@@ -1,0 +1,407 @@
+r0.0	"<Bold>r0.0 They've Invaded Pleasantville</Bold>
+<LineBreak/><LineBreak/>
+<Bold>Pleasantville</Bold> minigame is a two-player game of a secret invasion by space aliens. One player, the Alien player, moves the Alien controlled and uncontrolled pieces, and the other player, the Town player, moves the Town-controlled pieces. There are 12 game-turns in this game. In any given turn, playing pieces representing various townspeople will be moved across the mapboard, which is a map of Pleasantville.
+<LineBreak/><LineBreak/>
+The Alien player will try to keep the whereabouts of the Alien controlled townspeople a secret, while they 'take-over' more unsuspecting townspeople and build up strength for the final showdown with the Town player. The Alien player, in short, will try to create a large army of townspeople-zombies, eliminate any opposition, and occupy Pleasantville as a base for futher operations. The Town player will try to convince the townspeople that there is an alien manace in the town, and will attempt to fight any Alien controlled townspeople encountered. With luck and careful play, the Town player hopes to defeat the Alien controlled 'zombies', locate the Alien headquaters, and destory the Alien sub-commander.
+<LineBreak/><LineBreak/>
+<InlineUIContainer><Button Content='r2.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> How to Win<LineBreak/>
+<InlineUIContainer><Button Content='r3.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Map and Counters<LineBreak/>
+<InlineUIContainer><Button Content='r4.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Preparations for Play<LineBreak/>
+<InlineUIContainer><Button Content='r5.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Sequence of Play<LineBreak/>
+<InlineUIContainer><Button Content='r6.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Movement<LineBreak/>
+<InlineUIContainer><Button Content='r7.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Conversation and Influence (Town player only)<LineBreak/>
+<InlineUIContainer><Button Content='r8.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Combat<LineBreak/>
+<InlineUIContainer><Button Content='r9.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Alien Take-Over And Observation
+<LineBreak/><LineBreak/>
+Additional Rules can be viewed by selecting the <Bold>Help | Show Rules...</Bold> menu."
+r1.0	"<Bold>r1.0 How to Win</Bold>
+<LineBreak/><LineBreak/>
+The Town player wins in either of two ways:
+<LineBreak/><LineBreak/>
+1.) Locating the Alien headquarters and defeating in combat the Alien Sub-Commander (Zebu-Lon) --or--<LineBreak/>
+2. ) Having <Bold>half or more</Bold> of the total influence factors in play under town control at the end of the game.
+<LineBreak/><LineBreak/>
+Any townspeople who are dead, tied-up, unconscious, or stunned do not count as being in play and are ignored.
+<LineBreak/><LineBreak/>
+If the Town player cannot meet either of these conditions, the <Italic>Alien player wins!.</Italic>
+<LineBreak/><LineBreak/>
+The length of the game is 12 complete turns. The game marks off the turns as they are completed."
+r2.0	"<Bold>r2.0 Map and Counters</Bold>
+<LineBreak/><LineBreak/>
+<InlineUIContainer><Button Content='r2.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Mapboard<LineBreak/>
+<InlineUIContainer><Button Content='r2.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Counters"
+r2.1	"<Bold>r2.1 Mapboard</Bold>
+<LineBreak/><LineBreak/>
+The game map represents the main area of the town of Pleasantville. It has been divided into irregularly-shaped spaces for movement purposes. 
+<LineBreak/><LineBreak/>
+<Bold>Green</Bold> spaces are built-up areas such as parland, alleyways, lawns, etc.<LineBreak/>
+<Bold>Yellow, blue, and orange</Bold> spaces are major buildings. There can be several spaces within the same building. Major buildings are usually surrounded by walls (black lines) and can only be entered through doors (black boxes). Each major building has a name and a letter or number to identify it. <LineBreak/>
+<Bold>Gray</Bold> spaces are streets, some of which are named. <LineBreak/>
+<Bold>Brown</Bold> spaces are railroad tracks and the graveyard."
+r2.2	"<Bold>r2.2 Counters</Bold>
+<LineBreak/><LineBreak/>
+The playing pieces, or counters, represent the important townspeople of Pleasantville, with the exception of the Alien sub-commander. There are two sets of townspeople counters. The counters marked with an star on the back are townspeople who have been 'taken-over' by the Alien player. These makred counters are substituted for the unmarked counters whenever the Alien player 'takes-over' a normal townsperson. This process is explained in Alien Take-Over and Observation 
+<InlineUIContainer><Button Content='r9.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>.
+<LineBreak/><LineBreak/>
+<InlineUIContainer><Button Content='r2.2.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Label<LineBreak/>
+<InlineUIContainer><Button Content='r2.2.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Starting Location<LineBreak/>
+<InlineUIContainer><Button Content='r2.2.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Movement Allowance<LineBreak/>
+<InlineUIContainer><Button Content='r2.2.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Influence Factor<LineBreak/>
+<InlineUIContainer><Button Content='r2.2.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Combat Factor<LineBreak/>
+<InlineUIContainer><Button Content='r2.2.6' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Other Counters<LineBreak/>"
+r2.2.1	"<Bold>r2.2 Counters - Label</Bold><LineBreak/><LineBreak/>
+The center of the counter identifies the townsperson role in the town."
+r2.2.2	"<Bold>r2.2.2 Counters - Starting Location</Bold><LineBreak/><LineBreak/>
+This letter on upper right of counter shows where the counter is placed on the map at the start of the game. For example, the Lawyer starts at building spot J, i.e., the Lawyer's Office."
+r2.2.3	"<Bold>r2.2.3 Counters - Movement Allowance</Bold><LineBreak/><LineBreak/>
+This number on the upper right of the counter is the maximum number of spaces that counter may usually be moved in one turn. The Lawyer, therefore, may be moved up to five spaces per turn."
+r2.2.4	"<Bold>r2.2.4 Counters - Influence Factor</Bold><LineBreak/><LineBreak/>
+This number on the bottom right of the counter is the relative respect, personal charm/appeal, or leadership abilities of the townsperson as viewed by the residents of Pleasantville. 
+<LineBreak/><LineBreak/>
+Townspeople with a high influence factor, such as the Minister with 20 or the Bank President with 19, are admired and trusted by all other residents. The Town Drunk, on the other hand, with an influence of three is the least influential townsperson in play."
+r2.2.5	"<Bold>r2.2.5 Counters - Combat Factor</Bold><LineBreak/><LineBreak/>
+This number on the bottom right of the counter is the relative fighting ability of that townsperson. It reflects the townsperson's age, strength, courage, and likely weaponry. The Sheriff and Deputy Sheriff, with combat factors 10 and 9 respectively, are the most powerful fighters in Pleasantville, while the Wife with combat factor 4 is rather weak. THe Alien creature has a combat factor of 10 and is a match for nearly any two townspeople."
+r2.2.6	"<Bold>r2.2.6 Other Counters</Bold><LineBreak/><LineBreak/>
+Note that the Alien Sub-Commander has no movement allowance or influence factor. It cannot use influence per Conversation and Influence 
+<InlineUIContainer><Button Content='r7.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>.
+<LineBreak/><LineBreak/>
+The 'Tied Up' counters are used as markers only and have no other function in the game per 
+<InlineUIContainer><Button Content='r8.7.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>."
+r3.0	"<Bold>r3.0 Preparations for Play</Bold><LineBreak/><LineBreak/>
+<InlineUIContainer><Button Content='r3.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Secretly Select HQ Area<LineBreak/>
+<InlineUIContainer><Button Content='r3.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Select Town Player Counter<LineBreak/>
+<InlineUIContainer><Button Content='r3.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Roll for Alien Controlled Counter<LineBreak/>
+<InlineUIContainer><Button Content='r3.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Setting Up Map<LineBreak/>
+<InlineUIContainer><Button Content='r3.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Alien Substitution<LineBreak/>"
+r3.1	"<Bold>r3.1  Secretly Select HQ Area</Bold><LineBreak/><LineBreak/>
+The first step is for the Alien player to secretly choose where the Alien Sub-Commander is running his operations. The headquarters (HQ) must be a specified building, such as <Bold>House 4</Bold> the <Bold>Stock Pen</Bold> , the <Bold>Town Hall</Bold>, etc. If the building chosen as the Alien HQ has more than one space, the Alien player must choose which area of the building is the Alien HQ. This information is secret to the Alien Player."
+r3.2	"<Bold>r3.2 Select Towns Player Counter</Bold><LineBreak/><LineBreak/>
+Second, the Town player rolls a die to determine which townsperson counter begins the game under his or her control according to 
+<InlineUIContainer><Button Content='Town Player Starting' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table."
+r3.3	"<Bold>r3.3 Roll for Alien Controlled Counter</Bold><LineBreak/><LineBreak/>
+Third, the Alien player secretly rolls the die twice on the <InlineUIContainer><Button Content='Townsperson' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table 
+to determine which townspersons begin the game under Alien control. The Alien player cannot begin with the same character as the Town player. Such a result requires rerolling the die to get a different result. Also, note that any 1st die roll of 6 must be rerolled when using this table."
+r3.4	"<Bold>r3.4 Setting Up Map</Bold><LineBreak/><LineBreak/>
+The counters are divided into two groups, the 'normal' townspeople and the 'taken-over' townspeople which have star on th back of the counter. The digital version of this game automatically handles alien tracking. The normal townspeople are placed on the map. The starting locations for each piece is printed in the upper-left of the corner of the counter per <InlineUIContainer><Button Content='r2.2.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. Every counter is placed on the map.
+<LineBreak/><LineBreak/>
+If a building has more than one space in it, the counter is placed randomly in one of the spaces. However, only one counter may be placed in each space."
+r3.5	"<Bold>r3.5 Alien Substitution</Bold><LineBreak/><LineBreak/>
+The Alien controlled counters are substituted with the normal townspeople on the map secretly so that the Town player does not know which counters are under Alien control. The digital version of this game automatically tracks alien players."
+r4.0	"<Bold>r4.0 Sequence of Play</Bold><LineBreak/><LineBreak/>
+The sequence of play is followed each turn until the end of the game occurs (12 turns) or until one player wins per 
+<InlineUIContainer><Button Content='r1.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. The completion of each phase of events equals one turn.
+<LineBreak/><LineBreak/>
+Each game turn is divided into a number of phases:
+<InlineUIContainer><Button Content='r3.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Random Movement Phase<LineBreak/>
+<InlineUIContainer><Button Content='r3.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Alien Player Movement Phase<LineBreak/>
+<InlineUIContainer><Button Content='r3.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Town Player Movement Phase<LineBreak/>
+<InlineUIContainer><Button Content='r7.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Conversation and Influence Phase<LineBreak/>
+<InlineUIContainer><Button Content='r8.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Combat Phase<LineBreak/>
+<InlineUIContainer><Button Content='r9.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Alien Take-Over and Observation Phase<LineBreak/>"
+r5.0	"<Bold>r5.0 Control</Bold><LineBreak/><LineBreak/>
+In this game, it is important to distinguish between a counter that is 'controlled' or 'uncontrolled' by either player. Each player begins the game with one townsperson who is 'controlled'. Every other townsperson begins as an 'uncontrolled' counter; that is, a counter not under the control of either the Alien or Town player. 
+<LineBreak/><LineBreak/>
+<InlineUIContainer><Button Content='r3.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Alien Control<LineBreak/>
+<InlineUIContainer><Button Content='r3.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Town Control<LineBreak/>
+<InlineUIContainer><Button Content='r3.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Uncontrolled<LineBreak/>"
+r5.1	"<Bold>r5.1 Alien Control</Bold><LineBreak/><LineBreak/>
+Alien controlled counters are moved by the Alien player and may be used to 'take-over' uncontrolled townspeople by implanting a bio-mechanical device per 
+<InlineUIContainer><Button Content='r9.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. When a take-over happens, uncontrolled townspeople may observe and become wary per 
+<InlineUIContainer><Button Content='r9.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>.
+<LineBreak/><LineBreak/>
+Additionally, the alien controlled counter may 'take-over' Town controlled counters in combat per 
+<InlineUIContainer><Button Content='r8.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>."
+r5.2	"<Bold>r5.2 Town Control</Bold><LineBreak/><LineBreak/>
+The Town player may move their counters or use them for:
+-- Conversation per <InlineUIContainer><Button Content='r7.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
+-- Influence per <InlineUIContainer><Button Content='r7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
+-- Interrogation per <InlineUIContainer><Button Content='r8.7.2 FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
+-- Combat per <InlineUIContainer><Button Content='r8.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+<LineBreak/><LineBreak/>
+Town control is gained by influencing an uncontrolled townsperson or by removing an implant from an Alien controlled counter per 
+ <InlineUIContainer><Button Content='r6.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>."
+r5.3	"<Bold>r5.3 Uncontrolled</Bold><LineBreak/><LineBreak/>
+These counters may not be controlled by either player. They are moved in the Random Movement Phase per 
+ <InlineUIContainer><Button Content='r6.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> and the Alien Movement Phase per 
+ <InlineUIContainer><Button Content='r6.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>.
+<LineBreak/><LineBreak/>
+In addition, uncontrolled counters may be: <LineBreak/><LineBreak/>
+-- Skeptical: Town player has tried to unsuccessfully influence per 
+ <InlineUIContainer><Button Content='r7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> and failed. They will be harder to influence if the Town player tries again.<LineBreak/><LineBreak/>
+-- Wary: Townspeople who observed an Alien takeover per 
+ <InlineUIContainer><Button Content='r9.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. They may not be moved in the Alien Movement Phase per 
+ <InlineUIContainer><Button Content='r6.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> and must be attacked in combat per 
+ <InlineUIContainer><Button Content='r8.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>  by the Alien player before they can be taken over per 
+ <InlineUIContainer><Button Content='r9.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. These townspeople will also be easier for the Town Player to influence."
+r6.0	"<Bold>r6.0 Movement</Bold><LineBreak/><LineBreak/>
+Movement is made according to each counter's movement allowance which is the number on the upper right of the counter per 
+<InlineUIContainer><Button Content='r2.2.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. A counter with a movement allowance of five can be moved up to (but no more than) five spaces per movement phase. The exception is random movement in which the townsperson is moved twice their normal movement to reach a target building per 
+<InlineUIContainer><Button Content='r6.3.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. 
+<LineBreak/><LineBreak/>
+A controlled counter may be moved less than its movement allowance or not moved at all if so desired. Unused movement may not be accumulated or transferred to another counter. All movement is subject to the following additional rules:
+<LineBreak/><LineBreak/>
+<InlineUIContainer><Button Content='r6.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Stacking<LineBreak/>
+<InlineUIContainer><Button Content='r6.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Doors<LineBreak/>
+<InlineUIContainer><Button Content='r6.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Random Movement<LineBreak/>
+<InlineUIContainer><Button Content='r6.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Alien Player Movement<LineBreak/>
+<InlineUIContainer><Button Content='r6.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Town Player Movement"
+r6.1	"<Bold>r6.1 Stacking</Bold><LineBreak/><LineBreak/>
+Each player may 'stack' up to three of his or her controlled counters in any one space. Up to three uncontrolled counters can also be in the space; thus a space may hold up to nine counters - three Alien controlled, three Town controlled, and three uncontrolled.
+<LineBreak/><LineBreak/>
+A player cannot deliberately stack more than three friendly controlled counters in a given space. If the stacking limits are exceeded (for example, due to a successful influence attempt per 
+<InlineUIContainer><Button Content='r7.2.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>), the controlling player must at first opportunity move his or her counter(s) so that the stack contains no more than three friendly controlled counters.
+<LineBreak/><LineBreak/>
+There is no movement cost for joining or leaving a stack. Counters in a stack may move alone or as a stack. If counters move as a stack, the movement allowance of the group is that of the slowest counter in the stack."
+r6.2	"<Bold>r6.2 Doors</Bold><LineBreak/><LineBreak/>
+Counters may not be moved through walls (denoted as black lines). To enter or leave a building, a counter must move through a door (small black box on the map). There is no extra movement costs for moving through a door. 
+<LineBreak/><LineBreak/>
+Special areas with no walls around them (Graveyard, Stock Pens, and Gas Pumps) may be entered and moved through freely."
+r6.3	"<Bold>r6.3 Random Movement</Bold><LineBreak/><LineBreak/>
+Random movement is checked four times at the beginning of each turn. Therefore, a maximum of four pieces move randomly in any given turn. For each check, the Alien player rolls a die twince to determine which townsperson will move using the <InlineUIContainer><Button Content='Townsperson' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table. The town player rolls a die twice and consults the 
+<InlineUIContainer><Button Content='Target Building Table' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> to determine the building that the townsperson will move toward. In the digital version, random movement is handled automatically.
+<LineBreak/><LineBreak/>
+Random movement applies to one specific turn only and never carries over to the next turn. Additional rules for Random Movement:<LineBreak/>
+<InlineUIContainer><Button Content='r6.3.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Random Move Process<LineBreak/>
+<InlineUIContainer><Button Content='r6.3.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Only Uncontrolled<LineBreak/>
+<InlineUIContainer><Button Content='r6.3.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Limitations"
+r6.3.1	"<Bold>r6.3.1 Random Movement - Process</Bold><LineBreak/><LineBreak/>
+A townsperson designated by the roll of the dice for random movement is moved twice its movement allowance toward the target building moving along the shortest possible path. If the counter enters the building, it must stop in the first space entered.
+<LineBreak/><LineBreak/>
+Otherwise, the counter stops once it moves twice its nornal movement allowance per 
+<InlineUIContainer><Button Content='r2.2.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. If several different paths are available that are equal in distance to the target building, the path is chosen randomly to see which path is taken."
+r6.3.2	"<Bold>r6.3.2 Random Movement - Only Uncontrolled</Bold><LineBreak/><LineBreak/>
+Only uncontrolled townspeople are completely subject to random movement. A player may choose not to have counters he or she controls randomly moved if desired. Of course, the Alien player must keep in mind that doing this early in the game reveals the idenities of the Alien controlled counters. So, he or she may choose to let townspeople under Alien control move randomly to keep Town player guessing who are the Alien controlled counters."
+r6.3.3	"<Bold>r6.3.3 Random Movement - Limitations</Bold><LineBreak/><LineBreak/>
+A townsperson may not be moved randomly twice in one turn. If the same townsperson is rolled a second time, that roll is ignored, though it still counts as one of the four random movement rolls. 
+<LineBreak/><LineBreak/>
+Also, townspeople who have following attributes also do not move but still count as one of the four rolls:<LineBreak/>
+-- Tied Up per <InlineUIContainer><Button Content='r6.3.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> 
+-- Unconscious per <InlineUIContainer><Button Content='Alien Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> or <InlineUIContainer><Button Content='Town Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Tables
+-- Dead per Alien Loss or Town Loss Tables
+<LineBreak/><LineBreak/>
+If a townsperson is already in the target building, the counter does not move and still counts as one fo the four rolls. A first roll of  six must be rerolled on the 
+<InlineUIContainer><Button Content='Target Building' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table as done on the 
+<InlineUIContainer><Button Content='Townsperson' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table."
+r6.4	"<Bold>r6.4 Alien Player Movement</Bold><LineBreak/><LineBreak/>
+During his or her movement phase, the Alien player may move up to five townsperson counters. However, these townspeople may not be:<LineBreak/>
+-- Controlled by Town player per <InlineUIContainer><Button Content='r5.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
+-- Wary per <InlineUIContainer><Button Content='r5.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
+-- Tied Up per <InlineUIContainer><Button Content='r6.3.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
+-- Unconscious per <InlineUIContainer><Button Content='Alien Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> or <InlineUIContainer><Button Content='Town Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Tables<LineBreak/>
+-- Stunned per Alien Loss or Town Loss Tables</Button></InlineUIContainer> Tables
+<LineBreak/><LineBreak/>
+In effect, the Alien player is limited to moving up to five counters that are either Alien controlled, skeptical per 
+<InlineUIContainer><Button Content='r7.2.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> 
+or totally uncontrolled. 
+<LineBreak/><LineBreak/>
+Such counters may be moved in the Alien Movement Phase even if they were moved randomly in the Random Movement Phase per 
+<InlineUIContainer><Button Content='r6.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> 
+. This rule allows the Alien player to keep the Town player guessing which counters are Alien controlled and which are not. Of course, the Alien player is not required to move any pieces at all if so desired. Any counters including Town player controlled pieces have no effect on Alien movement."
+r6.5	"<Bold>r6.5 Town Player Movement Movement</Bold><LineBreak/><LineBreak/>
+During his or her movement phase, the Town player may move any townsperson that is controlled by the Town player. The Town player may not move uncontrolled townspeople, Alien-controlled townspeople, or townspeople that are:
+-- Tied Up per <InlineUIContainer><Button Content='r6.3.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
+-- Unconscious per <InlineUIContainer><Button Content='Alien Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> or <InlineUIContainer><Button Content='Town Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Tables<LineBreak/>
+-- Stunned per Alien Loss or Town Loss Tables</Button></InlineUIContainer> Tables
+<LineBreak/><LineBreak/>
+An Alien controlled counter in a space may halt or prevent the movement of one Town controlled counter moving into that space. When there is more than one Town-controlled counter to choose from, the Alien player may choose which counters do not move. The decision whether or not to stop a Town controlled counter is made by the Alien player as needed."
+r7.0	"<Bold>r7.0 Conversation and Influence (Town player only)</Bold><LineBreak/><LineBreak/>
+Conversation and Influence are methods where the Town player interacts with uncontrolled counters to either determine if Alien controlled or recruit additional Town controlled counters.
+<InlineUIContainer><Button Content='r7.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Conversation<LineBreak/>
+<InlineUIContainer><Button Content='r7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Influence<LineBreak/>"
+r7.1	"<Bold>r7.1 Conversation</Bold><LineBreak/><LineBreak/>
+Conversation is how the Town player discovers if a townsperson is Alien controlled. In this phase, each Town controlled counter can talk to one suspected townsperson to discover if the person is acting mechanically or unnaturally. The two counters must be in the same space to have a conversation. To have a conversation, the Town player tells the Alien player which counters are having the conversation and rolls two dice. On a roll of nine or better including modifiers from the <InlineUIContainer><Button Content='Conversation Modifiers' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table, the Town player deteremines if it is Alien controlled counter.
+<LineBreak/><LineBreak/>
+A townsperson may be talked to more than once a turn if there is a more than one Town controlled piece in that space, provided each Town controlled piece only makes one attempt at conversation each turn. "
+r7.2	"<Bold>r7.2 Influence</Bold><LineBreak/><LineBreak/>
+The Town player may also try to influence uncontrolled townsperson counters during this phase. Influencing is trying to convince other townspeople that there is an alien plot afoot to take-over Pleasantville. This is how the Town player can gain control of additional townspeople. Alien controlled counters cannot influence other counters but take-over townspeople per 
+<InlineUIContainer><Button Content='r9.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>.
+<LineBreak/><LineBreak/>
+<InlineUIContainer><Button Content='r7.2.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Process<LineBreak/>
+<InlineUIContainer><Button Content='r7.2.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Mutliple Town Controlled Counters<LineBreak/>
+<InlineUIContainer><Button Content='r7.2.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Rolling<LineBreak/>
+<InlineUIContainer><Button Content='r7.2.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> No Effect Result<LineBreak/>
+<InlineUIContainer><Button Content='r7.2.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Convinced Result<LineBreak/>
+<InlineUIContainer><Button Content='r7.2.6' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Alien Controlled Counters"
+r7.2.1	"<Bold>r7.2.1 Influence - Process</Bold><LineBreak/><LineBreak/>
+The Town player may only try to influence other townspeople in the same space as the Town controlled counter. Each Town controlled counter may only try to influence one other counter per turn. 
+<LineBreak/><LineBreak/>
+To influence another uncontrolled counter, the Town player compares the Influence Factor of the Town controlled player (bottom right per <InlineUIContainer><Button Content='r2.2.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>) to the Influence Factor of the other townsperson. This comparison is reduced to the simpliest possible odds-ratio and compared to on the 
+<InlineUIContainer><Button Content='Influence Results' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table. 
+<LineBreak/><LineBreak/>
+Fopr example, if the Minister (influence factor=20) tries to influence the Supermarket Manager (influence factor=10), the ratio is 20 to 10 which simplifies to 2 to 1. All fractions are rounded down, so a 20 to 11 ratio reduces to 3-2 and not 2-1."
+r7.2.2	"<Bold>r7.2.2 Influence - Mutliple Town Controlled Counters</Bold><LineBreak/><LineBreak/>
+When a stack of Town controlled pieces is attempting to influence the same counter, all the Influence Factors of the Town controlled counters are added together. 
+<LineBreak/><LineBreak/>
+For example, if the War Vet (influence factor=12) and Teller (influence factor=9) are stacked together and are trying to influence the Paperboy (Influence Factor=9), the final odds-ratio would be 12+9=21 to 9 which reduces to 2 to 1 odds.
+<LineBreak/><LineBreak/>
+If there is more than one uncontrolled townsperson in the same space and only one Town controlled piece, the Town player can only attempt to influence one of them. If there are more than one Town controlled counter in that same space, each Town controlled counter could try to influence a different uncontrolled counter, or they can combined to influence one uncontrolled piece."
+r7.2.3	"<Bold>r7.2.3 Influence - Rolling</Bold><LineBreak/><LineBreak/>
+Once the odds-ratio is found, the Town player rolls two die and adds the influence attempts modifiers. He or she consults the 
+<InlineUIContainer><Button Content='Influence Results' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table. The final number is cross indexed with the appropriate odds-radio column to determine the final results. All influence attempts are resolved one-by-one in this fashion.
+<LineBreak/><LineBreak/>
+Modifiers:<LineBreak/>
+-1 if Townsperson is skeptical per <InlineUIContainer><Button Content='r7.2.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
++1 if Townsperson is wary per <InlineUIContainer><Button Content='r9.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
++1 if Influencing counter has implant as evidence per <InlineUIContainer><Button Content='r8.7.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>"
+r7.2.4	"<Bold>r7.2.4 Influence - No Effect Causes Skeptic</Bold><LineBreak/><LineBreak/>
+The townsperson did not believe the attempt to convince him or her. That particular townsperson is now highly skeptical about an alien invasion. If an attempt to influence that counter is made again, the Town player must stubtract one from the die roll on the <InlineUIContainer><Button Content='Influence Results' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table for future attempts. The penalty is not cumulative."
+r7.2.5	"<Bold>r7.2.5 Influence - Convinced Result</Bold><LineBreak/><LineBreak/>
+The counter is now a Town controlled counter. It will move and function as a Town controlled piece. "
+r7.2.6	"<Bold>r7.2.6 Influence - Alien Controlled Counters</Bold><LineBreak/><LineBreak/>
+Obviously, a townsperson under Alien control cannot be influenced by the Town player, However, the Town player might try to influence an Alien controlled counter not knowing it is under Alien control.
+<LineBreak/><LineBreak/>
+If a Convinced result occurs on the <InlineUIContainer><Button Content='Influence Results' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table, the Alien player must reveal that the counter is Alien controlled. The influence attempt automatically fails. If a 'No Effect' result is rolled, the Alien player should not reveal that the counter is Alien controlled.
+<LineBreak/><LineBreak/>
+Any combat per <InlineUIContainer><Button Content='r8.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>  
+involving Alien controlled counters upon which an influence attempt was made that turn is resolved with a one-column shift on the 
+<InlineUIContainer><Button Content='Combat Results' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table in favor of the Alien player. The shift occurs whether or not the Town player discovered the Alien counter's true identity before combat. 
+<LineBreak/><LineBreak/>
+For example, an Alien attack that normally would be rolled on the +1-3 column would shift to the +4-6 column instead. If the Town player made the attack on the +4-6 column, it would shift to the +1-3 column shifting one column in favor of the Alien player."
+r8.0	"<Bold>r8.0 Combat</Bold><LineBreak/><LineBreak/>
+All combat is resolved in this phase including combat with the Alien controlled counters upon which an influence attempt was made per 
+<InlineUIContainer><Button Content='r7.2.6' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. Both players will resolve combat during this phase of the turn.
+<LineBreak/><LineBreak/>
+<InlineUIContainer><Button Content='r8.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> General Rules<LineBreak/>
+<InlineUIContainer><Button Content='r8.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Attacking Uncontrolled Counters<LineBreak/>
+<InlineUIContainer><Button Content='r8.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Procedure<LineBreak/>
+<InlineUIContainer><Button Content='r8.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Results<LineBreak/>
+<InlineUIContainer><Button Content='r8.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Post Combat Activity (Town player only)<LineBreak/>"
+r8.1	"<Bold>r8.1 Combat - General Rules</Bold><LineBreak/><LineBreak/>
+Combat takes place only between counters sharing the same space. It is not permitted to attack a counter in an adjacent space.
+<LineBreak/><LineBreak/>
+All combat is voluntary. Neither player is forced to start combat. Thus, combat takes place only when at least one player desires it.
+<LineBreak/><LineBreak/>
+Either player may start combat as desired. Combat for each space is resolved separately and individually. There is no way combat in one are will affect combat in another area. Each counter may only be involved in one combat per turn.
+"
+r8.2	"<Bold>r8.2 Combat - Attacking Uncontrolled Townspeople</Bold><LineBreak/><LineBreak/>
+Only Alien or Town controlled counters that are not Tied Up, unconscious, or stunned may start a combat in the combat phase. Uncontrolled townspeople will not take part in a combat unless attacked. If the Town player attacks one or more uncontrolled counters thinking them to be Alien controlled, the Alien player reveals their uncontrolled state. The result is automatically 'Attacker Wins' for the Town player, regardless of the number of uncontrolled townspeople. 
+<LineBreak/><LineBreak/>
+Each defeated townsperson must roll for the effects of being defeated on the 
+<InlineUIContainer><Button Content='Town Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table.  Post-Combat Activity per 
+<InlineUIContainer><Button Content='r8.7.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer
+only occur if an Alien controlled counter is discovered.
+<LineBreak/><LineBreak/>
+The Alien player is not allowed to attack uncontrolled townspersons except those who have observed an  Alien 'take-over' per 
+<InlineUIContainer><Button Content='r9.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. Alien take-over can proceed on knocked out or stunned uncontrolled counters per 
+<InlineUIContainer><Button Content='r9.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>."
+r8.3	"<Bold>r8.3 Combat - Procedures</Bold><LineBreak/><LineBreak/>
+The Combat Factors (lower left per <InlineUIContainer><Button Content='r2.2.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>) of the counters involved in the combat are compared to one another arriving at a postive difference (plus differential) for one player's counters. The player with the greatest number of combat factors in a combat is always called the 'Attacker' regardless of the overall game situation. The other player is called the 'Defender' for that combat. 
+<LineBreak/><LineBreak/>
+The difference in Combat Factors determines which column on the 
+<InlineUIContainer><Button Content='Combat Results' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table is used to resolve the combat. For example, a differential of +2 for a combat is resolved on the +1-3 column.
+<LineBreak/><LineBreak/>
+Once the combat factors have been added up and compared, the players consult the Combat Results Table. Two die are rolled by the Attacker. The dice roll is cross-indexed with the appropriate column and the result is then immediately applied to the counters involved. See <InlineUIContainer><Button Content='r8.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> for an example."
+r8.4	"<Bold>r8.4 Combat - Example</Bold><LineBreak/><LineBreak/>
+For example, the Alien player has the Wife under Alien control in the same space as the Welder who is Town controlled. During the combat phase, the Alien player decides to have combat with the Welder. The Combat Factor of the Welder is seven and the Wife's is four. Therefore, there is a +3 differential in favor of the Town player. Note that the Welder is the Attacker even though the Wife started the combat."
+r8.5	"<Bold>r8.5 Combat - Stacking</Bold><LineBreak/><LineBreak/>
+If either player controls more than one townsperson in a space, all Combat Factors for each player must be totalled together and then compared.
+<LineBreak/><LineBreak/>
+For example, in one space the Alien player controls the Lawyer (CF=6) and the Drunk (CF=8). The Town player controls the Guard (CF=8) and the Fire Chief (CF=8). The resulting combat would be calculated as follows: 6 + 8 = 14 against 8 + 8 = 16 which is a +2 differential for the Town player. 
+<LineBreak/><LineBreak/>
+A maximum of three counters per player may be involved in one combat. If the Town player is temporarily overstacked per  <InlineUIContainer><Button Content='r7.2.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> because of a successful influence attempt, the Town player may choose which three counters will fight."
+r8.6	"<Bold>r8.6 Combat - Results</Bold><LineBreak/><LineBreak/>
+There are four results that can occur from combat:<LineBreak/><LineBreak/>
+-- Attacker Flees (AF): Each counter of the Attacker must flee using Random Movement per <InlineUIContainer><Button Content='r6.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. If the counter is already in the building, roll again until a different target building is determined. The Alien Sub-Commander cannot flee and instead defeated. Should the Town Player defeat the Sub-Commander, the game is automatically ended with a Town player victory.<LineBreak/>
+-- Defender Flees (DF): Same mechanics as Attacker flees but for Defender.<LineBreak/>
+-- Attacker Wins (A): Consult the appropriate table: 
+ <InlineUIContainer><Button Content='Alien Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table or  
+ <InlineUIContainer><Button Content='Town Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table. The dice are rolled for each individual counter of the defeated force, and the results are applied immediately.  Should the Town Player defeat the Sub-Commander, the game is automatically ended with a Town player victory!<LineBreak/>
+-- Defender Wins (D): Same mechanics as Attacker Wins but for Defender."
+r8.7	"<Bold>r8.7 Combat - Post Combat Activity</Bold><LineBreak/><LineBreak/>
+The Town player after winning a combat may choose to do one of the following actions with the defeated Alien controlled counters. These actions are purely voluntary on the part of the Town player, though they can be crucial to the Town player's chances of victory. 
+<LineBreak/><LineBreak/>
+Depending on the actual result inflicted upon a defeated Alien controlled counter, some actions may not always be possible (e.g., interrogating a dead or knocked-out piece). The  <InlineUIContainer><Button Content='Alien Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table specifies which actions may be taken in each given circumstances.
+<LineBreak/><LineBreak/>
+Post Combat Activities are the following:
+<InlineUIContainer><Button Content='r8.7.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Tie Up<LineBreak/>
+<InlineUIContainer><Button Content='r8.7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Interrogation<LineBreak/>
+<InlineUIContainer><Button Content='r8.7.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Implant Removal<LineBreak/>"
+8.7.1	"<Bold>r8.7.1  Combat - Post Combat Activity - Tie Up</Bold><LineBreak/><LineBreak/>
+Town controlled counters may always tie up knocked-out or surrendering Alien controlled counters. A Tied Up marker is placed over each Alien counter so treated. For purposes of stacking, tied up townspeople are ignored. A townserson who is Tied Up may not move, attack, or be attacked until they are freed. A Tied Up townsperson may be freed if a friendly counter is in that space at the end of a game turn and wishes to free it."
+8.7.2	"<Bold>r8.7.2  Combat - Post Combat Activity - Interrogation</Bold><LineBreak/><LineBreak/>
+Any conscious, defeated, Alien controlled counter may be interrogated by a Town controlled piece. Interrogation consists of the Town player choosing any four spaces on the mapboard and asking if any of these spaces is the location of the Alien HQ. 
+<LineBreak/><LineBreak/>
+If the Town player guesses the correct space, the Alien places the Alien Sub-Commander counter on the mapboard. 
+<LineBreak/><LineBreak/>
+Only four choices may be made per interrogation, and each Alien controlled counter may only be interrogated once. "
+8.7.3	"<Bold>r8.7.3  Combat - Post Combat Activity - Implant Removal</Bold><LineBreak/><LineBreak/>
+Townspeople are taken-over by Alien controlled counters by means of a bio-mechanical implant attached to the back of the victum's neck. As long as the implant remains attached, that counter remains under the Alien player's control. 
+<LineBreak/><LineBreak/>
+The Town player may try to remove the implant thus breaking the Alien player's control over that counter. The Town player may try to remove this implant from a defeated Alien controlled townsperson, thus breaking the Alien player's control. One Town controlled counter is chose to attempt the removal. The Town player rolls two dice and consults the 
+<InlineUIContainer><Button Content='Implant Removal' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table.
+<LineBreak/><LineBreak/>
+Successfully removing the implant causes the victim to come under control of the Town player. If an implant is removed intact, it can be carried as evidence. Such evidence adds +1 to the influence roll when the townsperson carrying the implant tries to influence another townsperson per <InlineUIContainer><Button Content='r7.2.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. 
+<LineBreak/><LineBreak/>
+As only Alien controlled counters may be interrogated, it is wise to interrogate per <InlineUIContainer><Button Content='r8.7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>  before attempting to remove an implant. Removing the implant generates an electric shock which erases all memory of the Alien HQ from the victim's memory, a unique safegard which is built into the implant's circuits."
+r9.0	"<Bold>r9.0 Alien Take-Over And Observation</Bold><LineBreak/><LineBreak/>
+During this phase, the Alien player may 'take-over' uncontrolled townspeople, thus bringing them under Alien control. This is handled secretly so the Town player does know know which counters are Alien controlled.
+<LineBreak/><LineBreak/>
+<InlineUIContainer><Button Content='r9.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Take-Over<LineBreak/>
+<InlineUIContainer><Button Content='r9.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Observation<LineBreak/>"
+r9.1	"<Bold>r9.1 Take-Over</Bold><LineBreak/><LineBreak/>
+At the beginning of this phase, the Alien player may remove from the map any two group of two counters in the same space neither which is controlled by the Town player. If one of the two counters is Alien controlled and the other is uncontrolled, the Alien player replaces the uncontrolled counter with the duplicate making it an Alien controlled counter. If neigher of the removed counters is Alien controlled, the Alien player pretends to exchange them. The Alien player than returns the counters to their original space on the mapboard.
+<LineBreak/><LineBreak/>
+<InlineUIContainer><Button Content='r9.1.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Take-over Example<LineBreak/>
+<InlineUIContainer><Button Content='r9.1.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Take-over Restrictions<LineBreak/>"
+r9.1.1	"<Bold>r9.1.1 Take-over Example</Bold><LineBreak/><LineBreak/>
+At the beginning of this phase, the Alien player finds three spaces on the board that are holding more than one counter. However, the counters in one space are Town controlled, so the Alien player cannot affect them. 
+<LineBreak/><LineBreak/>
+The first space contains the Plumber who is Alien controlled and the Maid who is uncontrolled. The Alien player removes these counters and puts them behind the screen (or clicks the relevant space in the digital version). He substitues the normal Maid counter with the alien controlled counter. He places both counters back where they came from on the board. A take-over has been accomplished.
+<LineBreak/><LineBreak/>
+In the last space, there are the Checkout Girl and the Paperboy. Both are uncontrolled, so no take-over is possible. The Alien player takes them off anyways and shuffles mimics replacing hoping to mislead the Town player. He replaces the two counters to their original location on the board."
+r9.1.2	"<Bold>r9.1.2 Take-over Restrictions</Bold><LineBreak/><LineBreak/>
+Take-over can occur in any space on the board. One of the two counters removed must be already Alien controlled. An Alien controlled counter may only take-over one townsperson per turn. If there is more than one Alien controlled counter in the same space and more than one uncontrolled counter, each Alien controlled counter may take-over an uncontrolled counter. An uncontrolled townsperson who has successfully observed an Alien takeover is not subject to take-over as explained in Observation section per <InlineUIContainer><Button Content='r9.21' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. Observation only applies if the uncontrolled counter is also not being taken-over in the same turn in the same area. Observation roll occurs whenever the counters are removed from the board to do a possible take-over.."
+r9.2	"<Bold>r9.2 Take-over Observation</Bold><LineBreak/><LineBreak/>
+There is a chance that a nearby townsperson will watch closely enough to detect an Alien take-over if one occurs. Any time the Alien player removes counters from the mapboard during a take-over, a townsperson might notice or observe the take-over. Refer to the <InlineUIContainer><Button Content='Observation' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table which gives the number that must be rolled on one die for a townsperson to successfully observe a take-over based on the townsperson location to the observation space.
+<LineBreak/><LineBreak/>
+<InlineUIContainer><Button Content='r9.2.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Observation Example<LineBreak/>
+<InlineUIContainer><Button Content='r9.2.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>Observation Restrictions<LineBreak/>"
+r9.2.1	"<Bold>r9.2.1 Observation Example</Bold><LineBreak/><LineBreak/>
+If the observation attempt is successful, the Town player may flip over one of the observed counters to see if it is Alien controlled. If an Alien controlled counter is discovered, and the observing townsperson is currently uncontrolled, the counter has observed a take-over. 
+<LineBreak/><LineBreak/>
+The observing counter is still uncontrolled but wary. A town player who tries to influence a wary person gains a +1 on his or her dice roll on the <InlineUIContainer><Button Content='Influence Result' FontFamily='Courier New'  FontSize='12'></Button> Table per </InlineUIContainer> per <InlineUIContainer><Button Content='r7.2.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> because that townsperson has already witnessed some funny business which makes this suspicious.
+<LineBreak/><LineBreak/>
+In addition, that townsperson is now somewhat alert to a take-over attempt, lest the same thing happen to him or her, and may not be moved or taken-over outright by the Alien player for the remainder of the game. This counter must be attacked and defeated by the Alien player before the Alien player moves it or tries to take-over it again per Combat per </InlineUIContainer> per <InlineUIContainer><Button Content='r7.2.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>.. 
+<LineBreak/><LineBreak/>
+If the Alien player is defeated in an attack on the wary townsperson, the result is an automatic flee result for the Alien controlled counters involved per 
+<InlineUIContainer><Button Content='r8.6' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>."
+r9.2.2	"<Bold>r9.2.2 Observation Restrictions</Bold><LineBreak/><LineBreak/>
+Observation cannot take place more than 3 spaces away. Observations are blocked by corners and walls. Townspeople have no chance of observing through doors, building walls, or around corners. Other townspeople do not black this line of sight.  To determine corners, a straight line is made between the center of the observer's space to the observation space. 
+<LineBreak/><LineBreak/>
+Each townsperson able to make an observation attempt may do so only once per turn. Counters that are taken off the mapboard during a take-over cannot observe. 
+<LineBreak/><LineBreak/>
+Alien controlled townspeople do not observe Alien take-overs. If the Town player tries to observe with an undiscovered Alien controlled townsperson and succeeds, the Alien player tells the Town player that the townsperson observed nothing because the counter  is actually under Alien control!"
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

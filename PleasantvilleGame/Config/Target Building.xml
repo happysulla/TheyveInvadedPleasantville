@@ -1,0 +1,382 @@
+﻿<Table CellSpacing="2" BorderBrush="Black" BorderThickness="3">
+	<Table.Columns>
+		<TableColumn Width='60'/>
+		<TableColumn Width='120'/>
+		<TableColumn Width='60'/>
+		<TableColumn Width='120'/>
+	</Table.Columns>
+	<TableRowGroup>
+		<TableRow  FontSize='18' >
+			<TableCell ColumnSpan='4' TextAlignment='Center' BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<LineBreak/>
+					TARGET BUILDING TABLE
+					<LineBreak/>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+	</TableRowGroup>
+	<TableRowGroup>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Bold>
+						<Run Text='Roll'></Run>
+					</Bold>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Bold>
+						<Run Text='Townsperson'></Run>
+					</Bold>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Bold>
+						<Run Text='Roll'></Run>
+					</Bold>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Bold>
+						<Run Text='Townsperson'></Run>
+					</Bold>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+	</TableRowGroup>
+	<TableRowGroup>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Run Text='1-1'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Run Text='Tavern'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Run Text='3-4'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Run Text='Church'></Run></Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='1-2'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='Veterinarians Office'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='3-5'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='Graveyard'></Run>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='1-3'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='Clothing Store'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='3-6'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='Stock Pen'></Run>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='1-4'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='General Store'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='4-1'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='Train Station'></Run>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='1-5'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='Gas Pumps'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='4-2'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='House A'></Run>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='1-6'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='Supermarket'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='4-3'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='House 1'></Run>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='2-1'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='School'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='4-4'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='House 2'></Run>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='2-2'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='Bank'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='4-5'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='House 3'></Run>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='2-3'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='Doctors Office'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='4-6'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='House 4'></Run>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='2-4'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='VFW'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='5-1'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='House 6'></Run>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='2-5'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='Bar and Grill'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='5-2'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='House 6'></Run>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='2-6'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='Machine Repair Shop'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='5-3'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='House 7'></Run>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='3-1'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='Sheriff and Fire Department'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='5-4'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='House 8'></Run>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='3-2'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='Town Hall'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='5-5'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='Lawyers Office'></Run>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='3-3'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='Hotel and Restaurant'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='5-6'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='House K'></Run>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1' ColumnSpan='4'>
+				<Paragraph>
+					<Run Text='Any roll starting with 6 is rerolled'></Run>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+	</TableRowGroup>
+	</Table>

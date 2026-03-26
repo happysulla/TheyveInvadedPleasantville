@@ -1,0 +1,78 @@
+﻿<Table CellSpacing="2" BorderBrush="Black" BorderThickness="3">
+	<Table.Columns>
+		<TableColumn Width='60'/>
+		<TableColumn Width='120'/>
+	</Table.Columns>
+	<TableRowGroup>
+		<TableRow  FontSize='18' >
+			<TableCell ColumnSpan='2' TextAlignment='Center' BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<LineBreak/>
+					TOWN PLAYER STARTING TABLE
+					<LineBreak/>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+	</TableRowGroup>
+	<TableRowGroup>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Bold><Run Text='Die Roll'></Run></Bold></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Bold><Run Text='Townsperson'></Run></Bold>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+	</TableRowGroup>
+	<TableRowGroup>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Run Text='1'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Run Text='Bank President'></Run></Paragraph>
+			</TableCell>
+		</TableRow>
+	    <TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Run Text='2'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Run Text='Doctor'></Run></Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Run Text='3'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Run Text='Mayor'></Run></Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Run Text='4'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Run Text='Minister'></Run></Paragraph>
+			</TableCell>
+		</TableRow>		
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Run Text='5'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Run Text='School Teacher'></Run></Paragraph>
+			</TableCell>
+		</TableRow>		
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Run Text='6'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Run Text='Sheriff'></Run></Paragraph>
+			</TableCell>
+		</TableRow>			
+	</TableRowGroup>
+	</Table>
