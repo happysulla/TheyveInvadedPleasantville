@@ -9,15 +9,13 @@ namespace PleasantvilleGame
       public GameAction Action { set; get; } = GameAction.Error;
       public GameAction ActionDieRoll { set; get; } = GameAction.Error;
       public string EventActive { set; get; } = "";
-      public EnumMainImage MainImage { set; get; } = EnumMainImage.MI_Other;
       public GameCommand() { }
-      public GameCommand(GamePhase phase, GameAction drAction, string evt, GameAction action, EnumMainImage mainImage )
+      public GameCommand(GamePhase phase, GameAction drAction, string evt, GameAction action )
       {
          Phase = phase;
          EventActive = evt;
          Action = action;
          ActionDieRoll = drAction;
-         MainImage = mainImage;
       }
    }
    public class GameCommands : IEnumerable, IGameCommands

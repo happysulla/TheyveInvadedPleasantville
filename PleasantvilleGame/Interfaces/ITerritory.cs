@@ -11,7 +11,7 @@ namespace PleasantvilleGame
       List<IMapPoint> Points { set; get; }
       List<String> Adjacents { get; }
       List<String> PavedRoads { get; }
-      List<String> UnpavedRoads { get; }
+      List<String> Observations { get; }
    }
    //--------------------------------------------------------
    public interface ITerritories : System.Collections.IEnumerable
