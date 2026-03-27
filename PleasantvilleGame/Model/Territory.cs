@@ -1,0 +1,1211 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Transactions;
+using System.Windows.Media;
+using Windows.Perception.Spatial;
+using System.Windows.Controls;
+using System.Windows.Shapes;
+using System.Windows.Controls.Primitives;
+using System.Diagnostics;
+using Point = System.Windows.Point;
+
+namespace PattonsBest
+{
+   [Serializable]
+   public class Territory : ITerritory
+   {
+      public string Name { get; set; } = "Offboard";
+      public string CanvasName { get; set; } = "Main";
+      public string Type { get; set; } = "ERROR";
+      public IMapPoint CenterPoint { get; set; } = new MapPoint();
+      public List<IMapPoint> Points { get; set; } = new List<IMapPoint>();
+      public List<string> Adjacents { get; set; } = new List<string>();
+      public List<string> PavedRoads { get; set; } = new List<string>();
+      public List<string> UnpavedRoads { get; set; } = new List<string>();
+      //---------------------------------------------------------------
+      public static IMapPoint GetRandomPoint(ITerritory t, double offset) // return the top left location of a MapItem, not the center point
+      {
+         if (0 == t.Points.Count)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GetRandomPoint(): t.Points.Count=0 for t.Name=" + t.Name);
+            return t.CenterPoint;
+         }
+         //----------------------------------------------------
+         // Make a StreamGeometry object from t.Points 
+         StreamGeometry geometry = new StreamGeometry();
+         using (StreamGeometryContext ctx = geometry.Open())
+         {
+            IMapPoint mp0 = t.Points[0];
+            System.Windows.Point point0 = new System.Windows.Point(mp0.X, mp0.Y);
+            ctx.BeginFigure(point0, true, true); //  filled and closed
+            for (int i = 1; i < t.Points.Count; ++i)
+            {
+               IMapPoint mpI = t.Points[i];
+               System.Windows.Point pointI = new System.Windows.Point(mpI.X, mpI.Y);
+               ctx.LineTo(pointI, true, false);
+            }
+            geometry.Freeze();
+         }
+         System.Windows.Rect rect = geometry.Bounds;
+         //----------------------------------------------------
+         int count = 20;
+         while (0 < --count) // offset is the difference between MapItem location on screen and the center of the  MapItem.
+         {
+            double XCenter = Utilities.RandomGenerator.Next((int)rect.Left, (int)rect.Right) + offset; // Get a random point in the bounding box
+            double YCenter = Utilities.RandomGenerator.Next((int)rect.Top, (int)rect.Bottom) + offset;
+            System.Windows.Point pCenter = new System.Windows.Point(XCenter, YCenter);
+            if (true == IsPointInPolygon(t, pCenter))
+            {
+               System.Windows.Point p1 = new System.Windows.Point(XCenter - offset, YCenter - offset);
+               System.Windows.Point p2 = new System.Windows.Point(XCenter + offset, YCenter - offset);
+               System.Windows.Point p3 = new System.Windows.Point(XCenter - offset, YCenter + offset);
+               System.Windows.Point p4 = new System.Windows.Point(XCenter + offset, YCenter + offset);
+               bool isP1In = IsPointInPolygon(t, p1);
+               bool isP2In = IsPointInPolygon(t, p2);
+               bool isP3In = IsPointInPolygon(t, p3);
+               bool isP4In = IsPointInPolygon(t, p4);
+               if (false == isP1In && false == isP2In)  // try to adjust location so that four corners are inside the region
+               {
+                  YCenter += offset;
+               }
+               else if (false == isP3In && false == isP4In)
+               {
+                  YCenter -= offset;
+               }
+               else if (false == isP1In && false == isP3In)
+               {
+                  XCenter += offset;
+               }
+               else if (false == isP2In && false == isP4In)
+               {
+                  XCenter -= offset;
+               }
+               else if (false == isP1In && true == isP2In)
+               {
+                  XCenter += offset;
+               }
+               else if (true == isP1In && false == isP2In)
+               {
+                  XCenter -= offset;
+               }
+               else if (true == isP3In && false == isP4In)
+               {
+                  YCenter -= offset;
+               }
+               else if (false == isP3In && true == isP4In)
+               {
+                  YCenter -= offset;
+               }
+               System.Windows.Point p5 = new System.Windows.Point(XCenter - offset, YCenter - offset); // do a final check to make sure point is in region
+               if (true == IsPointInPolygon(t, p5))
+                  return new MapPoint(p5.X, p5.Y);
+            }
+         }
+         Logger.Log(LogEnum.LE_ERROR, "GetRandomPoint(): Cannot find a random point in t.Name=" + t.Name + " rect=" + rect.ToString());
+         return new MapPoint(t.CenterPoint.X - offset, t.CenterPoint.Y - offset);
+      }
+      public static IMapPoint GetClosestPointInTerritory(ITerritory t, Point pCenter, double offset )
+      {
+         if (0 == t.Points.Count)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GetRandomPoint(): t.Points.Count=0 for t.Name=" + t.Name);
+            return t.CenterPoint;
+         }
+         //---------------------------------
+         int count = 20;
+         while (0 < --count) // offset is the difference between MapItem location on screen and the center of the  MapItem.
+         {
+            double XCenter = pCenter.X + offset; // Get a random point in the bounding box
+            double YCenter = pCenter.Y + offset;
+            if (true == IsPointInPolygon(t, pCenter))
+            {
+               System.Windows.Point p1 = new System.Windows.Point(XCenter - offset, YCenter - offset);
+               System.Windows.Point p2 = new System.Windows.Point(XCenter + offset, YCenter - offset);
+               System.Windows.Point p3 = new System.Windows.Point(XCenter - offset, YCenter + offset);
+               System.Windows.Point p4 = new System.Windows.Point(XCenter + offset, YCenter + offset);
+               bool isP1In = IsPointInPolygon(t, p1);
+               bool isP2In = IsPointInPolygon(t, p2);
+               bool isP3In = IsPointInPolygon(t, p3);
+               bool isP4In = IsPointInPolygon(t, p4);
+               if (false == isP1In && false == isP2In)  // try to adjust location so that four corners are inside the region
+               {
+                  YCenter += offset;
+               }
+               else if (false == isP3In && false == isP4In)
+               {
+                  YCenter -= offset;
+               }
+               else if (false == isP1In && false == isP3In)
+               {
+                  XCenter += offset;
+               }
+               else if (false == isP2In && false == isP4In)
+               {
+                  XCenter -= offset;
+               }
+               else if (false == isP1In && true == isP2In)
+               {
+                  XCenter += offset;
+               }
+               else if (true == isP1In && false == isP2In)
+               {
+                  XCenter -= offset;
+               }
+               else if (true == isP3In && false == isP4In)
+               {
+                  YCenter -= offset;
+               }
+               else if (false == isP3In && true == isP4In)
+               {
+                  YCenter -= offset;
+               }
+               System.Windows.Point p5 = new System.Windows.Point(XCenter - offset, YCenter - offset); // do a final check to make sure point is in region
+               if (true == IsPointInPolygon(t, p5))
+                  return new MapPoint(p5.X, p5.Y);
+            }
+         }
+         Logger.Log(LogEnum.LE_ERROR, "GetRandomPoint(): Cannot find a random point in t.Name=" + t.Name );
+         return new MapPoint(t.CenterPoint.X - offset, t.CenterPoint.Y - offset);
+
+      }
+      public static bool IsPointInPolygon(ITerritory t, Point point)
+      {
+         if (0 == t.Points.Count)
+         {
+            //Logger.Log(LogEnum.LE_ERROR, "GetClosestPoint(): t.Points.Count=0 for t.Name=" + t.Name);
+            return false;
+         }
+         int intersections = 0;
+         int count = t.Points.Count;
+         for (int i = 0; i < count; i++)
+         {
+            Point vertex1 = new Point(t.Points[i].X, t.Points[i].Y);
+            Point vertex2 = new Point(t.Points[(i + 1) % count].X, t.Points[(i + 1) % count].Y);
+            if ((point.Y > vertex1.Y) != (point.Y > vertex2.Y)) // Check if the ray intersects the edge
+            {
+               double slope = (vertex2.X - vertex1.X) / (vertex2.Y - vertex1.Y);
+               double intersectX = vertex1.X + slope * (point.Y - vertex1.Y);
+               if (point.X < intersectX)
+                  intersections++;
+            }
+         }
+         return (intersections % 2) != 0; // Odd number of intersections means the point is inside
+      }
+      public static IMapPoint GetClosestPoint(ITerritory t, Point p, double offset)
+      {
+         if (0 == t.Points.Count)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GetClosestPoint(): t.Points.Count=0 for t.Name=" + t.Name);
+            return new MapPoint(t.CenterPoint.X - offset, t.CenterPoint.Y - offset);
+         }
+         //-----------------------------------
+         PointCollection points = new PointCollection();
+         foreach (IMapPoint mp1 in t.Points)
+            points.Add(new System.Windows.Point(mp1.X, mp1.Y));
+         //-----------------------------------
+         double minDistance = double.MaxValue;
+         Point minClosestPoint = new Point(0, 0);
+         for (int i = 0; i < t.Points.Count; i++)
+         {
+            Point start = points[i];
+            Point end = points[(i + 1) % points.Count];           // Loop back to the first point
+            Point closestPoint;
+            double distance = DistanceToSegment(p, start, end, out closestPoint);   // Calculate distance to the edge
+            if( distance < minDistance )
+            {
+               minDistance = distance;
+               minClosestPoint = closestPoint;
+            }
+         }
+         return new MapPoint(minClosestPoint.X - offset, minClosestPoint.Y - offset);
+      }
+      private static double DistanceToSegment(Point p, Point a, Point b, out Point closestPoint)
+      {
+         double dx = b.X - a.X;
+         double dy = b.Y - a.Y;
+         if (dx == 0 && dy == 0) // a and b are the same point
+            return Math.Sqrt(Math.Pow(p.X - a.X, 2) + Math.Pow(p.Y - a.Y, 2));        
+         double t = ((p.X - a.X) * dx + (p.Y - a.Y) * dy) / (dx * dx + dy * dy); // Project point p onto the line segment [a, b], clamping to the segment
+         t = Math.Max(0, Math.Min(1, t));
+         Point closest = new Point(a.X + t * dx, a.Y + t * dy); // Find the closest point on the segment                                 
+         return Math.Sqrt(Math.Pow(p.X - closest.X, 2) + Math.Pow(p.Y - closest.Y, 2)); // Return the distance from p to the closest point
+      }
+      public static int GetSmokeCount(IGameInstance gi, char sector, char range)
+      {
+         int numSmokeMarkers = 0;
+         IStack? stack = gi.BattleStacks.Find(gi.Home);
+         if (null == stack)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GetSmokeCount():  stack=null for " + gi.Home.Name);
+            return -10000;
+         }
+         foreach (IMapItem smoke in stack.MapItems)
+         {
+            if (true == smoke.Name.Contains("Smoke"))
+               numSmokeMarkers++;
+         }
+         stack = gi.BattleStacks.Find("B" + sector + "C");
+         if (null != stack)
+         {
+            foreach (IMapItem smoke in stack.MapItems)
+            {
+               if (true == smoke.Name.Contains("Smoke"))
+                  numSmokeMarkers++;
+            }
+         }
+         if (('M' == range) || ('L' == range))
+         {
+            stack = gi.BattleStacks.Find("B" + sector + "M");
+            if (null != stack)
+            {
+               foreach (IMapItem smoke in stack.MapItems)
+               {
+                  if (true == smoke.Name.Contains("Smoke"))
+                     numSmokeMarkers++;
+               }
+            }
+         }
+         if ('L' == range)
+         {
+            string tName = "B" + sector + "L";
+            stack = gi.BattleStacks.Find(tName);
+            if (null != stack)
+            {
+               foreach (IMapItem smoke in stack.MapItems)
+               {
+                  if (true == smoke.Name.Contains("Smoke"))
+                     numSmokeMarkers++;
+               }
+            }
+         }
+         return numSmokeMarkers;
+      }
+      public static List<String>? GetSpottedTerritories(IGameInstance gi, ICrewMember cm)
+      {
+         List<string> spottedTerritories = new List<string>();
+         //---------------------------------------------------
+         if( (true == cm.IsIncapacitated) || (true == cm.IsKilled)) // GetSpottedTerritories() - return nothing if incapacitated
+            return spottedTerritories;
+         //---------------------------------------------------
+         IAfterActionReport? lastReport = gi.Reports.GetLast();
+         if (null == lastReport)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GetSpottingResult(): lastReport=null");
+            return null;
+         }
+         TankCard card = new TankCard(lastReport.TankCardNum);
+         //---------------------------------------------------
+         bool isCloseRangeOnly = false;
+         if ((true == lastReport.Weather.Contains("Fog")) || (true == lastReport.Weather.Contains("Falling")))
+            isCloseRangeOnly = true;
+         switch (cm.Role)
+         {
+            case "Commander":
+               if ( (true == cm.IsButtonedUp) && (false == card.myIsVisionCupola) ) // any one sector
+               {
+                  foreach (IStack stack in gi.BattleStacks) // only view one sector already chosen in battle prep
+                  {
+                     foreach (IMapItem mi in stack.MapItems)
+                     {
+                        if (true == mi.Name.Contains("CommanderSpot"))
+                        {
+                           string tName = mi.TerritoryCurrent.Name;
+                           if (6 != tName.Length)
+                           {
+                              Logger.Log(LogEnum.LE_ERROR, "GetSpottedTerritories(): tName != 6 for " + mi.TerritoryCurrent.Name);
+                              return null;
+                           }
+                           char sector = tName[tName.Length - 1];
+                           spottedTerritories.Add("B" + sector + "C");
+                           if (false == isCloseRangeOnly)
+                           {
+                              spottedTerritories.Add("B" + sector + "M");
+                              spottedTerritories.Add("B" + sector + "L");
+                           }
+                        }
+                     }
+                  }
+               }
+               else // all sectors
+               {
+                  if ((14 == lastReport.TankCardNum) || (16 == lastReport.TankCardNum)) // split hatch with vision cupola - split hatch excludes left rear
+                  {
+                     switch (gi.Sherman.RotationHull)
+                     {
+                        case 0:
+                           spottedTerritories.Add("B1C");
+                           spottedTerritories.Add("B2C");
+                           spottedTerritories.Add("B4C");
+                           spottedTerritories.Add("B6C");
+                           spottedTerritories.Add("B9C");
+                           if (false == isCloseRangeOnly)
+                           {
+                              spottedTerritories.Add("B1M");
+                              spottedTerritories.Add("B2M");
+                              spottedTerritories.Add("B4M");
+                              spottedTerritories.Add("B6M");
+                              spottedTerritories.Add("B9M");
+                              spottedTerritories.Add("B1L");
+                              spottedTerritories.Add("B2L");
+                              spottedTerritories.Add("B4L");
+                              spottedTerritories.Add("B6L");
+                              spottedTerritories.Add("B9L");
+                           }
+                           break;
+                        case 60:
+                           spottedTerritories.Add("B1C");
+                           spottedTerritories.Add("B2C");
+                           spottedTerritories.Add("B3C");
+                           spottedTerritories.Add("B6C");
+                           spottedTerritories.Add("B9C");
+                           if (false == isCloseRangeOnly)
+                           {
+                              spottedTerritories.Add("B1M");
+                              spottedTerritories.Add("B2M");
+                              spottedTerritories.Add("B3M");
+                              spottedTerritories.Add("B6M");
+                              spottedTerritories.Add("B9M");
+                              spottedTerritories.Add("B1L");
+                              spottedTerritories.Add("B2L");
+                              spottedTerritories.Add("B3L");
+                              spottedTerritories.Add("B6L");
+                              spottedTerritories.Add("B9L");
+                           }
+                           break;
+                        case 120:
+                           spottedTerritories.Add("B1C");
+                           spottedTerritories.Add("B2C");
+                           spottedTerritories.Add("B3C");
+                           spottedTerritories.Add("B4C");
+                           spottedTerritories.Add("B9C");
+                           if (false == isCloseRangeOnly)
+                           {
+                              spottedTerritories.Add("B1M");
+                              spottedTerritories.Add("B2M");
+                              spottedTerritories.Add("B3M");
+                              spottedTerritories.Add("B4M");
+                              spottedTerritories.Add("B9M");
+                              spottedTerritories.Add("B1L");
+                              spottedTerritories.Add("B2L");
+                              spottedTerritories.Add("B3L");
+                              spottedTerritories.Add("B4L");
+                              spottedTerritories.Add("B9L");
+                           }
+                           break;
+                        case 180:
+                           spottedTerritories.Add("B1C");
+                           spottedTerritories.Add("B2C");
+                           spottedTerritories.Add("B3C");
+                           spottedTerritories.Add("B4C");
+                           spottedTerritories.Add("B6C");
+                           if (false == isCloseRangeOnly)
+                           {
+                              spottedTerritories.Add("B1M");
+                              spottedTerritories.Add("B2M");
+                              spottedTerritories.Add("B3M");
+                              spottedTerritories.Add("B4M");
+                              spottedTerritories.Add("B6M");
+                              spottedTerritories.Add("B1L");
+                              spottedTerritories.Add("B2L");
+                              spottedTerritories.Add("B3L");
+                              spottedTerritories.Add("B4L");
+                              spottedTerritories.Add("B6L");
+                           }
+                           break;
+                        case 240:
+                           spottedTerritories.Add("B2C");
+                           spottedTerritories.Add("B3C");
+                           spottedTerritories.Add("B4C");
+                           spottedTerritories.Add("B6C");
+                           spottedTerritories.Add("B9C");
+                           if (false == isCloseRangeOnly)
+                           {
+                              spottedTerritories.Add("B2M");
+                              spottedTerritories.Add("B3M");
+                              spottedTerritories.Add("B4M");
+                              spottedTerritories.Add("B6M");
+                              spottedTerritories.Add("B9M");
+                              spottedTerritories.Add("B2L");
+                              spottedTerritories.Add("B3L");
+                              spottedTerritories.Add("B4L");
+                              spottedTerritories.Add("B6L");
+                              spottedTerritories.Add("B9L");
+                           }
+                           break;
+                        case 300:
+                           spottedTerritories.Add("B1C");
+                           spottedTerritories.Add("B3C");
+                           spottedTerritories.Add("B4C");
+                           spottedTerritories.Add("B6C");
+                           spottedTerritories.Add("B9C");
+                           if (false == isCloseRangeOnly)
+                           {
+                              spottedTerritories.Add("B1M");
+                              spottedTerritories.Add("B3M");
+                              spottedTerritories.Add("B4M");
+                              spottedTerritories.Add("B6M");
+                              spottedTerritories.Add("B9M");
+                              spottedTerritories.Add("B1L");
+                              spottedTerritories.Add("B3L");
+                              spottedTerritories.Add("B4L");
+                              spottedTerritories.Add("B6L");
+                              spottedTerritories.Add("B9L");
+                           }
+                           break;
+                        default:
+                           Logger.Log(LogEnum.LE_ERROR, "GetSpottedTerritories(): 2-reached default for RotationHull=" + gi.Sherman.RotationHull.ToString());
+                           return null;
+                     }
+
+                  }
+                  else // split hatch excludes left rear
+                  {
+                     GetAllTerritories(ref spottedTerritories, isCloseRangeOnly);
+                  }
+               }
+               break;
+            case "Gunner":
+               double rotation = gi.Sherman.RotationHull + gi.Sherman.RotationTurret;
+               if (359 < rotation)
+                  rotation -= 360.0;
+               switch (rotation)
+               {
+                  case 0:
+                     spottedTerritories.Add("B6C");
+                     if (false == isCloseRangeOnly)
+                     {
+                        spottedTerritories.Add("B6M");
+                        spottedTerritories.Add("B6L");
+                     }
+                     break;
+                  case 60:
+                     spottedTerritories.Add("B9C");
+                     if (false == isCloseRangeOnly)
+                     {
+                        spottedTerritories.Add("B9M");
+                        spottedTerritories.Add("B9L");
+                     }
+                     break;
+                  case 120:
+                     spottedTerritories.Add("B1C");
+                     if (false == isCloseRangeOnly)
+                     {
+                        spottedTerritories.Add("B1M");
+                        spottedTerritories.Add("B1L");
+                     }
+                     break;
+                  case 180:
+                     spottedTerritories.Add("B2C");
+                     if (false == isCloseRangeOnly)
+                     {
+                        spottedTerritories.Add("B2M");
+                        spottedTerritories.Add("B2L");
+                     }
+                     break;
+                  case 240:
+                     spottedTerritories.Add("B3C");
+                     if (false == isCloseRangeOnly)
+                     {
+                        spottedTerritories.Add("B3M");
+                        spottedTerritories.Add("B3L");
+                     }
+                     break;
+                  case 300:
+                     spottedTerritories.Add("B4C");
+                     if (false == isCloseRangeOnly)
+                     {
+                        spottedTerritories.Add("B4M");
+                        spottedTerritories.Add("B4L");
+                     }
+                     break;
+                  default:
+                     Logger.Log(LogEnum.LE_ERROR, "GetSpottedTerritories(): 1-reached default for rotation=" + rotation.ToString());
+                     return null;
+               }
+               break;
+            case "Loader":
+               if(true == cm.IsButtonedUp)
+               {
+                  foreach (IStack stack in gi.BattleStacks) // any one sector already selected
+                  {
+                     foreach (IMapItem mi in stack.MapItems)
+                     {
+                        if (true == mi.Name.Contains("LoaderSpot"))
+                        {
+                           string tName = mi.TerritoryCurrent.Name;
+                           if (5 != tName.Length)
+                           {
+                              Logger.Log(LogEnum.LE_ERROR, "GetSpottedTerritories(): tName != 5 for " + mi.TerritoryCurrent.Name);
+                              return null;
+                           }
+                           char sector = tName[tName.Length - 1];
+                           spottedTerritories.Add("B" + sector + "C");
+                           if (false == isCloseRangeOnly)
+                           {
+                              spottedTerritories.Add("B" + sector + "M");
+                              spottedTerritories.Add("B" + sector + "L");
+                           }
+                        }
+                     }
+                  }
+               }
+               else
+               {
+                  GetAllTerritories(ref spottedTerritories, isCloseRangeOnly);
+               }
+               break;
+            case "Driver":
+            case "Assistant":
+               if (true == cm.IsButtonedUp) // Tank Front Only 
+               {
+                  switch (gi.Sherman.RotationHull)
+                  {
+                     case 0:
+                        spottedTerritories.Add("B6C");
+                        if (false == isCloseRangeOnly)
+                        {
+                           spottedTerritories.Add("B6M");
+                           spottedTerritories.Add("B6L");
+                        }
+                        break;
+                     case 60:
+                        spottedTerritories.Add("B9C");
+                        if (false == isCloseRangeOnly)
+                        {
+                           spottedTerritories.Add("B9M");
+                           spottedTerritories.Add("B9L");
+                        }
+                        break;
+                     case 120:
+                        spottedTerritories.Add("B1C");
+                        if (false == isCloseRangeOnly)
+                        {
+                           spottedTerritories.Add("B1M");
+                           spottedTerritories.Add("B1L");
+                        }
+                        break;
+                     case 180:
+                        spottedTerritories.Add("B2C");
+                        if (false == isCloseRangeOnly)
+                        {
+                           spottedTerritories.Add("B2M");
+                           spottedTerritories.Add("B2L");
+                        }
+                        break;
+                     case 240:
+                        spottedTerritories.Add("B3C");
+                        if (false == isCloseRangeOnly)
+                        {
+                           spottedTerritories.Add("B3M");
+                           spottedTerritories.Add("B3L");
+                        }
+                        break;
+                     case 300:
+                        spottedTerritories.Add("B4C");
+                        if (false == isCloseRangeOnly)
+                        {
+                           spottedTerritories.Add("B4M");
+                           spottedTerritories.Add("B4L");
+                        }
+                        break;
+                     default:
+                        Logger.Log(LogEnum.LE_ERROR, "GetSpottedTerritories(): 2-reached default for RotationHull=" + gi.Sherman.RotationHull.ToString());
+                        return null;
+                  }
+               }
+               else // all sectors except rear
+               {
+                  switch (gi.Sherman.RotationHull)
+                  {
+                     case 0:
+                        if (false == isCloseRangeOnly)
+                        {
+                           spottedTerritories.Add("B1M");
+                           spottedTerritories.Add("B1L");
+                           spottedTerritories.Add("B3M");
+                           spottedTerritories.Add("B3L");
+                           spottedTerritories.Add("B4M");
+                           spottedTerritories.Add("B4L");
+                           spottedTerritories.Add("B6M");
+                           spottedTerritories.Add("B6L");
+                           spottedTerritories.Add("B9M");
+                           spottedTerritories.Add("B9L");
+                        }
+                        spottedTerritories.Add("B1C");
+                        spottedTerritories.Add("B3C");
+                        spottedTerritories.Add("B4C");
+                        spottedTerritories.Add("B6C");
+                        spottedTerritories.Add("B9C");
+                        break;
+                     case 60:
+                        if (false == isCloseRangeOnly)
+                        {
+                           spottedTerritories.Add("B1M");
+                           spottedTerritories.Add("B1L");
+                           spottedTerritories.Add("B2M");
+                           spottedTerritories.Add("B2L");
+                           spottedTerritories.Add("B4M");
+                           spottedTerritories.Add("B4L");
+                           spottedTerritories.Add("B6M");
+                           spottedTerritories.Add("B6L");
+                           spottedTerritories.Add("B9M");
+                           spottedTerritories.Add("B9L");
+                        }
+                        spottedTerritories.Add("B1C");
+                        spottedTerritories.Add("B2C");
+                        spottedTerritories.Add("B4C");
+                        spottedTerritories.Add("B6C");
+                        spottedTerritories.Add("B9C");
+                        break;
+                     case 120:
+                        if (false == isCloseRangeOnly)
+                        {
+                           spottedTerritories.Add("B1M");
+                           spottedTerritories.Add("B1L");
+                           spottedTerritories.Add("B2M");
+                           spottedTerritories.Add("B2L");
+                           spottedTerritories.Add("B3M");
+                           spottedTerritories.Add("B3L");
+                           spottedTerritories.Add("B6M");
+                           spottedTerritories.Add("B6L");
+                           spottedTerritories.Add("B9M");
+                           spottedTerritories.Add("B9L");
+                        }
+                        spottedTerritories.Add("B1C");
+                        spottedTerritories.Add("B2C");
+                        spottedTerritories.Add("B3C");
+                        spottedTerritories.Add("B6C");
+                        spottedTerritories.Add("B9C");
+                        break;
+                     case 180:
+                        if (false == isCloseRangeOnly)
+                        {
+                           spottedTerritories.Add("B1M");
+                           spottedTerritories.Add("B1L");
+                           spottedTerritories.Add("B2M");
+                           spottedTerritories.Add("B2L");
+                           spottedTerritories.Add("B3M");
+                           spottedTerritories.Add("B3L");
+                           spottedTerritories.Add("B4M");
+                           spottedTerritories.Add("B4L");
+                           spottedTerritories.Add("B9M");
+                           spottedTerritories.Add("B9L");
+                        }
+                        spottedTerritories.Add("B1C");
+                        spottedTerritories.Add("B2C");
+                        spottedTerritories.Add("B3C");
+                        spottedTerritories.Add("B4C");
+                        spottedTerritories.Add("B9C");
+                        break;
+                     case 240:
+                        if (false == isCloseRangeOnly)
+                        {
+                           spottedTerritories.Add("B1M");
+                           spottedTerritories.Add("B1L");
+                           spottedTerritories.Add("B2M");
+                           spottedTerritories.Add("B2L");
+                           spottedTerritories.Add("B3M");
+                           spottedTerritories.Add("B3L");
+                           spottedTerritories.Add("B4M");
+                           spottedTerritories.Add("B4L");
+                           spottedTerritories.Add("B6M");
+                           spottedTerritories.Add("B6L");
+                        }
+                        spottedTerritories.Add("B1C");
+                        spottedTerritories.Add("B2C");
+                        spottedTerritories.Add("B3C");
+                        spottedTerritories.Add("B4C");
+                        spottedTerritories.Add("B6C");
+                        break;
+                     case 300:
+                        if (false == isCloseRangeOnly)
+                        {
+                           spottedTerritories.Add("B2M");
+                           spottedTerritories.Add("B2L");
+                           spottedTerritories.Add("B3M");
+                           spottedTerritories.Add("B3L");
+                           spottedTerritories.Add("B4M");
+                           spottedTerritories.Add("B4L");
+                           spottedTerritories.Add("B6M");
+                           spottedTerritories.Add("B6L");
+                           spottedTerritories.Add("B9M");
+                           spottedTerritories.Add("B9L");
+                        }
+                        spottedTerritories.Add("B2C");
+                        spottedTerritories.Add("B3C");
+                        spottedTerritories.Add("B4C");
+                        spottedTerritories.Add("B6C");
+                        spottedTerritories.Add("B9C");
+                        break;
+                     default:
+                        Logger.Log(LogEnum.LE_ERROR, "GetSpottedTerritories(): 3-reached default for RotationHull=" + gi.Sherman.RotationHull.ToString());
+                        return null;
+                  }
+               }
+               break;
+            default:
+               Logger.Log(LogEnum.LE_ERROR, "GetSpottedTerritories(): reached default for cm=" + cm.Name);
+               return null;
+         }
+         //------------------------------------
+         List<string> returnedTerritories = new List<string>(); // filter list to only unspotted/spotted enemy units
+         foreach ( string tName in spottedTerritories )
+         {
+            int count = tName.Length;
+            if (3 != count)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "GetSpottedTerritories(): length not 3 for tName=" + tName);
+               return null;
+            }
+            IStack? stack = gi.BattleStacks.Find(tName);
+            if (null != stack)
+            {
+               foreach (IMapItem mi in stack.MapItems)
+               {
+                  if ((true == mi.Name.Contains("ATG")) || (true == mi.Name.Contains("TANK")) || (true == mi.Name.Contains("SPG")))
+                  {
+                     if ( (EnumSpottingResult.IDENTIFIED != mi.Spotting) && (EnumSpottingResult.HIDDEN != mi.Spotting))
+                     {
+                        returnedTerritories.Add(tName); // only want key off one MapItem in each territory
+                        break;
+                     }
+                  }
+               }
+            }
+         }
+         return returnedTerritories;
+      }
+      private static void GetAllTerritories(ref List<string> spottedTerritories, bool isCloseRangeOnly)
+      {
+         spottedTerritories.Add("B1C");
+         spottedTerritories.Add("B2C");
+         spottedTerritories.Add("B3C");
+         spottedTerritories.Add("B4C");
+         spottedTerritories.Add("B6C");
+         spottedTerritories.Add("B9C");
+         if (false == isCloseRangeOnly)
+         {
+            spottedTerritories.Add("B1M");
+            spottedTerritories.Add("B2M");
+            spottedTerritories.Add("B3M");
+            spottedTerritories.Add("B4M");
+            spottedTerritories.Add("B6M");
+            spottedTerritories.Add("B9M");
+            spottedTerritories.Add("B1L");
+            spottedTerritories.Add("B2L");
+            spottedTerritories.Add("B3L");
+            spottedTerritories.Add("B4L");
+            spottedTerritories.Add("B6L");
+            spottedTerritories.Add("B9L");
+         }
+      }
+      public static string GetMainGunSector(IGameInstance gi)
+      {
+         double originalRotation = gi.Sherman.RotationHull + gi.Sherman.RotationTurret;
+         double rotation = originalRotation;
+         if (rotation < 0)
+            rotation += 360.0;
+         if( 359 < rotation )
+            rotation -= 360.0;
+         switch( rotation )
+         {
+            case 0.0:
+               return "6";
+            case 60.0:
+               return "9";
+            case 120.0:
+               return "1";
+            case 180.0:
+               return "2";
+            case 240.0:
+               return "3";
+            case 300.0:
+               return "4";
+            default:
+               Logger.Log(LogEnum.LE_ERROR, "GetMainGunSector() reached default rotation=" + rotation.ToString() + " or=" + originalRotation.ToString() + " hr=" + gi.Sherman.RotationHull.ToString() + " tr=" + gi.Sherman.RotationTurret.ToString());
+               return "ERROR";
+         }
+      }
+      public static bool IsEnemyUnitInSector(IGameInstance gi, string sector, bool isFriendlyAdvance = false)
+      {
+         string tName = "B" + sector + "C";
+         IStack? stack = gi.BattleStacks.Find(tName);
+         if (null != stack)
+         {
+            foreach (IMapItem mi in stack.MapItems)
+            {
+               if (true == mi.IsEnemyUnit())
+               {
+                  if (true == isFriendlyAdvance)
+                     return true;
+                  else if ((false == mi.IsVehicle()) && (false == mi.IsAntiTankGun()))
+                     return true;
+                  else if ((EnumSpottingResult.SPOTTED == mi.Spotting) || (EnumSpottingResult.IDENTIFIED == mi.Spotting))
+                     return true;
+               }
+            }
+         }
+         //--------------------------------------
+         tName = "B" + sector + "M";
+         stack = gi.BattleStacks.Find(tName);
+         if (null != stack)
+         {
+            foreach (IMapItem mi in stack.MapItems)
+            {
+               if (true == mi.IsEnemyUnit())
+               {
+                  if (true == isFriendlyAdvance)
+                     return true;
+                  else if ((false == mi.IsVehicle()) && (false == mi.IsAntiTankGun()))
+                     return true;
+                  else if ((EnumSpottingResult.SPOTTED == mi.Spotting) || (EnumSpottingResult.IDENTIFIED == mi.Spotting))
+                     return true;
+               }
+            }
+         }
+         //--------------------------------------
+         tName = "B" + sector + "L";
+         stack = gi.BattleStacks.Find(tName);
+         if (null != stack)
+         {
+            foreach (IMapItem mi in stack.MapItems)
+            {
+               if (true == mi.IsEnemyUnit())
+               {
+                  if (true == isFriendlyAdvance)
+                     return true;
+                  else if ((false == mi.IsVehicle()) && (false == mi.IsAntiTankGun()))
+                     return true;
+                  else if ((EnumSpottingResult.SPOTTED == mi.Spotting) || (EnumSpottingResult.IDENTIFIED == mi.Spotting))
+                     return true;
+               }
+            }
+         }
+         return false;
+      }
+      //---------------------------------------------------------------
+      public Territory()
+      {
+      }
+      //public Territory(string name) { Name = name; }
+      public override string ToString()
+      {
+         return Name + ":" + Type;
+      }
+      public ITerritory Find(List<ITerritory> territories, string name)
+      {
+         IEnumerable<ITerritory> results = from territory in territories
+                                           where territory.Name == name
+                                           select territory;
+         if (0 < results.Count())
+            return results.First();
+         else
+            throw new Exception("Territory.Find(): Unknown Territory=" + name);
+      }
+      public static IMapPath? GetBestPath(ITerritories territories, ITerritory startT, ITerritory endT, int moveFactor)
+      {
+         IMapPaths paths = new MapPaths();
+         if (moveFactor < 1)
+            return new MapPath(endT.Name);
+         IMapPaths adjPaths = new MapPaths();
+         if (startT.Name == endT.Name)
+         {
+            IMapPath path = new MapPath(endT.Name);
+            path.Territories.Add(endT);
+            paths.Add(path);
+            return path;
+         }
+         else
+         {
+            foreach (string adjTerritory in startT.Adjacents) // Setup a path map for each adjacent territory
+            {
+               IMapPath path = new MapPath(adjTerritory);
+               ITerritory? adj = territories.Find(adjTerritory);
+               if (adj == null)
+               {
+                  Logger.Log(LogEnum.LE_VIEW_MIM, "GetBestPath(): adj=null");
+                  return null;
+               }
+               path.Territories.Add(adj);
+               path.Metric = GetDistance(adj, endT);
+               paths.Add(path);
+               adjPaths.Add(path);
+               if (adjTerritory == endT.Name)  // If the adjacent territory is the end territory, no need to continue.  It is the best path.
+               {
+                  Logger.Log(LogEnum.LE_VIEW_MIM, "GetBestPath(): Adjacent Move moving from " + startT.Name + " to " + endT.Name);
+                  return path;
+               }
+            }
+            // For each IMapPath object, determine the next Territory that  moves the object closer to the end goal.
+            bool isEndTerritoryReached = false;
+            for (int i = 1; i < moveFactor; ++i)
+            {
+               //Console.WriteLine("---------------->>MF={0}<<-------------------------", i.ToString());
+               // Perform no more movement if end territory is reached by one of the paths.
+               if (true == isEndTerritoryReached)
+                  break;
+               // Iterate through the IMapPath objects trying to find the lowest metric score for each adjacent territory.
+               foreach (IMapPath path in paths)
+               {
+                  //Console.WriteLine("==> Adding to {0} ", path.ToString());
+                  if (path.Metric == double.MaxValue)
+                     continue;
+                  // Set a threshold for the lowest metric score.
+                  // Set it to a very high number because the first interation of 
+                  // the following loop determines what metric score to bcontinue.
+                  // If a metric score is less than this number, it is set as
+                  // the new threshold, i.e. trying to find the minimum metric score.
+                  double lowestMetricScore = double.MaxValue; // Set to high number
+                  ITerritory? lowestTerritory = null;
+                  // A Territory is better if the distance between the center
+                  // point of the territory and all other alternatives is 
+                  // the smallest.
+                  ITerritory adj1 = path.Territories[path.Territories.Count - 1];
+                  foreach (string alternative in adj1.Adjacents)
+                  {
+                     //Console.WriteLine("     ==> Trying {0}", alternative);
+                     ITerritory? adj2 = territories.Find(alternative);
+                     if (adj2 == null)
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "GetBestPath(): adj2=null for alternative=" + alternative);
+                        continue;
+                     }
+                     // If the end territory is reached, no need to continue
+                     // looking at alternates.
+                     if (adj2.Name == endT.Name)
+                     {
+                        //Console.WriteLine("     ==> ==>Reached End Territory {0} for PATH={1}", adj2.ToString(), path.ToString());
+                        // Calculate the metric between this adjacent territory and
+                        // the end territory.  If it results in a lower path metric,
+                        // set it at the low water mark.
+                        double altDistanceMetric = GetDistance(adj2, endT);
+                        altDistanceMetric += path.Metric;
+                        if (altDistanceMetric <= lowestMetricScore)
+                        {
+                           lowestMetricScore = altDistanceMetric;
+                           lowestTerritory = adj2;
+                        }
+                        isEndTerritoryReached = true;
+                        break; // end reached so break out of loop
+                     }
+                     // Exclude alternative paths that fold back to start territory
+                     if (adj2.Name == startT.Name)
+                     {
+                        //Console.WriteLine("     ==> ==>{0} is start territory", adj2.Name);
+                        continue;
+                     }
+                     // Exclude alternative paths that fold back to other adjacent territories
+                     bool isMatchFound = false;
+                     foreach (IMapPath aPath in adjPaths)
+                     {
+                        if (alternative == aPath.Name)
+                        {
+                           isMatchFound = true;
+                           break;
+                        }
+                     }
+                     if (true == isMatchFound)
+                     {
+                        //Console.WriteLine("     ==> ==> {0} is already adjacent {1}", adj2.ToString(), path.ToString());
+                        continue;
+                     }
+                     // Exclude alternative paths that fold back on themselves, i.e.
+                     // do not choose a Territory that is already on this MapPath.
+                     IEnumerable<ITerritory> results1 = from territory in path.Territories where territory.Name == adj2.Name select territory;
+                     if (0 < results1.Count())
+                     {
+                        //Console.WriteLine("     ==> ==> {0} is already in {1}", adj2.ToString(), path.ToString());
+                        continue;
+                     }
+                     // Calculate the metric between this adjacent territory and
+                     // the end territory.  If it results in a lower path metric,
+                     // set it at the low water mark.
+                     double altDistanceMetric2 = GetDistance(adj2, endT);
+                     altDistanceMetric2 += path.Metric;
+                     if (altDistanceMetric2 <= lowestMetricScore)
+                     {
+                        lowestMetricScore = altDistanceMetric2;
+                        lowestTerritory = adj2;
+                     }
+                  } // end foreach (String alternative in adj1.Adjacents)
+                    // Check if a territory was added to Map Path for this instance.
+                    // If not, then this map path needs to be deleted.
+                  if (double.MaxValue == lowestMetricScore)
+                  {
+                     //Console.WriteLine("     ==> Skipping {0} at Max Value", path.ToString());
+                     path.Metric = double.MaxValue;
+                     continue;
+                  }
+                  else // Add the Territory with the lowest Metric to the path
+                  {
+                     if (null != lowestTerritory)
+                     {
+                        path.Territories.Add(lowestTerritory);
+                        path.Metric = lowestMetricScore;
+                     }
+                     //Console.WriteLine("     ==> Appending to {0}", path.ToString());
+                  }
+               } // end foreach (IMapPath path in paths)
+            } // end for (int i = 0; i < moveFactor; ++i)
+         } // end else startT is not equal to endT
+         //--------------------------------------------
+         // Determine from all paths which is the lowest metric
+         int i1 = 1;
+         int count = paths.Count;
+         if (count < 1)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GetBestPath(): did not reach " + startT.Name + " from " + endT.Name);
+            return null;
+         }
+         IMapPath? bestPath = paths[0];
+         if (bestPath == null)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GetBestPath(): bestpath= null & did not reach " + startT.Name + " from " + endT.Name);
+            return null;
+         }
+         foreach (IMapPath path in paths)
+         {
+            //Console.WriteLine("{0}.) {1}", i1.ToString(), path.ToString());
+            if (path.Metric < bestPath.Metric)
+               bestPath = path;
+            ++i1;
+         }
+         Logger.Log(LogEnum.LE_VIEW_MIM, "GetBestPath(): moving from " + startT.Name + " to " + endT.Name + " using " + bestPath.ToString());
+         return bestPath;
+      }
+      //------------------------------------------------------------------------------
+      static private double GetDistance(ITerritory startT, ITerritory endT)
+      {
+         Point startPoint = new Point(startT.CenterPoint.X, startT.CenterPoint.Y);
+         Point endPoint = new Point(endT.CenterPoint.X, endT.CenterPoint.Y);
+         double xDelta = endPoint.X - startPoint.X;
+         double yDelta = endPoint.Y - startPoint.Y;
+         double distance = Math.Sqrt(xDelta * xDelta + yDelta * yDelta);
+         return distance;
+      }
+   }
+   //---------------------------------------------------------------
+   [Serializable]
+   public class Territories : IEnumerable, ITerritories
+   {
+      [NonSerialized] public const string FILENAME = "Territories.xml";
+      [NonSerialized] static public ITerritories theTerritories = new Territories();
+      private readonly ArrayList myList;
+      public Territories() { myList = new ArrayList(); }
+      public void Add(ITerritory t) { myList.Add(t); }
+      public void Insert(int index, ITerritory t) { myList.Insert(index, t); }
+      public int Count { get { return myList.Count; } }
+      public void Clear() { myList.Clear(); }
+      public bool Contains(ITerritory t)
+      {
+         foreach (object o in myList)
+         {
+            ITerritory t1 = (ITerritory)o;
+            if (Utilities.RemoveSpaces(t.Name) == Utilities.RemoveSpaces(t1.Name)) // match on name
+               return true;
+         }
+         return false;
+      }
+      public IEnumerator GetEnumerator() { return myList.GetEnumerator(); }
+      public int IndexOf(ITerritory t) { return myList.IndexOf(t); }
+      public void Remove(ITerritory t) { myList.Remove(t); }
+      public ITerritory? Find(string tName)
+      {
+         foreach (object o in myList)
+         {
+            ITerritory t = (ITerritory)o;
+            if (tName == Utilities.RemoveSpaces(t.Name))
+               return t;
+         }
+         return null;
+      }
+      public ITerritory? Find(string tName, string tType)
+      {
+         foreach (object o in myList)
+         {
+            ITerritory t = (ITerritory)o;
+            string territoryName = Utilities.RemoveSpaces(t.Name);
+            string territoryType = Utilities.RemoveSpaces(t.Type);
+            if ((tName == territoryName) && (tType == territoryType) )
+               return t;
+         }
+         return null;
+      }
+      public ITerritory? RemoveAt(int index)
+      {
+         ITerritory? t = myList[index] as ITerritory;
+         myList.RemoveAt(index);
+         return t;
+      }
+      public ITerritory? Remove(string tName)
+      {
+         foreach (object o in myList)
+         {
+            ITerritory t = (ITerritory)o;
+            if (tName == t.Name)
+            {
+               myList.Remove(t);
+               return t;
+            }
+         }
+         return null;
+      }
+      public ITerritory? this[int index]
+      {
+         get
+         {
+            ITerritory? t = myList[index] as ITerritory;
+            return t;
+         }
+         set { myList[index] = value; }
+      }
+      public override string ToString()
+      {
+         StringBuilder sb = new StringBuilder();
+         sb.Append("[ ");
+         foreach (object o in myList)
+         {
+            ITerritory t = (ITerritory)o;
+            sb.Append(t.Name);
+            sb.Append(" ");
+         }
+         sb.Append("]");
+         return sb.ToString();
+      }
+   }
+   //---------------------------------------------------------------
+   public static class TerritoryExtensions
+   {
+      public static ITerritory? Find(this IList<ITerritory> territories, string name)
+      {
+         try
+         {
+            IEnumerable<ITerritory> results = from territory in territories where territory.Name == name select territory;
+            if (0 < results.Count())
+               return results.First();
+         }
+         catch (Exception e)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MyTerritoryExtensions.Find(list, name): name=" + name + " e.Message=\n" + e.ToString()); ;
+         }
+         return null;
+      }
+      public static ITerritory? Find(this IList<ITerritory> territories, string name, string type)
+      {
+         try
+         {
+            IEnumerable<ITerritory> results = from territory in territories where (territory.Name == name && territory.Type == type) select territory;
+            if (0 < results.Count())
+               return results.First();
+         }
+         catch (Exception e)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MyTerritoryExtensions.Find(list, name): name=" + name + " type=" + type + " e.Message=\n" + e.ToString()); ;
+         }
+         return null;
+      }
+   }
+}
