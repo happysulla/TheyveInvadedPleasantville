@@ -1,0 +1,303 @@
+﻿<Table CellSpacing="2" BorderBrush="Black" BorderThickness="3">
+	<Table.Columns>
+		<TableColumn Width='60'/>
+		<TableColumn Width='60'/>
+		<TableColumn Width='60'/>
+		<TableColumn Width='60'/>
+		<TableColumn Width='60'/>
+		<TableColumn Width='60'/>
+	</Table.Columns>
+	<TableRowGroup>
+		<TableRow  FontSize='18' >
+			<TableCell ColumnSpan='6' BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><LineBreak/>COMBAT RESULTS TABLE<LineBreak/></Paragraph>
+			</TableCell>
+		</TableRow>
+	</TableRowGroup>
+	<TableRowGroup>
+		<TableRow  FontSize='12' >
+			<TableRow  FontSize='18' >
+				<TableCell ColumnSpan='6' BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+					<Paragraph>Combat Factor Difference</Paragraph>
+				</TableCell>
+			</TableRow>
+			<TableCell BorderBrush='Black' TextAlignment='Center' BorderThickness='1'>
+				<Paragraph><Bold><Run Text='Dice Roll'/></Bold></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center' BorderThickness='1'>
+				<Paragraph><Bold><LinkBreak/><Run Text='0'></Run></Bold></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center' BorderThickness='1'>
+				<Paragraph><Bold><LinkBreak/><Run Text='+1-3'></Run></Bold></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center' BorderThickness='1'>
+				<Paragraph><Bold><LinkBreak/><Run Text='+4-6'></Run></Bold></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center' BorderThickness='1'>
+				<Paragraph><Bold><LinkBreak/><Run Text='+7-9'></Run></Bold></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Bold><LinkBreak/><Run Text='+10 or more'></Run></Bold></Paragraph>
+			</TableCell>
+		</TableRow>
+	</TableRowGroup>
+	<TableRowGroup>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='2'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='D'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='AF'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='DF'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='D'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>	
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='3'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='D'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='D'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='D'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='AF'></Run></Paragraph>
+			</TableCell>			
+		</TableRow>	
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='4'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='D'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='D'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='AF'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>				
+		</TableRow>	
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='5'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='D'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='D'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='DF'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>				
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='6'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='DF'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='AF'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>			
+		</TableRow>		
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='7'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='AF'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>				
+		</TableRow>	
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='8'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='DF'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='DF'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='D'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>				
+		</TableRow>	
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='9'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='DF'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='DF'></Run></Paragraph>
+			</TableCell>			
+		</TableRow>	
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='10'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='D'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='D'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>			
+		</TableRow>	
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='11'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='D'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='AF'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='D'></Run></Paragraph>
+			</TableCell>				
+		</TableRow>	
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='12'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='DF'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='A'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
+				<Paragraph><Run Text='D'></Run></Paragraph>
+			</TableCell>			
+		</TableRow>			
+	</TableRowGroup>
+	<TableRowGroup>
+		<TableRow  FontSize='18' >
+			<TableCell ColumnSpan='6' TextAlignment='Left' BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Bold><Run Text='Results:  '></Run></Bold>
+					<InlineUIContainer>
+						<Button Content='r8.6' FontFamily='Courier New'  FontSize='8'></Button>
+					</InlineUIContainer>
+					<InlineUIContainer>
+						<Button Content='Alien Loss' FontFamily='Courier New'  FontSize='8'></Button>
+					</InlineUIContainer>
+					<InlineUIContainer>
+						<Button Content='Town Loss' FontFamily='Courier New'  FontSize='8'></Button>
+					</InlineUIContainer>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='18' >
+			<TableCell ColumnSpan='6' TextAlignment='Left' BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>A  = Attacker Wins</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='18' >
+			<TableCell ColumnSpan='6' TextAlignment='Left' BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>D  = Defender Wins</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='18' >
+			<TableCell ColumnSpan='6' TextAlignment='Left' BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>AF = Attacker Flees</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='18' >
+			<TableCell ColumnSpan='6' TextAlignment='Left' BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>DF = Defender Flees</Paragraph>
+			</TableCell>
+		</TableRow>
+	</TableRowGroup>
+	</Table>

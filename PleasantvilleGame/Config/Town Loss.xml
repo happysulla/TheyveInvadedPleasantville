@@ -1,0 +1,80 @@
+﻿<Table CellSpacing="2" BorderBrush="Black" BorderThickness="3">
+	<Table.Columns>
+		<TableColumn Width='120'/>
+		<TableColumn Width='120'/>
+	</Table.Columns>
+	<TableRowGroup>
+		<TableRow  FontSize='18' >
+			<TableCell ColumnSpan='2' TextAlignment='Center' BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<LineBreak/>
+					TOWN LOSS TABLE
+					<LineBreak/>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+	</TableRowGroup>
+	<TableRowGroup>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Bold>
+						<Run Text='Dice Roll'></Run>
+					</Bold>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Bold>
+						<Run Text='Result'></Run>
+					</Bold>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+	</TableRowGroup>
+	<TableRowGroup>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph><Run Text='2-4'></Run></Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Bold>
+						<Run Text='Killed!'/>
+					</Bold>
+					<Run Text=' Remove counter from play.'></Run>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='5-6'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Bold>
+						<Run Text='Knocked out'/>
+					</Bold>
+					<Run Text=' Townsperson remains unconscious until the end of the combat phase in the next turn. An unconscious piece may not be moved or taken-over by the Alien player. After the combat phase of the next turn, the counter is stunned.'></Run>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='7-12'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Bold>
+						<Run Text='Stunned'/>
+					</Bold>
+					<Run Text=' The counter must be treated one space in any direciton by the Town player. Until the end of the combat phase of the next turn, the counter may not be moved by either player, although it will move randomly if required. It may not be influenced by the Town player, but may be taken-over by the Alien player. After the combat phase of the next turn, the piece reverst to the full control of the Town player if it has not be taken over by the Alien player and if it was originally controlled by the Town player.'></Run>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
+	</TableRowGroup>
+</Table>

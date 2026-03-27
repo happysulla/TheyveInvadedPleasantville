@@ -8,7 +8,7 @@
 			<TableCell ColumnSpan='2' TextAlignment='Center' BorderBrush='Black' BorderThickness='1'>
 				<Paragraph>
 					<LineBreak/>
-					Modifiers to Conversation Attempts
+					Modifiers to Invluence Attempts
 					<LineBreak/>
 				</Paragraph>
 			</TableCell>
@@ -18,16 +18,12 @@
 		<TableRow  FontSize='12' >
 			<TableCell BorderBrush='Black' BorderThickness='1'>
 				<Paragraph><Bold>
-				<Run Text='Influence Factor of'></Run>
-				<LineBreak/>
-				<Run Text='Suspected Townsperson'></Run>
+				<Run Text='Description'></Run>
 				</Bold></Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' BorderThickness='1'>
 				<Paragraph><Bold>
-				<Run Text='Add to'></Run>
-				<LineBreak/>
-				<Run Text='Dice Roll'></Run>
+				<Run Text='Modifier'></Run>
 				</Bold></Paragraph>
 			</TableCell>
 		</TableRow>
@@ -35,15 +31,15 @@
 	<TableRowGroup>
 		<TableRow  FontSize='12' >
 			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph><Run Text='1-6'></Run></Paragraph>
+				<Paragraph><Run Text='Townsperson is skeptical'></Run></Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph><Run Text='0'></Run></Paragraph>
+				<Paragraph><Run Text='-1'></Run></Paragraph>
 			</TableCell>
 		</TableRow>
 	    <TableRow  FontSize='12' >
 			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph><Run Text='7-10'></Run></Paragraph>
+				<Paragraph><Run Text='Townsperson is wary'></Run></Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' BorderThickness='1'>
 				<Paragraph><Run Text='+1'></Run></Paragraph>
@@ -51,19 +47,11 @@
 		</TableRow>
 		<TableRow  FontSize='12' >
 			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph><Run Text='11-15'></Run></Paragraph>
+				<Paragraph><Run Text='Influence counter has implant as evidence'></Run></Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' BorderThickness='1'>
 				<Paragraph><Run Text='+2'></Run></Paragraph>
 			</TableCell>
 		</TableRow>
-		<TableRow  FontSize='12' >
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph><Run Text='16-20'></Run></Paragraph>
-			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph><Run Text='+3'></Run></Paragraph>
-			</TableCell>
-		</TableRow>		
 	</TableRowGroup>
 	</Table>

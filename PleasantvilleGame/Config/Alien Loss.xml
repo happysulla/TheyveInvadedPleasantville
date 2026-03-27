@@ -8,7 +8,7 @@
 			<TableCell ColumnSpan='2' TextAlignment='Center' BorderBrush='Black' BorderThickness='1'>
 				<Paragraph>
 					<LineBreak/>
-					Modifiers to Conversation Attempts
+					ALIEN LOSS TABLE
 					<LineBreak/>
 				</Paragraph>
 			</TableCell>
@@ -17,53 +17,66 @@
 	<TableRowGroup>
 		<TableRow  FontSize='12' >
 			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph><Bold>
-				<Run Text='Influence Factor of'></Run>
-				<LineBreak/>
-				<Run Text='Suspected Townsperson'></Run>
-				</Bold></Paragraph>
+				<Paragraph>
+					<Bold>
+						<Run Text='Dice Roll'></Run>
+					</Bold>
+				</Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph><Bold>
-				<Run Text='Add to'></Run>
-				<LineBreak/>
-				<Run Text='Dice Roll'></Run>
-				</Bold></Paragraph>
+				<Paragraph>
+					<Bold>
+						<Run Text='Result'></Run>
+					</Bold>
+				</Paragraph>
 			</TableCell>
 		</TableRow>
 	</TableRowGroup>
 	<TableRowGroup>
 		<TableRow  FontSize='12' >
 			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph><Run Text='1-6'></Run></Paragraph>
+				<Paragraph>
+					<Run Text='2-4'></Run>
+				</Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph><Run Text='0'></Run></Paragraph>
-			</TableCell>
-		</TableRow>
-	    <TableRow  FontSize='12' >
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph><Run Text='7-10'></Run></Paragraph>
-			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph><Run Text='+1'></Run></Paragraph>
-			</TableCell>
-		</TableRow>
-		<TableRow  FontSize='12' >
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph><Run Text='11-15'></Run></Paragraph>
-			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph><Run Text='+2'></Run></Paragraph>
+				<Paragraph>
+					<Bold>
+						<Run Text='Killed!'/>
+					</Bold>
+					<Run Text=' Remove counter from play.'></Run>
+				</Paragraph>
 			</TableCell>
 		</TableRow>
 		<TableRow  FontSize='12' >
 			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph><Run Text='16-20'></Run></Paragraph>
+				<Paragraph>
+					<Run Text='5-6'></Run>
+				</Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph><Run Text='+3'></Run></Paragraph>
+				<Paragraph>
+					<Bold>
+						<Run Text='Knocked out'/>
+					</Bold>
+					<Run Text=' Townsperson remains unconscious until the end of the combat phase in the next turn. The counter may not be interrogated until conscious. It ay be tied up. The Tow player may also try to remove the implant.'></Run>
+				</Paragraph>
 			</TableCell>
-		</TableRow>		
+		</TableRow>
+		<TableRow  FontSize='12' >
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Run Text='7-12'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1'>
+				<Paragraph>
+					<Bold>
+						<Run Text='Surrenders'/>
+					</Bold>
+					<Run Text=' The counter may be interrogated or tied up. The Town player may also try to remove the implant.'></Run>
+				</Paragraph>
+			</TableCell>
+		</TableRow>
 	</TableRowGroup>
-	</Table>
+</Table>
