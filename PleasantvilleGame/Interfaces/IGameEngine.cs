@@ -6,51 +6,6 @@ using System.Windows.Controls;
 namespace PleasantvilleGame
 {
    [Serializable]
-   public enum GameAction
-   {
-      AlienStart,
-      TownspersonStart,
-      AlienDisplaysRandomMovement,
-      TownspersonDisplaysRandomMovement,
-      AlienAcksRandomMovement,
-      TownspersonAcksRandomMovement,
-      ResetMovement,
-      AlienMovement,
-      AlienCompletesMovement,
-      TownspersonAcksAlienMovement,
-      TownpersonProposesMovement,
-      AlienTimeoutOnMovement,
-      AlienModifiesTownspersonMovement,
-      TownpersonMovement,
-      TownpersonCompletesMovement,
-      AlienAcksTownspersonMovement,
-      TownspersonPerformsConversation,
-      TownspersonCompletesConversations,
-      TownspersonPerformsInfluencing,
-      TownspersonCompletesInfluencing,
-      AlienInitiateCombat,
-      TownspersonNackCombatSelection,
-      AlienPerformCombat,
-      TownspersonInitiateCombat,
-      AlienNackCombatSelection,
-      TownspersonPerformCombat,
-      TownspersonCompletesCombat,
-      AlienCompletesCombat,
-      TownspersonIterrogates,
-      TownspersonCompletesIterogations,
-      AlienAcksIterogations,
-      TownspersonRemovesImplant,
-      TownspersonCompletesRemoval,
-      AlienTakeover,
-      AlienCompletesTakeovers,
-      UpdateView,
-      ShowAlien,
-      ShowEndGame,
-      ExitGame,
-      Error
-   };
-
-   [Serializable]
    public enum GamePhase
    {
       AlienStart,
@@ -158,20 +113,6 @@ namespace PleasantvilleGame
       EndGameClose,
       EndGameExit,
       ExitGame,
-
-      SetupShowMapHistorical,
-      SetupShowMovementBoard,
-      SetupShowBattleBoard,
-      SetupShowTankCard,
-      SetupShowAfterActionReport,
-      SetupAssignCrewRating,
-      SetupShowCombatCalendarCheck,
-      SetupCombatCalendarRoll,
-      SetupFinalize,
-      SetupSingleGameDay,
-      SetupDecreaseDate,
-      SetupIncreaseDate,
-      SetupShowSingleDayBattleStart,
 
       Error
    };

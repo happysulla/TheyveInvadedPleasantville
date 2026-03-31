@@ -1,6 +1,7 @@
-﻿using System.Text;
+﻿using System.Text
 using System.Windows;
 
+using System.Windows;
 namespace PleasantvilleGame
 {
    public class GameStateChecker
@@ -41,19 +42,19 @@ namespace PleasantvilleGame
                return true;
          }
 
-         return false;
-      }
-      #endregion
+            return false;
+        }
+        #endregion
 
-      #region bool CheckForInfluence(IGameInstance gi)
-      static public bool CheckForInfluence(IGameInstance gi)
-      {
-         List<Stack> stacks = new List<Stack>();
-         stacks.AssignPeople(gi.Persons);
-         foreach (Stack stack in stacks)
-         {
-            IMapItems townspeopleControlled = new MapItems();
-            IMapItems townspeopleUncontrolled = new MapItems();
+        #region bool CheckForInfluence(IGameInstance gi)
+        static public bool CheckForInfluence(IGameInstance gi)
+        {
+            List<Stack> stacks = new List<Stack>();
+            stacks.AssignPeople(gi.Persons);
+            foreach (Stack stack in stacks)
+            {
+                IMapItems townspeopleControlled = new MapItems();
+                IMapItems townspeopleUncontrolled = new MapItems();
 
             foreach (MapItem mi in stack.MapItems)
             {
@@ -75,19 +76,19 @@ namespace PleasantvilleGame
                return true;
          }
 
-         return false;
-      }
-      #endregion
+            return false;
+        }
+        #endregion
 
-      #region bool CheckForTownspersonCombats(IGameInstance gi)
-      static public bool CheckForTownspersonCombats(IGameInstance gi)
-      {
-         IMapItemCombat previousCombat = gi.MapItemCombat; // If the previous combat had retreats, do not assume combats are completed
-         if (true == previousCombat.IsAnyRetreat)          // until the player explicitly indicates it with menu command.  This allows them
-         {
-            Logger.Log(LogEnum.LE_GAMESTATE_CHECKER, "CheckForTownspersonCombats(): previousCombat.IsAnyRetreat=true");
-            return true;                                  // to see the retreats. 
-         }
+        #region bool CheckForTownspersonCombats(IGameInstance gi)
+        static public bool CheckForTownspersonCombats(IGameInstance gi)
+        {
+            IMapItemCombat previousCombat = gi.MapItemCombat; // If the previous combat had retreats, do not assume combats are completed
+            if (true == previousCombat.IsAnyRetreat)          // until the player explicitly indicates it with menu command.  This allows them
+            {
+                Logger.Log(LogEnum.LE_GAMESTATE_CHECKER, "CheckForTownspersonCombats(): previousCombat.IsAnyRetreat=true");
+                return true;                                  // to see the retreats. 
+            }
 
          // The townspeople can fight aliens or uncontrolled townspeople.
          // They might want to fight uncontrolled townspeople if they suspect 
@@ -127,19 +128,19 @@ namespace PleasantvilleGame
             }
          }
 
-         return false;
-      }
-      #endregion
+            return false;
+        }
+        #endregion
 
-      #region bool CheckForAlienCombats(IGameInstance gi)
-      static public bool CheckForAlienCombats(IGameInstance gi)
-      {
-         IMapItemCombat previousCombat = gi.MapItemCombat; // If the previous combat had retreats, do not assume combats are completed
-         if (true == previousCombat.IsAnyRetreat)          // until the player explicitly indicates it with menu command.  This allows them to be seen.
-         {
-            Logger.Log(LogEnum.LE_GAMESTATE_CHECKER, "CheckForTownspersonCombats(): previousCombat.IsAnyRetreat=true");
-            return true;                                  // to see the retreats. 
-         }                             // to see the retreats. 
+        #region bool CheckForAlienCombats(IGameInstance gi)
+        static public bool CheckForAlienCombats(IGameInstance gi)
+        {
+            IMapItemCombat previousCombat = gi.MapItemCombat; // If the previous combat had retreats, do not assume combats are completed
+            if (true == previousCombat.IsAnyRetreat)          // until the player explicitly indicates it with menu command.  This allows them to be seen.
+            {
+                Logger.Log(LogEnum.LE_GAMESTATE_CHECKER, "CheckForTownspersonCombats(): previousCombat.IsAnyRetreat=true");
+                return true;                                  // to see the retreats. 
+            }                             // to see the retreats. 
 
          List<Stack> stacks = new List<Stack>();
          stacks.AssignPeople(gi.Persons);
@@ -194,14 +195,14 @@ namespace PleasantvilleGame
             }
          }
 
-         return false;
-      }
-      #endregion
+            return false;
+        }
+        #endregion
 
-      #region bool CheckForIterogations(IGameInstance gi)
-      static public bool CheckForIterogations(IGameInstance gi)
-      {
-         gi.NumIterogationsThisTurn = 0;
+        #region bool CheckForIterogations(IGameInstance gi)
+        static public bool CheckForIterogations(IGameInstance gi)
+        {
+            gi.NumIterogationsThisTurn = 0;
 
          IMapItem zebulon = gi.Persons.Find("Zebulon");
          if (true == zebulon.IsAlienKnown)  // If Zebulon is already on the map board, no need to iterogate
@@ -246,21 +247,21 @@ namespace PleasantvilleGame
                gi.NumIterogationsThisTurn += surrenderedAliens.Count * 4;
          }
 
-         if (0 < gi.NumIterogationsThisTurn)
-            return true;
-         return false;
-      }
-      #endregion
+            if (0 < gi.NumIterogationsThisTurn)
+                return true;
+            return false;
+        }
+        #endregion
 
-      #region bool CheckForImplantRemoval(IGameInstance gi)
-      static public bool CheckForImplantRemoval(IGameInstance gi)
-      {
-         List<Stack> stacks = new List<Stack>();
-         stacks.AssignPeople(gi.Persons);
-         foreach (Stack stack in stacks)
-         {
-            if (stack.MapItems.Count < 2)
-               continue;
+        #region bool CheckForImplantRemoval(IGameInstance gi)
+        static public bool CheckForImplantRemoval(IGameInstance gi)
+        {
+            List<Stack> stacks = new List<Stack>();
+            stacks.AssignPeople(gi.Persons);
+            foreach (Stack stack in stacks)
+            {
+                if (stack.MapItems.Count < 2)
+                    continue;
 
             IMapItems controlled = new MapItems();
             IMapItems aliens = new MapItems();
@@ -280,19 +281,19 @@ namespace PleasantvilleGame
                return true;
          }
 
-         return false;
-      }
-      #endregion
+            return false;
+        }
+        #endregion
 
-      #region bool CheckForAlienTakeovers(IGameInstance gi)
-      static public bool CheckForAlienTakeovers(IGameInstance gi)
-      {
-         List<Stack> stacks = new List<Stack>();
-         stacks.AssignPeople(gi.Persons);
-         foreach (Stack stack in stacks)
-         {
-            if (stack.MapItems.Count < 2)
-               continue;
+        #region bool CheckForAlienTakeovers(IGameInstance gi)
+        static public bool CheckForAlienTakeovers(IGameInstance gi)
+        {
+            List<Stack> stacks = new List<Stack>();
+            stacks.AssignPeople(gi.Persons);
+            foreach (Stack stack in stacks)
+            {
+                if (stack.MapItems.Count < 2)
+                    continue;
 
             IMapItems possibleVictums = new MapItems();
             IMapItems knownAliens = new MapItems();
@@ -330,14 +331,14 @@ namespace PleasantvilleGame
                return true;
          }
 
-         return false;
-      }
-      #endregion
+            return false;
+        }
+        #endregion
 
-      #region bool CheckForEndOfGame(IGameInstance gi)
-      static public bool CheckForEndOfGame(IGameInstance gi)
-      {
-         StringBuilder sb = null;
+        #region bool CheckForEndOfGame(IGameInstance gi)
+        static public bool CheckForEndOfGame(IGameInstance gi)
+        {
+            StringBuilder sb = null;
 
          gi.NumIterogationsThisTurn = 0;
 
@@ -594,14 +595,14 @@ namespace PleasantvilleGame
             return true;
          gi.GameTurn = "Game Turn #" + gameTurn.ToString();
 
-         return false;
-      }
-      #endregion
+            return false;
+        }
+        #endregion
 
-      #region bool CheckForRandomMoves(IGameInstance gi)
-      static public bool CheckForRandomMoves(IGameInstance gi)
-      {
-         // Perform cleanup
+        #region bool CheckForRandomMoves(IGameInstance gi)
+        static public bool CheckForRandomMoves(IGameInstance gi)
+        {
+            // Perform cleanup
 
          gi.IsAlienDisplayedRandomMovement = false;
          gi.IsControlledDisplayedRandomMovement = false;
@@ -631,82 +632,93 @@ namespace PleasantvilleGame
             return true; // If any mapitem can move randomly
          }
 
-         return false;
-      }
-      #endregion
-   }
-   public abstract class GameState : IGameState
-   {
-      #region double GetDistance(ITerritory startT, ITerritory endT)
-      public double GetDistance(ITerritory startT, ITerritory endT)
-      {
-         Point startPoint = new Point(startT.CenterPoint.X, startT.CenterPoint.Y);
-         Point endPoint = new Point(endT.CenterPoint.X, endT.CenterPoint.Y);
-         double xDelta = endPoint.X - startPoint.X;
-         double yDelta = endPoint.Y - startPoint.Y;
-         double distance = Math.Sqrt(xDelta * xDelta + yDelta * yDelta);
-         return distance;
-      }
-      #endregion
-      public bool PerformMovement(IGameInstance gi, IMapItem mi)
-      {
-
-         int r3 = Utilities.RandomGenerator.Next(5); // Find the target building location.
-         int r4 = Utilities.RandomGenerator.Next(6);
-         string building = Utilities.RemoveSpaces(Utilities.targetBuildingTable[r3, r4]);
-         int numOfSectorsInBuilding = 0;
-         for (int i1 = 0; i1 < Constants.buildingSizes.GetLength(0); i1++) // If moving to a build, randomly select a space from the building.  // GetLength(0) gets the length of the array.
-         {
-            string buildingToCompare = Utilities.RemoveSpaces(Constants.buildingSizes[i1, 0]);
-            if (buildingToCompare == building)
-            {
-               numOfSectorsInBuilding = Int32.Parse(Constants.buildingSizes[i1, 1]);
-               break;
-            }
-         }
-         //-----------------------------------------------------
-         int selectedSector = Utilities.RandomGenerator.Next(numOfSectorsInBuilding);
-         ++selectedSector;
-         ITerritory newTerritory = Territory.Find(building, selectedSector);
-         if ((mi.Territory.Name == newTerritory.Name) && (mi.Territory.Sector == newTerritory.Sector))
-         {
             return false;
-         }
-         mi.IsMoved = true;
+        }
+        #endregion
+    }
+    public abstract class GameState : IGameState
+    {
+        #region double GetDistance(ITerritory startT, ITerritory endT)
+        public double GetDistance(ITerritory startT, ITerritory endT)
+        {
+            Point startPoint = new Point(startT.CenterPoint.X, startT.CenterPoint.Y);
+            Point endPoint = new Point(endT.CenterPoint.X, endT.CenterPoint.Y);
+            double xDelta = endPoint.X - startPoint.X;
+            double yDelta = endPoint.Y - startPoint.Y;
+            double distance = Math.Sqrt(xDelta * xDelta + yDelta * yDelta);
+            return distance;
+        }
+        #endregion
 
-         IMapItemMove mim = new MapItemMove(mi, newTerritory, gi.Persons);
-         if (null != mim.NewTerritory)
-         {
-            gi.MapItemMoves.Add(mim);
-            mi.Territory = mim.NewTerritory;
-            int counterCount = 0;
-            foreach (IMapItem mi1 in gi.Persons)
+        #region bool PerformMovement( IGameInstance gi, IMapItem mi )
+        public bool PerformMovement(IGameInstance gi, IMapItem mi)
+        {
+            // Find the target building location.
+
+            int r3 = GameEngine.RandomGenerator.Next(5);
+            int r4 = GameEngine.RandomGenerator.Next(6);
+            string building = Utilities.RemoveSpaces(Constants.targetBuildingTable[r3, r4]);
+
+            // If moving to a build, randomly select a space from the building.
+            // GetLength(0) gets the length of the array.
+
+            int numOfSectorsInBuilding = 0;
+            for (int i1 = 0; i1 < Constants.buildingSizes.GetLength(0); i1++)
             {
-               if ((mi1.Territory.Name == mim.NewTerritory.Name) && (mi1.Territory.Sector == mim.NewTerritory.Sector))
-                  ++counterCount;
+                string buildingToCompare = Utilities.RemoveSpaces(Constants.buildingSizes[i1, 0]);
+                if (buildingToCompare == building)
+                {
+                    numOfSectorsInBuilding = Int32.Parse(Constants.buildingSizes[i1, 1]);
+                    break;
+                }
             }
-            mi.Location = new MapPoint(mi.Territory.CenterPoint.X - Utilities.theXOffset + (counterCount * 3), mi.Territory.CenterPoint.Y - Utilities.theYOffset + (counterCount * 3));
-         }
-         return true;
-      }
-      //--------------------------------------------------------------------
-      public void PerformMovements(IGameInstance gi, int numPeopleToMove)
-      {
-         int numPeopleSkipped = 0;
-         int numPeopleMoved = 0;
-         int loopCount = 0;
-         while ((numPeopleMoved < numPeopleToMove) && (++loopCount < 200))
-         {
-            int r1 = GameEngine.RandomGenerator.Next(5);
-            int r2 = GameEngine.RandomGenerator.Next(6);
-            string person = Utilities.RemoveSpaces(Constants.townsPersonTable[r1, r2]);
-            IMapItem personMoving = gi.Persons.Find(person);
-            if (null == personMoving)
+
+            int selectedSector = GameEngine.RandomGenerator.Next(numOfSectorsInBuilding);
+            ++selectedSector;
+
+            ITerritory newTerritory = Territory.Find(building, selectedSector);
+            if ((mi.Territory.Name == newTerritory.Name) && (mi.Territory.Sector == newTerritory.Sector))
             {
-               ++numPeopleSkipped;
-               //Console.WriteLine("PerformMovements(): {0} Unknown {1}", numPeopleSkipped.ToString(), person);
-               continue;
+                return false;
             }
+            mi.IsMoved = true;
+
+            IMapItemMove mim = new MapItemMove(mi, newTerritory, gi.Persons);
+            if (null != mim.NewTerritory)
+            {
+                gi.MapItemMoves.Add(mim);
+                mi.Territory = mim.NewTerritory;
+                int counterCount = 0;
+                foreach (IMapItem mi1 in gi.Persons)
+                {
+                    if ((mi1.Territory.Name == mim.NewTerritory.Name) && (mi1.Territory.Sector == mim.NewTerritory.Sector))
+                        ++counterCount;
+                }
+                mi.Location = new MapPoint(mi.Territory.CenterPoint.X - Utilities.theXOffset + (counterCount * 3), mi.Territory.CenterPoint.Y - Utilities.theYOffset + (counterCount * 3));
+            }
+
+            return true;
+        }
+        #endregion
+
+        #region void PerformMovements( IGameInstance gi, int numPeopleToMove )
+        public void PerformMovements(IGameInstance gi, int numPeopleToMove)
+        {
+            int numPeopleSkipped = 0;
+            int numPeopleMoved = 0;
+            int loopCount = 0;
+            while ((numPeopleMoved < numPeopleToMove) && (++loopCount < 200))
+            {
+                int r1 = GameEngine.RandomGenerator.Next(5);
+                int r2 = GameEngine.RandomGenerator.Next(6);
+                string person = Utilities.RemoveSpaces(Constants.townsPersonTable[r1, r2]);
+                IMapItem personMoving = gi.Persons.Find(person);
+                if (null == personMoving)
+                {
+                    ++numPeopleSkipped;
+                    //Console.WriteLine("PerformMovements(): {0} Unknown {1}", numPeopleSkipped.ToString(), person);
+                    continue;
+                }
 
             // If the counter is moved or tied up or known to be alien controlled, do not move.
             if ((true == personMoving.IsMoved) || (true == personMoving.IsControlled) || (true == personMoving.IsAlienKnown) ||
@@ -725,240 +737,267 @@ namespace PleasantvilleGame
                continue;
             }
 
-            if (false == PerformMovement(gi, personMoving))
+                if (false == PerformMovement(gi, personMoving))
+                {
+                    ++numPeopleSkipped;
+                    Console.WriteLine("PerformMovements(): {0} Same Building {1}", numPeopleSkipped.ToString(), person);
+                    continue;
+                }
+                else
+                {
+                    ++numPeopleMoved;  // Keep track of number of people moved
+                    //                    Console.WriteLine("PerformMovements(): {0} Moved {1}", numPeopleMoved.ToString(), person);
+                }
+            }  // end while()
+        }
+        #endregion
+
+        #region IGameState GetGameState(GamePhase phase)
+        static public IGameState GetGameState(GamePhase phase)
+        {
+            switch (phase)
             {
-               ++numPeopleSkipped;
-               Console.WriteLine("PerformMovements(): {0} Same Building {1}", numPeopleSkipped.ToString(), person);
-               continue;
+                case GamePhase.AlienStart: return new GameStateSetup();
+                case GamePhase.AlienMovement: return new GameStateAlienPlayerMovement();
+                case GamePhase.AlienTakeover: return new GameStateAlienTakeover();
+                case GamePhase.Combat: return new GameStateCombat();
+                case GamePhase.Conversations: return new GameStateConversations();
+                case GamePhase.ImplantRemoval: return new GameStateImplantRemoval();
+                case GamePhase.Influences: return new GameStateInfluences();
+                case GamePhase.Iterrogations: return new GameStateIterogations();
+                case GamePhase.RandomMovement: return new GameStateRandomMovement();
+                case GamePhase.ShowEndGame: return new GameStateEnded();
+                case GamePhase.TownspersonMovement: return new GameStateTownPlayerMovement();
+                case GamePhase.TownspersonStart: return new GameStateSetup();
+                default: return new GameStateEnded();
             }
-            else
-            {
-               ++numPeopleMoved;  // Keep track of number of people moved
-                                  //                    Console.WriteLine("PerformMovements(): {0} Moved {1}", numPeopleMoved.ToString(), person);
-            }
-         }  // end while()
-      }
-      static public IGameState GetGameState(GamePhase phase)
-      {
-         switch (phase)
-         {
-            case GamePhase.AlienStart: return new GameStateSetup();
-            case GamePhase.AlienMovement: return new GameStateAlienPlayerMovement();
-            case GamePhase.AlienTakeover: return new GameStateAlienTakeover();
-            case GamePhase.Combat: return new GameStateCombat();
-            case GamePhase.Conversations: return new GameStateConversations();
-            case GamePhase.ImplantRemoval: return new GameStateImplantRemoval();
-            case GamePhase.Influences: return new GameStateInfluences();
-            case GamePhase.Iterrogations: return new GameStateIterogations();
-            case GamePhase.RandomMovement: return new GameStateRandomMovement();
-            case GamePhase.ShowEndGame: return new GameStateEnded();
-            case GamePhase.TownspersonMovement: return new GameStateTownPlayerMovement();
-            case GamePhase.TownspersonStart: return new GameStateSetup();
-            default: return new GameStateEnded();
-         }
-      }
-      abstract public string PerformNextAction(IGameInstance gi, ref GameAction action);
-   }
+        }
+        #endregion
+
+        abstract public string PerformNextAction(IGameInstance gi, ref GameAction action);
+    }
    //----------------------------------------------------------------
+   #region GameStateStart
    class GameStateSetup : GameState
-   {
-      public override string PerformNextAction(IGameInstance gi, ref GameAction action)
-      {
-         String returnStatus = "OK";
-         switch (action)
-         {
-            #region Alien Start
-            case GameAction.AlienStart:
-               gi.IsAlienStarted = true;
-               if (true == gi.IsControlledStarted)
-               {
-                  gi.GamePhase = GamePhase.RandomMovement;
-                  gi.NextAction = "Display Random Movement";
-               }
-               else
-               {
-                  gi.NextAction = "Awaiting Townsperson Start";
-               }
-               break;
-            #endregion
-
-            #region Townsperson Start
-            case GameAction.TownspersonStart:
-               gi.IsControlledStarted = true;
-               if (true == gi.IsAlienStarted)
-               {
-                  gi.GamePhase = GamePhase.RandomMovement;
-                  gi.NextAction = "Display Random Movement";
-               }
-               else
-               {
-                  gi.NextAction = "Awaiting Alien Start";
-               }
-               break;
-            #endregion
-
-            #region default
-            default:
-               returnStatus = "Reached Default";
-               Console.WriteLine("GameStateSetup.PerformNextAction() reached default with next action={0}", gi.NextAction);
-               break;
-               #endregion
-         }
-
-         StringBuilder sb11 = new StringBuilder("\t\t\tGameState.PerformNextAction(gi,action) ==> action="); sb11.Append(action.ToString());
-         sb11.Append(" IsAlienStarted="); sb11.Append(gi.IsAlienStarted); sb11.Append(" IsControlledStarted="); sb11.Append(gi.IsControlledStarted);
-         sb11.Append(" GamePhase="); sb11.Append(gi.GamePhase.ToString()); sb11.Append(" NextAction="); sb11.Append(gi.NextAction);
-         Logger.Log(LogEnum.LE_NEXT_ACTION, sb11.ToString());
-
-         return returnStatus;
-      }
-   }
-   //----------------------------------------------------------------
-   class GameStateRandomMovement : GameState
-   {
-      #region void RecordIncapacitatedPeople(IGameInstance gi)
-      public void RecordIncapacitatedPeople(IGameInstance gi)
-      {
-         // At the end of the turn, all stunned units become unstunned.
-         // All knocked out people become stunned.
-
-         List<Stack> stacks = new List<Stack>();
-         stacks.AssignPeople(gi.Persons);
-         foreach (Stack stack in stacks)
-         {
-            foreach (MapItem mi in stack.MapItems)
+    {
+        public override string PerformNextAction(IGameInstance gi, ref GameAction action)
+        {
+            String returnStatus = "OK";
+            switch (action)
             {
-               if (true == mi.IsStunned)
-                  gi.PersonsStunned.Add(mi); // Keep a list of which MapItems are Stunned.
+                #region Alien Start
+                case GameAction.AlienStart:
+                    gi.IsAlienStarted = true;
+                    if (true == gi.IsControlledStarted)
+                    {
+                        gi.GamePhase = GamePhase.RandomMovement;
+                        gi.NextAction = "Display Random Movement";
+                    }
+                    else
+                    {
+                        gi.NextAction = "Awaiting Townsperson Start";
+                    }
+                    break;
+                #endregion
 
-               if (false == mi.IsConscious)
-                  gi.PersonsKnockedOut.Add(mi); // Keep a list of which MapItems start the turn knocked out.
+                #region Townsperson Start
+                case GameAction.TownspersonStart:
+                    gi.IsControlledStarted = true;
+                    if (true == gi.IsAlienStarted)
+                    {
+                        gi.GamePhase = GamePhase.RandomMovement;
+                        gi.NextAction = "Display Random Movement";
+                    }
+                    else
+                    {
+                        gi.NextAction = "Awaiting Alien Start";
+                    }
+                    break;
+                #endregion
+
+                #region default
+                default:
+                    returnStatus = "Reached Default";
+                    Console.WriteLine("GameStateSetup.PerformNextAction() reached default with next action={0}", gi.NextAction);
+                    break;
+                #endregion
             }
-         }
-      }
-      #endregion
 
-      public override string PerformNextAction(IGameInstance gi, ref GameAction action)
-      {
-         String returnStatus = "OK";
-         switch (action)
-         {
-            case GameAction.ShowAlien:
-               break;
-            case GameAction.AlienDisplaysRandomMovement:
-               gi.IsAlienDisplayedRandomMovement = true;
-               RecordIncapacitatedPeople(gi);
-               if (false == gi.IsControlledDisplayedRandomMovement)
-               {
-                  PerformMovements(gi, 4);
-                  gi.NextAction = "Awaiting Townsperson Display Random Movement";
-               }
-               else
-               {
-                  if (true == gi.IsControlledAckedRandomMovement)
-                     gi.NextAction = "Awaiting Alien Ack Random Movement";
-                  else
-                     gi.NextAction = "Ack Random Movement";
-               }
-               break;
-            case GameAction.TownspersonDisplaysRandomMovement:
-               gi.IsControlledDisplayedRandomMovement = true;
-               if (false == gi.IsAlienDisplayedRandomMovement)
-               {
-                  PerformMovements(gi, 4);
-                  gi.NextAction = "Awaiting Alien Display Random Movement";
-               }
-               else
-               {
-                  if (true == gi.IsAlienAckedRandomMovement)
-                     gi.NextAction = "Awaiting Townsperson Ack Random Movement";
-                  else
-                     gi.NextAction = "Ack Random Movement";
-               }
-               break;
-            case GameAction.AlienAcksRandomMovement:
-               gi.IsAlienAckedRandomMovement = true;
-               if (true == gi.IsControlledAckedRandomMovement)
-               {
-                  gi.IsAlienDisplayedRandomMovement = false;
-                  gi.IsControlledDisplayedRandomMovement = false;
-                  gi.IsAlienAckedRandomMovement = false;
-                  gi.IsControlledAckedRandomMovement = false;
+            StringBuilder sb11 = new StringBuilder("\t\t\tGameState.PerformNextAction(gi,action) ==> action="); sb11.Append(action.ToString());
+            sb11.Append(" IsAlienStarted="); sb11.Append(gi.IsAlienStarted); sb11.Append(" IsControlledStarted="); sb11.Append(gi.IsControlledStarted);
+            sb11.Append(" GamePhase="); sb11.Append(gi.GamePhase.ToString()); sb11.Append(" NextAction="); sb11.Append(gi.NextAction);
+            Logger.Log(LogEnum.LE_NEXT_ACTION, sb11.ToString());
 
-                  gi.NextAction = "Alien Performs Movement";
-                  gi.GamePhase = GamePhase.AlienMovement;
-                  foreach (IMapItemMove mim in gi.MapItemMoves)
-                  {
-                     IMapItem mi = mim.MapItem;
-                     mi.Territory = mim.NewTerritory;
-                     mi.TerritoryStarting = mim.NewTerritory;
-                     mi.IsMoved = false;
-                     mi.MovementUsed = 0;
-                  }
-                  gi.MapItemMoves.Clear();
-                  gi.MapItemCombat.IsAnyRetreat = false;
-                  gi.Takeover = null;
-               }
-               else
-               {
-                  if (false == gi.IsControlledDisplayedRandomMovement)
-                     gi.NextAction = "Awaiting Townsperson Display Random Movement";
-                  else
-                     gi.NextAction = "Awaiting Townsperson Ack Random Movement";
-               }
-               break;
-            case GameAction.TownspersonAcksRandomMovement:
-               gi.IsControlledAckedRandomMovement = true;
-               if (true == gi.IsAlienAckedRandomMovement)
-               {
-
-                  gi.IsAlienDisplayedRandomMovement = false;
-                  gi.IsControlledDisplayedRandomMovement = false;
-                  gi.IsAlienAckedRandomMovement = false;
-                  gi.IsControlledAckedRandomMovement = false;
-                  gi.Takeover = null;
-                  gi.MapItemCombat.IsAnyRetreat = false;
-                  foreach (IMapItemMove mim in gi.MapItemMoves)
-                  {
-                     IMapItem mi = mim.MapItem;
-                     mi.Territory = mim.NewTerritory;
-                     mi.TerritoryStarting = mim.NewTerritory;
-                     mi.IsMoved = false;
-                     mi.MovementUsed = 0;
-                  }
-                  gi.MapItemMoves.Clear();
-
-                  gi.NextAction = "Alien Performs Movement";
-                  gi.GamePhase = GamePhase.AlienMovement;
-
-               }
-               else
-               {
-                  if (false == gi.IsAlienDisplayedRandomMovement)
-                     gi.NextAction = "Awaiting Alien Display Random Movement";
-                  else
-                     gi.NextAction = "Awaiting Alien Ack Random Movement";
-               }
-               break;
-            default:
-               Console.WriteLine("GameStateRandomMovement::PerformNextAction() reached default with action={0} NextAction={1}", action, gi.NextAction);
-               break;
-         }
-         return returnStatus;
-      }
-   }
+            return returnStatus;
+        }
+    }
+   #endregion
    //----------------------------------------------------------------
+   #region GameStateRandomMovement
+   class GameStateRandomMovement : GameState
+    {
+        #region void RecordIncapacitatedPeople(IGameInstance gi)
+        public void RecordIncapacitatedPeople(IGameInstance gi)
+        {
+            // At the end of the turn, all stunned units become unstunned.
+            // All knocked out people become stunned.
+
+            List<Stack> stacks = new List<Stack>();
+            stacks.AssignPeople(gi.Persons);
+            foreach (Stack stack in stacks)
+            {
+                foreach (MapItem mi in stack.MapItems)
+                {
+                    if (true == mi.IsStunned)
+                        gi.PersonsStunned.Add(mi); // Keep a list of which MapItems are Stunned.
+
+                    if (false == mi.IsConscious)
+                        gi.PersonsKnockedOut.Add(mi); // Keep a list of which MapItems start the turn knocked out.
+                }
+            }
+        }
+        #endregion
+
+        public override string PerformNextAction(IGameInstance gi, ref GameAction action)
+        {
+            String returnStatus = "OK";
+            switch (action)
+            {
+                #region ShowAlien
+                case GameAction.ShowAlien:
+                   break;
+                #endregion
+
+                #region AlienDisplaysRandomMovement
+                case GameAction.AlienDisplaysRandomMovement:
+                    gi.IsAlienDisplayedRandomMovement = true;
+                    RecordIncapacitatedPeople(gi);
+                    if (false == gi.IsControlledDisplayedRandomMovement)
+                    {
+                        PerformMovements(gi, 4);
+                        gi.NextAction = "Awaiting Townsperson Display Random Movement";
+                    }
+                    else
+                    {
+                        if ( true == gi.IsControlledAckedRandomMovement )
+                            gi.NextAction = "Awaiting Alien Ack Random Movement";
+                        else
+                            gi.NextAction = "Ack Random Movement";
+                    }
+                    break;
+                #endregion
+
+                #region TownspersonDisplaysRandomMovement
+                case GameAction.TownspersonDisplaysRandomMovement:
+                    gi.IsControlledDisplayedRandomMovement = true;
+                    if (false == gi.IsAlienDisplayedRandomMovement)
+                    {
+                        PerformMovements(gi, 4);
+                        gi.NextAction = "Awaiting Alien Display Random Movement";
+                    }
+                    else
+                    {
+                        if (true == gi.IsAlienAckedRandomMovement)
+                            gi.NextAction = "Awaiting Townsperson Ack Random Movement";
+                        else
+                            gi.NextAction = "Ack Random Movement";
+                    }
+                    break;
+                #endregion
+
+                #region AlienAcksRandomMovement
+                case GameAction.AlienAcksRandomMovement:
+                    gi.IsAlienAckedRandomMovement = true;
+                    if (true == gi.IsControlledAckedRandomMovement)
+                    {
+                        gi.IsAlienDisplayedRandomMovement = false;
+                        gi.IsControlledDisplayedRandomMovement = false;
+                        gi.IsAlienAckedRandomMovement = false;
+                        gi.IsControlledAckedRandomMovement = false;
+
+                        gi.NextAction = "Alien Performs Movement";
+                        gi.GamePhase = GamePhase.AlienMovement;
+                        foreach (IMapItemMove mim in gi.MapItemMoves)
+                        {
+                            IMapItem mi = mim.MapItem;
+                            mi.Territory = mim.NewTerritory;
+                            mi.TerritoryStarting = mim.NewTerritory;
+                            mi.IsMoved = false;
+                            mi.MovementUsed = 0;
+                        }
+                        gi.MapItemMoves.Clear();
+                        gi.MapItemCombat.IsAnyRetreat = false;
+                        gi.Takeover = null;
+                    }
+                    else
+                    {
+                        if( false == gi.IsControlledDisplayedRandomMovement )
+                           gi.NextAction = "Awaiting Townsperson Display Random Movement";
+                        else
+                           gi.NextAction = "Awaiting Townsperson Ack Random Movement";
+                    }
+                    break;
+                #endregion
+
+                #region TownspersonAcksRandomMovement
+                case GameAction.TownspersonAcksRandomMovement:
+                    gi.IsControlledAckedRandomMovement = true;
+                    if (true == gi.IsAlienAckedRandomMovement)
+                    {
+
+                  gi.IsAlienDisplayedRandomMovement = false;
+                  gi.IsControlledDisplayedRandomMovement = false;
+                  gi.IsAlienAckedRandomMovement = false;
+                  gi.IsControlledAckedRandomMovement = false;
+                  gi.Takeover = null;
+                  gi.MapItemCombat.IsAnyRetreat = false;
+                  foreach (IMapItemMove mim in gi.MapItemMoves)
+                  {
+                     IMapItem mi = mim.MapItem;
+                     mi.Territory = mim.NewTerritory;
+                     mi.TerritoryStarting = mim.NewTerritory;
+                     mi.IsMoved = false;
+                     mi.MovementUsed = 0;
+                  }
+                  gi.MapItemMoves.Clear();
+
+                        gi.NextAction = "Alien Performs Movement";
+                        gi.GamePhase = GamePhase.AlienMovement;
+                        
+                    }
+                    else
+                    {
+                        if (false == gi.IsAlienDisplayedRandomMovement)
+                            gi.NextAction = "Awaiting Alien Display Random Movement";
+                        else
+                            gi.NextAction = "Awaiting Alien Ack Random Movement";
+                    }
+                    break;
+                #endregion
+
+                #region default
+                default:
+                    Console.WriteLine("GameStateRandomMovement::PerformNextAction() reached default with action={0} NextAction={1}", action, gi.NextAction);
+                    break;
+                #endregion
+            }
+            return returnStatus;
+        }
+    }
+   #endregion
+   //----------------------------------------------------------------
+   #region GameStateAlienPlayerMovement
    class GameStateAlienPlayerMovement : GameState
-   {
-      public override string PerformNextAction(IGameInstance gi, ref GameAction action)
-      {
-         String returnStatus = "OK";
-         switch (action)
-         {
-            #region ShowAlien
-            case GameAction.ShowAlien:
-               break;
-            #endregion
+    {
+        public override string PerformNextAction(IGameInstance gi, ref GameAction action)
+        {
+            String returnStatus = "OK";
+            switch (action)
+            {
+                #region ShowAlien
+                case GameAction.ShowAlien:
+                    break;
+                #endregion
 
             #region AlienMovement
             case GameAction.AlienMovement:
@@ -997,66 +1036,68 @@ namespace PleasantvilleGame
                break;
             #endregion
 
-            #region default
-            default:
-               returnStatus = "Reached Default";
-               Console.WriteLine("GameStateAlienPlayerMovement::PerformNextAction() reached default with action={0} NextAction={1}", action.ToString(), gi.NextAction);
-               break;
-               #endregion
-         }
-         return returnStatus;
-      }
-   }
-   //----------------------------------------------------------------
-   class GameStateTownPlayerMovement : GameState
-   {
-      #region bool IsZebulonDiscovered(IGameInstance gi, IMapItemMove mim)
-      private bool IsZebulonDiscovered(IGameInstance gi, IMapItemMove mim)
-      {
-         if (null != mim)
-         {
-            IMapItem movingMi = gi.Persons.Find(mim.MapItem.Name);
-            if (null != movingMi)
-            {
-               // Determine if Zebulon is along the path of this move.
-               // If so, back out to this new territory.
-
-               IMapItem zebulon = gi.Persons.Find("Zebulon");
-               foreach (ITerritory t in mim.BestPath.Territories)
-               {
-                  if (false == zebulon.IsAlienKnown) // Determine if Zebulon is discovered
-                  {
-                     if ((t.Name == zebulon.Territory.Name) && (t.Sector == zebulon.Territory.Sector))
-                     {
-                        zebulon.IsAlienKnown = true;         // Zebulon is now exposed
-                        movingMi.Territory = movingMi.TerritoryStarting; // Back out to the old Territory
-                        movingMi.IsMoveAllowedToResetThisTurn = false;
-                        movingMi.MovementUsed = 0;
-
-                        IMapItemMove modifiedMove = new MapItemMove(movingMi, zebulon.Territory, gi.Persons);
-                        gi.MapItemMoves[0] = modifiedMove;
-
-                        movingMi.MovementUsed = movingMi.Movement;
-                        movingMi.IsMoved = true;
-                        return true;
-                     }
-                  }
-               }
+                #region default
+                default:
+                    returnStatus = "Reached Default";
+                    Console.WriteLine("GameStateAlienPlayerMovement::PerformNextAction() reached default with action={0} NextAction={1}", action.ToString(), gi.NextAction);
+                    break;
+                #endregion
             }
-         }
-         return false;
-      }
-      #endregion
+            return returnStatus;
+        }
+    }
+   #endregion
+   //----------------------------------------------------------------
+   #region GameStateTownPlayerMovement
+   class GameStateTownPlayerMovement : GameState
+    {
+        #region bool IsZebulonDiscovered(IGameInstance gi, IMapItemMove mim)
+        private bool IsZebulonDiscovered(IGameInstance gi, IMapItemMove mim)
+        {
+            if (null != mim)
+            {
+                IMapItem movingMi = gi.Persons.Find(mim.MapItem.Name);
+                if (null != movingMi)
+                {
+                    // Determine if Zebulon is along the path of this move.
+                    // If so, back out to this new territory.
 
-      public override string PerformNextAction(IGameInstance gi, ref GameAction action)
-      {
-         String returnStatus = "OK";
-         switch (action)
-         {
-            #region ShowAlien
-            case GameAction.ShowAlien:
-               break;
-            #endregion
+                    IMapItem zebulon = gi.Persons.Find("Zebulon");
+                    foreach (ITerritory t in mim.BestPath.Territories)
+                    {
+                        if (false == zebulon.IsAlienKnown) // Determine if Zebulon is discovered
+                        {
+                            if ((t.Name == zebulon.Territory.Name) && (t.Sector == zebulon.Territory.Sector))
+                            {
+                                zebulon.IsAlienKnown = true;         // Zebulon is now exposed
+                                movingMi.Territory = movingMi.TerritoryStarting; // Back out to the old Territory
+                                movingMi.IsMoveAllowedToResetThisTurn = false;
+                                movingMi.MovementUsed = 0;
+
+                                IMapItemMove modifiedMove = new MapItemMove(movingMi, zebulon.Territory, gi.Persons);
+                                gi.MapItemMoves[0] = modifiedMove;
+
+                                movingMi.MovementUsed = movingMi.Movement;
+                                movingMi.IsMoved = true;
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+        #endregion
+
+        public override string PerformNextAction(IGameInstance gi, ref GameAction action)
+        {
+            String returnStatus = "OK";
+            switch (action)
+            {
+                #region ShowAlien
+                case GameAction.ShowAlien:
+                    break;
+                #endregion
 
             #region ResetMovement
             case GameAction.ResetMovement:
@@ -1263,28 +1304,30 @@ namespace PleasantvilleGame
                break;
             #endregion
 
-            #region default
-            default:
-               returnStatus = "Reached Default";
-               Console.WriteLine("GameStateTownPlayerMovement::PerformNextAction() reached default with action={0} NextAction={1}", action.ToString(), gi.NextAction);
-               break;
-               #endregion
-         }
-         return returnStatus;
-      }
-   }
+                #region default
+                default:
+                    returnStatus = "Reached Default";
+                    Console.WriteLine("GameStateTownPlayerMovement::PerformNextAction() reached default with action={0} NextAction={1}", action.ToString(), gi.NextAction);
+                    break;
+                #endregion
+            }
+            return returnStatus;
+        }
+    }
+   #endregion
    //----------------------------------------------------------------
+   #region GameStateConversations
    class GameStateConversations : GameState
-   {
-      public override string PerformNextAction(IGameInstance gi, ref GameAction action)
-      {
-         String returnStatus = "OK";
-         switch (action)
-         {
-            #region ShowAlien
-            case GameAction.ShowAlien:
-               break;
-            #endregion
+    {
+        public override string PerformNextAction(IGameInstance gi, ref GameAction action)
+        {
+            String returnStatus = "OK";
+            switch (action)
+            {
+                #region ShowAlien
+                case GameAction.ShowAlien:
+                    break;
+                #endregion
 
             #region TownspersonPerformsConversation
             case GameAction.TownspersonPerformsConversation:
@@ -1338,28 +1381,30 @@ namespace PleasantvilleGame
                break;
             #endregion
 
-            #region default
-            default:
-               returnStatus = "Reached Default";
-               Console.WriteLine("GameStateConversations::PerformNextAction() reached default with action={0} NextAction={1}", action.ToString(), gi.NextAction);
-               break;
-               #endregion
-         }
-         return returnStatus;
-      }
-   }
+                #region default
+                default:
+                    returnStatus = "Reached Default";
+                    Console.WriteLine("GameStateConversations::PerformNextAction() reached default with action={0} NextAction={1}", action.ToString(), gi.NextAction);
+                    break;
+                #endregion
+            }
+            return returnStatus;
+        }
+    }
+   #endregion
    //----------------------------------------------------------------
+   #region GameStateInfluences
    class GameStateInfluences : GameState
-   {
-      public override string PerformNextAction(IGameInstance gi, ref GameAction action)
-      {
-         String returnStatus = "OK";
-         switch (action)
-         {
-            #region ShowAlien
-            case GameAction.ShowAlien:
-               break;
-            #endregion
+    {
+        public override string PerformNextAction(IGameInstance gi, ref GameAction action)
+        {
+            String returnStatus = "OK";
+            switch (action)
+            {
+                #region ShowAlien
+                case GameAction.ShowAlien:
+                    break;
+                #endregion
 
             #region TownspersonPerformsInfluencing
             case GameAction.TownspersonPerformsInfluencing:
@@ -1408,35 +1453,37 @@ namespace PleasantvilleGame
                break;
             #endregion
 
-            #region default
-            default:
-               returnStatus = "Reached Default";
-               Console.WriteLine("GameStateInfluences::PerformNextAction() reached default with action={0} NextAction={1}", action.ToString(), gi.NextAction);
-               break;
-               #endregion
-         }
-         return returnStatus;
-      }
-   }
+                #region default
+                default:
+                    returnStatus = "Reached Default";
+                    Console.WriteLine("GameStateInfluences::PerformNextAction() reached default with action={0} NextAction={1}", action.ToString(), gi.NextAction);
+                    break;
+                #endregion
+            }
+            return returnStatus;
+        }
+    }
+   #endregion
    //----------------------------------------------------------------
+   #region GameStateCombat
    class GameStateCombat : GameState
-   {
-      static private CombatResult[,] theTable = new CombatResult[12, 5];
+    {
+        static private CombatResult[,] theTable = new CombatResult[12, 5];
 
-      #region Contructor
-      public GameStateCombat()
-      {
-         theTable[0, 0] = CombatResult.DefenderWins;
-         theTable[1, 0] = CombatResult.DefenderWins;
-         theTable[2, 0] = CombatResult.DefenderWins;
-         theTable[3, 0] = CombatResult.DefenderWins;
-         theTable[4, 0] = CombatResult.DefenderFlees;
-         theTable[5, 0] = CombatResult.AttackerFlees;
-         theTable[6, 0] = CombatResult.DefenderFlees;
-         theTable[7, 0] = CombatResult.AttackerWins;
-         theTable[8, 0] = CombatResult.AttackerWins;
-         theTable[9, 0] = CombatResult.AttackerWins;
-         theTable[10, 0] = CombatResult.AttackerWins;
+        #region Contructor
+        public GameStateCombat()
+        {
+            theTable[0, 0] = CombatResult.DefenderWins;
+            theTable[1, 0] = CombatResult.DefenderWins;
+            theTable[2, 0] = CombatResult.DefenderWins;
+            theTable[3, 0] = CombatResult.DefenderWins;
+            theTable[4, 0] = CombatResult.DefenderFlees;
+            theTable[5, 0] = CombatResult.AttackerFlees;
+            theTable[6, 0] = CombatResult.DefenderFlees;
+            theTable[7, 0] = CombatResult.AttackerWins;
+            theTable[8, 0] = CombatResult.AttackerWins;
+            theTable[9, 0] = CombatResult.AttackerWins;
+            theTable[10, 0] = CombatResult.AttackerWins;
 
          theTable[0, 1] = CombatResult.AttackerFlees;
          theTable[1, 1] = CombatResult.AttackerWins;
@@ -1474,28 +1521,28 @@ namespace PleasantvilleGame
          theTable[9, 3] = CombatResult.AttackerFlees;
          theTable[10, 3] = CombatResult.AttackerWins;
 
-         theTable[0, 4] = CombatResult.AttackerWins;
-         theTable[1, 4] = CombatResult.AttackerFlees;
-         theTable[2, 4] = CombatResult.AttackerWins;
-         theTable[3, 4] = CombatResult.AttackerWins;
-         theTable[4, 4] = CombatResult.AttackerWins;
-         theTable[5, 4] = CombatResult.AttackerWins;
-         theTable[6, 4] = CombatResult.AttackerWins;
-         theTable[7, 4] = CombatResult.DefenderFlees;
-         theTable[8, 4] = CombatResult.AttackerWins;
-         theTable[9, 4] = CombatResult.DefenderWins;
-         theTable[10, 4] = CombatResult.DefenderWins;
-      }
-      #endregion
+            theTable[0, 4] = CombatResult.AttackerWins;
+            theTable[1, 4] = CombatResult.AttackerFlees;
+            theTable[2, 4] = CombatResult.AttackerWins;
+            theTable[3, 4] = CombatResult.AttackerWins;
+            theTable[4, 4] = CombatResult.AttackerWins;
+            theTable[5, 4] = CombatResult.AttackerWins;
+            theTable[6, 4] = CombatResult.AttackerWins;
+            theTable[7, 4] = CombatResult.DefenderFlees;
+            theTable[8, 4] = CombatResult.AttackerWins;
+            theTable[9, 4] = CombatResult.DefenderWins;
+            theTable[10, 4] = CombatResult.DefenderWins;
+        }
+        #endregion
 
-      #region PerformCombat( IGameInstance gi )
-      public void PerformCombat(IGameInstance gi)
-      {
-         if (null == gi.MapItemCombat)
-         {
-            MessageBox.Show("No Combat");
-            return;
-         }
+        #region PerformCombat( IGameInstance gi )
+        public void PerformCombat(IGameInstance gi)
+        {
+            if (null == gi.MapItemCombat)
+            {
+                MessageBox.Show("No Combat");
+                return;
+            }
 
          IMapItemCombat combat = gi.MapItemCombat;
          if (null == combat.Territory)
@@ -1786,23 +1833,23 @@ namespace PleasantvilleGame
                }
                break;
 
-            default:
-               Console.WriteLine("ERRROR - Reached default");
-               break;
-         }
-      } // end function
-      #endregion
+                default:
+                    Console.WriteLine("ERRROR - Reached default");
+                    break;
+            }
+        } // end function
+        #endregion
 
-      #region void PerformCombatResolveLoss( IGameInstance gi, IMapItem mi)
-      void PerformCombatResolveLoss(IGameInstance gi, IMapItem mi)
-      {
-         StringBuilder sb = null;
-         if (mi.Name == "Zebulon")
-         {
-            IMapItem zebulon = gi.Persons.Find("Zebulon");
-            zebulon.IsKilled = true;
-            return;
-         }
+        #region void PerformCombatResolveLoss( IGameInstance gi, IMapItem mi)
+        void PerformCombatResolveLoss(IGameInstance gi, IMapItem mi)
+        {
+            StringBuilder sb = null;
+            if (mi.Name == "Zebulon")
+            {
+                IMapItem zebulon = gi.Persons.Find("Zebulon");
+                zebulon.IsKilled = true;
+                return;
+            }
 
          // First perfom the actions that occur no matter what the result.
          // The influence factors are adjusted downward.
@@ -1853,448 +1900,454 @@ namespace PleasantvilleGame
          int die2 = GameEngine.RandomGenerator.Next(6) + 1;
          int lossTableRoll = die1 + die2;
 
-         if (lossTableRoll < 5)
-         {
-            mi.IsKilled = true;
-         }
-         else if (lossTableRoll < 7)
-         {
-            mi.IsConscious = false;
-            if (true == mi.IsAlienKnown)
-               mi.IsTiedUp = true;
-         }
-         else
-         {
-            if (true == mi.IsAlienKnown)
+            if (lossTableRoll < 5)
             {
-               mi.IsSurrendered = true;
-               mi.IsTiedUp = true;
+                mi.IsKilled = true;
+             }
+            else if (lossTableRoll < 7)
+            {
+                mi.IsConscious = false;
+                if (true == mi.IsAlienKnown)
+                    mi.IsTiedUp = true;
             }
             else
             {
-               mi.IsStunned = true;
-               int tempMovement = mi.Movement; // Set up to only retreat one space 
-               mi.Movement = 1;                // by setting the IMapItems movement to one.
-               mi.IsMoved = false;
-               mi.MovementUsed = 0;
-               mi.TerritoryStarting = mi.Territory;  // If there are any pending moves, make sure they are removed
-               if (false == PerformMovement(gi, mi))
-                  Console.WriteLine("PerformCombatResolveLoss() No Retreat to same place for {0} ", mi.Name);
-               mi.Movement = tempMovement;     // return MapItem movement to original value
+                if (true == mi.IsAlienKnown)
+                {
+                    mi.IsSurrendered = true;
+                    mi.IsTiedUp = true;
+                }
+                else
+                {
+                   mi.IsStunned = true;
+                    int tempMovement = mi.Movement; // Set up to only retreat one space 
+                    mi.Movement = 1;                // by setting the IMapItems movement to one.
+                    mi.IsMoved = false;
+                    mi.MovementUsed = 0;
+                    mi.TerritoryStarting = mi.Territory;  // If there are any pending moves, make sure they are removed
+                    if (false == PerformMovement(gi, mi))
+                        Console.WriteLine("PerformCombatResolveLoss() No Retreat to same place for {0} ", mi.Name);
+                    mi.Movement = tempMovement;     // return MapItem movement to original value
+                }
             }
-         }
-      }
+        }
 
-      #endregion
+        #endregion
 
-      public override string PerformNextAction(IGameInstance gi, ref GameAction action)
-      {
-         String returnStatus = "OK";
-         switch (action)
-         {
-            #region ShowAlien
-            case GameAction.ShowAlien:
-               break;
-            #endregion
+        public override string PerformNextAction(IGameInstance gi, ref GameAction action)
+        {
+            String returnStatus = "OK";
+            switch (action)
+            {
+                #region ShowAlien
+                case GameAction.ShowAlien:
+                    break;
+                #endregion
 
-            #region AlienInitiateCombat
-            case GameAction.AlienInitiateCombat:
-               if (true == gi.IsAlienInitiatedCombat)
-                  action = GameAction.TownspersonNackCombatSelection;
-               if ((false == gi.IsAlienInitiatedCombat) && (false == gi.IsControlledInitiatedCombat))
-               {
-                  gi.IsAlienInitiatedCombat = true;
-                  gi.MapItemMoves.Clear();    // Clear any previous retreats
-                  gi.NextAction = "Alien Initiated Combat";
-               }
-               else
-               {
-                  action = GameAction.TownspersonNackCombatSelection;
-               }
-               break;
-            #endregion
+                #region AlienInitiateCombat
+                case GameAction.AlienInitiateCombat:
+                    if( true == gi.IsAlienInitiatedCombat )
+                        action = GameAction.TownspersonNackCombatSelection;
+                    if ((false == gi.IsAlienInitiatedCombat) && (false == gi.IsControlledInitiatedCombat))
+                    {
+                        gi.IsAlienInitiatedCombat = true;
+                        gi.MapItemMoves.Clear();    // Clear any previous retreats
+                        gi.NextAction = "Alien Initiated Combat";
+                    }
+                    else
+                    {
+                        action = GameAction.TownspersonNackCombatSelection;
+                    }
+                    break;
+                #endregion
 
-            #region TownspersonInitiateCombat
-            case GameAction.TownspersonInitiateCombat:
-               if (true == gi.IsControlledCombatCompleted)
-                  action = GameAction.AlienNackCombatSelection;
-               if ((false == gi.IsAlienInitiatedCombat) && (false == gi.IsControlledInitiatedCombat))
-               {
-                  gi.IsControlledInitiatedCombat = true;
-                  gi.MapItemMoves.Clear();    // Clear any previous retreats
-                  gi.NextAction = "Townsperson Initiated Combat";
-               }
-               else
-               {
-                  action = GameAction.AlienNackCombatSelection;
-               }
-               break;
-            #endregion
+                #region TownspersonInitiateCombat
+                case GameAction.TownspersonInitiateCombat:
+                    if( true == gi.IsControlledCombatCompleted )
+                        action = GameAction.AlienNackCombatSelection;
+                    if ((false == gi.IsAlienInitiatedCombat) && (false == gi.IsControlledInitiatedCombat))
+                    {
+                        gi.IsControlledInitiatedCombat = true;
+                        gi.MapItemMoves.Clear();    // Clear any previous retreats
+                        gi.NextAction = "Townsperson Initiated Combat";
+                    }
+                    else
+                    {
+                        action = GameAction.AlienNackCombatSelection;
+                    }
+                    break;
+                #endregion
 
-            #region AlienPerformCombat
-            case GameAction.AlienPerformCombat:
-               PerformCombat(gi);
-               gi.IsAlienInitiatedCombat = false;
-               gi.NextAction = "Select Flashing Region to Initiate Combat";
-               IMapItem zebulon = gi.Persons.Find("Zebulon");
-               if (true == zebulon.IsKilled)
-               {
-                  action = GameAction.ShowEndGame;
-                  gi.GamePhase = GamePhase.ShowEndGame;
-                  gi.NextAction = "End Game";
-                  gi.GameTurn = "Completed";
-               }
-               else if ((true == gi.IsControlledCombatCompleted) && ((false == GameStateChecker.CheckForAlienCombats(gi))))
-               {
-                  gi.IsAlienCombatCompleted = false;
-                  gi.IsControlledCombatCompleted = false;
-                  if (true == GameStateChecker.CheckForIterogations(gi))
-                  {
-                     gi.NextAction = "Townsperson chooses Black Building Space";
-                     gi.GamePhase = GamePhase.Iterrogations;
-                  }
-                  else if (true == GameStateChecker.CheckForImplantRemoval(gi))
-                  {
-                     gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
-                     gi.GamePhase = GamePhase.ImplantRemoval;
-                  }
-                  else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
-                  {
-                     gi.GamePhase = GamePhase.AlienTakeover;
-                     gi.NextAction = "Alien Chooses Flashing Space for Takeover";
-                  }
-                  else if (true == GameStateChecker.CheckForEndOfGame(gi))
-                  {
-                     action = GameAction.ShowEndGame;
-                     gi.GamePhase = GamePhase.ShowEndGame;
-                     gi.NextAction = "End Game";
-                     gi.GameTurn = "Completed";
-                  }
-                  else if (true == GameStateChecker.CheckForRandomMoves(gi))
-                  {
-                     gi.NextAction = "Display Random Movement";
-                     gi.GamePhase = GamePhase.RandomMovement;
-                  }
-                  else
-                  {
-                     gi.NextAction = "Alien Performs Movement";
-                     gi.GamePhase = GamePhase.AlienMovement;
-                  }
-               }
-               break;
-            #endregion
+                #region AlienPerformCombat
+                case GameAction.AlienPerformCombat:
+                    PerformCombat(gi);
+                    gi.IsAlienInitiatedCombat = false;
+                    gi.NextAction = "Select Flashing Region to Initiate Combat";
+                    IMapItem zebulon = gi.Persons.Find("Zebulon");
+                    if (true == zebulon.IsKilled)
+                    {
+                        action = GameAction.ShowEndGame;
+                        gi.GamePhase = GamePhase.ShowEndGame;
+                        gi.NextAction = "End Game";
+                        gi.GameTurn = "Completed";
+                    }
+                    else if ((true == gi.IsControlledCombatCompleted) && ((false == GameStateChecker.CheckForAlienCombats(gi))))
+                    {
+                        gi.IsAlienCombatCompleted = false;
+                        gi.IsControlledCombatCompleted = false;
+                        if (true == GameStateChecker.CheckForIterogations(gi))
+                        {
+                            gi.NextAction = "Townsperson chooses Black Building Space";
+                            gi.GamePhase = GamePhase.Iterrogations;
+                        }
+                        else if (true == GameStateChecker.CheckForImplantRemoval(gi))
+                        {
+                            gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
+                            gi.GamePhase = GamePhase.ImplantRemoval;
+                        }
+                        else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
+                        {
+                            gi.GamePhase = GamePhase.AlienTakeover;
+                            gi.NextAction = "Alien Chooses Flashing Space for Takeover";
+                        }
+                        else if (true == GameStateChecker.CheckForEndOfGame(gi))
+                        {
+                            action = GameAction.ShowEndGame;
+                            gi.GamePhase = GamePhase.ShowEndGame;
+                            gi.NextAction = "End Game";
+                            gi.GameTurn = "Completed";
+                        }
+                        else if (true == GameStateChecker.CheckForRandomMoves(gi))
+                        {
+                            gi.NextAction = "Display Random Movement";
+                            gi.GamePhase = GamePhase.RandomMovement;
+                        }
+                        else
+                        {
+                            gi.NextAction = "Alien Performs Movement";
+                            gi.GamePhase = GamePhase.AlienMovement;
+                        }
+                    }
+                    break;
+                #endregion
 
-            #region TownspersonPerformCombat
-            case GameAction.TownspersonPerformCombat:
-               PerformCombat(gi);
-               gi.IsControlledInitiatedCombat = false;
-               IMapItem zebulon1 = gi.Persons.Find("Zebulon");
-               if (true == zebulon1.IsKilled)
-               {
-                  action = GameAction.ShowEndGame;
-                  gi.GamePhase = GamePhase.ShowEndGame;
-                  gi.NextAction = "End Game";
-                  gi.GameTurn = "Completed";
-               }
-               else if ((true == gi.IsAlienCombatCompleted) && ((false == GameStateChecker.CheckForTownspersonCombats(gi))))
-               {
-                  gi.IsAlienCombatCompleted = false;
-                  gi.IsControlledCombatCompleted = false;
-                  if (true == GameStateChecker.CheckForIterogations(gi))
-                  {
-                     gi.NextAction = "Townsperson chooses Black Building Space";
-                     gi.GamePhase = GamePhase.Iterrogations;
-                  }
-                  else if (true == GameStateChecker.CheckForImplantRemoval(gi))
-                  {
-                     gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
-                     gi.GamePhase = GamePhase.ImplantRemoval;
-                  }
-                  else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
-                  {
-                     gi.GamePhase = GamePhase.AlienTakeover;
-                     gi.NextAction = "Alien Chooses Flashing Space for Takeover";
-                  }
-                  else if (true == GameStateChecker.CheckForEndOfGame(gi))
-                  {
-                     action = GameAction.ShowEndGame;
-                     gi.GamePhase = GamePhase.ShowEndGame;
-                     gi.NextAction = "End Game";
-                     gi.GameTurn = "Completed";
-                  }
-                  else if (true == GameStateChecker.CheckForRandomMoves(gi))
-                  {
-                     gi.NextAction = "Display Random Movement";
-                     gi.GamePhase = GamePhase.RandomMovement;
-                  }
-                  else
-                  {
-                     gi.NextAction = "Alien Performs Movement";
-                     gi.GamePhase = GamePhase.AlienMovement;
-                  }
-               }
-               break;
-            #endregion
+                #region TownspersonPerformCombat
+                case GameAction.TownspersonPerformCombat:
+                    PerformCombat(gi);
+                    gi.IsControlledInitiatedCombat = false;
+                    IMapItem zebulon1 = gi.Persons.Find("Zebulon");
+                    if (true == zebulon1.IsKilled)
+                    {
+                        action = GameAction.ShowEndGame;
+                        gi.GamePhase = GamePhase.ShowEndGame;
+                        gi.NextAction = "End Game";
+                        gi.GameTurn = "Completed";
+                    }
+                    else if ((true == gi.IsAlienCombatCompleted) && ((false == GameStateChecker.CheckForTownspersonCombats(gi))))
+                    {
+                        gi.IsAlienCombatCompleted = false;
+                        gi.IsControlledCombatCompleted = false;
+                        if (true == GameStateChecker.CheckForIterogations(gi))
+                        {
+                            gi.NextAction = "Townsperson chooses Black Building Space";
+                            gi.GamePhase = GamePhase.Iterrogations;
+                        }
+                        else if (true == GameStateChecker.CheckForImplantRemoval(gi))
+                        {
+                            gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
+                            gi.GamePhase = GamePhase.ImplantRemoval;
+                        }
+                        else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
+                        {
+                            gi.GamePhase = GamePhase.AlienTakeover;
+                            gi.NextAction = "Alien Chooses Flashing Space for Takeover";
+                        }
+                        else if (true == GameStateChecker.CheckForEndOfGame(gi))
+                        {
+                            action = GameAction.ShowEndGame;
+                            gi.GamePhase = GamePhase.ShowEndGame;
+                            gi.NextAction = "End Game";
+                            gi.GameTurn = "Completed";
+                        }
+                        else if (true == GameStateChecker.CheckForRandomMoves(gi))
+                        {
+                            gi.NextAction = "Display Random Movement";
+                            gi.GamePhase = GamePhase.RandomMovement;
+                        }
+                        else
+                        {
+                            gi.NextAction = "Alien Performs Movement";
+                            gi.GamePhase = GamePhase.AlienMovement;
+                        }
+                    }
+                    break;
+                #endregion
 
-            #region TownspersonCompletesCombat
-            case GameAction.TownspersonCompletesCombat:
-               gi.IsControlledCombatCompleted = true;
-               gi.IsControlledInitiatedCombat = false;
-               if (true == gi.IsAlienCombatCompleted)
-               {
-                  gi.IsAlienCombatCompleted = false;
-                  gi.IsControlledCombatCompleted = false;
-                  foreach (IMapItemMove mim in gi.MapItemMoves)
-                  {
-                     IMapItem mi = mim.MapItem;
-                     mi.Territory = mim.NewTerritory;
-                     mi.TerritoryStarting = mim.NewTerritory;
-                     mi.IsMoved = false;
-                     mi.MovementUsed = 0;
-                  }
-                  gi.MapItemMoves.Clear();
+                #region TownspersonCompletesCombat
+                case GameAction.TownspersonCompletesCombat:
+                    gi.IsControlledCombatCompleted = true;
+                    gi.IsControlledInitiatedCombat = false;
+                    if (true == gi.IsAlienCombatCompleted)
+                    {
+                        gi.IsAlienCombatCompleted = false;
+                        gi.IsControlledCombatCompleted = false;
+                        foreach (IMapItemMove mim in gi.MapItemMoves)
+                        {
+                            IMapItem mi = mim.MapItem;
+                            mi.Territory = mim.NewTerritory;
+                            mi.TerritoryStarting = mim.NewTerritory;
+                            mi.IsMoved = false;
+                            mi.MovementUsed = 0;
+                        }
+                        gi.MapItemMoves.Clear();
 
-                  if (true == GameStateChecker.CheckForIterogations(gi))
-                  {
-                     gi.NextAction = "Townsperson chooses Black Building Space";
-                     gi.GamePhase = GamePhase.Iterrogations;
-                  }
-                  else if (true == GameStateChecker.CheckForImplantRemoval(gi))
-                  {
-                     gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
-                     gi.GamePhase = GamePhase.ImplantRemoval;
-                  }
-                  else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
-                  {
-                     gi.GamePhase = GamePhase.AlienTakeover;
-                     gi.NextAction = "Alien Chooses Flashing Space for Takeover";
-                  }
-                  else if (true == GameStateChecker.CheckForEndOfGame(gi))
-                  {
-                     action = GameAction.ShowEndGame;
-                     gi.GamePhase = GamePhase.ShowEndGame;
-                     gi.NextAction = "End Game";
-                     gi.GameTurn = "Completed";
-                  }
-                  else if (true == GameStateChecker.CheckForRandomMoves(gi))
-                  {
-                     gi.NextAction = "Display Random Movement";
-                     gi.GamePhase = GamePhase.RandomMovement;
-                  }
-                  else
-                  {
-                     gi.NextAction = "Alien Performs Movement";
-                     gi.GamePhase = GamePhase.AlienMovement;
-                  }
-               }
-               else
-               {
-                  gi.NextAction = "Awaiting Alien Complete Combat";
-               }
-               break;
-            #endregion
+                        if (true == GameStateChecker.CheckForIterogations(gi))
+                        {
+                            gi.NextAction = "Townsperson chooses Black Building Space";
+                            gi.GamePhase = GamePhase.Iterrogations;
+                        }
+                        else if (true == GameStateChecker.CheckForImplantRemoval(gi))
+                        {
+                            gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
+                            gi.GamePhase = GamePhase.ImplantRemoval;
+                        }
+                        else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
+                        {
+                            gi.GamePhase = GamePhase.AlienTakeover;
+                            gi.NextAction = "Alien Chooses Flashing Space for Takeover";
+                        }
+                        else if (true == GameStateChecker.CheckForEndOfGame(gi))
+                        {
+                            action = GameAction.ShowEndGame;
+                            gi.GamePhase = GamePhase.ShowEndGame;
+                            gi.NextAction = "End Game";
+                            gi.GameTurn = "Completed";
+                        }
+                        else if (true == GameStateChecker.CheckForRandomMoves(gi))
+                        {
+                            gi.NextAction = "Display Random Movement";
+                            gi.GamePhase = GamePhase.RandomMovement;
+                        }
+                        else
+                        {
+                            gi.NextAction = "Alien Performs Movement";
+                            gi.GamePhase = GamePhase.AlienMovement;
+                        }
+                    }
+                    else
+                    {
+                        gi.NextAction = "Awaiting Alien Complete Combat";
+                    }
+                    break;
+                #endregion
 
-            #region AlienCompletesCombat
-            case GameAction.AlienCompletesCombat:
-               gi.IsAlienCombatCompleted = true;
-               gi.IsAlienInitiatedCombat = false;
-               if (true == gi.IsControlledCombatCompleted)
-               {
-                  foreach (IMapItemMove mim in gi.MapItemMoves)
-                  {
-                     IMapItem mi = mim.MapItem;
-                     mi.Territory = mim.NewTerritory;
-                     mi.TerritoryStarting = mim.NewTerritory;
-                     mi.IsMoved = false;
-                     mi.MovementUsed = 0;
-                  }
-                  gi.MapItemMoves.Clear();
+                #region AlienCompletesCombat
+                case GameAction.AlienCompletesCombat:
+                    gi.IsAlienCombatCompleted = true;
+                    gi.IsAlienInitiatedCombat = false;
+                    if (true == gi.IsControlledCombatCompleted)
+                    {
+                        foreach (IMapItemMove mim in gi.MapItemMoves)
+                        {
+                            IMapItem mi = mim.MapItem;
+                            mi.Territory = mim.NewTerritory;
+                            mi.TerritoryStarting = mim.NewTerritory;
+                            mi.IsMoved = false;
+                            mi.MovementUsed = 0;
+                        }
+                        gi.MapItemMoves.Clear();
 
-                  gi.IsAlienCombatCompleted = false;
-                  gi.IsControlledCombatCompleted = false;
-                  if (true == GameStateChecker.CheckForIterogations(gi))
-                  {
-                     gi.NextAction = "Townsperson chooses Black Building Space";
-                     gi.GamePhase = GamePhase.Iterrogations;
-                  }
-                  else if (true == GameStateChecker.CheckForImplantRemoval(gi))
-                  {
-                     gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
-                     gi.GamePhase = GamePhase.ImplantRemoval;
-                  }
-                  else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
-                  {
-                     gi.GamePhase = GamePhase.AlienTakeover;
-                     gi.NextAction = "Alien Chooses Flashing Space for Takeover";
-                  }
-                  else if (true == GameStateChecker.CheckForEndOfGame(gi))
-                  {
-                     action = GameAction.ShowEndGame;
-                     gi.GamePhase = GamePhase.ShowEndGame;
-                     gi.NextAction = "End Game";
-                     gi.GameTurn = "Completed";
-                  }
-                  else if (true == GameStateChecker.CheckForRandomMoves(gi))
-                  {
-                     gi.NextAction = "Display Random Movement";
-                     gi.GamePhase = GamePhase.RandomMovement;
-                  }
-                  else
-                  {
-                     gi.NextAction = "Alien Performs Movement";
-                     gi.GamePhase = GamePhase.AlienMovement;
-                  }
-               }
-               else
-               {
-                  gi.NextAction = "Awaiting Townsperson Complete Combat";
-               }
-               break;
-            #endregion
+                        gi.IsAlienCombatCompleted = false;
+                        gi.IsControlledCombatCompleted = false;
+                        if (true == GameStateChecker.CheckForIterogations(gi))
+                        {
+                            gi.NextAction = "Townsperson chooses Black Building Space";
+                            gi.GamePhase = GamePhase.Iterrogations;
+                        }
+                        else if (true == GameStateChecker.CheckForImplantRemoval(gi))
+                        {
+                            gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
+                            gi.GamePhase = GamePhase.ImplantRemoval;
+                        }
+                        else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
+                        {
+                            gi.GamePhase = GamePhase.AlienTakeover;
+                            gi.NextAction = "Alien Chooses Flashing Space for Takeover";
+                        }
+                        else if (true == GameStateChecker.CheckForEndOfGame(gi))
+                        {
+                            action = GameAction.ShowEndGame;
+                            gi.GamePhase = GamePhase.ShowEndGame;
+                            gi.NextAction = "End Game";
+                            gi.GameTurn = "Completed";
+                        }
+                        else if (true == GameStateChecker.CheckForRandomMoves(gi))
+                        {
+                            gi.NextAction = "Display Random Movement";
+                            gi.GamePhase = GamePhase.RandomMovement;
+                        }
+                        else
+                        {
+                            gi.NextAction = "Alien Performs Movement";
+                            gi.GamePhase = GamePhase.AlienMovement;
+                        }
+                    }
+                    else
+                    {
+                        gi.NextAction = "Awaiting Townsperson Complete Combat";
+                    }
+                    break;
+                #endregion
 
-            #region default
-            default:
-               returnStatus = "Reached Default";
-               Console.WriteLine("GameStateCombat::PerformNextAction() reached default with action={0} NextAction={1}", action.ToString(), gi.NextAction);
-               break;
-               #endregion
-         }
-         return returnStatus;
-      }
-   }
+                #region default
+                default:
+                    returnStatus = "Reached Default";
+                    Console.WriteLine("GameStateCombat::PerformNextAction() reached default with action={0} NextAction={1}", action.ToString(), gi.NextAction);
+                    break;
+                #endregion
+            }
+            return returnStatus;
+        }
+    }
+   #endregion
    //----------------------------------------------------------------
+   #region GameStateIterogations
    class GameStateIterogations : GameState
-   {
-      public override string PerformNextAction(IGameInstance gi, ref GameAction action)
-      {
-         String returnStatus = "OK";
-         switch (action)
-         {
-            #region ShowAlien
-            case GameAction.ShowAlien:
-               break;
-            #endregion
+    {
+        public override string PerformNextAction(IGameInstance gi, ref GameAction action)
+        {
+            String returnStatus = "OK";
+            switch (action)
+            {
+                #region ShowAlien
+                case GameAction.ShowAlien:
+                    break;
+                #endregion
 
-            #region TownspersonIterrogates
-            case GameAction.TownspersonIterrogates:
-               if (0 == gi.NumIterogationsThisTurn)
-               {
-                  gi.NextAction = "Alien Acknowledges Iterogations";
-                  action = GameAction.TownspersonCompletesIterogations;
-               }
-               break;
-            #endregion
+                #region TownspersonIterrogates
+                case GameAction.TownspersonIterrogates:
+                    if (0 == gi.NumIterogationsThisTurn)
+                    {
+                        gi.NextAction = "Alien Acknowledges Iterogations";
+                        action = GameAction.TownspersonCompletesIterogations;
+                    }
+                    break;
+                #endregion
 
-            #region TownspersonCompletesIterogations
-            case GameAction.TownspersonCompletesIterogations:
-               gi.NextAction = "Alien Acknowledges Iterogations";
-               break;
-            #endregion
+                #region TownspersonCompletesIterogations
+                case GameAction.TownspersonCompletesIterogations:
+                    gi.NextAction = "Alien Acknowledges Iterogations";
+                    break;
+                #endregion
 
-            #region AlienAcksIterogations
-            case GameAction.AlienAcksIterogations:
-               if (true == GameStateChecker.CheckForImplantRemoval(gi))
-               {
-                  gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
-                  gi.GamePhase = GamePhase.ImplantRemoval;
-               }
-               else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
-               {
-                  gi.GamePhase = GamePhase.AlienTakeover;
-                  gi.NextAction = "Alien Chooses Flashing Space for Takeover";
-               }
-               else if (true == GameStateChecker.CheckForEndOfGame(gi))
-               {
-                  action = GameAction.ShowEndGame;
-                  gi.GamePhase = GamePhase.ShowEndGame;
-                  gi.NextAction = "End Game";
-                  gi.GameTurn = "Completed";
-               }
-               else if (true == GameStateChecker.CheckForRandomMoves(gi))
-               {
-                  gi.NextAction = "Display Random Movement";
-                  gi.GamePhase = GamePhase.RandomMovement;
-               }
-               else
-               {
-                  gi.NextAction = "Alien Performs Movement";
-                  gi.GamePhase = GamePhase.AlienMovement;
-               }
-               break;
-            #endregion
+                #region AlienAcksIterogations
+                case GameAction.AlienAcksIterogations:
+                    if (true == GameStateChecker.CheckForImplantRemoval(gi))
+                    {
+                        gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
+                        gi.GamePhase = GamePhase.ImplantRemoval;
+                    }
+                    else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
+                    {
+                        gi.GamePhase = GamePhase.AlienTakeover;
+                        gi.NextAction = "Alien Chooses Flashing Space for Takeover";
+                    }
+                    else if (true == GameStateChecker.CheckForEndOfGame(gi))
+                    {
+                        action = GameAction.ShowEndGame;
+                        gi.GamePhase = GamePhase.ShowEndGame;
+                        gi.NextAction = "End Game";
+                        gi.GameTurn = "Completed";
+                    }
+                    else if (true == GameStateChecker.CheckForRandomMoves(gi))
+                    {
+                        gi.NextAction = "Display Random Movement";
+                        gi.GamePhase = GamePhase.RandomMovement;
+                    }
+                    else
+                    {
+                        gi.NextAction = "Alien Performs Movement";
+                        gi.GamePhase = GamePhase.AlienMovement;
+                    }
+                    break;
+                #endregion
 
-            #region default
-            default:
-               returnStatus = "Reached Default";
-               Console.WriteLine("GameStateIterogations::PerformNextAction() reached default with action={0} NextAction={1}", action.ToString(), gi.NextAction);
-               break;
-               #endregion
-         }
-         return returnStatus;
-      }
-   }
+                #region default
+                default:
+                    returnStatus = "Reached Default";
+                    Console.WriteLine("GameStateIterogations::PerformNextAction() reached default with action={0} NextAction={1}", action.ToString(), gi.NextAction);
+                    break;
+                #endregion
+            }
+            return returnStatus;
+        }
+    }
+   #endregion
    //----------------------------------------------------------------
+   #region GameStateImplantRemoval
    class GameStateImplantRemoval : GameState
-   {
-      public override string PerformNextAction(IGameInstance gi, ref GameAction action)
-      {
-         String returnStatus = "OK";
-         switch (action)
-         {
-            #region TownspersonCompletesInfluencing
-            case GameAction.TownspersonCompletesInfluencing:
-               break;
-            #endregion
+    {
+        public override string PerformNextAction(IGameInstance gi, ref GameAction action)
+        {
+            String returnStatus = "OK";
+            switch (action)
+            {
+                #region TownspersonCompletesInfluencing
+                case GameAction.TownspersonCompletesInfluencing:
+                    break;
+                #endregion
 
-            #region ShowAlien
-            case GameAction.ShowAlien:
-               break;
-            #endregion
+                #region ShowAlien
+                case GameAction.ShowAlien:
+                    break;
+                #endregion
 
-            #region TownspersonCompletesRemoval
-            case GameAction.TownspersonCompletesRemoval:
-               if (true == GameStateChecker.CheckForAlienTakeovers(gi))
-               {
-                  gi.GamePhase = GamePhase.AlienTakeover;
-                  gi.NextAction = "Alien Chooses Flashing Space for Takeover";
-               }
-               else if (true == GameStateChecker.CheckForEndOfGame(gi))
-               {
-                  action = GameAction.ShowEndGame;
-                  gi.GamePhase = GamePhase.ShowEndGame;
-                  gi.NextAction = "End Game";
-                  gi.GameTurn = "Completed";
-               }
-               else if (true == GameStateChecker.CheckForRandomMoves(gi))
-               {
-                  gi.NextAction = "Display Random Movement";
-                  gi.GamePhase = GamePhase.RandomMovement;
-               }
-               else
-               {
-                  gi.NextAction = "Alien Performs Movement";
-                  gi.GamePhase = GamePhase.AlienMovement;
-               }
-               break;
-            #endregion
+                #region TownspersonCompletesRemoval
+                case GameAction.TownspersonCompletesRemoval:
+                    if (true == GameStateChecker.CheckForAlienTakeovers(gi))
+                    {
+                        gi.GamePhase = GamePhase.AlienTakeover;
+                        gi.NextAction = "Alien Chooses Flashing Space for Takeover";
+                    }
+                    else if (true == GameStateChecker.CheckForEndOfGame(gi))
+                    {
+                        action = GameAction.ShowEndGame;
+                        gi.GamePhase = GamePhase.ShowEndGame;
+                        gi.NextAction = "End Game";
+                        gi.GameTurn = "Completed";
+                    }
+                    else if (true == GameStateChecker.CheckForRandomMoves(gi))
+                    {
+                        gi.NextAction = "Display Random Movement";
+                        gi.GamePhase = GamePhase.RandomMovement;
+                    }
+                    else
+                    {
+                        gi.NextAction = "Alien Performs Movement";
+                        gi.GamePhase = GamePhase.AlienMovement;
+                    }
+                    break;
+                #endregion
 
-            #region default
-            default:
-               returnStatus = "Reached Default";
-               Console.WriteLine("GameStateImplantRemoval::PerformNextAction() reached default with action={0} NextAction={1}", action.ToString(), gi.NextAction);
-               break;
-               #endregion
-         }
-         return returnStatus;
-      }
-   }
+                #region default
+                default:
+                    returnStatus = "Reached Default";
+                    Console.WriteLine("GameStateImplantRemoval::PerformNextAction() reached default with action={0} NextAction={1}", action.ToString(), gi.NextAction);
+                    break;
+                #endregion
+            }
+            return returnStatus;
+        }
+    }
+   #endregion
    //----------------------------------------------------------------
+   #region GameStateAlienTakeover
    class GameStateAlienTakeover : GameState
-   {
-      #region string PerformTakeover( IGameInstance gi )
-      private string PerformTakeover(ref IGameInstance gi)
-      {
-         StringBuilder sb = new StringBuilder();
+    {
+        #region string PerformTakeover( IGameInstance gi )
+        private string PerformTakeover(ref IGameInstance gi)
+        {
+            StringBuilder sb = new StringBuilder();
 
          if (null == gi.Takeover)
          {
@@ -2441,78 +2494,79 @@ namespace PleasantvilleGame
          }
          return "OK";
 
-      } // end function
-      #endregion
+        } // end function
+        #endregion
 
-      public override string PerformNextAction(IGameInstance gi, ref GameAction action)
-      {
-         String returnStatus = "OK";
-         switch (action)
-         {
-            #region ShowAlien
-            case GameAction.ShowAlien:
-               break;
-            #endregion
+        public override string PerformNextAction(IGameInstance gi, ref GameAction action)
+        {
+            String returnStatus = "OK";
+            switch (action)
+            {
+                #region ShowAlien
+                case GameAction.ShowAlien:
+                    break;
+                #endregion
 
-            #region AlienTakeover
-            case GameAction.AlienTakeover:
-               returnStatus = PerformTakeover(ref gi);
-               break;
-            #endregion
+                #region AlienTakeover
+                case GameAction.AlienTakeover:
+                    returnStatus = PerformTakeover(ref gi);
+                    break;
+                #endregion
 
-            #region AlienCompletesTakeovers
-            case GameAction.AlienCompletesTakeovers:
-               if (true == GameStateChecker.CheckForEndOfGame(gi))
-               {
-                  action = GameAction.ShowEndGame;
-                  gi.GamePhase = GamePhase.ShowEndGame;
-                  gi.NextAction = "End Game";
-                  gi.GameTurn = "Completed";
-               }
-               else if (true == GameStateChecker.CheckForRandomMoves(gi))
-               {
-                  gi.NextAction = "Display Random Movement";
-                  gi.GamePhase = GamePhase.RandomMovement;
-               }
-               else
-               {
-                  gi.NextAction = "Alien Performs Movement";
-                  gi.GamePhase = GamePhase.AlienMovement;
-               }
-               break;
-            #endregion
+                #region AlienCompletesTakeovers
+                case GameAction.AlienCompletesTakeovers:
+                    if (true == GameStateChecker.CheckForEndOfGame(gi))
+                    {
+                        action = GameAction.ShowEndGame;
+                        gi.GamePhase = GamePhase.ShowEndGame;
+                        gi.NextAction = "End Game";
+                        gi.GameTurn = "Completed";
+                    }
+                    else if (true == GameStateChecker.CheckForRandomMoves(gi))
+                    {
+                        gi.NextAction = "Display Random Movement";
+                        gi.GamePhase = GamePhase.RandomMovement;
+                    }
+                    else
+                    {
+                        gi.NextAction = "Alien Performs Movement";
+                        gi.GamePhase = GamePhase.AlienMovement;
+                    }
+                    break;
+                #endregion
 
-            #region default
-            default:
-               returnStatus = "Reached Default";
-               Console.WriteLine("GameStateAlienTakeover::PerformNextAction() reached default with action={0} NextAction={1}", action.ToString(), gi.NextAction);
-               break;
-               #endregion
-         }
-         return returnStatus;
-      }
-   }
+                #region default
+                default:
+                    returnStatus = "Reached Default";
+                    Console.WriteLine("GameStateAlienTakeover::PerformNextAction() reached default with action={0} NextAction={1}", action.ToString(), gi.NextAction);
+                    break;
+                #endregion
+            }
+            return returnStatus;
+        }
+    }
+   #endregion
    //----------------------------------------------------------------
    class GameStateEnded : GameState
-   {
-      public override string PerformNextAction(IGameInstance gi, ref GameAction action)
-      {
-         String returnStatus = "OK";
-         switch (action)
-         {
-            case GameAction.ShowAlien:
-               break;
-            case GameAction.ShowEndGame:
-               break;
-            case GameAction.ExitGame:
-               Application.Current.Shutdown();
-               break;
-            default:
-               returnStatus = "Reached Default";
-               Console.WriteLine("GameStateEnded::PerformNextAction() reached default with action={0} NextAction={1}", action.ToString(), gi.NextAction);
-               break;
-         }
-         return returnStatus;
-      }
-   }
+    {
+        public override string PerformNextAction(IGameInstance gi, ref GameAction action)
+        {
+            String returnStatus = "OK";
+            switch (action)
+            {
+                case GameAction.ShowAlien:
+                    break;
+                case GameAction.ShowEndGame:
+                    break;
+                case GameAction.ExitGame:
+                    Application.Current.Shutdown();
+                    break;
+                default:
+                    returnStatus = "Reached Default";
+                    Console.WriteLine("GameStateEnded::PerformNextAction() reached default with action={0} NextAction={1}", action.ToString(), gi.NextAction);
+                    break;
+            }
+            return returnStatus;
+        }
+    }
 }
