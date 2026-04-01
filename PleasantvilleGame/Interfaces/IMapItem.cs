@@ -5,10 +5,27 @@ using System.Windows.Xps.Serialization;
 
 namespace PleasantvilleGame
 {
+   [Serializable]
+   public struct BloodSpot
+   {
+      public int mySize;      // diameter  of blood spot
+      public double myLeft;   // left of where blood spot exists on canvas
+      public double myTop;    // top of where blood spot exists on canvas
+      public BloodSpot(int range, Random r)
+      {
+         mySize = r.Next(5) + 3;
+         myLeft = r.Next(0, range - mySize);
+         myTop = r.Next(0, range - mySize);
+      }
+      public BloodSpot(int size, double left, double top)
+      {
+         mySize = size;
+         myLeft = left;
+         myTop = top;
+      }
+   }
    public interface IMapItem
    {
-      //----------------------------------------
-      // Basic Properties
       string Name { get; set; }
       string TopImageName { get; set; }
       string BottomImageName { get; set; }
@@ -18,53 +35,40 @@ namespace PleasantvilleGame
       bool IsAnimated { get; set; }
       bool IsMoved { get; set; }               // If Sherman moved, it cannot fire unless it has HVSS
       int Count { get; set; }
+      //----------------------------------------
       IMapPoint Location { get; set; }       // top left corner of MapItem
-      //----------------------------------------
-      double RotationHull { get; set; }      // rotation to point at location
-      double RotationOffsetHull { get; set; }
-      //----------------------------------------
-      double RotationTurret { get; set; }
-      double RotationOffsetTurret { get; set; }
-      //----------------------------------------
-      ITerritory TerritoryCurrent { get; set; }
+      ITerritory Territory { get; set; }
       ITerritory TerritoryStarting { get; set; }
       //----------------------------------------
-      string LastMoveAction { get; set; }
-      bool IsMoving { get; set; }
-      bool IsHullDown { get; set; }
+      int Combat { get; set; }
+      int Influence { get; set; }
+      int Movement { get; set; }
+      int MovementUsed { get; set; }
+      //----------------------------------------
+      bool IsConscious { get; set; }
+      bool IsAlienUnknown { get; set; }
+      bool IsAlienKnown { get; set; }
+      bool IsControlled { get; set; }
+      bool IsImplantHeld { get; set; }
+      bool IsInterrogated { get; set; }
       bool IsKilled { get; set; }
-      bool IsUnconscious { get; set; }
-      bool IsIncapacitated { get; set; }
-      bool IsFired { get; set; }
-      bool IsSpotted { get; set; }
-      bool IsInterdicted { get; set; }
-      Dictionary<string, int> EnemyAcquiredShots { set; get; } // Enemies that have acquired on this MapItem <string=Firer, int=number of shots>
-      //----------------------------------------
-      bool IsMovingInOpen { get; set; }
-      bool IsWoods { get; set; }
-      bool IsBuilding { get; set; }
-      bool IsFortification { get; set; }
-      bool IsThrownTrack { get; set; }
-      bool IsBoggedDown { get; set; }
-      bool IsAssistanceNeeded { get; set; }
-      bool IsFuelNeeded { get; set; }
-      //----------------------------------------
-      bool IsHeHit { get; set; }
-      bool IsApHit { get; set; } 
-      EnumSpottingResult Spotting { get; set; }
+      bool IsSkeptical { get; set; }
+      bool IsStunned { get; set; }
+      bool IsSurrendered { get; set; }
+      bool IsTiedUp { get; set; }
+      bool IsWary { get; set; }
+      bool IsMoveStoppedThisTurn { get; set; }
+      bool IsMoveAllowedToResetThisTurn { get; set; }
+      bool IsConversedThisTurn { get; set; }
+      bool IsInfluencedThisTurn { get; set; }
+      bool IsCombatThisTurn { get; set; }
+      bool IsInterrogatedThisTurn { get; set; }
+      bool IsImplantRemovalThisTurn { get; set; }
+      bool IsTakeoverThisTurn { get; set; }
       //----------------------------------------
       void Copy(IMapItem mi);
       void Sync(IMapItem mi); // synchronize most of the data but not all
-      bool IsEnemyUnit();
-      bool IsVehicle();
-      bool IsTurret();
-      bool IsAntiTankGun();
-      bool IsSelfPropelledGun();
-      string GetEnemyUnit();
       void SetBloodSpots(int percent = 40);
-      bool SetMapItemRotation(IMapItem target);
-      bool SetMapItemRotationTurret(IMapItem target);
-      bool UpdateMapRotation(string facing);
    }
    //==========================================
    public interface IMapItems : System.Collections.IEnumerable
@@ -83,32 +87,5 @@ namespace PleasantvilleGame
       IMapItem? this[int index] { get; set; }
       IMapItems Shuffle();
       void Rotate(int numOfRotates);
-   }
-   //==========================================
-   public interface ICrewMember : IMapItem
-   {
-      string Role { get; set; }
-      string Rank { get; set; }
-      int Rating { get; set; }
-      bool IsButtonedUp { get; set; }
-      string Wound { get; set; }
-      int WoundDaysUntilReturn { get; set; }
-   }
-   //==========================================
-   public interface ICrewMembers : System.Collections.IEnumerable
-   {
-      int Count { get; }
-      void Add(ICrewMember cm);
-      void Insert(int index, ICrewMember cm);
-      void Clear();
-      bool Contains(ICrewMember cm);
-      int IndexOf(ICrewMember cm);
-      void Remove(ICrewMember cmName);
-      void Reverse();
-      ICrewMember? Remove(string cmName);
-      ICrewMember? RemoveAt(int index);
-      ICrewMember? Find(string cmName);
-      ICrewMember? this[int index] { get; set; }
-
    }
 }

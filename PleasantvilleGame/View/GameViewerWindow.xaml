@@ -1,0 +1,86 @@
+﻿<Window x:Class="PleasantvilleGame.GameViewerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="PleasantVille" 
+        WindowStyle="SingleBorderWindow" 
+        HorizontalAlignment="Center" 
+        VerticalAlignment="Center" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" BorderThickness="3" d:DesignHeight="1310" d:DesignWidth="1590" Icon="/Pleasantville;component/Images/PleasantVille.gif" SizeToContent="WidthAndHeight" Closed="GameViewerWindowClosed" Name="myGameViewerWindow" WindowState="Maximized" Cursor="Arrow" ForceCursor="True">
+    <DockPanel>
+        <Menu x:Name="myMainMenu" DockPanel.Dock="Top">
+            <MenuItem Header="_Start" InputGestureText="Ctrl+S" x:Name="myMenuItemGamePhase" >
+                <MenuItem Header="_Next Action" x:Name="myMenuItemNextAction" InputGestureText="Ctrl+N"/>
+                <MenuItem Header="_Display" x:Name="myMenuItemDisplay" InputGestureText="Ctrl+D"/>
+            </MenuItem>
+        </Menu>
+        <StatusBar  x:Name="myStatusBar" DockPanel.Dock="Bottom" >
+            <Label x:Name="myLabelInfluenceTotal" Content="Total Influence=337" />
+            <Separator />
+            <Label x:Name="myLabelInfluenceTownspeople" Content="Town's People Influence=0" />
+            <Separator />
+            <Label x:Name="myLabelInfluenceAlienKnown" Content="Alien Influence=0" />
+            <Separator />
+            <Label x:Name="myLabelInfluenceAlien" Content="Unknown Influence=0" />
+            <Separator />
+            <Label x:Name="myLabelGamePhase" Content="Game Phase" Visibility="Hidden"/>
+            <Separator />
+            <Label x:Name="myLabelNextAction" Content="Game Action" Visibility="Hidden"/>
+        </StatusBar>
+        <ScrollViewer Name="scollviewer" HorizontalScrollBarVisibility="Auto" >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1071" />
+                    <ColumnDefinition Width="485" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="573"></RowDefinition>
+                    <RowDefinition Height="627"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Canvas Name="myCanvas" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,12,0">
+                    <Image Source="/Pleasantville;component/Images/PleasantVille.gif"  Height="1196" Width="1113" Canvas.Left="0" Canvas.Top="0" />
+                    <Label Content="Aliens Win!!!!" FontSize="72" FontWeight="Bold" Foreground="Red" Name="myLabelWinner" Visibility="Hidden" HorizontalAlignment="Center" VerticalAlignment="Center" Height="143" Width="628" Canvas.Left="230" Canvas.Top="490" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Harlow Solid" Panel.ZIndex="10000">
+                        <Label.Triggers>
+                            <EventTrigger RoutedEvent="Label.Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="myLabelWinner" Storyboard.TargetProperty="Opacity" From="1.0" To="0.0" Duration="0:0:1" AutoReverse="True" RepeatBehavior="Forever" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Label.Triggers>
+                    </Label>
+                </Canvas>
+                <DockPanel Name="myDockPanelTextEntry" Margin="6,0,0,2" Grid.Column="1">
+                    <TextBox Name="myTextBoxDisplay" BorderThickness="5" VerticalScrollBarVisibility="Auto" Background="#17000000" IsReadOnly="True" MaxLines="30000" TextWrapping="Wrap" Height="489" DockPanel.Dock="Top" Width="456" />
+                    <TextBox Name="myTextBoxEntry" AcceptsReturn="True" Cursor="Arrow" CaretBrush="#FFEF1414" AcceptsTab="True" TextChanged="myTextBoxEntryTextChanged" TextWrapping="Wrap" DockPanel.Dock="Bottom" Width="458" Height="81" />
+                </DockPanel>
+                <Canvas Name="myHelperCanvas" Grid.Row="1" Grid.Column="1">
+                    <Button Content="OK" Name="myButtonOk" Click="myButtonOk_Click" Margin="249,145,0,460" HorizontalAlignment="Left" Width="71" Canvas.Top="6" Canvas.Left="22" />
+                    <Button Content="Ignore" Height="23" HorizontalAlignment="Left" Margin="129,144,0,0" Name="myButtonIgnore" VerticalAlignment="Top" Width="75" Canvas.Top="6" Canvas.Left="22" Click="myButtonIgnoreClick" />
+                    <Button Content="Button" Height="50" Name="myButton1" Width="50" Background="#FFFFD500" Click="myButton1_Click" Canvas.Left="30" Canvas.Top="60" />
+                    <Button Content="Button" Height="50" Name="myButton2" Width="50" Background="#FFFFD500" Click="myButton2_Click" Canvas.Left="97" Canvas.Top="60" />
+                    <Button Content="Button" Height="50" Name="myButton3" Width="50" Background="#FFFFD500" Click="myButton3_Click" Canvas.Left="166" Canvas.Top="60" />
+                    <Label Content="-&gt;" Height="Auto" Name="myLabelArrow" FontSize="56" FontFamily="=&gt;" IsEnabled="False"  Margin="199,30,224,521" Canvas.Top="18" Canvas.Left="20" />
+                    <Button Content="Button" Height="50" Name="myButton4" Width="50" Background="White" Click="myButton4_Click" Canvas.Left="288" Canvas.Top="60" />
+                    <Button Content="Button" Height="50" Name="myButton5" Width="50" Background="White" Click="myButton5_Click" Canvas.Left="355" Canvas.Top="60" />
+                    <Button Content="Button" Height="50" Name="myButton6" Width="50" Background="White" Click="myButton6_Click"  Canvas.Left="421" Canvas.Top="60" />
+                    <Rectangle Height="50" Name="myRectangle1" Stroke="Red" Width="50" StrokeThickness="3" Canvas.Left="30" Canvas.Top="60" />
+                    <Rectangle Height="50" Name="myRectangle2" Stroke="Red" Width="50" StrokeThickness="3" Canvas.Left="97" Canvas.Top="60" />
+                    <Rectangle Height="50" Name="myRectangle3" Stroke="Red" Width="50" StrokeThickness="3" Canvas.Left="166" Canvas.Top="60" />
+                    <Rectangle Height="50" Name="myRectangle4" Stroke="Red" Width="50" StrokeThickness="3" Canvas.Left="288" Canvas.Top="60" />
+                    <Rectangle Height="50" Name="myRectangle5" Stroke="Red" Width="50" StrokeThickness="3"  Canvas.Left="355" Canvas.Top="60" />
+                    <Rectangle Height="50" Name="myRectangle6" Stroke="Red" Width="50" StrokeThickness="3"  Canvas.Left="421" Canvas.Top="60" />
+                    <Label Content="Choose One Target to ..." Height="29" Name="myLabelRightTop" Width="218" Margin="271,31,29,567" Grid.Row="1" Canvas.Top="4" Canvas.Left="14" />
+                    <Label Content="Choose One Person To Perform ..." Height="31" Name="myLabelLeftTop" Width="236" Margin="11,31,271,565" Grid.Row="1" Grid.Column="1" Canvas.Top="2" Canvas.Left="12" />
+                    <Label Content="Wary" Height="31" Name="myLabelButton1" Width="50"  Margin="17,101,451,495" Canvas.Top="8" Canvas.Left="10" />
+                    <Label Content="Wary" Height="31" Name="myLabelButton2" Width="50"  Margin="84,101,384,495" Canvas.Top="8" Canvas.Left="10" />
+                    <Label Content="Wary" Height="31" Name="myLabelButton3" Width="50"  Margin="154,101,314,495" Canvas.Top="8" Canvas.Left="10" />
+                    <Label Content="Wary" Height="31" Name="myLabelButton4" Width="50"  Margin="277,101,191,495" Canvas.Top="8" Canvas.Left="10" />
+                    <Label Content="Wary" Height="31" Name="myLabelButton5" Width="50" Margin="344,101,124,495" Canvas.Top="8" Canvas.Left="10" />
+                    <Label Content="Wary" Height="31" Name="myLabelButton6" Width="50" Margin="411,101,57,0"  VerticalAlignment="Top" Canvas.Top="8" Canvas.Left="10" />
+                    <TextBox Height="126" x:Name="myTextBoxResults" BorderBrush="{x:Null}" Margin="1038,165,43,336"/>
+                    <Label Content="Heading" x:Name="myLabelHeading" FontSize="16" Height="40" Width="459" Canvas.Left="12" Canvas.Top="2" />
+                </Canvas>
+            </Grid>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

@@ -1,7 +1,5 @@
-﻿using System;
+﻿
 using System.Collections;
-using System.Data.Common;
-using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,7 +11,7 @@ using WpfAnimatedGif;
 namespace PleasantvilleGame
 {
    [Serializable]
-   public class MapItemImage : IMapItemImage
+   public class MapImage : IMapImage
    {
       public static string theImageDirectory = "";
       public BitmapImage myBitmapImage;
@@ -26,7 +24,7 @@ namespace PleasantvilleGame
       private ImageAnimationController? myAnimationController = null;
       public ImageAnimationController? AnimationController { get => myAnimationController; set => myAnimationController = value; }
       //--------------------------------------------
-      public MapItemImage(string imageName)
+      public MapImage(string imageName)
       {
          string fullImagePath = theImageDirectory + Utilities.RemoveSpaces(imageName) + ".gif";
          Name = imageName;
@@ -39,7 +37,7 @@ namespace PleasantvilleGame
             ImageControl = new Image { Source = myBitmapImage, Stretch = Stretch.Fill, Name = imageName };
             if (null == ImageControl)
             {
-               Logger.Log(LogEnum.LE_ERROR, "MapItemImage(): 0 imageName=" + imageName);
+               Logger.Log(LogEnum.LE_ERROR, "MapImage(): 0 imageName=" + imageName);
             }
             else
             {
@@ -52,22 +50,22 @@ namespace PleasantvilleGame
          }
          catch (DirectoryNotFoundException dirException)
          {
-            Logger.Log(LogEnum.LE_ERROR, "MapItemImage(): 1 imageName=" + fullImagePath + "\n" + dirException.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "MapImage(): 1 imageName=" + fullImagePath + "\n" + dirException.ToString());
          }
          catch (FileNotFoundException fileException)
          {
-            Logger.Log(LogEnum.LE_ERROR, "MapItemImage(): 2  imageName=" + fullImagePath + "\n" + fileException.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "MapImage(): 2  imageName=" + fullImagePath + "\n" + fileException.ToString());
          }
          catch (IOException ioException)
          {
-            Logger.Log(LogEnum.LE_ERROR, "MapItemImage(): 3 imageName=" + fullImagePath + "\n" + ioException.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "MapImage(): 3 imageName=" + fullImagePath + "\n" + ioException.ToString());
          }
          catch (Exception e)
          {
-            Logger.Log(LogEnum.LE_ERROR, "MapItemImage(): 4 imageName=" + fullImagePath + "\n" + e.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "MapImage(): 4 imageName=" + fullImagePath + "\n" + e.ToString());
          }
       }
-      public MapItemImage(MapItemImage mii)
+      public MapImage(MapImage mii)
       {
          Name = mii.Name;
          myBitmapImage = mii.myBitmapImage;
@@ -121,39 +119,39 @@ namespace PleasantvilleGame
    }
    //--------------------------------------------------------------------------
    [Serializable]
-   public class MapItemImages : IEnumerable, IMapItemImages
+   public class MapImages : IEnumerable, IMapImages
    {
       private readonly ArrayList myList;
-      public MapItemImages() { myList = new ArrayList(); }
-      public void Add(IMapItemImage mii) { myList.Add(mii); }
-      public void Insert(int index, IMapItemImage mii) { myList.Insert(index, mii); }
+      public MapImages() { myList = new ArrayList(); }
+      public void Add(IMapImage mii) { myList.Add(mii); }
+      public void Insert(int index, IMapImage mii) { myList.Insert(index, mii); }
       public int Count { get { return myList.Count; } }
       public void Clear() { myList.Clear(); }
-      public bool Contains(IMapItemImage mii) { return myList.Contains(mii); }
+      public bool Contains(IMapImage mii) { return myList.Contains(mii); }
       public IEnumerator GetEnumerator() { return myList.GetEnumerator(); }
-      public int IndexOf(IMapItemImage mii) { return myList.IndexOf(mii); }
-      public void Remove(IMapItemImage mii) { myList.Remove(mii); }
-      public IMapItemImage? RemoveAt(int index)
+      public int IndexOf(IMapImage mii) { return myList.IndexOf(mii); }
+      public void Remove(IMapImage mii) { myList.Remove(mii); }
+      public IMapImage? RemoveAt(int index)
       {
-         IMapItemImage? mii = myList[index] as IMapItemImage;
+         IMapImage? mii = myList[index] as IMapImage;
          if (null == mii) return null;
          myList.RemoveAt(index);
          return mii;
       }
-      public IMapItemImage? this[int index]
+      public IMapImage? this[int index]
       {
          get
          {
-            IMapItemImage? image = myList[index] as IMapItemImage;
+            IMapImage? image = myList[index] as IMapImage;
             return image;
          }
          set { myList[index] = value; }
       }
-      public IMapItemImage? Find(string pathToMatch)
+      public IMapImage? Find(string pathToMatch)
       {
          foreach (object o in myList)
          {
-            IMapItemImage mii = (IMapItemImage)o;
+            IMapImage mii = (IMapImage)o;
             if (mii.Name == pathToMatch)
                return mii;
          }
@@ -163,10 +161,10 @@ namespace PleasantvilleGame
       {
          foreach (object o in myList)
          {
-            MapItemImage? mii = o as MapItemImage;
+            MapImage? mii = o as MapImage;
             if (null == mii)
             {
-               Logger.Log(LogEnum.LE_ERROR, "GetBitmapImage(): mii is not a MapItemImage");
+               Logger.Log(LogEnum.LE_ERROR, "GetBitmapImage(): mii is not a MapImage");
                return null;
             }
             if (mii.Name == imageName)
@@ -179,7 +177,7 @@ namespace PleasantvilleGame
                return mii.myBitmapImage;
             }
          }
-         MapItemImage miiToAdd = new MapItemImage(imageName);
+         MapImage miiToAdd = new MapImage(imageName);
          myList.Add(miiToAdd);
          return miiToAdd.myBitmapImage;
       }

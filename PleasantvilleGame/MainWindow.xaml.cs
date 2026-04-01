@@ -141,7 +141,7 @@ namespace PleasantvilleGame
                return;
             }
             //--------------------------------------------
-            string iconFilename = MapImage.theImageDirectory + "PattonsBest.ico";
+            string iconFilename = MapImage.theImageDirectory + "PleasantvilleGame.ico";
             Uri iconUri = new Uri(iconFilename, UriKind.Absolute);
             this.Icon = BitmapFrame.Create(iconUri);
             //--------------------------------------------

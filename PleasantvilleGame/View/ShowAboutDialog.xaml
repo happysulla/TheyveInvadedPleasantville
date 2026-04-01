@@ -1,0 +1,53 @@
+﻿<Window x:Class="PleasantvilleGame.ShowAboutDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PleasantvilleGame"
+        mc:Ignorable="d"
+        Topmost="True" 
+        Name="myAboutDialog"
+        Title="About Patton's Best" MinHeight="400" MinWidth="400" MaxHeight="800" MaxWidth="800" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" ResizeMode="NoResize" 
+        Closed="Window_Closed">
+    <Grid>
+      <Grid.RowDefinitions>
+         <RowDefinition Height="Auto"></RowDefinition>
+         <RowDefinition Height="Auto"></RowDefinition>
+         <RowDefinition Height="Auto"></RowDefinition>
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+      </Grid.ColumnDefinitions>
+      <StackPanel Name="myStackPanelHeader" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center"  HorizontalAlignment="Left" >
+         <TextBox Name="myTextBox" Width="Auto" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}"  Margin="0,0,10,0" >
+            Digital Version: 1.0 Date: July 10, 2024
+         </TextBox>
+         <TextBlock TextWrapping="Wrap" Width="Auto" Foreground="{x:Null}" >
+            <Hyperlink NavigateUri="https://github.com/happysulla/PleasantvilleGame" RequestNavigate="Hyperlink_RequestNavigate">  GitHub  </Hyperlink>
+         </TextBlock>
+      </StackPanel>
+      <TextBlock  x:Name="myTextBlock" Grid.Row="1" TextWrapping="Wrap" Width="Auto" >
+         <LineBreak/>
+          <Italic>For those of you who like to roll percentile dice -- this game's for you!</Italic> This is a solitaire game involving tank command -- 
+                  that is you control a Sherman tank (17 variations) and command a crew assigned to the 4th Armored Division as you move out of the 
+                  Cobra Breakout following the Normandy invasion.
+         <LineBreak/> <LineBreak/>
+         You and your tank move into a new territory and deal with German defenses situated in northern France and, as the campaign game
+         goes on, across the Rhine and into Germany. You will need to make life and death decisions in managing your crew&apos;s actions, 
+         your tank&apos;s facing, and attempt to take out enemy forces without losing your tank (which is extremely challenging). 
+         The combat system utilizes an area map for the larger scale movement of your task force but then switches to an 
+         abstracted Battle Board when contact is made with the enemy. 
+         <LineBreak/><LineBreak/>
+         <Italic>Game Designer: </Italic>
+         <Hyperlink NavigateUri="https://boardgamegeek.com/boardgamedesigner/1329/bruce-shelley" RequestNavigate="Hyperlink_RequestNavigate">Bruce Campbell Shelly</Hyperlink>
+         (born July 1948 in Fremont, Michigan) is an American game designer 
+         and writer who is most famously known as the computer game designer who helped design games such as Sid Meier&apos;s Civilization, 
+         Railroad Tycoon, and Age of Empires. In 1980, he and several of his friends at the University of Virginia formed the game 
+         company called Iron Crown Enterprises. Strategy and Tactics Magazine published his first game in the early 1980s. In 1981, he briefly
+         worked for Simulations Publications, Inc. (SPI). He then worked for The Avalon Hill Game Co, contributing to such classic games 
+         as 1830: Railways and Robber Barons and Titan. 
+      </TextBlock>
+      <StackPanel Name="myStackPanelButtons" Grid.Row="2" Grid.ColumnSpan="1"  Orientation="Horizontal" VerticalAlignment="Center"  HorizontalAlignment="Center" Margin="5,5,5,5" >
+         <Button x:Name="myButtonOK" HorizontalAlignment="Center" Width="70" Height="30" VerticalAlignment="Top" Margin="0,10,0,0" FontSize="14" Click="ButtonOk_Click" IsDefault="True">OK</Button>
+      </StackPanel>
+   </Grid>
+</Window>
