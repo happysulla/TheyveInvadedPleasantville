@@ -54,8 +54,7 @@ namespace PleasantvilleGame
       //------------------------------------------------
       IMapItemMove PreviousMapItemMove { set; get; }
       IMapItemMoves MapItemMoves { set; get; }
-      IStacks MoveStacks { set; get; }
-      IStacks BattleStacks { set; get; }
+      IStacks Stacks { set; get; }
       List<EnteredHex> EnteredHexes { get; }
       //------------------------------------------------
       List<IUnitTest> UnitTests { get; }

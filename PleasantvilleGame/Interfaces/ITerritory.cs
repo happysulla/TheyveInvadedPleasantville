@@ -7,6 +7,7 @@ namespace PleasantvilleGame
       string Name { get; set; }
       string CanvasName { get; set; }
       string Type { get; set; }
+      int Sector { get; set; }
       IMapPoint CenterPoint { get; set; }
       List<IMapPoint> Points { set; get; }
       List<String> Adjacents { get; }
@@ -25,6 +26,7 @@ namespace PleasantvilleGame
       void Remove(ITerritory tName);
       ITerritory? Find(string tName);
       ITerritory? Find(string tName, string tType);
+      ITerritory? Find(string tName, int sector);
       ITerritory? Remove(string tName);
       ITerritory? RemoveAt(int index);
       ITerritory? this[int index] { get; set; }

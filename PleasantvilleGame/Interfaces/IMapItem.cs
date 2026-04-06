@@ -38,6 +38,7 @@ namespace PleasantvilleGame
       //----------------------------------------
       IMapPoint Location { get; set; }       // top left corner of MapItem
       ITerritory Territory { get; set; }
+      ITerritory TerritoryCurrent { get; set; }
       ITerritory TerritoryStarting { get; set; }
       //----------------------------------------
       int Combat { get; set; }

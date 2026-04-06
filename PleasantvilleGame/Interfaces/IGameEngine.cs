@@ -8,6 +8,7 @@ namespace PleasantvilleGame
    [Serializable]
    public enum GamePhase
    {
+      GameSetup,
       AlienStart,
       TownspersonStart,
       RandomMovement,

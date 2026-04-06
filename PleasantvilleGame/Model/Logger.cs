@@ -41,6 +41,12 @@ namespace PleasantvilleGame
       LE_VIEW_MIM_ADD,
       LE_VIEW_MIM_CLEAR,
       LE_VIEW_CONTROL_NAME,
+      //-------------
+      LE_TIMER_ELAPED,
+      LE_COMBAT_SUMS,
+      LE_INFLUENCE_CHANGE,
+      LE_GAMESTATE_CHECKER,
+      LE_GAMESTATE_CHECKER_TIED_UP,
       LE_END_ENUM
    }
    //----------------------------------------------------------------------------

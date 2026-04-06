@@ -1,16 +1,6 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Globalization;
-using System.Linq;
-using System.Security.Policy;
-using System.Text;
+﻿using System.Text;
 using System.Windows;
 using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-using Windows.ApplicationModel.Appointments.AppointmentsProvider;
 
 namespace PleasantvilleGame
 { 
@@ -50,7 +40,7 @@ namespace PleasantvilleGame
       public string EndGameReason { set; get; } = "";
       //---------------------------------------------------------------
       public IMapItemMoves MapItemMoves { get; set; } = new MapItemMoves();
-      public IStacks MoveStacks { get; set; } = new Stacks();
+      public IStacks Stacks { get; set; } = new Stacks();
       private List<EnteredHex> myEnteredHexes = new List<EnteredHex>();
       public List<EnteredHex> EnteredHexes { get => myEnteredHexes; }
       //---------------------------------------------------------------
@@ -71,11 +61,6 @@ namespace PleasantvilleGame
             }
             if (false == gameLoadMgr.ReadXmlTerritories(reader, Territories.theTerritories))
                Logger.Log(LogEnum.LE_ERROR, "GameInstance(): ReadTerritoriesXml() returned false for filename=" + filename);
-            ITerritory? tHome = Territories.theTerritories.Find("Home");
-            if (null == tHome)
-               Logger.Log(LogEnum.LE_ERROR, "GameInstance(): tHome=null");
-            else
-               Home = tHome;
          }
          catch (Exception e)
          {

@@ -54,9 +54,8 @@ namespace PleasantvilleGame
             CtorError = true;
             return;
          }
-         // Remove last territory if exceeds stacking limit.
          int countOfTerritories = BestPath.Territories.Count;
-         NewTerritory = BestPath.Territories[countOfTerritories - 1];
+         NewTerritory = BestPath.Territories[countOfTerritories - 1];          // Remove last territory if exceeds stacking limit.
       }
       public override string ToString()
       {
