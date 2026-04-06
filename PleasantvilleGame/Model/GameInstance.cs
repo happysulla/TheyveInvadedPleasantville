@@ -14,35 +14,49 @@ namespace PleasantvilleGame
       public IGameCommands GameCommands { set; get; } = new GameCommands();
       public Options Options { get; set; } = new Options();
       public GameStatistics Statistics { get; set; } = new GameStatistics();
-      public int MaxDayBetweenCombat { get; set; } = 0;
-      public int MaxRollsForAirSupport { get; set; } = 0;
-      public int MaxRollsForArtillerySupport { get; set; } = 0;
-      public int MaxEnemiesInOneBattle { get; set; } = 0;
-      public int RoundsOfCombat { get; set; } = 0;
-      public int NumOfBattles { get; set; } = 0;
-      public int NumKiaSherman { get; set; } = 0;
-      public int NumKia { get; set; } = 0;
-      public bool IsFirstSpottingOccurred { get; set; } = false;
-      public bool Is1stEnemyStrengthCheckTerritory { get; set; } = true;
       //------------------------------------------------
       public bool IsMultipleSelectForDieResult { set; get; } = false;
       public bool IsGridActive { set; get; } = false;
       public IUndo? UndoCmd { set; get; } = null;
       //------------------------------------------------
+      public Guid GameGuid { get; set; } = Guid.NewGuid();
       public string EventActive { get; set; } = "e000";
       public string EventDisplayed { set; get; } = "e000";
       //------------------------------------------------
-      public Guid GameGuid { get; set; } = Guid.NewGuid();
       public int Day { get; set; } = 0;
-      public int GameTurn { get; set; } = 0;
+      public int GameTurn { get; set; } = 0; 
       public GamePhase GamePhase { get; set; } = GamePhase.GameSetup;
       public GameAction DieRollAction { get; set; } = GameAction.DieRollActionNone;
       public string EndGameReason { set; get; } = "";
+      //----------------------------------------------
+      public IMapItems Persons { set; get; }
+      public IMapItems PersonsStunned { set; get; }
+      public IMapItems PersonsKnockedOut { set; get; }
+      public IMapItemCombat MapItemCombat { set; get; }
+      public IMapItemTakeover Takeover { set; get; }
+      public ITerritories ZebulonTerritories { set; get; }
       //---------------------------------------------------------------
       public IMapItemMoves MapItemMoves { get; set; } = new MapItemMoves();
       public IStacks Stacks { get; set; } = new Stacks();
       private List<EnteredHex> myEnteredHexes = new List<EnteredHex>();
       public List<EnteredHex> EnteredHexes { get => myEnteredHexes; }
+      //---------------------------------------------------------------
+      public string PlayerTurn { set; get; } = "Alien";
+      public int InfluenceCountTotal { set; get; } = 0;
+      public int InfluenceCountTownspeople { set; get; } = 0;
+      public int InfluenceCountAlienUnknown { set; get; } = 0;
+      public int InfluenceCountAlienKnown { set; get; } = 0;
+      public int NumIterogationsThisTurn { set; get; } = 0;
+      public bool IsAlienStarted { set; get; } = false;
+      public bool IsControlledStarted { set; get; } = false;
+      public bool IsAlienDisplayedRandomMovement { set; get; } = false;
+      public bool IsControlledDisplayedRandomMovement { set; get; } = false;
+      public bool IsAlienAckedRandomMovement { set; get; } = false;
+      public bool IsControlledAckedRandomMovement { set; get; } = false;
+      public bool IsAlienInitiatedCombat { set; get; } = false;
+      public bool IsControlledInitiatedCombat { set; get; } = false;
+      public bool IsAlienCombatCompleted { set; get; } = false;
+      public bool IsControlledCombatCompleted { set; get; } = false;
       //---------------------------------------------------------------
       [NonSerialized] private List<IUnitTest> myUnitTests = new List<IUnitTest>();
       public List<IUnitTest> UnitTests { get => myUnitTests; }

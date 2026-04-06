@@ -26,21 +26,25 @@ namespace PleasantvilleGame
       GameAction DieRollAction { set; get; } // Used in EventViewerPanel when die roll happens to indicate next event for die roll
       String EndGameReason { set; get; }
       //----------------------------------------------
+      IMapItems Persons { set; get; }
+      IMapItems PersonsStunned { set; get; }
+      IMapItems PersonsKnockedOut { set; get; }
+      IMapItemCombat MapItemCombat { set; get; }
+      IMapItemTakeover Takeover { set; get; }
+      ITerritories ZebulonTerritories { set; get; }
+      //----------------------------------------------
+      IMapItemMove PreviousMapItemMove { set; get; }
+      IMapItemMoves MapItemMoves { set; get; }
+      IStacks Stacks { set; get; }
+      List<EnteredHex> EnteredHexes { get; }
+      //----------------------------------------------
       string PlayerTurn { set; get; }
       string NextAction { set; get; }
       int InfluenceCountTotal { set; get; }
       int InfluenceCountTownspeople { set; get; }
       int InfluenceCountAlienUnknown { set; get; }
       int InfluenceCountAlienKnown { set; get; }
-      //----------------------------------------------
-      IMapItems Persons { set; get; }
-      IMapItems PersonsStunned { set; get; }
-      IMapItems PersonsKnockedOut { set; get; }
-      IMapItemCombat MapItemCombat { set; get; }
-      IMapItemTakeover Takeover { set; get; }
-      List<ITerritory> ZebulonTerritories { set; get; }
       int NumIterogationsThisTurn { set; get; }
-      //----------------------------------------------
       bool IsAlienStarted { set; get; }
       bool IsControlledStarted { set; get; }
       bool IsAlienDisplayedRandomMovement { set; get; }
@@ -51,12 +55,7 @@ namespace PleasantvilleGame
       bool IsControlledInitiatedCombat { set; get; }
       bool IsAlienCombatCompleted { set; get; }
       bool IsControlledCombatCompleted { set; get; }
-      //------------------------------------------------
-      IMapItemMove PreviousMapItemMove { set; get; }
-      IMapItemMoves MapItemMoves { set; get; }
-      IStacks Stacks { set; get; }
-      List<EnteredHex> EnteredHexes { get; }
-      //------------------------------------------------
+      //----------------------------------------------
       List<IUnitTest> UnitTests { get; }
       //=========================================================
       bool AddUnknownAlien(IMapItem newAlien);

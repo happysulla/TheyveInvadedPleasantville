@@ -1658,8 +1658,8 @@ namespace PleasantvilleGame
 
          // Next see what the dice roll shows.
 
-         int die1 = GameEngine.RandomGenerator.Next(6) + 1;
-         int die2 = GameEngine.RandomGenerator.Next(6) + 1;
+         int die1 = Utilities.RandomGenerator.Next(6) + 1;
+         int die2 = Utilities.RandomGenerator.Next(6) + 1;
          int lossTableRoll = die1 + die2;
 
          if (lossTableRoll < 5)
@@ -1827,7 +1827,7 @@ namespace PleasantvilleGame
                   action = GameAction.ShowEndGame;
                   gi.GamePhase = GamePhase.ShowEndGame;
                   gi.NextAction = "End Game";
-                  gi.GameTurn = "Completed";
+                  gi.GameTurn = 13;
                }
                else if (true == GameStateChecker.CheckForRandomMoves(gi))
                {
@@ -1904,7 +1904,7 @@ namespace PleasantvilleGame
                   action = GameAction.ShowEndGame;
                   gi.GamePhase = GamePhase.ShowEndGame;
                   gi.NextAction = "End Game";
-                  gi.GameTurn = "Completed";
+                  gi.GameTurn = 13;
                }
                else if (true == GameStateChecker.CheckForRandomMoves(gi))
                {

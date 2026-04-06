@@ -87,6 +87,8 @@ namespace PleasantvilleGame
       IMapItem? Find(string miName);
       IMapItem? this[int index] { get; set; }
       IMapItems Shuffle();
+      IMapItems Sort();
+      IMapItems SortOnCombat();
       void Rotate(int numOfRotates);
    }
 }

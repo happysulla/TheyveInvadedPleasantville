@@ -532,7 +532,7 @@ namespace PleasantvilleGame
             }
          }
          gi.PersonsKnockedOut.Clear();
-         if (false == Utilities.IsInfluenceCheck(gi))
+         if (false == GameStateChecker.IsInfluenceCheck(gi))
          {
             MessageBox.Show("CheckForEndOfGame(): ERROR - Influence failure");
             Logger.Log(LogEnum.LE_ERROR, "CheckForEndOfGame(): returned error");
@@ -581,5 +581,84 @@ namespace PleasantvilleGame
 
          return false;
       }
+      public static bool IsInfluenceCheck(IGameInstance gi)
+      {
+         int totalInfluence = 0;
+
+         int cogentInfluence = 0;
+         int knownInfluence = 0;
+         int unknownInfluence = 0;
+         int controlledInfluence = 0;
+         int uncontrolledInfluence = 0;
+
+         int incapacitatedInfluence = 0;
+         int tiedUpInfluence = 0;
+         int stunnedInfluence = 0;
+         int unconsciousInfluence = 0;
+         int surrenderedInfluence = 0;
+         int killedInfluence = 0;
+         int errorInfluence = 0;
+
+         foreach (IMapItem mi in gi.Persons)
+         {
+            totalInfluence += mi.Influence;
+
+            if ((false == mi.IsTiedUp) && (true == mi.IsConscious) && (false == mi.IsStunned) && (false == mi.IsSurrendered) && (false == mi.IsKilled))
+            {
+               cogentInfluence += mi.Influence;
+               if (true == mi.IsControlled)
+                  controlledInfluence += mi.Influence;
+               if (true == mi.IsAlienKnown)
+                  knownInfluence += mi.Influence;
+               if (true == mi.IsAlienUnknown)
+                  unknownInfluence += mi.Influence;
+               if ((false == mi.IsControlled) && (false == mi.IsAlienKnown) && (false == mi.IsAlienUnknown))
+                  uncontrolledInfluence += mi.Influence;
+            }
+            else
+            {
+               incapacitatedInfluence += mi.Influence;
+               if (true == mi.IsKilled)
+                  killedInfluence += mi.Influence;
+               else if (true == mi.IsSurrendered)
+                  surrenderedInfluence += mi.Influence;
+               else if (false == mi.IsConscious)
+                  unconsciousInfluence += mi.Influence;
+               else if (true == mi.IsStunned)
+                  stunnedInfluence += mi.Influence;
+               else if (true == mi.IsTiedUp)
+                  tiedUpInfluence += mi.Influence;
+               else
+                  errorInfluence += mi.Influence;
+            }
+         }
+
+         if ((337 != totalInfluence) ||
+             (totalInfluence != (cogentInfluence + incapacitatedInfluence)) ||
+             (cogentInfluence != (controlledInfluence + knownInfluence + unknownInfluence + uncontrolledInfluence)) ||
+             (0 != errorInfluence))
+         {
+            StringBuilder sb = new StringBuilder("IsInfluenceCheck(): Influence Not Adding Up: ");
+            sb.Append("\n T="); sb.Append(totalInfluence.ToString());
+            sb.Append("\n cap="); sb.Append(cogentInfluence.ToString());
+            sb.Append("\n kn="); sb.Append(knownInfluence.ToString());
+            sb.Append("\n unk="); sb.Append(unknownInfluence.ToString());
+            sb.Append("\n tp="); sb.Append(controlledInfluence.ToString());
+            sb.Append("\n uc="); sb.Append(uncontrolledInfluence.ToString());
+
+            sb.Append("\n incap="); sb.Append(incapacitatedInfluence.ToString());
+            sb.Append("\n tu="); sb.Append(tiedUpInfluence.ToString());
+            sb.Append("\n st="); sb.Append(stunnedInfluence.ToString());
+            sb.Append("\n unc="); sb.Append(unconsciousInfluence.ToString());
+            sb.Append("\n sur="); sb.Append(surrenderedInfluence.ToString());
+            sb.Append("\n kia="); sb.Append(killedInfluence.ToString());
+            sb.Append("\n err="); sb.Append(errorInfluence.ToString());
+
+            Logger.Log(LogEnum.LE_ERROR, sb.ToString());
+            return false;
+         }
+         return true;
+      }
+
    }
 }

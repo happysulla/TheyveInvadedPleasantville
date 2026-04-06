@@ -433,7 +433,6 @@ namespace PleasantvilleGame
 
          return sortedMapItems;
       }
-
       public IMapItems SortOnCombat()
       {
          MapItems sortedMapItems = new MapItems();
