@@ -12,6 +12,10 @@ namespace PleasantvilleGame
       Options Options { get; set; }
       GameStatistics Statistics { get; set; }
       //----------------------------------------------
+      IMapItemMoves MapItemMoves { set; get; }
+      IStacks Stacks { set; get; }
+      List<EnteredHex> EnteredHexes { get; }
+      //----------------------------------------------
       bool IsMultipleSelectForDieResult { set; get; } // In EventViewer, show buttons instead of die results for user to choose from
       bool IsGridActive { set; get; } // True if there is some EventViewer manager active
       IUndo? UndoCmd { set; get; }
@@ -26,17 +30,13 @@ namespace PleasantvilleGame
       GameAction DieRollAction { set; get; } // Used in EventViewerPanel when die roll happens to indicate next event for die roll
       String EndGameReason { set; get; }
       //----------------------------------------------
+      ITerritories ZebulonTerritories { set; get; }
       IMapItems Persons { set; get; }
       IMapItems PersonsStunned { set; get; }
       IMapItems PersonsKnockedOut { set; get; }
-      IMapItemCombat MapItemCombat { set; get; }
-      IMapItemTakeover Takeover { set; get; }
-      ITerritories ZebulonTerritories { set; get; }
-      //----------------------------------------------
-      IMapItemMove PreviousMapItemMove { set; get; }
-      IMapItemMoves MapItemMoves { set; get; }
-      IStacks Stacks { set; get; }
-      List<EnteredHex> EnteredHexes { get; }
+      IMapItemCombat? MapItemCombat { set; get; }
+      IMapItemTakeover? Takeover { set; get; }
+      IMapItemMove? PreviousMapItemMove { set; get; }
       //----------------------------------------------
       string PlayerTurn { set; get; }
       string NextAction { set; get; }

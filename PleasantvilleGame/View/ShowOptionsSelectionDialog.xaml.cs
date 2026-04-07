@@ -1,10 +1,7 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Collections.Generic;
-using Windows.System;
-
-
+using CheckBox = System.Windows.Controls.CheckBox;
+using RadioButton = System.Windows.Controls.RadioButton;
 
 namespace PleasantvilleGame
 {

@@ -14,6 +14,11 @@ namespace PleasantvilleGame
       public IGameCommands GameCommands { set; get; } = new GameCommands();
       public Options Options { get; set; } = new Options();
       public GameStatistics Statistics { get; set; } = new GameStatistics();
+      //---------------------------------------------------------------
+      public IMapItemMoves MapItemMoves { get; set; } = new MapItemMoves();
+      public IStacks Stacks { get; set; } = new Stacks();
+      private List<EnteredHex> myEnteredHexes = new List<EnteredHex>();
+      public List<EnteredHex> EnteredHexes { get => myEnteredHexes; }
       //------------------------------------------------
       public bool IsMultipleSelectForDieResult { set; get; } = false;
       public bool IsGridActive { set; get; } = false;
@@ -29,19 +34,16 @@ namespace PleasantvilleGame
       public GameAction DieRollAction { get; set; } = GameAction.DieRollActionNone;
       public string EndGameReason { set; get; } = "";
       //----------------------------------------------
-      public IMapItems Persons { set; get; }
-      public IMapItems PersonsStunned { set; get; }
-      public IMapItems PersonsKnockedOut { set; get; }
-      public IMapItemCombat MapItemCombat { set; get; }
-      public IMapItemTakeover Takeover { set; get; }
-      public ITerritories ZebulonTerritories { set; get; }
-      //---------------------------------------------------------------
-      public IMapItemMoves MapItemMoves { get; set; } = new MapItemMoves();
-      public IStacks Stacks { get; set; } = new Stacks();
-      private List<EnteredHex> myEnteredHexes = new List<EnteredHex>();
-      public List<EnteredHex> EnteredHexes { get => myEnteredHexes; }
+      public ITerritories ZebulonTerritories { set; get; } = new Territories();
+      public IMapItems Persons { set; get; } = new MapItems();
+      public IMapItems PersonsStunned { set; get; } = new MapItems();
+      public IMapItems PersonsKnockedOut { set; get; } = new MapItems();
+      public IMapItemCombat? MapItemCombat { set; get; } = null;
+      public IMapItemTakeover? Takeover { set; get; } = null;
+      public IMapItemMove? PreviousMapItemMove { set; get; } = null;
       //---------------------------------------------------------------
       public string PlayerTurn { set; get; } = "Alien";
+      public string NextAction { set; get; } = "";
       public int InfluenceCountTotal { set; get; } = 0;
       public int InfluenceCountTownspeople { set; get; } = 0;
       public int InfluenceCountAlienUnknown { set; get; } = 0;
@@ -79,6 +81,24 @@ namespace PleasantvilleGame
          catch (Exception e)
          {
             Logger.Log(LogEnum.LE_ERROR, "GameInstance(): ReadTerritoriesXml() exception=\n" + e.ToString());
+            return;
+         }
+         try
+         {
+            GameLoadMgr gameLoadMgr = new GameLoadMgr();
+            string filename = ConfigFileReader.theConfigDirectory + "People.xml";
+            XmlTextReader? reader = new XmlTextReader(filename) { WhitespaceHandling = WhitespaceHandling.None };
+            if (null == reader)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "GameInstance(): reader=null");
+               return;
+            }
+            if (false == gameLoadMgr.ReadXmlTownspeople(reader, MapItems.theMapItems))
+               Logger.Log(LogEnum.LE_ERROR, "GameInstance(): ReadXmlTownspeople() returned false for filename=" + filename);
+         }
+         catch (Exception e)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameInstance(): ReadXmlTownspeople() exception=\n" + e.ToString());
             return;
          }
       }

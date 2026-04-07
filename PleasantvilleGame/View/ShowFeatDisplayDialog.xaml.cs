@@ -7,7 +7,12 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Shapes;
-
+using MessageBox = System.Windows.MessageBox;
+using Button = System.Windows.Controls.Button;
+using CheckBox = System.Windows.Controls.CheckBox;
+using FontFamily = System.Windows.Media.FontFamily;
+using Brushes = System.Windows.Media.Brushes;
+using Rectangle = System.Windows.Shapes.Rectangle;
 
 namespace PleasantvilleGame
 {
@@ -60,13 +65,13 @@ namespace PleasantvilleGame
             myButtonShowAll.Visibility = Visibility.Hidden;
          //------------------------------------------------------------
          int numRect = 0;
-         Thickness tickness = new Thickness(5, 2, 1, 2);
+         Thickness thickness = new Thickness(5, 2, 1, 2);
          for(int i=0; i < GameEngine.theInGameFeats.Count ; ++i)
          {
             int rowNum = i + 2 + numRect; // 2=header stuff to bypass
             if ((8 == rowNum) || (26 == rowNum) || (44 == rowNum) || (50 == rowNum) || (58 == rowNum) || (64 == rowNum))
             {
-               Rectangle r = new Rectangle() { Width = 500, Height = 1, Fill = Brushes.Black, Stroke = Brushes.Black, HorizontalAlignment=HorizontalAlignment.Left, Margin = tickness };
+               Rectangle r = new Rectangle() { Width = 500, Height = 1, Fill = Brushes.Black, Stroke = Brushes.Black, HorizontalAlignment = System.Windows.HorizontalAlignment.Left, Margin = thickness };
                myGrid.Children.Add(r);
                Grid.SetRow(r, rowNum);
                Grid.SetColumn(r, 0);
@@ -91,7 +96,7 @@ namespace PleasantvilleGame
             {
                isFeatChecked = true;
             }
-            CheckBox cb = new CheckBox() { IsEnabled = false, IsChecked = isFeatChecked, FontSize = 14, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(5) };
+            CheckBox cb = new CheckBox() { IsEnabled = false, IsChecked = isFeatChecked, FontSize = 14, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(5) };
             myGrid.Children.Add(cb);
             Grid.SetColumn(cb, 0);
             Grid.SetRow(cb, rowNum);

@@ -169,12 +169,11 @@ namespace PleasantvilleGame
          }
          return false;
       }
-      public static System.Windows.Input.Cursor ConvertToCursor(UIElement control, Point hotSpot)
+      public static System.Windows.Input.Cursor ConvertToCursor(UIElement control, System.Windows.Point hotSpot)
       {
          //--------------------------------------------
-         // convert FrameworkElement to PNG stream
-         var pngStream = new MemoryStream();
-         control.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+         var pngStream = new MemoryStream(); // convert FrameworkElement to PNG stream
+         control.Measure(new System.Windows.Size(double.PositiveInfinity, double.PositiveInfinity));
          Rect rect = new Rect(0, 0, control.DesiredSize.Width, control.DesiredSize.Height);
          RenderTargetBitmap rtb = new RenderTargetBitmap((int)control.DesiredSize.Width, (int)control.DesiredSize.Height, 96, 96, PixelFormats.Pbgra32);
          control.Arrange(rect);
@@ -184,8 +183,7 @@ namespace PleasantvilleGame
          png.Frames.Add(BitmapFrame.Create(rtb));
          png.Save(pngStream);
          //--------------------------------------------
-         // write cursor header info
-         var cursorStream = new MemoryStream();
+         var cursorStream = new MemoryStream(); // write cursor header info
          cursorStream.Write(new byte[2] { 0x00, 0x00 }, 0, 2);                               // ICONDIR: Reserved. Must always be 0.
          cursorStream.Write(new byte[2] { 0x02, 0x00 }, 0, 2);                               // ICONDIR: Specifies image type: 1 for icon (.ICO) image, 2 for cursor (.CUR) image. Other values are invalid
          cursorStream.Write(new byte[2] { 0x01, 0x00 }, 0, 2);                               // ICONDIR: Specifies number of images in the file.
@@ -195,25 +193,11 @@ namespace PleasantvilleGame
          cursorStream.Write(new byte[1] { 0x00 }, 0, 1);                                     // ICONDIRENTRY: Reserved. Should be 0.
          cursorStream.Write(new byte[2] { (byte)hotSpot.X, 0x00 }, 0, 2);                    // ICONDIRENTRY: Specifies the horizontal coordinates of the hotspot in number of pixels from the left.
          cursorStream.Write(new byte[2] { (byte)hotSpot.Y, 0x00 }, 0, 2);                    // ICONDIRENTRY: Specifies the vertical coordinates of the hotspot in number of pixels from the top.
-         cursorStream.Write(new byte[4] {                                                    // ICONDIRENTRY: Specifies the size of the image's data in bytes
-                                          (byte)(pngStream.Length & 0x000000FF),
-                                          (byte)((pngStream.Length & 0x0000FF00) >> 0x08),
-                                          (byte)((pngStream.Length & 0x00FF0000) >> 0x10),
-                                          (byte)((pngStream.Length & 0xFF000000) >> 0x18)
-                                       }, 0, 4);
-         cursorStream.Write(new byte[4] {                                                    // ICONDIRENTRY: Specifies the offset of BMP or PNG data from the beginning of the ICO/CUR file
-                                          0x16,
-                                          0x00,
-                                          0x00,
-                                          0x00,
-                                       }, 0, 4);
-
-         // copy PNG stream to cursor stream
-         pngStream.Seek(0, SeekOrigin.Begin);
+         cursorStream.Write(new byte[4] { (byte)(pngStream.Length & 0x000000FF), (byte)((pngStream.Length & 0x0000FF00) >> 0x08), (byte)((pngStream.Length & 0x00FF0000) >> 0x10), (byte)((pngStream.Length & 0xFF000000) >> 0x18)  }, 0, 4); // ICONDIRENTRY: Specifies the size of the image's data in bytes
+         cursorStream.Write(new byte[4] { 0x16, 0x00, 0x00, 0x00 }, 0, 4); // ICONDIRENTRY: Specifies the offset of BMP or PNG data from the beginning of the ICO/CUR file
+         pngStream.Seek(0, SeekOrigin.Begin); // copy PNG stream to cursor stream
          pngStream.CopyTo(cursorStream);
-
-         // return cursor stream
-         cursorStream.Seek(0, SeekOrigin.Begin);
+         cursorStream.Seek(0, SeekOrigin.Begin); // return cursor stream
          return new System.Windows.Input.Cursor(cursorStream);
       }
       public static string Serialize<T>(T t)

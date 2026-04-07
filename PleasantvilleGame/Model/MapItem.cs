@@ -28,7 +28,8 @@ namespace PleasantvilleGame
       public string TopImageName { get; set; } = string.Empty;
       public string BottomImageName { get; set; } = string.Empty;
       public string OverlayImageName { get; set; } = string.Empty;
-      public List<BloodSpot> WoundSpots { get; } = new List<BloodSpot>();
+      public List<BloodSpot> myWoundSpots = new List<BloodSpot>();
+      public List<BloodSpot> WoundSpots { get => myWoundSpots; }
       public double Zoom { get; set; } = 1.0;
       public bool IsAnimated
       {
@@ -57,7 +58,8 @@ namespace PleasantvilleGame
             return mii.IsAnimated;
          }
       }
-      public bool IsMoved { get; set; } = false;               // If Sherman moved, it cannot fire unless it has HVSS
+      public bool IsMoved { get; set; } = false;  
+      public bool IsKilled { get; set; } = false;
       public int Count { get; set; } = 0;
       //--------------------------------------------------
       private IMapPoint myLocation = new MapPoint();  // top left corner of MapItem
@@ -86,7 +88,6 @@ namespace PleasantvilleGame
       public bool IsControlled { get; set; } = false;
       public bool IsImplantHeld { get; set; } = false;
       public bool IsInterrogated { get; set; } = false;
-      public bool IsKilled { get; set; } = false;
       public bool IsSkeptical { get; set; } = false;
       public bool IsStunned { get; set; } = false;
       public bool IsSurrendered { get; set; } = false;
@@ -165,16 +166,104 @@ namespace PleasantvilleGame
          Location.X = territory.CenterPoint.X - zoom * Utilities.theMapItemOffset;
          Location.Y = territory.CenterPoint.Y - zoom * Utilities.theMapItemOffset;
       }
-      //----------------------------------------------------------------------------
-      public override string ToString()
+      public void Copy(IMapItem mi)
       {
-         StringBuilder sb = new StringBuilder();
-         sb.Append("Name=<");
-         sb.Append(Name);
-         sb.Append(">T=<");
-         sb.Append(TerritoryCurrent.Name);
-         return sb.ToString();
+         this.Name = mi.Name;
+         this.TopImageName = mi.TopImageName;
+         this.BottomImageName = mi.BottomImageName;
+         this.OverlayImageName = mi.OverlayImageName;
+         foreach (BloodSpot bs in mi.WoundSpots)
+            this.WoundSpots.Add(bs);
+         this.Zoom = mi.Zoom;
+         this.IsMoved = mi.IsMoved;
+         this.IsKilled = mi.IsKilled;
+         this.Count = mi.Count;
+         this.Location.X = mi.Location.X;
+         this.Location.Y = mi.Location.Y;
+         //--------------------------------------
+         this.TerritoryCurrent = mi.TerritoryCurrent;
+         this.TerritoryStarting = mi.TerritoryStarting;
+         //--------------------------------------
+         this.Combat = mi.Combat;
+         this.Influence = mi.Influence;
+         this.Movement = mi.Movement;
+         this.MovementUsed = mi.MovementUsed;
+         //--------------------------------------
+         this.IsConscious = mi.IsConscious;
+         this.IsAlienUnknown = mi.IsAlienUnknown;
+         this.IsAlienKnown = mi.IsAlienKnown;
+         this.IsControlled = mi.IsControlled;
+         this.IsImplantHeld = mi.IsImplantHeld;
+         this.IsSkeptical = mi.IsSkeptical;
+         this.IsStunned = mi.IsStunned;
+         this.IsSurrendered = mi.IsSurrendered;
+         this.IsTiedUp = mi.IsTiedUp;
+         this.IsWary = mi.IsWary;
+         //--------------------------------------
+         this.IsMoveStoppedThisTurn = mi.IsMoveStoppedThisTurn;
+         this.IsMoveAllowedToResetThisTurn = mi.IsMoveAllowedToResetThisTurn;
+         this.IsConversedThisTurn = mi.IsConversedThisTurn;
+         this.IsInfluencedThisTurn = mi.IsInfluencedThisTurn;
+         this.IsCombatThisTurn = mi.IsCombatThisTurn;
+         this.IsInterrogatedThisTurn = mi.IsInterrogatedThisTurn;
+         this.IsImplantRemovalThisTurn = mi.IsImplantRemovalThisTurn;
+         this.IsTakeoverThisTurn = mi.IsTakeoverThisTurn;
       }
+      public void Sync(IMapItem mi)
+      {
+         foreach (BloodSpot bs in mi.WoundSpots)
+            this.WoundSpots.Add(bs);
+         this.Zoom = mi.Zoom;
+         this.IsMoved = mi.IsMoved;
+         this.Count = mi.Count;
+         this.Location.X = mi.Location.X;
+         this.Location.Y = mi.Location.Y;
+         //--------------------------------------
+         //--------------------------------------
+         this.TerritoryCurrent = mi.TerritoryCurrent;
+         this.TerritoryStarting = mi.TerritoryStarting;
+         //--------------------------------------
+         this.Combat = mi.Combat;
+         this.Influence = mi.Influence;
+         this.Movement = mi.Movement;
+         this.MovementUsed = mi.MovementUsed;
+         //--------------------------------------
+         this.IsConscious = mi.IsConscious;
+         this.IsAlienUnknown = mi.IsAlienUnknown;
+         this.IsAlienKnown = mi.IsAlienKnown;
+         this.IsControlled = mi.IsControlled;
+         this.IsImplantHeld = mi.IsImplantHeld;
+         this.IsSkeptical = mi.IsSkeptical;
+         this.IsStunned = mi.IsStunned;
+         this.IsSurrendered = mi.IsSurrendered;
+         this.IsTiedUp = mi.IsTiedUp;
+         this.IsWary = mi.IsWary;
+         //--------------------------------------
+         this.IsMoveStoppedThisTurn = mi.IsMoveStoppedThisTurn;
+         this.IsMoveAllowedToResetThisTurn = mi.IsMoveAllowedToResetThisTurn;
+         this.IsConversedThisTurn = mi.IsConversedThisTurn;
+         this.IsInfluencedThisTurn = mi.IsInfluencedThisTurn;
+         this.IsCombatThisTurn = mi.IsCombatThisTurn;
+         this.IsInterrogatedThisTurn = mi.IsInterrogatedThisTurn;
+         this.IsImplantRemovalThisTurn = mi.IsImplantRemovalThisTurn;
+         this.IsTakeoverThisTurn = mi.IsTakeoverThisTurn;
+
+      } // sync this mapitem data with passed-in parameter during spotting
+      public void SetBloodSpots(int percent = 30)
+      {
+         if (0 == percent) // heal if set to zero
+         {
+            myWoundSpots.Clear();
+            return;
+         }
+         for (int spots = 0; spots < percent; ++spots) // splatter the MapItem with random blood spots
+         {
+            int range = (int)(Utilities.theMapItemSize);
+            BloodSpot spot = new BloodSpot(range, theRandom);
+            myWoundSpots.Add(spot);
+         }
+      }
+      //----------------------------------------------------------------------------
       static public void Shuffle(ref List<IMapItem> mapItems)
       {
          for (int j = 0; j < 10; ++j)
@@ -283,59 +372,20 @@ namespace PleasantvilleGame
             //   b.Background = Brushes.White;
 
          }
-      static public IMapItems CreatePeople()
+      public override string ToString()
       {
-         IMapItems people = new MapItems();
-         XmlTextReader reader = null;
-         try
-         {
-            // Load the reader with the data file and ignore all white space nodes.         
-            reader = new XmlTextReader("People.xml");
-            reader.WhitespaceHandling = WhitespaceHandling.None;
-            while (reader.Read())
-            {
-               if (reader.Name == "Person")
-               {
-                  if (reader.IsStartElement())
-                  {
-                     string name = reader.GetAttribute("value");
-                     reader.Read(); // read the territory
-                     string territoryName = reader.GetAttribute("value");
-                     reader.Read(); // read the sector
-                     string sector = reader.GetAttribute("value");
-                     reader.Read(); // read the movement
-                     string movement = reader.GetAttribute("value");
-                     reader.Read(); // read the influence
-                     string influence = reader.GetAttribute("value");
-                     reader.Read(); // read the combat
-                     string combat = reader.GetAttribute("value");
-                     ITerritory t = Pleasantville.Territory.Find(territoryName, Int32.Parse(sector));
-                     IMapItem person = new MapItem(name, name, name, t, Int32.Parse(movement), Int32.Parse(influence), Int32.Parse(combat));
-                     people.Add(person);
-                  }
-               }
-
-            }   // end while
-
-            return people;
-
-         } // try
-         catch (Exception e)
-         {
-            Console.WriteLine("MapItem.CreatePeople(): Exception:  e.Message={0} while reading reader.Name={1}", e.Message, reader.Name);
-            return people;
-         }
-
-         finally
-         {
-            if (reader != null)
-               reader.Close();
-         }
+         StringBuilder sb = new StringBuilder();
+         sb.Append("Name=<");
+         sb.Append(Name);
+         sb.Append(">T=<");
+         sb.Append(TerritoryCurrent.Name);
+         return sb.ToString();
       }
    }
    //===========================================
    public class MapItems : IEnumerable, IMapItems
    {
+      public static MapItems theMapItems = new MapItems();
       private ArrayList myList;
       public MapItems() { myList = new ArrayList(); }
       public void Add(IMapItem mi) { myList.Add(mi); }
@@ -393,7 +443,7 @@ namespace PleasantvilleGame
          int count = myList.Count;
          for (int i = 0; i < count; i++)
          {
-            int index = GameEngine.RandomGenerator.Next(myList.Count);
+            int index = Utilities.RandomGenerator.Next(myList.Count);
             if (index < myList.Count)
             {
                IMapItem randomIndex = (IMapItem)myList[index];

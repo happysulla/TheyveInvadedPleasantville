@@ -5,7 +5,7 @@ using System.Text;
 
 using PleasantvilleRemote;
 
-namespace Pleasantville
+namespace PleasantvilleGame
 {
     [Serializable]
     class MapItemTakeover : IMapItemTakeover

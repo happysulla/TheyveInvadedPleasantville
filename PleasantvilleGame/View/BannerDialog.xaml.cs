@@ -1,0 +1,127 @@
+﻿using System;
+using System.IO;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Forms;
+using System.Windows.Input;
+using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Xml;
+using Image = System.Windows.Controls.Image;
+
+namespace PleasantvilleGame
+{
+   public partial class BannerDialog : System.Windows.Window
+   {
+      public bool CtorError { get; } = false;
+      private string myKey = "";
+      public string Key { get => myKey; }
+      private TextBlock myTextBlockDisplay = new TextBlock();
+      public TextBlock TextBoxDiplay { get => myTextBlockDisplay; }
+      public static bool theIsCheckBoxChecked = false;
+      private bool myIsReopen = false;
+      public bool IsReopen { get => myIsReopen; }
+      //------------------------------------
+      private bool myIsDragging = false;
+      private System.Windows.Point myOffsetInBannerWindow;
+      //-------------------------------------------------------------------------------------
+      public BannerDialog(string key, StringReader sr)
+      {
+         InitializeComponent();
+         myIsReopen = false; // Tell parent to reopen on font change
+         BitmapImage? img = MapItem.theMapImages.GetBitmapImage("Parchment");
+         if( null == img)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "BannerDialog(): GetBitmapImage(Parchment) return null");
+            CtorError = true;
+            return;
+         }
+         ImageBrush brush = new ImageBrush(img);
+         this.Background = brush;
+         //-------------------------------
+         Image imageRifles = new Image() { Source = MapItem.theMapImages.GetBitmapImage("CrossedRifles") };
+         myButtonClose.Content = imageRifles;
+         //-------------------------------
+         myCheckBoxFont.IsChecked = theIsCheckBoxChecked;
+         //-------------------------------
+         try
+         {
+            XmlTextReader xr = new XmlTextReader(sr);
+            myTextBlockDisplay = (TextBlock)XamlReader.Load(xr); // TextBox created in RuleManager.ShowRule()
+            foreach (Inline inline in myTextBlockDisplay.Inlines)
+            {
+               if (inline is InlineUIContainer)
+               {
+                  InlineUIContainer ui = (InlineUIContainer)inline;
+                  if (ui.Child is Image img1)
+                  {
+                     string imageName = img1.Name;
+                     if (true == img1.Name.Contains("Continue"))
+                        imageName = "Continue";
+                     string fullImagePath = MapImage.theImageDirectory + Utilities.RemoveSpaces(imageName) + ".gif";
+                     System.Windows.Media.Imaging.BitmapImage bitImage = new BitmapImage();
+                     bitImage.BeginInit();
+                     bitImage.UriSource = new Uri(fullImagePath, UriKind.Absolute);
+                     bitImage.EndInit();
+                     img1.Source = bitImage;
+                  }
+               }
+            }
+            myScrollViewerBanner.Content = myTextBlockDisplay;
+            myTextBlockDisplay.MouseLeftButtonDown += Window_MouseLeftButtonDown;
+            myKey = key;
+         }
+         catch (Exception e)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "BannerDialog(): e=" + e.ToString() + "  for key=" + key);
+            CtorError = true;
+            return;
+         }
+      }
+      //-------------------------------------------------------------------------
+      private void BannerLoaded(object sender, System.EventArgs e)
+      {
+         myScrollViewerBanner.Height = myDockPanel.ActualHeight - myButtonClose.Height - 50;
+         myTextBlockDisplay.Height = myTextBlockDisplay.ActualHeight;
+      }
+      private void ButtonClose_Click(object sender, RoutedEventArgs e)
+      {
+         Close();
+      }
+      private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+      {
+         myOffsetInBannerWindow = e.GetPosition(this);
+         myIsDragging = true;
+         e.Handled = true;
+      }
+      private void Window_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+      {
+         if (false == myIsDragging)
+         {
+            base.OnMouseMove(e);
+            return;
+         }
+         System.Windows.Point newPoint1 = this.PointToScreen(e.GetPosition(this));
+         System.Windows.Media.Matrix currentMatrix = ScreenExtensions.GetMatrixFromVisual(this);
+         this.Left = (newPoint1.X - myOffsetInBannerWindow.X) / currentMatrix.M11;
+         this.Top = (newPoint1.Y - myOffsetInBannerWindow.Y) / currentMatrix.M22;
+         e.Handled = true;
+      }
+      private void Window_MouseUp(object sender, MouseButtonEventArgs e)
+      {
+         myIsDragging = false;
+      }
+      private void myCheckBoxFont_Clicked(object sender, RoutedEventArgs e)
+      {
+         theIsCheckBoxChecked = !theIsCheckBoxChecked;
+         myIsReopen = true;
+         Close();
+      }
+      private void WindowLostFocus(object sender, RoutedEventArgs e)
+      {
+         myIsDragging = false;
+      }
+   }
+}

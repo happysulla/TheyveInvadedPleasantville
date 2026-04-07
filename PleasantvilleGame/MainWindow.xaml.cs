@@ -1,16 +1,9 @@
 ﻿using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Application = System.Windows.Application;
 
 namespace PleasantvilleGame
 {
@@ -85,7 +78,7 @@ namespace PleasantvilleGame
          {
             //--------------------------------------------
             string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            Logger.theLogDirectory = appDataDir + @"\Pleasantville\Logs\";
+            Logger.theLogDirectory = appDataDir + @"\PattonsBest\Logs\";
             if (false == Directory.Exists(Logger.theLogDirectory)) // create directory if does not exists
                Directory.CreateDirectory(Logger.theLogDirectory);
             if (false == Logger.SetInitial()) // setup logger
@@ -110,15 +103,15 @@ namespace PleasantvilleGame
             MapImage.theImageDirectory = theAssemblyDirectory + @"\Images\";
             ConfigFileReader.theConfigDirectory = theAssemblyDirectory + @"\Config\";
             //--------------------------------------------
-            GameLoadMgr.theGamesDirectory = appDataDir + @"\Pleasantville\Games\";
+            GameLoadMgr.theGamesDirectory = appDataDir + @"\PattonsBest\Games\";
             if (false == Directory.Exists(GameLoadMgr.theGamesDirectory)) // create directory if does not exists
                Directory.CreateDirectory(GameLoadMgr.theGamesDirectory);
             //--------------------------------------------
-            GameFeats.theGameFeatDirectory = appDataDir + @"\Pleasantville\GameFeats\";
+            GameFeats.theGameFeatDirectory = appDataDir + @"\PattonsBest\GameFeats\";
             if (false == Directory.Exists(GameFeats.theGameFeatDirectory)) // create directory if does not exists
                Directory.CreateDirectory(GameFeats.theGameFeatDirectory);
             //--------------------------------------------
-            GameStatistics.theGameStatisticsDirectory = appDataDir + @"\Pleasantville\GameStats\";
+            GameStatistics.theGameStatisticsDirectory = appDataDir + @"\PattonsBest\GameStats\";
             if (false == Directory.Exists(GameStatistics.theGameStatisticsDirectory)) // create directory if does not exists
                Directory.CreateDirectory(GameStatistics.theGameStatisticsDirectory);
             //--------------------------------------------
@@ -141,7 +134,7 @@ namespace PleasantvilleGame
                return;
             }
             //--------------------------------------------
-            string iconFilename = MapImage.theImageDirectory + "PleasantvilleGame.ico";
+            string iconFilename = MapImage.theImageDirectory + "PattonsBest.ico";
             Uri iconUri = new Uri(iconFilename, UriKind.Absolute);
             this.Icon = BitmapFrame.Create(iconUri);
             //--------------------------------------------
@@ -153,6 +146,19 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "MainWindow() e=" + e.ToString());
             Application.Current.Shutdown();
             return;
+         }
+      }
+      //-----------------------------------------------------------------------
+      public void UpdateViews(IGameInstance gi, GameAction action)
+      {
+         if (null == myGameEngine)
+            return;
+         foreach (IView v in myGameEngine.Views)
+         {
+            if (null == v)
+               Logger.Log(LogEnum.LE_ERROR, "UpdateView(): v=null");
+            else
+               v.UpdateView(ref gi, action);
          }
       }
    }

@@ -1,0 +1,183 @@
+﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
+using Button = System.Windows.Controls.Button;
+using Label = System.Windows.Controls.Label;
+using Brushes = System.Windows.Media.Brushes;
+using FontFamily = System.Windows.Media.FontFamily;
+using Rectangle = System.Windows.Shapes.Rectangle;
+
+namespace PleasantvilleGame
+{
+   public partial class RuleListingDialog : Window
+   {
+      public delegate void EndRuleListingDialogCallback();
+      private EndRuleListingDialogCallback myCallback;
+      private const int STARTING_RULE_ROW = 0;
+      private const int STARTING_EVENT_ROW = 0;
+      public bool CtorError = false;
+      private RuleDialogViewer? myRulesMgr = null;
+      private Thickness myThickness = new Thickness(5, 2, 5, 2);
+      private readonly FontFamily myFontFam = new FontFamily("Courier New");
+      //----------------------------------------------------------------
+      public RuleListingDialog(RuleDialogViewer rm, bool isEventDialog, EndRuleListingDialogCallback callback)
+      {
+         myCallback = callback;
+         InitializeComponent();
+         if (null == rm)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "RuleListingDialog(): rm=null");
+            CtorError = true;
+            return;
+         }
+         myRulesMgr = rm;
+         if (true == isEventDialog)
+         {
+            this.Title = "Event Listing";
+            int numToDisplay = myRulesMgr.Events.Keys.Count - STARTING_EVENT_ROW + 2; // add one for header row and one for separator
+            for (int i = 0; i < numToDisplay; ++i)
+            {
+               RowDefinition rowDef = new RowDefinition();
+               myGrid.RowDefinitions.Add(rowDef);
+            }
+         }
+         else
+         {
+            int numToDisplay = myRulesMgr.Rules.Keys.Count - STARTING_RULE_ROW + 2; // add one for header row and one for separator
+            for (int i = 0; i < numToDisplay; ++i)
+            {
+               RowDefinition rowDef = new RowDefinition();
+               myGrid.RowDefinitions.Add(rowDef);
+            }
+         }
+         UpdateGridRowHeader(isEventDialog);
+         if (false == UpdateGridRows(isEventDialog))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "RuleListingDialog(): UpdateGridRows() returned false");
+            CtorError = true;
+            return;
+         }
+      }
+      private void UpdateGridRowHeader(bool isEventDialog)
+      {
+         string content = "Rule Title";
+         if (true == isEventDialog)
+            content = "Event Title";
+         Label labelRuleNum = new Label() { FontFamily = myFontFam, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = "Number" };
+         myGrid.Children.Add(labelRuleNum);
+         Grid.SetRow(labelRuleNum, 0);
+         Grid.SetColumn(labelRuleNum, 0);
+         Label labelRuleTitle = new Label() { FontFamily = myFontFam, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = content };
+         myGrid.Children.Add(labelRuleTitle);
+         Grid.SetRow(labelRuleTitle, 0);
+         Grid.SetColumn(labelRuleTitle, 1);
+         Rectangle r1 = new Rectangle() { Visibility = Visibility.Visible, Height=1, Fill=Brushes.Black, Margin = myThickness };
+         myGrid.Children.Add(r1);
+         Grid.SetRow(r1, 1);
+         Grid.SetColumn(r1, 0);
+         Grid.SetColumnSpan(r1, 2);
+      }
+      private bool UpdateGridRows(bool isEventDialog)
+      {
+         if( null == myRulesMgr)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "UpdateGridRows(): myRulesManager=null");
+            return false;
+         }
+         if ( true == isEventDialog)
+         {
+            int numToDisplay = myRulesMgr.Events.Keys.Count - STARTING_EVENT_ROW; // add one for header row and one for separator
+            int rowNum = 2;
+            for (int i = 0; i < numToDisplay; ++i)
+            {
+               int eventNum = i + STARTING_EVENT_ROW;
+               string key = myRulesMgr.Events.Keys.ElementAt(eventNum);
+               string title = myRulesMgr.GetEventTitle(key);
+               if (null == title)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateGridRows(): title=null for key=" + key);
+                  return false;
+               }
+               System.Windows.Controls.Button b = new Button { FontFamily = myFontFam, FontSize = 12, Margin = new Thickness(5), Content = key };
+               b.Click += ButtonShowRule_Click;
+               myGrid.Children.Add(b);
+               Grid.SetRow(b, rowNum);
+               Grid.SetColumn(b, 0);
+               Label label = new Label() { FontFamily = myFontFam, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center, Content = title };
+               myGrid.Children.Add(label);
+               Grid.SetRow(label, rowNum);
+               Grid.SetColumn(label, 1);
+               ++rowNum;
+            }
+         }
+         else
+         {
+            int numToDisplay = myRulesMgr.Rules.Keys.Count - STARTING_RULE_ROW; // add one for header row and one for separator
+            int rowNum = 2;
+            for (int i = 0; i < numToDisplay; ++i)
+            {
+               int ruleNum = i + STARTING_RULE_ROW;
+               string key = myRulesMgr.Rules.Keys.ElementAt(ruleNum);
+               if ('0' != key.Last())
+                  continue;
+               string title = myRulesMgr.GetRuleTitle(key);
+               if (null == title)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateGridRows(): title=null");
+                  return false;
+               }
+               System.Windows.Controls.Button b = new Button { FontFamily = myFontFam, FontSize = 12, Margin = new Thickness(5), Content = key };
+               b.Click += ButtonShowRule_Click;
+               myGrid.Children.Add(b);
+               Grid.SetRow(b, rowNum);
+               Grid.SetColumn(b, 0);
+               Label label = new Label() { FontFamily = myFontFam, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center, Content = title };
+               myGrid.Children.Add(label);
+               Grid.SetRow(label, rowNum);
+               Grid.SetColumn(label, 1);
+               ++rowNum;
+            }
+         }
+         return true;
+      }
+      private void ButtonShowRule_Click(object sender, RoutedEventArgs e)
+      {
+         if (null == myRulesMgr)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "UpdateGridRows(): myRulesManager=null");
+            return;
+         }
+         Button b = (Button)sender;
+         string key = (string)b.Content;
+         if (true == key.StartsWith("r")) // rules based click
+         {
+            if (false == myRulesMgr.ShowRule(key))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Button_Click(): ShowRule() returned false");
+               return;
+            }
+         }
+         else if (true == key.StartsWith("e")) // event based click
+         {
+            if (false == myRulesMgr.ShowEventDialog(key))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Button_Click():  ShowEvent() returned false");
+               return;
+            }
+         }
+         else  // table based click
+         {
+            if (false == myRulesMgr.ShowTable(key))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Button_Click():  ShowTable() returned false");
+               return;
+            }
+         }
+      }
+      private void Window_Closed(object sender, EventArgs e)
+      {
+         myCallback();
+      }
+   }
+}

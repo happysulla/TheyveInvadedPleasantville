@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using WpfAnimatedGif;
+using Image= System.Windows.Controls.Image;
 
 namespace PleasantvilleGame
 {

@@ -1,26 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Windows;
-
-using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using PleasantvilleRemote;
+using Control=System.Windows.Controls.Control;
+using Label = System.Windows.Controls.Label;
 
-namespace Pleasantville
+namespace PleasantvilleGame
 {
     class StatusBarViewer : IView
     {
-        #region Fields ( myStatusBar )
         private StatusBar myStatusBar;
         private bool myIsAlien = false;
-        #endregion
-
-        #region Properties( none )
-        #endregion
-
-        #region Constructor 
+        //--------------------------------------------------------------
         public StatusBarViewer( StatusBar sb, bool isAlien )
         {
             myStatusBar = sb;
@@ -39,10 +29,8 @@ namespace Pleasantville
                 }
             }
         }
-        #endregion
-
-        #region Updateview(ref IGameInstance gi, GameAction action)
-        public void UpdateView(ref IGameInstance gi, GameAction action)
+      //--------------------------------------------------------------
+      public void UpdateView(ref IGameInstance gi, GameAction action)
         {
             StringBuilder sb1 = new StringBuilder("---------------StatusBarViewer::UpdateView() ==> action="); sb1.Append(action.ToString()); sb1.Append("  ==> NextAction="); sb1.Append(gi.NextAction);
             Logger.Log(LogEnum.LE_VIEW_UPDATE_STATUS_BAR, sb1.ToString());
@@ -105,6 +93,5 @@ namespace Pleasantville
                 }
             }
         }
-        #endregion
     }
 }

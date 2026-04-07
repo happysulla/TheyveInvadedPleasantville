@@ -33,11 +33,11 @@ namespace PleasantvilleGame
       List<BloodSpot> WoundSpots { get; }
       double Zoom { get; set; }
       bool IsAnimated { get; set; }
-      bool IsMoved { get; set; }               // If Sherman moved, it cannot fire unless it has HVSS
+      bool IsMoved { get; set; }              
+      bool IsKilled { get; set; }
       int Count { get; set; }
       //----------------------------------------
       IMapPoint Location { get; set; }       // top left corner of MapItem
-      ITerritory Territory { get; set; }
       ITerritory TerritoryCurrent { get; set; }
       ITerritory TerritoryStarting { get; set; }
       //----------------------------------------
@@ -52,7 +52,6 @@ namespace PleasantvilleGame
       bool IsControlled { get; set; }
       bool IsImplantHeld { get; set; }
       bool IsInterrogated { get; set; }
-      bool IsKilled { get; set; }
       bool IsSkeptical { get; set; }
       bool IsStunned { get; set; }
       bool IsSurrendered { get; set; }
@@ -69,11 +68,12 @@ namespace PleasantvilleGame
       //----------------------------------------
       void Copy(IMapItem mi);
       void Sync(IMapItem mi); // synchronize most of the data but not all
-      void SetBloodSpots(int percent = 40);
+      void SetBloodSpots(int percent);
    }
    //==========================================
    public interface IMapItems : System.Collections.IEnumerable
    {
+      static IMapItems Townspersons = new MapItems();
       int Count { get; }
       void Add(IMapItem mi);
       void Insert(int index, IMapItem mi);

@@ -17,10 +17,7 @@ namespace PleasantvilleGame
       //---------------------------------------------------------------------
       private readonly MainWindow myMainWindow;
       private readonly List<IView> myViews = new List<IView>();
-      public List<IView> Views
-      {
-         get { return myViews; }
-      }
+      public List<IView> Views { get { return myViews; } }
       //---------------------------------------------------------------
       public GameEngine(MainWindow mainWindow)
       {

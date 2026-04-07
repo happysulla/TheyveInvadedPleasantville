@@ -31,15 +31,15 @@ namespace PleasantvilleGame
       {
          int r3 = Utilities.RandomGenerator.Next(5);
          int r4 = Utilities.RandomGenerator.Next(6);
-         string building = Utilities.RemoveSpaces(Constants.targetBuildingTable[r3, r4]); // Find the target building location.
+         string building = Utilities.RemoveSpaces(Constants.theTargetBuildingTable[r3, r4]); // Find the target building location.
          //-----------------------------------------
          int numOfSectorsInBuilding = 0;
-         for (int i1 = 0; i1 < Constants.buildingSizes.GetLength(0); i1++)   // If moving to a build, randomly select a space from the building. GetLength(0) gets the length of the array.
+         for (int i1 = 0; i1 < Constants.theBuildingSizes.GetLength(0); i1++)   // If moving to a build, randomly select a space from the building. GetLength(0) gets the length of the array.
          {
-            string buildingToCompare = Utilities.RemoveSpaces(Constants.buildingSizes[i1, 0]);
+            string buildingToCompare = Utilities.RemoveSpaces(Constants.theBuildingSizes[i1, 0]);
             if (buildingToCompare == building)
             {
-               numOfSectorsInBuilding = Int32.Parse(Constants.buildingSizes[i1, 1]);
+               numOfSectorsInBuilding = Int32.Parse(Constants.theBuildingSizes[i1, 1]);
                break;
             }
          }
@@ -74,7 +74,7 @@ namespace PleasantvilleGame
          {
             int r1 = Utilities.RandomGenerator.Next(5);
             int r2 = Utilities.RandomGenerator.Next(6);
-            string person = Utilities.RemoveSpaces(Constants.townsPersonTable[r1, r2]);
+            string person = Utilities.RemoveSpaces(Constants.theTownpersonsTable[r1, r2]);
             IMapItem personMoving = gi.Persons.Find(person);
             if (null == personMoving)
             {
@@ -220,7 +220,6 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            #region ShowAlien
             case GameAction.ShowAlien:
                break;
             case GameAction.AlienDisplaysRandomMovement:
@@ -373,12 +372,8 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            #region ShowAlien
             case GameAction.ShowAlien:
                break;
-            #endregion
-
-            #region AlienMovement
             case GameAction.AlienMovement:
                if (0 < gi.MapItemMoves.Count)
                {
@@ -388,20 +383,11 @@ namespace PleasantvilleGame
                   movingMi1.IsMoved = true;
                }
                break;
-            #endregion
-
-            #region ResetMovement
             case GameAction.ResetMovement:
                break;
-            #endregion
-
-            #region AlienCompletesMovement
             case GameAction.AlienCompletesMovement:
                gi.NextAction = "Townsperson Acks Alien Movement";
                break;
-            #endregion
-
-            #region TownspersonAcksAlienMovement
             case GameAction.TownspersonAcksAlienMovement:
                foreach (IMapItem mi in gi.Persons)
                {
@@ -413,14 +399,10 @@ namespace PleasantvilleGame
                gi.NextAction = "Townsperson Selects Counter to Move";
                gi.GamePhase = GamePhase.TownspersonMovement;
                break;
-            #endregion
-
-            #region default
             default:
                returnStatus = "reached default action=" + action.ToString();
                Logger.Log(LogEnum.LE_ERROR, "GameStateAlienPlayerMovement.PerformAction(): " + returnStatus);
                break;
-               #endregion
          }
          StringBuilder sb12 = new StringBuilder();
          if ("OK" != returnStatus)
@@ -459,7 +441,6 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            #region ShowAlien
             case GameAction.ShowAlien:
                break;
             case GameAction.ResetMovement:
@@ -750,17 +731,10 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            #region ShowAlien
             case GameAction.ShowAlien:
                break;
-            #endregion
-
-            #region TownspersonPerformsConversation
             case GameAction.TownspersonPerformsConversation:
                break;
-            #endregion
-
-            #region TownspersonCompletesConversations
             case GameAction.TownspersonCompletesConversations:
                if (true == GameStateChecker.CheckForInfluence(gi))
                {
@@ -805,14 +779,10 @@ namespace PleasantvilleGame
                   gi.GamePhase = GamePhase.AlienMovement;
                }
                break;
-            #endregion
-
-            #region default
             default:
                returnStatus = "reached default action=" + action.ToString();
                Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(): " + returnStatus);
                break;
-               #endregion
          }
          StringBuilder sb12 = new StringBuilder();
          if ("OK" != returnStatus)
@@ -852,17 +822,10 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            #region ShowAlien
             case GameAction.ShowAlien:
                break;
-            #endregion
-
-            #region TownspersonPerformsInfluencing
             case GameAction.TownspersonPerformsInfluencing:
                break;
-            #endregion
-
-            #region TownspersonCompletesInfluencing
             case GameAction.TownspersonCompletesInfluencing:
                if ((true == GameStateChecker.CheckForTownspersonCombats(gi)) || ((true == GameStateChecker.CheckForAlienCombats(gi))))
                {
@@ -902,14 +865,10 @@ namespace PleasantvilleGame
                   gi.GamePhase = GamePhase.AlienMovement;
                }
                break;
-            #endregion
-
-            #region default
             default:
                returnStatus = "reached default action=" + action.ToString();
                Logger.Log(LogEnum.LE_ERROR, "GameStateInfluences.PerformAction(): " + returnStatus);
                break;
-               #endregion
          }
          StringBuilder sb12 = new StringBuilder();
          if ("OK" != returnStatus)
@@ -948,12 +907,8 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            #region ShowAlien
             case GameAction.ShowAlien:
                break;
-            #endregion
-
-            #region AlienInitiateCombat
             case GameAction.AlienInitiateCombat:
                if (true == gi.IsAlienInitiatedCombat)
                   action = GameAction.TownspersonNackCombatSelection;
@@ -968,9 +923,6 @@ namespace PleasantvilleGame
                   action = GameAction.TownspersonNackCombatSelection;
                }
                break;
-            #endregion
-
-            #region TownspersonInitiateCombat
             case GameAction.TownspersonInitiateCombat:
                if (true == gi.IsControlledCombatCompleted)
                   action = GameAction.AlienNackCombatSelection;
@@ -985,9 +937,6 @@ namespace PleasantvilleGame
                   action = GameAction.AlienNackCombatSelection;
                }
                break;
-            #endregion
-
-            #region AlienPerformCombat
             case GameAction.AlienPerformCombat:
                PerformCombat(gi);
                gi.IsAlienInitiatedCombat = false;
@@ -1038,9 +987,6 @@ namespace PleasantvilleGame
                   }
                }
                break;
-            #endregion
-
-            #region TownspersonPerformCombat
             case GameAction.TownspersonPerformCombat:
                PerformCombat(gi);
                gi.IsControlledInitiatedCombat = false;
@@ -1090,9 +1036,6 @@ namespace PleasantvilleGame
                   }
                }
                break;
-            #endregion
-
-            #region TownspersonCompletesCombat
             case GameAction.TownspersonCompletesCombat:
                gi.IsControlledCombatCompleted = true;
                gi.IsControlledInitiatedCombat = false;
@@ -1148,9 +1091,6 @@ namespace PleasantvilleGame
                   gi.NextAction = "Awaiting Alien Complete Combat";
                }
                break;
-            #endregion
-
-            #region AlienCompletesCombat
             case GameAction.AlienCompletesCombat:
                gi.IsAlienCombatCompleted = true;
                gi.IsAlienInitiatedCombat = false;
@@ -1206,14 +1146,10 @@ namespace PleasantvilleGame
                   gi.NextAction = "Awaiting Townsperson Complete Combat";
                }
                break;
-            #endregion
-
-            #region default
             default:
                returnStatus = "reached default action=" + action.ToString();
                Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(): " + returnStatus);
                break;
-               #endregion
          }
          StringBuilder sb12 = new StringBuilder();
          if ("OK" != returnStatus)
@@ -1612,10 +1548,8 @@ namespace PleasantvilleGame
             zebulon.IsKilled = true;
             return;
          }
-
          // First perfom the actions that occur no matter what the result.
          // The influence factors are adjusted downward.
-
          gi.InfluenceCountTotal -= mi.Influence;
          sb = new StringBuilder("PerformCombatResolveLoss():"); sb.Append(mi.Name); sb.Append(" ---- from Total "); sb.Append(mi.Influence.ToString());
          sb.Append(" T="); sb.Append(gi.InfluenceCountTotal.ToString());
@@ -1708,12 +1642,8 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            #region ShowAlien
             case GameAction.ShowAlien:
                break;
-            #endregion
-
-            #region TownspersonIterrogates
             case GameAction.TownspersonIterrogates:
                if (0 == gi.NumIterogationsThisTurn)
                {
@@ -1721,15 +1651,9 @@ namespace PleasantvilleGame
                   action = GameAction.TownspersonCompletesIterogations;
                }
                break;
-            #endregion
-
-            #region TownspersonCompletesIterogations
             case GameAction.TownspersonCompletesIterogations:
                gi.NextAction = "Alien Acknowledges Iterogations";
                break;
-            #endregion
-
-            #region AlienAcksIterogations
             case GameAction.AlienAcksIterogations:
                if (true == GameStateChecker.CheckForImplantRemoval(gi))
                {
@@ -1759,14 +1683,10 @@ namespace PleasantvilleGame
                   gi.GamePhase = GamePhase.AlienMovement;
                }
                break;
-            #endregion
-
-            #region default
             default:
                returnStatus = "reached default action=" + action.ToString();
                Logger.Log(LogEnum.LE_ERROR, "GameStateIterogations.PerformAction(): " + returnStatus);
                break;
-               #endregion
          }
          StringBuilder sb12 = new StringBuilder();
          if ("OK" != returnStatus)
@@ -1805,17 +1725,10 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            #region TownspersonCompletesInfluencing
             case GameAction.TownspersonCompletesInfluencing:
                break;
-            #endregion
-
-            #region ShowAlien
             case GameAction.ShowAlien:
                break;
-            #endregion
-
-            #region TownspersonCompletesRemoval
             case GameAction.TownspersonCompletesRemoval:
                if (true == GameStateChecker.CheckForAlienTakeovers(gi))
                {
@@ -1840,14 +1753,10 @@ namespace PleasantvilleGame
                   gi.GamePhase = GamePhase.AlienMovement;
                }
                break;
-            #endregion
-
-            #region default
             default:
                returnStatus = "reached default action=" + action.ToString();
                Logger.Log(LogEnum.LE_ERROR, "GameStateImplantRemoval.PerformAction(): " + returnStatus);
                break;
-               #endregion
          }
          StringBuilder sb12 = new StringBuilder();
          if ("OK" != returnStatus)
@@ -1886,18 +1795,11 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            #region ShowAlien
             case GameAction.ShowAlien:
                break;
-            #endregion
-
-            #region AlienTakeover
             case GameAction.AlienTakeover:
                returnStatus = PerformTakeover(ref gi);
                break;
-            #endregion
-
-            #region AlienCompletesTakeovers
             case GameAction.AlienCompletesTakeovers:
                if (true == GameStateChecker.CheckForEndOfGame(gi))
                {
@@ -1917,14 +1819,10 @@ namespace PleasantvilleGame
                   gi.GamePhase = GamePhase.AlienMovement;
                }
                break;
-            #endregion
-
-            #region default
             default:
                returnStatus = "reached default action=" + action.ToString();
                Logger.Log(LogEnum.LE_ERROR, "GameStateAlienTakeover.PerformAction(): " + returnStatus);
                break;
-               #endregion
          }
          StringBuilder sb12 = new StringBuilder();
          if ("OK" != returnStatus)
