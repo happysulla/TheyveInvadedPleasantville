@@ -8,6 +8,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml;
 using System.Collections;
+using Button = System.Windows.Controls.Button;
+using Image = System.Windows.Controls.Image;
+
 namespace PleasantvilleGame
 {
    public class MapItem : IMapItem

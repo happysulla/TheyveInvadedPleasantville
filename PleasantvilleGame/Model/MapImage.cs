@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using WpfAnimatedGif;
+using Image=System.Windows.Controls.Image;
 
 namespace PleasantvilleGame
 {
