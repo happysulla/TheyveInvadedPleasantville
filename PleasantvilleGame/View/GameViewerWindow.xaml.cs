@@ -13,6 +13,9 @@ using Image = System.Windows.Controls.Image;
 using FontFamily = System.Windows.Media.FontFamily;
 using Rectangle = System.Windows.Shapes.Rectangle;
 using Brush = System.Windows.Media.Brush;
+using Brushes=System.Windows.Media.Brushes;
+using Application=System.Windows.Application;
+using Color=System.Windows.Media.Color;
 
 namespace PleasantvilleGame
 {
@@ -254,6 +257,11 @@ namespace PleasantvilleGame
       //-------------INTERFACE FUNCTIONS---------------------------------
       public void UpdateView(ref IGameInstance gi, GameAction action)
       {
+         if( null == myGameEngine )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::UpdateView() myGameEngine is null");
+            return;
+         }  
          if (true == IsAlien)
          {
             StringBuilder sb = new StringBuilder("---------------   ALIEN GameViewerWindow::UpdateView() ==> action="); sb.Append(action.ToString()); sb.Append("  ==> NextAction="); sb.Append(gi.NextAction);
@@ -266,19 +274,13 @@ namespace PleasantvilleGame
          }
 
          myGameInstance = gi;
+         GameAction outAction = GameAction.Error;
          switch (action) // Perform acton based on the current next action.
          {
-            #region AlienStart
             case GameAction.AlienStart:
                break;
-            #endregion
-
-            #region TownspersonStart
             case GameAction.TownspersonStart:
                break;
-            #endregion
-
-            #region AlienDisplaysRandomMovement
             case GameAction.AlienDisplaysRandomMovement:
                if (true == IsAlien)
                {
@@ -287,9 +289,6 @@ namespace PleasantvilleGame
                   ClearActionPanel();
                }
                break;
-            #endregion
-
-            #region TownspersonDisplaysRandomMovement
             case GameAction.TownspersonDisplaysRandomMovement:
                if (false == IsAlien)
                {
@@ -298,9 +297,6 @@ namespace PleasantvilleGame
                   ClearActionPanel();
                }
                break;
-            #endregion
-
-            #region AlienAcksRandomMovement
             case GameAction.AlienAcksRandomMovement:
                if (true == IsAlien)
                {
@@ -322,9 +318,6 @@ namespace PleasantvilleGame
                   myTimer.Interval = ANIMATE_SPEED * 1000 + 3000;  // reset timer
                }
                break;
-            #endregion
-
-            #region TownspersonAcksRandomMovement
             case GameAction.TownspersonAcksRandomMovement:
                if (false == IsAlien)
                {
@@ -345,22 +338,13 @@ namespace PleasantvilleGame
                   myTakeoversCompleted = false;
                }
                break;
-            #endregion
-
-            #region ResetMovement
             case GameAction.ResetMovement:
                UpdateCanvas(gi, true);  // unhide the pologon line shown
                break;
-            #endregion
-
-            #region AlienMovement
             case GameAction.AlienMovement:
                UpdateViewMovement(gi);
                ClearActionPanel();
                break;
-            #endregion
-
-            #region AlienCompletesMovement
             case GameAction.AlienCompletesMovement:
                if (true == IsAlien)
                {
@@ -370,9 +354,6 @@ namespace PleasantvilleGame
                   myRectangleSelection.Visibility = Visibility.Hidden;
                }
                break;
-            #endregion
-
-            #region TownspersonAcksAlienMovement
             case GameAction.TownspersonAcksAlienMovement:
                UpdateCanvas(gi);
                myMovingMapItems.Clear();
@@ -381,9 +362,6 @@ namespace PleasantvilleGame
                myMovingRectangle = null;
                myRectangleSelection.Visibility = Visibility.Hidden;
                break;
-            #endregion
-
-            #region TownspersonProposesMovement
             case GameAction.TownpersonProposesMovement:
                if (true == IsAlien)
                {
@@ -395,7 +373,8 @@ namespace PleasantvilleGame
                   }
                   else
                   {
-                     myGameEngine.PerformNextAction(ref gi, GameAction.AlienModifiesTownspersonMovement);
+                     outAction = GameAction.AlienModifiesTownspersonMovement;
+                     myGameEngine.PerformAction(ref gi, ref outAction);
                   }
                }
                else
@@ -405,17 +384,11 @@ namespace PleasantvilleGame
                   myRectangleSelection.Visibility = Visibility.Hidden;
                }
                break;
-            #endregion
-
-            #region TownspersonMovement
             case GameAction.TownpersonMovement:
                myIsAlienAbleToStopMove = false;
                myTimer.Stop();
                UpdateViewMovement(gi);
                break;
-            #endregion
-
-            #region AlienTimeoutOnMovement
             case GameAction.AlienTimeoutOnMovement:
                if (false == IsAlien)
                {
@@ -423,17 +396,11 @@ namespace PleasantvilleGame
                   UpdateViewMovement(gi);
                }
                break;
-            #endregion
-
-            #region AlienModifiesTownspersonMovement
             case GameAction.AlienModifiesTownspersonMovement:
                myIsAlienAbleToStopMove = false;
                UpdateCanvas(gi, true);
                UpdateViewMovement(gi);
                break;
-            #endregion
-
-            #region TownpersonCompletesMovement
             case GameAction.TownpersonCompletesMovement:
                if (false == IsAlien)
                {
@@ -443,9 +410,6 @@ namespace PleasantvilleGame
                   myRectangleSelection.Visibility = Visibility.Hidden;
                }
                break;
-            #endregion
-
-            #region AlienAcksTownspersonMovement:
             case GameAction.AlienAcksTownspersonMovement:
                UpdateCanvas(gi);
                UpdateViewState(gi);
@@ -455,48 +419,30 @@ namespace PleasantvilleGame
                myMovingRectangle = null;
                myRectangleSelection.Visibility = Visibility.Hidden;
                break;
-            #endregion
-
-            #region TownspersonPerformsConversation
             case GameAction.TownspersonPerformsConversation:
                UpdateCanvas(gi);
                UpdateViewState(gi);
                break;
-            #endregion
-
-            #region TownspersonCompletesConversations
             case GameAction.TownspersonCompletesConversations:
                UpdateCanvas(gi);
                UpdateViewState(gi);
                break;
-            #endregion
-
-            #region TownspersonPerformsInfluencing
             case GameAction.TownspersonPerformsInfluencing:
                UpdateCanvas(gi);
                UpdateViewState(gi);
                break;
-            #endregion
-
-            #region TownspersonCompletesInfluencing
             case GameAction.TownspersonCompletesInfluencing:
                UpdateCanvas(gi);
                UpdateViewState(gi);
                break;
-            #endregion
-
-            #region AlienInitiateCombat
             case GameAction.AlienInitiateCombat:
                if ((true == myIsCombatInitiatedForAlien) && (true == IsAlien))
                {
                   UpdateCanvas(gi);
                   Logger.Log(LogEnum.LE_COMBAT_STATE, "UpdateView():AlienInitiateCombat: ALIEN Performs Combat");
-                  myGameEngine.PerformNextAction(ref gi, GameAction.AlienPerformCombat);
+                  myGameEngine.PerformAction(ref gi, GameAction.AlienPerformCombat);
                }
                break;
-            #endregion
-
-            #region TownspersonNackCombatSelection
             case GameAction.TownspersonNackCombatSelection:
                if (true == IsAlien)
                {
@@ -506,9 +452,6 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_COMBAT_STATE, "UpdateView():TownspersonNackCombatSelection: ALIEN myIsCombatInitiatedForAlien=false");
                }
                break;
-            #endregion
-
-            #region AlienPerformCombat
             case GameAction.AlienPerformCombat:
                UpdateCanvas(gi);
                if (null != gi.MapItemCombat.Territory)
@@ -517,20 +460,14 @@ namespace PleasantvilleGame
                      DisplayCombatResults(gi);
                }
                break;
-            #endregion
-
-            #region TownspersonInitiateCombat
             case GameAction.TownspersonInitiateCombat:
                if ((true == myIsCombatInitiatedForTownsperson) && (false == IsAlien))
                {
                   UpdateCanvas(gi);
                   Logger.Log(LogEnum.LE_COMBAT_STATE, "UpdateView():TownspersonInitiateCombat: TP PERFORMS COMBAT");
-                  myGameEngine.PerformNextAction(ref gi, GameAction.TownspersonPerformCombat);
+                  myGameEngine.PerformAction(ref gi, GameAction.TownspersonPerformCombat);
                }
                break;
-            #endregion
-
-            #region AlienNackCombatSelection
             case GameAction.AlienNackCombatSelection:
                if (false == IsAlien)
                {
@@ -540,9 +477,6 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_COMBAT_STATE, "UpdateView():AlienNackCombatSelection: TP    myIsCombatInitiatedForTownsperson=false");
                }
                break;
-            #endregion
-
-            #region TownspersonPerformCombat
             case GameAction.TownspersonPerformCombat:
                UpdateCanvas(gi);
                if (null != gi.MapItemCombat.Territory)
@@ -553,9 +487,6 @@ namespace PleasantvilleGame
                   }
                }
                break;
-            #endregion
-
-            #region TownspersonCompletesCombat
             case GameAction.TownspersonCompletesCombat:
                myRectangleSelection.Visibility = Visibility.Hidden;
                if (true == IsAlien)
@@ -570,9 +501,6 @@ namespace PleasantvilleGame
                StringBuilder sb2 = new StringBuilder("UpdateView():TownspersonCompletesCombat: "); sb2.Append(IsAlien.ToString()); sb2.Append("myIsCombatInitiatedForTownsperson=false");
                Logger.Log(LogEnum.LE_COMBAT_STATE, sb2.ToString());
                break;
-            #endregion
-
-            #region AlienCompletesCombat
             case GameAction.AlienCompletesCombat:
                if (false == IsAlien)
                {
@@ -587,44 +515,26 @@ namespace PleasantvilleGame
                StringBuilder sb3 = new StringBuilder("UpdateView():AlienCompletesCombat: "); sb3.Append(IsAlien.ToString()); sb3.Append("myIsCombatInitiatedForAlien=false");
                Logger.Log(LogEnum.LE_COMBAT_STATE, sb3.ToString());
                break;
-            #endregion
-
-            #region TownspersonIterrogates
             case GameAction.TownspersonIterrogates:
                UpdateCanvas(gi);
                UpdateViewState(gi);
                break;
-            #endregion
-
-            #region TownspersonCompletesIterogations
             case GameAction.TownspersonCompletesIterogations:
                UpdateCanvas(gi);
                UpdateViewState(gi);
                break;
-            #endregion
-
-            #region AlienAcksIterogations
             case GameAction.AlienAcksIterogations:
                UpdateCanvas(gi);
                UpdateViewState(gi);
                break;
-            #endregion
-
-            #region TownspersonRemovesImplant
             case GameAction.TownspersonRemovesImplant:
                UpdateCanvas(gi);
                UpdateViewState(gi);
                break;
-            #endregion
-
-            #region TownspersonCompletesRemoval
             case GameAction.TownspersonCompletesRemoval:
                UpdateCanvas(gi);
                UpdateViewState(gi);
                break;
-            #endregion
-
-            #region AlienTakeover
             case GameAction.AlienTakeover:
                UpdateCanvas(gi);
                if (null == gi.Takeover)
@@ -653,17 +563,11 @@ namespace PleasantvilleGame
                }
                UpdateViewState(gi);
                break;
-            #endregion
-
-            #region AlienCompletesTakeovers
             case GameAction.AlienCompletesTakeovers:
                UpdateCanvas(gi);
                myIsTakeOverInOneRegion = false;
                myIsTakeOverPromptNeededToFoolOpponent = false;
                break;
-            #endregion
-
-            #region ShowEndGame
             case GameAction.ShowEndGame:
                ClearActionPanel();
                foreach (IMapItem mi in gi.Persons)         // SHow all the aliens
@@ -703,9 +607,6 @@ namespace PleasantvilleGame
                UpdateCanvas(gi);
                UpdateViewState(gi);
                break;
-            #endregion
-
-            #region ShowAlien
             case GameAction.ShowAlien:
                List<Stack> stacks = new List<Stack>();
                stacks.AssignPeople(gi.Persons, IsAlien);
@@ -726,13 +627,9 @@ namespace PleasantvilleGame
                }
                UpdateViewState(gi);
                break;
-            #endregion
-
-            #region default
             default:
                Console.WriteLine("ERROR: GameViewerWindow::UpdateView() reached default next action={0}", action.ToString());
                break;
-               #endregion
          }
       }
       //-------------UPDATE HELPER FUNCTIONS---------------------------------
@@ -874,7 +771,7 @@ namespace PleasantvilleGame
 
          UpdateActionPanelButtons(gi);
       }
-      void UpdateActionPanelButtons(IGameInstance gi)
+      public void UpdateActionPanelButtons(IGameInstance gi)
       {
          if (Visibility.Visible == myButton1.Visibility)
          {
@@ -944,12 +841,12 @@ namespace PleasantvilleGame
                int counterCount1 = 0;
                foreach (IMapItem mi1 in gi.Persons)
                {
-                  if ((mi1.Territory.Name == mi.TerritoryStarting.Name) && (mi1.Territory.Sector == mi.TerritoryStarting.Sector))
+                  if ((mi1.TerritoryCurrent.Name == mi.TerritoryStarting.Name) && (mi1.TerritoryCurrent.Sector == mi.TerritoryStarting.Sector))
                      ++counterCount1;
                }
 
-               mi.Territory = mi.TerritoryStarting;
-               mi.Location = new MapPoint(mi.Territory.CenterPoint.X - Utilities.theXOffset + (counterCount1 * 3), mi.Territory.CenterPoint.Y - Utilities.theYOffset + (counterCount1 * 3));
+               mi.TerritoryCurrent = mi.TerritoryStarting;
+               mi.Location = new MapPoint(mi.TerritoryCurrent.CenterPoint.X - Utilities.theMapItemOffset + (counterCount1 * 3), mi.TerritoryCurrent.CenterPoint.Y - Utilities.theMapItemOffset + (counterCount1 * 3));
 
                Button b = myButtons.Find(mi.Name);
                if (null != b)
@@ -967,11 +864,16 @@ namespace PleasantvilleGame
 
             foreach (IMapItemMove mim2 in gi.MapItemMoves)
             {
+               if( null == mim2.NewTerritory )
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateViewMovement() mim2.NewTerritory is null");
+                  return ;
+               }
                IMapItem mi = mim2.MapItem;
                int counterCount2 = 0;
                foreach (IMapItem mi2 in gi.Persons)
                {
-                  if ((mi2.Territory.Name == mim2.NewTerritory.Name) && (mi2.Territory.Sector == mim2.NewTerritory.Sector))
+                  if ((mi2.TerritoryCurrent.Name == mim2.NewTerritory.Name) && (mi2.TerritoryCurrent.Sector == mim2.NewTerritory.Sector))
                      ++counterCount2;
                }
 
@@ -1004,8 +906,8 @@ namespace PleasantvilleGame
 
                // Reset to its final position
 
-               mi.Territory = mim2.NewTerritory;
-               mi.Location = new MapPoint(mi.Territory.CenterPoint.X - Utilities.theXOffset + (counterCount2 * 3), mi.Territory.CenterPoint.Y - Utilities.theYOffset + (counterCount2 * 3));
+               mi.TerritoryCurrent = mim2.NewTerritory;
+               mi.Location = new MapPoint(mi.TerritoryCurrent.CenterPoint.X - Utilities.theMapItemOffset + (counterCount2 * 3), mi.TerritoryCurrent.CenterPoint.Y - Utilities.theMapItemOffset + (counterCount2 * 3));
 
                if (mi.Movement <= mi.MovementUsed)
                {
@@ -1032,7 +934,7 @@ namespace PleasantvilleGame
                      break;
                   }
                   myConversationsCompleted = true;
-                  myGameEngine.PerformNextAction(ref gi, GameAction.TownspersonCompletesConversations);
+                  myGameEngine.PerformAction(ref gi, GameAction.TownspersonCompletesConversations);
                   break;
                }
                break;
@@ -1043,7 +945,7 @@ namespace PleasantvilleGame
                   if ((true == IsAlien) && (false == myInfluencesCompleted))
                   {
                      myInfluencesCompleted = true;
-                     myGameEngine.PerformNextAction(ref gi, GameAction.TownspersonCompletesInfluencing);
+                     myGameEngine.PerformAction(ref gi, GameAction.TownspersonCompletesInfluencing);
                   }
                }
                break;
@@ -1056,7 +958,7 @@ namespace PleasantvilleGame
                      if (false == myAlienCombatCompleted)
                      {
                         myAlienCombatCompleted = true;
-                        myGameEngine.PerformNextAction(ref gi, GameAction.AlienCompletesCombat);
+                        myGameEngine.PerformAction(ref gi, GameAction.AlienCompletesCombat);
                      }
                   }
                   else if (false == myTownspeopleCombatCompleted)
@@ -1064,7 +966,7 @@ namespace PleasantvilleGame
                      if (false == myTownspeopleCombatCompleted)
                      {
                         myTownspeopleCombatCompleted = true;
-                        myGameEngine.PerformNextAction(ref gi, GameAction.TownspersonCompletesCombat);
+                        myGameEngine.PerformAction(ref gi, GameAction.TownspersonCompletesCombat);
                      }
                   }
                }
@@ -1076,7 +978,7 @@ namespace PleasantvilleGame
                   if ((false == IsAlien) && (false == myInterogationsCompleted))
                   {
                      myInterogationsCompleted = true;
-                     myGameEngine.PerformNextAction(ref gi, GameAction.TownspersonCompletesIterogations);
+                     myGameEngine.PerformAction(ref gi, GameAction.TownspersonCompletesIterogations);
                   }
                }
                break;
@@ -1087,7 +989,7 @@ namespace PleasantvilleGame
                   if ((false == IsAlien) && (false == myImplateRemovalsCompleted))
                   {
                      myImplateRemovalsCompleted = true;
-                     myGameEngine.PerformNextAction(ref gi, GameAction.TownspersonCompletesRemoval);
+                     myGameEngine.PerformAction(ref gi, GameAction.TownspersonCompletesRemoval);
                   }
                }
                break;
@@ -1100,7 +1002,7 @@ namespace PleasantvilleGame
                      if (false == myTakeoversCompleted)
                      {
                         myTakeoversCompleted = true;
-                        myGameEngine.PerformNextAction(ref gi, GameAction.AlienCompletesTakeovers);
+                        myGameEngine.PerformAction(ref gi, GameAction.AlienCompletesTakeovers);
                      }
                   }
                }
@@ -1198,13 +1100,13 @@ namespace PleasantvilleGame
                      if (Visibility.Visible == b.Visibility)
                      {
                         b.Visibility = Visibility.Hidden;
-                        Logger.Log(LogEnum.LE_MOVING_KIA_RESULTS, mi.Name + " is hidden");
+                        Logger.Log(LogEnum.LE_MOVE_KIA_RESULTS, mi.Name + " is hidden");
                      }
                   }
                   else
                   {
                      MapItem.SetButtonContent(b, mi, IsAlien);
-                     mi.Location = new MapPoint(mi.Territory.CenterPoint.X - Utilities.theXOffset + (counterCount * 3), mi.Territory.CenterPoint.Y - Utilities.theYOffset + (counterCount * 3));
+                     mi.Location = new MapPoint(mi.TerritoryCurrent.CenterPoint.X - Utilities.theXOffset + (counterCount * 3), mi.TerritoryCurrent.CenterPoint.Y - Utilities.theYOffset + (counterCount * 3));
                      ++counterCount;
                      Canvas.SetLeft(b, mi.Location.X);
                      Canvas.SetTop(b, mi.Location.Y);
@@ -1451,7 +1353,7 @@ namespace PleasantvilleGame
 
             // Turn the region red
 
-            String targetName = townspeopleControlled[0].Territory.Name + townspeopleControlled[0].Territory.Sector.ToString();
+            String targetName = townspeopleControlled[0].TerritoryCurrent.Name + townspeopleControlled[0].TerritoryCurrent.Sector.ToString();
             foreach (UIElement ui in myCanvas.Children)
             {
                if (ui is Polygon)
@@ -1572,8 +1474,8 @@ namespace PleasantvilleGame
             else if (5 < rightMapItem.Influence)
                dieRollModifier = 1;
 
-            int die1 = GameEngine.RandomGenerator.Next(6) + 1;
-            int die2 = GameEngine.RandomGenerator.Next(6) + 1;
+            int die1 = Utilities.RandomGenerator.Next(6) + 1;
+            int die2 = Utilities.RandomGenerator.Next(6) + 1;
             int finalValue = die1 + die2 + dieRollModifier;
 
             int needRoll = 9 - dieRollModifier;
@@ -1612,7 +1514,7 @@ namespace PleasantvilleGame
             myTextBoxResults.Text = resultString.ToString();
          }
 
-         myGameEngine.PerformNextAction(ref gi, GameAction.TownspersonPerformsConversation);
+         myGameEngine.PerformAction(ref gi, GameAction.TownspersonPerformsConversation);
 
          if (true == isIgnoreResults)
             ClearActionPanel();
@@ -1670,7 +1572,7 @@ namespace PleasantvilleGame
 
             // Turn the region red
 
-            String targetName = townspeopleControlled[0].Territory.Name + townspeopleControlled[0].Territory.Sector.ToString();
+            String targetName = townspeopleControlled[0].TerritoryCurrent.Name + townspeopleControlled[0].TerritoryCurrent.Sector.ToString();
             foreach (UIElement ui in myCanvas.Children)
             {
                if (ui is Polygon)
@@ -1889,8 +1791,8 @@ namespace PleasantvilleGame
 
             dieThreshold += dieRollModifier;
 
-            int die1 = GameEngine.RandomGenerator.Next(6) + 1;
-            int die2 = GameEngine.RandomGenerator.Next(6) + 1;
+            int die1 = Utilities.RandomGenerator.Next(6) + 1;
+            int die2 = Utilities.RandomGenerator.Next(6) + 1;
             int sum = die1 + die2;
 
             displayResults.Append("\nModifier: ");
@@ -1946,7 +1848,7 @@ namespace PleasantvilleGame
 
          } // if( true == isIgnoreResults)
 
-         myGameEngine.PerformNextAction(ref gi, GameAction.TownspersonPerformsInfluencing);
+         myGameEngine.PerformAction(ref gi, GameAction.TownspersonPerformsInfluencing);
          if (true == isIgnoreResults)
             ClearActionPanel();
          else
@@ -2041,7 +1943,7 @@ namespace PleasantvilleGame
             {
                if (0 == controlled.Count)
                   continue;
-               combatTerritory = controlled[0].Territory;
+               combatTerritory = controlled[0].TerritoryCurrent;
                if ((0 == aliens.Count) && ((0 == uncontrolled.Count) && (0 == unknownAliens.Count)))
                   continue;
             }
@@ -2236,13 +2138,13 @@ namespace PleasantvilleGame
             {
                Logger.Log(LogEnum.LE_COMBAT_STATE, "MouseLeftButtonDownCanvas():Combat: ALIEN myIsCombatInitiatedForAlien=true");
                myIsCombatInitiatedForAlien = true;
-               myGameEngine.PerformNextAction(ref gi, GameAction.AlienInitiateCombat);
+               myGameEngine.PerformAction(ref gi, GameAction.AlienInitiateCombat);
             }
             else
             {
                Logger.Log(LogEnum.LE_COMBAT_STATE, "MouseLeftButtonDownCanvas():Combat TP    myIsCombatInitiatedForTownsperson=true");
                myIsCombatInitiatedForTownsperson = true;
-               myGameEngine.PerformNextAction(ref gi, GameAction.TownspersonInitiateCombat);
+               myGameEngine.PerformAction(ref gi, GameAction.TownspersonInitiateCombat);
             }
             return;
          }
@@ -2408,7 +2310,7 @@ namespace PleasantvilleGame
 
             // Turn the region red
 
-            String targetName = townspeopleControlled[0].Territory.Name + townspeopleControlled[0].Territory.Sector.ToString();
+            String targetName = townspeopleControlled[0].TerritoryCurrent.Name + townspeopleControlled[0].TerritoryCurrent.Sector.ToString();
             foreach (UIElement ui in myCanvas.Children)
             {
                if (ui is Polygon)
@@ -2601,8 +2503,8 @@ namespace PleasantvilleGame
 
          if (false == isIgnoreResults)
          {
-            int die1 = GameEngine.RandomGenerator.Next(6) + 1;
-            int die2 = GameEngine.RandomGenerator.Next(6) + 1;
+            int die1 = Utilities.RandomGenerator.Next(6) + 1;
+            int die2 = Utilities.RandomGenerator.Next(6) + 1;
             int sum = die1 + die2;
 
             StringBuilder displayResults = new StringBuilder("Roll: ");
@@ -2878,7 +2780,7 @@ namespace PleasantvilleGame
          if (false == isIgnoreResults)
             gi.Takeover = new MapItemTakeover(alien, victum);
 
-         myGameEngine.PerformNextAction(ref gi, GameAction.AlienTakeover);
+         myGameEngine.PerformAction(ref gi, GameAction.AlienTakeover);
 
          if (true == isIgnoreResults)
             ClearActionPanel();
@@ -2906,9 +2808,7 @@ namespace PleasantvilleGame
       {
          if (null != myGameEngine)
          {
-            // Do not do anything unless a carriage return happens
-
-            string entry = myTextBoxEntry.Text;
+            string entry = myTextBoxEntry.Text;  // Do not do anything unless a carriage return happens
             int length = entry.Count();
             if (0 == length)
                return;
@@ -2920,7 +2820,7 @@ namespace PleasantvilleGame
                sb.Append(entry);
                myTextBoxDisplay.AppendText(sb.ToString());
                myTextBoxDisplay.ScrollToEnd();
-               myGameEngine.SendText(entry);
+               //myGameEngine.SendText(entry);
             }
          }
       }
@@ -3314,7 +3214,7 @@ namespace PleasantvilleGame
                   {
                      if (false == gi.AddKnownAlien(selectedMapItem))
                         Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickExposeAlien(): returned error");
-                     myGameEngine.PerformNextAction(ref gi, GameAction.ShowAlien); // Inform the user to return back
+                     myGameEngine.PerformAction(ref gi, GameAction.ShowAlien); // Inform the user to return back
                   }
                }
             }
@@ -3362,7 +3262,7 @@ namespace PleasantvilleGame
                            IMapItemMove modifiedMove = new MapItemMove(movingMi, selectedMapItem.Territory, gi.Persons);
                            gi.MapItemMoves[0] = modifiedMove;
                            movingMi.MovementUsed = movingMi.Movement; // ensure cannot move further
-                           myGameEngine.PerformNextAction(ref gi, GameAction.AlienModifiesTownspersonMovement);
+                           myGameEngine.PerformAction(ref gi, GameAction.AlienModifiesTownspersonMovement);
                            UpdateCanvas(gi, true);
                         }
                      }
@@ -3380,7 +3280,7 @@ namespace PleasantvilleGame
             myIsAlienAbleToStopMove = false;
             Logger.Log(LogEnum.LE_TIMER_ELAPED, "TimerElasped():  Reset State myIsAlienAbleToStopMove=false");
             myTimer.Stop();
-            myGameEngine.PerformNextAction(ref gi, GameAction.AlienTimeoutOnMovement);
+            myGameEngine.PerformAction(ref gi, GameAction.AlienTimeoutOnMovement);
          }
       }
       private void myButton1_Click(object sender, RoutedEventArgs e)
@@ -3679,7 +3579,7 @@ namespace PleasantvilleGame
                      }
                      StringBuilder sb = new StringBuilder("MouseLeftButtonDownCanvas(): "); sb.Append(gi.NumIterogationsThisTurn.ToString()); sb.Append("). picked "); sb.Append(selectedTerritory.ToString());
                      Logger.Log(LogEnum.LE_ITEROGATIONS, sb.ToString());
-                     myGameEngine.PerformNextAction(ref gi, GameAction.TownspersonIterrogates);
+                     myGameEngine.PerformAction(ref gi, GameAction.TownspersonIterrogates);
                   }
                }
                return;
@@ -3750,12 +3650,12 @@ namespace PleasantvilleGame
                gi.MapItemMoves.Add(mim);
                if (GamePhase.AlienMovement == gi.GamePhase)
                {
-                  myGameEngine.PerformNextAction(ref gi, GameAction.AlienMovement);
+                  myGameEngine.PerformAction(ref gi, GameAction.AlienMovement);
                }
                else if (GamePhase.TownspersonMovement == gi.GamePhase)
                {
                   myIsAlienAbleToStopMove = true; // The townsperson cannot move any more MapItems until a response is received from teh Alien player.
-                  myGameEngine.PerformNextAction(ref myGameInstance, GameAction.TownpersonProposesMovement);
+                  myGameEngine.PerformAction(ref myGameInstance, GameAction.TownpersonProposesMovement);
                }
             }
          }
@@ -3888,7 +3788,7 @@ namespace PleasantvilleGame
                }
 
                gi.MapItemMoves.Clear();
-               myGameEngine.PerformNextAction(ref gi, GameAction.ResetMovement); // Inform the user to return back
+               myGameEngine.PerformAction(ref gi, GameAction.ResetMovement); // Inform the user to return back
             }
          }
       }

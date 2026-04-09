@@ -5,6 +5,9 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
+using MessageBox = System.Windows.MessageBox;
+using Rectangle=System.Windows.Shapes.Rectangle;
+using IMage=System.Windows.Controls.Image;
 
 namespace PleasantvilleGame
 {

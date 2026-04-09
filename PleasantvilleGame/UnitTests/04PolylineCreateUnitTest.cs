@@ -105,30 +105,6 @@ namespace PleasantvilleGame
             return;
          }
          //-------------------------------------
-         if (true == myIsBattleMapShown)
-         {
-            myIsBattleMapShown = false;
-            myCanvasImageViewer.ShowMovementMap(myCanvasMain);
-         }
-         else
-         {
-            myIsBattleMapShown = true;
-            IAfterActionReport? lastReport = gi.Reports.GetLast();
-            if (null == lastReport)
-            {
-               ICombatCalendarEntry? entry = TableMgr.theCombatCalendarEntries[0];
-               if (null == entry)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "PolylineCreateUnitTest(): entry=null");
-                  CtorError = true;
-                  return;
-               }
-               lastReport = new AfterActionReport(entry); 
-               gi.Reports.Add(lastReport); 
-            }
-            myCanvasImageViewer.ShowBattleMap(false, myCanvasMain);
-         }
-         //-------------------------------------
          myDashArray.Add(5);  // used for dotted lines
          myDashArray.Add(2);  // used for dotted lines
       }
@@ -152,22 +128,6 @@ namespace PleasantvilleGame
          //-----------------------------------
          if (CommandName == myCommandNames[0])
          {
-            if (true == myIsBattleMapShown)
-            {
-               myIsBattleMapShown = false;
-               myCanvasImageViewer.ShowMovementMap(myCanvasMain);
-            }
-            else
-            {
-               myIsBattleMapShown = true;
-               IAfterActionReport? lastReport = gi.Reports.GetLast();
-               if (null == lastReport)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "Command(): lastReport=null");
-                  return false;
-               }
-               myCanvasImageViewer.ShowBattleMap(false, myCanvasMain);
-            }
          }
          else if (CommandName == myCommandNames[1])
          {

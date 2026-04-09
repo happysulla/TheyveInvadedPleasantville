@@ -597,7 +597,7 @@ namespace PleasantvilleGame
          }
          return true;
       }
-      public bool ReadXmlTownspeople(XmlReader reader, ITerritories territories)
+      public bool ReadXmlTownspeople(XmlReader reader, IMapItems townspeople)
       {
          CultureInfo currentCulture = CultureInfo.CurrentCulture;
          System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
@@ -609,7 +609,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): IsStartElement(Territories)=false");
                return false;
             }
-            if (reader.Name != "Territories")
+            if (reader.Name != "Townspeople")
             {
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): Territories != (node=" + reader.Name + ")");
                return false;
@@ -625,44 +625,44 @@ namespace PleasantvilleGame
             //-----------------------------------------------------------------
             for (int i = 0; i < count; ++i)
             {
-               ITerritory territory = new Territory();
+               IMapItem townperson = new MapItem();
                reader.Read();
                if (false == reader.IsStartElement())
                {
                   Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): IsStartElement(Territory)=false count=" + count.ToString() + " i=" + i.ToString());
                   return false;
                }
-               if (reader.Name != "Territory")
+               if (reader.Name != "Name")
                {
-                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): Territory != (node=" + reader.Name + ")");
+                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): Name != (node=" + reader.Name + ")");
                   return false;
                }
-               string? tName = reader.GetAttribute("value");
-               if (null == tName)
+               string? name = reader.GetAttribute("value");
+               if (null == name)
                {
                   Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): GetAttribute() returned false");
                   return false;
                }
-               territory.Name = tName;
+               townperson.Name = name;
                //--------------------------------------
                reader.Read();
                if (false == reader.IsStartElement())
                {
-                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): IsStartElement(Parent)=false tName=" + tName);
+                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): IsStartElement(Parent)=false for name=" + name);
                   return false;
                }
-               if (reader.Name != "Parent")
+               if (reader.Name != "TopImageName")
                {
-                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): Parent != (node=" + reader.Name + ")");
+                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): TopImageName != (node=" + reader.Name + ")");
                   return false;
                }
                string? sAttribute = reader.GetAttribute("value");
                if (null == sAttribute)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): GetAttribute(Parent)=null");
+                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): GetAttribute(TopImageName)=null");
                   return false;
                }
-               territory.CanvasName = sAttribute;
+               townperson.TopImageName = sAttribute;
                //--------------------------------------
                reader.Read();
                if (false == reader.IsStartElement())
@@ -670,44 +670,37 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): IsStartElement(Type)=false");
                   return false;
                }
-               if (reader.Name != "Type")
+               if (reader.Name != "BottomImageName")
                {
-                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): Type != (node=" + reader.Name + ")");
+                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): BottomImageName != (node=" + reader.Name + ")");
                   return false;
                }
                string? sAttribute1 = reader.GetAttribute("value");
                if (null == sAttribute1)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): GetAttribute(Type)=null");
+                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): GetAttribute(BottomImageName)=null");
                   return false;
                }
-               territory.Type = sAttribute1;
+               townperson.BottomImageName = sAttribute1;
                //--------------------------------------
                reader.Read();
                if (false == reader.IsStartElement())
                {
-                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): IsStartElement(CenterPoint)=false");
+                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): IsStartElement(Zoom)=false");
                   return false;
                }
-               if (reader.Name != "CenterPoint")
+               if (reader.Name != "Zoom")
                {
-                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): CenterPoint != (node=" + reader.Name + ")");
+                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): Zoom != (node=" + reader.Name + ")");
                   return false;
                }
-               string? sX = reader.GetAttribute("X");
+               string? sZoom = reader.GetAttribute("value");
                if (null == sX)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): GetAttribute(sX)=null");
+                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): GetAttribute(Zoom)=null");
                   return false;
                }
-               territory.CenterPoint.X = double.Parse(sX);
-               string? sY = reader.GetAttribute("Y");
-               if (null == sY)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): GetAttribute(sX)=null");
-                  return false;
-               }
-               territory.CenterPoint.Y = double.Parse(sY);
+               townperson.Zoom = double.Parse(sZoom);
                //--------------------------------------
                reader.Read();
                if (false == reader.IsStartElement())
@@ -1313,82 +1306,6 @@ namespace PleasantvilleGame
             reader.Read();
             if (false == reader.IsStartElement())
             {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(RotationOffsetHull) = false");
-               return false;
-            }
-            if (reader.Name != "RotationOffsetHull")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): RotationOffsetHull != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sRotationOffsetHull = reader.GetAttribute("value");
-            if (null == sRotationOffsetHull)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): sRotationOffsetHull=null");
-               return false;
-            }
-            mi.RotationOffsetHull = Convert.ToDouble(sRotationOffsetHull);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(RotationHull) = false");
-               return false;
-            }
-            if (reader.Name != "RotationHull")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): RotationHull != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sRotationHull = reader.GetAttribute("value");
-            if (null == sRotationHull)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): sRotationHull=null");
-               return false;
-            }
-            mi.RotationHull = Convert.ToDouble(sRotationHull);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(RotationOffset_Turret) = false");
-               return false;
-            }
-            if (reader.Name != "RotationOffsetTurret")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): RotationOffset_Turret != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sRotationOffsetTurret = reader.GetAttribute("value");
-            if (null == sRotationOffsetTurret)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): sRotationOffsetTurret=null");
-               return false;
-            }
-            mi.RotationOffsetTurret = Convert.ToDouble(sRotationOffsetTurret);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(RotationTurret) = false");
-               return false;
-            }
-            if (reader.Name != "RotationTurret")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): RotationTurret != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sRotationTurret = reader.GetAttribute("value");
-            if (null == sRotationTurret)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): sRotationTurret=null");
-               return false;
-            }
-            mi.RotationTurret = Convert.ToDouble(sRotationTurret);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
                Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(LocationX) = false");
                return false;
             }
@@ -1499,399 +1416,7 @@ namespace PleasantvilleGame
                }
                mi.TerritoryStarting = tStart;
             }
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(LastMoveAction) = false");
-               return false;
-            }
-            if (reader.Name != "LastMoveAction")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): LastMoveAction != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sLastMoveAction = reader.GetAttribute("value");
-            if (null == sLastMoveAction)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): sLastMoveAction=null");
-               return false;
-            }
-            mi.LastMoveAction = sLastMoveAction;
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsMoving) = false");
-               return false;
-            }
-            if (reader.Name != "IsMoving")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsMoving != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sIsMoving = reader.GetAttribute("value");
-            if (null == sIsMoving)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsMoving=null");
-               return false;
-            }
-            mi.IsMoving = Convert.ToBoolean(sIsMoving);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsHullDown) = false");
-               return false;
-            }
-            if (reader.Name != "IsHullDown")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsHullDown != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sIsHullDown = reader.GetAttribute("value");
-            if (null == sIsHullDown)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsHullDown=null");
-               return false;
-            }
-            mi.IsHullDown = Convert.ToBoolean(sIsHullDown);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsKilled) = false");
-               return false;
-            }
-            if (reader.Name != "IsKilled")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsKilled != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sIsKilled = reader.GetAttribute("value");
-            if (null == sIsKilled)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsKilled=null");
-               return false;
-            }
-            mi.IsKilled = Convert.ToBoolean(sIsKilled);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsUnconscious) = false");
-               return false;
-            }
-            if (reader.Name != "IsUnconscious")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsUnconscious != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sIsUnconscious = reader.GetAttribute("value");
-            if (null == sIsUnconscious)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsUnconscious=null");
-               return false;
-            }
-            mi.IsUnconscious = Convert.ToBoolean(sIsUnconscious);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsIncapacitated) = false");
-               return false;
-            }
-            if (reader.Name != "IsIncapacitated")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsIncapacitated != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sIsIncapacitated = reader.GetAttribute("value");
-            if (null == sIsIncapacitated)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsIncapacitated=null");
-               return false;
-            }
-            mi.IsIncapacitated = Convert.ToBoolean(sIsIncapacitated);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsFired) = false");
-               return false;
-            }
-            if (reader.Name != "IsFired")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsFired != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sIsFired = reader.GetAttribute("value");
-            if (null == sIsFired)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsFired=null");
-               return false;
-            }
-            mi.IsFired = Convert.ToBoolean(sIsFired);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsSpotted) = false");
-               return false;
-            }
-            if (reader.Name != "IsSpotted")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsSpotted != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sIsSpotted = reader.GetAttribute("value");
-            if (null == sIsSpotted)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsSpotted=null");
-               return false;
-            }
-            mi.IsSpotted = Convert.ToBoolean(sIsSpotted);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsInterdicted) = false");
-               return false;
-            }
-            if (reader.Name != "IsInterdicted")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsInterdicted != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sIsInterdicted = reader.GetAttribute("value");
-            if (null == sIsInterdicted)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsInterdicted=null");
-               return false;
-            }
-            mi.IsInterdicted = Convert.ToBoolean(sIsInterdicted);
-            //---------------------------------------------
-            if (false == ReadXmlListingMapItemsEnemyAcquiredShots(reader, mi.EnemyAcquiredShots))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): ReadXmlListingMapItemsEnemyAcquiredShots() returned false");
-               return false;
-            }
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsMovingInOpen) = false");
-               return false;
-            }
-            if (reader.Name != "IsMovingInOpen")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsMovingInOpen != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sIsMovingInOpen = reader.GetAttribute("value");
-            if (null == sIsMovingInOpen)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsMovingInOpen=null");
-               return false;
-            }
-            mi.IsMovingInOpen = Convert.ToBoolean(sIsMovingInOpen);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsWoods) = false");
-               return false;
-            }
-            if (reader.Name != "IsWoods")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsWoods != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sIsWoods = reader.GetAttribute("value");
-            if (null == sIsWoods)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsWoods=null");
-               return false;
-            }
-            mi.IsWoods = Convert.ToBoolean(sIsWoods);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsBuilding) = false");
-               return false;
-            }
-            if (reader.Name != "IsBuilding")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsBuilding != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sIsBuilding = reader.GetAttribute("value");
-            if (null == sIsBuilding)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsBuilding=null");
-               return false;
-            }
-            mi.IsBuilding = Convert.ToBoolean(sIsBuilding);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsFortification) = false");
-               return false;
-            }
-            if (reader.Name != "IsFortification")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsFortification != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sIsFortification = reader.GetAttribute("value");
-            if (null == sIsFortification)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsFortification=null");
-               return false;
-            }
-            mi.IsFortification = Convert.ToBoolean(sIsFortification);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(Is_ThrownTrack) = false");
-               return false;
-            }
-            if (reader.Name != "IsThrownTrack")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): Is_ThrownTrack != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sIsThrownTrack = reader.GetAttribute("value");
-            if (null == sIsThrownTrack)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): Is_ThrownTrack=null");
-               return false;
-            }
-            mi.IsThrownTrack = Convert.ToBoolean(sIsThrownTrack);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(Is_BoggedDown) = false");
-               return false;
-            }
-            if (reader.Name != "IsBoggedDown")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): Is_BoggedDown != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sIsBoggedDown = reader.GetAttribute("value");
-            if (null == sIsBoggedDown)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): Is_BoggedDown=null");
-               return false;
-            }
-            mi.IsBoggedDown = Convert.ToBoolean(sIsBoggedDown);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsAssistanceNeeded) = false");
-               return false;
-            }
-            if (reader.Name != "IsAssistanceNeeded") // Read_XmlListingMapItems()
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsAssistanceNeeded != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sIsAssistanceNeeded = reader.GetAttribute("value"); // Read_XmlListingMapItems()
-            if (null == sIsAssistanceNeeded)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsAssistanceNeeded=null");
-               return false;
-            }
-            mi.IsAssistanceNeeded = Convert.ToBoolean(sIsAssistanceNeeded); // Read_XmlListingMapItems()
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsFuelNeeded) = false");
-               return false;
-            }
-            if (reader.Name != "IsFuelNeeded")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsFuelNeeded != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sIsFuelNeeded = reader.GetAttribute("value");
-            if (null == sIsFuelNeeded)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): sIsFuelNeeded=null");
-               return false;
-            }
-            mi.IsFuelNeeded = Convert.ToBoolean(sIsFuelNeeded);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsHeHit) = false");
-               return false;
-            }
-            if (reader.Name != "IsHeHit")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsHeHit != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sIsHeHit = reader.GetAttribute("value");
-            if (null == sIsHeHit)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsHeHit=null");
-               return false;
-            }
-            mi.IsHeHit = Convert.ToBoolean(sIsHeHit);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsApHit) = false");
-               return false;
-            }
-            if (reader.Name != "IsApHit")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsApHit != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sIsApHit = reader.GetAttribute("value");
-            if (null == sIsApHit)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsApHit=null");
-               return false;
-            }
-            mi.IsApHit = Convert.ToBoolean(sIsApHit);
-            //---------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(Spotting) = false");
-               return false;
-            }
-            if (reader.Name != "Spotting")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): Spotting != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sSpotting = reader.GetAttribute("value");
-            if (null == sSpotting)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): sSpotting=null");
-               return false;
-            }
-            switch (sSpotting)
-            {
-               case "HIDDEN": mi.Spotting = EnumSpottingResult.HIDDEN; break;
-               case "UNSPOTTED": mi.Spotting = EnumSpottingResult.UNSPOTTED; break;
-               case "SPOTTED": mi.Spotting = EnumSpottingResult.SPOTTED; break;
-               case "IDENTIFIED": mi.Spotting = EnumSpottingResult.IDENTIFIED; break;
-               default: Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reached default sSpotting=" + sSpotting); return false;
-            }
+
             reader.Read(); // get past </MapItem>
             theMapItems.Add(mi);
          }
@@ -2096,35 +1621,13 @@ namespace PleasantvilleGame
             GamePhase phase = GamePhase.Error;
             switch (sGamePhase)
             {
-               case "UnitTest": phase = GamePhase.UnitTest; break;
+               case "UnitTests": phase = GamePhase.UnitTests; break;
                case "GameSetup": phase = GamePhase.GameSetup; break;
-               case "MorningBriefing": phase = GamePhase.MorningBriefing; break;
-               case "Preparations": phase = GamePhase.Preparations; break;
-               case "Movement": phase = GamePhase.Movement; break;
-               case "Battle": phase = GamePhase.Battle; break;
-               case "BattleRoundSequence": phase = GamePhase.BattleRoundSequence; break;
-               case "EveningDebriefing": phase = GamePhase.EveningDebriefing; break;
-               case "EndGame": phase = GamePhase.EndGame; break;
-               case "Error": phase = GamePhase.Error; break;
                default: Logger.Log(LogEnum.LE_ERROR, "ReadXmlGameCommands(): reached default sGamePhase=" + sGamePhase); return false;
             }
+
             //------------------------------------
-            string? sMainImage = reader.GetAttribute("MainImage");
-            if (null == sMainImage)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlGameCommands(): sMainImage=null");
-               return false;
-            }
-            EnumMainImage mainImage = EnumMainImage.MI_Other;
-            switch (sMainImage)
-            {
-               case "MI_Other": mainImage = EnumMainImage.MI_Other; break;
-               case "MI_Battle": mainImage = EnumMainImage.MI_Battle; break;
-               case "MI_Move": mainImage = EnumMainImage.MI_Move; break;
-               default: Logger.Log(LogEnum.LE_ERROR, "ReadXmlGameCommands(): reached default sMainImage=" + sMainImage); return false;
-            }
-            //------------------------------------
-            IGameCommand gameCmd = new GameCommand(phase, dieRollAction, sEventActive, action, mainImage);
+            IGameCommand gameCmd = new GameCommand(phase, dieRollAction, sEventActive, action);
             gameCmds.Add(gameCmd);
          }
          if (0 < count)
@@ -2904,105 +2407,19 @@ namespace PleasantvilleGame
       private bool CreateXmlListingOfMapItems(XmlDocument aXmlDocument, IGameInstance gi)
       {
          theMapItems.Clear();
-         IAfterActionReport? lastReport = gi.Reports.GetLast();
-         if (null == lastReport)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): report=null");
-            return false;
-         }
-         if (null == theMapItems.Find(gi.Commander.Name))
-            theMapItems.Add((IMapItem)gi.Commander);
-         if (null == theMapItems.Find(gi.Gunner.Name))
-            theMapItems.Add((IMapItem)gi.Gunner);
-         if (null == theMapItems.Find(gi.Loader.Name))
-            theMapItems.Add((IMapItem)gi.Loader);
-         if (null == theMapItems.Find(gi.Driver.Name))
-            theMapItems.Add((IMapItem)gi.Driver);
-         if (null == theMapItems.Find(gi.Assistant.Name))
-            theMapItems.Add((IMapItem)gi.Assistant);
-         //-----------------------------------
-         foreach (IMapItem mi in gi.ReadyRacks)
-            theMapItems.Add(mi);
-         foreach (IMapItem mi in gi.Hatches)
-            theMapItems.Add(mi);
-         foreach (IMapItem mi in gi.CrewActions)
-         {
-            if (null == theMapItems.Find(mi.Name))
-               theMapItems.Add(mi);
-         }
-         foreach (IMapItem mi in gi.GunLoads)
-            theMapItems.Add(mi);
-         foreach (IMapItem mi in gi.Targets)
-         {
-            if (null == theMapItems.Find(mi.Name))
-               theMapItems.Add(mi);
-         }
-         foreach (IMapItem mi in gi.AdvancingEnemies)
-         {
-            if (null == theMapItems.Find(mi.Name))
-               theMapItems.Add(mi);
-         }
-         foreach (IMapItem mi in gi.ShermanAdvanceOrRetreatEnemies)
-         {
-            if (null == theMapItems.Find(mi.Name))
-               theMapItems.Add(mi);
-         }
-         //-----------------------------------
-         foreach (IMapItem mi in gi.NewMembers) // only saving off the IMapItem portion of ICrewMember
-         {
-            if (null == theMapItems.Find(mi.Name))
-               theMapItems.Add(mi);
-         }
-         foreach (IMapItem mi in gi.InjuredCrewMembers) // only saving off the IMapItem portion of ICrewMember
-         {
-            if (null == theMapItems.Find(mi.Name))
-               theMapItems.Add(mi);
-         }
-         foreach (IMapItem mi in gi.BattlePrep.myHatches)
-            theMapItems.Add(mi);
-         //-----------------------------------
-         if (null != gi.TargetMainGun)
-            theMapItems.Add(gi.TargetMainGun);
-         if (null != gi.TargetMg)
-            theMapItems.Add(gi.TargetMg);
-         if (null != gi.ShermanFiringAtFront)
-            theMapItems.Add(gi.ShermanFiringAtFront);
-         if (null != gi.ShermanHvss)
-            theMapItems.Add(gi.ShermanHvss);
-         if (null != gi.ReturningCrewman)
-            theMapItems.Add(gi.ReturningCrewman);
          //-----------------------------------
          foreach (IMapItemMove mim in gi.MapItemMoves)
          {
             if (null == theMapItems.Find(mim.MapItem.Name))
                theMapItems.Add(mim.MapItem);
          }
-         foreach (IStack stack in gi.MoveStacks)
+         foreach (IStack stack in gi.Stacks)
          {
             foreach (IMapItem mi in stack.MapItems)
             {
                if (null == theMapItems.Find(mi.Name))
                   theMapItems.Add(mi);
             }
-         }
-         foreach (IStack stack in gi.BattleStacks)
-         {
-            foreach (IMapItem mi in stack.MapItems)
-            {
-               if (null == theMapItems.Find(mi.Name))
-                  theMapItems.Add(mi);
-            }
-         }
-         theMapItems.Add(gi.Sherman);
-         if (null != gi.Death)
-         {
-            if (null == theMapItems.Find(gi.Death.myEnemyUnit.Name))
-               theMapItems.Add(gi.Death.myEnemyUnit);
-         }
-         if (null != gi.Panzerfaust)
-         {
-            if (null == theMapItems.Find(gi.Panzerfaust.myEnemyUnit.Name))
-               theMapItems.Add(gi.Panzerfaust.myEnemyUnit);
          }
          //======================================================
          XmlNode? root = aXmlDocument.DocumentElement;
@@ -3139,62 +2556,6 @@ namespace PleasantvilleGame
                return false;
             }
             //--------------------------------
-            elem = aXmlDocument.CreateElement("RotationOffsetHull");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(RotationOffsetHull) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.RotationOffsetHull.ToString("F3"));
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(RotationOffsetHull) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("RotationHull");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(RotationHull) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.RotationHull.ToString("F3"));
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(RotationHull) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("RotationOffsetTurret");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(RotationOffsetTurret) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.RotationOffsetTurret.ToString("F3"));
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(RotationOffsetTurret) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("RotationTurret");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(RotationTurret) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.RotationTurret.ToString("F3"));
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(RotationTurret) returned null");
-               return false;
-            }
-            //--------------------------------
             elem = aXmlDocument.CreateElement("LocationX");
             if (null == elem)
             {
@@ -3255,292 +2616,6 @@ namespace PleasantvilleGame
             if (null == node)
             {
                Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(TerritoryStarting) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("LastMoveAction");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(LastMoveAction) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.LastMoveAction);
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(LastMoveAction) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("IsMoving");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsMoving) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.IsMoving.ToString());
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsMoving) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("IsHullDown");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsHullDown) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.IsHullDown.ToString());
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsHullDown) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("IsKilled");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsKilled) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.IsKilled.ToString());
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsKilled) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("IsUnconscious");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsUnconscious) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.IsUnconscious.ToString());
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsUnconscious) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("IsIncapacitated");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsIncapacitated) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.IsIncapacitated.ToString());
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsIncapacitated) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("IsFired");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsFired) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.IsFired.ToString());
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsFired) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("IsSpotted");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsSpotted) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.IsSpotted.ToString());
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsSpotted) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("IsInterdicted");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsInterdicted) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.IsInterdicted.ToString());
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsInterdicted) returned null");
-               return false;
-            }
-            //--------------------------------
-            if (false == CreateXmlListingOfMapItemsAcquiredShots(aXmlDocument, miNode, mi.EnemyAcquiredShots))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): Create_XmlListingOfMapItemsWoundSpots() returned false");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("IsMovingInOpen");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsMovingInOpen) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.IsMovingInOpen.ToString());
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(Is_MovingInOpen) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("IsWoods");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsWoods) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.IsWoods.ToString());
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsWoods) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("IsBuilding");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsBuilding) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.IsBuilding.ToString());
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsBuilding) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("IsFortification");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsFortification) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.IsFortification.ToString());
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsFortification) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("IsThrownTrack");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(Is_ThrownTrack) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.IsThrownTrack.ToString());
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(Is_ThrownTrack) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("IsBoggedDown");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(Is_BoggedDown) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.IsBoggedDown.ToString());
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(Is_BoggedDown) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("IsAssistanceNeeded");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsAssistanceNeeded) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.IsAssistanceNeeded.ToString()); // Create_XmlListingOfMapItems()
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsAssistanceNeeded) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("IsFuelNeeded");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsFuelNeeded) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.IsFuelNeeded.ToString());
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsFuelNeeded) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("IsHeHit");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsHeHit) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.IsHeHit.ToString());
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsHeHit) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("IsApHit");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsApHit) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.IsApHit.ToString());
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsApHit) returned null");
-               return false;
-            }
-            //--------------------------------
-            elem = aXmlDocument.CreateElement("Spotting");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(Spotting) returned null");
-               return false;
-            }
-            elem.SetAttribute("value", mi.Spotting.ToString());
-            node = miNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(Spotting) returned null");
                return false;
             }
          }
@@ -3664,7 +2739,6 @@ namespace PleasantvilleGame
             gameCmdElem.SetAttribute("ActionDieRoll", gameCmd.ActionDieRoll.ToString());
             gameCmdElem.SetAttribute("EventActive", gameCmd.EventActive.ToString());
             gameCmdElem.SetAttribute("Phase", gameCmd.Phase.ToString());
-            gameCmdElem.SetAttribute("MainImage", gameCmd.MainImage.ToString());
             XmlNode? gameCmdNode = gameCmdsNode.AppendChild(gameCmdElem);
             if (null == gameCmdNode)
             {

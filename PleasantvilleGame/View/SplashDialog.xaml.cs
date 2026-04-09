@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Image=System.Windows.Controls.Image; 
 
 namespace PleasantvilleGame
 {

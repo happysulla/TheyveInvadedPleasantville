@@ -840,7 +840,6 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Set_CheckboxState(): myGameInstance=null");
             return false;
          }
-         Logger.Log(LogEnum.LE_SHOW_AUTOSETUP_BATTLEPREP, "SetCheckboxState(): isSetupPerformed=" + gi.BattlePrep.myIsSetupPerformed.ToString() + " for key=" + key);
          if (("e011" == key) || ("e011a" == key)) 
             cb.Visibility = Visibility.Hidden;
          else
@@ -889,7 +888,6 @@ namespace PleasantvilleGame
          StringBuilder sb11 = new StringBuilder("      ######ShowDieResult() :");
          sb11.Append(" p="); sb11.Append(myGameInstance.GamePhase.ToString());
          sb11.Append(" ae="); sb11.Append(myGameInstance.EventActive);
-         sb11.Append(" bp="); sb11.Append(myGameInstance.BattlePhase.ToString());
          sb11.Append(" a="); sb11.Append(action.ToString());
          sb11.Append(" dr="); sb11.Append(dieRoll.ToString());
          Logger.Log(LogEnum.LE_VIEW_UPDATE_EVENTVIEWER, sb11.ToString());

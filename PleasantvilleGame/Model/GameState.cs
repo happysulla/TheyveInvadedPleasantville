@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Text;
 using System.Windows;
+using Application=System.Windows.Application;
+using Color=System.Windows.Media.Color;
+using MessageBox=System.Windows.MessageBox;
 
 namespace PleasantvilleGame
 {
@@ -31,15 +34,15 @@ namespace PleasantvilleGame
       {
          int r3 = Utilities.RandomGenerator.Next(5);
          int r4 = Utilities.RandomGenerator.Next(6);
-         string building = Utilities.RemoveSpaces(Constants.theTargetBuildingTable[r3, r4]); // Find the target building location.
+         string building = Utilities.RemoveSpaces(TableMgr.theTargetBuildingTable[r3, r4]); // Find the target building location.
          //-----------------------------------------
          int numOfSectorsInBuilding = 0;
-         for (int i1 = 0; i1 < Constants.theBuildingSizes.GetLength(0); i1++)   // If moving to a build, randomly select a space from the building. GetLength(0) gets the length of the array.
+         for (int i1 = 0; i1 < TableMgr.theBuildingSizes.GetLength(0); i1++)   // If moving to a build, randomly select a space from the building. GetLength(0) gets the length of the array.
          {
-            string buildingToCompare = Utilities.RemoveSpaces(Constants.theBuildingSizes[i1, 0]);
+            string buildingToCompare = Utilities.RemoveSpaces(TableMgr.theBuildingSizes[i1, 0]);
             if (buildingToCompare == building)
             {
-               numOfSectorsInBuilding = Int32.Parse(Constants.theBuildingSizes[i1, 1]);
+               numOfSectorsInBuilding = Int32.Parse(TableMgr.theBuildingSizes[i1, 1]);
                break;
             }
          }
@@ -51,7 +54,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "PerformMovement(): newTerritory is null for building=" + building + " selectedSector=" + selectedSector.ToString());
             return false;
          }
-         if ((mi.Territory.Name == newTerritory.Name) && (mi.Territory.Sector == newTerritory.Sector))
+         if ((mi.TerritoryCurrent.Name == newTerritory.Name) && (mi.TerritoryCurrent.Sector == newTerritory.Sector))
          {
             return false;
          }
@@ -74,7 +77,7 @@ namespace PleasantvilleGame
          {
             int r1 = Utilities.RandomGenerator.Next(5);
             int r2 = Utilities.RandomGenerator.Next(6);
-            string person = Utilities.RemoveSpaces(Constants.theTownpersonsTable[r1, r2]);
+            string person = Utilities.RemoveSpaces(TableMgr.theTownpersonsTable[r1, r2]);
             IMapItem personMoving = gi.Persons.Find(person);
             if (null == personMoving)
             {
@@ -267,7 +270,7 @@ namespace PleasantvilleGame
                   foreach (IMapItemMove mim in gi.MapItemMoves)
                   {
                      IMapItem mi = mim.MapItem;
-                     mi.Territory = mim.NewTerritory;
+                     mi.TerritoryCurrent = mim.NewTerritory;
                      mi.TerritoryStarting = mim.NewTerritory;
                      mi.IsMoved = false;
                      mi.MovementUsed = 0;
@@ -298,7 +301,7 @@ namespace PleasantvilleGame
                   foreach (IMapItemMove mim in gi.MapItemMoves)
                   {
                      IMapItem mi = mim.MapItem;
-                     mi.Territory = mim.NewTerritory;
+                     mi.TerritoryCurrent = mim.NewTerritory;
                      mi.TerritoryStarting = mim.NewTerritory;
                      mi.IsMoved = false;
                      mi.MovementUsed = 0;
@@ -391,7 +394,7 @@ namespace PleasantvilleGame
             case GameAction.TownspersonAcksAlienMovement:
                foreach (IMapItem mi in gi.Persons)
                {
-                  mi.TerritoryStarting = mi.Territory;
+                  mi.TerritoryStarting = mi.TerritoryCurrent;
                   mi.IsMoved = false;
                   mi.MovementUsed = 0;
                }
@@ -439,6 +442,7 @@ namespace PleasantvilleGame
          string previousEvent = gi.EventActive;
          string returnStatus = "OK";
          string key = gi.EventActive;
+         bool isZebulonDiscovered = false; // out parameter to IsZebulonDiscovered()...need to initialize to compile
          switch (action)
          {
             case GameAction.ShowAlien:
@@ -455,72 +459,95 @@ namespace PleasantvilleGame
                break;
             case GameAction.AlienTimeoutOnMovement:
                gi.NextAction = "Townsperson Selects Counter to Move";
-               if (true == IsZebulonDiscovered(gi, gi.PreviousMapItemMove))
+               if (false == IsZebulonDiscovered(gi, gi.PreviousMapItemMove, out isZebulonDiscovered))
                {
-                  action = GameAction.AlienModifiesTownspersonMovement;
-                  gi.PreviousMapItemMove = null;
+                  returnStatus = "IsZebulonDiscovered() returned false for " + action.ToString();
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
                }
                else
                {
-                  if (null != gi.PreviousMapItemMove)
+                  if (true == isZebulonDiscovered)
                   {
-                     foreach (ITerritory t in gi.PreviousMapItemMove.BestPath.Territories)
-                        gi.ZebulonTerritories.Remove(t);
+                     action = GameAction.AlienModifiesTownspersonMovement;
+                     gi.PreviousMapItemMove = null;
                   }
-                  if (0 < gi.MapItemMoves.Count)
+                  else
                   {
-                     IMapItemMove mim1 = gi.MapItemMoves[0];
-                     IMapItem movingMi1 = gi.Persons.Find(mim1.MapItem.Name);
-                     movingMi1.IsMoved = true;
-                     movingMi1.MovementUsed += mim1.BestPath.Territories.Count;
-                     gi.PreviousMapItemMove = mim1;
+                     if (null != gi.PreviousMapItemMove)
+                     {
+                        foreach (ITerritory t in gi.PreviousMapItemMove.BestPath.Territories)
+                           gi.ZebulonTerritories.Remove(t);
+                     }
+                     if (0 < gi.MapItemMoves.Count)
+                     {
+                        IMapItemMove mim1 = gi.MapItemMoves[0];
+                        IMapItem movingMi1 = gi.Persons.Find(mim1.MapItem.Name);
+                        movingMi1.IsMoved = true;
+                        movingMi1.MovementUsed += mim1.BestPath.Territories.Count;
+                        gi.PreviousMapItemMove = mim1;
+                     }
                   }
                }
                break;
             case GameAction.AlienModifiesTownspersonMovement:
                gi.NextAction = "Townsperson Selects Counter to Move";
-               if (true == IsZebulonDiscovered(gi, gi.PreviousMapItemMove))
+               if( false == IsZebulonDiscovered(gi, gi.PreviousMapItemMove, out isZebulonDiscovered) )
                {
-                  action = GameAction.AlienModifiesTownspersonMovement;
-                  gi.PreviousMapItemMove = null;
+                  returnStatus = "IsZebulonDiscovered() returned false for " + action.ToString();
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
                }
                else
                {
-                  if (0 < gi.MapItemMoves.Count)
+                  if (true == isZebulonDiscovered)
                   {
-                     IMapItemMove mim2 = gi.MapItemMoves[0];
-                     IMapItem movingMi2 = gi.Persons.Find(mim2.MapItem.Name);
-                     movingMi2.IsMoveAllowedToResetThisTurn = false;
-                     movingMi2.MovementUsed += mim2.BestPath.Territories.Count;
-                     movingMi2.IsMoved = true;
-                     if (null != gi.PreviousMapItemMove)
-                     {
-                        foreach (ITerritory t in mim2.BestPath.Territories)
-                           gi.ZebulonTerritories.Remove(t);
-                     }
+                     action = GameAction.AlienModifiesTownspersonMovement;
                      gi.PreviousMapItemMove = null;
                   }
+                  else
+                  {
+                     if (0 < gi.MapItemMoves.Count)
+                     {
+                        IMapItemMove mim2 = gi.MapItemMoves[0];
+                        IMapItem movingMi2 = gi.Persons.Find(mim2.MapItem.Name);
+                        movingMi2.IsMoveAllowedToResetThisTurn = false;
+                        movingMi2.MovementUsed += mim2.BestPath.Territories.Count;
+                        movingMi2.IsMoved = true;
+                        if (null != gi.PreviousMapItemMove)
+                        {
+                           foreach (ITerritory t in mim2.BestPath.Territories)
+                              gi.ZebulonTerritories.Remove(t);
+                        }
+                        gi.PreviousMapItemMove = null;
+                     }
+                  }
                }
-
                break;
             case GameAction.TownpersonCompletesMovement:
-               if (true == IsZebulonDiscovered(gi, gi.PreviousMapItemMove))
+               if (false == IsZebulonDiscovered(gi, gi.PreviousMapItemMove, out isZebulonDiscovered))
                {
-                  gi.NextAction = "Townsperson Selects Counter to Move";
-                  action = GameAction.AlienModifiesTownspersonMovement;
+                  returnStatus = "IsZebulonDiscovered() returned false for " + action.ToString();
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
                }
-               else if (null != gi.PreviousMapItemMove)
+               else
                {
-                  gi.NextAction = "Alien Acks Townspeople Movement";
-                  foreach (ITerritory t in gi.PreviousMapItemMove.BestPath.Territories)
-                     gi.ZebulonTerritories.Remove(t);
+                  if (true == isZebulonDiscovered)
+                  {
+                     gi.NextAction = "Townsperson Selects Counter to Move";
+                     action = GameAction.AlienModifiesTownspersonMovement;
+                  }
+                  else if (null != gi.PreviousMapItemMove)
+                  {
+                     gi.NextAction = "Alien Acks Townspeople Movement";
+                     foreach (ITerritory t in gi.PreviousMapItemMove.BestPath.Territories)
+                        gi.ZebulonTerritories.Remove(t);
+                  }
+                  gi.PreviousMapItemMove = null;
                }
-               gi.PreviousMapItemMove = null;
                break;
             case GameAction.AlienAcksTownspersonMovement:
                foreach (IMapItem mi in gi.Persons)
                {
-                  mi.TerritoryStarting = mi.Territory;
+                  mi.TerritoryStarting = mi.TerritoryCurrent;
                   mi.IsMoved = false;
                   mi.MovementUsed = 0;
                   mi.IsMoveStoppedThisTurn = false;
@@ -626,7 +653,7 @@ namespace PleasantvilleGame
                if ((false == person.IsWary) && (false == person.IsControlled) && (false == person.IsMoveStoppedThisTurn) && ("Zebulon" != person.Name)
                      && (false == person.IsStunned) && (false == person.IsTiedUp) && (false == person.IsSurrendered) && (false == person.IsKilled))
                {
-                  if ((person.Territory.Name == mim.OldTerritory.Name) && (person.Territory.Sector == mim.OldTerritory.Sector)) // Check if moving mapitem originates in territory controlled by alien
+                  if ((person.TerritoryCurrent.Name == mim.OldTerritory.Name) && (person.TerritoryCurrent.Sector == mim.OldTerritory.Sector)) // Check if moving mapitem originates in territory controlled by alien
                   {
                      Logger.Log(LogEnum.LE_TIMER_ELAPED, "Wait for Alien To Stop Move before started");
                      gi.NextAction = "Alien May Elect to Stop Move if Possible";
@@ -635,7 +662,7 @@ namespace PleasantvilleGame
                   for (int i = 0; i < mim.BestPath.Territories.Count - 1; ++i) // Check if moving mapitem originates in territory controlled by alien -- Do not check the last territory moved into
                   {
                      ITerritory t = mim.BestPath.Territories[i];
-                     if ((person.Territory.Name == t.Name) && (person.Territory.Sector == t.Sector))
+                     if ((person.TerritoryCurrent.Name == t.Name) && (person.TerritoryCurrent.Sector == t.Sector))
                      {
                         Logger.Log(LogEnum.LE_TIMER_ELAPED, "Wait for Alien To Modify move");
                         gi.NextAction = "Alien May Elect to Stop Move if Possible";
@@ -697,7 +724,7 @@ namespace PleasantvilleGame
          {
             if (false == zebulon.IsAlienKnown) // Determine if Zebulon is discovered
             {
-               if ((t.Name == zebulon.Territory.Name) && (t.Sector == zebulon.Territory.Sector))
+               if ((t.Name == zebulon.TerritoryCurrent.Name) && (t.Sector == zebulon.TerritoryCurrent.Sector))
                {
                   isZebulanDiscovered = true;
                   zebulon.IsAlienKnown = true;                     // Zebulon is now exposed
@@ -1046,7 +1073,7 @@ namespace PleasantvilleGame
                   foreach (IMapItemMove mim in gi.MapItemMoves)
                   {
                      IMapItem mi = mim.MapItem;
-                     mi.Territory = mim.NewTerritory;
+                     mi.TerritoryCurrent = mim.NewTerritory;
                      mi.TerritoryStarting = mim.NewTerritory;
                      mi.IsMoved = false;
                      mi.MovementUsed = 0;
@@ -1099,7 +1126,7 @@ namespace PleasantvilleGame
                   foreach (IMapItemMove mim in gi.MapItemMoves)
                   {
                      IMapItem mi = mim.MapItem;
-                     mi.Territory = mim.NewTerritory;
+                     mi.TerritoryCurrent = mim.NewTerritory;
                      mi.TerritoryStarting = mim.NewTerritory;
                      mi.IsMoved = false;
                      mi.MovementUsed = 0;
@@ -1512,7 +1539,7 @@ namespace PleasantvilleGame
                      IMapItem zebulon = gi.Persons.Find("Zebulon");
                      zebulon.IsKilled = true;
                   }
-                  attacker.TerritoryStarting = attacker.Territory;  // If there are any pending moves, make sure they are removed
+                  attacker.TerritoryStarting = attacker.TerritoryCurrent;  // If there are any pending moves, make sure they are removed
                   if (false == PerformMovement(gi, attacker))
                      Console.WriteLine("PerformCombatResolveLoss() No Retreat to same place for {0} ", attacker.Name);
                }
@@ -1528,7 +1555,7 @@ namespace PleasantvilleGame
                      zebulon.IsKilled = true;
                      return;
                   }
-                  defender.TerritoryStarting = defender.Territory;  // If there are any pending moves, make sure they are removed
+                  defender.TerritoryStarting = defender.TerritoryCurrent;  // If there are any pending moves, make sure they are removed
                   if (false == PerformMovement(gi, defender))
                      Console.WriteLine("PerformCombatResolveLoss() No Retreat to same place for {0} ", defender.Name);
                }
@@ -1620,7 +1647,7 @@ namespace PleasantvilleGame
                mi.Movement = 1;                // by setting the IMapItems movement to one.
                mi.IsMoved = false;
                mi.MovementUsed = 0;
-               mi.TerritoryStarting = mi.Territory;  // If there are any pending moves, make sure they are removed
+               mi.TerritoryStarting = mi.TerritoryCurrent;  // If there are any pending moves, make sure they are removed
                if (false == PerformMovement(gi, mi))
                   Console.WriteLine("PerformCombatResolveLoss() No Retreat to same place for {0} ", mi.Name);
                mi.Movement = tempMovement;     // return MapItem movement to original value
@@ -1850,7 +1877,6 @@ namespace PleasantvilleGame
       private string PerformTakeover(ref IGameInstance gi)
       {
          StringBuilder sb = new StringBuilder();
-
          if (null == gi.Takeover)
          {
             Logger.Log(LogEnum.LE_ERROR, "GameStateAlienTakeover::PerformTakeover(): takeover = null ");
@@ -1866,99 +1892,93 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "GameStateAlienTakeover::PerformTakeover(): Uncontrolled = null ");
             return "PerformTakeover() ERROR";
          }
-
-         // Determine if there are any observations.  If so, create a string to hold 
-         // who and with what roll the observation happended.  
-
-         List<Stack> stacks = new List<Stack>();
-         stacks.AssignPeople(gi.Persons);
-         foreach (String observation in gi.Takeover.Alien.Territory.Observations)
+         // Determine if there are any observations.  If so, create a string to hold who and with what roll the observation happened.  
+         foreach (String observation in gi.Takeover.Alien.TerritoryCurrent.Observations)
          {
-            ITerritory obsTerritory = Territory.Find(observation);
-            IMapItems people = stacks.FindPeople(obsTerritory);
-            if (null != people)
+            IStack? stack = gi.Stacks.Find(observation);
+            if( null == stack )
             {
-               // Get distance between two territories
-
-               IMapPath path = MapItemMove.GetBestPath(gi.Takeover.Alien.Territory, obsTerritory, 3);
-               foreach (IMapItem person in people)
+               Logger.Log(LogEnum.LE_ERROR, "PerformTakeover(): stack is null for observation=" + observation);
+               return "ERROR";
+            }
+            ITerritory? obsTerritory = Territories.theTerritories.Find(observation);
+            if (null == obsTerritory)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PerformTakeover(): obsTerritory is null for observation=" + observation);
+               return "ERROR";
+            }
+            IMapPath? path = Territory.GetBestPath(Territories.theTerritories, gi.Takeover.Alien.TerritoryCurrent, obsTerritory, 3); // Get distance between two territories
+            if( null == path )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PerformTakeover(): path is null for observation=" + observation);
+               return "ERROR";
+            }
+            foreach (IMapItem person in stack.MapItems )
+            {
+               if (gi.Takeover.Uncontrolled.Name == person.Name)
+                  continue;
+               if ((true == person.IsWary) || (true == person.IsAlienKnown) || (true == person.IsAlienUnknown) || (false == person.IsConscious) || (true == person.IsStunned) || (true == person.IsKilled))
+                  continue;
+               int dieRoll = Utilities.RandomGenerator.Next(6) + 1;
+               switch (path.Territories.Count)
                {
-                  if (gi.Takeover.Uncontrolled.Name == person.Name)
-                     continue;
-
-                  if ((true == person.IsWary) || (true == person.IsAlienKnown) || (true == person.IsAlienUnknown) || (false == person.IsConscious) || (true == person.IsStunned) || (true == person.IsKilled))
-                     continue;
-
-                  int dieRoll = GameEngine.RandomGenerator.Next(6) + 1;
-                  switch (path.Territories.Count)
-                  {
-                     case 0:
-                        if (dieRoll < 5)
-                        {
-                           person.IsWary = true;
-                           person.IsSkeptical = false;  // wary people are never skeptical
-                           sb.Append(person.Name);
-                           sb.Append(" observed with a die roll = ");
-                           sb.Append(dieRoll.ToString());
-                           sb.Append("\n");
-                        }
-                        break;
-
-                     case 1:
-                        if (dieRoll < 4)
-                        {
-                           person.IsWary = true;
-                           person.IsSkeptical = false;  // wary people are never skeptical
-                           sb.Append(person.Name);
-                           sb.Append(" observed with a die roll = ");
-                           sb.Append(dieRoll.ToString());
-                           sb.Append("\n");
-                        }
-                        break;
-
-                     case 2:
-                        if (dieRoll < 3)
-                        {
-                           person.IsWary = true;
-                           person.IsSkeptical = false;  // wary people are never skeptical
-                           sb.Append(person.Name);
-                           sb.Append(" observed with a die roll = ");
-                           sb.Append(dieRoll.ToString());
-                           sb.Append("\n");
-                        }
-                        break;
-
-                     case 3:
-                        if (dieRoll < 2)
-                        {
-                           person.IsWary = true;
-                           person.IsSkeptical = false;  // wary people are never skeptical
-                           sb.Append(person.Name);
-                           sb.Append(" observed with a die roll = ");
-                           sb.Append(dieRoll.ToString());
-                           sb.Append("\n");
-                        }
-                        break;
-
-                     default:
-                        Logger.Log(LogEnum.LE_ERROR, "PerformTakeover(): reached default");
-                        return "PerformTakeover() ERROR";
-
-                  } // end switch
-
-               }  // end foreach (IMapItem person in people)
-
-            }  // end else 
-
+                  case 0:
+                     if (dieRoll < 5)
+                     {
+                        person.IsWary = true;
+                        person.IsSkeptical = false;  // wary people are never skeptical
+                        sb.Append(person.Name);
+                        sb.Append(" observed with a die roll = ");
+                        sb.Append(dieRoll.ToString());
+                        sb.Append("\n");
+                     }
+                     break;
+                  case 1:
+                     if (dieRoll < 4)
+                     {
+                        person.IsWary = true;
+                        person.IsSkeptical = false;  // wary people are never skeptical
+                        sb.Append(person.Name);
+                        sb.Append(" observed with a die roll = ");
+                        sb.Append(dieRoll.ToString());
+                        sb.Append("\n");
+                     }
+                     break;
+                  case 2:
+                     if (dieRoll < 3)
+                     {
+                        person.IsWary = true;
+                        person.IsSkeptical = false;  // wary people are never skeptical
+                        sb.Append(person.Name);
+                        sb.Append(" observed with a die roll = ");
+                        sb.Append(dieRoll.ToString());
+                        sb.Append("\n");
+                     }
+                     break;
+                  case 3:
+                     if (dieRoll < 2)
+                     {
+                        person.IsWary = true;
+                        person.IsSkeptical = false;  // wary people are never skeptical
+                        sb.Append(person.Name);
+                        sb.Append(" observed with a die roll = ");
+                        sb.Append(dieRoll.ToString());
+                        sb.Append("\n");
+                     }
+                     break;
+                  default:
+                     Logger.Log(LogEnum.LE_ERROR, "PerformTakeover(): reached default");
+                     return "PerformTakeover() ERROR";
+               } // end switch
+            }
          }  //  end foreach (String observation in gi.Takeover.Alien.Territory.Observations)
-
          gi.Takeover.Observations = sb.ToString();
          if (0 == gi.Takeover.Observations.Count())
          {
             gi.Takeover.Observations = "Nobody Noticed";
             if ((true == gi.Takeover.Uncontrolled.IsControlled) || (true == gi.Takeover.Uncontrolled.IsWary))
             {
-               Logger.Log(LogEnum.LE_OBSERVATIONS, "PerformTakeover(): Taking over controlled or wary ==> " + gi.Takeover.ToString());
+               Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS, "PerformTakeover(): Taking over controlled or wary ==> " + gi.Takeover.ToString());
                if (false == gi.AddKnownAlien(gi.Takeover.Alien))
                {
                   Logger.Log(LogEnum.LE_ERROR, "PerformTakeover()1 returned error for " + gi.Takeover.Alien.Name);
@@ -1972,7 +1992,7 @@ namespace PleasantvilleGame
             }
             else
             {
-               Logger.Log(LogEnum.LE_OBSERVATIONS, "PerformTakeover(): Taking over uncontrolled without notice ==> " + gi.Takeover.ToString());
+               Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS, "PerformTakeover(): Taking over uncontrolled without notice ==> " + gi.Takeover.ToString());
                if (false == gi.AddUnknownAlien(gi.Takeover.Uncontrolled))
                {
                   Logger.Log(LogEnum.LE_ERROR, "PerformTakeover()3 returned error for " + gi.Takeover.Uncontrolled.Name);
@@ -1982,7 +2002,7 @@ namespace PleasantvilleGame
          }
          else
          {
-            Logger.Log(LogEnum.LE_OBSERVATIONS, "PerformTakeover(): Taking over uncontrolled w/ observation ==> " + gi.Takeover.ToString());
+            Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS, "PerformTakeover(): Taking over uncontrolled w/ observation ==> " + gi.Takeover.ToString());
             if (false == gi.AddKnownAlien(gi.Takeover.Alien))
             {
                Logger.Log(LogEnum.LE_ERROR, "PerformTakeover()4 returned error for " + gi.Takeover.Alien.Name);
@@ -1995,8 +2015,7 @@ namespace PleasantvilleGame
             }
          }
          return "OK";
-
-      } // end function
+      }
    }
    //----------------------------------------------------------------
    class GameStateEnded : GameState

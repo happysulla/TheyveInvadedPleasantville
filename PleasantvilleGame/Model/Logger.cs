@@ -12,9 +12,11 @@ namespace PleasantvilleGame
       LE_GAME_END,
       LE_GAME_END_CHECK,
       LE_NEXT_ACTION,
+      LE_VIEW_UPDATE_WINDOW,
       LE_UNDO_COMMAND,
       LE_MOVE_STACKING,
       LE_MOVE_COUNT,
+      LE_MOVE_KIA_RESULTS,
       LE_SHOW_STACK_ADD,
       LE_SHOW_STACK_DEL,
       LE_SHOW_STACK_VIEW,
@@ -30,6 +32,7 @@ namespace PleasantvilleGame
       LE_VIEW_SHOW_SETTINGS,
       LE_SHOW_UPLOAD_GAME,
       LE_SHOW_VP_TOTAL,
+      LE_SHOW_OBSERVATIONS,
       //-------------
       LE_RESET_ROLL_STATE,
       LE_VIEW_DICE_MOVING,
@@ -92,9 +95,11 @@ namespace PleasantvilleGame
          SetOn(LogEnum.LE_GAME_END);
          SetOn(LogEnum.LE_GAME_END_CHECK);
          SetOn(LogEnum.LE_NEXT_ACTION);
+         SetOn(LogEnum.LE_VIEW_UPDATE_WINDOW);
          //-------------
          SetOn(LogEnum.LE_MOVE_STACKING);
          SetOn(LogEnum.LE_MOVE_COUNT);
+         SetOn(LogEnum.LE_MOVE_KIA_RESULTS);
          SetOn(LogEnum.LE_SHOW_STACK_ADD);
          SetOn(LogEnum.LE_SHOW_STACK_DEL);
          SetOn(LogEnum.LE_SHOW_STACK_VIEW);

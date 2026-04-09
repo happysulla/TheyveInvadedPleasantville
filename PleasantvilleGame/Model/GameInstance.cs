@@ -154,7 +154,7 @@ namespace PleasantvilleGame
             mi.IsWary = false;
             mi.IsControlled = false;
          }
-         if (false == Utilities.IsInfluenceCheck(this))
+         if (false == GameStateChecker.IsInfluenceCheck(this))
          {
             MessageBox.Show("AddUnknownAlien() ERROR - Influence failure for " + mi.Name);
             return false;
@@ -218,7 +218,7 @@ namespace PleasantvilleGame
             mi.IsAlienUnknown = false;
             mi.IsAlienKnown = true;
          }
-         if (false == Utilities.IsInfluenceCheck(this))
+         if (false == GameStateChecker.IsInfluenceCheck(this))
          {
             MessageBox.Show("AddKnownAlien() ERROR - Influence failure for " + mi.Name);
             return false;
@@ -287,7 +287,7 @@ namespace PleasantvilleGame
             mi.IsSurrendered = false;
             mi.IsAlienUnknown = false;
          }
-         if (false == Utilities.IsInfluenceCheck(this))
+         if (false == GameStateChecker.IsInfluenceCheck(this))
          {
             MessageBox.Show("AddTownperson() ERROR - Influence failure for " + mi.Name);
             return false;

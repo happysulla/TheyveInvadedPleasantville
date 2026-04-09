@@ -6,6 +6,8 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using Image=System.Windows.Controls.Image;
+using Application=System.Windows.Application;
 
 namespace PleasantvilleGame
 {

@@ -21,6 +21,7 @@ namespace PleasantvilleGame
       ImplantRemoval,
       AlienTakeover,
       ShowEndGame,
+      UnitTests,
       Error
    };
    public enum GameAction

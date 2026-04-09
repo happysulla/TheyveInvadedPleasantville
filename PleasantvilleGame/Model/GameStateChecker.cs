@@ -325,7 +325,7 @@ namespace PleasantvilleGame
             mi.IsTakeoverThisTurn = false;
             mi.MovementUsed = 0;
             mi.IsMoved = false;
-            mi.TerritoryStarting = mi.Territory;
+            mi.TerritoryStarting = mi.TerritoryCurrent;
          }
 
          //--------------------------------------------------------
@@ -638,7 +638,7 @@ namespace PleasantvilleGame
              (cogentInfluence != (controlledInfluence + knownInfluence + unknownInfluence + uncontrolledInfluence)) ||
              (0 != errorInfluence))
          {
-            StringBuilder sb = new StringBuilder("IsInfluenceCheck(): Influence Not Adding Up: ");
+            StringBuilder sb = new StringBuilder("Is_InfluenceCheck(): Influence Not Adding Up: ");
             sb.Append("\n T="); sb.Append(totalInfluence.ToString());
             sb.Append("\n cap="); sb.Append(cogentInfluence.ToString());
             sb.Append("\n kn="); sb.Append(knownInfluence.ToString());

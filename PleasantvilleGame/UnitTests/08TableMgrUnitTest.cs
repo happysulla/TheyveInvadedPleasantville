@@ -10,6 +10,8 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Xml.Linq;
+using Image=System.Windows.Controls.Image;
+using Button=System.Windows.Controls.Button;
 
 namespace PleasantvilleGame
 {
@@ -141,105 +143,7 @@ namespace PleasantvilleGame
             }
             foreach (UIElement ui1 in elements)
                myCanvasMain.Children.Remove(ui1);
-            CanvasImageViewer.theMainImage = EnumMainImage.MI_Battle;
-            myCanvasImageViewer.ShowBattleMap(false, myCanvasMain);
             //------------------------------------
-            string shermanName = "Sherman75" + Utilities.MapItemNum.ToString();
-            Utilities.MapItemNum++;
-            gi.Sherman = new MapItem(shermanName, 2.0, "t01", gi.Home);
-            myGameInstance.BattleStacks.Add(gi.Sherman);
-            //------------------------------------
-            string name = "ATG" + Utilities.MapItemNum.ToString();
-            Utilities.MapItemNum++;
-            ITerritory? t = Territories.theTerritories.Find("B2M");
-            if (null == t)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): t=null for B6M");
-               return false;
-            }
-            myATG = new MapItem(name, Utilities.ZOOM + 0.1, "c76UnidentifiedAtg", t);
-            IMapPoint mp = Territory.GetRandomPoint(t, myATG.Zoom * Utilities.theMapItemOffset);
-            myATG.Location = mp;
-            myGameInstance.BattleStacks.Add(myATG);
-            if (false == myATG.SetMapItemRotation(myGameInstance.Sherman))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): Set_MapItemRotation() returned false");
-               return false;
-            }
-            if (false == myATG.UpdateMapRotation("Side"))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): Update_MapRotation() returned false");
-               return false;
-            }
-            //------------------------------------
-            name = "SPG" + Utilities.MapItemNum.ToString();
-            Utilities.MapItemNum++;
-            t = Territories.theTerritories.Find("B3M");
-            if (null == t)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): t=null for B4M");
-               return false;
-            }
-            mySPG = new MapItem(name, Utilities.ZOOM + 0.5, "c77UnidentifiedSpg", t);
-            mp = Territory.GetRandomPoint(t, mySPG.Zoom * Utilities.theMapItemOffset);
-            mySPG.Location = mp;
-            myGameInstance.BattleStacks.Add(mySPG);
-            if (false == mySPG.SetMapItemRotation(myGameInstance.Sherman))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): Set_MapItemRotation() returned false");
-               return false;
-            }
-            if (false == mySPG.UpdateMapRotation("Rear"))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): Update_MapRotation() returned false");
-               return false;
-            }
-            //------------------------------------
-            name = "PzIV" + Utilities.MapItemNum.ToString();
-            Utilities.MapItemNum++;
-            t = Territories.theTerritories.Find("B2M");
-            if (null == t)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): t=null for B9M");
-               return false;
-            }
-            myPzIV = new MapItem(name, Utilities.ZOOM + 0.5, "c79PzIV", t);
-            mp = Territory.GetRandomPoint(t, myPzIV.Zoom * Utilities.theMapItemOffset);
-            myPzIV.Location = mp;
-            myGameInstance.BattleStacks.Add(myPzIV);
-            if (false == myPzIV.SetMapItemRotation(myGameInstance.Sherman))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): Set_MapItemRotation() returned false");
-               return false;
-            }
-            if (false == myPzIV.SetMapItemRotationTurret(myGameInstance.Sherman))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): Set_MapItemRotation() returned false");
-               return false;
-            }
-            //------------------------------------
-            name = "TANK" + Utilities.MapItemNum.ToString();
-            Utilities.MapItemNum++;
-            t = Territories.theTerritories.Find("B1M");
-            if (null == t)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): t=null for B9M");
-               return false;
-            }
-            myTank = new MapItem(name, Utilities.ZOOM + 0.5, "c78UnidentifiedTank", t);
-            mp = Territory.GetRandomPoint(t, myTank.Zoom * Utilities.theMapItemOffset);
-            myTank.Location = mp;
-            myGameInstance.BattleStacks.Add(myTank);
-            if (false == myTank.SetMapItemRotation(myGameInstance.Sherman))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): Set_MapItemRotation() returned false");
-               return false;
-            }
-            if (false == myTank.UpdateMapRotation("Rear"))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): Update_MapRotation() returned false");
-               return false;
-            }
             ++myIndexName;
          } 
          //-----------------------------------------
@@ -250,11 +154,6 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Command(): myATG=null");
                return false;
             }
-            Option option = gi.Options.Find("AtgCoveredArc");
-            option.IsEnabled = true;
-            int modifier = TableMgr.GetEnemyToHitNumberModifierForYourTank(myGameInstance, myATG);
-            GameAction outAction = GameAction.UpdateBattleBoard;
-            myGameViewerWindow.UpdateView(ref myGameInstance, outAction);
          }
          //-----------------------------------------
          else if (CommandName == myCommandNames[2])
@@ -264,11 +163,6 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Command(): mySPG=null");
                return false;
             }
-            Option option = gi.Options.Find("SpgCoveredArc");
-            option.IsEnabled = true;
-            int modifier = TableMgr.GetEnemyToHitNumberModifierForYourTank(myGameInstance, mySPG);
-            GameAction outAction = GameAction.UpdateBattleBoard;
-            myGameViewerWindow.UpdateView(ref myGameInstance, outAction);
          }
          else if (CommandName == myCommandNames[3])
          {
@@ -277,11 +171,6 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Command(): myPzIV=null");
                return false;
             }
-            Option option = gi.Options.Find("TankCoveredArc");
-            option.IsEnabled = true;
-            int modifier = TableMgr.GetEnemyToHitNumberModifierForYourTank(myGameInstance, myPzIV);
-            GameAction outAction = GameAction.UpdateBattleBoard;
-            myGameViewerWindow.UpdateView(ref myGameInstance, outAction);
          }
          else if (CommandName == myCommandNames[4])
          {
@@ -290,11 +179,6 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Command(): myTank=null");
                return false;
             }
-            Option option = gi.Options.Find("SlowTransverseCoveredArc");
-            option.IsEnabled = true;
-            int modifier = TableMgr.GetEnemyToHitNumberModifierForYourTank(myGameInstance, myTank);
-            GameAction outAction = GameAction.UpdateBattleBoard;
-            myGameViewerWindow.UpdateView(ref myGameInstance, outAction);
          }
          else if (CommandName == myCommandNames[5])
          {
@@ -349,7 +233,7 @@ namespace PleasantvilleGame
          }
          CleanCanvas(gi, myCanvasMain);
          //--------------------------------------------------
-         Application.Current.Shutdown();
+         System.Windows.Application.Current.Shutdown();
          return true;
       }
       //--------------------------------------------------------------------
@@ -378,7 +262,6 @@ namespace PleasantvilleGame
             {
                if (true == button.Name.Contains("Die"))  // die buttons never disappear - only one copy of them
                   continue;
-               gi.BattleStacks.Remove(button.Name);
             }
          }
          foreach (UIElement ui1 in elements)
