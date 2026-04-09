@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Windows;
 using System.Xml;
+using MessageBox=System.Windows.MessageBox;
 
 namespace PleasantvilleGame
 { 

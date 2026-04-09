@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using MessageBox=System.Windows.MessageBox;
 
 namespace PleasantvilleGame
 {
@@ -73,16 +74,11 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_GAMESTATE_CHECKER, "CheckForTownspersonCombats(): previousCombat.IsAnyRetreat=true");
             return true;                                  // to see the retreats. 
          }
-
          // The townspeople can fight aliens or uncontrolled townspeople.
          // They might want to fight uncontrolled townspeople if they suspect 
          // they are aliens.  However, if they are not aliens, the uncontrolled
          // townspeople immediately lose the battle and could be killed.
-
-         List<Stack> stacks = new List<Stack>();
-         stacks.AssignPeople(gi.Persons);
-
-         foreach (Stack stack in stacks)
+         foreach (Stack stack in gi.Stacks)
          {
             if (stack.MapItems.Count < 2)
                continue;
@@ -122,11 +118,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_GAMESTATE_CHECKER, "CheckForTownspersonCombats(): previousCombat.IsAnyRetreat=true");
             return true;                                  // to see the retreats. 
          }                             // to see the retreats. 
-
-         List<Stack> stacks = new List<Stack>();
-         stacks.AssignPeople(gi.Persons);
-
-         foreach (Stack stack in stacks)
+         foreach (Stack stack in gi.Stacks)
          {
             if (stack.MapItems.Count < 2)
                continue;
@@ -181,18 +173,12 @@ namespace PleasantvilleGame
       static public bool CheckForIterogations(IGameInstance gi)
       {
          gi.NumIterogationsThisTurn = 0;
-
          IMapItem zebulon = gi.Persons.Find("Zebulon");
          if (true == zebulon.IsAlienKnown)  // If Zebulon is already on the map board, no need to iterogate
             return false;
-
          IMapItems controlled = new MapItems();
          IMapItems surrenderedAliens = new MapItems();
-
-         List<Stack> stacks = new List<Stack>();
-         stacks.AssignPeople(gi.Persons);
-
-         foreach (Stack stack in stacks)
+         foreach (Stack stack in gi.Stacks)
          {
             if (stack.MapItems.Count < 2)
                continue;
@@ -231,9 +217,7 @@ namespace PleasantvilleGame
       }
       static public bool CheckForImplantRemoval(IGameInstance gi)
       {
-         List<Stack> stacks = new List<Stack>();
-         stacks.AssignPeople(gi.Persons);
-         foreach (Stack stack in stacks)
+         foreach (Stack stack in gi.Stacks)
          {
             if (stack.MapItems.Count < 2)
                continue;
@@ -260,13 +244,10 @@ namespace PleasantvilleGame
       }
       static public bool CheckForAlienTakeovers(IGameInstance gi)
       {
-         List<Stack> stacks = new List<Stack>();
-         stacks.AssignPeople(gi.Persons);
-         foreach (Stack stack in stacks)
+         foreach (Stack stack in gi.Stacks)
          {
             if (stack.MapItems.Count < 2)
                continue;
-
             IMapItems possibleVictums = new MapItems();
             IMapItems knownAliens = new MapItems();
             foreach (MapItem mi in stack.MapItems)
@@ -331,10 +312,7 @@ namespace PleasantvilleGame
          //--------------------------------------------------------
          // Tied Up MapItems
          // Tied up players are freed if a friendly counter is in the same hex at the end of the turn.
-
-         List<Stack> stacks = new List<Stack>();
-         stacks.AssignPeople(gi.Persons);
-         foreach (Stack stack in stacks)
+         foreach (Stack stack in gi.Stacks)
          {
             IMapItems alienTiedUpPersons = new MapItems();
             IMapItems controlledTiedUpPersons = new MapItems();
@@ -560,7 +538,7 @@ namespace PleasantvilleGame
          foreach (IMapItemMove mim in gi.MapItemMoves)
          {
             IMapItem mi = mim.MapItem;
-            mi.Territory = mim.NewTerritory;
+            mi.TerritoryCurrent = mim.NewTerritory;
             mi.TerritoryStarting = mim.NewTerritory;
             mi.IsMoved = false;
             mi.MovementUsed = 0;
