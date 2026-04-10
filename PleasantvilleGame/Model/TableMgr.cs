@@ -8,6 +8,7 @@ namespace PleasantvilleGame
 {
    internal class TableMgr
    {
+      static public CombatResult[,] theTable = new CombatResult[12, 5];
       public const int FN_ERROR = -1000;
       public readonly static string[,] theTownpersonsTable = new string[5, 6]
       {
@@ -64,7 +65,69 @@ namespace PleasantvilleGame
       //=====================================================================
       public TableMgr()
       {
+         CreateCombatTable();
+      }
+      private void CreateCombatTable()
+      {
+         theTable[0, 0] = CombatResult.DefenderWins;
+         theTable[1, 0] = CombatResult.DefenderWins;
+         theTable[2, 0] = CombatResult.DefenderWins;
+         theTable[3, 0] = CombatResult.DefenderWins;
+         theTable[4, 0] = CombatResult.DefenderFlees;
+         theTable[5, 0] = CombatResult.AttackerFlees;
+         theTable[6, 0] = CombatResult.DefenderFlees;
+         theTable[7, 0] = CombatResult.AttackerWins;
+         theTable[8, 0] = CombatResult.AttackerWins;
+         theTable[9, 0] = CombatResult.AttackerWins;
+         theTable[10, 0] = CombatResult.AttackerWins;
 
+         theTable[0, 1] = CombatResult.AttackerFlees;
+         theTable[1, 1] = CombatResult.AttackerWins;
+         theTable[2, 1] = CombatResult.DefenderWins;
+         theTable[3, 1] = CombatResult.DefenderWins;
+         theTable[4, 1] = CombatResult.AttackerFlees;
+         theTable[5, 1] = CombatResult.AttackerWins;
+         theTable[6, 1] = CombatResult.DefenderFlees;
+         theTable[7, 1] = CombatResult.AttackerWins;
+         theTable[8, 1] = CombatResult.DefenderWins;
+         theTable[9, 1] = CombatResult.AttackerWins;
+         theTable[10, 1] = CombatResult.DefenderFlees;
+
+         theTable[0, 2] = CombatResult.DefenderFlees;
+         theTable[1, 2] = CombatResult.DefenderWins;
+         theTable[2, 2] = CombatResult.AttackerFlees;
+         theTable[3, 2] = CombatResult.AttackerWins;
+         theTable[4, 2] = CombatResult.AttackerWins;
+         theTable[5, 2] = CombatResult.AttackerWins;
+         theTable[6, 2] = CombatResult.DefenderWins;
+         theTable[7, 2] = CombatResult.DefenderFlees;
+         theTable[8, 2] = CombatResult.AttackerWins;
+         theTable[9, 2] = CombatResult.DefenderWins;
+         theTable[10, 2] = CombatResult.AttackerWins;
+
+         theTable[0, 3] = CombatResult.DefenderWins;
+         theTable[1, 3] = CombatResult.DefenderWins;
+         theTable[2, 3] = CombatResult.AttackerWins;
+         theTable[3, 3] = CombatResult.DefenderFlees;
+         theTable[4, 3] = CombatResult.AttackerWins;
+         theTable[5, 3] = CombatResult.AttackerWins;
+         theTable[6, 3] = CombatResult.AttackerWins;
+         theTable[7, 3] = CombatResult.AttackerWins;
+         theTable[8, 3] = CombatResult.DefenderWins;
+         theTable[9, 3] = CombatResult.AttackerFlees;
+         theTable[10, 3] = CombatResult.AttackerWins;
+
+         theTable[0, 4] = CombatResult.AttackerWins;
+         theTable[1, 4] = CombatResult.AttackerFlees;
+         theTable[2, 4] = CombatResult.AttackerWins;
+         theTable[3, 4] = CombatResult.AttackerWins;
+         theTable[4, 4] = CombatResult.AttackerWins;
+         theTable[5, 4] = CombatResult.AttackerWins;
+         theTable[6, 4] = CombatResult.AttackerWins;
+         theTable[7, 4] = CombatResult.DefenderFlees;
+         theTable[8, 4] = CombatResult.AttackerWins;
+         theTable[9, 4] = CombatResult.DefenderWins;
+         theTable[10, 4] = CombatResult.DefenderWins;
       }
    }
 }

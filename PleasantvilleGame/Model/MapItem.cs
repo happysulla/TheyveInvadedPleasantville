@@ -406,7 +406,7 @@ namespace PleasantvilleGame
       public IEnumerator GetEnumerator() { return myList.GetEnumerator(); }
       public int IndexOf(IMapItem mi) { return myList.IndexOf(mi); }
       public void Remove(IMapItem mi) { myList.Remove(mi); }
-      public IMapItem Find(string miName)
+      public IMapItem? Find(string miName)
       {
          int i = 0;
          foreach (Object o in myList)
@@ -418,7 +418,7 @@ namespace PleasantvilleGame
          }
          return null;
       }
-      public IMapItem Remove(string miName)
+      public IMapItem? Remove(string miName)
       {
          foreach (Object o in myList)
          {
@@ -431,7 +431,7 @@ namespace PleasantvilleGame
          }
          return null;
       }
-      public IMapItem this[int index]
+      public IMapItem? this[int index]
       {
          get { return (IMapItem)(myList[index]); }
          set { myList[index] = value; }

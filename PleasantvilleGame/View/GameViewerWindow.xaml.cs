@@ -2465,7 +2465,7 @@ namespace PleasantvilleGame
          else
             UpdateActionPanelButtons(gi);
       }
-      private bool DisplayTakeovers(IGameInstance gi, ITerritory selectedTerritory = null)
+      private bool DisplayTakeovers(IGameInstance gi, ITerritory? selectedTerritory = null)
       {
 
          if (false == IsAlien)

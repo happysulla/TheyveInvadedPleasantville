@@ -68,7 +68,11 @@ namespace PleasantvilleGame
       }
       static public bool CheckForTownspersonCombats(IGameInstance gi)
       {
-         IMapItemCombat previousCombat = gi.MapItemCombat; // If the previous combat had retreats, do not assume combats are completed
+         IMapItemCombat? previousCombat = gi.MapItemCombat; // If the previous combat had retreats, do not assume combats are completed
+         if( null == previousCombat)
+         {
+            return false;
+         }
          if (true == previousCombat.IsAnyRetreat)          // until the player explicitly indicates it with menu command.  This allows them
          {
             Logger.Log(LogEnum.LE_GAMESTATE_CHECKER, "CheckForTownspersonCombats(): previousCombat.IsAnyRetreat=true");
