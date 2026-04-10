@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
+using RadioButton=System.Windows.Controls.RadioButton;
 
 namespace PleasantvilleGame
 {

@@ -8,6 +8,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Image=System.Windows.Controls.Image;
 using Application=System.Windows.Application;
+using MessageBox=System.Windows.MessageBox;
+using RadioButton=System.Windows.Controls.RadioButton;
 
 namespace PleasantvilleGame
 {

@@ -95,7 +95,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Command(): myDieRoller=null");
             return false;
          }
-         Logger.SetOn(LogEnum.LE_RESET_ROLL_STATE);
+         Logger.SetOn(LogEnum.LE_SHOW_ROLL_STATE);
          if (CommandName == myCommandNames[0]) // Show 100 rolls of the dice and the average value
          {
             int NUM_OF_ROLLS = 1200;
@@ -224,7 +224,7 @@ namespace PleasantvilleGame
             return false;
          }
          //-----------------------------------------------------------------------
-         Logger.SetOff(LogEnum.LE_RESET_ROLL_STATE);
+         Logger.SetOff(LogEnum.LE_SHOW_ROLL_STATE);
          ++gi.GameTurn;
          return true;
       }
@@ -232,7 +232,7 @@ namespace PleasantvilleGame
       private void ShowResults(int dieRoll)
       {
          //MessageBox.Show("ShowResults=" + dieRoll.ToString());
-         Logger.Log(LogEnum.LE_RESET_ROLL_STATE, "dieRoll=" + dieRoll.ToString());
+         Logger.Log(LogEnum.LE_SHOW_ROLL_STATE, "dieRoll=" + dieRoll.ToString());
       }
       private void RemoveEllipses()
       {

@@ -139,7 +139,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Create_Events(): myRulesMgr.Events.Count=0");
                return false;
             }
-            Logger.Log(LogEnum.LE_RESET_ROLL_STATE, "Create_Events(): resetting die rolls gi.DieResults.Count=" + gi.DieResults.Count.ToString());
+            Logger.Log(LogEnum.LE_SHOW_ROLL_STATE, "Create_Events(): resetting die rolls gi.DieResults.Count=" + gi.DieResults.Count.ToString());
             foreach (string key in myRulesMgr.Events.Keys) // For each event, create a dictionary entry. There can be no more than three die rolls per event
                gi.DieResults[key] = new int[3] { Utilities.NO_RESULT, Utilities.NO_RESULT, Utilities.NO_RESULT };
          }

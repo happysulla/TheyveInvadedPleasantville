@@ -72,8 +72,7 @@ namespace PleasantvilleGame
 
             myLabelAlienSelected.Visibility = Visibility.Visible;
             Canvas.SetLeft(myLabelArrow, 77);
-            MapItem.SetButtonContent(myButton1, myMovingTownsperson);
-
+            MapItem.SetButtonContent(myButton1, myMovingTownsperson, true);
             switch (myKnownAliens.Count)
             {
                 case 1:
@@ -83,7 +82,7 @@ namespace PleasantvilleGame
                     Canvas.SetLeft(myButton2, 149+50);
                     Canvas.SetLeft(myRectangle2, 149 + 50);
                     myButton2.Visibility = Visibility.Visible;
-                    MapItem.SetButtonContent(myButton2, myKnownAliens[0]);
+                    MapItem.SetButtonContent(myButton2, myKnownAliens[0], true);
                     break;
                 case 2:
                     Canvas.SetLeft(myButton1, 12+25);
@@ -95,16 +94,16 @@ namespace PleasantvilleGame
                     Canvas.SetLeft(myRectangle3, 216 + 25);
                     myButton2.Visibility = Visibility.Visible;
                     myButton3.Visibility = Visibility.Visible;
-                    MapItem.SetButtonContent(myButton2, myKnownAliens[0]);
-                    MapItem.SetButtonContent(myButton3, myKnownAliens[1]);
+                    MapItem.SetButtonContent(myButton2, myKnownAliens[0], true);
+                    MapItem.SetButtonContent(myButton3, myKnownAliens[1], true);
                     break;
                 case 3:
                     myButton2.Visibility = Visibility.Visible;
                     myButton3.Visibility = Visibility.Visible;
                     myButton4.Visibility = Visibility.Visible;
-                    MapItem.SetButtonContent(myButton2, myKnownAliens[0]);
-                    MapItem.SetButtonContent(myButton3, myKnownAliens[1]);
-                    MapItem.SetButtonContent(myButton4, myKnownAliens[2]);
+                    MapItem.SetButtonContent(myButton2, myKnownAliens[0], true);
+                    MapItem.SetButtonContent(myButton3, myKnownAliens[1], true);
+                    MapItem.SetButtonContent(myButton4, myKnownAliens[2], true);
                     break;
                 default:
                     Console.WriteLine("DialogStopMovement:UpdateView() ERROR - reached default");

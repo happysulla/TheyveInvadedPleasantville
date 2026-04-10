@@ -23,6 +23,15 @@ namespace PleasantvilleGame
       LE_SHOW_MAIN_CLEAR,
       LE_SHOW_ENTERED_HEX,
       LE_SHOW_BUTTON_MOVE,
+      LE_SHOW_ROLL_STATE,
+      LE_SHOW_UPLOAD_GAME,
+      LE_SHOW_VP_TOTAL,
+      //-------------
+      LE_SHOW_MIM_ADD,
+      LE_SHOW_MIM_CLEAR,
+      LE_SHOW_MIM_MOVING_COUNT,
+      LE_SHOW_MIM_BEST_PATH,
+      LE_MIM_RETURN_TO_START,
       //-------------
       LE_VIEW_SHOW_OPTIONS,
       LE_VIEW_SHOW_FEATS,
@@ -30,20 +39,21 @@ namespace PleasantvilleGame
       LE_VIEW_SHOW_GAMESAVES,
       LE_VIEW_SHOW_STATS_MIN,
       LE_VIEW_SHOW_SETTINGS,
-      LE_SHOW_UPLOAD_GAME,
-      LE_SHOW_VP_TOTAL,
-      LE_SHOW_OBSERVATIONS,
       //-------------
-      LE_RESET_ROLL_STATE,
-      LE_VIEW_DICE_MOVING,
+      LE_VIEW_UPDATE_ACTION_PANEL_CLEAR,
+      LE_VIEW_UPDATE_ACTION_PANEL,
+      LE_SHOW_DICE_MOVING,
       LE_VIEW_UPDATE_MENU,
       LE_VIEW_UPDATE_STATUS_BAR,
       LE_VIEW_UPDATE_EVENTVIEWER,
       LE_VIEW_APPEND_EVENT,
-      LE_VIEW_MIM,
-      LE_VIEW_MIM_ADD,
-      LE_VIEW_MIM_CLEAR,
       LE_VIEW_CONTROL_NAME,
+      //-------------
+      LE_SHOW_OBSERVATIONS,
+      LE_SHOW_COMBAT_STATE,
+      LE_SHOW_COMBAT_THREAD,
+      LE_SHOW_CONVERSATIONS,
+      LE_SHOW_ITEROGATIONS,
       //-------------
       LE_TIMER_ELAPED,
       LE_COMBAT_SUMS,
@@ -106,6 +116,8 @@ namespace PleasantvilleGame
          SetOn(LogEnum.LE_SHOW_MAIN_CLEAR);
          SetOn(LogEnum.LE_SHOW_ENTERED_HEX);
          SetOn(LogEnum.LE_SHOW_BUTTON_MOVE);
+         SetOn(LogEnum.LE_SHOW_ROLL_STATE);
+         SetOn(LogEnum.LE_SHOW_DICE_MOVING);
          //-------------
          SetOn(LogEnum.LE_VIEW_SHOW_OPTIONS);
          SetOn(LogEnum.LE_VIEW_SHOW_FEATS);
@@ -117,16 +129,15 @@ namespace PleasantvilleGame
          SetOn(LogEnum.LE_SHOW_UPLOAD_GAME);
          SetOn(LogEnum.LE_SHOW_VP_TOTAL);
          //-------------
-         SetOn(LogEnum.LE_RESET_ROLL_STATE);
-         SetOn(LogEnum.LE_VIEW_DICE_MOVING);
+         SetOn(LogEnum.LE_SHOW_MIM_ADD);
+         SetOn(LogEnum.LE_SHOW_MIM_CLEAR);
+         SetOn(LogEnum.LE_SHOW_MIM_BEST_PATH);
+         //-------------
          SetOn(LogEnum.LE_VIEW_UPDATE_MENU);
          SetOn(LogEnum.LE_VIEW_UPDATE_STATUS_BAR);
          SetOn(LogEnum.LE_VIEW_UPDATE_EVENTVIEWER);
          SetOn(LogEnum.LE_VIEW_APPEND_EVENT);
-         SetOn(LogEnum.LE_VIEW_MIM);
-         SetOn(LogEnum.LE_VIEW_MIM_ADD);
          SetOn(LogEnum.LE_VIEW_UPDATE_MENU);
-         SetOn(LogEnum.LE_VIEW_MIM_CLEAR);
          SetOn(LogEnum.LE_VIEW_CONTROL_NAME);
          return true;
       }

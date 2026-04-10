@@ -59,7 +59,7 @@ namespace PleasantvilleGame
             return false;
          }
          //-----------------------------------------
-         Logger.Log(LogEnum.LE_VIEW_MIM_ADD, "Move_TaskForceToNewArea(): mi=" + mi.Name + " entering t=" + newTerritory.Name);
+         Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Move_TaskForceToNewArea(): mi=" + mi.Name + " entering t=" + newTerritory.Name);
          if (false == CreateMapItemMove(gi, mi, newTerritory))
          {
             Logger.Log(LogEnum.LE_ERROR, "Move_TaskForceToNewArea(): AddMapItemMove() returned false");
@@ -139,7 +139,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): Invalid State Territories.Count=" + mim.BestPath.Territories.Count.ToString() + " for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
             return false;
          }
-         Logger.Log(LogEnum.LE_VIEW_MIM_ADD, "Create_MapItemMove(): mi=" + mi.Name + " moving to t=" + newT.Name);
+         Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Create_MapItemMove(): mi=" + mi.Name + " moving to t=" + newT.Name);
          gi.MapItemMoves.Insert(0, mim); // add at front
          return true;
       }
@@ -732,7 +732,7 @@ namespace PleasantvilleGame
                   movingMi.IsMoveAllowedToResetThisTurn = false;
                   movingMi.IsMoved = true;
                   //-------------------------------------------
-                  Logger.Log(LogEnum.LE_VIEW_MIM_ADD, "Is_ZebulonDiscovered(): mi=" + movingMi.Name + " entering t=" + zebulon.TerritoryCurrent);
+                  Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Is_ZebulonDiscovered(): mi=" + movingMi.Name + " entering t=" + zebulon.TerritoryCurrent);
                   if (false == CreateMapItemMove(gi, movingMi, zebulon.TerritoryCurrent))
                   {
                      Logger.Log(LogEnum.LE_ERROR, "Is_ZebulonDiscovered(): Create_MapItemMove() returned false");

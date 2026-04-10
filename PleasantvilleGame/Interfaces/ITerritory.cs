@@ -13,6 +13,7 @@ namespace PleasantvilleGame
       List<String> Adjacents { get; }
       List<String> PavedRoads { get; }
       List<String> Observations { get; }
+      bool IsBuilding();
    }
    //--------------------------------------------------------
    public interface ITerritories : System.Collections.IEnumerable
