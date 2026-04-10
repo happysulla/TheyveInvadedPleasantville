@@ -392,9 +392,15 @@ namespace PleasantvilleGame
       private ArrayList myList;
       public MapItems() { myList = new ArrayList(); }
       public void Add(IMapItem mi) { myList.Add(mi); }
-      public IMapItem RemoveAt(int index)
+      public IMapItem? RemoveAt(int index)
       {
-         IMapItem mi = (IMapItem)myList[index];
+         Object o = myList[index];
+         if( null == o)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MapItems.RemoveAt(): index=" + index + " is out of range.");
+            return null;
+         }
+         IMapItem? mi = (IMapItem)o;
          myList.RemoveAt(index);
          return mi;
       }

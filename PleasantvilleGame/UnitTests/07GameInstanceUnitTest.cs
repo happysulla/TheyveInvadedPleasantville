@@ -21,8 +21,8 @@ namespace PleasantvilleGame
       private ScrollViewer? myScrollViewerCanvas = null;
       private Canvas? myCanvasMap = null;
       private Canvas? myCanvasTank = null;
-      private IGameInstance? myGameInstanceSave = null;
-      private IGameInstance? myGameInstanceLoad = null;
+      //private IGameInstance? myGameInstanceSave = null;
+      //private IGameInstance? myGameInstanceLoad = null;
       //--------------------------------------------------------------------
       private int myIndexName = 0;
       private List<string> myHeaderNames = new List<string>();

@@ -50,7 +50,7 @@ namespace PleasantvilleGame
       private bool myIsFlagSetForOverstack = false;               // MapItem cannot move into hex due to overstack
       private bool myIsFlagSetForMaxMove = false;                 // MapItem cannot move into hex due to overstack
       //--------------------------------------------------------------
-      private Rectangle? myMovingRectangle = null;                // Rentable that is moving with button
+      //private Rectangle? myMovingRectangle = null;                // Rentangle that is moving with button
       private Rectangle myRectangleSelection = new Rectangle();   // Player has manually selected this button
       //--------------------------------------------------------------
       private Storyboard? myStoryboard = null;

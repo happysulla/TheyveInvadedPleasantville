@@ -12,8 +12,7 @@ namespace PleasantvilleGame
       public static string theTypeChecked = "A";
       public static string theCardChecked = "1";
       public static string theParentChecked = "Main";
-      private Canvas? myCanvasMain = null;
-      private Canvas? myCanvasTank = null;
+      private Canvas? myCanvas = null;
       public TerritoryCreateDialog(Canvas? main)
       {
          if (null == main)
@@ -21,7 +20,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "TerritoryVerifyDialog(): main=null");
             return;
          }
-         myCanvasMain = main;
+         myCanvas = main;
          //-----------------------------------------
          InitializeComponent();
          UpdateView();

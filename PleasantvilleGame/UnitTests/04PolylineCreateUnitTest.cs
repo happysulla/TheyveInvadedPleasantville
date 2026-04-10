@@ -23,7 +23,6 @@ namespace PleasantvilleGame
       private Canvas? myCanvasTank = null;
       private Canvas? myCanvasMain = null;
       private CanvasImageViewer? myCanvasImageViewer = null;
-      private bool myIsBattleMapShown = false;
       private int myIndexRoad = 0;
       private bool myIsPavedRoad = false;
       private List<Ellipse> myEllipses = new List<Ellipse>();
