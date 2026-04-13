@@ -66,18 +66,22 @@ namespace PleasantvilleGame
 
          return false;
       }
-      static public bool CheckForTownspersonCombats(IGameInstance gi)
+      static public bool CheckForTownspersonCombats(IGameInstance gi, out bool isTownspersonCombat)
       {
+         isTownspersonCombat = false;
          IMapItemCombat? previousCombat = gi.MapItemCombat; // If the previous combat had retreats, do not assume combats are completed
          if( null == previousCombat)
          {
+            Logger.Log(LogEnum.LE_ERROR, "CheckForTownspersonCombats(): previousCombat=null");
             return false;
          }
-         if (true == previousCombat.IsAnyRetreat)          // until the player explicitly indicates it with menu command.  This allows them
+         if (true == previousCombat.IsAnyRetreat)          // until the player explicitly indicates it with menu command.  This allows them to see the retreats. 
          {
             Logger.Log(LogEnum.LE_GAMESTATE_CHECKER, "CheckForTownspersonCombats(): previousCombat.IsAnyRetreat=true");
-            return true;                                  // to see the retreats. 
+            isTownspersonCombat = true;
+            return true; 
          }
+         //-----------------------------------------------------------
          // The townspeople can fight aliens or uncontrolled townspeople.
          // They might want to fight uncontrolled townspeople if they suspect 
          // they are aliens.  However, if they are not aliens, the uncontrolled
@@ -100,7 +104,7 @@ namespace PleasantvilleGame
                else
                   uncontrolled.Add(mi);
             }
-
+            //-----------------------------------------------------------
             if ((0 != controlled.Count) && ((0 != aliens.Count) || (0 != uncontrolled.Count)))
             {
                StringBuilder sb = new StringBuilder("CheckForTownspersonCombats(): t="); sb.Append(stack.Territory.ToString());
@@ -108,20 +112,28 @@ namespace PleasantvilleGame
                sb.Append(" aliens.Count="); sb.Append(aliens.Count.ToString());
                sb.Append(" uncontrolled.Count="); sb.Append(uncontrolled.Count.ToString());
                Logger.Log(LogEnum.LE_GAMESTATE_CHECKER, sb.ToString());
+               isTownspersonCombat = true;
                return true;
             }
          }
-
-         return false;
+         return true;
       }
-      static public bool CheckForAlienCombats(IGameInstance gi)
+      static public bool CheckForAlienCombats(IGameInstance gi, out bool isAlienCombat)
       {
-         IMapItemCombat previousCombat = gi.MapItemCombat; // If the previous combat had retreats, do not assume combats are completed
-         if (true == previousCombat.IsAnyRetreat)          // until the player explicitly indicates it with menu command.  This allows them to be seen.
+         isAlienCombat = false;
+         if (null == gi.MapItemCombat)        
+         {
+            Logger.Log(LogEnum.LE_GAMESTATE_CHECKER, "CheckForTownspersonCombats(): gi.MapItemCombat=true");
+            return false;                                  // to see the retreats. 
+         }
+         IMapItemCombat? previousCombat = gi.MapItemCombat; // If the previous combat had retreats, do not assume combats are completed
+         if (true == previousCombat.IsAnyRetreat)           // until the player explicitly indicates it with menu command.  This allows them to be seen.
          {
             Logger.Log(LogEnum.LE_GAMESTATE_CHECKER, "CheckForTownspersonCombats(): previousCombat.IsAnyRetreat=true");
+            isAlienCombat = true;
             return true;                                  // to see the retreats. 
          }                             // to see the retreats. 
+         //--------------------------------------------------
          foreach (Stack stack in gi.Stacks)
          {
             if (stack.MapItems.Count < 2)
@@ -143,7 +155,7 @@ namespace PleasantvilleGame
 
             if ((0 != controlled.Count) && ((0 != aliens.Count) || (0 != uncontrolled.Count)))
             {
-               StringBuilder sb = new StringBuilder("CheckForAlienCombats(): t="); sb.Append(stack.Territory.ToString());
+               StringBuilder sb = new StringBuilder("CheckFor_AlienCombats(): t="); sb.Append(stack.Territory.ToString());
                sb.Append(" controlled.Count="); sb.Append(controlled.Count.ToString());
                sb.Append(" aliens.Count="); sb.Append(aliens.Count.ToString());
                sb.Append(" uncontrolled.Count="); sb.Append(uncontrolled.Count.ToString());
@@ -161,18 +173,18 @@ namespace PleasantvilleGame
                }
                if (true == isAnyMapItemsWary)
                {
-                  StringBuilder sb = new StringBuilder("CheckForAlienCombats(): t="); sb.Append(stack.Territory.ToString());
+                  StringBuilder sb = new StringBuilder("CheckFor_AlienCombats(): t="); sb.Append(stack.Territory.ToString());
                   sb.Append(" controlled.Count="); sb.Append(controlled.Count.ToString());
                   sb.Append(" aliens.Count="); sb.Append(aliens.Count.ToString());
                   sb.Append(" uncontrolled.Count="); sb.Append(uncontrolled.Count.ToString());
                   sb.Append(" isAnyMapItemsWary=true");
                   Logger.Log(LogEnum.LE_GAMESTATE_CHECKER, sb.ToString());
+                  isAlienCombat = true;
                   return true;
                }
             }
          }
-
-         return false;
+         return true;
       }
       static public bool CheckForIterogations(IGameInstance gi)
       {

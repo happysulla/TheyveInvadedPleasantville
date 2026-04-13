@@ -120,14 +120,13 @@ namespace PleasantvilleGame
       //---------------------------------------------------------------
       public bool AddUnknownAlien(IMapItem newAlien)
       {
-         StringBuilder sb = null;
-         IMapItem mi = this.Persons.Find(newAlien.Name);
+         StringBuilder sb = new StringBuilder("AddUnknownAlien():"); 
+         IMapItem? mi = this.Stacks.FindMapItem(newAlien.Name);
          if (null == mi)
          {
-            Console.WriteLine("GameInstance::AddUnknownAlien() - ERROR mi = null ");
+            Logger.Log(LogEnum.LE_ERROR, "GameInstance(): AddUnknownAlien() mi=null for name=" + newAlien.Name);
             return false;
          }
-
          if (false == mi.IsAlienUnknown)
          {
             if ((false == mi.IsTiedUp) && (true == mi.IsConscious) && (false == mi.IsStunned) && (false == mi.IsSurrendered) && (false == mi.IsKilled))
@@ -135,7 +134,8 @@ namespace PleasantvilleGame
                if (true == mi.IsControlled)
                {
                   InfluenceCountTownspeople -= mi.Influence;
-                  sb = new StringBuilder("AddUnknownAlien():"); sb.Append(mi.Name); sb.Append(" ---- from TP "); sb.Append(mi.Influence.ToString());
+                  sb.Append(mi.Name); sb.Append(" ---- from TP "); 
+                  sb.Append(mi.Influence.ToString());
                   sb.Append(" T="); sb.Append(this.InfluenceCountTotal.ToString());
                   sb.Append(" Known="); sb.Append(this.InfluenceCountAlienKnown.ToString());
                   sb.Append(" UnKnown="); sb.Append(this.InfluenceCountAlienUnknown.ToString());
@@ -144,7 +144,9 @@ namespace PleasantvilleGame
                }
 
                InfluenceCountAlienUnknown += mi.Influence;
-               sb = new StringBuilder("AddUnknownAlien():"); sb.Append(mi.Name); sb.Append(" ++++ to Unknown "); sb.Append(mi.Influence.ToString());
+               sb.Append(mi.Name); 
+               sb.Append(" ++++ to Unknown "); 
+               sb.Append(mi.Influence.ToString());
                sb.Append(" T="); sb.Append(this.InfluenceCountTotal.ToString());
                sb.Append(" Known="); sb.Append(this.InfluenceCountAlienKnown.ToString());
                sb.Append(" UnKnown="); sb.Append(this.InfluenceCountAlienUnknown.ToString());
@@ -164,49 +166,47 @@ namespace PleasantvilleGame
       }
       public bool AddKnownAlien(IMapItem newAlien)
       {
-         StringBuilder sb = null;
-         IMapItem mi = this.Persons.Find(newAlien.Name);
+         StringBuilder sb = new StringBuilder("AddKnownAlien():"); ;
+         IMapItem? mi = this.Stacks.FindMapItem(newAlien.Name);
          if (null == mi)
          {
             Console.WriteLine("GameInstance::AddKnownAlien() - ERROR mi = null ");
             return false;
          }
-
          if (false == mi.IsAlienKnown)  // Do not add if already known alien
          {
             // Stunned, tied-up, and surrendered townspeople can be taken over. 
-            // However, influence probably not going to be added to Alien total until 
-            // condition expires.
-
-
+            // However, influence probably not going to be added to Alien total until  condition expires.
             if ((false == mi.IsTiedUp) && (true == mi.IsConscious) && (false == mi.IsStunned) && (false == mi.IsSurrendered) && (false == mi.IsKilled))
             {
                if (true == mi.IsControlled)
                {
                   InfluenceCountTownspeople -= mi.Influence;
-                  sb = new StringBuilder("AddKnownAlien():"); sb.Append(mi.Name); sb.Append(" ---- from TP "); sb.Append(mi.Influence.ToString());
+                  sb.Append(mi.Name); 
+                  sb.Append(" ---- from TP "); 
+                  sb.Append(mi.Influence.ToString());
                   sb.Append(" T="); sb.Append(this.InfluenceCountTotal.ToString());
                   sb.Append(" Known="); sb.Append(this.InfluenceCountAlienKnown.ToString());
                   sb.Append(" UnKnown="); sb.Append(this.InfluenceCountAlienUnknown.ToString());
                   sb.Append(" TP="); sb.Append(this.InfluenceCountTownspeople.ToString());
                   Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
                }
-
-               // Determine if already an alien.  If already an alien, need to remove from that influence 
-
-               if (true == mi.IsAlienUnknown)
+               if (true == mi.IsAlienUnknown) // Determine if already an alien.  If already an alien, need to remove from that influence 
                {
                   InfluenceCountAlienUnknown -= mi.Influence;
-                  sb = new StringBuilder("AddKnownAlien():"); sb.Append(mi.Name); sb.Append(" ---- from Unknown "); sb.Append(mi.Influence.ToString());
+                  sb.Append(mi.Name); 
+                  sb.Append(" ---- from Unknown "); 
+                  sb.Append(mi.Influence.ToString());
                   sb.Append(" T="); sb.Append(this.InfluenceCountTotal.ToString());
                   sb.Append(" Known="); sb.Append(this.InfluenceCountAlienKnown.ToString());
                   sb.Append(" UnKnown="); sb.Append(this.InfluenceCountAlienUnknown.ToString());
                   sb.Append(" TP="); sb.Append(this.InfluenceCountTownspeople.ToString());
                   Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
                }
-
                InfluenceCountAlienKnown += mi.Influence;
-               sb = new StringBuilder("AddKnownAlien():"); sb.Append(mi.Name); sb.Append(" ++++ to Known "); sb.Append(mi.Influence.ToString());
+               sb =  sb.Append(mi.Name); 
+               sb.Append(" ++++ to Known "); 
+               sb.Append(mi.Influence.ToString());
                sb.Append(" T="); sb.Append(this.InfluenceCountTotal.ToString());
                sb.Append(" Known="); sb.Append(this.InfluenceCountAlienKnown.ToString());
                sb.Append(" UnKnown="); sb.Append(this.InfluenceCountAlienUnknown.ToString());

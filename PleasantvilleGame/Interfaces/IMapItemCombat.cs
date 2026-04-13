@@ -27,11 +27,11 @@ namespace PleasantvilleGame
    {
       int Count { get; }
       void Add(IMapItemCombat cr);
-      IMapItemCombat RemoveAt(int index);
+      IMapItemCombat? RemoveAt(int index);
       void Insert(int index, IMapItemCombat cr);
       void Clear();
       bool Contains(IMapItemCombat cr);
       int IndexOf(IMapItemCombat cr);
-      IMapItemCombat this[int index] { get; set; }
+      IMapItemCombat? this[int index] { get; set; }
    }
 }

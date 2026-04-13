@@ -394,7 +394,7 @@ namespace PleasantvilleGame
       public void Add(IMapItem mi) { myList.Add(mi); }
       public IMapItem? RemoveAt(int index)
       {
-         Object o = myList[index];
+         Object? o = myList[index];
          if( null == o)
          {
             Logger.Log(LogEnum.LE_ERROR, "MapItems.RemoveAt(): index=" + index + " is out of range.");
@@ -439,28 +439,40 @@ namespace PleasantvilleGame
       }
       public IMapItem? this[int index]
       {
-         get { return (IMapItem)(myList[index]); }
+         get 
+         {
+            Object? o = myList[index];
+            if (null == o)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "MapItemCombats.RemoveAt(): null object at index " + index.ToString());
+               return null;
+            }
+            IMapItem mi = (IMapItem)o;
+            return mi;
+         }
          set { myList[index] = value; }
       }
       public IMapItems Shuffle()
       {
          IMapItems newOrder = new MapItems();
-
-         // Random select card in myCards list and
-         // remove it.  Then add it to new list. 
-
          int count = myList.Count;
-         for (int i = 0; i < count; i++)
+         for (int i = 0; i < count; i++) // Random select card in myCards list and remove it.  Then add it to new list. 
          {
             int index = Utilities.RandomGenerator.Next(myList.Count);
             if (index < myList.Count)
             {
-               IMapItem randomIndex = (IMapItem)myList[index];
+               Object? o = myList[index];
+               if (null == o)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "MapItemCombats.RemoveAt(): null object at index " + index.ToString());
+                  myList.RemoveAt(index);
+                  continue;
+               }
+               IMapItem randomIndex = (IMapItem)o;
                myList.RemoveAt(index);
                newOrder.Add(randomIndex);
             }
          }
-
          return newOrder;
       }
       public IMapItems Sort()

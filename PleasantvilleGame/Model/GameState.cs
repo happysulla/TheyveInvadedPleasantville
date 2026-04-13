@@ -570,77 +570,94 @@ namespace PleasantvilleGame
 					break;
 				case GameAction.AlienModifiesTownspersonMovement:
 					gi.NextAction = "Townsperson Selects Counter to Move";
-					if (false == IsZebulonDiscovered(gi, gi.PreviousMapItemMove, out isZebulonDiscovered))
+					if( null == gi.PreviousMapItemMove)
 					{
-						returnStatus = "IsZebulonDiscovered() returned false for " + action.ToString();
+						returnStatus = "gi.PreviousMapItemMove is null in AlienModifiesTownspersonMovement action";
 						Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-					}
+               }
 					else
 					{
-						if (true == isZebulonDiscovered)
-						{
-							action = GameAction.AlienModifiesTownspersonMovement;
-							gi.PreviousMapItemMove = null;
-						}
-						else
-						{
-							if (0 < gi.MapItemMoves.Count)
-							{
-								IMapItemMove? mim2 = gi.MapItemMoves[0];
-								if (null == mim2)
-								{
-									returnStatus = "mim2 is null in AlienModifiesTownspersonMovement action";
-									Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-								}
-								else 
-								{
-									if (null == mim2.BestPath)
-									{
-										returnStatus = "mim2.BestPath is null in AlienModifiesTownspersonMovement action";
-										Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-									}
-									else
-									{
-										foreach (ITerritory t in mim2.BestPath.Territories)
-											gi.ZebulonTerritories.Remove(t);
-										mim2.MapItem.IsMoved = true;
-										mim2.MapItem.MovementUsed += mim2.BestPath.Territories.Count;
-										gi.PreviousMapItemMove = mim2;
-									}
-								}
-							}
-						}
-					}
+                  if (false == IsZebulonDiscovered(gi, gi.PreviousMapItemMove, out isZebulonDiscovered))
+                  {
+                     returnStatus = "IsZebulonDiscovered() returned false for " + action.ToString();
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+                  }
+                  else
+                  {
+                     if (true == isZebulonDiscovered)
+                     {
+                        action = GameAction.AlienModifiesTownspersonMovement;
+                        gi.PreviousMapItemMove = null;
+                     }
+                     else
+                     {
+                        if (0 < gi.MapItemMoves.Count)
+                        {
+                           IMapItemMove? mim2 = gi.MapItemMoves[0];
+                           if (null == mim2)
+                           {
+                              returnStatus = "mim2 is null in AlienModifiesTownspersonMovement action";
+                              Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+                           }
+                           else
+                           {
+                              if (null == mim2.BestPath)
+                              {
+                                 returnStatus = "mim2.BestPath is null in AlienModifiesTownspersonMovement action";
+                                 Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+                              }
+                              else
+                              {
+                                 foreach (ITerritory t in mim2.BestPath.Territories)
+                                    gi.ZebulonTerritories.Remove(t);
+                                 mim2.MapItem.IsMoved = true;
+                                 mim2.MapItem.MovementUsed += mim2.BestPath.Territories.Count;
+                                 gi.PreviousMapItemMove = mim2;
+                              }
+                           }
+                        }
+                     }
+                  }
+               }
+
 					break;
 				case GameAction.TownpersonCompletesMovement:
-					if (false == IsZebulonDiscovered(gi, gi.PreviousMapItemMove, out isZebulonDiscovered))
+					if (null == gi.PreviousMapItemMove)
 					{
-						returnStatus = "IsZebulonDiscovered() returned false for " + action.ToString();
+						returnStatus = "gi.PreviousMapItemMove is null in AlienModifiesTownspersonMovement action";
 						Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
 					}
 					else
 					{
-						if (true == isZebulonDiscovered)
-						{
-							gi.NextAction = "Townsperson Selects Counter to Move";
-							action = GameAction.AlienModifiesTownspersonMovement;
-						}
-						else if (null != gi.PreviousMapItemMove)
-						{
-							if(null== gi.PreviousMapItemMove.BestPath)
-							{
-								returnStatus = "gi.PreviousMapItemMove.BestPath is null in TownpersonCompletesMovement action";
-								Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-							}
-							else
-							{
-								gi.NextAction = "Alien Acks Townspeople Movement";
-								foreach (ITerritory t in gi.PreviousMapItemMove.BestPath.Territories)
-									gi.ZebulonTerritories.Remove(t);
-							}
-						}
-						gi.PreviousMapItemMove = null;
-					}
+                  if (false == IsZebulonDiscovered(gi, gi.PreviousMapItemMove, out isZebulonDiscovered))
+                  {
+                     returnStatus = "IsZebulonDiscovered() returned false for " + action.ToString();
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+                  }
+                  else
+                  {
+                     if (true == isZebulonDiscovered)
+                     {
+                        gi.NextAction = "Townsperson Selects Counter to Move";
+                        action = GameAction.AlienModifiesTownspersonMovement;
+                     }
+                     else if (null != gi.PreviousMapItemMove)
+                     {
+                        if (null == gi.PreviousMapItemMove.BestPath)
+                        {
+                           returnStatus = "gi.PreviousMapItemMove.BestPath is null in TownpersonCompletesMovement action";
+                           Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+                        }
+                        else
+                        {
+                           gi.NextAction = "Alien Acks Townspeople Movement";
+                           foreach (ITerritory t in gi.PreviousMapItemMove.BestPath.Territories)
+                              gi.ZebulonTerritories.Remove(t);
+                        }
+                     }
+                     gi.PreviousMapItemMove = null;
+                  }
+               }
 					break;
 				case GameAction.AlienAcksTownspersonMovement:
 					foreach (IMapItem mi in gi.Persons)
@@ -651,50 +668,66 @@ namespace PleasantvilleGame
 						mi.IsMoveStoppedThisTurn = false;
 					}
 					gi.MapItemMoves.Clear();
-
-					if (true == GameStateChecker.CheckForConversations(gi))
+					//-----------------------------------------------------
+					bool isAlienCombat;
+					if( false == GameStateChecker.CheckForAlienCombats(gi, out isAlienCombat))
 					{
-						gi.NextAction = "Townsperson Select Flashing Space";
-						gi.GamePhase = GamePhase.Conversations;
-					}
-					else if (true == GameStateChecker.CheckForInfluence(gi))
+						returnStatus = "GameStateChecker.CheckForAlienCombats() returned false in AlienAcksTownspersonMovement action";
+						Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+               }
+               bool isTownspersonCombat;
+               if (false == GameStateChecker.CheckForTownspersonCombats(gi, out isTownspersonCombat))
+               {
+                  returnStatus = "GameStateChecker.CheckForAlienCombats() returned false in AlienAcksTownspersonMovement action";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+               }
+					if( "OK" == returnStatus)
 					{
-						gi.NextAction = "Townsperson Select Flashing Space";
-						gi.GamePhase = GamePhase.Influences;
-					}
-					else if ((true == GameStateChecker.CheckForTownspersonCombats(gi)) || ((true == GameStateChecker.CheckForAlienCombats(gi))))
-					{
-						gi.NextAction = "Each Player Select Flashing Space";
-						gi.GamePhase = GamePhase.Combat;
-					}
-					else if (true == GameStateChecker.CheckForIterogations(gi))
-					{
-						gi.NextAction = "Townsperson chooses Flashing Space for Interrogation";
-						gi.GamePhase = GamePhase.Iterrogations;
-					}
-					else if (true == GameStateChecker.CheckForImplantRemoval(gi))
-					{
-						gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
-						gi.GamePhase = GamePhase.ImplantRemoval;
-					}
-					else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
-					{
-						gi.GamePhase = GamePhase.AlienTakeover;
-						gi.NextAction = "Alien Chooses Flashing Space for Takeover";
-					}
-					else if (true == GameStateChecker.CheckForEndOfGame(gi))
-					{
-						action = GameAction.ShowEndGame;
-						gi.GamePhase = GamePhase.ShowEndGame;
-						gi.NextAction = "End Game";
-						gi.GameTurn = 13;
-					}
-					else
-					{
-						gi.NextAction = "Display Random Movement";
-						gi.GamePhase = GamePhase.RandomMovement;
-						gi.GameTurn++;
-					}
+                  //-----------------------------------------------------
+                  if (true == GameStateChecker.CheckForConversations(gi))
+                  {
+                     gi.NextAction = "Townsperson Select Flashing Space";
+                     gi.GamePhase = GamePhase.Conversations;
+                  }
+                  else if (true == GameStateChecker.CheckForInfluence(gi))
+                  {
+                     gi.NextAction = "Townsperson Select Flashing Space";
+                     gi.GamePhase = GamePhase.Influences;
+                  }
+                  else if ( (true == isTownspersonCombat) || (true == isAlienCombat) )
+                  {
+                     gi.NextAction = "Each Player Select Flashing Space";
+                     gi.GamePhase = GamePhase.Combat;
+                  }
+                  else if (true == GameStateChecker.CheckForIterogations(gi))
+                  {
+                     gi.NextAction = "Townsperson chooses Flashing Space for Interrogation";
+                     gi.GamePhase = GamePhase.Iterrogations;
+                  }
+                  else if (true == GameStateChecker.CheckForImplantRemoval(gi))
+                  {
+                     gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
+                     gi.GamePhase = GamePhase.ImplantRemoval;
+                  }
+                  else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
+                  {
+                     gi.GamePhase = GamePhase.AlienTakeover;
+                     gi.NextAction = "Alien Chooses Flashing Space for Takeover";
+                  }
+                  else if (true == GameStateChecker.CheckForEndOfGame(gi))
+                  {
+                     action = GameAction.ShowEndGame;
+                     gi.GamePhase = GamePhase.ShowEndGame;
+                     gi.NextAction = "End Game";
+                     gi.GameTurn = 13;
+                  }
+                  else
+                  {
+                     gi.NextAction = "Display Random Movement";
+                     gi.GamePhase = GamePhase.RandomMovement;
+                     gi.GameTurn++;
+                  }
+               }
 					break;
 				default:
 					returnStatus = "reached default action=" + action.ToString();
@@ -891,47 +924,63 @@ namespace PleasantvilleGame
 				case GameAction.TownspersonPerformsConversation:
 					break;
 				case GameAction.TownspersonCompletesConversations:
-					if (true == GameStateChecker.CheckForInfluence(gi))
+               //-----------------------------------------------------
+               bool isAlienCombat;
+               if (false == GameStateChecker.CheckForAlienCombats(gi, out isAlienCombat))
+               {
+                  returnStatus = "GameStateChecker.CheckForAlienCombats() returned false in AlienAcksTownspersonMovement action";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+               }
+               bool isTownspersonCombat;
+               if (false == GameStateChecker.CheckForTownspersonCombats(gi, out isTownspersonCombat))
+               {
+                  returnStatus = "GameStateChecker.CheckForAlienCombats() returned false in AlienAcksTownspersonMovement action";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+               }
+					if ("OK" == returnStatus)
 					{
-						gi.NextAction = "Townsperson Select Flashing Space";
-						gi.GamePhase = GamePhase.Influences;
-					}
-					else if ((true == GameStateChecker.CheckForTownspersonCombats(gi)) || ((true == GameStateChecker.CheckForAlienCombats(gi))))
-					{
-						gi.NextAction = "Decides Where to Perform Combats";
-						gi.GamePhase = GamePhase.Combat;
-					}
-					else if (true == GameStateChecker.CheckForIterogations(gi))
-					{
-						gi.NextAction = "Townsperson chooses Flashing Space for Interrogation";
-						gi.GamePhase = GamePhase.Iterrogations;
-					}
-					else if (true == GameStateChecker.CheckForImplantRemoval(gi))
-					{
-						gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
-						gi.GamePhase = GamePhase.ImplantRemoval;
-					}
-					else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
-					{
-						gi.GamePhase = GamePhase.AlienTakeover;
-						gi.NextAction = "Alien Chooses Flashing Space for Takeover";
-					}
-					else if (true == GameStateChecker.CheckForEndOfGame(gi))
-					{
-						action = GameAction.ShowEndGame;
-						gi.GamePhase = GamePhase.ShowEndGame;
-						gi.NextAction = "End Game";
-						gi.GameTurn = 13;
-					}
-					else if (true == GameStateChecker.CheckForRandomMoves(gi))
-					{
-						gi.NextAction = "Display Random Movement";
-						gi.GamePhase = GamePhase.RandomMovement;
-					}
-					else
-					{
-						gi.NextAction = "Alien Performs Movement";
-						gi.GamePhase = GamePhase.AlienMovement;
+						if (true == GameStateChecker.CheckForInfluence(gi))
+						{
+							gi.NextAction = "Townsperson Select Flashing Space";
+							gi.GamePhase = GamePhase.Influences;
+						}
+						else if ((true == isTownspersonCombat) || (true == isAlienCombat) )
+						{
+							gi.NextAction = "Decides Where to Perform Combats";
+							gi.GamePhase = GamePhase.Combat;
+						}
+						else if (true == GameStateChecker.CheckForIterogations(gi))
+						{
+							gi.NextAction = "Townsperson chooses Flashing Space for Interrogation";
+							gi.GamePhase = GamePhase.Iterrogations;
+						}
+						else if (true == GameStateChecker.CheckForImplantRemoval(gi))
+						{
+							gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
+							gi.GamePhase = GamePhase.ImplantRemoval;
+						}
+						else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
+						{
+							gi.GamePhase = GamePhase.AlienTakeover;
+							gi.NextAction = "Alien Chooses Flashing Space for Takeover";
+						}
+						else if (true == GameStateChecker.CheckForEndOfGame(gi))
+						{
+							action = GameAction.ShowEndGame;
+							gi.GamePhase = GamePhase.ShowEndGame;
+							gi.NextAction = "End Game";
+							gi.GameTurn = 13;
+						}
+						else if (true == GameStateChecker.CheckForRandomMoves(gi))
+						{
+							gi.NextAction = "Display Random Movement";
+							gi.GamePhase = GamePhase.RandomMovement;
+						}
+						else
+						{
+							gi.NextAction = "Alien Performs Movement";
+							gi.GamePhase = GamePhase.AlienMovement;
+						}
 					}
 					break;
 				default:
@@ -982,43 +1031,58 @@ namespace PleasantvilleGame
 				case GameAction.TownspersonPerformsInfluencing:
 					break;
 				case GameAction.TownspersonCompletesInfluencing:
-					if ((true == GameStateChecker.CheckForTownspersonCombats(gi)) || ((true == GameStateChecker.CheckForAlienCombats(gi))))
+               bool isAlienCombat;
+               if (false == GameStateChecker.CheckForAlienCombats(gi, out isAlienCombat))
+               {
+                  returnStatus = "GameStateChecker.CheckForAlienCombats() returned false in AlienAcksTownspersonMovement action";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+               }
+               bool isTownspersonCombat;
+               if (false == GameStateChecker.CheckForTownspersonCombats(gi, out isTownspersonCombat))
+               {
+                  returnStatus = "GameStateChecker.CheckForAlienCombats() returned false in AlienAcksTownspersonMovement action";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+               }
+					if ("OK" == returnStatus)
 					{
-						gi.NextAction = "Decides Where to Perform Combats";
-						gi.GamePhase = GamePhase.Combat;
-					}
-					else if (true == GameStateChecker.CheckForIterogations(gi))
-					{
-						gi.NextAction = "Townsperson chooses Flashing Space for Interrogation";
-						gi.GamePhase = GamePhase.Iterrogations;
-					}
-					else if (true == GameStateChecker.CheckForImplantRemoval(gi))
-					{
-						gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
-						gi.GamePhase = GamePhase.ImplantRemoval;
-					}
-					else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
-					{
-						gi.GamePhase = GamePhase.AlienTakeover;
-						gi.NextAction = "Alien Chooses Flashing Space for Takeover";
-					}
-					else if (true == GameStateChecker.CheckForEndOfGame(gi))
-					{
-						action = GameAction.ShowEndGame;
-						gi.GamePhase = GamePhase.ShowEndGame;
-						gi.NextAction = "End Game";
-						gi.GameTurn = 13;
-					}
-					else if (true == GameStateChecker.CheckForRandomMoves(gi))
-					{
-						gi.NextAction = "Display Random Movement";
-						gi.GamePhase = GamePhase.RandomMovement;
-					}
-					else
-					{
-						gi.NextAction = "Alien Performs Movement";
-						gi.GamePhase = GamePhase.AlienMovement;
-					}
+                  if ((true == isTownspersonCombat) || (true == isAlienCombat) )
+                  {
+                     gi.NextAction = "Decides Where to Perform Combats";
+                     gi.GamePhase = GamePhase.Combat;
+                  }
+                  else if (true == GameStateChecker.CheckForIterogations(gi))
+                  {
+                     gi.NextAction = "Townsperson chooses Flashing Space for Interrogation";
+                     gi.GamePhase = GamePhase.Iterrogations;
+                  }
+                  else if (true == GameStateChecker.CheckForImplantRemoval(gi))
+                  {
+                     gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
+                     gi.GamePhase = GamePhase.ImplantRemoval;
+                  }
+                  else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
+                  {
+                     gi.GamePhase = GamePhase.AlienTakeover;
+                     gi.NextAction = "Alien Chooses Flashing Space for Takeover";
+                  }
+                  else if (true == GameStateChecker.CheckForEndOfGame(gi))
+                  {
+                     action = GameAction.ShowEndGame;
+                     gi.GamePhase = GamePhase.ShowEndGame;
+                     gi.NextAction = "End Game";
+                     gi.GameTurn = 13;
+                  }
+                  else if (true == GameStateChecker.CheckForRandomMoves(gi))
+                  {
+                     gi.NextAction = "Display Random Movement";
+                     gi.GamePhase = GamePhase.RandomMovement;
+                  }
+                  else
+                  {
+                     gi.NextAction = "Alien Performs Movement";
+                     gi.GamePhase = GamePhase.AlienMovement;
+                  }
+               }
 					break;
 				default:
 					returnStatus = "reached default action=" + action.ToString();
@@ -1104,52 +1168,61 @@ namespace PleasantvilleGame
 					}
 					else
 					{
-						if (true == zebulon.IsKilled)
+                  bool isAlienCombat;
+                  if (false == GameStateChecker.CheckForAlienCombats(gi, out isAlienCombat))
+                  {
+                     returnStatus = "GameStateChecker.CheckForAlienCombats() returned false in AlienAcksTownspersonMovement action";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+                  }
+						else
 						{
-							action = GameAction.ShowEndGame;
-							gi.GamePhase = GamePhase.ShowEndGame;
-							gi.NextAction = "End Game";
-							gi.GameTurn = 13;
-						}
-						else if ((true == gi.IsControlledCombatCompleted) && ((false == GameStateChecker.CheckForAlienCombats(gi))))
-						{
-							gi.IsAlienCombatCompleted = false;
-							gi.IsControlledCombatCompleted = false;
-							if (true == GameStateChecker.CheckForIterogations(gi))
-							{
-								gi.NextAction = "Townsperson chooses Black Building Space";
-								gi.GamePhase = GamePhase.Iterrogations;
-							}
-							else if (true == GameStateChecker.CheckForImplantRemoval(gi))
-							{
-								gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
-								gi.GamePhase = GamePhase.ImplantRemoval;
-							}
-							else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
-							{
-								gi.GamePhase = GamePhase.AlienTakeover;
-								gi.NextAction = "Alien Chooses Flashing Space for Takeover";
-							}
-							else if (true == GameStateChecker.CheckForEndOfGame(gi))
-							{
-								action = GameAction.ShowEndGame;
-								gi.GamePhase = GamePhase.ShowEndGame;
-								gi.NextAction = "End Game";
-								gi.GameTurn = 13;
-							}
-							else if (true == GameStateChecker.CheckForRandomMoves(gi))
-							{
-								gi.NextAction = "Display Random Movement";
-								gi.GamePhase = GamePhase.RandomMovement;
-							}
-							else
-							{
-								gi.NextAction = "Alien Performs Movement";
-								gi.GamePhase = GamePhase.AlienMovement;
-							}
-						}
-					}
-					break;
+                     if (true == zebulon.IsKilled)
+                     {
+                        action = GameAction.ShowEndGame;
+                        gi.GamePhase = GamePhase.ShowEndGame;
+                        gi.NextAction = "End Game";
+                        gi.GameTurn = 13;
+                     }
+                     else if ((true == gi.IsControlledCombatCompleted) && (false == isAlienCombat) )
+                     {
+                        gi.IsAlienCombatCompleted = false;
+                        gi.IsControlledCombatCompleted = false;
+                        if (true == GameStateChecker.CheckForIterogations(gi))
+                        {
+                           gi.NextAction = "Townsperson chooses Black Building Space";
+                           gi.GamePhase = GamePhase.Iterrogations;
+                        }
+                        else if (true == GameStateChecker.CheckForImplantRemoval(gi))
+                        {
+                           gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
+                           gi.GamePhase = GamePhase.ImplantRemoval;
+                        }
+                        else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
+                        {
+                           gi.GamePhase = GamePhase.AlienTakeover;
+                           gi.NextAction = "Alien Chooses Flashing Space for Takeover";
+                        }
+                        else if (true == GameStateChecker.CheckForEndOfGame(gi))
+                        {
+                           action = GameAction.ShowEndGame;
+                           gi.GamePhase = GamePhase.ShowEndGame;
+                           gi.NextAction = "End Game";
+                           gi.GameTurn = 13;
+                        }
+                        else if (true == GameStateChecker.CheckForRandomMoves(gi))
+                        {
+                           gi.NextAction = "Display Random Movement";
+                           gi.GamePhase = GamePhase.RandomMovement;
+                        }
+                        else
+                        {
+                           gi.NextAction = "Alien Performs Movement";
+                           gi.GamePhase = GamePhase.AlienMovement;
+                        }
+                     }
+                  }
+               }
+               break;
 				case GameAction.TownspersonPerformCombat:
 					PerformCombat(gi);
 					gi.IsControlledInitiatedCombat = false;
@@ -1161,51 +1234,60 @@ namespace PleasantvilleGame
 					}
 					else
 					{
-						if (true == zebulon1.IsKilled)
+						bool isTownspersonCombat;
+                  if (false == GameStateChecker.CheckForTownspersonCombats(gi, out isTownspersonCombat))
+                  {
+                     returnStatus = "CheckForTownspersonCombats() returned false";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(): " + returnStatus);
+                  }
+						else
 						{
-							action = GameAction.ShowEndGame;
-							gi.GamePhase = GamePhase.ShowEndGame;
-							gi.NextAction = "End Game";
-							gi.GameTurn = 13;
-						}
-						else if ((true == gi.IsAlienCombatCompleted) && ((false == GameStateChecker.CheckForTownspersonCombats(gi))))
-						{
-							gi.IsAlienCombatCompleted = false;
-							gi.IsControlledCombatCompleted = false;
-							if (true == GameStateChecker.CheckForIterogations(gi))
-							{
-								gi.NextAction = "Townsperson chooses Black Building Space";
-								gi.GamePhase = GamePhase.Iterrogations;
-							}
-							else if (true == GameStateChecker.CheckForImplantRemoval(gi))
-							{
-								gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
-								gi.GamePhase = GamePhase.ImplantRemoval;
-							}
-							else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
-							{
-								gi.GamePhase = GamePhase.AlienTakeover;
-								gi.NextAction = "Alien Chooses Flashing Space for Takeover";
-							}
-							else if (true == GameStateChecker.CheckForEndOfGame(gi))
-							{
-								action = GameAction.ShowEndGame;
-								gi.GamePhase = GamePhase.ShowEndGame;
-								gi.NextAction = "End Game";
-								gi.GameTurn = 13;
-							}
-							else if (true == GameStateChecker.CheckForRandomMoves(gi))
-							{
-								gi.NextAction = "Display Random Movement";
-								gi.GamePhase = GamePhase.RandomMovement;
-							}
-							else
-							{
-								gi.NextAction = "Alien Performs Movement";
-								gi.GamePhase = GamePhase.AlienMovement;
-							}
-						}
-					}
+                     if (true == zebulon1.IsKilled)
+                     {
+                        action = GameAction.ShowEndGame;
+                        gi.GamePhase = GamePhase.ShowEndGame;
+                        gi.NextAction = "End Game";
+                        gi.GameTurn = 13;
+                     }
+                     else if ( (true == gi.IsAlienCombatCompleted) && (false == isTownspersonCombat) )
+                     {
+                        gi.IsAlienCombatCompleted = false;
+                        gi.IsControlledCombatCompleted = false;
+                        if (true == GameStateChecker.CheckForIterogations(gi))
+                        {
+                           gi.NextAction = "Townsperson chooses Black Building Space";
+                           gi.GamePhase = GamePhase.Iterrogations;
+                        }
+                        else if (true == GameStateChecker.CheckForImplantRemoval(gi))
+                        {
+                           gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
+                           gi.GamePhase = GamePhase.ImplantRemoval;
+                        }
+                        else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
+                        {
+                           gi.GamePhase = GamePhase.AlienTakeover;
+                           gi.NextAction = "Alien Chooses Flashing Space for Takeover";
+                        }
+                        else if (true == GameStateChecker.CheckForEndOfGame(gi))
+                        {
+                           action = GameAction.ShowEndGame;
+                           gi.GamePhase = GamePhase.ShowEndGame;
+                           gi.NextAction = "End Game";
+                           gi.GameTurn = 13;
+                        }
+                        else if (true == GameStateChecker.CheckForRandomMoves(gi))
+                        {
+                           gi.NextAction = "Display Random Movement";
+                           gi.GamePhase = GamePhase.RandomMovement;
+                        }
+                        else
+                        {
+                           gi.NextAction = "Alien Performs Movement";
+                           gi.GamePhase = GamePhase.AlienMovement;
+                        }
+                     }
+                  }
+               }
 					break;
 				case GameAction.TownspersonCompletesCombat:
 					gi.IsControlledCombatCompleted = true;
@@ -1217,45 +1299,55 @@ namespace PleasantvilleGame
 						foreach (IMapItemMove mim in gi.MapItemMoves)
 						{
 							IMapItem mi = mim.MapItem;
-							mi.TerritoryCurrent = mim.NewTerritory;
-							mi.TerritoryStarting = mim.NewTerritory;
-							mi.IsMoved = false;
-							mi.MovementUsed = 0;
+							if (null == mim.NewTerritory)
+							{
+								returnStatus = "mim.NewTerritory is null in TownpersonCompletesCombat action";
+								Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(): " + returnStatus);
+							}
+							else
+							{
+								mi.TerritoryCurrent = mim.NewTerritory;
+								mi.TerritoryStarting = mim.NewTerritory;
+								mi.IsMoved = false;
+								mi.MovementUsed = 0;
+							}
 						}
 						gi.MapItemMoves.Clear();
-
-						if (true == GameStateChecker.CheckForIterogations(gi))
+						if( "OK" == returnStatus)
 						{
-							gi.NextAction = "Townsperson chooses Black Building Space";
-							gi.GamePhase = GamePhase.Iterrogations;
-						}
-						else if (true == GameStateChecker.CheckForImplantRemoval(gi))
-						{
-							gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
-							gi.GamePhase = GamePhase.ImplantRemoval;
-						}
-						else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
-						{
-							gi.GamePhase = GamePhase.AlienTakeover;
-							gi.NextAction = "Alien Chooses Flashing Space for Takeover";
-						}
-						else if (true == GameStateChecker.CheckForEndOfGame(gi))
-						{
-							action = GameAction.ShowEndGame;
-							gi.GamePhase = GamePhase.ShowEndGame;
-							gi.NextAction = "End Game";
-							gi.GameTurn = 13;
-						}
-						else if (true == GameStateChecker.CheckForRandomMoves(gi))
-						{
-							gi.NextAction = "Display Random Movement";
-							gi.GamePhase = GamePhase.RandomMovement;
-						}
-						else
-						{
-							gi.NextAction = "Alien Performs Movement";
-							gi.GamePhase = GamePhase.AlienMovement;
-						}
+                     if (true == GameStateChecker.CheckForIterogations(gi))
+                     {
+                        gi.NextAction = "Townsperson chooses Black Building Space";
+                        gi.GamePhase = GamePhase.Iterrogations;
+                     }
+                     else if (true == GameStateChecker.CheckForImplantRemoval(gi))
+                     {
+                        gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
+                        gi.GamePhase = GamePhase.ImplantRemoval;
+                     }
+                     else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
+                     {
+                        gi.GamePhase = GamePhase.AlienTakeover;
+                        gi.NextAction = "Alien Chooses Flashing Space for Takeover";
+                     }
+                     else if (true == GameStateChecker.CheckForEndOfGame(gi))
+                     {
+                        action = GameAction.ShowEndGame;
+                        gi.GamePhase = GamePhase.ShowEndGame;
+                        gi.NextAction = "End Game";
+                        gi.GameTurn = 13;
+                     }
+                     else if (true == GameStateChecker.CheckForRandomMoves(gi))
+                     {
+                        gi.NextAction = "Display Random Movement";
+                        gi.GamePhase = GamePhase.RandomMovement;
+                     }
+                     else
+                     {
+                        gi.NextAction = "Alien Performs Movement";
+                        gi.GamePhase = GamePhase.AlienMovement;
+                     }
+                  }
 					}
 					else
 					{
@@ -1270,47 +1362,57 @@ namespace PleasantvilleGame
 						foreach (IMapItemMove mim in gi.MapItemMoves)
 						{
 							IMapItem mi = mim.MapItem;
-							mi.TerritoryCurrent = mim.NewTerritory;
-							mi.TerritoryStarting = mim.NewTerritory;
-							mi.IsMoved = false;
-							mi.MovementUsed = 0;
+							if (null == mim.NewTerritory)
+							{
+								returnStatus = "mim.NewTerritory is null in AlienCompletesCombat action";
+								Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(): " + returnStatus);
+							}
+							else
+							{
+								mi.TerritoryCurrent = mim.NewTerritory;
+								mi.TerritoryStarting = mim.NewTerritory;
+								mi.IsMoved = false;
+								mi.MovementUsed = 0;
+							}
 						}
 						gi.MapItemMoves.Clear();
-
-						gi.IsAlienCombatCompleted = false;
-						gi.IsControlledCombatCompleted = false;
-						if (true == GameStateChecker.CheckForIterogations(gi))
+						if( "OK" == returnStatus)
 						{
-							gi.NextAction = "Townsperson chooses Black Building Space";
-							gi.GamePhase = GamePhase.Iterrogations;
-						}
-						else if (true == GameStateChecker.CheckForImplantRemoval(gi))
-						{
-							gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
-							gi.GamePhase = GamePhase.ImplantRemoval;
-						}
-						else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
-						{
-							gi.GamePhase = GamePhase.AlienTakeover;
-							gi.NextAction = "Alien Chooses Flashing Space for Takeover";
-						}
-						else if (true == GameStateChecker.CheckForEndOfGame(gi))
-						{
-							action = GameAction.ShowEndGame;
-							gi.GamePhase = GamePhase.ShowEndGame;
-							gi.NextAction = "End Game";
-							gi.GameTurn = 13;
-						}
-						else if (true == GameStateChecker.CheckForRandomMoves(gi))
-						{
-							gi.NextAction = "Display Random Movement";
-							gi.GamePhase = GamePhase.RandomMovement;
-						}
-						else
-						{
-							gi.NextAction = "Alien Performs Movement";
-							gi.GamePhase = GamePhase.AlienMovement;
-						}
+                     gi.IsAlienCombatCompleted = false;
+                     gi.IsControlledCombatCompleted = false;
+                     if (true == GameStateChecker.CheckForIterogations(gi))
+                     {
+                        gi.NextAction = "Townsperson chooses Black Building Space";
+                        gi.GamePhase = GamePhase.Iterrogations;
+                     }
+                     else if (true == GameStateChecker.CheckForImplantRemoval(gi))
+                     {
+                        gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
+                        gi.GamePhase = GamePhase.ImplantRemoval;
+                     }
+                     else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
+                     {
+                        gi.GamePhase = GamePhase.AlienTakeover;
+                        gi.NextAction = "Alien Chooses Flashing Space for Takeover";
+                     }
+                     else if (true == GameStateChecker.CheckForEndOfGame(gi))
+                     {
+                        action = GameAction.ShowEndGame;
+                        gi.GamePhase = GamePhase.ShowEndGame;
+                        gi.NextAction = "End Game";
+                        gi.GameTurn = 13;
+                     }
+                     else if (true == GameStateChecker.CheckForRandomMoves(gi))
+                     {
+                        gi.NextAction = "Display Random Movement";
+                        gi.GamePhase = GamePhase.RandomMovement;
+                     }
+                     else
+                     {
+                        gi.NextAction = "Alien Performs Movement";
+                        gi.GamePhase = GamePhase.AlienMovement;
+                     }
+                  }
 					}
 					else
 					{

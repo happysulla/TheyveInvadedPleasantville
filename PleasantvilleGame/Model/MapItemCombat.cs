@@ -23,7 +23,7 @@ namespace PleasantvilleGame
          get { return myDefenders; }
          set { myDefenders = value; }
       }
-      private ITerritory myTerritory = null;
+      private ITerritory myTerritory = new Territory();
       public ITerritory Territory
       {
          get { return myTerritory; }
@@ -87,9 +87,15 @@ namespace PleasantvilleGame
       private ArrayList myList;
       public MapItemCombats() { myList = new ArrayList(); }
       public void Add(IMapItemCombat cr) { myList.Add(cr); }
-      public IMapItemCombat RemoveAt(int index)
+      public IMapItemCombat? RemoveAt(int index)
       {
-         IMapItemCombat cr = (IMapItemCombat)myList[index];
+         Object? o = myList[index];
+         if (null == o)
+         {
+            Logger.Log(LogEnum.LE_ERROR,"MapItemCombats.RemoveAt(): null object at index " + index.ToString());
+            return null;
+         }
+         IMapItemCombat cr = (IMapItemCombat)o;
          myList.RemoveAt(index);
          return cr;
       }
@@ -99,9 +105,19 @@ namespace PleasantvilleGame
       public bool Contains(IMapItemCombat cr) { return myList.Contains(cr); }
       public IEnumerator GetEnumerator() { return myList.GetEnumerator(); }
       public int IndexOf(IMapItemCombat cr) { return myList.IndexOf(cr); }
-      public IMapItemCombat this[int index]
+      public IMapItemCombat? this[int index]
       {
-         get { return (IMapItemCombat)(myList[index]); }
+         get 
+         {
+            Object? o = myList[index];
+            if (null == o)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "MapItemCombats.RemoveAt(): null object at index " + index.ToString());
+               return null;
+            }
+            IMapItemCombat cr = (IMapItemCombat)o;
+            return cr; 
+         }
          set { myList[index] = value; }
       }
    }
