@@ -189,7 +189,12 @@ namespace PleasantvilleGame
       static public bool CheckForIterogations(IGameInstance gi)
       {
          gi.NumIterogationsThisTurn = 0;
-         IMapItem zebulon = gi.Persons.Find("Zebulon");
+         IMapItem? zebulon = gi.Stacks.FindMapItem("Zebulon");
+         if( null == zebulon )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CheckForIterogations(): ERROR: GameState::CheckForIterogations() - unable to find Zebulon");
+            return false;
+         }
          if (true == zebulon.IsAlienKnown)  // If Zebulon is already on the map board, no need to iterogate
             return false;
          IMapItems controlled = new MapItems();

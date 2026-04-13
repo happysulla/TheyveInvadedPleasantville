@@ -838,7 +838,7 @@ namespace PleasantvilleGame
             }
          }
       }
-      private void UpdateViewMovement(IGameInstance gi)
+      private bool UpdateViewMovement(IGameInstance gi)
       {
          try
          {
@@ -870,7 +870,7 @@ namespace PleasantvilleGame
                if( null == mim2.NewTerritory )
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateViewMovement() mim2.NewTerritory is null");
-                  return ;
+                  return false;
                }
                IMapItem mi = mim2.MapItem;
                int counterCount2 = 0;
@@ -879,8 +879,8 @@ namespace PleasantvilleGame
                   if ((mi2.TerritoryCurrent.Name == mim2.NewTerritory.Name) && (mi2.TerritoryCurrent.Sector == mim2.NewTerritory.Sector))
                      ++counterCount2;
                }
-
-               IMapItem alreadyMovedMapItem = myMovingMapItems.Find(mi.Name);
+               //-----------------------------------------------
+               IMapItem? alreadyMovedMapItem = myMovingMapItems.Find(mi.Name);
                if (null == alreadyMovedMapItem)
                {
                   ++myBrushIndex;
@@ -912,9 +912,10 @@ namespace PleasantvilleGame
          }
          catch (Exception e)
          {
-            Console.WriteLine("UpdateViewMovement() - EXCEPTION THROWN e={0}", e.ToString());
-            Logger.Log(LogEnum.LE_ERROR, "UpdateViewMovement:  EXCEPTION THROWN e=\n{0}", e.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "UpdateViewMovement:  EXCEPTION THROWN e=\n{0}" + e.ToString());
+            return false;
          }
+         return true;
       }
       private void UpdateViewState(IGameInstance gi)
       {
@@ -1415,8 +1416,18 @@ namespace PleasantvilleGame
          //   }
          //}
       }
-      private void PerformConversation(IGameInstance gi, bool isIgnoreResults)
+      private bool PerformConversation(IGameInstance gi, bool isIgnoreResults)
       {
+         if( null == gi )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::PerformConversation() gi is null");
+            return false;
+         }
+         if(null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::PerformConversation() myGameEngine is null");
+            return false;
+         }
          // First get the influence factor of the townsperson talking.
          // Create a die roll modifier based-on this value.
          String sbstart = "PerformConversation() -isIgnoreResults=" + isIgnoreResults.ToString();
@@ -1432,10 +1443,39 @@ namespace PleasantvilleGame
             sb.Append(" myRightSelected=");
             sb.Append(myRightMapItemsInActionPanelSelected.Count.ToString());
             Logger.Log(LogEnum.LE_ERROR, sb.ToString());
-            return;
+            return false;
          }
-         IMapItem leftMapItem = gi.Persons.Find(myLeftMapItemsInActionPanelSelected[0].Name);
-         IMapItem rightMapItem = gi.Persons.Find(myRightMapItemsInActionPanelSelected[0].Name);
+         //-------------------------------------------------------------
+         IMapItem? selectedLeft = myLeftMapItemsInActionPanelSelected[0];
+         if ( null == selectedLeft)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "PerformConversation() myLeftMapItemsInActionPanelSelected[0]=null");
+            return false;
+         }
+         IMapItem? leftMapItem = gi.Stacks.FindMapItem(selectedLeft.Name);
+         if( null == leftMapItem )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "PerformConversation() leftMapItem=null");
+            return false;
+         }
+         IMapItem? selectedRight= myRightMapItemsInActionPanelSelected[0];
+         if (null == selectedRight)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "PerformConversation() myLeftMapItemsInActionPanelSelected[0]=null");
+            return false;
+         }
+         if (null == myRightMapItemsInActionPanelSelected[0])
+         {
+            Logger.Log(LogEnum.LE_ERROR, "PerformConversation() myRightMapItemsInActionPanelSelected[0]=null");
+            return false;
+         }
+         IMapItem? rightMapItem = gi.Stacks.FindMapItem(selectedRight.Name);
+         if (null == rightMapItem)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "PerformConversation() rightMapItem=null");
+            return false;
+         }
+         //-------------------------------------------------------------
          leftMapItem.IsConversedThisTurn = true;
          if (false == isIgnoreResults)
          {
@@ -1490,6 +1530,7 @@ namespace PleasantvilleGame
             ClearActionPanel();
          else
             UpdateActionPanelButtons(gi);
+         return true;
       }
       private bool DisplayInfluences(IGameInstance gi)
       {

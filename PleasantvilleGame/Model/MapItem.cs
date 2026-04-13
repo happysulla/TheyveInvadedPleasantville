@@ -536,10 +536,15 @@ namespace PleasantvilleGame
       {
          for (int j = 0; j < numOfRotates; j++)
          {
-            Object temp = myList[0];
+            Object? o = myList[0];
+            if( null == o)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "MapItems.Rotate(): null object at index 0");
+               continue;
+            }
             for (int i = 0; i < myList.Count - 1; i++)
                myList[i] = myList[i + 1];
-            myList[myList.Count - 1] = temp;
+            myList[myList.Count - 1] = o;
          }
       }
       //------------------------------------------------------------
