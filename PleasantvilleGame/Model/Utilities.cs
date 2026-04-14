@@ -139,7 +139,10 @@ namespace PleasantvilleGame
          string[] aStringArray1 = aLine.Split(new char[] { '"' });
          int length = aStringArray1.Length;
          if (0 == length % 2)
-            throw new Exception("Syntax error: Invalid number of quotes");
+         {
+            Logger.Log(LogEnum.LE_ERROR, "RemoveSpaces(): 0 == length % 2 for aLine=" + aLine);
+            return "ERROR";
+         }
          for (int i = 0; i < aStringArray1.Length; i += 2)
          {
             string aSubString = "";

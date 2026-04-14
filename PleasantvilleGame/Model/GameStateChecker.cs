@@ -4,15 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using MessageBox=System.Windows.MessageBox;
+using MessageBox = System.Windows.MessageBox;
 
 namespace PleasantvilleGame
 {
    public class GameStateChecker
    {
       public GameStateChecker() { }
-      static public bool CheckForConversations(IGameInstance gi)
+      static public bool CheckForConversations(IGameInstance gi, out bool isConversation)
       {
+         isConversation = false;
          foreach (Stack stack in gi.Stacks)
          {
             IMapItems townspeopleControlled = new MapItems();
@@ -33,22 +34,24 @@ namespace PleasantvilleGame
                }
             }
             if ((0 != townspeopleControlled.Count) && (0 != townspeopleUncontrolled.Count))
+            {
+               isConversation = true;
                return true;
+            }
          }
-         return false;
+         return true;
       }
-      static public bool CheckForInfluence(IGameInstance gi)
+      static public bool CheckForInfluence(IGameInstance gi, out bool isInfluence)
       {
+         isInfluence = false;
          foreach (Stack stack in gi.Stacks)
          {
             IMapItems townspeopleControlled = new MapItems();
             IMapItems townspeopleUncontrolled = new MapItems();
-
             foreach (MapItem mi in stack.MapItems)
             {
                if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (false == mi.IsConscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
                   continue;
-
                if (true == mi.IsControlled)
                {
                   townspeopleControlled.Add(mi);
@@ -59,18 +62,19 @@ namespace PleasantvilleGame
                      townspeopleUncontrolled.Add(mi);
                }
             }
-
             if ((0 != townspeopleControlled.Count) && (0 != townspeopleUncontrolled.Count))
+            {
+               isInfluence = true;
                return true;
+            }
          }
-
-         return false;
+         return true;
       }
       static public bool CheckForTownspersonCombats(IGameInstance gi, out bool isTownspersonCombat)
       {
          isTownspersonCombat = false;
          IMapItemCombat? previousCombat = gi.MapItemCombat; // If the previous combat had retreats, do not assume combats are completed
-         if( null == previousCombat)
+         if (null == previousCombat)
          {
             Logger.Log(LogEnum.LE_ERROR, "CheckForTownspersonCombats(): previousCombat=null");
             return false;
@@ -79,7 +83,7 @@ namespace PleasantvilleGame
          {
             Logger.Log(LogEnum.LE_GAMESTATE_CHECKER, "CheckForTownspersonCombats(): previousCombat.IsAnyRetreat=true");
             isTownspersonCombat = true;
-            return true; 
+            return true;
          }
          //-----------------------------------------------------------
          // The townspeople can fight aliens or uncontrolled townspeople.
@@ -121,7 +125,7 @@ namespace PleasantvilleGame
       static public bool CheckForAlienCombats(IGameInstance gi, out bool isAlienCombat)
       {
          isAlienCombat = false;
-         if (null == gi.MapItemCombat)        
+         if (null == gi.MapItemCombat)
          {
             Logger.Log(LogEnum.LE_GAMESTATE_CHECKER, "CheckForTownspersonCombats(): gi.MapItemCombat=true");
             return false;                                  // to see the retreats. 
@@ -190,7 +194,7 @@ namespace PleasantvilleGame
       {
          gi.NumIterogationsThisTurn = 0;
          IMapItem? zebulon = gi.Stacks.FindMapItem("Zebulon");
-         if( null == zebulon )
+         if (null == zebulon)
          {
             Logger.Log(LogEnum.LE_ERROR, "CheckForIterogations(): ERROR: GameState::CheckForIterogations() - unable to find Zebulon");
             return false;
@@ -309,51 +313,38 @@ namespace PleasantvilleGame
       }
       static public bool CheckForEndOfGame(IGameInstance gi)
       {
-         StringBuilder sb = null;
-
+         StringBuilder sb;
          gi.NumIterogationsThisTurn = 0;
-
-         // Cleanup the temporary state changes
-
-         foreach (IMapItem mi in gi.Persons)
+         foreach (IStack stack in gi.Stacks)
          {
-            mi.IsMoveStoppedThisTurn = false;
-            mi.IsMoveAllowedToResetThisTurn = true;
-            mi.IsConversedThisTurn = false;
-            mi.IsInfluencedThisTurn = false;
-            mi.IsCombatThisTurn = false;
-            mi.IsInterrogatedThisTurn = false;
-            mi.IsImplantRemovalThisTurn = false;
-            mi.IsTakeoverThisTurn = false;
-            mi.MovementUsed = 0;
-            mi.IsMoved = false;
-            mi.TerritoryStarting = mi.TerritoryCurrent;
+            foreach (IMapItem mi in stack.MapItems)
+            {
+               mi.IsMoveStoppedThisTurn = false;
+               mi.IsMoveAllowedToResetThisTurn = true;
+               mi.IsConversedThisTurn = false;
+               mi.IsInfluencedThisTurn = false;
+               mi.IsCombatThisTurn = false;
+               mi.IsInterrogatedThisTurn = false;
+               mi.IsImplantRemovalThisTurn = false;
+               mi.IsTakeoverThisTurn = false;
+               mi.MovementUsed = 0;
+               mi.IsMoved = false;
+               mi.TerritoryStarting = mi.TerritoryCurrent;
+            }
          }
-
          //--------------------------------------------------------
-         // Tied Up MapItems
-         // Tied up players are freed if a friendly counter is in the same hex at the end of the turn.
-         foreach (Stack stack in gi.Stacks)
+         foreach (Stack stack in gi.Stacks) //  Tied Up MapItems - Tied up players are freed if a friendly counter is in the same hex at the end of the turn.
          {
             IMapItems alienTiedUpPersons = new MapItems();
             IMapItems controlledTiedUpPersons = new MapItems();
-
             bool isFriendlyAlienHelping = false;
             bool isFriendlyControlledHelping = false;
-
+            //-------------------------------------------------------------------------------
             StringBuilder sb1 = new StringBuilder("CheckForEndOfGame(): Tied Up Units in t=\n"); sb1.Append(stack.Territory.ToString());
-            foreach (MapItem person in stack.MapItems)
+            foreach (MapItem mi in stack.MapItems)
             {
-               IMapItem mi = gi.Persons.Find(person.Name);
-               if (null == mi)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "CheckForEndOfGame()1: ERROR: GameState::CheckForEndOfGame() - unalbe to find " + mi.Name);
-                  return true;
-               }
-
                if ((true == mi.IsSurrendered) || (true == mi.IsKilled))
                   continue;
-
                if (true == mi.IsTiedUp) // Cound be stunned or unconscious
                {
                   if (true == mi.IsAlienKnown)
@@ -363,8 +354,6 @@ namespace PleasantvilleGame
                   sb1.Append(" ");
                   sb1.Append(mi.Name);
                }
-
-
                if ((false == mi.IsTiedUp) && (true == mi.IsConscious) && (false == mi.IsStunned))
                {
                   if (true == mi.IsAlienKnown)
@@ -380,18 +369,11 @@ namespace PleasantvilleGame
                   sb1.Append(mi.Name);
                }
             }
-
+            //-------------------------------------------------------------------------------
             if (true == isFriendlyAlienHelping)
             {
-               foreach (IMapItem mi1 in alienTiedUpPersons) // known aliens tied up
+               foreach (IMapItem alien in alienTiedUpPersons) // known aliens tied up
                {
-                  IMapItem alien = gi.Persons.Find(mi1.Name);
-                  if (null == mi1)
-                  {
-                     Logger.Log(LogEnum.LE_ERROR, "CheckForEndOfGame()1: ERROR: GameState::CheckForEndOfGame() - unalbe to find " + mi1.Name);
-                     return true;
-                  }
-
                   alien.IsTiedUp = false;
                   sb1.Append(" untied alien=");
                   sb1.Append(alien.Name);
@@ -415,18 +397,11 @@ namespace PleasantvilleGame
                   }
                }
             }
-
+            //-------------------------------------------------------------------------------
             if (true == isFriendlyControlledHelping)
             {
-               foreach (IMapItem mi2 in controlledTiedUpPersons)
+               foreach (IMapItem controlled in controlledTiedUpPersons)
                {
-                  IMapItem controlled = gi.Persons.Find(mi2.Name);
-                  if (null == mi2)
-                  {
-                     Logger.Log(LogEnum.LE_ERROR, "CheckForEndOfGame()1: ERROR: GameState::CheckForEndOfGame() - unalbe to find " + mi2.Name);
-                     return true;
-                  }
-
                   controlled.IsTiedUp = false;
                   sb1.Append(" untied TP=");
                   sb1.Append(controlled.Name);
@@ -439,7 +414,6 @@ namespace PleasantvilleGame
                      sb.Append(" UnKnown="); sb.Append(gi.InfluenceCountAlienUnknown.ToString());
                      sb.Append(" TP="); sb.Append(gi.InfluenceCountTownspeople.ToString());
                      Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
-
                      gi.InfluenceCountTownspeople += controlled.Influence;
                      sb = new StringBuilder("CheckForEndOfGame(): untie"); sb.Append(controlled.Name); sb.Append(" ++++ to TP "); sb.Append(controlled.Influence.ToString());
                      sb.Append(" T="); sb.Append(gi.InfluenceCountTotal.ToString());
@@ -450,93 +424,75 @@ namespace PleasantvilleGame
                   }
                }
             }
-
             Logger.Log(LogEnum.LE_GAMESTATE_CHECKER_TIED_UP, sb1.ToString());
-
          } // end foreach (Stack stack in stacks)
          //-----------------------------------------------------------
-         // Unstunned 
-         // For each person who was stunned returns to the game
-         foreach (IMapItem mi in gi.PersonsStunned)
+         foreach (IMapItem mi1 in gi.PersonsStunned)          // Unstunned - For each person who was stunned returns to the game
          {
-            IMapItem mi1 = gi.Persons.Find(mi.Name);
-            if (null == mi1)
+            mi1.IsStunned = false;
+            if (false == mi1.IsTiedUp)
             {
-               Logger.Log(LogEnum.LE_ERROR, "CheckForEndOfGame()1: ERROR: GameState::CheckForEndOfGame() - unalbe to find " + mi.Name);
-               return true;
-            }
-            else
-            {
-               mi1.IsStunned = false;
-               if (false == mi1.IsTiedUp)
+               gi.InfluenceCountTotal += mi1.Influence;
+               sb = new StringBuilder("CheckForEndOfGame(): unstunned "); sb.Append(mi1.Name); sb.Append(" ++++ to TOTAL "); sb.Append(mi1.Influence.ToString());
+               sb.Append(" Tot="); sb.Append(gi.InfluenceCountTotal.ToString());
+               sb.Append(" Known="); sb.Append(gi.InfluenceCountAlienKnown.ToString());
+               sb.Append(" UnKnown="); sb.Append(gi.InfluenceCountAlienUnknown.ToString());
+               sb.Append(" TP="); sb.Append(gi.InfluenceCountTownspeople.ToString());
+               Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
+
+               if (true == mi1.IsAlienUnknown)
                {
-                  gi.InfluenceCountTotal += mi1.Influence;
-                  sb = new StringBuilder("CheckForEndOfGame(): unstunned "); sb.Append(mi.Name); sb.Append(" ++++ to TOTAL "); sb.Append(mi.Influence.ToString());
+                  gi.InfluenceCountAlienUnknown += mi1.Influence;
+                  sb = new StringBuilder("CheckForEndOfGame(): unstunned "); sb.Append(mi1.Name); sb.Append(" ++++ to unknown "); sb.Append(mi1.Influence.ToString());
                   sb.Append(" Tot="); sb.Append(gi.InfluenceCountTotal.ToString());
                   sb.Append(" Known="); sb.Append(gi.InfluenceCountAlienKnown.ToString());
                   sb.Append(" UnKnown="); sb.Append(gi.InfluenceCountAlienUnknown.ToString());
                   sb.Append(" TP="); sb.Append(gi.InfluenceCountTownspeople.ToString());
                   Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
-
-                  if (true == mi1.IsAlienUnknown)
-                  {
-                     gi.InfluenceCountAlienUnknown += mi1.Influence;
-                     sb = new StringBuilder("CheckForEndOfGame(): unstunned "); sb.Append(mi.Name); sb.Append(" ++++ to unknown "); sb.Append(mi.Influence.ToString());
-                     sb.Append(" Tot="); sb.Append(gi.InfluenceCountTotal.ToString());
-                     sb.Append(" Known="); sb.Append(gi.InfluenceCountAlienKnown.ToString());
-                     sb.Append(" UnKnown="); sb.Append(gi.InfluenceCountAlienUnknown.ToString());
-                     sb.Append(" TP="); sb.Append(gi.InfluenceCountTownspeople.ToString());
-                     Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
-                  }
-                  else if (true == mi1.IsAlienKnown)
-                  {
-                     gi.InfluenceCountAlienKnown += mi1.Influence;
-                     sb = new StringBuilder("CheckForEndOfGame(): unstunned "); sb.Append(mi.Name); sb.Append(" ++++ to known "); sb.Append(mi.Influence.ToString());
-                     sb.Append(" Tot="); sb.Append(gi.InfluenceCountTotal.ToString());
-                     sb.Append(" Known="); sb.Append(gi.InfluenceCountAlienKnown.ToString());
-                     sb.Append(" UnKnown="); sb.Append(gi.InfluenceCountAlienUnknown.ToString());
-                     sb.Append(" TP="); sb.Append(gi.InfluenceCountTownspeople.ToString());
-                     Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
-                  }
-                  else if (true == mi1.IsControlled)
-                  {
-                     gi.InfluenceCountTownspeople += mi1.Influence;
-                     sb = new StringBuilder("CheckForEndOfGame() : unstunned "); sb.Append(mi.Name); sb.Append(" ++++ to TP "); sb.Append(mi.Influence.ToString());
-                     sb.Append(" Tot="); sb.Append(gi.InfluenceCountTotal.ToString());
-                     sb.Append(" Known="); sb.Append(gi.InfluenceCountAlienKnown.ToString());
-                     sb.Append(" UnKnown="); sb.Append(gi.InfluenceCountAlienUnknown.ToString());
-                     sb.Append(" TP="); sb.Append(gi.InfluenceCountTownspeople.ToString());
-                     Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
-                  }
-
                }
+               else if (true == mi1.IsAlienKnown)
+               {
+                  gi.InfluenceCountAlienKnown += mi1.Influence;
+                  sb = new StringBuilder("CheckForEndOfGame(): unstunned "); sb.Append(mi1.Name); sb.Append(" ++++ to known "); sb.Append(mi1.Influence.ToString());
+                  sb.Append(" Tot="); sb.Append(gi.InfluenceCountTotal.ToString());
+                  sb.Append(" Known="); sb.Append(gi.InfluenceCountAlienKnown.ToString());
+                  sb.Append(" UnKnown="); sb.Append(gi.InfluenceCountAlienUnknown.ToString());
+                  sb.Append(" TP="); sb.Append(gi.InfluenceCountTownspeople.ToString());
+                  Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
+               }
+               else if (true == mi1.IsControlled)
+               {
+                  gi.InfluenceCountTownspeople += mi1.Influence;
+                  sb = new StringBuilder("CheckForEndOfGame() : unstunned "); sb.Append(mi1.Name); sb.Append(" ++++ to TP "); sb.Append(mi1.Influence.ToString());
+                  sb.Append(" Tot="); sb.Append(gi.InfluenceCountTotal.ToString());
+                  sb.Append(" Known="); sb.Append(gi.InfluenceCountAlienKnown.ToString());
+                  sb.Append(" UnKnown="); sb.Append(gi.InfluenceCountAlienUnknown.ToString());
+                  sb.Append(" TP="); sb.Append(gi.InfluenceCountTownspeople.ToString());
+                  Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
+               }
+
             }
          }
          gi.PersonsStunned.Clear();
-         // -------------------------------------------------------
-         // Knocked Out Map Items
-         // For each person who was not recently knocked out, it converts to a stunned counter.
-         foreach (IMapItem mi in gi.PersonsKnockedOut)
+         //-----------------------------------------------------------
+         foreach (IMapItem mi in gi.PersonsKnockedOut) // Knocked Out Map Items - For each person who was not recently knocked out, it converts to a stunned counter.
          {
-            IMapItem mi1 = gi.Persons.Find(mi.Name);
-            if (null != mi1)
-            {
-               mi1.IsConscious = true;
-               mi1.IsStunned = true;
-            }
-            else
-            {
-               Logger.Log(LogEnum.LE_ERROR, "CheckForEndOfGame()2: ERROR: GameState::CheckForEndOfGame() - unalbe to find " + mi.Name);
-               return true;
-            }
+            mi.IsConscious = true;
+            mi.IsStunned = true;
          }
          gi.PersonsKnockedOut.Clear();
+         //-----------------------------------------------------------
          if (false == GameStateChecker.IsInfluenceCheck(gi))
          {
-            MessageBox.Show("CheckForEndOfGame(): ERROR - Influence failure");
             Logger.Log(LogEnum.LE_ERROR, "CheckForEndOfGame(): returned error");
+            return false;
          }
-         IMapItem zebulon = gi.Persons.Find("Zebulon"); // If Zebulon is dead, game is over.
+         IMapItem? zebulon = gi.Stacks.FindMapItem("Zebulon"); // If Zebulon is dead, game is over.
+         if( null == zebulon)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CheckForEndOfGame(): ERROR: GameState::CheckForEndOfGame() - unable to find Zebulon");
+            return false;
+         }
          if (true == zebulon.IsKilled)
             return true;
          if (((gi.InfluenceCountAlienUnknown <= 0) && (gi.InfluenceCountAlienKnown <= 0)) || (gi.InfluenceCountTownspeople <= 0))  // If either the Alien or Townscontrolled influcence reaches zero, game over
@@ -548,8 +504,6 @@ namespace PleasantvilleGame
       }
       static public bool CheckForRandomMoves(IGameInstance gi)
       {
-         // Perform cleanup
-
          gi.IsAlienDisplayedRandomMovement = false;
          gi.IsControlledDisplayedRandomMovement = false;
          gi.IsAlienAckedRandomMovement = false;

@@ -468,6 +468,11 @@ namespace PleasantvilleGame
       //--------------------------------------------------------------------
       void MouseLeftButtonDownDeleteTerritory(object sender, MouseButtonEventArgs e)
       {
+         if( null == myCanvas )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownDeleteTerritory(): myCanvas=null");
+            return;
+         }
          System.Windows.Point p = e.GetPosition(myCanvas);
          //--------------------------------------------
          Ellipse? selectedEllipse = null;

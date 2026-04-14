@@ -226,17 +226,9 @@ namespace PleasantvilleGame
          }
          return true;
       }
-      public bool AddTownperson(IMapItem newPerson)
+      public bool AddTownperson(IMapItem mi)
       {
-         StringBuilder sb = null;
-
-         IMapItem mi = this.Persons.Find(newPerson.Name);
-         if (null == mi)
-         {
-            Console.WriteLine("GameInstance::AddTownperson() - ERROR mi = null ");
-            return false;
-         }
-
+         //-----------------------------------------
          if (false == mi.IsControlled)
          {
             if ((false == mi.IsTiedUp) && (true == mi.IsConscious) && (false == mi.IsStunned) && (false == mi.IsKilled))
@@ -244,43 +236,43 @@ namespace PleasantvilleGame
                if ((true == mi.IsAlienKnown) && (false == mi.IsSurrendered))
                {
                   InfluenceCountAlienKnown -= mi.Influence;
-                  sb = new StringBuilder("AddTownperson():"); sb.Append(mi.Name); sb.Append(" ---- from known "); sb.Append(mi.Influence.ToString());
-                  sb.Append(" T="); sb.Append(this.InfluenceCountTotal.ToString());
-                  sb.Append(" Known="); sb.Append(this.InfluenceCountAlienKnown.ToString());
-                  sb.Append(" UnKnown="); sb.Append(this.InfluenceCountAlienUnknown.ToString());
-                  sb.Append(" TP="); sb.Append(this.InfluenceCountTownspeople.ToString());
-                  Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
+                  StringBuilder sb0 = new StringBuilder("AddTownperson():"); sb0.Append(mi.Name); sb0.Append(" ---- from known "); sb0.Append(mi.Influence.ToString());
+                  sb0.Append(" T="); sb0.Append(this.InfluenceCountTotal.ToString());
+                  sb0.Append(" Known="); sb0.Append(this.InfluenceCountAlienKnown.ToString());
+                  sb0.Append(" UnKnown="); sb0.Append(this.InfluenceCountAlienUnknown.ToString());
+                  sb0.Append(" TP="); sb0.Append(this.InfluenceCountTownspeople.ToString());
+                  Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb0.ToString());
                }
 
                if ((true == mi.IsAlienUnknown) && (false == mi.IsSurrendered))
                {
                   InfluenceCountAlienUnknown -= mi.Influence;
-                  sb = new StringBuilder("AddTownperson():"); sb.Append(mi.Name); sb.Append(" ---- from unknown "); sb.Append(mi.Influence.ToString());
-                  sb.Append(" T="); sb.Append(this.InfluenceCountTotal.ToString());
-                  sb.Append(" Known="); sb.Append(this.InfluenceCountAlienKnown.ToString());
-                  sb.Append(" UnKnown="); sb.Append(this.InfluenceCountAlienUnknown.ToString());
-                  sb.Append(" TP="); sb.Append(this.InfluenceCountTownspeople.ToString());
-                  Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
+                  StringBuilder sb1 = new StringBuilder("AddTownperson():"); sb1.Append(mi.Name); sb1.Append(" ---- from unknown "); sb1.Append(mi.Influence.ToString());
+                  sb1.Append(" T="); sb1.Append(this.InfluenceCountTotal.ToString());
+                  sb1.Append(" Known="); sb1.Append(this.InfluenceCountAlienKnown.ToString());
+                  sb1.Append(" UnKnown="); sb1.Append(this.InfluenceCountAlienUnknown.ToString());
+                  sb1.Append(" TP="); sb1.Append(this.InfluenceCountTownspeople.ToString());
+                  Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb1.ToString());
                }
 
                if (true == mi.IsSurrendered)
                {
                   InfluenceCountTotal += mi.Influence; // A surrendered alien that converts gets added back to total influence
-                  sb = new StringBuilder("AddTownperson():"); sb.Append(mi.Name); sb.Append(" ++++ to total "); sb.Append(mi.Influence.ToString());
-                  sb.Append(" T="); sb.Append(this.InfluenceCountTotal.ToString());
-                  sb.Append(" Known="); sb.Append(this.InfluenceCountAlienKnown.ToString());
-                  sb.Append(" UnKnown="); sb.Append(this.InfluenceCountAlienUnknown.ToString());
-                  sb.Append(" TP="); sb.Append(this.InfluenceCountTownspeople.ToString());
-                  Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
+                  StringBuilder sb2 = new StringBuilder("AddTownperson():"); sb2.Append(mi.Name); sb2.Append(" ++++ to total "); sb2.Append(mi.Influence.ToString());
+                  sb2.Append(" T="); sb2.Append(this.InfluenceCountTotal.ToString());
+                  sb2.Append(" Known="); sb2.Append(this.InfluenceCountAlienKnown.ToString());
+                  sb2.Append(" UnKnown="); sb2.Append(this.InfluenceCountAlienUnknown.ToString());
+                  sb2.Append(" TP="); sb2.Append(this.InfluenceCountTownspeople.ToString());
+                  Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb2.ToString());
                }
 
                InfluenceCountTownspeople += mi.Influence;
-               sb = new StringBuilder("AddTownperson():"); sb.Append(mi.Name); sb.Append(" ++++ to TP "); sb.Append(mi.Influence.ToString());
-               sb.Append(" T="); sb.Append(this.InfluenceCountTotal.ToString());
-               sb.Append(" Known="); sb.Append(this.InfluenceCountAlienKnown.ToString());
-               sb.Append(" UnKnown="); sb.Append(this.InfluenceCountAlienUnknown.ToString());
-               sb.Append(" TP="); sb.Append(this.InfluenceCountTownspeople.ToString());
-               Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
+               StringBuilder sb3 = new StringBuilder("AddTownperson():"); sb3.Append(mi.Name); sb3.Append(" ++++ to TP "); sb3.Append(mi.Influence.ToString());
+               sb3.Append(" T="); sb3.Append(this.InfluenceCountTotal.ToString());
+               sb3.Append(" Known="); sb3.Append(this.InfluenceCountAlienKnown.ToString());
+               sb3.Append(" UnKnown="); sb3.Append(this.InfluenceCountAlienUnknown.ToString());
+               sb3.Append(" TP="); sb3.Append(this.InfluenceCountTownspeople.ToString());
+               Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb3.ToString());
             }
             mi.IsAlienKnown = false;
             mi.IsControlled = true;
@@ -290,7 +282,7 @@ namespace PleasantvilleGame
          }
          if (false == GameStateChecker.IsInfluenceCheck(this))
          {
-            MessageBox.Show("AddTownperson() ERROR - Influence failure for " + mi.Name);
+            Logger.Log(LogEnum.LE_ERROR, "AddTownperson() ERROR - Influence failure for " + mi.Name);
             return false;
          }
          return true;

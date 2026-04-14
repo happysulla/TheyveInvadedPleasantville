@@ -668,8 +668,20 @@ namespace PleasantvilleGame
 						mi.IsMoveStoppedThisTurn = false;
 					}
 					gi.MapItemMoves.Clear();
-					//-----------------------------------------------------
-					bool isAlienCombat;
+               //-----------------------------------------------------
+               bool isConversation;
+               if (false == GameStateChecker.CheckForConversations(gi, out isConversation))
+               {
+                  returnStatus = "GameStateChecker.CheckForConversations() returned false in AlienAcksTownspersonMovement action";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+               }
+               bool isInfluence;
+               if (false == GameStateChecker.CheckForInfluence(gi, out isInfluence))
+               {
+                  returnStatus = "GameStateChecker.CheckForInfluence() returned false in AlienAcksTownspersonMovement action";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+               }
+               bool isAlienCombat;
 					if( false == GameStateChecker.CheckForAlienCombats(gi, out isAlienCombat))
 					{
 						returnStatus = "GameStateChecker.CheckForAlienCombats() returned false in AlienAcksTownspersonMovement action";
@@ -684,12 +696,12 @@ namespace PleasantvilleGame
 					if( "OK" == returnStatus)
 					{
                   //-----------------------------------------------------
-                  if (true == GameStateChecker.CheckForConversations(gi))
+                  if (true == isConversation)
                   {
                      gi.NextAction = "Townsperson Select Flashing Space";
                      gi.GamePhase = GamePhase.Conversations;
                   }
-                  else if (true == GameStateChecker.CheckForInfluence(gi))
+                  else if (true == isInfluence)
                   {
                      gi.NextAction = "Townsperson Select Flashing Space";
                      gi.GamePhase = GamePhase.Influences;
@@ -925,6 +937,12 @@ namespace PleasantvilleGame
 					break;
 				case GameAction.TownspersonCompletesConversations:
                //-----------------------------------------------------
+               bool isInfluence;
+               if (false == GameStateChecker.CheckForInfluence(gi, out isInfluence))
+               {
+                  returnStatus = "GameStateChecker.CheckForInfluence() returned false in AlienAcksTownspersonMovement action";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+               }
                bool isAlienCombat;
                if (false == GameStateChecker.CheckForAlienCombats(gi, out isAlienCombat))
                {
@@ -939,7 +957,7 @@ namespace PleasantvilleGame
                }
 					if ("OK" == returnStatus)
 					{
-						if (true == GameStateChecker.CheckForInfluence(gi))
+						if (true == isInfluence)
 						{
 							gi.NextAction = "Townsperson Select Flashing Space";
 							gi.GamePhase = GamePhase.Influences;

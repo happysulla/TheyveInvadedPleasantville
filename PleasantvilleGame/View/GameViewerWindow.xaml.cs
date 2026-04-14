@@ -23,7 +23,7 @@ namespace PleasantvilleGame
    public partial class GameViewerWindow : Window, IView
    {
       //--------------------------------------------------------------
-      public bool CtorError { get; } = false;
+      public bool CtorError { set;  get; } = false;
       private IGameEngine? myGameEngine = null;
       private IGameInstance? myGameInstance = null;
       private List<Button> myButtons = new List<Button>();
@@ -89,15 +89,14 @@ namespace PleasantvilleGame
             myTextBoxEntry.Foreground = Constants.theAlienControlledBrush;
          else
             myTextBoxEntry.Foreground = Constants.theTownControlledBrush;
-
+         //----------------------------------------------------------
          //myTimer.Interval = ANIMATE_SPEED * 1000 + 1000;
          //myTimer.Tick += new EventHandler(this.TimerElasped);
-
          if (true == isAlien)
             this.BorderBrush = Constants.theAlienControlledBrush;
          else
             this.BorderBrush = Constants.theTownControlledBrush;
-
+         //----------------------------------------------------------
          StringBuilder sb55 = new StringBuilder();
          if (true == isServer)
             sb55.Append("SERVER: ");
@@ -108,30 +107,40 @@ namespace PleasantvilleGame
          else
             sb55.Append("Pleasantville For Humans");
          this.Title = sb55.ToString();
-
-         myCanvas.MouseLeftButtonDown += this.MouseLeftButtonDownCanvas;  // Connect up the Event Handler for mouse down
-         myCanvas.MouseRightButtonDown += this.MouseRightButtonDownCanvas;  // Connect up the Event Handler for mouse down
-
+         myCanvas.MouseLeftButtonDown += this.MouseLeftButtonDownCanvas;    
+         myCanvas.MouseRightButtonDown += this.MouseRightButtonDownCanvas;
+         //----------------------------------------------------------
          // Implement the Model View Controller (MVC) pattern by registering views with
          // the game engine such that when the model data is changed, the views are updated.
-
          ge.RegisterForUpdates(this);
          StatusBarViewer sbv = new StatusBarViewer(myStatusBar, isAlien);
          ge.RegisterForUpdates(sbv);
          MainMenuViewer mmv = new MainMenuViewer(myGameEngine, gi, myCanvas, myMainMenu, isAlien);
          ge.RegisterForUpdates(mmv);
-
          //----------------------------------------------------------
          // Create the territories and the regions marking the territories.
          // Keep a list of Territories used in the game.  All the information 
          // of Territories is static and does not change.
          foreach (ITerritory t in Territories.theTerritories)
          {
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:ctor: null territory in Territories.theTerritories");
+               CtorError = true;
+               return;
+            }
+            string? tagName = t.ToString();
+            if( null == tagName )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:ctor: tagName=null for t=" + t.Name);
+               CtorError = true;
+               return;
+            }
             if (0 < t.Points.Count)
             {
                Polygon aPolygon = new Polygon();
                aPolygon.Fill = mySolidColorBrushClear;
-               aPolygon.Tag = Utilities.RemoveSpaces(t.ToString());
+               aPolygon.Tag = Utilities.RemoveSpaces(tagName);
                aPolygon.Name = t.Name + t.Sector.ToString();
                myCanvas.RegisterName(aPolygon.Name, aPolygon);
                List<Point> points = new List<Point>();

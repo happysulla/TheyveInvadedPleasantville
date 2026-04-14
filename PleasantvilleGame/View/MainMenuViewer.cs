@@ -10,16 +10,16 @@ namespace PleasantvilleGame
 {
    class MainMenuViewer : IView
    {
+      private readonly Menu myMainMenu;                     // Top level menu items: File | View | Options | Help
+      private MenuItem? myMenuItemGamePhase = new MenuItem();
+      private MenuItem myMenuItemNextAction = new MenuItem();
+      private MenuItem myMenuItemDisplay = new MenuItem();
+      private IGameEngine myGameEngine;
+      private IGameInstance myGameInstance;
       private Canvas myCanvas;
-      private Menu myMainMenu;
-      private bool myIsAlien = false;
-      private MenuItem myMenuItemGamePhase = null;
-      private MenuItem myMenuItemNextAction = null;
-      private MenuItem myMenuItemDisplay = null;
-      private IGameEngine myGameEngine = null;
-      private IGameInstance myGameInstance = null;
-      private bool myIsZebulonTerritoriesVisible = false;
+      private bool myIsAlien;
 
+      private bool myIsZebulonTerritoriesVisible = false;
       private bool myIsTownspersonStarted = false;
       private bool myIsAlienStarted = false;
       private bool myIsTownspersonAcked = false;
@@ -29,45 +29,44 @@ namespace PleasantvilleGame
       {
          myGameEngine = ge;
          myGameInstance = gi;
-         myMainMenu = mi;
          myCanvas = c;
+         myMainMenu = mi;
          myIsAlien = isAlien;
-         foreach (Control item in myMainMenu.Items)
-         {
-            if (item is MenuItem)
-            {
-               MenuItem menuItem = (MenuItem)item;
-               if (menuItem.Name == "myMenuItemGamePhase")
-               {
-                  myMenuItemGamePhase = menuItem;
-                  myMenuItemGamePhase.Header = "_Game Actions";
-                  myMenuItemGamePhase.InputGestureText = "Ctrl+G";
+         //foreach (Control item in myMainMenu.Items)
+         //{
+         //   if (item is MenuItem)
+         //   {
+         //      MenuItem menuItem = (MenuItem)item;
+         //      if (menuItem.Name == "myMenuItemGamePhase")
+         //      {
+         //         myMenuItemGamePhase = menuItem;
+         //         myMenuItemGamePhase.Header = "_Game Actions";
+         //         myMenuItemGamePhase.InputGestureText = "Ctrl+G";
 
-                  foreach (Control item1 in menuItem.Items)
-                  {
-                     MenuItem menuItem1 = (MenuItem)item1;
-                     if (menuItem1.Name == "myMenuItemNextAction")
-                     {
-                        myMenuItemNextAction = menuItem1;
-                        myMenuItemNextAction.Click += MenuItemNextAction_Click;
-                        myMenuItemNextAction.Header = "_Start";
-                        myMenuItemNextAction.InputGestureText = "Ctrl+P";
-                     }
-                     else if (menuItem1.Name == "myMenuItemDisplay")
-                     {
-                        myMenuItemDisplay = menuItem1;
-                        myMenuItemDisplay.Click += MenuItemDisplay_Click;
-                        myMenuItemDisplay.Header = "_Display Possible Zebulon Locatons";
-                        myMenuItemDisplay.InputGestureText = "Ctrl+D";
-                     }
-                  } // end if (item is MenuItem)
-               } // end if (item is MenuItem)
-            } // end foreach (Control item in myMainMenu.Items)
-         } // end foreach (Control item in myMainMenu.Items)
+         //         foreach (Control item1 in menuItem.Items)
+         //         {
+         //            MenuItem menuItem1 = (MenuItem)item1;
+         //            if (menuItem1.Name == "myMenuItemNextAction")
+         //            {
+         //               myMenuItemNextAction = menuItem1;
+         //               myMenuItemNextAction.Click += MenuItemNextAction_Click;
+         //               myMenuItemNextAction.Header = "_Start";
+         //               myMenuItemNextAction.InputGestureText = "Ctrl+P";
+         //            }
+         //            else if (menuItem1.Name == "myMenuItemDisplay")
+         //            {
+         //               myMenuItemDisplay = menuItem1;
+         //               myMenuItemDisplay.Click += MenuItemDisplay_Click;
+         //               myMenuItemDisplay.Header = "_Display Possible Zebulon Locatons";
+         //               myMenuItemDisplay.InputGestureText = "Ctrl+D";
+         //            }
+         //         } // end if (item is MenuItem)
+         //      } // end if (item is MenuItem)
+         //   } // end foreach (Control item in myMainMenu.Items)
+         //} // end foreach (Control item in myMainMenu.Items)
       } // end MainMenuViewer()
-      public void UpdateCanvasShowZebulonLocations()
+      public bool UpdateCanvasShowZebulonLocations()
       {
-         IGameInstance gi = myGameInstance;
          SolidColorBrush aSolidColorBrush1 = new SolidColorBrush();
          aSolidColorBrush1.Color = Color.FromArgb(0, 0, 1, 0);
          if (false == myIsZebulonTerritoriesVisible)
@@ -81,8 +80,13 @@ namespace PleasantvilleGame
             {
                if (ui is Polygon)
                {
-                  Polygon p = (Polygon)ui;
-                  ITerritory t = gi.ZebulonTerritories.Find(p.Tag.ToString());
+                  Polygon? p = (Polygon)ui;
+                  if( null == p )
+                  {
+                     Logger.Log(LogEnum.LE_VIEW_UPDATE_MENU, "MainMenuViewer::UpdateCanvas_ShowZebulonLocations() => polygon is null");
+                     continue;
+                  }
+                  ITerritory? t = myGameInstance.ZebulonTerritories.Find(p.Name);
                   if (null == t)
                      p.Fill = aSolidColorBrush1;
                   else
@@ -102,6 +106,7 @@ namespace PleasantvilleGame
                }
             }
          }
+         return true;
       }
       public void UpdateView(ref IGameInstance gi, GameAction action)
       {
@@ -756,7 +761,16 @@ namespace PleasantvilleGame
       }
       private void MenuItemNextAction_Click(object sender, RoutedEventArgs e)
       {
-         IGameInstance gi = myGameInstance;
+         if( null == myGameInstance )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MainMenuViewer::MenuItemNextAction_Click(): myGameInstance is null");
+            return;
+         }
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MainMenuViewer::MenuItemNextAction_Click(): myGameEngine is null");
+            return;
+         }
          GameAction action = GameAction.TownspersonDisplaysRandomMovement; // Game State follows the state pattern.  Each game state represents a different object.  The initial game state is Setup.
          switch (myMenuItemNextAction.Header.ToString())
          {
@@ -819,11 +833,12 @@ namespace PleasantvilleGame
                break;
          }
          GameAction outAction = action;
-         myGameEngine.PerformAction(ref gi, ref outAction);
+         myGameEngine.PerformAction(ref myGameInstance, ref outAction);
       }
       public void MenuItemDisplay_Click(object sender, RoutedEventArgs e)
       {
-         UpdateCanvasShowZebulonLocations();
+         if( false == UpdateCanvasShowZebulonLocations() )
+            Logger.Log(LogEnum.LE_ERROR, "MainMenuViewer::MenuItemDisplay_Click(): UpdateCanvas_ShowZebulonLocations() returned false");
       }
    }
 }
