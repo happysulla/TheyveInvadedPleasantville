@@ -2957,9 +2957,14 @@ namespace PleasantvilleGame
          myGameEngine.PerformAction(ref gi, ref outAction);
          return true;
       }
-      private void PerformTakeoverObserved(IGameInstance gi)
+      private bool PerformTakeoverObserved(IGameInstance gi)
       {
          ClearActionPanel();
+         if( null == gi.Takeover)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "PerformTakeoverObserved() gi.Takeover=null");
+            return false;
+         }
          myLeftMapItemsInActionPanel.Add(gi.Takeover.Alien);
          myRightMapItemsInActionPanel.Add(gi.Takeover.Uncontrolled);
          UpdateActionPanel(gi, !IsAlien);
@@ -2974,6 +2979,7 @@ namespace PleasantvilleGame
 
          myTextBoxResults.Text = gi.Takeover.Observations;
          UpdateActionPanelButtons(gi);
+         return true;
       }
       //-------------CONTROLLER FUNCTIONS---------------------------------
       private void myTextBoxEntryTextChanged(object sender, TextChangedEventArgs e)
@@ -3138,7 +3144,7 @@ namespace PleasantvilleGame
             return;
          //--------------------------------------------------
          // Get the selected territory
-         ITerritory selectedTerritory = null;
+         ITerritory? selectedTerritory = null;
          foreach (UIElement ui in myCanvas.Children)
          {
             if (ui is Polygon)
@@ -3148,14 +3154,24 @@ namespace PleasantvilleGame
                {
                   foreach (ITerritory t in Territories.theTerritories)
                   {
-                     if (aPolygon.Tag.ToString() == Utilities.RemoveSpaces(t.ToString()))
+                     if( null == t )
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownCanvas() t=null in Territories.theTerritories");
+                        continue;
+                     }
+                     string? tName  = t.ToString();
+                     if( true == string.IsNullOrEmpty(tName))
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownCanvas() t.ToString() is null or empty for territory in Territories.theTerritories");
+                        continue;
+                     }
+                     if (aPolygon.Tag.ToString() == Utilities.RemoveSpaces(tName))
                      {
                         selectedTerritory = t;
                         break;
                      }
                   }
                }
-
             } 
             if (null != selectedTerritory)
                break;
@@ -3197,7 +3213,18 @@ namespace PleasantvilleGame
                {
                   foreach (ITerritory t in Territories.theTerritories)
                   {
-                     if (aPolygon.Tag.ToString() == Utilities.RemoveSpaces(t.ToString()))
+                     if (null == t)
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownCanvas() t=null in Territories.theTerritories");
+                        continue;
+                     }
+                     string? tName = t.ToString();
+                     if (true == string.IsNullOrEmpty(tName))
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownCanvas() t.ToString() is null or empty for territory in Territories.theTerritories");
+                        continue;
+                     }
+                     if (aPolygon.Tag.ToString() == Utilities.RemoveSpaces(tName))
                      {
                         selectedTerritory = t;
                         break;
@@ -3222,7 +3249,8 @@ namespace PleasantvilleGame
          if (sender is Button)
          {
             Button selectedButton = (Button)sender;
-            MapItemReturnToStart(selectedButton);
+            if( false == MapItemReturnToStart(selectedButton))
+               Logger.Log(LogEnum.LE_ERROR, "ContextMenuLoaded() MapItemReturnToStart() returned error");
          }
       }
       private void ContextMenuLoaded(object sender, RoutedEventArgs e)
@@ -3298,7 +3326,13 @@ namespace PleasantvilleGame
                   if (cm.Items[3] is MenuItem)
                   {
                      MenuItem menuItem = (MenuItem)cm.Items[3];
-                     menuItem.IsEnabled = IsAlienAbleToStopMove(myGameInstance, mi);
+                     bool isMenuEnabled;
+                     if( false == IsAlienAbleToStopMove(myGameInstance, mi, out isMenuEnabled))
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "ContextMenuLoaded(): IsAlienAbleToStopMove() returned false");
+                        return;
+                     }
+                     menuItem.IsEnabled = isMenuEnabled;
                   }
                }
             }
@@ -3315,14 +3349,20 @@ namespace PleasantvilleGame
                if (cm.PlacementTarget is Button)
                {
                   Button b = (Button)cm.PlacementTarget;
-                  MapItemReturnToStart(b);
+                  if (false == MapItemReturnToStart(b))
+                     Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickReturnToStart(): MapItemReturnToStart() returned error");
                }
             }
          }
       }
       private void ContextMenuClickRotate(object sender, RoutedEventArgs e)
       {
-         IGameInstance gi = myGameInstance;
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ContextMenuLoaded(): myGameInstance=null");
+            return;
+         }
+         //--------------------------------------------------
          if (sender is MenuItem)
          {
             MenuItem mi = (MenuItem)sender;
@@ -3332,7 +3372,7 @@ namespace PleasantvilleGame
                if (cm.PlacementTarget is Button)
                {
                   Button b = (Button)cm.PlacementTarget;
-                  IMapItem? selectedMapItem = gi.Stacks.FindMapItem(b.Name);
+                  IMapItem? selectedMapItem = myGameInstance.Stacks.FindMapItem(b.Name);
                   if (null == selectedMapItem)
                   {
                      Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickRotate() selectedMapItem=null for name=" + b.Name);
@@ -3856,11 +3896,16 @@ namespace PleasantvilleGame
             case GamePhase.Iterrogations:
                if (false == IsAlien)
                {
-                  if ((true == selectedTerritory.IsBuilding()) && (null != myGameInstance.ZebulonTerritories.Find(selectedTerritory.ToString())) && (0 < myGameInstance.NumIterogationsThisTurn))
+                  if ((true == selectedTerritory.IsBuilding()) && (null != myGameInstance.ZebulonTerritories.Find(selectedTerritory.Name)) && (0 < myGameInstance.NumIterogationsThisTurn))
                   {
                      --myGameInstance.NumIterogationsThisTurn;
                      myGameInstance.ZebulonTerritories.Remove(selectedTerritory);
-                     IMapItem zebulon = myGameInstance.Persons.Find("Zebulon");
+                     IMapItem? zebulon = myGameInstance.Stacks.FindMapItem("Zebulon");
+                     if( null == zebulon)
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "MapItemCommonAction() myGameInstance.Stacks.FindMapItem(\"Zebulon\") returned null");
+                        return;
+                     }
                      if ((zebulon.TerritoryCurrent.Name == selectedTerritory.Name) && (zebulon.TerritoryCurrent.Sector == selectedTerritory.Sector))
                      {
                         zebulon.IsAlienKnown = true;
@@ -3871,6 +3916,7 @@ namespace PleasantvilleGame
                      sb.Append("). picked "); 
                      sb.Append(selectedTerritory.ToString());
                      Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, sb.ToString());
+                     //------------------------------------------------------
                      GameAction outAction = GameAction.TownspersonIterrogates;
                      myGameEngine.PerformAction(ref myGameInstance, ref outAction);
                   }
@@ -3908,7 +3954,12 @@ namespace PleasantvilleGame
          //----------------------------------------
          if ((null != selectedTerritory) && (null != selectedButton))  // MapItem already selected to move.  Moving it to a known space
          {
-            IMapItem movingMapItem = myGameInstance.Persons.Find(selectedButton.Name);
+            IMapItem? movingMapItem = myGameInstance.Stacks.FindMapItem(selectedButton.Name);
+            if (null == movingMapItem)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "MapItemMoveManually() myGameInstance.Stacks.FindMapItem() returned null for name=" + selectedButton.Name);
+               return;
+            }
             if ((selectedTerritory.Name == movingMapItem.TerritoryCurrent.Name) && (selectedTerritory.Sector == movingMapItem.TerritoryCurrent.Sector))
             {
                this.RotateStack(selectedTerritory); // rotate the stack
@@ -3927,7 +3978,17 @@ namespace PleasantvilleGame
                }
 
                movingMapItem.TerritoryStarting = movingMapItem.TerritoryCurrent;
-               MapItemMove mim = new MapItemMove(Territories.theTerritories, movingMapItem, selectedTerritory);
+               MapItemMove? mim = new MapItemMove(Territories.theTerritories, movingMapItem, selectedTerritory);
+               if(null == mim)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "MapItemMoveManually() new MapItemMove() returned null");
+                  return;
+               }
+               if (null == mim.BestPath)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "MapItemMoveManually() new MapItemMove() mim.BestPath=null");
+                  return;
+               }
                if ((0 == mim.BestPath.Territories.Count) || (null == mim.NewTerritory))
                {
                   if (true == myIsFlagSetForOverstack)
@@ -3951,22 +4012,43 @@ namespace PleasantvilleGame
             }
          }
       }
-      private bool IsAlienAbleToStopMove(IGameInstance gi, IMapItem mi)
+      private bool IsAlienAbleToStopMove(IGameInstance gi, IMapItem mi, out bool isAlienAbleToStopMove)
       {
+         isAlienAbleToStopMove=false;
          if (("Zebulon" != mi.Name) && (true != mi.IsStunned) && (true != mi.IsTiedUp) && (true != mi.IsSurrendered)
           && (true != mi.IsStunned) && (true != mi.IsKilled) && ((true == mi.IsAlienUnknown) || (true == mi.IsAlienKnown))
           && (false == mi.IsMoveStoppedThisTurn) && (GamePhase.TownspersonMovement == gi.GamePhase))
          {
             if (0 < gi.MapItemMoves.Count)
             {
-               IMapItemMove mim = gi.MapItemMoves[0];
-
-               IMapItem movingMI = gi.Persons.Find(mim.MapItem.Name);
+               IMapItemMove? mim = gi.MapItemMoves[0];
+               if( null == mim)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "IsAlienAbleToStopMove() gi.MapItemMoves[0]=null");
+                  return false;
+               }
+               if (null == mim.OldTerritory)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "IsAlienAbleToStopMove() mim.OldTerritory=null");
+                  return false;
+               }
+               if (null == mim.BestPath)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "IsAlienAbleToStopMove() mim.BestPath=null");
+                  return false;
+               }
+               IMapItem? movingMI = gi.Stacks.FindMapItem(mim.MapItem.Name);
+               if( null == movingMI)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "IsAlienAbleToStopMove() gi.Stacks.FindMapItem() returned null for name=" + mim.MapItem.Name);
+                  return false;
+               }  
                if ((mi.TerritoryCurrent.Name == mim.OldTerritory.Name) && (mi.TerritoryCurrent.Sector == mim.OldTerritory.Sector))
                {
                   if ((true == movingMI.IsControlled) && (false == movingMI.IsStunned) && (false == movingMI.IsTiedUp)
                      && (false == movingMI.IsSurrendered) && (false == movingMI.IsStunned) && (false == movingMI.IsKilled))
                   {
+                     isAlienAbleToStopMove = true;
                      return true;
                   }
                }
@@ -3980,75 +4062,78 @@ namespace PleasantvilleGame
                              && (false == movingMI.IsSurrendered) && (false == movingMI.IsStunned) && (false == movingMI.IsKilled)
                              && (false == movingMI.IsMoveStoppedThisTurn))
                         {
+                           isAlienAbleToStopMove = true;
                            return true;
                         }
                      }
-                  } // end foreach
+                  } 
                }
-
-            } // end if (0 < gi.MapItemMoves.Count)
-
-         } // end if (("Zebulon" != mi.Name) ...
-
-         return false;
+            } 
+         } 
+         return true;
       }
-      private void MapItemReturnToStart(Button selectedButton)
+      private bool MapItemReturnToStart(Button selectedButton)
       {
          if (null == myGameInstance)
          {
-            Logger.Log(LogEnum.LE_ERROR, "MapItemReturnToStart(): myGameInstance=null");
-            return;
+            Logger.Log(LogEnum.LE_ERROR, "MapItem_ReturnToStart(): myGameInstance=null");
+            return false;
          }
          if (null == myGameEngine)
          {
-            Logger.Log(LogEnum.LE_ERROR, "MapItemReturnToStart(): myGameEngine=null");
-            return;
+            Logger.Log(LogEnum.LE_ERROR, "MapItem_ReturnToStart(): myGameEngine=null");
+            return false;
          }
-         IGameInstance gi = myGameInstance;
-         IMapItem selectedMapItem = gi.Persons.Find(selectedButton.Name);
+         IMapItem? selectedMapItem = myGameInstance.Stacks.FindMapItem(selectedButton.Name);
          if (null == selectedMapItem)
          {
-            Console.WriteLine("GameViewerWindow::MapItemReturnToStart(): selectedMapItem=null for {0}", selectedButton.Name);
-            return;
+            Logger.Log(LogEnum.LE_ERROR, "MapItem_ReturnToStart(): myGameInstance.Stacks.FindMapItem() returned null for name=" + selectedButton.Name);
+            return false;
          }
          if (false == selectedMapItem.IsMoveAllowedToResetThisTurn) // if not allowed to reset, do nothing
          {
-            if ((true == myIsFlagSetForMoveReset) && (true == IsAlien) && (GamePhase.AlienMovement == gi.GamePhase))
+            if ((true == myIsFlagSetForMoveReset) && (true == IsAlien) && (GamePhase.AlienMovement == myGameInstance.GamePhase))
                MessageBox.Show("Reset Not Allowed");
-            if ((true == myIsFlagSetForMoveReset) && (false == IsAlien) && (GamePhase.TownspersonMovement == gi.GamePhase))
+            if ((true == myIsFlagSetForMoveReset) && (false == IsAlien) && (GamePhase.TownspersonMovement == myGameInstance.GamePhase))
                MessageBox.Show("Reset Not Allowed");
             myIsFlagSetForMoveReset = true;
             this.RotateStack(selectedMapItem.TerritoryCurrent); // rotate the stack
-            return;  // do nothing
+            return true;  // do nothing
          }
-         switch (gi.GamePhase)
+         switch (myGameInstance.GamePhase)
          {
             case GamePhase.AlienMovement:
                if ((true == selectedMapItem.IsControlled) || (false == IsAlien))
                {
                   if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
-                     Logger.Log(LogEnum.LE_ERROR, "MapItemReturnToStart(): RotateStack() returned error");
-                  return;  // do nothing
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "MapItem_ReturnToStart(): RotateStack() returned error");
+                     return false;
+                  }
+                  return true;  // do nothing
                }
                break;
-
             case GamePhase.TownspersonMovement:
                if ((false == selectedMapItem.IsControlled) || (true == IsAlien))
                {
                   if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
-                     Logger.Log(LogEnum.LE_ERROR, "MapItemReturnToStart(): RotateStack() returned error");
-                  return;  // do nothing
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "MapItem_ReturnToStart(): RotateStack() returned error");
+                     return false;
+                  }
+                  return true;  // do nothing
                }
                break;
-
             default:
                if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
-                  Logger.Log(LogEnum.LE_ERROR, "MapItemReturnToStart(): RotateStack() returned error");
-               return;
-
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "MapItem_ReturnToStart(): RotateStack() returned error");
+                  return false;
+               }
+               return true;  // do nothing
          } // end switch
          //--------------------------------------------------
-         StringBuilder sb = new StringBuilder("MapItemReturnToStart(): t="); sb.Append(selectedMapItem.TerritoryCurrent.ToString()); sb.Append(" st="); sb.Append(selectedMapItem.TerritoryStarting.ToString());
+         StringBuilder sb = new StringBuilder("MapItem_ReturnToStart(): t="); sb.Append(selectedMapItem.TerritoryCurrent.ToString()); sb.Append(" st="); sb.Append(selectedMapItem.TerritoryStarting.ToString());
          Logger.Log(LogEnum.LE_MIM_RETURN_TO_START, sb.ToString());
          if (selectedMapItem.TerritoryCurrent != selectedMapItem.TerritoryStarting)
          {
@@ -4063,20 +4148,20 @@ namespace PleasantvilleGame
             selectedButton.BeginAnimation(Canvas.TopProperty, null);
             myRectangleSelection.Visibility = Visibility.Hidden;
             myMovingButton = null;
-            if (0 < gi.MapItemMoves.Count)
+            if (0 < myGameInstance.MapItemMoves.Count)
             {
-               IMapItemMove? mim = gi.MapItemMoves[0];
+               IMapItemMove? mim = myGameInstance.MapItemMoves[0];
                if (null == mim)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "MapItemReturnToStart(): gi.MapItemMoves[0] = null");
-                  return;
+                  Logger.Log(LogEnum.LE_ERROR, "MapItem_ReturnToStart(): gi.MapItemMoves[0] = null");
+                  return false;
                }
                if (null == mim.BestPath)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "MapItemReturnToStart():  mim.BestPath = null");
-                  return;
+                  Logger.Log(LogEnum.LE_ERROR, "MapItem_ReturnToStart():  mim.BestPath = null");
+                  return false;
                }
-               IMapItem? previousMovingMi1 = gi.Stacks.FindMapItem(mim.MapItem.Name);
+               IMapItem? previousMovingMi1 = myGameInstance.Stacks.FindMapItem(mim.MapItem.Name);
                if (null != previousMovingMi1)
                {
                   previousMovingMi1.TerritoryCurrent = previousMovingMi1.TerritoryStarting;
@@ -4089,17 +4174,18 @@ namespace PleasantvilleGame
                      IMapItem? alreadyMovedMapItem = myMovingMapItems.Find(previousMovingMi1.Name);
                      if (null != alreadyMovedMapItem)
                      {
-                        StringBuilder sb1 = new StringBuilder("MapItemReturnToStart(): n="); sb1.Append(previousMovingMi1.Name); sb1.Append(" st="); sb1.Append(previousMovingMi1.TerritoryStarting.ToString());
+                        StringBuilder sb1 = new StringBuilder("MapItem_ReturnToStart(): n="); sb1.Append(previousMovingMi1.Name); sb1.Append(" st="); sb1.Append(previousMovingMi1.TerritoryStarting.ToString());
                         Logger.Log(LogEnum.LE_SHOW_MIM_MOVING_COUNT, sb1.ToString());
                         myMovingMapItems.Remove(previousMovingMi1.Name);
                      }
                   }
                }
-               gi.MapItemMoves.Clear();
+               myGameInstance.MapItemMoves.Clear();
                GameAction outAction = GameAction.ResetMovement;
-               myGameEngine.PerformAction(ref gi, ref outAction); // Inform the user to return back
+               myGameEngine.PerformAction(ref myGameInstance, ref outAction); // Inform the user to return back
             }
          }
+         return true;
       }
       private bool RotateStack(ITerritory selectedTerritory)
       {
@@ -4130,14 +4216,17 @@ namespace PleasantvilleGame
          {
             return true;
          }
+         IMapItem? bottomAlivePerson = alivePeopleInStack[0];
+         if ( null == bottomAlivePerson)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "RotateStack(): alivePeopleInStack[0]=null");
+            return false;
+         }
          //--------------------------------------------------I 
          foreach (IMapItem deadPerson in deadPeopleInStack)   // Remove all dead people
-         {
-            IMapItem person = gi.Persons.Find(deadPerson.Name);
-            gi.Persons.Remove(person);
-         }
+            stack.MapItems.Remove(deadPerson);
          Rectangle? bottomRect = null;
-         IMapItem? bottomMi = gi.Persons.Find(alivePeopleInStack[0].Name); // Remove the bottom MapItem, Bounding Rectable, and button.
+         IMapItem? bottomMi = gi.Stacks.FindMapItem(bottomAlivePerson.Name); // Remove the bottom MapItem, Bounding Rectable, and button.
          if (null == bottomMi)
             return true;
          Button? bottomButton = myButtons.Find(bottomMi.Name);
@@ -4201,10 +4290,7 @@ namespace PleasantvilleGame
             bottomRect.BeginAnimation(Canvas.TopProperty, null);  // end animation offset
          }
          foreach (IMapItem deadPerson in deadPeopleInStack) // Add dead people back into the stack
-         {
-            IMapItem person = gi.Persons.Find(deadPerson.Name);
-            gi.Persons.Add(person);
-         }
+            stack.MapItems.Add(deadPerson);
          return true;
       }
    }

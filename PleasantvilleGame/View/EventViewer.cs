@@ -39,7 +39,6 @@ namespace PleasantvilleGame
       private ScrollViewer? myScrollViewerTextBlock;
       private Canvas? myCanvasMain = null;
       private TextBlock? myTextBlock = null;
-      private int myNumSmokeAttacksThisRound = 0;
       //--------------------------------------------------------------------
       private readonly FontFamily myFontFam1 = new FontFamily("Courier New");
       //--------------------------------------------------------------------
