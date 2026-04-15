@@ -111,8 +111,13 @@ namespace PleasantvilleGame
       public void UpdateView(ref IGameInstance gi, GameAction action)
       {
          myGameInstance = gi;
+         if( null == myMenuItemGamePhase )
+         {
+            Logger.Log(LogEnum.LE_VIEW_UPDATE_MENU, "MainMenuViewer::Update_View() => myMenuItemGamePhase is null");
+            return;
+         }
          myMenuItemGamePhase.Header = gi.GameTurn;
-         StringBuilder sb = new StringBuilder("-----------------MainMenuViewer::UpdateView() => action="); sb.Append(action.ToString()); sb.Append("  ==> NextAction="); sb.Append(gi.NextAction);
+         StringBuilder sb = new StringBuilder("-----------------MainMenuViewer::Update_View() => action="); sb.Append(action.ToString()); sb.Append("  ==> NextAction="); sb.Append(gi.NextAction);
          Logger.Log(LogEnum.LE_VIEW_UPDATE_MENU, sb.ToString());
          switch (action)
          {
@@ -755,8 +760,8 @@ namespace PleasantvilleGame
                myMenuItemNextAction.IsEnabled = true;
                break;
             default:
-               Console.WriteLine("ERROR<<<<<MainMenuViewer::UpdateView() reached default with action={0} NextAction={1}", action.ToString(), gi.NextAction);
-               break;
+               Logger.Log(LogEnum.LE_ERROR, "MainMenuViewer::Update_View() reached default with action=" + action.ToString() + " NextAction=" + gi.NextAction);
+               return;
          }
       }
       private void MenuItemNextAction_Click(object sender, RoutedEventArgs e)

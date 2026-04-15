@@ -952,10 +952,17 @@ namespace PleasantvilleGame
                bool isTownspersonCombat;
                if (false == GameStateChecker.CheckForTownspersonCombats(gi, out isTownspersonCombat))
                {
-                  returnStatus = "GameStateChecker.CheckForAlienCombats() returned false in AlienAcksTownspersonMovement action";
+                  returnStatus = "GameStateChecker.CheckForTownspersonCombats() returned false in AlienAcksTownspersonMovement action";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
                }
-					if ("OK" == returnStatus)
+               bool isAnyMovement;
+               if (false == GameStateChecker.CheckForRandomMoves(gi, out isAnyMovement))
+               {
+                  returnStatus = "GameStateChecker.CheckForTownspersonCombats() returned false in AlienAcksTownspersonMovement action";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+               }
+               //-----------------------------------------------------
+               if ("OK" == returnStatus)
 					{
 						if (true == isInfluence)
 						{
@@ -989,7 +996,7 @@ namespace PleasantvilleGame
 							gi.NextAction = "End Game";
 							gi.GameTurn = 13;
 						}
-						else if (true == GameStateChecker.CheckForRandomMoves(gi))
+						else if (true == isAnyMovement)
 						{
 							gi.NextAction = "Display Random Movement";
 							gi.GamePhase = GamePhase.RandomMovement;
@@ -1061,7 +1068,14 @@ namespace PleasantvilleGame
                   returnStatus = "GameStateChecker.CheckForAlienCombats() returned false in AlienAcksTownspersonMovement action";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
                }
-					if ("OK" == returnStatus)
+               bool isAnyMovement;
+               if (false == GameStateChecker.CheckForRandomMoves(gi, out isAnyMovement))
+               {
+                  returnStatus = "GameStateChecker.CheckForTownspersonCombats() returned false in AlienAcksTownspersonMovement action";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+               }
+               //-----------------------------------------------------
+               if ("OK" == returnStatus)
 					{
                   if ((true == isTownspersonCombat) || (true == isAlienCombat) )
                   {
@@ -1090,7 +1104,7 @@ namespace PleasantvilleGame
                      gi.NextAction = "End Game";
                      gi.GameTurn = 13;
                   }
-                  else if (true == GameStateChecker.CheckForRandomMoves(gi))
+                  else if (true == isAnyMovement)
                   {
                      gi.NextAction = "Display Random Movement";
                      gi.GamePhase = GamePhase.RandomMovement;
@@ -1192,8 +1206,15 @@ namespace PleasantvilleGame
                      returnStatus = "GameStateChecker.CheckForAlienCombats() returned false in AlienAcksTownspersonMovement action";
                      Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
                   }
-						else
-						{
+                  bool isAnyMovement;
+                  if (false == GameStateChecker.CheckForRandomMoves(gi, out isAnyMovement))
+                  {
+                     returnStatus = "GameStateChecker.CheckForTownspersonCombats() returned false in AlienAcksTownspersonMovement action";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+                  }
+                  //-----------------------------------------------------
+                  if("OK" == returnStatus)
+                  {
                      if (true == zebulon.IsKilled)
                      {
                         action = GameAction.ShowEndGame;
@@ -1227,7 +1248,7 @@ namespace PleasantvilleGame
                            gi.NextAction = "End Game";
                            gi.GameTurn = 13;
                         }
-                        else if (true == GameStateChecker.CheckForRandomMoves(gi))
+                        else if (true == isAnyMovement)
                         {
                            gi.NextAction = "Display Random Movement";
                            gi.GamePhase = GamePhase.RandomMovement;
@@ -1258,8 +1279,15 @@ namespace PleasantvilleGame
                      returnStatus = "CheckForTownspersonCombats() returned false";
                      Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(): " + returnStatus);
                   }
-						else
-						{
+                  bool isAnyMovement;
+                  if (false == GameStateChecker.CheckForRandomMoves(gi, out isAnyMovement))
+                  {
+                     returnStatus = "GameStateChecker.CheckForTownspersonCombats() returned false in AlienAcksTownspersonMovement action";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+                  }
+                  //-----------------------------------------------------
+                  if ( "OK" == returnStatus)
+                  {
                      if (true == zebulon1.IsKilled)
                      {
                         action = GameAction.ShowEndGame;
@@ -1293,7 +1321,7 @@ namespace PleasantvilleGame
                            gi.NextAction = "End Game";
                            gi.GameTurn = 13;
                         }
-                        else if (true == GameStateChecker.CheckForRandomMoves(gi))
+                        else if (true == isAnyMovement)
                         {
                            gi.NextAction = "Display Random Movement";
                            gi.GamePhase = GamePhase.RandomMovement;
@@ -1331,8 +1359,15 @@ namespace PleasantvilleGame
 							}
 						}
 						gi.MapItemMoves.Clear();
-						if( "OK" == returnStatus)
-						{
+                  bool isAnyMovement;
+                  if (false == GameStateChecker.CheckForRandomMoves(gi, out isAnyMovement))
+                  {
+                     returnStatus = "GameStateChecker.CheckForTownspersonCombats() returned false in AlienAcksTownspersonMovement action";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+                  }
+                  //-----------------------------------------------------
+                  if ("OK" == returnStatus)
+                  {
                      if (true == GameStateChecker.CheckForIterogations(gi))
                      {
                         gi.NextAction = "Townsperson chooses Black Building Space";
@@ -1355,7 +1390,7 @@ namespace PleasantvilleGame
                         gi.NextAction = "End Game";
                         gi.GameTurn = 13;
                      }
-                     else if (true == GameStateChecker.CheckForRandomMoves(gi))
+                     else if (true == isAnyMovement)
                      {
                         gi.NextAction = "Display Random Movement";
                         gi.GamePhase = GamePhase.RandomMovement;
@@ -1394,7 +1429,16 @@ namespace PleasantvilleGame
 							}
 						}
 						gi.MapItemMoves.Clear();
-						if( "OK" == returnStatus)
+                  gi.MapItemMoves.Clear();
+                  //-----------------------------------------------------
+                  bool isAnyMovement;
+                  if (false == GameStateChecker.CheckForRandomMoves(gi, out isAnyMovement))
+                  {
+                     returnStatus = "GameStateChecker.CheckForTownspersonCombats() returned false in AlienAcksTownspersonMovement action";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+                  }
+                  //-----------------------------------------------------
+                  if ( "OK" == returnStatus)
 						{
                      gi.IsAlienCombatCompleted = false;
                      gi.IsControlledCombatCompleted = false;
@@ -1420,7 +1464,7 @@ namespace PleasantvilleGame
                         gi.NextAction = "End Game";
                         gi.GameTurn = 13;
                      }
-                     else if (true == GameStateChecker.CheckForRandomMoves(gi))
+                     else if (true == isAnyMovement)
                      {
                         gi.NextAction = "Display Random Movement";
                         gi.GamePhase = GamePhase.RandomMovement;
@@ -1871,7 +1915,14 @@ namespace PleasantvilleGame
 					gi.NextAction = "Alien Acknowledges Iterogations";
 					break;
 				case GameAction.AlienAcksIterogations:
-					if (true == GameStateChecker.CheckForImplantRemoval(gi))
+               bool isAnyMovement;
+               if (false == GameStateChecker.CheckForRandomMoves(gi, out isAnyMovement))
+               {
+                  returnStatus = "GameStateChecker.CheckForTownspersonCombats() returned false in AlienAcksTownspersonMovement action";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+               }
+               //-----------------------------------------------------
+               if (true == GameStateChecker.CheckForImplantRemoval(gi))
 					{
 						gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
 						gi.GamePhase = GamePhase.ImplantRemoval;
@@ -1888,8 +1939,8 @@ namespace PleasantvilleGame
 						gi.NextAction = "End Game";
 						gi.GameTurn = 13;
 					}
-					else if (true == GameStateChecker.CheckForRandomMoves(gi))
-					{
+               else if (true == isAnyMovement)
+               {
 						gi.NextAction = "Display Random Movement";
 						gi.GamePhase = GamePhase.RandomMovement;
 					}
@@ -1946,7 +1997,14 @@ namespace PleasantvilleGame
 				case GameAction.ShowAlien:
 					break;
 				case GameAction.TownspersonCompletesRemoval:
-					if (true == GameStateChecker.CheckForAlienTakeovers(gi))
+               bool isAnyMovement;
+               if (false == GameStateChecker.CheckForRandomMoves(gi, out isAnyMovement))
+               {
+                  returnStatus = "GameStateChecker.CheckForTownspersonCombats() returned false in AlienAcksTownspersonMovement action";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+               }
+               //-----------------------------------------------------
+               if (true == GameStateChecker.CheckForAlienTakeovers(gi))
 					{
 						gi.GamePhase = GamePhase.AlienTakeover;
 						gi.NextAction = "Alien Chooses Flashing Space for Takeover";
@@ -1958,8 +2016,8 @@ namespace PleasantvilleGame
 						gi.NextAction = "End Game";
 						gi.GameTurn = 13;
 					}
-					else if (true == GameStateChecker.CheckForRandomMoves(gi))
-					{
+               else if (true == isAnyMovement)
+               {
 						gi.NextAction = "Display Random Movement";
 						gi.GamePhase = GamePhase.RandomMovement;
 					}
@@ -2024,17 +2082,27 @@ namespace PleasantvilleGame
 						gi.NextAction = "End Game";
 						gi.GameTurn = 13;
 					}
-					else if (true == GameStateChecker.CheckForRandomMoves(gi))
+               bool isAnyMovement;
+               if (false == GameStateChecker.CheckForRandomMoves(gi, out isAnyMovement))
+               {
+                  returnStatus = "GameStateChecker.CheckForTownspersonCombats() returned false in AlienAcksTownspersonMovement action";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+               }
+               //-----------------------------------------------------
+					if( "OK" == returnStatus)
 					{
-						gi.NextAction = "Display Random Movement";
-						gi.GamePhase = GamePhase.RandomMovement;
-					}
-					else
-					{
-						gi.NextAction = "Alien Performs Movement";
-						gi.GamePhase = GamePhase.AlienMovement;
-					}
-					break;
+						if (true == isAnyMovement)
+						{
+							gi.NextAction = "Display Random Movement";
+							gi.GamePhase = GamePhase.RandomMovement;
+						}
+						else
+						{
+							gi.NextAction = "Alien Performs Movement";
+							gi.GamePhase = GamePhase.AlienMovement;
+						}
+               }
+               break;
 				default:
 					returnStatus = "reached default action=" + action.ToString();
 					Logger.Log(LogEnum.LE_ERROR, "GameStateAlienTakeover.PerformAction(): " + returnStatus);

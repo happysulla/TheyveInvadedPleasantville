@@ -502,37 +502,46 @@ namespace PleasantvilleGame
             return true;
          return false;
       }
-      static public bool CheckForRandomMoves(IGameInstance gi)
+      static public bool CheckForRandomMoves(IGameInstance gi, out bool isAnyMovement)
       {
+         isAnyMovement = false;
+         if (null == gi.MapItemCombat)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CheckFor_RandomMoves(): ERROR - gi.MapItemCombat is null");
+            return false;
+         }
          gi.IsAlienDisplayedRandomMovement = false;
          gi.IsControlledDisplayedRandomMovement = false;
          gi.IsAlienAckedRandomMovement = false;
          gi.IsControlledAckedRandomMovement = false;
          gi.Takeover = null;
+         //-----------------------------------------------------------
          gi.MapItemCombat.IsAnyRetreat = false;
          foreach (IMapItemMove mim in gi.MapItemMoves)
          {
             IMapItem mi = mim.MapItem;
+            if (null == mim.NewTerritory)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "CheckFor_RandomMoves(): ERROR -  mim.NewTerritory is null");
+               return false;
+            }
             mi.TerritoryCurrent = mim.NewTerritory;
             mi.TerritoryStarting = mim.NewTerritory;
             mi.IsMoved = false;
             mi.MovementUsed = 0;
          }
          gi.MapItemMoves.Clear();
-
-         // Check if anybody can move
-
-         foreach (IMapItem mi in gi.Persons)
+         //-----------------------------------------------------------
+         foreach (IMapItem mi in gi.Persons) // Check if anybody can move
          {
             if ((true == mi.IsKilled) || (false == mi.IsConscious) || (true == mi.IsSurrendered)
                 || (true == mi.IsStunned) || (true == mi.IsTiedUp)
                 || (true == mi.IsControlled) || (true == mi.IsAlienKnown))
                continue;
-
+            isAnyMovement = true;
             return true; // If any mapitem can move randomly
          }
-
-         return false;
+         return true;
       }
       public static bool IsInfluenceCheck(IGameInstance gi)
       {

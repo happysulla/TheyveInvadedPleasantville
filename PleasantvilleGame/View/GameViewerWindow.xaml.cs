@@ -13,17 +13,17 @@ using Image = System.Windows.Controls.Image;
 using FontFamily = System.Windows.Media.FontFamily;
 using Rectangle = System.Windows.Shapes.Rectangle;
 using Brush = System.Windows.Media.Brush;
-using Brushes=System.Windows.Media.Brushes;
-using Application=System.Windows.Application;
-using Color=System.Windows.Media.Color;
-using MessageBox=System.Windows.MessageBox;
+using Brushes = System.Windows.Media.Brushes;
+using Application = System.Windows.Application;
+using Color = System.Windows.Media.Color;
+using MessageBox = System.Windows.MessageBox;
 
 namespace PleasantvilleGame
 {
    public partial class GameViewerWindow : Window, IView
    {
       //--------------------------------------------------------------
-      public bool CtorError { set;  get; } = false;
+      public bool CtorError { set; get; } = false;
       private IGameEngine? myGameEngine = null;
       private IGameInstance? myGameInstance = null;
       private List<Button> myButtons = new List<Button>();
@@ -79,7 +79,7 @@ namespace PleasantvilleGame
       private IMapItems myRightMapItemsInActionPanelSelected = new MapItems();
       public bool IsAlien { set; get; } = false;
       //==============================================================
-      public GameViewerWindow(IGameEngine ge, IGameInstance gi, bool isServer=false, bool isAlien=false)
+      public GameViewerWindow(IGameEngine ge, IGameInstance gi, bool isServer = false, bool isAlien = false)
       {
          InitializeComponent();
          myGameEngine = ge;
@@ -107,7 +107,7 @@ namespace PleasantvilleGame
          else
             sb55.Append("Pleasantville For Humans");
          this.Title = sb55.ToString();
-         myCanvas.MouseLeftButtonDown += this.MouseLeftButtonDownCanvas;    
+         myCanvas.MouseLeftButtonDown += this.MouseLeftButtonDownCanvas;
          myCanvas.MouseRightButtonDown += this.MouseRightButtonDownCanvas;
          //----------------------------------------------------------
          // Implement the Model View Controller (MVC) pattern by registering views with
@@ -130,7 +130,7 @@ namespace PleasantvilleGame
                return;
             }
             string? tagName = t.ToString();
-            if( null == tagName )
+            if (null == tagName)
             {
                Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:ctor: tagName=null for t=" + t.Name);
                CtorError = true;
@@ -152,8 +152,7 @@ namespace PleasantvilleGame
             }
          }
          //------------------------------------------
-         // Setup Context Menu for Buttons
-         myContextMenuCanvas.Loaded += this.ContextMenuLoaded;
+         myContextMenuCanvas.Loaded += this.ContextMenuLoaded;  // Setup Context Menu for Buttons
          MenuItem mi1 = new MenuItem();
          mi1.Header = "_Return to Starting point";
          mi1.InputGestureText = "Ctrl+S";
@@ -164,7 +163,7 @@ namespace PleasantvilleGame
          mi2.InputGestureText = "Ctrl+R";
          mi2.Click += this.ContextMenuClickRotate;
          myContextMenuCanvas.Items.Add(mi2);
-
+         //------------------------------------------
          if (true == IsAlien)
          {
             MenuItem mi3 = new MenuItem();
@@ -178,36 +177,33 @@ namespace PleasantvilleGame
             mi4.Click += this.ContextMenuClickStopMove;
             myContextMenuCanvas.Items.Add(mi4);
          }
-
-         //--------------------------------------------------
-         // Create the buttons based on People
-
-         foreach (IMapItem person in gi.Persons)
-         {
-            Button b = new Button();
-            if (person.Name == "Zebulon")
-            {
-               if (false == IsAlien)
-                  b.Visibility = Visibility.Hidden;
-            }
-            b.ContextMenu = myContextMenuCanvas;
-            Canvas.SetLeft(b, person.Location.X - Utilities.theMapItemOffset);
-            Canvas.SetTop(b, person.Location.Y - Utilities.theMapItemOffset);
-            b.Click += this.ClickMapItem;
-            b.MouseDoubleClick += this.MouseDoubleClickMapItem;
-            b.Name = person.Name;
-            b.Height = 50.0;
-            b.Width = 50.0;
-            b.IsEnabled = true;
-            MapItem.SetButtonContent(b, person, IsAlien);
-            myButtons.Add(b);
-            myCanvas.Children.Add(b);
-         }
-
          //-----------------------------------------------
-         // Create standard color brushes
-
-         Constants.theTownControlledBrush.Color = Color.FromArgb(0xFF, 0x33, 0xAA, 0x33);
+         foreach (IStack stack in gi.Stacks)
+         {
+            foreach (IMapItem person in stack.MapItems) // Create the buttons based on People
+            {
+               Button b = new Button();
+               if (person.Name == "Zebulon")
+               {
+                  if (false == IsAlien)
+                     b.Visibility = Visibility.Hidden;
+               }
+               b.ContextMenu = myContextMenuCanvas;
+               Canvas.SetLeft(b, person.Location.X - Utilities.theMapItemOffset);
+               Canvas.SetTop(b, person.Location.Y - Utilities.theMapItemOffset);
+               b.Click += this.ClickMapItem;
+               b.MouseDoubleClick += this.MouseDoubleClickMapItem;
+               b.Name = person.Name;
+               b.Height = 50.0;
+               b.Width = 50.0;
+               b.IsEnabled = true;
+               MapItem.SetButtonContent(b, person, IsAlien);
+               myButtons.Add(b);
+               myCanvas.Children.Add(b);
+            }
+         }
+         //-----------------------------------------------
+         Constants.theTownControlledBrush.Color = Color.FromArgb(0xFF, 0x33, 0xAA, 0x33);    // Create standard color brushes
          Constants.theAlienControlledBrush.Color = Color.FromArgb(0xFF, 0xFF, 0xD5, 0x00);  // 0xFFFFD500
          Constants.theSkepticalBrush.Color = Color.FromArgb(0xFF, 0xF2, 0xDE, 0x9B);
          Constants.theWaryBrush.Color = Color.FromArgb(0xFF, 0x87, 0xE5, 0x87);
@@ -219,26 +215,20 @@ namespace PleasantvilleGame
          mySolidColorBrushOrange.Color = Colors.Orange;
          mySolidColorBrushPurple.Color = Colors.Purple;
          mySolidColorBrushRosyBrown.Color = Colors.RosyBrown;
-
          //------------------------------------------------
          // Create a container of brushes for painting paths.
          // The first brush is the alien color.
          // The second brush is the townspeople color.
-
          myBrushes.Add(Brushes.Green);
          myBrushes.Add(Brushes.Blue);
          myBrushes.Add(Brushes.Purple);
          myBrushes.Add(Brushes.Yellow);
          myBrushes.Add(Brushes.Red);
          myBrushes.Add(Brushes.Orange);
-
          myDashArray.Add(4);  // used for dotted lines
-         myDashArray.Add(2);  // used for dotted lines
-
-         //-----------------------------------------------------------------
-         // Create a Bounding Rectangles to indicate when a MapItem is moved
-
-         for (int i = 0; i < 6; ++i)
+         myDashArray.Add(2);
+         //------------------------------------------------
+         for (int i = 0; i < 6; ++i) // Create a Bounding Rectangles to indicate when a MapItem is moved
          {
             Rectangle r = new Rectangle();
             r.Stroke = myBrushes[i];
@@ -250,29 +240,29 @@ namespace PleasantvilleGame
             myRectangles.Add(r);
             myCanvas.Children.Add(r);
          }
-
-         // Create a Bounding Rectangle to indicate when a MapItem is selected to be moved by mouse pointer
-
-         myRectangleSelection.Stroke = Brushes.Red;
+         myRectangleSelection.Stroke = Brushes.Red; // Create a Bounding Rectangle to indicate when a MapItem is selected to be moved by mouse pointer
          myRectangleSelection.StrokeThickness = 3.0;
          myRectangleSelection.Width = 50;
          myRectangleSelection.Height = 50;
          myRectangleSelection.Visibility = Visibility.Hidden;
          myCanvas.Children.Add(myRectangleSelection);
          Canvas.SetZIndex(myRectangleSelection, 1000);
-
-         UpdateCanvas(gi); // Update the canvase based on data in the GameInstance
+         if (false == UpdateCanvas(gi))// Update the canvase based on data in the GameInstance
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:ctor: UpdateCanvas() returned false");
+            CtorError = true;
+            return;
+         }
          ClearActionPanel();
-
       }
       //-------------INTERFACE FUNCTIONS---------------------------------
       public void UpdateView(ref IGameInstance gi, GameAction action)
       {
-         if( null == myGameEngine )
+         if (null == myGameEngine)
          {
             Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::UpdateView() myGameEngine is null");
             return;
-         }  
+         }
          if (true == IsAlien)
          {
             StringBuilder sb = new StringBuilder("---------------   ALIEN GameViewerWindow::UpdateView() ==> action="); sb.Append(action.ToString()); sb.Append("  ==> NextAction="); sb.Append(gi.NextAction);
@@ -311,7 +301,11 @@ namespace PleasantvilleGame
             case GameAction.AlienAcksRandomMovement:
                if (true == IsAlien)
                {
-                  UpdateCanvas(gi);
+                  if (false == UpdateCanvas(gi))
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienAcksRandomMovement: UpdateCanvas() returned false");
+                     return;
+                  }
                   myMovingMapItems.Clear();
                   myMovingButton = null;
                   myIsFlagSetForAlienMoveCountExceeded = false;
@@ -332,7 +326,11 @@ namespace PleasantvilleGame
             case GameAction.TownspersonAcksRandomMovement:
                if (false == IsAlien)
                {
-                  UpdateCanvas(gi);
+                  if (false == UpdateCanvas(gi))
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonAcksRandomMovement: UpdateCanvas() returned false");
+                     return;
+                  }
                   myMovingMapItems.Clear();
                   myMovingButton = null;
                   myIsFlagSetForAlienMoveCountExceeded = false;
@@ -350,7 +348,11 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.ResetMovement:
-               UpdateCanvas(gi, true);  // unhide the pologon line shown
+               if (false == UpdateCanvas(gi, true))  // unhide the pologon line shown
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): ResetMovement: UpdateCanvas() returned false");
+                  return;
+               }
                break;
             case GameAction.AlienMovement:
                UpdateViewMovement(gi);
@@ -359,14 +361,22 @@ namespace PleasantvilleGame
             case GameAction.AlienCompletesMovement:
                if (true == IsAlien)
                {
-                  UpdateCanvas(gi);
+                  if (false == UpdateCanvas(gi))
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienCompletesMovement: UpdateCanvas() returned false");
+                     return;
+                  }
                   myMovingButton = null;
                   myMovingRectangle = null;
                   myRectangleSelection.Visibility = Visibility.Hidden;
                }
                break;
             case GameAction.TownspersonAcksAlienMovement:
-               UpdateCanvas(gi);
+               if (false == UpdateCanvas(gi))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonAcksAlienMovement: UpdateCanvas() returned false");
+                  return;
+               }
                myMovingMapItems.Clear();
                myMovingButton = null;
                myIsFlagSetForAlienMoveCountExceeded = false;
@@ -409,20 +419,32 @@ namespace PleasantvilleGame
                break;
             case GameAction.AlienModifiesTownspersonMovement:
                myIsAlienAbleToStopMove = false;
-               UpdateCanvas(gi, true);
+               if (false == UpdateCanvas(gi, true))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienModifiesTownspersonMovement: UpdateCanvas() returned false");
+                  return;
+               }
                UpdateViewMovement(gi);
                break;
             case GameAction.TownpersonCompletesMovement:
                if (false == IsAlien)
                {
-                  UpdateCanvas(gi);
+                  if (false == UpdateCanvas(gi))
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownpersonCompletesMovement: UpdateCanvas() returned false");
+                     return;
+                  }
                   myMovingButton = null;
                   myMovingRectangle = null;
                   myRectangleSelection.Visibility = Visibility.Hidden;
                }
                break;
             case GameAction.AlienAcksTownspersonMovement:
-               UpdateCanvas(gi);
+               if (false == UpdateCanvas(gi))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienAcksTownspersonMovement: UpdateCanvas() returned false");
+                  return;
+               }
                UpdateViewState(gi);
                myMovingMapItems.Clear();
                myMovingButton = null;
@@ -431,25 +453,45 @@ namespace PleasantvilleGame
                myRectangleSelection.Visibility = Visibility.Hidden;
                break;
             case GameAction.TownspersonPerformsConversation:
-               UpdateCanvas(gi);
+               if (false == UpdateCanvas(gi))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonPerformsConversation: UpdateCanvas() returned false");
+                  return;
+               }
                UpdateViewState(gi);
                break;
             case GameAction.TownspersonCompletesConversations:
-               UpdateCanvas(gi);
+               if (false == UpdateCanvas(gi))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesConversations: UpdateCanvas() returned false");
+                  return;
+               }
                UpdateViewState(gi);
                break;
             case GameAction.TownspersonPerformsInfluencing:
-               UpdateCanvas(gi);
+               if (false == UpdateCanvas(gi))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonPerformsInfluencing: UpdateCanvas() returned false");
+                  return;
+               }
                UpdateViewState(gi);
                break;
             case GameAction.TownspersonCompletesInfluencing:
-               UpdateCanvas(gi);
+               if (false == UpdateCanvas(gi))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesInfluencing: UpdateCanvas() returned false");
+                  return;
+               }
                UpdateViewState(gi);
                break;
             case GameAction.AlienInitiateCombat:
                if ((true == myIsCombatInitiatedForAlien) && (true == IsAlien))
                {
-                  UpdateCanvas(gi);
+                  if (false == UpdateCanvas(gi))
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienInitiateCombat: UpdateCanvas() returned false");
+                     return;
+                  }
                   Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, "UpdateView():AlienInitiateCombat: ALIEN Performs Combat");
                   outAction = GameAction.AlienPerformCombat;
                   myGameEngine.PerformAction(ref gi, ref outAction);
@@ -458,31 +500,43 @@ namespace PleasantvilleGame
             case GameAction.TownspersonNackCombatSelection:
                if (true == IsAlien)
                {
-                  UpdateCanvas(gi);
+                  if (false == UpdateCanvas(gi))
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonNackCombatSelection: UpdateCanvas() returned false");
+                     return;
+                  }
                   UpdateViewState(gi);
                   myIsCombatInitiatedForAlien = false;
                   Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, "UpdateView():TownspersonNackCombatSelection: ALIEN myIsCombatInitiatedForAlien=false");
                }
                break;
             case GameAction.AlienPerformCombat:
-               UpdateCanvas(gi);
-               if( null == gi.MapItemCombat )
-               { 
+               if (false == UpdateCanvas(gi))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienPerformCombat: UpdateCanvas() returned false");
+                  return;
+               }
+               if (null == gi.MapItemCombat)
+               {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView():AlienPerformCombat gi.MapItemCombat=null");
                }
                else
                {
-                   if (null != gi.MapItemCombat.Territory)
-                   {
-                      if ((0 != gi.MapItemCombat.Attackers.Count) && (0 != gi.MapItemCombat.Defenders.Count))
-                         DisplayCombatResults(gi);
-                   }
+                  if (null != gi.MapItemCombat.Territory)
+                  {
+                     if ((0 != gi.MapItemCombat.Attackers.Count) && (0 != gi.MapItemCombat.Defenders.Count))
+                        DisplayCombatResults(gi);
+                  }
                }
                break;
             case GameAction.TownspersonInitiateCombat:
                if ((true == myIsCombatInitiatedForTownsperson) && (false == IsAlien))
                {
-                  UpdateCanvas(gi);
+                  if (false == UpdateCanvas(gi))
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonInitiateCombat: UpdateCanvas() returned false");
+                     return;
+                  }
                   Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, "UpdateView():TownspersonInitiateCombat: TP PERFORMS COMBAT");
                   outAction = GameAction.TownspersonPerformCombat;
                   myGameEngine.PerformAction(ref gi, ref outAction);
@@ -491,15 +545,28 @@ namespace PleasantvilleGame
             case GameAction.AlienNackCombatSelection:
                if (false == IsAlien)
                {
-                  UpdateCanvas(gi);
+                  if (false == UpdateCanvas(gi))
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienNackCombatSelection: UpdateCanvas() returned false");
+                     return;
+                  }
                   UpdateViewState(gi);
                   myIsCombatInitiatedForTownsperson = false;
                   Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, "UpdateView():AlienNackCombatSelection: TP    myIsCombatInitiatedForTownsperson=false");
                }
                break;
             case GameAction.TownspersonPerformCombat:
-               UpdateCanvas(gi);
-               if (null != gi.MapItemCombat.Territory)
+               if (false == UpdateCanvas(gi))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonPerformCombat: UpdateCanvas() returned false");
+                  return;
+               }
+               if (null == gi.MapItemCombat)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView():TownspersonPerformCombat gi.MapItemCombat=null");
+                  return;
+               }
+               else
                {
                   if ((0 != gi.MapItemCombat.Attackers.Count) && (0 != gi.MapItemCombat.Defenders.Count))
                   {
@@ -515,7 +582,11 @@ namespace PleasantvilleGame
                   myMovingRectangle = null;
                   myRectangleSelection.Visibility = Visibility.Hidden;
                }
-               UpdateCanvas(gi);
+               if (false == UpdateCanvas(gi))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesCombat: UpdateCanvas() returned false");
+                  return;
+               }
                UpdateViewState(gi);
                myIsCombatInitiatedForTownsperson = false;
                StringBuilder sb2 = new StringBuilder("UpdateView():TownspersonCompletesCombat: "); sb2.Append(IsAlien.ToString()); sb2.Append("myIsCombatInitiatedForTownsperson=false");
@@ -527,36 +598,63 @@ namespace PleasantvilleGame
                   myMovingButton = null;
                   myMovingRectangle = null;
                   myRectangleSelection.Visibility = Visibility.Hidden;
-
                }
-               UpdateCanvas(gi);
+               if (false == UpdateCanvas(gi))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienCompletesCombat: UpdateCanvas() returned false");
+                  return;
+               }
                UpdateViewState(gi);
                myIsCombatInitiatedForAlien = false;
                StringBuilder sb3 = new StringBuilder("UpdateView():AlienCompletesCombat: "); sb3.Append(IsAlien.ToString()); sb3.Append("myIsCombatInitiatedForAlien=false");
                Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, sb3.ToString());
                break;
             case GameAction.TownspersonIterrogates:
-               UpdateCanvas(gi);
+               if (false == UpdateCanvas(gi))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonIterrogates: UpdateCanvas() returned false");
+                  return;
+               }
                UpdateViewState(gi);
                break;
             case GameAction.TownspersonCompletesIterogations:
-               UpdateCanvas(gi);
+               if (false == UpdateCanvas(gi))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesIterogations: UpdateCanvas() returned false");
+                  return;
+               }
                UpdateViewState(gi);
                break;
             case GameAction.AlienAcksIterogations:
-               UpdateCanvas(gi);
+               if (false == UpdateCanvas(gi))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienAcksIterogations: UpdateCanvas() returned false");
+                  return;
+               }
                UpdateViewState(gi);
                break;
             case GameAction.TownspersonRemovesImplant:
-               UpdateCanvas(gi);
+               if (false == UpdateCanvas(gi))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonRemovesImplant: UpdateCanvas() returned false");
+                  return;
+               }
                UpdateViewState(gi);
                break;
             case GameAction.TownspersonCompletesRemoval:
-               UpdateCanvas(gi);
+               if (false == UpdateCanvas(gi))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesRemoval: UpdateCanvas() returned false");
+                  return;
+               }
                UpdateViewState(gi);
                break;
             case GameAction.AlienTakeover:
-               UpdateCanvas(gi);
+               if (false == UpdateCanvas(gi))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienTakeover: UpdateCanvas() returned false");
+                  return;
+               }
                if (null == gi.Takeover)
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView():AlienTakeover gi.Takeover=null");
@@ -584,23 +682,35 @@ namespace PleasantvilleGame
                UpdateViewState(gi);
                break;
             case GameAction.AlienCompletesTakeovers:
-               UpdateCanvas(gi);
+               if (false == UpdateCanvas(gi))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienCompletesTakeovers: UpdateCanvas() returned false");
+                  return;
+               }
                myIsTakeOverInOneRegion = false;
                myIsTakeOverPromptNeededToFoolOpponent = false;
                break;
             case GameAction.ShowEndGame:
                ClearActionPanel();
-               foreach (IMapItem mi in gi.Persons)         // SHow all the aliens
+               foreach (IStack stack in gi.Stacks)         // Show all the stacks
                {
-                  if (true == mi.IsAlienUnknown)
+                  foreach (IMapItem mi in stack.MapItems)
                   {
-                     if (false == gi.AddKnownAlien(mi))
-                        Logger.Log(LogEnum.LE_ERROR, "UpdateView() returned error");
+                     if (true == mi.IsAlienUnknown)
+                     {
+                        if (false == gi.AddKnownAlien(mi))
+                           Logger.Log(LogEnum.LE_ERROR, "UpdateView() returned error");
+                     }
                   }
                }
-
+               //-------------------------------------------------------
                bool isAlienWin = true;                    // Determine who won.
-               IMapItem zebulon = gi.Persons.Find("Zebulon");
+               IMapItem? zebulon = gi.Stacks.FindMapItem("Zebulon");
+               if (null == zebulon)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView() could not find Zebulon in gi.Stacks");
+                  break;
+               }
                zebulon.IsAlienKnown = true;
                if (true == zebulon.IsKilled)
                   isAlienWin = false;
@@ -624,7 +734,11 @@ namespace PleasantvilleGame
                   myLabelWinner.Content = "Towns People Win!!!!";
                   myLabelWinner.Foreground = Constants.theTownControlledBrush;
                }
-               UpdateCanvas(gi);
+               if (false == UpdateCanvas(gi))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): ShowEndGame: UpdateCanvas() returned false");
+                  return;
+               }
                UpdateViewState(gi);
                break;
             case GameAction.ShowAlien:
@@ -634,12 +748,9 @@ namespace PleasantvilleGame
                   {
                      if (true == mi.IsAlienKnown)
                      {
-                        Button b = myButtons.Find(mi.Name);
+                        Button? b = myButtons.Find(mi.Name);
                         if (null != b)
                            MapItem.SetButtonContent(b, mi, IsAlien);
-                        IMapItem anotherMi = gi.Persons.Find(mi.Name);
-                        if (null != anotherMi)
-                           anotherMi.IsAlienKnown = true;
                      }
                   }
                }
@@ -719,18 +830,35 @@ namespace PleasantvilleGame
                return;
 
             case 1:
-               MapItem.SetButtonContent(myButton1, myLeftMapItemsInActionPanel[0], false);
+               IMapItem? leftMapItem = myLeftMapItemsInActionPanel[0];
+               if (null == leftMapItem)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateActionPanel() leftMapItem0 is null");
+                  return;
+               }
+               MapItem.SetButtonContent(myButton1, leftMapItem, false);
                myButton1.Visibility = Visibility.Visible;
                Canvas.SetLeft(myButton1, button1Left);
                Canvas.SetLeft(myRectangle1, button1Left);
                Canvas.SetLeft(myLabelButton1, button1Left);
                myRectangle1.Visibility = Visibility.Visible;
-               IMapItem mi = myLeftMapItemsInActionPanel[0];
-               myLeftMapItemsInActionPanelSelected.Add(mi);
+               myLeftMapItemsInActionPanelSelected.Add(leftMapItem);
                break;
             case 2:
-               MapItem.SetButtonContent(myButton1, myLeftMapItemsInActionPanel[0], false);
-               MapItem.SetButtonContent(myButton2, myLeftMapItemsInActionPanel[1], false);
+               IMapItem? leftMapItem0 = myLeftMapItemsInActionPanel[0];
+               if (null == leftMapItem0)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateActionPanel() leftMapItem0 is null");
+                  return;
+               }
+               IMapItem? leftMapItem1 = myLeftMapItemsInActionPanel[1];
+               if (null == leftMapItem1)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateActionPanel() leftMapItem1 is null");
+                  return;
+               }
+               MapItem.SetButtonContent(myButton1, leftMapItem0, false);
+               MapItem.SetButtonContent(myButton2, leftMapItem1, false);
                myButton1.Visibility = Visibility.Visible;
                myButton2.Visibility = Visibility.Visible;
                myLabelLeftTop.Visibility = Visibility.Visible;
@@ -755,12 +883,16 @@ namespace PleasantvilleGame
             case 0:
                break;
             case 1:
-               MapItem.SetButtonContent(myButton4, myRightMapItemsInActionPanel[0], false);
+               IMapItem? rightMapItem = myRightMapItemsInActionPanel[0];
+               if (null == rightMapItem)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateActionPanel() leftMapItem0 is null");
+                  return;
+               }
+               MapItem.SetButtonContent(myButton4, rightMapItem, false);
                myButton4.Visibility = Visibility.Visible;
-
                myRectangle4.Visibility = Visibility.Visible;
-               IMapItem mi = myRightMapItemsInActionPanel[0];
-               myRightMapItemsInActionPanelSelected.Add(mi);
+               myRightMapItemsInActionPanelSelected.Add(rightMapItem);
                break;
             case 2:
                myButton4.Visibility = Visibility.Visible;
@@ -795,27 +927,39 @@ namespace PleasantvilleGame
          {
             if (0 < myLeftMapItemsInActionPanel.Count)
             {
-               IMapItem mi = gi.Persons.Find(myLeftMapItemsInActionPanel[0].Name);
-               if (null != mi)
-                  MapItem.SetButtonContent(myButton1, mi, IsAlien);
+               IMapItem? leftMapItem0 = myLeftMapItemsInActionPanel[0];
+               if (null == leftMapItem0)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateActionPanel() leftMapItem0 is null");
+                  return;
+               }
+               MapItem.SetButtonContent(myButton1, leftMapItem0, IsAlien);
             }
          }
          if (Visibility.Visible == myButton2.Visibility)
          {
             if (1 < myLeftMapItemsInActionPanel.Count)
             {
-               IMapItem mi = gi.Persons.Find(myLeftMapItemsInActionPanel[1].Name);
-               if (null != mi)
-                  MapItem.SetButtonContent(myButton2, mi, IsAlien);
+               IMapItem? leftMapItem1 = myLeftMapItemsInActionPanel[0];
+               if (null == leftMapItem1)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateActionPanel() leftMapItem0 is null");
+                  return;
+               }
+               MapItem.SetButtonContent(myButton2, leftMapItem1, IsAlien);
             }
          }
          if (Visibility.Visible == myButton3.Visibility)
          {
             if (2 < myLeftMapItemsInActionPanel.Count)
             {
-               IMapItem mi = gi.Persons.Find(myLeftMapItemsInActionPanel[2].Name);
-               if (null != mi)
-                  MapItem.SetButtonContent(myButton3, mi, IsAlien);
+               IMapItem? leftMapItem2 = myLeftMapItemsInActionPanel[2];
+               if (null == leftMapItem2)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateActionPanel() leftMapItem0 is null");
+                  return;
+               }
+               MapItem.SetButtonContent(myButton3, leftMapItem2, IsAlien);
             }
          }
 
@@ -823,27 +967,39 @@ namespace PleasantvilleGame
          {
             if (0 < myRightMapItemsInActionPanel.Count)
             {
-               IMapItem mi = gi.Persons.Find(myRightMapItemsInActionPanel[0].Name);
-               if (null != mi)
-                  MapItem.SetButtonContent(myButton4, mi, IsAlien);
+               IMapItem? rightMapItem = myRightMapItemsInActionPanel[0];
+               if (null == rightMapItem)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateActionPanel() leftMapItem0 is null");
+                  return;
+               }
+               MapItem.SetButtonContent(myButton4, rightMapItem, IsAlien);
             }
          }
          if (Visibility.Visible == myButton5.Visibility)
          {
             if (1 < myRightMapItemsInActionPanel.Count)
             {
-               IMapItem mi = gi.Persons.Find(myRightMapItemsInActionPanel[1].Name);
-               if (null != mi)
-                  MapItem.SetButtonContent(myButton5, mi, IsAlien);
+               IMapItem? rightMapItem = myRightMapItemsInActionPanel[1];
+               if (null == rightMapItem)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateActionPanel() leftMapItem0 is null");
+                  return;
+               }
+               MapItem.SetButtonContent(myButton5, rightMapItem, IsAlien);
             }
          }
          if (Visibility.Visible == myButton6.Visibility)
          {
             if (2 < myRightMapItemsInActionPanel.Count)
             {
-               IMapItem mi = gi.Persons.Find(myRightMapItemsInActionPanel[2].Name);
-               if (null != mi)
-                  MapItem.SetButtonContent(myButton6, mi, IsAlien);
+               IMapItem? rightMapItem = myRightMapItemsInActionPanel[2];
+               if (null == rightMapItem)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateActionPanel() leftMapItem0 is null");
+                  return;
+               }
+               MapItem.SetButtonContent(myButton6, rightMapItem, IsAlien);
             }
          }
       }
@@ -876,7 +1032,7 @@ namespace PleasantvilleGame
             //-----------------------------------------------
             foreach (IMapItemMove mim2 in gi.MapItemMoves) // Move it 
             {
-               if( null == mim2.NewTerritory )
+               if (null == mim2.NewTerritory)
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateViewMovement() mim2.NewTerritory is null");
                   return false;
@@ -928,13 +1084,13 @@ namespace PleasantvilleGame
       }
       private void UpdateViewState(IGameInstance gi)
       {
-         if( null == myGameEngine )
+         if (null == myGameEngine)
          {
             Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::UpdateViewState() myGameEngine is null");
             return;
-         }  
+         }
          myStoryboard = null;  // turn off flashing
-         GameAction outAction = GameAction.Error;  
+         GameAction outAction = GameAction.Error;
          switch (gi.GamePhase)
          {
             case GamePhase.Conversations:
@@ -950,7 +1106,6 @@ namespace PleasantvilleGame
                   break;
                }
                break;
-
             case GamePhase.Influences:
                if (false == DisplayInfluences(gi))
                {
@@ -962,9 +1117,14 @@ namespace PleasantvilleGame
                   }
                }
                break;
-
             case GamePhase.Combat:
-               if (false == DisplayCombats(gi))
+               bool isRetreatNeedAck;
+               if (false == DisplayCombats(gi, out isRetreatNeedAck))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::UpdateViewState() DisplayCombats() returned falsel");
+                  return;
+               }
+               if (false == isRetreatNeedAck)
                {
                   if (true == IsAlien)
                   {
@@ -986,9 +1146,14 @@ namespace PleasantvilleGame
                   }
                }
                break;
-
             case GamePhase.Iterrogations:
-               if (false == DisplayIterogations(gi))
+               bool isAckIterrogationsNeeded;
+               if (false == DisplayIterogations(gi, out isAckIterrogationsNeeded))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::UpdateViewState() DisplayIterogations() returned false");
+                  return;
+               }
+               if (false == isAckIterrogationsNeeded)
                {
                   if ((false == IsAlien) && (false == myInterogationsCompleted))
                   {
@@ -998,7 +1163,6 @@ namespace PleasantvilleGame
                   }
                }
                break;
-
             case GamePhase.ImplantRemoval:
                if (false == DisplayImplantRemovals(gi))
                {
@@ -1010,7 +1174,6 @@ namespace PleasantvilleGame
                   }
                }
                break;
-
             case GamePhase.AlienTakeover:
                if (true == IsAlien)
                {
@@ -1025,24 +1188,31 @@ namespace PleasantvilleGame
                   }
                }
                break;
-
             default:
                break;
-
          }  // end switch
       }
-      private void UpdateCanvas(IGameInstance gi, bool isOnlyLastLegRemoved = false)
+      private bool UpdateCanvas(IGameInstance gi, bool isOnlyLastLegRemoved = false)
       {
-         // Clean the Canvas of all marks
-
-         List<UIElement> lines = new List<UIElement>();
+         List<UIElement> lines = new List<UIElement>();  // Clean the Canvas of all marks
          foreach (UIElement ui in myCanvas.Children)
          {
             if (ui is Polygon)
             {
                Polygon p1 = (Polygon)ui;
                Canvas.SetZIndex(p1, 0);
-               ITerritory t = gi.ZebulonTerritories.Find(p1.Tag.ToString());
+               if (null == p1.Tag)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateCanvas() Polygon p1.Tag is null");
+                  return false;
+               }
+               string tagString = (string)p1.Tag;
+               if (true == String.IsNullOrEmpty(tagString))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateCanvas() Polygon p1.Tag is not string");
+                  return false;
+               }
+               ITerritory? t = gi.ZebulonTerritories.Find(tagString);
                switch (gi.GamePhase)
                {
                   case GamePhase.Iterrogations:
@@ -1051,27 +1221,21 @@ namespace PleasantvilleGame
                      else
                         p1.Fill = mySolidColorBrushBlack;
                      break;
-
                   case GamePhase.Conversations:
                   case GamePhase.Influences:
                   case GamePhase.Combat:
                   case GamePhase.AlienTakeover:
                      break;
-
                   default:
                      p1.Fill = mySolidColorBrushClear;
                      myStoryboard = null;  // turn off flashing
                      break;
-
-               } // end switch
-
-            } // end if us
-
+               }
+            }
             if (ui is Polyline)
                lines.Add(ui);
-
          } // end foreach
-
+         //---------------------------------------------------------------
          if (false == isOnlyLastLegRemoved)
          {
             foreach (UIElement line in lines)
@@ -1082,26 +1246,36 @@ namespace PleasantvilleGame
             if (0 < lines.Count)
                myCanvas.Children.Remove(lines.Last());
          }
-
+         //---------------------------------------------------------------
          foreach (Rectangle r in myRectangles)
             r.Visibility = Visibility.Hidden;
-
-         IMapItem zebulon = gi.Persons.Find("Zebulon");
+         IMapItem? zebulon = gi.Stacks.FindMapItem("Zebulon");
+         if (null == zebulon)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "UpdateCanvas(): could not find Zebulon in gi.Stacks");
+            return false;
+         }
          if (true == zebulon.IsAlienKnown)
          {
-            Button b = myButtons.Find("Zebulon");
+            Button? b = myButtons.Find("Zebulon");
+            if (null == zebulon)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "UpdateCanvas(): could not find Zebulon in myButtons");
+               return false;
+            }
             if (null != b)
             {
                b.Visibility = Visibility.Visible;
                Canvas.SetZIndex(b, 100000);
             }
          }
+         //---------------------------------------------------------------
          foreach (Stack stack in gi.Stacks) // Update the Canvas with new MapItem locations
          {
             int counterCount = 0;
             foreach (IMapItem mi in stack.MapItems)
             {
-               Button b = myButtons.Find(mi.Name);
+               Button? b = myButtons.Find(mi.Name);
                if (null != b)
                {
                   b.BeginAnimation(Canvas.LeftProperty, null); // end animation offset
@@ -1127,7 +1301,7 @@ namespace PleasantvilleGame
                }
             }
          }
-
+         return true;
       }
       //-------------HELPER FUNCTIONS---------------------------------
       private bool IsMoveStoppedByAlienBeforeStarted(IGameInstance gi)
@@ -1427,12 +1601,12 @@ namespace PleasantvilleGame
       }
       private bool PerformConversation(IGameInstance gi, bool isIgnoreResults)
       {
-         if( null == gi )
+         if (null == gi)
          {
             Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::PerformConversation() gi is null");
             return false;
          }
-         if(null == myGameEngine)
+         if (null == myGameEngine)
          {
             Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::PerformConversation() myGameEngine is null");
             return false;
@@ -1456,18 +1630,18 @@ namespace PleasantvilleGame
          }
          //-------------------------------------------------------------
          IMapItem? selectedLeft = myLeftMapItemsInActionPanelSelected[0];
-         if ( null == selectedLeft)
+         if (null == selectedLeft)
          {
             Logger.Log(LogEnum.LE_ERROR, "PerformConversation() myLeftMapItemsInActionPanelSelected[0]=null");
             return false;
          }
          IMapItem? leftMapItem = gi.Stacks.FindMapItem(selectedLeft.Name);
-         if( null == leftMapItem )
+         if (null == leftMapItem)
          {
             Logger.Log(LogEnum.LE_ERROR, "PerformConversation() leftMapItem=null");
             return false;
          }
-         IMapItem? selectedRight= myRightMapItemsInActionPanelSelected[0];
+         IMapItem? selectedRight = myRightMapItemsInActionPanelSelected[0];
          if (null == selectedRight)
          {
             Logger.Log(LogEnum.LE_ERROR, "PerformConversation() myLeftMapItemsInActionPanelSelected[0]=null");
@@ -1578,8 +1752,14 @@ namespace PleasantvilleGame
             }
             if ((0 == townspeopleControlled.Count) || (0 == townspeopleUncontrolled.Count))
                continue;
-            // Turn the region red
-            String targetName = townspeopleControlled[0].TerritoryCurrent.Name + townspeopleControlled[0].TerritoryCurrent.Sector.ToString();
+            //---------------------------------------------------
+            IMapItem? controlled = townspeopleControlled[0];
+            if (null == controlled)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "DisplayInfluences() townspeopleControlled[0]=null");
+               continue;
+            }
+            String targetName = controlled.TerritoryCurrent.Name + controlled.TerritoryCurrent.Sector.ToString(); // Turn the region red
             foreach (UIElement ui in myCanvas.Children)
             {
                if (ui is Polygon)
@@ -1611,19 +1791,19 @@ namespace PleasantvilleGame
          myStoryboard.Begin(this);
          return true;
       }
-      private void DisplayInfluence(IGameInstance gi, ITerritory selectedTerritory)
+      private bool DisplayInfluence(IGameInstance gi, ITerritory selectedTerritory)
       {
          ClearActionPanel();
-         if (null == selectedTerritory) 
+         if (null == selectedTerritory)
          {
             Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() selectedTerritory=null");
-            return;
+            return false;
          }
-         IStack stack = gi.Stacks.Find(selectedTerritory);
-         if( null == stack )
+         IStack? stack = gi.Stacks.Find(selectedTerritory);
+         if (null == stack)
          {
             Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() stack=null");
-            return;
+            return false;
          }
          if (null != stack.MapItems)
          {
@@ -1651,7 +1831,12 @@ namespace PleasantvilleGame
                //----------------------------------------------------------------------
                for (int i = 0; i < myLeftMapItemsInActionPanel.Count; ++i)
                {
-                  IMapItem leftMi = myLeftMapItemsInActionPanel[i];
+                  IMapItem? leftMi = myLeftMapItemsInActionPanel[i];
+                  if (null == leftMi)
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() myLeftMapItemsInActionPanel[" + i + "]=null");
+                     continue;
+                  }
                   if (true == leftMi.IsImplantHeld)
                   {
                      switch (i)
@@ -1666,7 +1851,12 @@ namespace PleasantvilleGame
                //----------------------------------------------------------------------
                for (int i = 0; i < myRightMapItemsInActionPanel.Count; ++i)
                {
-                  IMapItem rightMi = myRightMapItemsInActionPanel[i];
+                  IMapItem? rightMi = myRightMapItemsInActionPanel[i];
+                  if (null == rightMi)
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() myRightMapItemsInActionPanel[" + i + "]=null");
+                     return false;
+                  }
                   if (true == rightMi.IsSkeptical)
                   {
                      switch (i)
@@ -1674,7 +1864,9 @@ namespace PleasantvilleGame
                         case 0: myLabelButton4.Visibility = Visibility.Visible; myLabelButton4.Content = "Skeptical"; break;
                         case 1: myLabelButton5.Visibility = Visibility.Visible; myLabelButton5.Content = "Skeptical"; break;
                         case 2: myLabelButton6.Visibility = Visibility.Visible; myLabelButton6.Content = "Skeptical"; break;
-                        default: break;
+                        default:
+                           Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() reached default i=" + i.ToString());
+                           return false;
                      }
                   }
                   if (true == rightMi.IsWary)
@@ -1684,7 +1876,9 @@ namespace PleasantvilleGame
                         case 0: myLabelButton4.Visibility = Visibility.Visible; myLabelButton4.Content = "Wary"; break;
                         case 1: myLabelButton5.Visibility = Visibility.Visible; myLabelButton5.Content = "Wary"; break;
                         case 2: myLabelButton6.Visibility = Visibility.Visible; myLabelButton6.Content = "Wary"; break;
-                        default: break;
+                        default:
+                           Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() reached default i=" + i.ToString());
+                           return false;
                      }
                   }
                }
@@ -1697,12 +1891,18 @@ namespace PleasantvilleGame
                myLabelRightTop.Content = "Last, choose a person being influenced:";
             }
          }
+         return true;
       }
-      private void PerformInfluence(IGameInstance gi, bool isIgnoreResults)
+      private bool PerformInfluence(IGameInstance gi, bool isIgnoreResults)
       {
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::Perform_Influence() myGameEngine is null");
+            return false;
+         }
          if ((0 == myLeftMapItemsInActionPanelSelected.Count) || (0 == myRightMapItemsInActionPanelSelected.Count))
          {
-            StringBuilder sb = new StringBuilder("PerformInfluence(): myLeft=");
+            StringBuilder sb = new StringBuilder("Perform_Influence(): myLeft=");
             sb.Append(myLeftMapItemsInActionPanel.Count.ToString());
             sb.Append(" myRight=");
             sb.Append(myRightMapItemsInActionPanel.Count.ToString());
@@ -1711,23 +1911,33 @@ namespace PleasantvilleGame
             sb.Append(" myRightSelected=");
             sb.Append(myRightMapItemsInActionPanelSelected.Count.ToString());
             Logger.Log(LogEnum.LE_ERROR, sb.ToString());
-            return;
+            return false;
          }
-
+         //-----------------------------------------------------------------------------
          double totalInfluence = 0;
          bool isImplantHeld = false;
          foreach (IMapItem mi in myLeftMapItemsInActionPanelSelected)
          {
-            IMapItem leftMapItem = gi.Persons.Find(myLeftMapItemsInActionPanelSelected[0].Name);
-            leftMapItem.IsInfluencedThisTurn = true;
+            IMapItem? leftMi = myLeftMapItemsInActionPanelSelected[0];
+            if (null == leftMi)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_Influence(): myLeftMapItemsInActionPanelSelected[0]=null");
+               return false;
+            }
+            leftMi.IsInfluencedThisTurn = true;
             totalInfluence += (double)mi.Influence;
             if (true == mi.IsImplantHeld)
                isImplantHeld = true;
          }
-
-         IMapItem rightMapItem = gi.Persons.Find(myRightMapItemsInActionPanelSelected[0].Name);
+         //-----------------------------------------------------------------------------
+         IMapItem? rightMapItem = myRightMapItemsInActionPanelSelected[0];
+         if (null == rightMapItem)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_Influence(): rightMapItem=null");
+            return false;
+         }
          rightMapItem.IsInfluencedThisTurn = true;
-
+         //-----------------------------------------------------------------------------
          if (false == isIgnoreResults)
          {
             StringBuilder displayResults = new StringBuilder("Odds: ");
@@ -1774,13 +1984,12 @@ namespace PleasantvilleGame
                dieThreshold = 10;
                displayResults.Append("1-3");
             }
-
+            //-----------------------------------------------------------------------------
             // Perform die roll modifier.
             // Subtact one if a controlled person holds evidence of an implant.
             // Check if MapItem is skeptical.  If both skeptical and wary,
             // cancel them out with no die roll modifier.
             // If not skeptical, check if wary.  This adds to the die roll.
-
             int dieRollModifier = 0;
             if (true == isImplantHeld)
                --dieRollModifier;
@@ -1788,22 +1997,18 @@ namespace PleasantvilleGame
                ++dieRollModifier;
             if (true == rightMapItem.IsWary)
                --dieRollModifier;
-
             dieThreshold += dieRollModifier;
-
+            //-----------------------------------------------------------------------------
             int die1 = Utilities.RandomGenerator.Next(6) + 1;
             int die2 = Utilities.RandomGenerator.Next(6) + 1;
             int sum = die1 + die2;
-
             displayResults.Append("\nModifier: ");
             if (0 <= dieRollModifier)
                displayResults.Append("+");
             displayResults.Append(dieRollModifier.ToString());
-
             displayResults.Append("\nNeed: ");
             displayResults.Append(dieThreshold.ToString());
             displayResults.Append("+");
-
             displayResults.Append("\nRoll: ");
             displayResults.Append(die1.ToString());
             displayResults.Append(" + ");
@@ -1812,22 +2017,24 @@ namespace PleasantvilleGame
             displayResults.Append(sum.ToString());
             displayResults.Append("\n");
             displayResults.Append(rightMapItem.Name);
-
-            if (dieThreshold <= sum)
+            if (dieThreshold <= sum) // Check for alien.  If alien, let user know it is discovered. Else, make the townsperson controlled.
             {
-               // Check for alien.  If alien, let user know it is discovered.
-               // Else, make the townsperson controlled.
-
                if (true == rightMapItem.IsAlienUnknown)
                {
                   if (false == gi.AddKnownAlien(rightMapItem))
-                     Logger.Log(LogEnum.LE_ERROR, "CheckForConversion() returned error");
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "Perform_Influence(): AddKnownAlien() returned error");
+                     return false;
+                  }
                   displayResults.Append(" is an Alien!!!!!!");
                }
                else
                {
                   if (false == gi.AddTownperson(rightMapItem))
-                     Logger.Log(LogEnum.LE_ERROR, "CheckForConversion() returned error");
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "Perform_Influence(): AddTownperson() returned error");
+                     return false;
+                  }
                   displayResults.Append(" says \"You are right.  Let's go get 'em!\"");
                }
             }
@@ -1843,19 +2050,19 @@ namespace PleasantvilleGame
                   displayResults.Append(" says \"Hmmmm.  It seems so unlikely.\"");
                }
             }
-
             myTextBoxResults.Text = displayResults.ToString();
-
-         } // if( true == isIgnoreResults)
+         }
+         //-----------------------------------------------------------------------------
          GameAction outAction = GameAction.TownspersonPerformsInfluencing;
          myGameEngine.PerformAction(ref gi, ref outAction);
          if (true == isIgnoreResults)
             ClearActionPanel();
          else
             UpdateActionPanelButtons(gi);
+         return true;
 
       }
-      private bool DisplayCombats(IGameInstance gi)
+      private bool DisplayCombats(IGameInstance gi, out bool isRetreatNeedAck)
       {
          // This method collects all possible combats in the respective containers 
          // <myTerritoriesCombatForAlien> or <myTerritoriesCombatForTownsperson>.  It turns 
@@ -1863,6 +2070,7 @@ namespace PleasantvilleGame
          // can be selected.  This function returns true if there are any possible combats
          // or retreats from previous combats.
          //----------------------------------------------------------------------
+         isRetreatNeedAck = false;
          myStoryboard = new Storyboard();
          foreach (UIElement ui in myCanvas.Children) // Clear any previous flashing regions
          {
@@ -1903,16 +2111,20 @@ namespace PleasantvilleGame
             // Based on counts, determine if a battle is possible.
             // !!!!!REMEMBER!!!!!  unknown aliens will not trigger a combat against wary people
             // unless the MapItem is exposed.  
-            ITerritory combatTerritory = null;
+            ITerritory? combatTerritory = null;
             if (true == IsAlien)
             {
                if (0 == aliens.Count)
                   continue;
-               combatTerritory = aliens[0].TerritoryCurrent;
-
+               IMapItem? alien = aliens[0];
+               if (null == alien)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Display_Combats() aliens[0]=null");
+                  return false;
+               }
+               combatTerritory = alien.TerritoryCurrent;
                if ((0 == controlled.Count) && (0 == uncontrolled.Count)) // If nobody to attack, skip
                   continue;
-
                if (0 == controlled.Count) // Alien can only attack uncontrolled counters that are wary
                {
                   bool isAnyMapItemsWary = false;
@@ -1929,19 +2141,23 @@ namespace PleasantvilleGame
             {
                if (0 == controlled.Count)
                   continue;
-               combatTerritory = controlled[0].TerritoryCurrent;
+               IMapItem? controlledMapItem = controlled[0];
+               if (null == controlledMapItem)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Display_Combats() controlled[0]=null");
+                  return false;
+               }
+               combatTerritory = controlledMapItem.TerritoryCurrent;
                if ((0 == aliens.Count) && ((0 == uncontrolled.Count) && (0 == unknownAliens.Count)))
                   continue;
             }
-
+            //------------------------------------------------------------------------------
             if (true == IsAlien)
                myTerritoriesCombatForAlien.Add(combatTerritory);
             else
                myTerritoriesCombatForTownsperson.Add(combatTerritory);
-
-            // Turn the region red
-
-            String targetName = combatTerritory.Name + combatTerritory.Sector.ToString();
+            //------------------------------------------------------------------------------
+            String targetName = combatTerritory.Name + combatTerritory.Sector.ToString(); // Turn the region red
             foreach (UIElement ui in myCanvas.Children)
             {
                if (ui is Polygon)
@@ -1955,28 +2171,28 @@ namespace PleasantvilleGame
                   }
                }
             }
-
-            // Perform animiation on the region
-
-            DoubleAnimation anim = new DoubleAnimation();
+            //------------------------------------------------------------------------------
+            DoubleAnimation anim = new DoubleAnimation();  // Perform animiation on the region
             anim.From = 0.7;
             anim.To = 0.2;
             anim.Duration = new Duration(TimeSpan.FromSeconds(0.6));
             anim.AutoReverse = true;
             anim.RepeatBehavior = RepeatBehavior.Forever;
-
             myStoryboard.Children.Add(anim);
             Storyboard.SetTargetProperty(anim, new PropertyPath(OpacityProperty));
             Storyboard.SetTargetName(anim, targetName); // Start flashing the region where the user can select
-
-         } // end foreach (Stack stack in stacks)
-
+         }
+         //------------------------------------------------------------------------------
          if (0 == myStoryboard.Children.Count)
          {
-            if (true == gi.MapItemCombat.IsAnyRetreat) // If the previous combat had retreats, do not assume combats are completed
-               return true;                           // until the player explicitly indicates it with menu command.  This allows them
-                                                      // to see the retreats.
-            return false;
+            if (null == gi.MapItemCombat)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::Display_Combats() gi.MapItemCombat is null");
+               return false;
+            }
+            if (true == gi.MapItemCombat.IsAnyRetreat) // If the previous combat had retreats, do not assume combats are completed until the player explicitly indicates it with menu command. This allows them to see the retreats.
+               isRetreatNeedAck = true;
+            return true;
          }
          myStoryboard.Begin(this);
          return true;
@@ -1984,35 +2200,26 @@ namespace PleasantvilleGame
       private void DisplayCombat(IGameInstance gi, ITerritory selectedTerritory)
       {
          ClearActionPanel();
-
-         // If passed-in territory is not null, user has selected this region.
-         // Show a dialog of the conversation results.
-
-         if (null == selectedTerritory)
+         if (null == selectedTerritory)  // If passed-in territory is not null, user has selected this region. Show a dialog of the conversation results.
          {
             Logger.Log(LogEnum.LE_ERROR, "DisplayTakover() selectedTerritory=null");
             return;
          }
-
-         // Only handle this mouse click if the selected territory is one where combat
-         // can occur.
-
-         if (true == IsAlien)
+         if (true == IsAlien) // Only handle this mouse click if the selected territory is one where combat can occur.
          {
-            if (null == myTerritoriesCombatForAlien.Find(selectedTerritory.ToString()))
+            if (null == myTerritoriesCombatForAlien.Find(selectedTerritory.Name))
                return;
          }
          else
          {
-            if (null == myTerritoriesCombatForTownsperson.Find(selectedTerritory.ToString()))
+            if (null == myTerritoriesCombatForTownsperson.Find(selectedTerritory.Name))
                return;
          }
-
+         //-------------------------------------------------------------------
          IMapItems aliens = new MapItems();
          IMapItems controlled = new MapItems();
          IMapItems uncontrolled = new MapItems();
          IMapItems wary = new MapItems();
-
          foreach (MapItem mi in gi.Persons)
          {
             if ((selectedTerritory.Name == mi.TerritoryCurrent.Name) && (selectedTerritory.Sector == mi.TerritoryCurrent.Sector))
@@ -2036,18 +2243,13 @@ namespace PleasantvilleGame
                }
             }
          }
-
-         // If there is no combat, return from this method
-
-         if (0 == controlled.Count)
+         //-------------------------------------------------------------------
+         if (0 == controlled.Count) // If there is no combat, return from this method
          {
             if ((0 == aliens.Count) || (0 == wary.Count))
                return;
          }
-
-         // Setup the action pane.
-
-         if (true == IsAlien)
+         if (true == IsAlien) // Setup the action pane.
          {
             foreach (IMapItem mi in aliens)
                myLeftMapItemsInActionPanel.Add(mi);
@@ -2075,34 +2277,35 @@ namespace PleasantvilleGame
                   myRightMapItemsInActionPanel.Add(mi);
             }
          }
-
+         //-------------------------------------------------------------------
          if ((0 != myLeftMapItemsInActionPanel.Count) && (0 != myRightMapItemsInActionPanel.Count))
          {
             UpdateActionPanel(gi, true);
-
             myLabelHeading.Visibility = Visibility.Visible;
             myLabelArrow.Visibility = Visibility.Visible;
             myTextBoxResults.Visibility = Visibility.Visible;
             myLabelLeftTop.Visibility = Visibility.Visible;
             myLabelRightTop.Visibility = Visibility.Visible;
-
             myLabelHeading.Content = "Combat... \"Let's Rumble!!!\"";
             myLabelLeftTop.Content = "All of these are attacking:";
             myLabelRightTop.Content = "All of these are defending:";
          }
-
       }
-      private void PerformCombat(IGameInstance gi, bool isIgnoreResults)
+      private bool PerformCombat(IGameInstance gi, bool isIgnoreResults)
       {
+         if( null == myGameEngine )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::Perform_Combat(): myGameEngine is null");
+            return false;
+         }
          if (true == isIgnoreResults)
          {
             ClearActionPanel();
-            return;
+            return true;
          }
-
          if ((0 == myLeftMapItemsInActionPanel.Count) || (0 == myRightMapItemsInActionPanel.Count))
          {
-            StringBuilder sb = new StringBuilder("PerformInfluence(): myLeft=");
+            StringBuilder sb = new StringBuilder("GameViewerWindow::Perform_Combat(): myLeft=");
             sb.Append(myLeftMapItemsInActionPanel.Count.ToString());
             sb.Append(" myRight=");
             sb.Append(myRightMapItemsInActionPanel.Count.ToString());
@@ -2111,14 +2314,23 @@ namespace PleasantvilleGame
             sb.Append(" myRightSelected=");
             sb.Append(myRightMapItemsInActionPanelSelected.Count.ToString());
             Logger.Log(LogEnum.LE_ERROR, sb.ToString());
-            return;
+            return false;
          }
-
-         // Only initiate combat if there is not an outstanding combat happening.
-
-         if ((false == myIsCombatInitiatedForAlien) && (false == myIsCombatInitiatedForTownsperson))
+         //-----------------------------------------------------------------------------
+         if ((false == myIsCombatInitiatedForAlien) && (false == myIsCombatInitiatedForTownsperson)) // Only initiate combat if there is not an outstanding combat happening.
          {
-            IMapItem leftMapItem = gi.Persons.Find(myLeftMapItemsInActionPanel[0].Name);
+
+            IMapItem? leftMapItem = myLeftMapItemsInActionPanel[0];
+            if( null == leftMapItem)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::Perform_Combat(): myLeftMapItemsInActionPanel[0]=null");
+               return false;
+            }
+            if( null == gi.MapItemCombat)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::Perform_Combat(): gi.MapItemCombat=null");
+               return false;
+            }
             gi.MapItemCombat.Territory = leftMapItem.TerritoryCurrent;
             if (true == IsAlien)
             {
@@ -2134,28 +2346,24 @@ namespace PleasantvilleGame
                GameAction outAction = GameAction.TownspersonInitiateCombat;
                myGameEngine.PerformAction(ref gi, ref outAction);
             }
-            return;
          }
-
+         return true;
       }
       private void DisplayCombatResults(IGameInstance gi)
       {
          ClearActionPanel();
-
-         IMapItemCombat battle = gi.MapItemCombat;
-         if (null == battle)
+         if (null == gi.MapItemCombat)
          {
-            Logger.Log(LogEnum.LE_ERROR, "DisplayCombatResults() battle=null");
+            Logger.Log(LogEnum.LE_ERROR, "DisplayCombatResults() gi.MapItemCombat=null");
             return;
          }
-
          int totalCombatForAttacker = 0;
          int numAttackers = 0;
          IMapItems leftMapItems = new MapItems();
-         foreach (IMapItem mi in battle.Attackers)
+         foreach (IMapItem mi in gi.MapItemCombat.Attackers)
             leftMapItems.Add(mi);
          leftMapItems = leftMapItems.SortOnCombat();
-
+         //-----------------------------------------------------------------------------
          foreach (IMapItem mi in leftMapItems)
          {
             myLeftMapItemsInActionPanel.Add(mi);
@@ -2164,11 +2372,11 @@ namespace PleasantvilleGame
             if (3 <= ++numAttackers)
                break;
          }
-
+         //-----------------------------------------------------------------------------
          int totalCombatForDefender = 0;
          int numDefenders = 0;
          IMapItems rightMapItems = new MapItems();
-         foreach (IMapItem mi in battle.Defenders)
+         foreach (IMapItem mi in gi.MapItemCombat.Defenders)
             rightMapItems.Add(mi);
          rightMapItems = rightMapItems.SortOnCombat();
          foreach (IMapItem mi in rightMapItems)
@@ -2179,7 +2387,7 @@ namespace PleasantvilleGame
             if (3 <= ++numDefenders)
                break;
          }
-
+         //-----------------------------------------------------------------------------
          if ((0 == myLeftMapItemsInActionPanel.Count) || (0 == myRightMapItemsInActionPanel.Count))
          {
             StringBuilder sb = new StringBuilder("DisplayCombatResults(): myLeft=");
@@ -2189,37 +2397,33 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, sb.ToString());
             return;
          }
-
+         //-----------------------------------------------------------------------------
          UpdateActionPanel(gi, true);
-
          myLabelHeading.Visibility = Visibility.Visible;
          myLabelArrow.Visibility = Visibility.Visible;
-
          Logger.Log(LogEnum.LE_SHOW_COMBAT_THREAD, "DisplayCombatResults() myTextBoxResults.Visibility = Visibility.Visible");
-
          myLabelHeading.Content = "Combat Results";
          myLabelLeftTop.Content = "Attackers:";
          myLabelRightTop.Content = "Defenders:";
-
+         //-----------------------------------------------------------------------------
          StringBuilder displayResults = new StringBuilder();
          displayResults.Append("Total Attacker Combat Factors=");
          displayResults.Append(totalCombatForAttacker.ToString());
          displayResults.Append("\nTotal Defender Combat Factors=");
          displayResults.Append(totalCombatForDefender.ToString());
-
          int differenceInCombat = totalCombatForAttacker - totalCombatForDefender;
          displayResults.Append("\nDifference: ");
          displayResults.Append(differenceInCombat.ToString());
-
-         int die1 = battle.DieRoll1;
-         int die2 = battle.DieRoll2;
+         //-----------------------------------------------------------------------------
+         int die1 = gi.MapItemCombat.DieRoll1;
+         int die2 = gi.MapItemCombat.DieRoll2;
          displayResults.Append("\nRoll: ");
          displayResults.Append(die1.ToString());
          displayResults.Append(" + ");
          displayResults.Append(die2.ToString());
          displayResults.Append(" => ");
-         displayResults.Append(battle.Result.ToString());
-
+         displayResults.Append(gi.MapItemCombat.Result.ToString());
+         //-----------------------------------------------------------------------------
          Logger.Log(LogEnum.LE_SHOW_COMBAT_THREAD, "DisplayCombatResults() myTextBoxResults.Text=displayResults");
          myTextBoxResults.Text = displayResults.ToString();
          myLabelLeftTop.Visibility = Visibility.Visible;
@@ -2231,25 +2435,43 @@ namespace PleasantvilleGame
       }
       private void PerformCombatRetreat(IGameInstance gi, bool isIgnoreResults)
       {
+         if( null == gi.MapItemCombat)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "PerformCombatRetreat() gi.MapItemCombat=null");
+            return;
+         }
          if (null != gi.MapItemCombat.Territory)
             UpdateViewMovement(gi); // Show retreats
          UpdateViewState(gi);
          myIsCombatInitiatedForTownsperson = false;
-         StringBuilder sb1 = new StringBuilder("UpdateView():TownspersonPerformCombat: "); sb1.Append(IsAlien.ToString()); sb1.Append("myIsCombatInitiatedForTownsperson=false");
+         StringBuilder sb1 = new StringBuilder("UpdateView():TownspersonPerformCombat: "); 
+         sb1.Append(IsAlien.ToString()); 
+         sb1.Append("myIsCombatInitiatedForTownsperson=false");
          Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, sb1.ToString());
-
          if (true == isIgnoreResults)
             ClearActionPanel();
       }
-      private bool DisplayIterogations(IGameInstance gi)
+      private bool DisplayIterogations(IGameInstance gi, out bool isInterrogations)
       {
+         isInterrogations = false;
          myStoryboard = new Storyboard();
          foreach (UIElement ui in myCanvas.Children) // Clear any previous flashing regions
          {
             if (ui is Polygon)
             {
                Polygon p1 = (Polygon)ui;
-               ITerritory t = gi.ZebulonTerritories.Find(p1.Tag.ToString());
+               if( null == p1.Tag)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "DisplayIterogations() Polygon.Tag=null");
+                  return false;
+               }
+               string tagString = (string)p1.Tag;
+               if( null == tagString)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "DisplayIterogations() Polygon.Tag.ToString()=null");
+                  return false;
+               }  
+               ITerritory? t = gi.ZebulonTerritories.Find(tagString);
                if (null == t)
                   p1.Fill = mySolidColorBrushClear;
                else
@@ -2283,7 +2505,13 @@ namespace PleasantvilleGame
             if ((0 == townspeopleControlled.Count) || (0 == surrenderedAliens.Count))
                continue;
             //--------------------------------------------------------------
-            String targetName = townspeopleControlled[0].TerritoryCurrent.Name + townspeopleControlled[0].TerritoryCurrent.Sector.ToString();
+            IMapItem? controlled = townspeopleControlled[0];
+            if( null == controlled)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "DisplayIterogations() townspeopleControlled[0]=null");
+               return false;
+            }  
+            String targetName = controlled.TerritoryCurrent.Name + controlled.TerritoryCurrent.Sector.ToString();
             foreach (UIElement ui in myCanvas.Children) // Turn the region red
             {
                if (ui is Polygon)
@@ -2331,23 +2559,27 @@ namespace PleasantvilleGame
          {
             if (stack.MapItems.Count < 2)
                continue;
-            // In each stack, get the count in the stack of the number of aliens 
-            // and controlled townspeople
-            IMapItems controlled = new MapItems();
+            IMapItems controlledMapItems = new MapItems();
             IMapItems aliens = new MapItems();
-            foreach (MapItem mi in stack.MapItems)
+            foreach (MapItem mi in stack.MapItems) // In each stack, get the count in the stack of the number of aliens  and controlled townspeople
             {
                if ((true == mi.IsImplantRemovalThisTurn) || (true == mi.IsKilled))
                   continue;
                if ((true == mi.IsControlled) && (true == mi.IsConscious) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
-                  controlled.Add(mi);
+                  controlledMapItems.Add(mi);
                else if ((true == mi.IsAlienKnown) && ("Zebulon" != mi.Name) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (false == mi.IsConscious)))
                   aliens.Add(mi);
             }
-            if ((0 == controlled.Count) || (0 == aliens.Count))
+            if ((0 == controlledMapItems.Count) || (0 == aliens.Count))
                continue;
             //-------------------------------------------------------------- 
-            String targetName = controlled[0].TerritoryCurrent.Name + controlled[0].TerritoryCurrent.Sector.ToString();  // Turn the region red
+            IMapItem? controlledMapItem = controlledMapItems[0];
+            if( null == controlledMapItem)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "DisplayImplantRemovals() controlledMapItems[0]=null");
+               return false;
+            }
+            String targetName = controlledMapItem.TerritoryCurrent.Name + controlledMapItem.TerritoryCurrent.Sector.ToString();  // Turn the region red
             foreach (UIElement ui in myCanvas.Children)
             {
                if (ui is Polygon)
@@ -2371,7 +2603,7 @@ namespace PleasantvilleGame
             myStoryboard.Children.Add(anim);
             Storyboard.SetTargetProperty(anim, new PropertyPath(OpacityProperty));
             Storyboard.SetTargetName(anim, targetName); // Start flashing the region where the user can select
-         } 
+         }
          //-------------------------------------------------------------- 
          if (0 == myStoryboard.Children.Count)
             return false;
@@ -2381,17 +2613,13 @@ namespace PleasantvilleGame
       private void DisplayImplantRemoval(IGameInstance gi, ITerritory selectedTerritory)
       {
          ClearActionPanel();
-
-         
-         // Show a dialog of the conversation results.
-
-         if (null == selectedTerritory)
+         if (null == selectedTerritory)  // Show a dialog of the conversation results.
          {
             Logger.Log(LogEnum.LE_ERROR, "DisplayImplantRemoval() selectedTerritory=null");
             return;
          }
          IStack? stack = gi.Stacks.Find(selectedTerritory);
-         if( null == stack )
+         if (null == stack)
          {
             Logger.Log(LogEnum.LE_ERROR, "DisplayImplantRemoval() stack=null");
             return;
@@ -2423,7 +2651,7 @@ namespace PleasantvilleGame
             }
          }
       }
-      private void PerformImplantRemoval(IGameInstance gi, bool isIgnoreResults)
+      private bool PerformImplantRemoval(IGameInstance gi, bool isIgnoreResults)
       {
          if ((0 == myLeftMapItemsInActionPanelSelected.Count) || (0 == myRightMapItemsInActionPanelSelected.Count))
          {
@@ -2436,28 +2664,36 @@ namespace PleasantvilleGame
             sb.Append(" myRightSelected=");
             sb.Append(myRightMapItemsInActionPanelSelected.Count.ToString());
             Logger.Log(LogEnum.LE_ERROR, sb.ToString());
-            return;
+            return false;
          }
-
-         IMapItem leftMapItem = gi.Persons.Find(myLeftMapItemsInActionPanelSelected[0].Name);
+         //-----------------------------------------------------------------------------
+         IMapItem? leftMapItem = myLeftMapItemsInActionPanelSelected[0];
+         if( null == leftMapItem)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::PerformImplantRemoval(): myLeftMapItemsInActionPanelSelected[0]=null");
+            return false;
+         }
          leftMapItem.IsImplantRemovalThisTurn = true;
-
-         IMapItem rightMapItem = gi.Persons.Find(myRightMapItemsInActionPanelSelected[0].Name);
+         //-----------------------------------------------------------------------------
+         IMapItem? rightMapItem = myRightMapItemsInActionPanelSelected[0];
+         if (null == rightMapItem)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::PerformImplantRemoval(): myRightMapItemsInActionPanelSelected[0]=null");
+            return false;
+         }
          rightMapItem.IsImplantRemovalThisTurn = true;
-
+         //-----------------------------------------------------------------------------
          if (false == isIgnoreResults)
          {
             int die1 = Utilities.RandomGenerator.Next(6) + 1;
             int die2 = Utilities.RandomGenerator.Next(6) + 1;
             int sum = die1 + die2;
-
             StringBuilder displayResults = new StringBuilder("Roll: ");
             displayResults.Append(die1.ToString());
             displayResults.Append(" + ");
             displayResults.Append(die2.ToString());
             displayResults.Append(" = ");
             displayResults.Append(sum.ToString());
-
             switch (sum)
             {
                case 2: // Implant Explodes
@@ -2466,56 +2702,54 @@ namespace PleasantvilleGame
                   rightMapItem.IsKilled = true;           // Kill the townsperson counter
                   leftMapItem.IsKilled = true;                       // Kill the Alien counter
                   break;
-
                case 4: // Implant is too tighly attached
                case 5:
                case 6:
                   displayResults.Append("\nImplant is too tighly attached. Try again next turn.");
                   break;
-
                case 7: // Implant is removed but disintegrates
                case 8:
                case 9:
                case 10:
                   displayResults.Append("\nImplant is removed but disintegrates.");
                   if (false == gi.AddTownperson(rightMapItem))
+                  {
                      Logger.Log(LogEnum.LE_ERROR, "CheckForImplantRemoval() returned error");
+                     return false;
+                  }
                   break;
-
                case 11: // Implant usuable
                case 12:
                   displayResults.Append("\nImplant is removed intact! You now have evidence.");
                   if (false == gi.AddTownperson(rightMapItem))
+                  {
                      Logger.Log(LogEnum.LE_ERROR, "CheckForImplantRemoval() returned error");
+                     return false;
+                  }
                   leftMapItem.IsImplantHeld = true;
                   break;
-
                default:
-                  break;
+                  Logger.Log(LogEnum.LE_ERROR, "CheckForImplantRemoval() reached default dr=" + sum.ToString());
+                  return false;
             }
-
             myTextBoxResults.Text = displayResults.ToString();
          }
-
+         //-----------------------------------------------------------------------------
          if (true == isIgnoreResults)
             ClearActionPanel();
          else
             UpdateActionPanelButtons(gi);
+         return true;
       }
       private bool DisplayTakeovers(IGameInstance gi, ITerritory? selectedTerritory = null)
       {
-
          if (false == IsAlien)
          {
             myStoryboard = null; // turn off any flashing spaces
             return false;
          }
-
          //----------------------------------------------------------------------
-         // Clear any previous flashing regions
-
-         myStoryboard = new Storyboard();
-
+         myStoryboard = new Storyboard(); // Clear any previous flashing regions
          foreach (UIElement ui in myCanvas.Children)
          {
             if (ui is Polygon)
@@ -2524,7 +2758,6 @@ namespace PleasantvilleGame
                p1.Fill = mySolidColorBrushClear;
             }
          }
-
          //----------------------------------------------------------------------
          // Display flashing regions where takovers can happen.
          // Iterate through the stacks looking for multiple counters per stack.;
@@ -2578,8 +2811,14 @@ namespace PleasantvilleGame
             if ((0 == possibleVictums.Count) || (0 == countOfAliens))
                continue;
             myIsTakeOverInOneRegion = true;
-            // Turn the region orange
-            String targetName = possibleVictums[0].TerritoryCurrent.Name + possibleVictums[0].TerritoryCurrent.Sector.ToString();
+            //-----------------------------------------------------------
+            IMapItem? possibleVictum = possibleVictums[0];
+            if( null == possibleVictum)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "DisplayTakeovers() possibleVictums[0]=null");
+               return false;
+            }  
+            String targetName = possibleVictum.TerritoryCurrent.Name + possibleVictum.TerritoryCurrent.Sector.ToString();  // Turn the region orange
             foreach (UIElement ui in myCanvas.Children)
             {
                if (ui is Polygon)
@@ -2593,22 +2832,19 @@ namespace PleasantvilleGame
                   }
                }
             }
-
-            // Perform animiation on the region
-
-            DoubleAnimation anim = new DoubleAnimation();
+            //-----------------------------------------------------------
+            DoubleAnimation anim = new DoubleAnimation();  // Perform animiation on the region
             anim.From = 0.7;
             anim.To = 0.2;
             anim.Duration = new Duration(TimeSpan.FromSeconds(0.6));
             anim.AutoReverse = true;
             anim.RepeatBehavior = RepeatBehavior.Forever;
-
             myStoryboard.Children.Add(anim);
             Storyboard.SetTargetProperty(anim, new PropertyPath(OpacityProperty));
             Storyboard.SetTargetName(anim, targetName); // Start flashing the region where the user can select
 
          } // end foreach (Stack stack in stacks)
-
+           //-------------------------------------------------------------------------------------------------
          if (0 == myStoryboard.Children.Count)
          {
             if ((true == myIsTakeOverPromptNeededToFoolOpponent) && (false == myIsTakeOverInOneRegion))
@@ -2616,16 +2852,13 @@ namespace PleasantvilleGame
             else
                return false;
          }
-
          myStoryboard.Begin(this);
          return true;
       }
       private void DisplayTakover(IGameInstance gi, ITerritory selectedTerritory)
       {
          ClearActionPanel();
-         // If passed-in territory is not null, user has selected this region.
-         // Show a dialog of the conversation results.
-         if (null == selectedTerritory)
+         if (null == selectedTerritory) // If passed-in territory is not null, user has selected this region. Show a dialog of the conversation results.
          {
             Logger.Log(LogEnum.LE_ERROR, "DisplayTakover() selectedTerritory=null");
             return;
@@ -2641,7 +2874,6 @@ namespace PleasantvilleGame
          {
             myLeftMapItemsInActionPanel.Clear();
             myRightMapItemsInActionPanel.Clear();
-
             foreach (IMapItem mi in stack.MapItems)
             {
                if (stack.MapItems.Count < 2)
@@ -2680,8 +2912,13 @@ namespace PleasantvilleGame
             }
          }
       }
-      private void PerformTakeover(IGameInstance gi, bool isIgnoreResults)
+      private bool PerformTakeover(IGameInstance gi, bool isIgnoreResults)
       {
+         if( null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::PerformTakeover(): myGameEngine is null");
+            return false;
+         }
          if ((0 == myLeftMapItemsInActionPanelSelected.Count) || (0 == myRightMapItemsInActionPanelSelected.Count))
          {
             StringBuilder sb = new StringBuilder("PerformTakeover(): myLeft=");
@@ -2693,21 +2930,32 @@ namespace PleasantvilleGame
             sb.Append(" myRightSelected=");
             sb.Append(myRightMapItemsInActionPanelSelected.Count.ToString());
             Logger.Log(LogEnum.LE_ERROR, sb.ToString());
-            return;
+            return false;
          }
-
-         IMapItem alien = gi.Persons.Find(myLeftMapItemsInActionPanelSelected[0].Name);
+         //-----------------------------------------------------------------------------
+         IMapItem? alien = myLeftMapItemsInActionPanelSelected[0];
+         if( null == alien)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::PerformTakeover(): myLeftMapItemsInActionPanelSelected[0]=null");
+            return false;
+         }
          alien.IsTakeoverThisTurn = true;
-
-         IMapItem victum = gi.Persons.Find(myRightMapItemsInActionPanelSelected[0].Name);
+         IMapItem? victum = myLeftMapItemsInActionPanelSelected[0];
+         if( null == victum)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::PerformTakeover(): myRightMapItemsInActionPanelSelected[0]=null");
+            return false;
+         }
          victum.IsTakeoverThisTurn = true;
-
+         //-----------------------------------------------------------------------------
          if (false == isIgnoreResults)
             gi.Takeover = new MapItemTakeover(alien, victum);
-         GameAction outAction = GameAction.AlienTakeover;
-         myGameEngine.PerformAction(ref gi, ref outAction);
          if (true == isIgnoreResults)
             ClearActionPanel();
+         //-----------------------------------------------------------------------------
+         GameAction outAction = GameAction.AlienTakeover;
+         myGameEngine.PerformAction(ref gi, ref outAction);
+         return true;
       }
       private void PerformTakeoverObserved(IGameInstance gi)
       {
@@ -2736,7 +2984,6 @@ namespace PleasantvilleGame
             int length = entry.Count();
             if (0 == length)
                return;
-
             if ('\n' == entry[length - 1])
             {
                myTextBoxEntry.Text = "";
@@ -2802,7 +3049,7 @@ namespace PleasantvilleGame
                      {
                         if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
                            Logger.Log(LogEnum.LE_ERROR, "ClickMapItem(): RotateStack() returned false");
-                        return;  
+                        return;
                      }
                   }
                   break;
@@ -2815,11 +3062,10 @@ namespace PleasantvilleGame
                      {
                         if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
                            Logger.Log(LogEnum.LE_ERROR, "ClickMapItem(): RotateStack() returned false");
-                        return;  
+                        return;
                      }
                   }
                   break;
-
                default:
                   MapItemCommonAction(selectedMapItem.TerritoryCurrent);
                   return;
@@ -2888,7 +3134,6 @@ namespace PleasantvilleGame
          // There is already a moving button.  Do not do any actions until
          // the alien player responds or there is a timeout on the alien response.
          // When that happens, myIsAlienAbleToStopMove=false.
-
          if (true == myIsAlienAbleToStopMove)
             return;
          //--------------------------------------------------
@@ -2911,12 +3156,10 @@ namespace PleasantvilleGame
                   }
                }
 
-            } // end if (ui is Polygon)
-
+            } 
             if (null != selectedTerritory)
                break;
-
-         }  // end foreach (UIElement ui in myCanvas.Children)
+         }  
          if (null == selectedTerritory)  // If no territory is selected, return
             return;
          //-----------------------------------------------------
@@ -2943,12 +3186,8 @@ namespace PleasantvilleGame
       {
 
          Point p = e.GetPosition(myCanvas);  // not used but useful info
-
-         #region Get the selected territory
          //--------------------------------------------------
-         // Get the selected territory
-
-         ITerritory selectedTerritory = null;
+         ITerritory? selectedTerritory = null;  // Get the selected territory
          foreach (UIElement ui in myCanvas.Children)
          {
             if (ui is Polygon)
@@ -2965,21 +3204,13 @@ namespace PleasantvilleGame
                      }
                   }
                }
-
-            } // end if (ui is Polygon)
-
+            } 
             if (null != selectedTerritory)
                break;
-
-         }  // end foreach (UIElement ui in myCanvas.Children)
-
+         }  
          if (null == selectedTerritory)  // If no territory is selected, return
             return;
-
-         #endregion
-
          this.RotateStack(selectedTerritory);
-
       }
       private void MouseDoubleClickMapItem(object sender, RoutedEventArgs e)
       {
@@ -2996,7 +3227,12 @@ namespace PleasantvilleGame
       }
       private void ContextMenuLoaded(object sender, RoutedEventArgs e)
       {
-         IGameInstance gi = myGameInstance;
+         if( null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ContextMenuLoaded() myGameInstance=null");
+            return;
+         }
+         //--------------------------------------------------
          if (sender is ContextMenu)
          {
             ContextMenu cm = (ContextMenu)sender;
@@ -3012,16 +3248,21 @@ namespace PleasantvilleGame
             if (cm.PlacementTarget is Button)
             {
                Button b = (Button)cm.PlacementTarget;
-               IMapItem mi = gi.Persons.Find(b.Name);
+               IMapItem? mi = myGameInstance.Stacks.FindMapItem(b.Name);
+               if( null == mi )
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "ContextMenuLoaded(): myGameInstance.Stacks.FindMapItem() returned null for name=" + b.Name);
+                  return;
+               }
                // Gray out the "Retun to Starting Point" menu item
                if ((0 < cm.Items.Count) && (true == mi.IsMoveAllowedToResetThisTurn))
                {
                   if (cm.Items[0] is MenuItem)
                   {
                      MenuItem menuItem = (MenuItem)cm.Items[0];
-                     if ((true == IsAlien) && (GamePhase.AlienMovement == gi.GamePhase) && (true == mi.IsMoved))
+                     if ((true == IsAlien) && (GamePhase.AlienMovement == myGameInstance.GamePhase) && (true == mi.IsMoved))
                         menuItem.IsEnabled = true;
-                     else if ((false == IsAlien) && (GamePhase.TownspersonMovement == gi.GamePhase) && (true == mi.IsMoved))
+                     else if ((false == IsAlien) && (GamePhase.TownspersonMovement == myGameInstance.GamePhase) && (true == mi.IsMoved))
                         menuItem.IsEnabled = true;
                   }
                }
@@ -3057,7 +3298,7 @@ namespace PleasantvilleGame
                   if (cm.Items[3] is MenuItem)
                   {
                      MenuItem menuItem = (MenuItem)cm.Items[3];
-                     menuItem.IsEnabled = IsAlienAbleToStopMove(gi, mi);
+                     menuItem.IsEnabled = IsAlienAbleToStopMove(myGameInstance, mi);
                   }
                }
             }
@@ -3091,10 +3332,10 @@ namespace PleasantvilleGame
                if (cm.PlacementTarget is Button)
                {
                   Button b = (Button)cm.PlacementTarget;
-                  IMapItem selectedMapItem = gi.Persons.Find(b.Name);
+                  IMapItem? selectedMapItem = gi.Stacks.FindMapItem(b.Name);
                   if (null == selectedMapItem)
                   {
-                     Console.WriteLine("GameViewerWindow::MouseDoubleClickMapItem() selectedMapItem = null for {0}", b.Name);
+                     Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickRotate() selectedMapItem=null for name=" + b.Name);
                      return;
                   }
                   this.RotateStack(selectedMapItem.TerritoryCurrent);
@@ -3104,7 +3345,16 @@ namespace PleasantvilleGame
       }
       private void ContextMenuClickExposeAlien(object sender, RoutedEventArgs e)
       {
-         IGameInstance gi = myGameInstance;
+         if( null == myGameInstance )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickExposeAlien() myGameInstance=null");
+            return;
+         }
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickExposeAlien() myGameEngine=null");
+            return;
+         }
          if (sender is MenuItem)
          {
             MenuItem mi = (MenuItem)sender;
@@ -3114,18 +3364,21 @@ namespace PleasantvilleGame
                if (cm.PlacementTarget is Button)
                {
                   Button b = (Button)cm.PlacementTarget;
-                  IMapItem selectedMapItem = gi.Persons.Find(b.Name);
+                  IMapItem? selectedMapItem = myGameInstance.Stacks.FindMapItem(b.Name);
                   if (null == selectedMapItem)
                   {
-                     Console.WriteLine("GameViewerWindow::MouseDoubleClickMapItem() selectedMapItem = null for {0}", b.Name);
+                     Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickExposeAlien() selectedMapItem=null for name=" + b.Name);
                      return;
                   }
                   if (true == selectedMapItem.IsAlienUnknown)
                   {
-                     if (false == gi.AddKnownAlien(selectedMapItem))
+                     if (false == myGameInstance.AddKnownAlien(selectedMapItem))
+                     {
                         Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickExposeAlien(): returned error");
+                        return;
+                     }
                      GameAction outAction = GameAction.ShowAlien;
-                     myGameEngine.PerformAction(ref gi, ref outAction); // Inform the user to return back
+                     myGameEngine.PerformAction(ref myGameInstance, ref outAction); // Inform the user to return back
                   }
                }
             }
@@ -3133,7 +3386,16 @@ namespace PleasantvilleGame
       }
       private void ContextMenuClickStopMove(object sender, RoutedEventArgs e)
       {
-         IGameInstance gi = myGameInstance;
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickStopMove() myGameInstance=null");
+            return;
+         }
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickStopMove() myGameEngine=null");
+            return;
+         }
          myTimer.Stop();
          if (sender is MenuItem)
          {
@@ -3144,38 +3406,51 @@ namespace PleasantvilleGame
                if (cm.PlacementTarget is Button)
                {
                   Button b = (Button)cm.PlacementTarget;
-                  IMapItem selectedMapItem = gi.Persons.Find(b.Name);
+                  IMapItem? selectedMapItem = myGameInstance.Stacks.FindMapItem(b.Name);
                   if (null != selectedMapItem)
                   {
                      if (((true == selectedMapItem.IsAlienUnknown) || (true == selectedMapItem.IsAlienKnown)) && (true == myIsAlienAbleToStopMove) && (false == selectedMapItem.IsMoveStoppedThisTurn))
                      {
-                        if (false == gi.AddKnownAlien(selectedMapItem))
-                           Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickStopMove(): returned error");
-                        selectedMapItem.IsMoveStoppedThisTurn = true;
-
-                        // Reset the moving MapItem
-
-                        if (0 < gi.MapItemMoves.Count)
+                        if (false == myGameInstance.AddKnownAlien(selectedMapItem))
                         {
-                           IMapItemMove mim = gi.MapItemMoves[0];
-                           IMapItem movingMi = gi.Persons.Find(mim.MapItem.Name);
-                           movingMi.TerritoryCurrent = movingMi.TerritoryStarting;
-                           movingMi.IsMoveStoppedThisTurn = true;
-                           movingMi.MovementUsed -= mim.BestPath.Territories.Count;
-                           if (movingMi.MovementUsed <= 0)
+                           Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickStopMove(): returned error");
+                           return;
+                        }
+                        selectedMapItem.IsMoveStoppedThisTurn = true;
+                        if (0 < myGameInstance.MapItemMoves.Count) // Reset the moving MapItem
+                        {
+                           IMapItemMove? mim = myGameInstance.MapItemMoves[0];
+                           if( null == mim)
                            {
-                              movingMi.MovementUsed = 0;
-                              movingMi.IsMoved = false;
+                              Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickStopMove() myGameInstance.MapItemMoves[0]=null");
+                              return;
                            }
-
-                           // Change to modified MapItemMove
-
-                           IMapItemMove modifiedMove = new MapItemMove(Territories.theTerritories, movingMi, selectedMapItem.TerritoryCurrent);
-                           gi.MapItemMoves[0] = modifiedMove;
-                           movingMi.MovementUsed = movingMi.Movement; // ensure cannot move further
+                           if (null == mim.MapItem)
+                           {
+                              Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickStopMove() mim.MapItem=null");
+                              return;
+                           }
+                           if (null == mim.BestPath)
+                           {
+                              Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickStopMove() mim.BestPath=null");
+                              return;
+                           }
+                           mim.MapItem.TerritoryCurrent = mim.MapItem.TerritoryStarting;
+                           mim.MapItem.IsMoveStoppedThisTurn = true;
+                           mim.MapItem.MovementUsed -= mim.BestPath.Territories.Count;
+                           if (mim.MapItem.MovementUsed <= 0)
+                           {
+                              mim.MapItem.MovementUsed = 0;
+                              mim.MapItem.IsMoved = false;
+                           }
+                           //--------------------------------
+                           IMapItemMove modifiedMove = new MapItemMove(Territories.theTerritories, mim.MapItem, selectedMapItem.TerritoryCurrent); // Change to modified MapItemMove
+                           myGameInstance.MapItemMoves[0] = modifiedMove;
+                           mim.MapItem.MovementUsed = mim.MapItem.Movement; // ensure cannot move further
+                           UpdateCanvas(myGameInstance, true);
+                           //--------------------------------
                            GameAction outAction = GameAction.AlienModifiesTownspersonMovement;
-                           myGameEngine.PerformAction(ref gi, ref outAction);
-                           UpdateCanvas(gi, true);
+                           myGameEngine.PerformAction(ref myGameInstance, ref outAction);
                         }
                      }
                   }
@@ -3185,21 +3460,40 @@ namespace PleasantvilleGame
       }
       private void TimerElasped(object sender, EventArgs e)
       {
-         IGameInstance gi = myGameInstance;
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "TimerElasped() myGameInstance=null");
+            return;
+         }
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "TimerElasped() myGameEngine=null");
+            return;
+         }
          Logger.Log(LogEnum.LE_TIMER_ELAPED, "TimerElasped() called");
          if (true == myIsAlienAbleToStopMove)
          {
             myIsAlienAbleToStopMove = false;
             Logger.Log(LogEnum.LE_TIMER_ELAPED, "TimerElasped():  Reset State myIsAlienAbleToStopMove=false");
             myTimer.Stop();
+            //-------------------------------
             GameAction outAction = GameAction.AlienTimeoutOnMovement;
-            myGameEngine.PerformAction(ref gi, ref outAction);
+            myGameEngine.PerformAction(ref myGameInstance, ref outAction);
          }
       }
       private void myButton1_Click(object sender, RoutedEventArgs e)
       {
-         IGameInstance gi = myGameInstance;
-         switch (gi.GamePhase)
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "myButton1_Click() myGameInstance=null");
+            return;
+         }
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "TimerElasmyButton1_Clickped() myGameEngine=null");
+            return;
+         }
+         switch (myGameInstance.GamePhase)
          {
             case GamePhase.Conversations:
             case GamePhase.ImplantRemoval:
@@ -3211,8 +3505,13 @@ namespace PleasantvilleGame
             default:
                break;
          }
-
-         IMapItem mi = myLeftMapItemsInActionPanel[0];
+         //-----------------------------------------------------------  
+         IMapItem? mi = myLeftMapItemsInActionPanel[0];
+         if( null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "myButton1_Click() myLeftMapItemsInActionPanel[0]=null");
+            return;
+         }  
          if (Visibility.Hidden == myRectangle1.Visibility) // if selected, deselect it
          {
             myRectangle1.Visibility = Visibility.Visible;
@@ -3231,8 +3530,17 @@ namespace PleasantvilleGame
       }
       private void myButton2_Click(object sender, RoutedEventArgs e)
       {
-         IGameInstance gi = myGameInstance;
-         switch (gi.GamePhase)
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "myButton1_Click() myGameInstance=null");
+            return;
+         }
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "TimerElasmyButton2_Clickped() myGameEngine=null");
+            return;
+         }
+         switch (myGameInstance.GamePhase)
          {
             case GamePhase.Conversations:
             case GamePhase.ImplantRemoval:
@@ -3244,8 +3552,13 @@ namespace PleasantvilleGame
             default:
                break;
          }
-
-         IMapItem mi = myLeftMapItemsInActionPanel[1];
+         //-----------------------------------------------------------  
+         IMapItem? mi = myLeftMapItemsInActionPanel[1];
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "myButton1_Click() myLeftMapItemsInActionPanel[0]=null");
+            return;
+         }
          if (Visibility.Hidden == myRectangle2.Visibility) // if selected, deselect it
          {
             myRectangle2.Visibility = Visibility.Visible;
@@ -3264,8 +3577,17 @@ namespace PleasantvilleGame
       }
       private void myButton3_Click(object sender, RoutedEventArgs e)
       {
-         IGameInstance gi = myGameInstance;
-         switch (gi.GamePhase)
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "myButton3_Click() myGameInstance=null");
+            return;
+         }
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "TimerElasmyButton3_Clickped() myGameEngine=null");
+            return;
+         }
+         switch (myGameInstance.GamePhase)
          {
             case GamePhase.Conversations:
             case GamePhase.ImplantRemoval:
@@ -3277,8 +3599,13 @@ namespace PleasantvilleGame
             default:
                break;
          }
-
-         IMapItem mi = myLeftMapItemsInActionPanel[2];
+         //-----------------------------------------------------------  
+         IMapItem? mi = myLeftMapItemsInActionPanel[2];
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "myButton3_Click() myLeftMapItemsInActionPanel[0]=null");
+            return;
+         }
          if (Visibility.Hidden == myRectangle3.Visibility) // if selected, deselect it
          {
             myRectangle3.Visibility = Visibility.Visible;
@@ -3289,7 +3616,6 @@ namespace PleasantvilleGame
             myRectangle3.Visibility = Visibility.Hidden;
             myLeftMapItemsInActionPanelSelected.Remove(mi.Name);
          }
-
          if ((0 < myLeftMapItemsInActionPanelSelected.Count) && (0 < myRightMapItemsInActionPanelSelected.Count))
             myButtonOk.IsEnabled = true;
          else
@@ -3297,8 +3623,17 @@ namespace PleasantvilleGame
       }
       private void myButton4_Click(object sender, RoutedEventArgs e)
       {
-         IGameInstance gi = myGameInstance;
-         switch (gi.GamePhase)
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "myButton3_Click() myGameInstance=null");
+            return;
+         }
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "TimerElasmyButton3_Clickped() myGameEngine=null");
+            return;
+         }
+         switch (myGameInstance.GamePhase)
          {
             case GamePhase.Conversations:
             case GamePhase.ImplantRemoval:
@@ -3310,8 +3645,13 @@ namespace PleasantvilleGame
             default:
                break;
          }
-
-         IMapItem mi = myRightMapItemsInActionPanel[0];
+         //-----------------------------------------------------------  
+         IMapItem? mi = myRightMapItemsInActionPanel[0];
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "myButton3_Click() myLeftMapItemsInActionPanel[0]=null");
+            return;
+         }
          if (Visibility.Hidden == myRectangle4.Visibility) // if selected, deselect it
          {
             myRectangle4.Visibility = Visibility.Visible;
@@ -3322,7 +3662,7 @@ namespace PleasantvilleGame
             myRectangle4.Visibility = Visibility.Hidden;
             myRightMapItemsInActionPanelSelected.Remove(mi.Name);
          }
-
+         //-----------------------------------------------------------  
          if ((0 < myLeftMapItemsInActionPanelSelected.Count) && (0 < myRightMapItemsInActionPanelSelected.Count))
             myButtonOk.IsEnabled = true;
          else
@@ -3330,8 +3670,17 @@ namespace PleasantvilleGame
       }
       private void myButton5_Click(object sender, RoutedEventArgs e)
       {
-         IGameInstance gi = myGameInstance;
-         switch (gi.GamePhase)
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "myButton3_Click() myGameInstance=null");
+            return;
+         }
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "TimerElasmyButton3_Clickped() myGameEngine=null");
+            return;
+         }
+         switch (myGameInstance.GamePhase)
          {
             case GamePhase.Conversations:
             case GamePhase.ImplantRemoval:
@@ -3343,8 +3692,13 @@ namespace PleasantvilleGame
             default:
                break;
          }
-
-         IMapItem mi = myRightMapItemsInActionPanel[1];
+         //-----------------------------------------------------------  
+         IMapItem? mi = myRightMapItemsInActionPanel[1];
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "myButton3_Click() myLeftMapItemsInActionPanel[0]=null");
+            return;
+         }
          if (Visibility.Hidden == myRectangle5.Visibility) // if selected, deselect it
          {
             myRectangle5.Visibility = Visibility.Visible;
@@ -3355,7 +3709,7 @@ namespace PleasantvilleGame
             myRectangle5.Visibility = Visibility.Hidden;
             myRightMapItemsInActionPanelSelected.Remove(mi.Name);
          }
-
+         //-----------------------------------------------------------  
          if ((0 < myLeftMapItemsInActionPanelSelected.Count) && (0 < myRightMapItemsInActionPanelSelected.Count))
             myButtonOk.IsEnabled = true;
          else
@@ -3363,8 +3717,17 @@ namespace PleasantvilleGame
       }
       private void myButton6_Click(object sender, RoutedEventArgs e)
       {
-         IGameInstance gi = myGameInstance;
-         switch (gi.GamePhase)
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "myButton6_Click() myGameInstance=null");
+            return;
+         }
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "myButton6_Click() myGameEngine=null");
+            return;
+         }
+         switch (myGameInstance.GamePhase)
          {
             case GamePhase.Conversations:
             case GamePhase.ImplantRemoval:
@@ -3376,8 +3739,13 @@ namespace PleasantvilleGame
             default:
                break;
          }
-
-         IMapItem mi = myRightMapItemsInActionPanel[2];
+         //-----------------------------------------------------------  
+         IMapItem? mi = myRightMapItemsInActionPanel[2];
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "myButton6_Click() myRightMapItemsInActionPanel[2]=null");
+            return;
+         }
          if (Visibility.Hidden == myRectangle6.Visibility) // if selected, deselect it
          {
             myRectangle6.Visibility = Visibility.Visible;
@@ -3388,7 +3756,7 @@ namespace PleasantvilleGame
             myRectangle6.Visibility = Visibility.Hidden;
             myRightMapItemsInActionPanelSelected.Remove(mi.Name);
          }
-
+         //-----------------------------------------------------------  
          if ((0 < myLeftMapItemsInActionPanelSelected.Count) && (0 < myRightMapItemsInActionPanelSelected.Count))
             myButtonOk.IsEnabled = true;
          else
@@ -3396,49 +3764,57 @@ namespace PleasantvilleGame
       }
       private void myButtonOk_Click(object sender, RoutedEventArgs e)
       {
-         IGameInstance gi = myGameInstance;
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "myButton6_Click() myGameInstance=null");
+            return;
+         }
          myButtonOk.Visibility = Visibility.Hidden;
          myButtonIgnore.Visibility = Visibility.Hidden;
-         switch (gi.GamePhase)
+         switch (myGameInstance.GamePhase)
          {
-            case GamePhase.Conversations: PerformConversation(gi, false); break;
-            case GamePhase.ImplantRemoval: PerformImplantRemoval(gi, false); break;
-            case GamePhase.AlienTakeover: PerformTakeover(gi, false); break;
-            case GamePhase.Influences: PerformInfluence(gi, false); break;
+            case GamePhase.Conversations: PerformConversation(myGameInstance, false); break;
+            case GamePhase.ImplantRemoval: PerformImplantRemoval(myGameInstance, false); break;
+            case GamePhase.AlienTakeover: PerformTakeover(myGameInstance, false); break;
+            case GamePhase.Influences: PerformInfluence(myGameInstance, false); break;
             case GamePhase.Combat:
                {
                   if ("" == myTextBoxResults.Text)
-                     PerformCombat(gi, false);
+                     PerformCombat(myGameInstance, false);
                   else
-                     PerformCombatRetreat(gi, false);
+                     PerformCombatRetreat(myGameInstance, false);
                   break;
                }
             default: break;
          }
-         UpdateViewState(gi);
+         UpdateViewState(myGameInstance);
       }
       private void myButtonIgnoreClick(object sender, RoutedEventArgs e)
       {
-         IGameInstance gi = myGameInstance;
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "myButtonIgnoreClick() myGameInstance=null");
+            return;
+         }
          myButtonOk.Visibility = Visibility.Hidden;
          myButtonIgnore.Visibility = Visibility.Hidden;
-         switch (gi.GamePhase)
+         switch (myGameInstance.GamePhase)
          {
-            case GamePhase.Conversations: PerformConversation(gi, true); break;
-            case GamePhase.ImplantRemoval: PerformImplantRemoval(gi, true); break;
-            case GamePhase.AlienTakeover: PerformTakeover(gi, true); break;
-            case GamePhase.Influences: PerformInfluence(gi, true); break;
+            case GamePhase.Conversations: PerformConversation(myGameInstance, true); break;
+            case GamePhase.ImplantRemoval: PerformImplantRemoval(myGameInstance, true); break;
+            case GamePhase.AlienTakeover: PerformTakeover(myGameInstance, true); break;
+            case GamePhase.Influences: PerformInfluence(myGameInstance, true); break;
             case GamePhase.Combat:
                {
                   if ("" == myTextBoxResults.Text)
-                     PerformCombat(gi, true);
+                     PerformCombat(myGameInstance, true);
                   else
-                     PerformCombatRetreat(gi, true);
+                     PerformCombatRetreat(myGameInstance, true);
                   break;
                }
             default: break;
          }
-         UpdateViewState(gi);
+         UpdateViewState(myGameInstance);
       }
       private void GameViewerWindowClosed(object sender, EventArgs e)
       {
@@ -3448,54 +3824,67 @@ namespace PleasantvilleGame
       //-------------CONTROLLER HELPER FUNCTIONS---------------------------------
       private void MapItemCommonAction(ITerritory selectedTerritory)
       {
-         IGameInstance gi = myGameInstance;
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MapItemCommonAction() myGameInstance=null");
+            return;
+         }
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "myButton6_Click() myGameEngine=null");
+            return;
+         }
+         //----------------------------------------
          myStoryboard = null;
-         switch (gi.GamePhase)
+         switch (myGameInstance.GamePhase)
          {
             case GamePhase.Conversations:
                if (false == IsAlien)
-                  DisplayConversation(gi, selectedTerritory);
+                  DisplayConversation(myGameInstance, selectedTerritory);
                else
                   RotateStack(selectedTerritory);
                return;
             case GamePhase.Influences:
                if (false == IsAlien)
-                  DisplayInfluence(gi, selectedTerritory);
+                  DisplayInfluence(myGameInstance, selectedTerritory);
                else
                   RotateStack(selectedTerritory);
                return;
             case GamePhase.Combat:
-               DisplayCombat(gi, selectedTerritory);
+               DisplayCombat(myGameInstance, selectedTerritory);
                return;
             case GamePhase.Iterrogations:
                if (false == IsAlien)
                {
-                  if ((true == selectedTerritory.IsBuilding()) && (null != gi.ZebulonTerritories.Find(selectedTerritory.ToString())) && (0 < gi.NumIterogationsThisTurn))
+                  if ((true == selectedTerritory.IsBuilding()) && (null != myGameInstance.ZebulonTerritories.Find(selectedTerritory.ToString())) && (0 < myGameInstance.NumIterogationsThisTurn))
                   {
-                     --gi.NumIterogationsThisTurn;
-                     gi.ZebulonTerritories.Remove(selectedTerritory);
+                     --myGameInstance.NumIterogationsThisTurn;
+                     myGameInstance.ZebulonTerritories.Remove(selectedTerritory);
                      IMapItem zebulon = myGameInstance.Persons.Find("Zebulon");
                      if ((zebulon.TerritoryCurrent.Name == selectedTerritory.Name) && (zebulon.TerritoryCurrent.Sector == selectedTerritory.Sector))
                      {
                         zebulon.IsAlienKnown = true;
-                        gi.NumIterogationsThisTurn = 0;
+                        myGameInstance.NumIterogationsThisTurn = 0;
                      }
-                     StringBuilder sb = new StringBuilder("MouseLeftButtonDownCanvas(): "); sb.Append(gi.NumIterogationsThisTurn.ToString()); sb.Append("). picked "); sb.Append(selectedTerritory.ToString());
+                     StringBuilder sb = new StringBuilder("MouseLeftButtonDownCanvas(): "); 
+                     sb.Append(myGameInstance.NumIterogationsThisTurn.ToString()); 
+                     sb.Append("). picked "); 
+                     sb.Append(selectedTerritory.ToString());
                      Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, sb.ToString());
                      GameAction outAction = GameAction.TownspersonIterrogates;
-                     myGameEngine.PerformAction(ref gi, ref outAction);
+                     myGameEngine.PerformAction(ref myGameInstance, ref outAction);
                   }
                }
                return;
             case GamePhase.ImplantRemoval:
                if (false == IsAlien)
-                  DisplayImplantRemoval(gi, selectedTerritory);
+                  DisplayImplantRemoval(myGameInstance, selectedTerritory);
                else
                   RotateStack(selectedTerritory);
                return;
             case GamePhase.AlienTakeover:
                if (true == IsAlien)
-                  DisplayTakover(gi, selectedTerritory);
+                  DisplayTakover(myGameInstance, selectedTerritory);
                else
                   RotateStack(selectedTerritory);
                return;
@@ -3506,10 +3895,20 @@ namespace PleasantvilleGame
       }
       private void MapItemMoveManually(ITerritory selectedTerritory, Button selectedButton)
       {
-         IGameInstance gi = myGameInstance;
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MapItemMoveManually() myGameInstance=null");
+            return;
+         }
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MapItemMoveManually() myGameEngine=null");
+            return;
+         }
+         //----------------------------------------
          if ((null != selectedTerritory) && (null != selectedButton))  // MapItem already selected to move.  Moving it to a known space
          {
-            IMapItem movingMapItem = gi.Persons.Find(selectedButton.Name);
+            IMapItem movingMapItem = myGameInstance.Persons.Find(selectedButton.Name);
             if ((selectedTerritory.Name == movingMapItem.TerritoryCurrent.Name) && (selectedTerritory.Sector == movingMapItem.TerritoryCurrent.Sector))
             {
                this.RotateStack(selectedTerritory); // rotate the stack
@@ -3536,14 +3935,14 @@ namespace PleasantvilleGame
                   myIsFlagSetForOverstack = true;
                   return;
                }
-               gi.MapItemMoves.Clear();
-               gi.MapItemMoves.Add(mim);
-               if (GamePhase.AlienMovement == gi.GamePhase)
+               myGameInstance.MapItemMoves.Clear();
+               myGameInstance.MapItemMoves.Add(mim);
+               if (GamePhase.AlienMovement == myGameInstance.GamePhase)
                {
                   GameAction outAction = GameAction.AlienMovement;
-                  myGameEngine.PerformAction(ref gi, ref outAction);
+                  myGameEngine.PerformAction(ref myGameInstance, ref outAction);
                }
-               else if (GamePhase.TownspersonMovement == gi.GamePhase)
+               else if (GamePhase.TownspersonMovement == myGameInstance.GamePhase)
                {
                   myIsAlienAbleToStopMove = true; // The townsperson cannot move any more MapItems until a response is received from teh Alien player.
                   GameAction outAction = GameAction.TownpersonProposesMovement;
@@ -3603,7 +4002,7 @@ namespace PleasantvilleGame
          if (null == myGameEngine)
          {
             Logger.Log(LogEnum.LE_ERROR, "MapItemReturnToStart(): myGameEngine=null");
-            return ;
+            return;
          }
          IGameInstance gi = myGameInstance;
          IMapItem selectedMapItem = gi.Persons.Find(selectedButton.Name);
@@ -3627,7 +4026,7 @@ namespace PleasantvilleGame
             case GamePhase.AlienMovement:
                if ((true == selectedMapItem.IsControlled) || (false == IsAlien))
                {
-                  if( false == this.RotateStack(selectedMapItem.TerritoryCurrent))
+                  if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
                      Logger.Log(LogEnum.LE_ERROR, "MapItemReturnToStart(): RotateStack() returned error");
                   return;  // do nothing
                }
@@ -3667,7 +4066,7 @@ namespace PleasantvilleGame
             if (0 < gi.MapItemMoves.Count)
             {
                IMapItemMove? mim = gi.MapItemMoves[0];
-               if( null == mim )
+               if (null == mim)
                {
                   Logger.Log(LogEnum.LE_ERROR, "MapItemReturnToStart(): gi.MapItemMoves[0] = null");
                   return;
@@ -3704,7 +4103,7 @@ namespace PleasantvilleGame
       }
       private bool RotateStack(ITerritory selectedTerritory)
       {
-         if( null == myGameInstance)
+         if (null == myGameInstance)
          {
             Logger.Log(LogEnum.LE_ERROR, "RotateStack(): myGameInstance=null");
             return false;
