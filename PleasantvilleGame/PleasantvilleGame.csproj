@@ -13,7 +13,7 @@
     <Description>Pleasantville Game of rural warfare against invading aliens.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <AssemblyVersion>0.0.1.1</AssemblyVersion>
-    <PackageIcon>Pleasantville.png</PackageIcon>
+    <PackageIcon></PackageIcon>
     <RepositoryUrl>https://github.com/happysulla/TheyveInvadedPleasantville</RepositoryUrl>
   </PropertyGroup>
 
@@ -276,7 +276,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Pleasantville.png">
+    <None Update="Pleasantville.ico">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
