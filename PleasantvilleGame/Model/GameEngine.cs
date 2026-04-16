@@ -1,17 +1,21 @@
 ﻿using System.Text;
 using System.Windows.Controls;
+using System.Xml;
 
 namespace PleasantvilleGame
 {
    public class GameEngine : IGameEngine
    {
       public const int MAX_GAME_TYPE = 3;
+      static public bool theIsAlien = false;
+      static public bool theIsServer = false;
       static public GameFeats theInGameFeats = new GameFeats();          // feats that change from starting as this session runs
       static public GameFeats theStartingFeats = new GameFeats();  // starting feats read in at app initialization
       //---------------------------------------------------------------------
-      static public GameStatistics theTotalStatistics = new GameStatistics();
-      static public GameStatistics theCampaignStatistics = new GameStatistics();
-      static public GameStatistics theSingleDayStatistics = new GameStatistics();
+      static public GameStatistics theAlienVersusStatistics = new GameStatistics();
+      static public GameStatistics theTownsVersusStatistics = new GameStatistics();
+      static public GameStatistics theTownsSoloStatistics = new GameStatistics();
+      static public GameStatistics theAlienSoloStatistics = new GameStatistics();
       //---------------------------------------------------------------------
       TableMgr myTableMgr = new TableMgr();
       //---------------------------------------------------------------------
@@ -22,6 +26,24 @@ namespace PleasantvilleGame
       public GameEngine(MainWindow mainWindow)
       {
          myMainWindow = mainWindow;
+         try
+         {
+            GameLoadMgr gameLoadMgr = new GameLoadMgr();
+            string filename = ConfigFileReader.theConfigDirectory + Territories.FILENAME;
+            XmlTextReader? reader = new XmlTextReader(filename) { WhitespaceHandling = WhitespaceHandling.None };
+            if (null == reader)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "GameInstance(): reader=null");
+               return;
+            }
+            if (false == gameLoadMgr.ReadXmlTerritories(reader, Territories.theTerritories))
+               Logger.Log(LogEnum.LE_ERROR, "GameInstance(): ReadTerritoriesXml() returned false for filename=" + filename);
+         }
+         catch (Exception e)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameInstance(): ReadTerritoriesXml() exception=\n" + e.ToString());
+            return;
+         }
       }
       public void RegisterForUpdates(IView view)
       {

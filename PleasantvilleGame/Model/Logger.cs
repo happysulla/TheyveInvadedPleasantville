@@ -24,6 +24,7 @@ namespace PleasantvilleGame
       LE_SHOW_ENTERED_HEX,
       LE_SHOW_BUTTON_MOVE,
       LE_SHOW_ROLL_STATE,
+      LE_SHOW_DICE_MOVING,
       LE_SHOW_UPLOAD_GAME,
       LE_SHOW_VP_TOTAL,
       //-------------
@@ -42,7 +43,6 @@ namespace PleasantvilleGame
       //-------------
       LE_VIEW_UPDATE_ACTION_PANEL_CLEAR,
       LE_VIEW_UPDATE_ACTION_PANEL,
-      LE_SHOW_DICE_MOVING,
       LE_VIEW_UPDATE_MENU,
       LE_VIEW_UPDATE_STATUS_BAR,
       LE_VIEW_UPDATE_EVENTVIEWER,

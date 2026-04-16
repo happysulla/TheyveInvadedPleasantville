@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using Control=System.Windows.Controls.Control;
 using Label = System.Windows.Controls.Label;
@@ -9,21 +10,25 @@ namespace PleasantvilleGame
     class StatusBarViewer : IView
     {
         private StatusBar myStatusBar;
-        private bool myIsAlien = false;
-        //--------------------------------------------------------------
-        public StatusBarViewer( StatusBar sb, bool isAlien )
+      private IGameInstance myGameInstance;
+      private IGameEngine myGameEngine;
+      private Canvas myCanvas;
+      private Cursor? myTargetCursor;
+      //--------------------------------------------------------------
+      public StatusBarViewer(StatusBar sb, IGameEngine ge, IGameInstance gi, Canvas c)
         {
-            myStatusBar = sb;
-            myIsAlien = isAlien;
-
-            foreach (Control item in myStatusBar.Items)
+         myStatusBar = sb;
+         myGameInstance = gi;
+         myGameEngine = ge;
+         myCanvas = c;
+         foreach (Control item in myStatusBar.Items)
             {
                 if (item is Label)
                 {
                     Label label = (Label)item;
                     if (label.Name == "myLabelInfluenceAlien")
                     {
-                        if( false == isAlien )
+                        if( false == GameEngine.theIsAlien )
                             item.Visibility = Visibility.Hidden;
                     }
                 }
@@ -68,21 +73,21 @@ namespace PleasantvilleGame
                         sb.Append("Next Action = ");
                         if ("Decides Where to Perform Combats" == gi.NextAction)
                         {
-                            if (true == myIsAlien)
+                            if (true == GameEngine.theIsAlien)
                                 sb.Append("Alien ");
                             else
                                 sb.Append("Townsperson ");
                         }
                         else if ("Ack Random Movement" == gi.NextAction)
                         {
-                            if (true == myIsAlien)
+                            if (true == GameEngine.theIsAlien)
                                 sb.Append("Awaiting Alien ");
                             else
                                 sb.Append("Awaiting Townsperson ");
                         }
                         else if ("Display Random Movement" == gi.NextAction)
                         {
-                            if (true == myIsAlien)
+                            if (true == GameEngine.theIsAlien)
                                 sb.Append("Awaiting Alien ");
                             else
                                 sb.Append("Awaiting Townsperson ");

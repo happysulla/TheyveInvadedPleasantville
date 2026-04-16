@@ -1,36 +1,69 @@
-﻿using System.Text;
+﻿using System.Collections;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Globalization;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Shapes;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using Button = System.Windows.Controls.Button;
-using Cursors = System.Windows.Input.Cursors;
-using Point = System.Windows.Point;
-using CheckBox = System.Windows.Controls.CheckBox;
-using Image = System.Windows.Controls.Image;
-using FontFamily = System.Windows.Media.FontFamily;
-using Rectangle = System.Windows.Shapes.Rectangle;
+using System.Windows.Shapes;
+using System.Xml;
+using Application = System.Windows.Application;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
-using Application = System.Windows.Application;
+using Button = System.Windows.Controls.Button;
+using CheckBox = System.Windows.Controls.CheckBox;
 using Color = System.Windows.Media.Color;
+using Cursors = System.Windows.Input.Cursors;
+using FontFamily = System.Windows.Media.FontFamily;
+using Image = System.Windows.Controls.Image;
 using MessageBox = System.Windows.MessageBox;
+using MouseEventArgs=System.Windows.Input.MouseEventArgs;
+using Point = System.Windows.Point;
+using Rectangle = System.Windows.Shapes.Rectangle;
 
 namespace PleasantvilleGame
 {
    public partial class GameViewerWindow : Window, IView
    {
       //--------------------------------------------------------------
+      private const int ANIMATE_SPEED = 3;
       public bool CtorError { set; get; } = false;
-      private IGameEngine? myGameEngine = null;
-      private IGameInstance? myGameInstance = null;
-      private List<Button> myButtons = new List<Button>();
-      private List<Brush> myBrushes = new List<Brush>();
-      private List<Rectangle> myRectangles = new List<Rectangle>();
-      private Rectangle? myMovingRectangle = null;                // Rentangle that is moving with button
+      private static Mutex theSaveSettingsMutex = new Mutex();
+      #region Win32 API declarations to set and get window placement
+      [DllImport("user32.dll")]
+      private static extern bool SetWindowPlacement(IntPtr hWnd, [In] ref WindowPlacement lpwndpl);
+      [DllImport("user32.dll")]
+      private static extern bool GetWindowPlacement(IntPtr hWnd, out WindowPlacement lpwndpl);
+      private const int SwShownormal = 1;
+      private const int SwShowminimized = 2;
+      #endregion
       //--------------------------------------------------------------
+      private const Double MARQUEE_SCROLL_ANMINATION_TIME = 30.0;
+      private const Double ELLIPSE_DIAMETER = 40.0;
+      private const Double ELLIPSE_RADIUS = ELLIPSE_DIAMETER / 2.0;
+      private Double theOldXAfterAnimation = 0.0;
+      private Double theOldYAfterAnimation = 0.0;
+      //--------------------------------------------------------------
+      private IGameEngine myGameEngine;
+      private IGameInstance myGameInstance;
+      private IDieRoller? myDieRoller = null;
+      private EventViewer? myEventViewer = null;
+      private MainMenuViewer? myMainMenuViewer = null;
+      //--------------------------------------------------------------
+      private List<Button> myButtons = new List<Button>();
+      private bool myIsFlagSetForAlienMoveCountExceeded = false;  // Alien only allowed to move 5 counters
+      private bool myIsFlagSetForMoveReset = false;               // Players cannot reset counter when selected
+      private bool myIsFlagSetForOverstack = false;               // MapItem cannot move into hex due to overstack
+      private bool myIsFlagSetForMaxMove = false;                 // MapItem cannot move into hex due to overstack
+      private bool myIsAlienAbleToStopMove = false;             // The Alien player is allowed to stop Townspeople from moving if in the same hex
+      //--------------------------------------------------------------
+      private List<Brush> myBrushes = new List<Brush>();
       private int myBrushIndex = 0;
       private DoubleCollection myDashArray = new DoubleCollection();
       private SolidColorBrush mySolidColorBrushClear = new SolidColorBrush();
@@ -42,22 +75,21 @@ namespace PleasantvilleGame
       private SolidColorBrush mySolidColorBrushRosyBrown = new SolidColorBrush();     // Implant Removal
       private SolidColorBrush mySolidColorBrushOrange = new SolidColorBrush();        // Takeovers
       //--------------------------------------------------------------
+      private List<Rectangle> myRectangles = new List<Rectangle>();
+      private Rectangle? myMovingRectangle = null;                // Rentangle that is moving with button
       private MapItems myMovingMapItems = new MapItems();         // A list to track which MapItems have moved this turn
       private Button? myMovingButton = null;                      // The manually selected button that will be moved
-      private ContextMenu myContextMenuCanvas = new ContextMenu();
-      //--------------------------------------------------------------
-      private bool myIsFlagSetForAlienMoveCountExceeded = false;  // Alien only allowed to move 5 counters
-      private bool myIsFlagSetForMoveReset = false;               // Players cannot reset counter when selected
-      private bool myIsFlagSetForOverstack = false;               // MapItem cannot move into hex due to overstack
-      private bool myIsFlagSetForMaxMove = false;                 // MapItem cannot move into hex due to overstack
-      //--------------------------------------------------------------
-      //private Rectangle? myMovingRectangle = null;                // Rentangle that is moving with button
       private Rectangle myRectangleSelection = new Rectangle();   // Player has manually selected this button
       //--------------------------------------------------------------
+      private readonly SplashDialog mySplashScreen;
+      private ContextMenu myContextMenuCanvas = new ContextMenu();
+      //--------------------------------------------------------------
+      private readonly FontFamily myFontFam = new FontFamily("Tahofma");
       private Storyboard? myStoryboard = null;
       private System.Windows.Forms.Timer myTimer = new System.Windows.Forms.Timer();
-      private const int ANIMATE_SPEED = 3;
-      protected bool myIsAlienAbleToStopMove = false;             // The Alien player is allowed to stop Townspeople from moving if in the same hex
+      private TextBlock myTextBoxMarquee; // Displayed at end to show Statistics of games
+      private Double mySpeedRatioMarquee = 1.0;
+      private Storyboard myStoryboardMarquee = new Storyboard();    // Show Statistics Marquee at end of game 
       //--------------------------------------------------------------
       private ITerritories myTerritoriesCombatForAlien = new Territories();
       private ITerritories myTerritoriesCombatForTownsperson = new Territories();
@@ -77,51 +109,143 @@ namespace PleasantvilleGame
       private IMapItems myLeftMapItemsInActionPanelSelected = new MapItems();
       private IMapItems myRightMapItemsInActionPanel = new MapItems();
       private IMapItems myRightMapItemsInActionPanelSelected = new MapItems();
-      public bool IsAlien { set; get; } = false;
       //==============================================================
-      public GameViewerWindow(IGameEngine ge, IGameInstance gi, bool isServer = false, bool isAlien = false)
+      public GameViewerWindow(IGameEngine ge, IGameInstance gi)
       {
-         InitializeComponent();
          myGameEngine = ge;
          myGameInstance = gi;
-         IsAlien = isAlien;
-         if (true == IsAlien)
-            myTextBoxEntry.Foreground = Constants.theAlienControlledBrush;
-         else
-            myTextBoxEntry.Foreground = Constants.theTownControlledBrush;
+         mySplashScreen = new SplashDialog(); // show splash screen waiting for finish initializing
+         mySplashScreen.Show();
+         InitializeComponent();
+         //---------------------------------------------------------------
+         NameScope.SetNameScope(this, new NameScope()); // TextBox Marquee is end game condtion - display Game Statistics
+         myTextBoxMarquee = new TextBlock() { Foreground = Brushes.Red, FontFamily = myFontFam, FontSize = 24 };
+         myTextBoxMarquee.MouseLeftButtonDown += MouseLeftButtonDownMarquee;
+         myTextBoxMarquee.MouseLeftButtonUp += MouseLeftButtonUpMarquee;
+         myTextBoxMarquee.MouseRightButtonDown += MouseRightButtonDownMarquee;
+         this.RegisterName("tbMarquee", myTextBoxMarquee);
+         //---------------------------------------------------------------
+         myMainMenuViewer = new MainMenuViewer(ge, gi, myMainMenu);
+         if (false == AddHotKeys(myMainMenuViewer))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): AddHotKeys() returned false");
+            CtorError = true;
+            return;
+         }
+         //---------------------------------------------------------------
+         if (false == String.IsNullOrEmpty(Properties.Settings.Default.GameDirectoryName))
+            GameLoadMgr.theGamesDirectory = Properties.Settings.Default.GameDirectoryName; // remember the game directory name
+         //---------------------------------------------------------------
+         if (false == DeserializeOptions(Properties.Settings.Default.GameOptions, gi.Options))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): DeserializeOptions() returned false");
+            CtorError = true;
+            return;
+         }
+         myMainMenuViewer.NewGameOptions = gi.Options;
+         Logger.Log(LogEnum.LE_VIEW_SHOW_OPTIONS, "GameViewerWindow(): Options=" + gi.Options.ToString());
+         //---------------------------------------------------------------
+         if (false == DeserializeGameFeats(GameEngine.theInGameFeats))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): DeserializeGameFeats() returned false");
+            CtorError = true;
+            return;
+         }
+         GameEngine.theStartingFeats = GameEngine.theInGameFeats.Clone(); // need to know difference between starting feats and feats that happen in this game
+         GameEngine.theStartingFeats.SetGameFeatThreshold();
+         Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "GameViewerWindow():\n  feats=" + GameEngine.theInGameFeats.ToString());
+         //---------------------------------------------------------------
+         if (false == DeserializeGameStatistics(GameEngine.theAlienSoloStatistics, "stat0"))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): Deserialize_GameStatistics(theAlienSoloStatistics) returned false");
+            CtorError = true;
+            return;
+         }
+         Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "GameViewerWindow():\n  theAlienSoloStatistics stats=" + GameEngine.theAlienSoloStatistics.ToString());
+         if (false == DeserializeGameStatistics(GameEngine.theTownsSoloStatistics, "stat1"))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): Deserialize_GameStatistics(theTownsSoloStatistics) returned false");
+            CtorError = true;
+            return;
+         }
+         Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "GameViewerWindow():\n  theTownsSoloStatistics stats=" + GameEngine.theTownsSoloStatistics.ToString());
+         if (false == DeserializeGameStatistics(GameEngine.theAlienVersusStatistics, "stat2"))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Update_CanvasShowStatsAdds(): Deserialize_GameStatistics(theAlienVersusStatistics) returned false");
+            CtorError = true;
+            return;
+         }
+         Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "GameViewerWindow():\n  theTownsVersusStatistics stats=" + GameEngine.theTownsVersusStatistics.ToString());
+         if (false == DeserializeGameStatistics(GameEngine.theTownsVersusStatistics, "stat3"))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Update_CanvasShowStatsAdds(): Deserialize_GameStatistics(theTownsVersusStatistics) returned false");
+            CtorError = true;
+            return;
+         }
+         Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "GameViewerWindow():\n  theTownsVersusStatistics stats=" + GameEngine.theTownsVersusStatistics.ToString());
+         //---------------------------------------------------------------
+         Utilities.ZoomCanvas = Properties.Settings.Default.ZoomCanvas;
+         myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas); // Constructor - revert to save zoom
+         StatusBarViewer sbv = new StatusBarViewer(myStatusBar, ge, gi, myCanvasMain);
+         //---------------------------------------------------------------
+         SetDisplayIconForUninstall(); // This is specialized code to add to Windows Registry the icon for uninstall
+         //-----------------------------------------------
+         this.BorderBrush = Constants.theNeutralBrush;
+         mySolidColorBrushClear.Color = Color.FromArgb(0, 0, 1, 0);
+         myBrushes.Add(Brushes.Green);  // Create a container of brushes for painting paths.
+         myBrushes.Add(Brushes.Blue);
+         myBrushes.Add(Brushes.Purple);
+         myBrushes.Add(Brushes.Yellow);
+         myBrushes.Add(Brushes.Red);
+         myBrushes.Add(Brushes.Orange);
+         myDashArray.Add(4);  // used for dotted lines
+         myDashArray.Add(2);
+         //---------------------------------------------------------------
+         myDieRoller = new DieRoller(myCanvasMain, CloseSplashScreen); // Close the splash screen when die resources are loaded
+         if (true == myDieRoller.CtorError)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): myDieRoller.CtorError=true");
+            CtorError = true;
+            return;
+         }
+         //----------------------------------------------------------------
+         myEventViewer = new EventViewer(myGameEngine, myGameInstance, myCanvasMain, myScrollViewerTextBlock, Territories.theTerritories, myDieRoller);
+         if (true == myEventViewer.CtorError)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): myEventViewer.CtorError=true");
+            CtorError = true;
+            return;
+         }
+         CanvasImageViewer civ = new CanvasImageViewer(myCanvasMain, myDieRoller);
+         if (true == civ.CtorError)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): civ.CtorError=true");
+            CtorError = true;
+            return;
+         }
+         //---------------------------------------------------------------
+         //if (true == GameEngine.theIsAlien)
+         //   myTextBoxEntry.Foreground = Constants.theAlienControlledBrush;
+         //else
+         //   myTextBoxEntry.Foreground = Constants.theTownControlledBrush;
          //----------------------------------------------------------
-         //myTimer.Interval = ANIMATE_SPEED * 1000 + 1000;
-         //myTimer.Tick += new EventHandler(this.TimerElasped);
-         if (true == isAlien)
-            this.BorderBrush = Constants.theAlienControlledBrush;
-         else
-            this.BorderBrush = Constants.theTownControlledBrush;
+         myTimer.Interval = ANIMATE_SPEED * 1000 + 1000;
+         myTimer.Tick += new EventHandler(this.TimerElasped);
          //----------------------------------------------------------
          StringBuilder sb55 = new StringBuilder();
-         if (true == isServer)
+         if (true == GameEngine.theIsServer)
             sb55.Append("SERVER: ");
          else
             sb55.Append("CLIENT: ");
-         if (true == isAlien)
+         if (true == GameEngine.theIsAlien)
             sb55.Append("Pleasantville For Aliens");
          else
             sb55.Append("Pleasantville For Humans");
          this.Title = sb55.ToString();
-         myCanvas.MouseLeftButtonDown += this.MouseLeftButtonDownCanvas;
-         myCanvas.MouseRightButtonDown += this.MouseRightButtonDownCanvas;
+         myCanvasMain.MouseLeftButtonDown += this.MouseLeftButtonDownCanvas;
+         myCanvasMain.MouseRightButtonDown += this.MouseRightButtonDownCanvas;
          //----------------------------------------------------------
-         // Implement the Model View Controller (MVC) pattern by registering views with
-         // the game engine such that when the model data is changed, the views are updated.
-         ge.RegisterForUpdates(this);
-         StatusBarViewer sbv = new StatusBarViewer(myStatusBar, isAlien);
-         ge.RegisterForUpdates(sbv);
-         MainMenuViewer mmv = new MainMenuViewer(myGameEngine, gi, myCanvas, myMainMenu, isAlien);
-         ge.RegisterForUpdates(mmv);
-         //----------------------------------------------------------
-         // Create the territories and the regions marking the territories.
-         // Keep a list of Territories used in the game.  All the information 
-         // of Territories is static and does not change.
-         foreach (ITerritory t in Territories.theTerritories)
+         foreach (ITerritory t in Territories.theTerritories) // Create the regions associated with the territories. All the information of Territories is static and does not change.
          {
             if (null == t)
             {
@@ -142,13 +266,13 @@ namespace PleasantvilleGame
                aPolygon.Fill = mySolidColorBrushClear;
                aPolygon.Tag = Utilities.RemoveSpaces(tagName);
                aPolygon.Name = t.Name + t.Sector.ToString();
-               myCanvas.RegisterName(aPolygon.Name, aPolygon);
+               myCanvasMain.RegisterName(aPolygon.Name, aPolygon);
                List<Point> points = new List<Point>();
                foreach (IMapPoint mp in t.Points)
                   points.Add(new Point(mp.X, mp.Y));
                PointCollection pointCollection = new PointCollection(points);
                aPolygon.Points = pointCollection;
-               myCanvas.Children.Add(aPolygon);
+               myCanvasMain.Children.Add(aPolygon);
             }
          }
          //------------------------------------------
@@ -164,7 +288,7 @@ namespace PleasantvilleGame
          mi2.Click += this.ContextMenuClickRotate;
          myContextMenuCanvas.Items.Add(mi2);
          //------------------------------------------
-         if (true == IsAlien)
+         if (true == GameEngine.theIsAlien)
          {
             MenuItem mi3 = new MenuItem();
             mi3.Header = "_Expose";
@@ -178,14 +302,14 @@ namespace PleasantvilleGame
             myContextMenuCanvas.Items.Add(mi4);
          }
          //-----------------------------------------------
-         foreach (IStack stack in gi.Stacks)
+         foreach (IStack stack in gi.Stacks) // Create the buttons based on People
          {
-            foreach (IMapItem person in stack.MapItems) // Create the buttons based on People
+            foreach (IMapItem person in stack.MapItems) 
             {
                Button b = new Button();
                if (person.Name == "Zebulon")
                {
-                  if (false == IsAlien)
+                  if (false == GameEngine.theIsAlien)
                      b.Visibility = Visibility.Hidden;
                }
                b.ContextMenu = myContextMenuCanvas;
@@ -197,36 +321,11 @@ namespace PleasantvilleGame
                b.Height = 50.0;
                b.Width = 50.0;
                b.IsEnabled = true;
-               MapItem.SetButtonContent(b, person, IsAlien);
+               MapItem.SetButtonContent(b, person, GameEngine.theIsAlien);
                myButtons.Add(b);
-               myCanvas.Children.Add(b);
+               myCanvasMain.Children.Add(b);
             }
          }
-         //-----------------------------------------------
-         Constants.theTownControlledBrush.Color = Color.FromArgb(0xFF, 0x33, 0xAA, 0x33);    // Create standard color brushes
-         Constants.theAlienControlledBrush.Color = Color.FromArgb(0xFF, 0xFF, 0xD5, 0x00);  // 0xFFFFD500
-         Constants.theSkepticalBrush.Color = Color.FromArgb(0xFF, 0xF2, 0xDE, 0x9B);
-         Constants.theWaryBrush.Color = Color.FromArgb(0xFF, 0x87, 0xE5, 0x87);
-         mySolidColorBrushClear.Color = Color.FromArgb(0, 0, 1, 0);
-         mySolidColorBrushBlack.Color = Colors.Black;
-         mySolidColorBrushGray.Color = Colors.Ivory;
-         mySolidColorBrushGreen.Color = Colors.Green;
-         mySolidColorBrushRed.Color = Colors.Red;
-         mySolidColorBrushOrange.Color = Colors.Orange;
-         mySolidColorBrushPurple.Color = Colors.Purple;
-         mySolidColorBrushRosyBrown.Color = Colors.RosyBrown;
-         //------------------------------------------------
-         // Create a container of brushes for painting paths.
-         // The first brush is the alien color.
-         // The second brush is the townspeople color.
-         myBrushes.Add(Brushes.Green);
-         myBrushes.Add(Brushes.Blue);
-         myBrushes.Add(Brushes.Purple);
-         myBrushes.Add(Brushes.Yellow);
-         myBrushes.Add(Brushes.Red);
-         myBrushes.Add(Brushes.Orange);
-         myDashArray.Add(4);  // used for dotted lines
-         myDashArray.Add(2);
          //------------------------------------------------
          for (int i = 0; i < 6; ++i) // Create a Bounding Rectangles to indicate when a MapItem is moved
          {
@@ -238,14 +337,14 @@ namespace PleasantvilleGame
             r.Height = 50;
             r.Visibility = Visibility.Hidden;
             myRectangles.Add(r);
-            myCanvas.Children.Add(r);
+            myCanvasMain.Children.Add(r);
          }
          myRectangleSelection.Stroke = Brushes.Red; // Create a Bounding Rectangle to indicate when a MapItem is selected to be moved by mouse pointer
          myRectangleSelection.StrokeThickness = 3.0;
          myRectangleSelection.Width = 50;
          myRectangleSelection.Height = 50;
          myRectangleSelection.Visibility = Visibility.Hidden;
-         myCanvas.Children.Add(myRectangleSelection);
+         myCanvasMain.Children.Add(myRectangleSelection);
          Canvas.SetZIndex(myRectangleSelection, 1000);
          if (false == UpdateCanvas(gi))// Update the canvase based on data in the GameInstance
          {
@@ -254,16 +353,604 @@ namespace PleasantvilleGame
             return;
          }
          ClearActionPanel();
+         //----------------------------------------------------------
+         ge.RegisterForUpdates(civ); // Implement the Model View Controller (MVC) pattern by registering views with  the game engine such that when the model data is changed, the views are updated.
+         ge.RegisterForUpdates(myMainMenuViewer);
+         ge.RegisterForUpdates(sbv);
+         ge.RegisterForUpdates(myEventViewer); // needs to be last so UploadGameView
+         ge.RegisterForUpdates(this);
+         Logger.Log(LogEnum.LE_GAME_INIT, "GameViewerWindow(): \nzoomCanvas=" + Properties.Settings.Default.ZoomCanvas.ToString() + "\nwp=" + Properties.Settings.Default.WindowPlacement + "\noptions=" + Properties.Settings.Default.GameOptions);
+      }
+      //-----------------------SUPPORTING FUNCTIONS--------------------
+      private bool AddHotKeys(MainMenuViewer mmv)
+      {
+         try
+         {
+            //RoutedCommand command = new RoutedCommand();
+            //KeyGesture keyGesture = new KeyGesture(Key.N, ModifierKeys.Control);
+            //InputBindings.Add(new KeyBinding(command, keyGesture));
+            //CommandBindings.Add(new CommandBinding(command, mmv.MenuItemNew_Click));
+            ////------------------------------------------------
+            //command = new RoutedCommand();
+            //keyGesture = new KeyGesture(Key.O, ModifierKeys.Control);
+            //InputBindings.Add(new KeyBinding(command, keyGesture));
+            //CommandBindings.Add(new CommandBinding(command, mmv.MenuItemFileOpen_Click));
+         }
+         catch (Exception ex)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "AddHotKeys(): ex=" + ex.ToString());
+            return false;
+         }
+         return true;
+      }
+      private void SetDisplayIconForUninstall()
+      {
+#if !DEBUG // Only do this for release version
+         if (true == Properties.Settings.Default.theIsFirstRun) // only do once - must set it in registry
+         {
+            try
+            {
+               string iconSourcePath = System.IO.Path.Combine(MapImage.theImageDirectory, "PattonsBest.ico");
+               var myUninstallKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Uninstall");
+               string[] mySubKeyNames = myUninstallKey.GetSubKeyNames();
+               for (int i = 0; i < mySubKeyNames.Length; i++)
+               {
+                  RegistryKey aKey = myUninstallKey.OpenSubKey(mySubKeyNames[i], true);
+                  // ClickOnce(Publish)
+                  // Publish -> Settings -> Options 
+                  // Publish Options -> Description -> Product Name (is your DisplayName)
+                  string displayName = (string)aKey.GetValue("DisplayName");
+                  if (true == displayName.Contains("Pattons Best"))
+                  {
+                     Logger.Log(LogEnum.LE_GAME_INIT, "SetDisplayIconForUninstall(): iconSourcePath=" + iconSourcePath);
+                     aKey.SetValue("DisplayIcon", iconSourcePath);
+                     break;
+                  }
+               }
+               Properties.Settings.Default.theIsFirstRun = false;
+               Properties.Settings.Default.Save();
+            }
+            catch (Exception ex)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "SetDisplayIconForUninstall(): e=" + ex.ToString());
+            }
+         }
+#endif
+      }
+      private void CloseSplashScreen() // callback function that removes splash screen when dice are loaded
+      {
+         GameAction outAction = GameAction.RemoveSplashScreen;
+         myGameEngine.PerformAction(ref myGameInstance, ref outAction);
+      }
+      private void SaveDefaultsToSettings(bool isWindowPlacementSaved = true)
+      {
+         theSaveSettingsMutex.WaitOne();
+         CultureInfo currentCulture = CultureInfo.CurrentCulture;
+         System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture; // for saving doubles with decimal instead of comma for German users
+         //-------------------------------------------
+         if (true == isWindowPlacementSaved)
+         {
+            WindowPlacement wp; // Persist window placement details to application settings
+            var hwnd = new WindowInteropHelper(this).Handle;
+            if (false == GetWindowPlacement(hwnd, out wp))
+               Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): GetWindowPlacement() returned false");
+            string sWinPlace = Utilities.Serialize<WindowPlacement>(wp);
+            Properties.Settings.Default.WindowPlacement = sWinPlace;
+         }
+         //-------------------------------------------
+         Properties.Settings.Default.ZoomCanvas = Utilities.ZoomCanvas;
+         //-------------------------------------------
+         Properties.Settings.Default.ScrollViewerHeight = myScrollViewerMap.Height;
+         Properties.Settings.Default.ScrollViewerWidth = myScrollViewerMap.Width;
+         //-------------------------------------------
+         Logger.Log(LogEnum.LE_VIEW_SHOW_OPTIONS, "Save_DefaultsToSettings(): Options=" + myGameInstance.Options.ToString());
+         string? sOptions = SerializeOptions(myGameInstance.Options);
+         if (null == sOptions)
+            Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeOptions() returned false");
+         else
+            Properties.Settings.Default.GameOptions = sOptions;
+         //-------------------------------------------
+         Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Save_DefaultsToSettings():\n  SAVING feats=" + GameEngine.theInGameFeats.ToString());
+         if (false == SerializeGameFeats(GameEngine.theInGameFeats))
+            Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): Serialize_GameFeats() returned false");
+         //-------------------------------------------
+         if (false == SerializeGameStatistics(GameEngine.theAlienSoloStatistics, "stat0"))
+            Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeGameStatistics() returned false");
+         if (false == SerializeGameStatistics(GameEngine.theTownsSoloStatistics, "stat1"))
+            Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeGameStatistics(theTownsSoloStatistics) returned false");
+         if (false == SerializeGameStatistics(GameEngine.theAlienVersusStatistics, "stat2"))
+            Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeGameStatistics(theAlienVersusStatistics) returned false");
+         //-------------------------------------------
+         Properties.Settings.Default.Save();
+         System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
+         theSaveSettingsMutex.ReleaseMutex();
+      }
+      private string? SerializeOptions(Options options)
+      {
+         //--------------------------------                                                                                              //--------------------------------                                                                                  //--------------------------------
+         XmlDocument aXmlDocument = new XmlDocument();
+         aXmlDocument.LoadXml("<Options></Options>");
+         if (null == aXmlDocument.DocumentElement)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Serialize_Options(): aXmlDocument.DocumentElement=null");
+            return null;
+         }
+         XmlNode? root = aXmlDocument.DocumentElement;
+         if (null == root)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Serialize_Options(): root is null");
+            return null;
+         }
+         aXmlDocument.DocumentElement.SetAttribute("count", options.Count.ToString());
+         //--------------------------------
+         foreach (Option option in options)
+         {
+            XmlElement? optionElem = aXmlDocument.CreateElement("Option");
+            if (null == optionElem)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Serialize_Options(): CreateElement(Option) returned null");
+               return null;
+            }
+            optionElem.SetAttribute("Name", option.Name);
+            optionElem.SetAttribute("IsEnabled", option.IsEnabled.ToString());
+            XmlNode? optionNode = root.AppendChild(optionElem);
+            if (null == optionNode)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Serialize_Options(): AppendChild(optionNode) returned null");
+               return null;
+            }
+         }
+         //--------------------------------
+         return aXmlDocument.OuterXml;
+      }
+      private bool SerializeGameFeats(GameFeats feats)
+      {
+         CultureInfo currentCulture = CultureInfo.CurrentCulture;
+         System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture; // for saving doubles with decimal instead of comma for German users
+         XmlDocument aXmlDocument = new XmlDocument();
+         aXmlDocument.LoadXml("<GameFeats></GameFeats>");
+         if (null == aXmlDocument.DocumentElement)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Serialize_GameFeats(): aXmlDocument.DocumentElement=null");
+            return false;
+         }
+         XmlNode? root = aXmlDocument.DocumentElement;
+         if (null == root)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Serialize_GameFeats(): root is null");
+            return false;
+         }
+         aXmlDocument.DocumentElement.SetAttribute("count", feats.Count.ToString());
+         //--------------------------------
+         foreach (GameFeat feat in feats)
+         {
+            XmlElement? featElem = aXmlDocument.CreateElement("Feat");
+            if (null == featElem)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Serialize_GameFeats(): CreateElement(Feat) returned null");
+               return false;
+            }
+            featElem.SetAttribute("Key", feat.Key);
+            featElem.SetAttribute("Value", feat.Value.ToString());
+            XmlNode? featNode = root.AppendChild(featElem);
+            if (null == featNode)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Serialize_GameFeats(): AppendChild(featNode) returned null");
+               return false;
+            }
+         }
+         //-----------------------------------------
+         if (null == aXmlDocument)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "SaveGameTo_File(): aXmlDocument=null");
+            return false;
+         }
+         //-----------------------------------------
+         try
+         {
+            if (false == Directory.Exists(GameFeats.theGameFeatDirectory)) // create directory if does not exists
+               Directory.CreateDirectory(GameFeats.theGameFeatDirectory);
+         }
+         catch (Exception e)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Serialize_GameFeats(): path=" + GameFeats.theGameFeatDirectory + "\n e=" + e.ToString());
+            return false;
+         }
+         string filename = GameFeats.theGameFeatDirectory + "feats.xml";
+         if (File.Exists(filename))
+            File.Delete(filename);
+         FileStream? writer = null;
+         //-----------------------------------------
+         try
+         {
+            writer = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Write);
+            XmlWriterSettings settings = new XmlWriterSettings { Indent = true, OmitXmlDeclaration = true, NewLineOnAttributes = false };
+            XmlWriter xmlWriter = XmlWriter.Create(writer, settings);// For XmlWriter, it uses the stream that was created: writer.
+            aXmlDocument.Save(xmlWriter);
+         }
+         catch (Exception ex)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Serialize_GameFeats(): path=" + GameFeats.theGameFeatDirectory + "\n e =" + ex.ToString());
+            System.Diagnostics.Debug.WriteLine(ex.ToString());
+            return false;
+         }
+         finally
+         {
+            if (writer != null)
+               writer.Close();
+            System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
+         }
+         return true;
+      }
+      private bool SerializeGameStatistics(GameStatistics statistics, string filename)
+      {
+         CultureInfo currentCulture = CultureInfo.CurrentCulture;
+         System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture; // for saving doubles with decimal instead of comma for German users
+         XmlDocument aXmlDocument = new XmlDocument();
+         aXmlDocument.LoadXml("<GameStatistics> </GameStatistics>");
+         if (null == aXmlDocument.DocumentElement)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Serialize_GameStatistics(): aXmlDocument.DocumentElement=null");
+            return false;
+         }
+         XmlNode? root = aXmlDocument.DocumentElement;
+         if (null == root)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Serialize_GameStatistics(): root is null");
+            return false;
+         }
+         aXmlDocument.DocumentElement.SetAttribute("count", statistics.Count.ToString());
+         //-----------------------------------------
+         foreach (GameStatistic statistic in statistics)
+         {
+            XmlElement? statisticElem = aXmlDocument.CreateElement("GameStatistic");
+            if (null == statisticElem)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Serialize_GameStatistics(): CreateElement(GameStatistic) returned null");
+               return false;
+            }
+            statisticElem.SetAttribute("Key", statistic.Key);
+            statisticElem.SetAttribute("Value", statistic.Value.ToString());
+            XmlNode? statisticNode = root.AppendChild(statisticElem);
+            if (null == statisticNode)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Serialize_GameStatistics(): AppendChild(statisticNode) returned null");
+               return false;
+            }
+         }
+         //-----------------------------------------
+         string filenameFull = GameStatistics.theGameStatisticsDirectory + filename + ".xml";
+         if (File.Exists(filenameFull))
+            File.Delete(filenameFull);
+         FileStream? writer = null;
+         //-----------------------------------------
+         try
+         {
+            writer = new FileStream(filenameFull, FileMode.OpenOrCreate, FileAccess.Write);
+            XmlWriterSettings settings = new XmlWriterSettings { Indent = true, OmitXmlDeclaration = true, NewLineOnAttributes = false };
+            XmlWriter xmlWriter = XmlWriter.Create(writer, settings);// For XmlWriter, it uses the stream that was created: writer.
+            aXmlDocument.Save(xmlWriter);
+         }
+         catch (Exception ex)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Serialize_GameStatistics(): path=" + GameStatistics.theGameStatisticsDirectory + "\n e =" + ex.ToString());
+            System.Diagnostics.Debug.WriteLine(ex.ToString());
+            return false;
+         }
+         finally
+         {
+            if (writer != null)
+               writer.Close();
+            System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
+         }
+         //--------------------------------
+         return true;
+      }
+      private bool DeserializeOptions(String sXml, Options options)
+      {
+         CultureInfo currentCulture = CultureInfo.CurrentCulture;
+         System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture; // for saving doubles with decimal instead of comma for German users
+         //-----------------------------------------------
+         options.Clear();
+         if (true == String.IsNullOrEmpty(sXml))
+         {
+            Logger.Log(LogEnum.LE_GAME_INIT, "Deserialize_Options(): String.IsNullOrEmpty(sXml) returned true - first time thru");
+            options.SetOriginalGameOptions();
+            System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
+            return true;
+         }
+         //-----------------------------------------------
+         try // XML serializer does not work for Interfaces
+         {
+            StringReader stringreader = new StringReader(sXml);
+            XmlReader reader = XmlReader.Create(stringreader);
+            reader.Read();
+            if (false == reader.IsStartElement())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Deserialize_Options(): reader.IsStartElement(Options) = false");
+               return false;
+            }
+            if (reader.Name != "Options")
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Deserialize_Options(): Options != (node=" + reader.Name + ")");
+               return false;
+            }
+            string? sCount = reader.GetAttribute("count");
+            if (null == sCount)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Deserialize_Options(): Count=null");
+               return false;
+            }
+            //-------------------------------------
+            int count = int.Parse(sCount);
+            for (int i = 0; i < count; ++i)
+            {
+               reader.Read();
+               if (false == reader.IsStartElement())
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Deserialize_Options(): IsStartElement(Option) returned false");
+                  return false;
+               }
+               if (reader.Name != "Option")
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Deserialize_Options(): Option != " + reader.Name);
+                  return false;
+               }
+               string? name = reader.GetAttribute("Name");
+               if (name == null)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Deserialize_Options(): Name=null");
+                  return false;
+               }
+               string? sEnabled = reader.GetAttribute("IsEnabled");
+               if (sEnabled == null)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Deserialize_Options(): IsEnabled=null");
+                  return false;
+               }
+               bool isEnabled = bool.Parse(sEnabled);
+               Option option = new Option(name, isEnabled);
+               options.Add(option);
+            }
+            if (0 < count)
+               reader.Read(); // get past </Options>
+         }
+         catch (DirectoryNotFoundException dirException)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Deserialize_Options(): s=" + sXml + "\ndirException=" + dirException.ToString());
+         }
+         catch (FileNotFoundException fileException)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Deserialize_Options(): s=" + sXml + "\nfileException=" + fileException.ToString());
+         }
+         catch (IOException ioException)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Deserialize_Options(): s=" + sXml + "\nioException=" + ioException.ToString());
+         }
+         catch (Exception ex)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Deserialize_Options(): s=" + sXml + "\nex=" + ex.ToString());
+         }
+         finally
+         {
+            System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
+            if (0 == options.Count)
+               options.SetOriginalGameOptions();
+         }
+         return true;
+      }
+      private bool DeserializeGameFeats(GameFeats feats)
+      {
+         feats.Clear();
+         CultureInfo currentCulture = CultureInfo.CurrentCulture;
+         System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture; // for saving doubles with decimal instead of comma for German users
+         XmlTextReader? reader = null;
+         try
+         {
+            string filename = GameFeats.theGameFeatDirectory + "feats.xml";
+            reader = new XmlTextReader(filename) { WhitespaceHandling = WhitespaceHandling.None };
+            if (null == reader)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameFeats(): reader=null");
+               return false;
+            }
+            reader.Read();
+            if (false == reader.IsStartElement())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameFeats(): reader.IsStartElement(Options) = false");
+               return false;
+            }
+            if (reader.Name != "GameFeats")
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameFeats(): Options != (node=" + reader.Name + ")");
+               return false;
+            }
+            string? sCount = reader.GetAttribute("count");
+            if (null == sCount)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameFeats(): Count=null");
+               return false;
+            }
+            //-------------------------------------
+            int count = int.Parse(sCount);
+            for (int i = 0; i < count; ++i)
+            {
+               reader.Read();
+               if (false == reader.IsStartElement())
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameFeats(): IsStartElement(Feat) returned false");
+                  return false;
+               }
+               if (reader.Name != "Feat")
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameFeats(): Feat != " + reader.Name);
+                  return false;
+               }
+               string? key = reader.GetAttribute("Key");
+               if (key == null)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameFeats(): Key=null");
+                  return false;
+               }
+               string? sValue = reader.GetAttribute("Value");
+               if (sValue == null)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameFeats(): sValue=null");
+                  return false;
+               }
+               int value = Convert.ToInt32(sValue);
+               GameFeat feat = new GameFeat(key, value);
+               feats.Add(feat);
+            }
+            if (0 < count)
+               reader.Read(); // get past </GameFeats>
+         }
+         //==========================================
+         catch (DirectoryNotFoundException dirException)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameFeats(): dirException=" + dirException.ToString());
+            return false;
+         }
+         catch (FileNotFoundException)
+         {
+            // expected on first run
+         }
+         catch (IOException ioException)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameFeats(): ioException=" + ioException.ToString());
+            return false;
+         }
+         catch (Exception ex)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameFeats(): ex=" + ex.ToString());
+            return false;
+         }
+         finally
+         {
+            if (reader != null)
+               reader.Close();
+            System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
+            if (0 == feats.Count)
+            {
+               feats.SetOriginalGameFeats();
+            }
+            else
+            {
+               foreach (string sKey in GameFeats.theDefaults) // ensure that if any new options are added, they show up in list
+               {
+                  bool isMatchFound = false;
+                  foreach (GameFeat feat in feats)
+                  {
+                     if (sKey == feat.Key)
+                     {
+                        isMatchFound = true;
+                        break;
+                     }
+                  }
+                  if (false == isMatchFound)
+                     feats.Add(new GameFeat(sKey));
+               }
+
+            }
+            feats.SetGameFeatThreshold(); // always set game feat thresholds to a known value on startup
+         }
+         return true;
+      }
+      private bool DeserializeGameStatistics(GameStatistics statistics, string filename)
+      {
+         statistics.Clear();
+         CultureInfo currentCulture = CultureInfo.CurrentCulture;
+         System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture; // for saving doubles with decimal instead of comma for German users
+         XmlTextReader? reader = null;
+         try
+         {
+            string qualifiedFilename = GameStatistics.theGameStatisticsDirectory + filename + ".xml";
+            reader = new XmlTextReader(qualifiedFilename) { WhitespaceHandling = WhitespaceHandling.None };
+            reader.Read();
+            if (false == reader.IsStartElement())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameStatistics(): reader.IsStartElement(Options) = false");
+               return false;
+            }
+            if (reader.Name != "GameStatistics")
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameStatistics(): GameStatistics != (node=" + reader.Name + ")");
+               return false;
+            }
+            string? sCount = reader.GetAttribute("count");
+            if (null == sCount)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameStatistics(): Count=null");
+               return false;
+            }
+            //-------------------------------------
+            int count = int.Parse(sCount);
+            for (int i = 0; i < count; ++i)
+            {
+               reader.Read();
+               if (false == reader.IsStartElement())
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameStatistics(): IsStartElement(Feat) returned false");
+                  return false;
+               }
+               if (reader.Name != "GameStatistic")
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameStatistics(): GameStatistic != " + reader.Name);
+                  return false;
+               }
+               string? key = reader.GetAttribute("Key");
+               if (key == null)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameStatistics(): Key=null");
+                  return false;
+               }
+               string? sValue = reader.GetAttribute("Value");
+               if (sValue == null)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameStatistics(): sValue=null");
+                  return false;
+               }
+               int value = Convert.ToInt32(sValue);
+               GameStatistic stat = new GameStatistic(key, value);
+               statistics.Add(stat);
+            }
+            if (0 < count)
+               reader.Read(); // get past </GameFeats>
+         }
+         //==========================================
+         catch (DirectoryNotFoundException dirException)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameFeats(): dirException=" + dirException.ToString());
+            return false;
+         }
+         catch (FileNotFoundException)
+         {
+            // expected on first run
+         }
+         catch (IOException ioException)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameFeats(): ioException=" + ioException.ToString());
+            return false;
+         }
+         catch (Exception ex)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Deserialize_GameFeats(): ex=" + ex.ToString());
+            return false;
+         }
+         finally
+         {
+            if (reader != null)
+               reader.Close();
+            System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
+            if (0 == statistics.Count)
+               statistics.SetOriginalGameStatistics();
+         }
+         return true;
       }
       //-------------INTERFACE FUNCTIONS---------------------------------
       public void UpdateView(ref IGameInstance gi, GameAction action)
       {
-         if (null == myGameEngine)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::UpdateView() myGameEngine is null");
-            return;
-         }
-         if (true == IsAlien)
+         if (true == GameEngine.theIsAlien)
          {
             StringBuilder sb = new StringBuilder("---------------   ALIEN GameViewerWindow::UpdateView() ==> action="); sb.Append(action.ToString()); sb.Append("  ==> NextAction="); sb.Append(gi.NextAction);
             Logger.Log(LogEnum.LE_VIEW_UPDATE_WINDOW, sb.ToString());
@@ -283,7 +970,7 @@ namespace PleasantvilleGame
             case GameAction.TownspersonStart:
                break;
             case GameAction.AlienDisplaysRandomMovement:
-               if (true == IsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   myStoryboard = null;
                   UpdateViewMovement(gi);
@@ -291,7 +978,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.TownspersonDisplaysRandomMovement:
-               if (false == IsAlien)
+               if (false == GameEngine.theIsAlien)
                {
                   myStoryboard = null;
                   UpdateViewMovement(gi);
@@ -299,7 +986,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.AlienAcksRandomMovement:
-               if (true == IsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   if (false == UpdateCanvas(gi))
                   {
@@ -324,7 +1011,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.TownspersonAcksRandomMovement:
-               if (false == IsAlien)
+               if (false == GameEngine.theIsAlien)
                {
                   if (false == UpdateCanvas(gi))
                   {
@@ -359,7 +1046,7 @@ namespace PleasantvilleGame
                ClearActionPanel();
                break;
             case GameAction.AlienCompletesMovement:
-               if (true == IsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   if (false == UpdateCanvas(gi))
                   {
@@ -384,7 +1071,7 @@ namespace PleasantvilleGame
                myRectangleSelection.Visibility = Visibility.Hidden;
                break;
             case GameAction.TownpersonProposesMovement:
-               if (true == IsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   myIsAlienAbleToStopMove = true;
                   if (false == IsMoveStoppedByAlienBeforeStarted(gi))
@@ -411,7 +1098,7 @@ namespace PleasantvilleGame
                UpdateViewMovement(gi);
                break;
             case GameAction.AlienTimeoutOnMovement:
-               if (false == IsAlien)
+               if (false == GameEngine.theIsAlien)
                {
                   myIsAlienAbleToStopMove = false;
                   UpdateViewMovement(gi);
@@ -427,7 +1114,7 @@ namespace PleasantvilleGame
                UpdateViewMovement(gi);
                break;
             case GameAction.TownpersonCompletesMovement:
-               if (false == IsAlien)
+               if (false == GameEngine.theIsAlien)
                {
                   if (false == UpdateCanvas(gi))
                   {
@@ -485,7 +1172,7 @@ namespace PleasantvilleGame
                UpdateViewState(gi);
                break;
             case GameAction.AlienInitiateCombat:
-               if ((true == myIsCombatInitiatedForAlien) && (true == IsAlien))
+               if ((true == myIsCombatInitiatedForAlien) && (true == GameEngine.theIsAlien))
                {
                   if (false == UpdateCanvas(gi))
                   {
@@ -498,7 +1185,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.TownspersonNackCombatSelection:
-               if (true == IsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   if (false == UpdateCanvas(gi))
                   {
@@ -530,7 +1217,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.TownspersonInitiateCombat:
-               if ((true == myIsCombatInitiatedForTownsperson) && (false == IsAlien))
+               if ((true == myIsCombatInitiatedForTownsperson) && (false == GameEngine.theIsAlien))
                {
                   if (false == UpdateCanvas(gi))
                   {
@@ -543,7 +1230,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.AlienNackCombatSelection:
-               if (false == IsAlien)
+               if (false == GameEngine.theIsAlien)
                {
                   if (false == UpdateCanvas(gi))
                   {
@@ -576,7 +1263,7 @@ namespace PleasantvilleGame
                break;
             case GameAction.TownspersonCompletesCombat:
                myRectangleSelection.Visibility = Visibility.Hidden;
-               if (true == IsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   myMovingButton = null;
                   myMovingRectangle = null;
@@ -589,11 +1276,11 @@ namespace PleasantvilleGame
                }
                UpdateViewState(gi);
                myIsCombatInitiatedForTownsperson = false;
-               StringBuilder sb2 = new StringBuilder("UpdateView():TownspersonCompletesCombat: "); sb2.Append(IsAlien.ToString()); sb2.Append("myIsCombatInitiatedForTownsperson=false");
+               StringBuilder sb2 = new StringBuilder("UpdateView():TownspersonCompletesCombat: "); sb2.Append(GameEngine.theIsAlien.ToString()); sb2.Append("myIsCombatInitiatedForTownsperson=false");
                Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, sb2.ToString());
                break;
             case GameAction.AlienCompletesCombat:
-               if (false == IsAlien)
+               if (false == GameEngine.theIsAlien)
                {
                   myMovingButton = null;
                   myMovingRectangle = null;
@@ -606,7 +1293,7 @@ namespace PleasantvilleGame
                }
                UpdateViewState(gi);
                myIsCombatInitiatedForAlien = false;
-               StringBuilder sb3 = new StringBuilder("UpdateView():AlienCompletesCombat: "); sb3.Append(IsAlien.ToString()); sb3.Append("myIsCombatInitiatedForAlien=false");
+               StringBuilder sb3 = new StringBuilder("UpdateView():AlienCompletesCombat: "); sb3.Append(GameEngine.theIsAlien.ToString()); sb3.Append("myIsCombatInitiatedForAlien=false");
                Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, sb3.ToString());
                break;
             case GameAction.TownspersonIterrogates:
@@ -667,7 +1354,7 @@ namespace PleasantvilleGame
                   }
                   else
                   {
-                     if (true == IsAlien)
+                     if (true == GameEngine.theIsAlien)
                      {
                         myTextBoxResults.Text = gi.Takeover.Observations;
                         UpdateActionPanelButtons(gi);
@@ -723,17 +1410,17 @@ namespace PleasantvilleGame
                if (0 == alienInflunence)
                   isAlienWin = false;
 
-               myLabelWinner.Visibility = Visibility.Visible;  // Report the winner
-               if (true == isAlienWin)
-               {
-                  myLabelWinner.Content = "Aliens Win!!!!";
-                  myLabelWinner.Foreground = Brushes.Orange;
-               }
-               else
-               {
-                  myLabelWinner.Content = "Towns People Win!!!!";
-                  myLabelWinner.Foreground = Constants.theTownControlledBrush;
-               }
+               //myLabelWinner.Visibility = Visibility.Visible;  // Report the winner
+               //if (true == isAlienWin)
+               //{
+               //   myLabelWinner.Content = "Aliens Win!!!!";
+               //   myLabelWinner.Foreground = Brushes.Orange;
+               //}
+               //else
+               //{
+               //   myLabelWinner.Content = "Towns People Win!!!!";
+               //   myLabelWinner.Foreground = Constants.theTownControlledBrush;
+               //}
                if (false == UpdateCanvas(gi))
                {
                   Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): ShowEndGame: UpdateCanvas() returned false");
@@ -750,7 +1437,7 @@ namespace PleasantvilleGame
                      {
                         Button? b = myButtons.Find(mi.Name);
                         if (null != b)
-                           MapItem.SetButtonContent(b, mi, IsAlien);
+                           MapItem.SetButtonContent(b, mi, GameEngine.theIsAlien);
                      }
                   }
                }
@@ -760,6 +1447,77 @@ namespace PleasantvilleGame
                Console.WriteLine("ERROR: GameViewerWindow::UpdateView() reached default next action={0}", action.ToString());
                break;
          }
+      }
+      //-------------GameViewerWindow---------------------------------
+      private void ContentRenderedGameViewerWindow(object sender, EventArgs e)
+      {
+         double mapPanelHeight = myDockPanelTop.ActualHeight - myMainMenu.ActualHeight - myStatusBar.ActualHeight;
+         myDockPanelInside.Height = mapPanelHeight;
+         myDockPanelControls.Height = mapPanelHeight;
+         //-----------------------------------------------------
+         myScrollViewerTextBlock.Height = mapPanelHeight - myCanvasHelper.ActualHeight - 5;
+         myTextBlockDisplay.Height = mapPanelHeight - myCanvasHelper.ActualHeight;
+         //-----------------------------------------------------
+         double mapPanelWidth = myDockPanelTop.ActualWidth - myDockPanelControls.ActualWidth - System.Windows.SystemParameters.VerticalScrollBarWidth;
+         myScrollViewerMap.Width = mapPanelWidth;
+         myScrollViewerMap.Height = mapPanelHeight;
+      }
+      private void SizeChangedGameViewerWindow(object sender, SizeChangedEventArgs e)
+      {
+         double mapPanelHeight = myDockPanelTop.ActualHeight - myMainMenu.ActualHeight - myStatusBar.ActualHeight;
+         myDockPanelInside.Height = mapPanelHeight;
+         myDockPanelControls.Height = mapPanelHeight;
+         //-----------------------------------------------------
+         myScrollViewerTextBlock.Height = mapPanelHeight - myCanvasHelper.ActualHeight - 5;
+         myTextBlockDisplay.Height = mapPanelHeight - myCanvasHelper.ActualHeight;
+         //myTextBlockDisplay.Width = myScrollViewerTextBlock.ActualWidth;
+         //Visibility v = myScrollViewerTextBlock.ComputedVerticalScrollBarVisibility;
+         //if (v == Visibility.Visible)
+         //   myTextBlockDisplay.Width -= System.Windows.SystemParameters.VerticalScrollBarWidth;
+         //-----------------------------------------------------
+         double mapPanelWidth = myDockPanelTop.ActualWidth - myDockPanelControls.ActualWidth - System.Windows.SystemParameters.VerticalScrollBarWidth;
+         myScrollViewerMap.Width = mapPanelWidth;
+         myScrollViewerMap.Height = mapPanelHeight;
+      }
+      private void ClosedGameViewerWindow(object sender, EventArgs e)
+      {
+         System.Windows.Application app = System.Windows.Application.Current;
+         app.Shutdown();
+      }
+      protected override void OnSourceInitialized(EventArgs e)
+      {
+         base.OnSourceInitialized(e);
+         try
+         {
+            // Load window placement details for previous application session from application settings
+            // Note - if window was closed on a monitor that is now disconnected from the computer,
+            //        SetWindowPlacement places the window onto a visible monitor.
+            if (false == String.IsNullOrEmpty(Properties.Settings.Default.WindowPlacement))
+            {
+               WindowPlacement wp = Utilities.Deserialize<WindowPlacement>(Properties.Settings.Default.WindowPlacement);
+               wp.length = Marshal.SizeOf(typeof(WindowPlacement));
+               wp.flags = 0;
+               wp.showCmd = (wp.showCmd == SwShowminimized ? SwShownormal : wp.showCmd);
+               var hwnd = new WindowInteropHelper(this).Handle;
+               if (false == SetWindowPlacement(hwnd, ref wp))
+                  Logger.Log(LogEnum.LE_ERROR, "SetWindowPlacement() returned false");
+            }
+            if (0.0 != Properties.Settings.Default.ScrollViewerHeight)
+               myScrollViewerMap.Height = Properties.Settings.Default.ScrollViewerHeight;
+            if (0.0 != Properties.Settings.Default.ScrollViewerWidth)
+               myScrollViewerMap.Width = Properties.Settings.Default.ScrollViewerWidth;
+         }
+         catch (Exception ex)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "OnSourceInitialized() e=" + ex.ToString());
+         }
+         return;
+      }
+      protected override void OnClosing(CancelEventArgs e) //  // WARNING - Not fired when Application.SessionEnding is fired
+      {
+         base.OnClosing(e);
+         System.Diagnostics.Debug.WriteLine("GameViewerWindow.ClosedGameViewerWindow(): Called Save_DefaultsToSettings()");
+         SaveDefaultsToSettings();
       }
       //-------------UPDATE HELPER FUNCTIONS---------------------------------
       public void ClearActionPanel()
@@ -933,7 +1691,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateActionPanel() leftMapItem0 is null");
                   return;
                }
-               MapItem.SetButtonContent(myButton1, leftMapItem0, IsAlien);
+               MapItem.SetButtonContent(myButton1, leftMapItem0, GameEngine.theIsAlien);
             }
          }
          if (Visibility.Visible == myButton2.Visibility)
@@ -946,7 +1704,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateActionPanel() leftMapItem0 is null");
                   return;
                }
-               MapItem.SetButtonContent(myButton2, leftMapItem1, IsAlien);
+               MapItem.SetButtonContent(myButton2, leftMapItem1, GameEngine.theIsAlien);
             }
          }
          if (Visibility.Visible == myButton3.Visibility)
@@ -959,7 +1717,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateActionPanel() leftMapItem0 is null");
                   return;
                }
-               MapItem.SetButtonContent(myButton3, leftMapItem2, IsAlien);
+               MapItem.SetButtonContent(myButton3, leftMapItem2, GameEngine.theIsAlien);
             }
          }
 
@@ -973,7 +1731,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateActionPanel() leftMapItem0 is null");
                   return;
                }
-               MapItem.SetButtonContent(myButton4, rightMapItem, IsAlien);
+               MapItem.SetButtonContent(myButton4, rightMapItem, GameEngine.theIsAlien);
             }
          }
          if (Visibility.Visible == myButton5.Visibility)
@@ -986,7 +1744,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateActionPanel() leftMapItem0 is null");
                   return;
                }
-               MapItem.SetButtonContent(myButton5, rightMapItem, IsAlien);
+               MapItem.SetButtonContent(myButton5, rightMapItem, GameEngine.theIsAlien);
             }
          }
          if (Visibility.Visible == myButton6.Visibility)
@@ -999,7 +1757,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateActionPanel() leftMapItem0 is null");
                   return;
                }
-               MapItem.SetButtonContent(myButton6, rightMapItem, IsAlien);
+               MapItem.SetButtonContent(myButton6, rightMapItem, GameEngine.theIsAlien);
             }
          }
       }
@@ -1021,7 +1779,7 @@ namespace PleasantvilleGame
                Button? b = myButtons.Find(mi.Name);
                if (null != b)
                {
-                  MapItem.SetButtonContent(b, mi, IsAlien);
+                  MapItem.SetButtonContent(b, mi, GameEngine.theIsAlien);
                   b.BeginAnimation(Canvas.LeftProperty, null); // end animation offset
                   b.BeginAnimation(Canvas.TopProperty, null);  // end animation offset
                   Canvas.SetLeft(b, mi.Location.X);
@@ -1057,7 +1815,7 @@ namespace PleasantvilleGame
                   myIsFlagSetForOverstack = false;
                   myIsFlagSetForMaxMove = false;
                   StringBuilder sb1 = new StringBuilder("UpdateViewMovement():");
-                  if (true == IsAlien)
+                  if (true == GameEngine.theIsAlien)
                      sb1.Append(" ALIEN sees moving ");
                   else
                      sb1.Append("  TP sees moving ");
@@ -1084,11 +1842,6 @@ namespace PleasantvilleGame
       }
       private void UpdateViewState(IGameInstance gi)
       {
-         if (null == myGameEngine)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::UpdateViewState() myGameEngine is null");
-            return;
-         }
          myStoryboard = null;  // turn off flashing
          GameAction outAction = GameAction.Error;
          switch (gi.GamePhase)
@@ -1096,7 +1849,7 @@ namespace PleasantvilleGame
             case GamePhase.Conversations:
                if (false == DisplayConversations(gi))
                {
-                  if (true != IsAlien || false != myConversationsCompleted)
+                  if (true != GameEngine.theIsAlien || false != myConversationsCompleted)
                   {
                      break;
                   }
@@ -1109,7 +1862,7 @@ namespace PleasantvilleGame
             case GamePhase.Influences:
                if (false == DisplayInfluences(gi))
                {
-                  if ((true == IsAlien) && (false == myInfluencesCompleted))
+                  if ((true == GameEngine.theIsAlien) && (false == myInfluencesCompleted))
                   {
                      myInfluencesCompleted = true;
                      outAction = GameAction.TownspersonCompletesInfluencing;
@@ -1126,7 +1879,7 @@ namespace PleasantvilleGame
                }
                if (false == isRetreatNeedAck)
                {
-                  if (true == IsAlien)
+                  if (true == GameEngine.theIsAlien)
                   {
                      if (false == myAlienCombatCompleted)
                      {
@@ -1155,7 +1908,7 @@ namespace PleasantvilleGame
                }
                if (false == isAckIterrogationsNeeded)
                {
-                  if ((false == IsAlien) && (false == myInterogationsCompleted))
+                  if ((false == GameEngine.theIsAlien) && (false == myInterogationsCompleted))
                   {
                      myInterogationsCompleted = true;
                      outAction = GameAction.TownspersonCompletesIterogations;
@@ -1166,7 +1919,7 @@ namespace PleasantvilleGame
             case GamePhase.ImplantRemoval:
                if (false == DisplayImplantRemovals(gi))
                {
-                  if ((false == IsAlien) && (false == myImplateRemovalsCompleted))
+                  if ((false == GameEngine.theIsAlien) && (false == myImplateRemovalsCompleted))
                   {
                      myImplateRemovalsCompleted = true;
                      outAction = GameAction.TownspersonCompletesRemoval;
@@ -1175,7 +1928,7 @@ namespace PleasantvilleGame
                }
                break;
             case GamePhase.AlienTakeover:
-               if (true == IsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   if (false == DisplayTakeovers(gi))
                   {
@@ -1195,7 +1948,7 @@ namespace PleasantvilleGame
       private bool UpdateCanvas(IGameInstance gi, bool isOnlyLastLegRemoved = false)
       {
          List<UIElement> lines = new List<UIElement>();  // Clean the Canvas of all marks
-         foreach (UIElement ui in myCanvas.Children)
+         foreach (UIElement ui in myCanvasMain.Children)
          {
             if (ui is Polygon)
             {
@@ -1239,12 +1992,12 @@ namespace PleasantvilleGame
          if (false == isOnlyLastLegRemoved)
          {
             foreach (UIElement line in lines)
-               myCanvas.Children.Remove(line);
+               myCanvasMain.Children.Remove(line);
          }
          else
          {
             if (0 < lines.Count)
-               myCanvas.Children.Remove(lines.Last());
+               myCanvasMain.Children.Remove(lines.Last());
          }
          //---------------------------------------------------------------
          foreach (Rectangle r in myRectangles)
@@ -1291,7 +2044,7 @@ namespace PleasantvilleGame
                   }
                   else
                   {
-                     MapItem.SetButtonContent(b, mi, IsAlien);
+                     MapItem.SetButtonContent(b, mi, GameEngine.theIsAlien);
                      mi.Location = new MapPoint(mi.TerritoryCurrent.CenterPoint.X - Utilities.theMapItemOffset + (counterCount * 3), mi.TerritoryCurrent.CenterPoint.Y - Utilities.theMapItemOffset + (counterCount * 3));
                      ++counterCount;
                      Canvas.SetLeft(b, mi.Location.X);
@@ -1310,7 +2063,7 @@ namespace PleasantvilleGame
          //   return false;
          //IMapItemMove mim = gi.MapItemMoves[0];
          ////List<Stack> stacks = new List<Stack>();
-         ////stacks.AssignPeople(gi.Persons, IsAlien);
+         ////stacks.AssignPeople(gi.Persons, GameEngine.theIsAlien);
          //IEnumerable<Stack> results = from stack in gi.Stacks
          //                             where stack.Territory.Name == mim.OldTerritory.Name
          //                             where stack.Territory.Sector == mim.OldTerritory.Sector
@@ -1366,7 +2119,7 @@ namespace PleasantvilleGame
          //aPolyline.StrokeEndLineCap = PenLineCap.Triangle;
          //aPolyline.Points = aPointCollection;
          //aPolyline.StrokeDashArray = myDashArray;
-         //myCanvas.Children.Add(aPolyline);
+         //myCanvasMain.Children.Add(aPolyline);
 
          //myMovingRectangle = myRectangles[myBrushIndex];
          //Canvas.SetLeft(myMovingRectangle, mim.MapItem.Location.X);
@@ -1382,7 +2135,7 @@ namespace PleasantvilleGame
          //persons.Add(mim.MapItem);          // and add to end so that it shows up on top.
          //IStack stack = 
          //List<Stack> stacks = new List<Stack>();
-         //stacks.AssignPeople(persons, IsAlien);
+         //stacks.AssignPeople(persons, GameEngine.theIsAlien);
          //IEnumerable<Stack> results = from stack in stacks
          //                             where stack.Territory.Name == mim.NewTerritory.Name
          //                             where stack.Territory.Sector == mim.NewTerritory.Sector
@@ -1485,7 +2238,7 @@ namespace PleasantvilleGame
       {
          //// Clear any previous flashing regions
          //myStoryboard = new Storyboard();
-         //foreach (UIElement ui in myCanvas.Children)
+         //foreach (UIElement ui in myCanvasMain.Children)
          //{
          //   if (ui is Polygon)
          //   {
@@ -1523,7 +2276,7 @@ namespace PleasantvilleGame
          //      continue;
          //   // Turn the region red
          //   String targetName = townspeopleControlled[0].TerritoryCurrent.Name + townspeopleControlled[0].TerritoryCurrent.Sector.ToString();
-         //   foreach (UIElement ui in myCanvas.Children)
+         //   foreach (UIElement ui in myCanvasMain.Children)
          //   {
          //      if (ui is Polygon)
          //      {
@@ -1587,7 +2340,7 @@ namespace PleasantvilleGame
          //   }
          //   if ((0 != myLeftMapItemsInActionPanel.Count) && (0 != myRightMapItemsInActionPanel.Count))
          //   {
-         //      UpdateActionPanel(gi, !IsAlien);
+         //      UpdateActionPanel(gi, !GameEngine.theIsAlien);
 
          //      myLabelHeading.Visibility = Visibility.Visible;
          //      myLabelArrow.Visibility = Visibility.Visible;
@@ -1601,16 +2354,6 @@ namespace PleasantvilleGame
       }
       private bool PerformConversation(IGameInstance gi, bool isIgnoreResults)
       {
-         if (null == gi)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::PerformConversation() gi is null");
-            return false;
-         }
-         if (null == myGameEngine)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::PerformConversation() myGameEngine is null");
-            return false;
-         }
          // First get the influence factor of the townsperson talking.
          // Create a die roll modifier based-on this value.
          String sbstart = "PerformConversation() -isIgnoreResults=" + isIgnoreResults.ToString();
@@ -1718,7 +2461,7 @@ namespace PleasantvilleGame
       private bool DisplayInfluences(IGameInstance gi)
       {
          myStoryboard = new Storyboard(); // Clear any previous flashing regions
-         foreach (UIElement ui in myCanvas.Children)
+         foreach (UIElement ui in myCanvasMain.Children)
          {
             if (ui is Polygon)
             {
@@ -1760,7 +2503,7 @@ namespace PleasantvilleGame
                continue;
             }
             String targetName = controlled.TerritoryCurrent.Name + controlled.TerritoryCurrent.Sector.ToString(); // Turn the region red
-            foreach (UIElement ui in myCanvas.Children)
+            foreach (UIElement ui in myCanvasMain.Children)
             {
                if (ui is Polygon)
                {
@@ -1827,7 +2570,7 @@ namespace PleasantvilleGame
             //----------------------------------------------------------------------
             if ((0 != myLeftMapItemsInActionPanel.Count) && (0 != myRightMapItemsInActionPanel.Count))
             {
-               UpdateActionPanel(gi, !IsAlien);
+               UpdateActionPanel(gi, !GameEngine.theIsAlien);
                //----------------------------------------------------------------------
                for (int i = 0; i < myLeftMapItemsInActionPanel.Count; ++i)
                {
@@ -1895,11 +2638,6 @@ namespace PleasantvilleGame
       }
       private bool PerformInfluence(IGameInstance gi, bool isIgnoreResults)
       {
-         if (null == myGameEngine)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::Perform_Influence() myGameEngine is null");
-            return false;
-         }
          if ((0 == myLeftMapItemsInActionPanelSelected.Count) || (0 == myRightMapItemsInActionPanelSelected.Count))
          {
             StringBuilder sb = new StringBuilder("Perform_Influence(): myLeft=");
@@ -2072,7 +2810,7 @@ namespace PleasantvilleGame
          //----------------------------------------------------------------------
          isRetreatNeedAck = false;
          myStoryboard = new Storyboard();
-         foreach (UIElement ui in myCanvas.Children) // Clear any previous flashing regions
+         foreach (UIElement ui in myCanvasMain.Children) // Clear any previous flashing regions
          {
             if (ui is Polygon)
             {
@@ -2080,7 +2818,7 @@ namespace PleasantvilleGame
                p1.Fill = mySolidColorBrushClear;
             }
          }
-         if (true == IsAlien)
+         if (true == GameEngine.theIsAlien)
             myTerritoriesCombatForAlien.Clear();
          else
             myTerritoriesCombatForTownsperson.Clear();
@@ -2112,7 +2850,7 @@ namespace PleasantvilleGame
             // !!!!!REMEMBER!!!!!  unknown aliens will not trigger a combat against wary people
             // unless the MapItem is exposed.  
             ITerritory? combatTerritory = null;
-            if (true == IsAlien)
+            if (true == GameEngine.theIsAlien)
             {
                if (0 == aliens.Count)
                   continue;
@@ -2152,13 +2890,13 @@ namespace PleasantvilleGame
                   continue;
             }
             //------------------------------------------------------------------------------
-            if (true == IsAlien)
+            if (true == GameEngine.theIsAlien)
                myTerritoriesCombatForAlien.Add(combatTerritory);
             else
                myTerritoriesCombatForTownsperson.Add(combatTerritory);
             //------------------------------------------------------------------------------
             String targetName = combatTerritory.Name + combatTerritory.Sector.ToString(); // Turn the region red
-            foreach (UIElement ui in myCanvas.Children)
+            foreach (UIElement ui in myCanvasMain.Children)
             {
                if (ui is Polygon)
                {
@@ -2205,7 +2943,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "DisplayTakover() selectedTerritory=null");
             return;
          }
-         if (true == IsAlien) // Only handle this mouse click if the selected territory is one where combat can occur.
+         if (true == GameEngine.theIsAlien) // Only handle this mouse click if the selected territory is one where combat can occur.
          {
             if (null == myTerritoriesCombatForAlien.Find(selectedTerritory.Name))
                return;
@@ -2249,7 +2987,7 @@ namespace PleasantvilleGame
             if ((0 == aliens.Count) || (0 == wary.Count))
                return;
          }
-         if (true == IsAlien) // Setup the action pane.
+         if (true == GameEngine.theIsAlien) // Setup the action pane.
          {
             foreach (IMapItem mi in aliens)
                myLeftMapItemsInActionPanel.Add(mi);
@@ -2332,7 +3070,7 @@ namespace PleasantvilleGame
                return false;
             }
             gi.MapItemCombat.Territory = leftMapItem.TerritoryCurrent;
-            if (true == IsAlien)
+            if (true == GameEngine.theIsAlien)
             {
                Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, "MouseLeftButtonDownCanvas():Combat: ALIEN myIsCombatInitiatedForAlien=true");
                myIsCombatInitiatedForAlien = true;
@@ -2445,7 +3183,7 @@ namespace PleasantvilleGame
          UpdateViewState(gi);
          myIsCombatInitiatedForTownsperson = false;
          StringBuilder sb1 = new StringBuilder("UpdateView():TownspersonPerformCombat: "); 
-         sb1.Append(IsAlien.ToString()); 
+         sb1.Append(GameEngine.theIsAlien.ToString()); 
          sb1.Append("myIsCombatInitiatedForTownsperson=false");
          Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, sb1.ToString());
          if (true == isIgnoreResults)
@@ -2455,7 +3193,7 @@ namespace PleasantvilleGame
       {
          isInterrogations = false;
          myStoryboard = new Storyboard();
-         foreach (UIElement ui in myCanvas.Children) // Clear any previous flashing regions
+         foreach (UIElement ui in myCanvasMain.Children) // Clear any previous flashing regions
          {
             if (ui is Polygon)
             {
@@ -2512,7 +3250,7 @@ namespace PleasantvilleGame
                return false;
             }  
             String targetName = controlled.TerritoryCurrent.Name + controlled.TerritoryCurrent.Sector.ToString();
-            foreach (UIElement ui in myCanvas.Children) // Turn the region red
+            foreach (UIElement ui in myCanvasMain.Children) // Turn the region red
             {
                if (ui is Polygon)
                {
@@ -2546,7 +3284,7 @@ namespace PleasantvilleGame
       private bool DisplayImplantRemovals(IGameInstance gi)
       {
          myStoryboard = new Storyboard();
-         foreach (UIElement ui in myCanvas.Children) // Clear any previous flashing regions
+         foreach (UIElement ui in myCanvasMain.Children) // Clear any previous flashing regions
          {
             if (ui is Polygon)
             {
@@ -2580,7 +3318,7 @@ namespace PleasantvilleGame
                return false;
             }
             String targetName = controlledMapItem.TerritoryCurrent.Name + controlledMapItem.TerritoryCurrent.Sector.ToString();  // Turn the region red
-            foreach (UIElement ui in myCanvas.Children)
+            foreach (UIElement ui in myCanvasMain.Children)
             {
                if (ui is Polygon)
                {
@@ -2641,7 +3379,7 @@ namespace PleasantvilleGame
 
             if ((0 != myLeftMapItemsInActionPanel.Count) && (0 != myRightMapItemsInActionPanel.Count))
             {
-               UpdateActionPanel(gi, !IsAlien);
+               UpdateActionPanel(gi, !GameEngine.theIsAlien);
                myLabelHeading.Visibility = Visibility.Visible;
                myLabelArrow.Visibility = Visibility.Visible;
                myTextBoxResults.Visibility = Visibility.Visible;
@@ -2743,14 +3481,14 @@ namespace PleasantvilleGame
       }
       private bool DisplayTakeovers(IGameInstance gi, ITerritory? selectedTerritory = null)
       {
-         if (false == IsAlien)
+         if (false == GameEngine.theIsAlien)
          {
             myStoryboard = null; // turn off any flashing spaces
             return false;
          }
          //----------------------------------------------------------------------
          myStoryboard = new Storyboard(); // Clear any previous flashing regions
-         foreach (UIElement ui in myCanvas.Children)
+         foreach (UIElement ui in myCanvasMain.Children)
          {
             if (ui is Polygon)
             {
@@ -2819,7 +3557,7 @@ namespace PleasantvilleGame
                return false;
             }  
             String targetName = possibleVictum.TerritoryCurrent.Name + possibleVictum.TerritoryCurrent.Sector.ToString();  // Turn the region orange
-            foreach (UIElement ui in myCanvas.Children)
+            foreach (UIElement ui in myCanvasMain.Children)
             {
                if (ui is Polygon)
                {
@@ -2902,7 +3640,7 @@ namespace PleasantvilleGame
             }
             if ((0 != myLeftMapItemsInActionPanel.Count) && (0 != myRightMapItemsInActionPanel.Count))
             {
-               UpdateActionPanel(gi, IsAlien);
+               UpdateActionPanel(gi, GameEngine.theIsAlien);
                myLabelHeading.Visibility = Visibility.Visible;
                myLabelArrow.Visibility = Visibility.Visible;
                myTextBoxResults.Visibility = Visibility.Visible;
@@ -2967,7 +3705,7 @@ namespace PleasantvilleGame
          }
          myLeftMapItemsInActionPanel.Add(gi.Takeover.Alien);
          myRightMapItemsInActionPanel.Add(gi.Takeover.Uncontrolled);
-         UpdateActionPanel(gi, !IsAlien);
+         UpdateActionPanel(gi, !GameEngine.theIsAlien);
 
          myLabelHeading.Visibility = Visibility.Visible;
          myLabelArrow.Visibility = Visibility.Visible;
@@ -2982,24 +3720,46 @@ namespace PleasantvilleGame
          return true;
       }
       //-------------CONTROLLER FUNCTIONS---------------------------------
+      private void MouseLeftButtonDownMarquee(object sender, MouseEventArgs e)
+      {
+         myStoryboardMarquee.Pause(this);
+      }
+      private void MouseLeftButtonUpMarquee(object send, MouseEventArgs e)
+      {
+         myStoryboardMarquee.Resume(this);
+      }
+      private void MouseRightButtonDownMarquee(object send, MouseEventArgs e)
+      {
+         if (2.5 < mySpeedRatioMarquee)
+            mySpeedRatioMarquee = 0.25;
+         else if ((1.8 < mySpeedRatioMarquee) && (mySpeedRatioMarquee < 2.2))
+            mySpeedRatioMarquee = 3.0;
+         else if ((0.8 < mySpeedRatioMarquee) && (mySpeedRatioMarquee < 1.2))
+            mySpeedRatioMarquee = 2.0;
+         else if ((0.3 < mySpeedRatioMarquee) && (mySpeedRatioMarquee < 0.6))
+            mySpeedRatioMarquee = 1.0;
+         else
+            mySpeedRatioMarquee = 0.5;
+         myStoryboardMarquee.SetSpeedRatio(this, mySpeedRatioMarquee);
+      }
       private void myTextBoxEntryTextChanged(object sender, TextChangedEventArgs e)
       {
-         if (null != myGameEngine)
-         {
-            string entry = myTextBoxEntry.Text;  // Do not do anything unless a carriage return happens
-            int length = entry.Count();
-            if (0 == length)
-               return;
-            if ('\n' == entry[length - 1])
-            {
-               myTextBoxEntry.Text = "";
-               StringBuilder sb = new StringBuilder("You say: ");
-               sb.Append(entry);
-               myTextBoxDisplay.AppendText(sb.ToString());
-               myTextBoxDisplay.ScrollToEnd();
-               //myGameEngine.SendText(entry);
-            }
-         }
+         //if (null != myGameEngine)
+         //{
+         //   string entry = myTextBoxEntry.Text;  // Do not do anything unless a carriage return happens
+         //   int length = entry.Count();
+         //   if (0 == length)
+         //      return;
+         //   if ('\n' == entry[length - 1])
+         //   {
+         //      myTextBoxEntry.Text = "";
+         //      StringBuilder sb = new StringBuilder("You say: ");
+         //      sb.Append(entry);
+         //      myTextBoxDisplay.AppendText(sb.ToString());
+         //      myTextBoxDisplay.ScrollToEnd();
+         //      //myGameEngine.SendText(entry);
+         //   }
+         //}
       }
       private void ClickMapItem(object sender, RoutedEventArgs e)
       {
@@ -3030,7 +3790,7 @@ namespace PleasantvilleGame
                case GamePhase.AlienMovement:
                   if (null == myMovingButton)
                   {
-                     if (false == IsAlien)
+                     if (false == GameEngine.theIsAlien)
                      {
                         if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
                            Logger.Log(LogEnum.LE_ERROR, "ClickMapItem(): RotateStack() returned false");
@@ -3062,7 +3822,7 @@ namespace PleasantvilleGame
                case GamePhase.TownspersonMovement:
                   if (null == myMovingButton)
                   {
-                     if ((("Townsperson Selects Counter to Move" != gi.NextAction) || (true == IsAlien)
+                     if ((("Townsperson Selects Counter to Move" != gi.NextAction) || (true == GameEngine.theIsAlien)
                          || (false == selectedMapItem.IsConscious) || (false == selectedMapItem.IsControlled) || (true == selectedMapItem.IsKilled)
                          || (true == selectedMapItem.IsStunned) || (true == selectedMapItem.IsTiedUp) || (true == myIsAlienAbleToStopMove)))
                      {
@@ -3136,7 +3896,7 @@ namespace PleasantvilleGame
             return;
          }
          IGameInstance gi = myGameInstance;
-         Point p = e.GetPosition(myCanvas);  // not used but useful info
+         Point p = e.GetPosition(myCanvasMain);  // not used but useful info
          // There is already a moving button.  Do not do any actions until
          // the alien player responds or there is a timeout on the alien response.
          // When that happens, myIsAlienAbleToStopMove=false.
@@ -3145,7 +3905,7 @@ namespace PleasantvilleGame
          //--------------------------------------------------
          // Get the selected territory
          ITerritory? selectedTerritory = null;
-         foreach (UIElement ui in myCanvas.Children)
+         foreach (UIElement ui in myCanvasMain.Children)
          {
             if (ui is Polygon)
             {
@@ -3182,13 +3942,13 @@ namespace PleasantvilleGame
          switch (gi.GamePhase)
          {
             case GamePhase.AlienMovement:
-               if ((true == IsAlien) && (null != myMovingButton))
+               if ((true == GameEngine.theIsAlien) && (null != myMovingButton))
                   MapItemMoveManually(selectedTerritory, myMovingButton);
                else
                   RotateStack(selectedTerritory);
                break;
             case GamePhase.TownspersonMovement:
-               if ((false == IsAlien) && (null != myMovingButton))
+               if ((false == GameEngine.theIsAlien) && (null != myMovingButton))
                   MapItemMoveManually(selectedTerritory, myMovingButton);
                else
                   RotateStack(selectedTerritory);
@@ -3201,10 +3961,10 @@ namespace PleasantvilleGame
       private void MouseRightButtonDownCanvas(object sender, MouseButtonEventArgs e)
       {
 
-         Point p = e.GetPosition(myCanvas);  // not used but useful info
+         Point p = e.GetPosition(myCanvasMain);  // not used but useful info
          //--------------------------------------------------
          ITerritory? selectedTerritory = null;  // Get the selected territory
-         foreach (UIElement ui in myCanvas.Children)
+         foreach (UIElement ui in myCanvasMain.Children)
          {
             if (ui is Polygon)
             {
@@ -3288,9 +4048,9 @@ namespace PleasantvilleGame
                   if (cm.Items[0] is MenuItem)
                   {
                      MenuItem menuItem = (MenuItem)cm.Items[0];
-                     if ((true == IsAlien) && (GamePhase.AlienMovement == myGameInstance.GamePhase) && (true == mi.IsMoved))
+                     if ((true == GameEngine.theIsAlien) && (GamePhase.AlienMovement == myGameInstance.GamePhase) && (true == mi.IsMoved))
                         menuItem.IsEnabled = true;
-                     else if ((false == IsAlien) && (GamePhase.TownspersonMovement == myGameInstance.GamePhase) && (true == mi.IsMoved))
+                     else if ((false == GameEngine.theIsAlien) && (GamePhase.TownspersonMovement == myGameInstance.GamePhase) && (true == mi.IsMoved))
                         menuItem.IsEnabled = true;
                   }
                }
@@ -3301,7 +4061,7 @@ namespace PleasantvilleGame
                //   {
                //      MenuItem menuItem = (MenuItem)cm.Items[1];
                //      List<Stack> stacks = new List<Stack>();
-               //      stacks.AssignPeople(gi.Persons, IsAlien);
+               //      stacks.AssignPeople(gi.Persons, GameEngine.theIsAlien);
                //      IMapItems mapItems = stacks.FindPeople(mi.TerritoryCurrent);
                //      if (null != mapItems)
                //      {
@@ -3385,16 +4145,6 @@ namespace PleasantvilleGame
       }
       private void ContextMenuClickExposeAlien(object sender, RoutedEventArgs e)
       {
-         if( null == myGameInstance )
-         {
-            Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickExposeAlien() myGameInstance=null");
-            return;
-         }
-         if (null == myGameEngine)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickExposeAlien() myGameEngine=null");
-            return;
-         }
          if (sender is MenuItem)
          {
             MenuItem mi = (MenuItem)sender;
@@ -3426,16 +4176,6 @@ namespace PleasantvilleGame
       }
       private void ContextMenuClickStopMove(object sender, RoutedEventArgs e)
       {
-         if (null == myGameInstance)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickStopMove() myGameInstance=null");
-            return;
-         }
-         if (null == myGameEngine)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickStopMove() myGameEngine=null");
-            return;
-         }
          myTimer.Stop();
          if (sender is MenuItem)
          {
@@ -3500,16 +4240,6 @@ namespace PleasantvilleGame
       }
       private void TimerElasped(object sender, EventArgs e)
       {
-         if (null == myGameInstance)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "TimerElasped() myGameInstance=null");
-            return;
-         }
-         if (null == myGameEngine)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "TimerElasped() myGameEngine=null");
-            return;
-         }
          Logger.Log(LogEnum.LE_TIMER_ELAPED, "TimerElasped() called");
          if (true == myIsAlienAbleToStopMove)
          {
@@ -3523,16 +4253,6 @@ namespace PleasantvilleGame
       }
       private void myButton1_Click(object sender, RoutedEventArgs e)
       {
-         if (null == myGameInstance)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "myButton1_Click() myGameInstance=null");
-            return;
-         }
-         if (null == myGameEngine)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "TimerElasmyButton1_Clickped() myGameEngine=null");
-            return;
-         }
          switch (myGameInstance.GamePhase)
          {
             case GamePhase.Conversations:
@@ -3570,16 +4290,6 @@ namespace PleasantvilleGame
       }
       private void myButton2_Click(object sender, RoutedEventArgs e)
       {
-         if (null == myGameInstance)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "myButton1_Click() myGameInstance=null");
-            return;
-         }
-         if (null == myGameEngine)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "TimerElasmyButton2_Clickped() myGameEngine=null");
-            return;
-         }
          switch (myGameInstance.GamePhase)
          {
             case GamePhase.Conversations:
@@ -3617,16 +4327,6 @@ namespace PleasantvilleGame
       }
       private void myButton3_Click(object sender, RoutedEventArgs e)
       {
-         if (null == myGameInstance)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "myButton3_Click() myGameInstance=null");
-            return;
-         }
-         if (null == myGameEngine)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "TimerElasmyButton3_Clickped() myGameEngine=null");
-            return;
-         }
          switch (myGameInstance.GamePhase)
          {
             case GamePhase.Conversations:
@@ -3663,16 +4363,6 @@ namespace PleasantvilleGame
       }
       private void myButton4_Click(object sender, RoutedEventArgs e)
       {
-         if (null == myGameInstance)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "myButton3_Click() myGameInstance=null");
-            return;
-         }
-         if (null == myGameEngine)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "TimerElasmyButton3_Clickped() myGameEngine=null");
-            return;
-         }
          switch (myGameInstance.GamePhase)
          {
             case GamePhase.Conversations:
@@ -3710,16 +4400,6 @@ namespace PleasantvilleGame
       }
       private void myButton5_Click(object sender, RoutedEventArgs e)
       {
-         if (null == myGameInstance)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "myButton3_Click() myGameInstance=null");
-            return;
-         }
-         if (null == myGameEngine)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "TimerElasmyButton3_Clickped() myGameEngine=null");
-            return;
-         }
          switch (myGameInstance.GamePhase)
          {
             case GamePhase.Conversations:
@@ -3757,16 +4437,6 @@ namespace PleasantvilleGame
       }
       private void myButton6_Click(object sender, RoutedEventArgs e)
       {
-         if (null == myGameInstance)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "myButton6_Click() myGameInstance=null");
-            return;
-         }
-         if (null == myGameEngine)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "myButton6_Click() myGameEngine=null");
-            return;
-         }
          switch (myGameInstance.GamePhase)
          {
             case GamePhase.Conversations:
@@ -3864,28 +4534,18 @@ namespace PleasantvilleGame
       //-------------CONTROLLER HELPER FUNCTIONS---------------------------------
       private void MapItemCommonAction(ITerritory selectedTerritory)
       {
-         if (null == myGameInstance)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "MapItemCommonAction() myGameInstance=null");
-            return;
-         }
-         if (null == myGameEngine)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "myButton6_Click() myGameEngine=null");
-            return;
-         }
          //----------------------------------------
          myStoryboard = null;
          switch (myGameInstance.GamePhase)
          {
             case GamePhase.Conversations:
-               if (false == IsAlien)
+               if (false == GameEngine.theIsAlien)
                   DisplayConversation(myGameInstance, selectedTerritory);
                else
                   RotateStack(selectedTerritory);
                return;
             case GamePhase.Influences:
-               if (false == IsAlien)
+               if (false == GameEngine.theIsAlien)
                   DisplayInfluence(myGameInstance, selectedTerritory);
                else
                   RotateStack(selectedTerritory);
@@ -3894,7 +4554,7 @@ namespace PleasantvilleGame
                DisplayCombat(myGameInstance, selectedTerritory);
                return;
             case GamePhase.Iterrogations:
-               if (false == IsAlien)
+               if (false == GameEngine.theIsAlien)
                {
                   if ((true == selectedTerritory.IsBuilding()) && (null != myGameInstance.ZebulonTerritories.Find(selectedTerritory.Name)) && (0 < myGameInstance.NumIterogationsThisTurn))
                   {
@@ -3923,13 +4583,13 @@ namespace PleasantvilleGame
                }
                return;
             case GamePhase.ImplantRemoval:
-               if (false == IsAlien)
+               if (false == GameEngine.theIsAlien)
                   DisplayImplantRemoval(myGameInstance, selectedTerritory);
                else
                   RotateStack(selectedTerritory);
                return;
             case GamePhase.AlienTakeover:
-               if (true == IsAlien)
+               if (true == GameEngine.theIsAlien)
                   DisplayTakover(myGameInstance, selectedTerritory);
                else
                   RotateStack(selectedTerritory);
@@ -3941,16 +4601,6 @@ namespace PleasantvilleGame
       }
       private void MapItemMoveManually(ITerritory selectedTerritory, Button selectedButton)
       {
-         if (null == myGameInstance)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "MapItemMoveManually() myGameInstance=null");
-            return;
-         }
-         if (null == myGameEngine)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "MapItemMoveManually() myGameEngine=null");
-            return;
-         }
          //----------------------------------------
          if ((null != selectedTerritory) && (null != selectedButton))  // MapItem already selected to move.  Moving it to a known space
          {
@@ -4074,16 +4724,6 @@ namespace PleasantvilleGame
       }
       private bool MapItemReturnToStart(Button selectedButton)
       {
-         if (null == myGameInstance)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "MapItem_ReturnToStart(): myGameInstance=null");
-            return false;
-         }
-         if (null == myGameEngine)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "MapItem_ReturnToStart(): myGameEngine=null");
-            return false;
-         }
          IMapItem? selectedMapItem = myGameInstance.Stacks.FindMapItem(selectedButton.Name);
          if (null == selectedMapItem)
          {
@@ -4092,9 +4732,9 @@ namespace PleasantvilleGame
          }
          if (false == selectedMapItem.IsMoveAllowedToResetThisTurn) // if not allowed to reset, do nothing
          {
-            if ((true == myIsFlagSetForMoveReset) && (true == IsAlien) && (GamePhase.AlienMovement == myGameInstance.GamePhase))
+            if ((true == myIsFlagSetForMoveReset) && (true == GameEngine.theIsAlien) && (GamePhase.AlienMovement == myGameInstance.GamePhase))
                MessageBox.Show("Reset Not Allowed");
-            if ((true == myIsFlagSetForMoveReset) && (false == IsAlien) && (GamePhase.TownspersonMovement == myGameInstance.GamePhase))
+            if ((true == myIsFlagSetForMoveReset) && (false == GameEngine.theIsAlien) && (GamePhase.TownspersonMovement == myGameInstance.GamePhase))
                MessageBox.Show("Reset Not Allowed");
             myIsFlagSetForMoveReset = true;
             this.RotateStack(selectedMapItem.TerritoryCurrent); // rotate the stack
@@ -4103,7 +4743,7 @@ namespace PleasantvilleGame
          switch (myGameInstance.GamePhase)
          {
             case GamePhase.AlienMovement:
-               if ((true == selectedMapItem.IsControlled) || (false == IsAlien))
+               if ((true == selectedMapItem.IsControlled) || (false == GameEngine.theIsAlien))
                {
                   if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
                   {
@@ -4114,7 +4754,7 @@ namespace PleasantvilleGame
                }
                break;
             case GamePhase.TownspersonMovement:
-               if ((false == selectedMapItem.IsControlled) || (true == IsAlien))
+               if ((false == selectedMapItem.IsControlled) || (true == GameEngine.theIsAlien))
                {
                   if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
                   {
@@ -4269,7 +4909,7 @@ namespace PleasantvilleGame
                Canvas.SetZIndex(b, counterCount * 10);
                b.BeginAnimation(Canvas.LeftProperty, null); // end animation offset
                b.BeginAnimation(Canvas.TopProperty, null);  // end animation offset
-               MapItem.SetButtonContent(b, mi, IsAlien);
+               MapItem.SetButtonContent(b, mi, GameEngine.theIsAlien);
                ++counterCount;
             }
          }
@@ -4280,7 +4920,7 @@ namespace PleasantvilleGame
          Canvas.SetZIndex(bottomButton, counterCount * 10);
          bottomButton.BeginAnimation(Canvas.LeftProperty, null); // end animation offset
          bottomButton.BeginAnimation(Canvas.TopProperty, null);  // end animation offset
-         MapItem.SetButtonContent(bottomButton, bottomMi, IsAlien);
+         MapItem.SetButtonContent(bottomButton, bottomMi, GameEngine.theIsAlien);
          if (null != bottomRect)
          {
             Canvas.SetLeft(bottomRect, bottomMi.Location.X);

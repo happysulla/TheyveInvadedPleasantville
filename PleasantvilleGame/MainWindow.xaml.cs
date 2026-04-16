@@ -67,18 +67,18 @@ namespace PleasantvilleGame
    }
    //===========================================================================
    public partial class MainWindow : Window
-    {
+   {
       public static string theAssemblyDirectory = "";
       private IGameEngine? myGameEngine = null;
       private GameViewerWindow? myGameViewerWindow = null;
       public MainWindow()
-        {
-            InitializeComponent();
+      {
+         InitializeComponent();
          try
          {
             //--------------------------------------------
             string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            Logger.theLogDirectory = appDataDir + @"\PattonsBest\Logs\";
+            Logger.theLogDirectory = appDataDir + @"\Pleasantville\Logs\";
             if (false == Directory.Exists(Logger.theLogDirectory)) // create directory if does not exists
                Directory.CreateDirectory(Logger.theLogDirectory);
             if (false == Logger.SetInitial()) // setup logger
@@ -103,15 +103,15 @@ namespace PleasantvilleGame
             MapImage.theImageDirectory = theAssemblyDirectory + @"\Images\";
             ConfigFileReader.theConfigDirectory = theAssemblyDirectory + @"\Config\";
             //--------------------------------------------
-            GameLoadMgr.theGamesDirectory = appDataDir + @"\PattonsBest\Games\";
+            GameLoadMgr.theGamesDirectory = appDataDir + @"\Pleasantville\Games\";
             if (false == Directory.Exists(GameLoadMgr.theGamesDirectory)) // create directory if does not exists
                Directory.CreateDirectory(GameLoadMgr.theGamesDirectory);
             //--------------------------------------------
-            GameFeats.theGameFeatDirectory = appDataDir + @"\PattonsBest\GameFeats\";
+            GameFeats.theGameFeatDirectory = appDataDir + @"\Pleasantville\GameFeats\";
             if (false == Directory.Exists(GameFeats.theGameFeatDirectory)) // create directory if does not exists
                Directory.CreateDirectory(GameFeats.theGameFeatDirectory);
             //--------------------------------------------
-            GameStatistics.theGameStatisticsDirectory = appDataDir + @"\PattonsBest\GameStats\";
+            GameStatistics.theGameStatisticsDirectory = appDataDir + @"\Pleasantville\GameStats\";
             if (false == Directory.Exists(GameStatistics.theGameStatisticsDirectory)) // create directory if does not exists
                Directory.CreateDirectory(GameStatistics.theGameStatisticsDirectory);
             //--------------------------------------------
@@ -152,11 +152,14 @@ namespace PleasantvilleGame
       public void UpdateViews(IGameInstance gi, GameAction action)
       {
          if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "UpdateViews() myGameEngine=null");
             return;
+         }
          foreach (IView v in myGameEngine.Views)
          {
             if (null == v)
-               Logger.Log(LogEnum.LE_ERROR, "UpdateView(): v=null");
+               Logger.Log(LogEnum.LE_ERROR, "UpdateViews(): v=null");
             else
                v.UpdateView(ref gi, action);
          }

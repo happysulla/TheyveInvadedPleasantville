@@ -10,28 +10,24 @@ namespace PleasantvilleGame
 {
    class MainMenuViewer : IView
    {
+      public Options? NewGameOptions { get; set; } = null;  // These options take affect when new game menu item is selected
+      private readonly IGameEngine myGameEngine;
+      private IGameInstance myGameInstance;
       private readonly Menu myMainMenu;                     // Top level menu items: File | View | Options | Help
       private MenuItem? myMenuItemGamePhase = new MenuItem();
       private MenuItem myMenuItemNextAction = new MenuItem();
       private MenuItem myMenuItemDisplay = new MenuItem();
-      private IGameEngine myGameEngine;
-      private IGameInstance myGameInstance;
-      private Canvas myCanvas;
-      private bool myIsAlien;
-
       private bool myIsZebulonTerritoriesVisible = false;
       private bool myIsTownspersonStarted = false;
       private bool myIsAlienStarted = false;
       private bool myIsTownspersonAcked = false;
       private bool myIsAlienAcked = false;
       //=======================================================
-      public MainMenuViewer(IGameEngine ge, IGameInstance gi, Canvas c, Menu mi, bool isAlien)
+      public MainMenuViewer(IGameEngine ge, IGameInstance gi, Menu mi)
       {
          myGameEngine = ge;
          myGameInstance = gi;
-         myCanvas = c;
          myMainMenu = mi;
-         myIsAlien = isAlien;
          //foreach (Control item in myMainMenu.Items)
          //{
          //   if (item is MenuItem)
@@ -67,45 +63,45 @@ namespace PleasantvilleGame
       } // end MainMenuViewer()
       public bool UpdateCanvasShowZebulonLocations()
       {
-         SolidColorBrush aSolidColorBrush1 = new SolidColorBrush();
-         aSolidColorBrush1.Color = Color.FromArgb(0, 0, 1, 0);
-         if (false == myIsZebulonTerritoriesVisible)
-         {
-            myIsZebulonTerritoriesVisible = true;
+         //SolidColorBrush aSolidColorBrush1 = new SolidColorBrush();
+         //aSolidColorBrush1.Color = Color.FromArgb(0, 0, 1, 0);
+         //if (false == myIsZebulonTerritoriesVisible)
+         //{
+         //   myIsZebulonTerritoriesVisible = true;
 
-            SolidColorBrush aSolidColorBrush2 = new SolidColorBrush();
-            aSolidColorBrush2.Color = Colors.Black;
+         //   SolidColorBrush aSolidColorBrush2 = new SolidColorBrush();
+         //   aSolidColorBrush2.Color = Colors.Black;
 
-            foreach (UIElement ui in myCanvas.Children)
-            {
-               if (ui is Polygon)
-               {
-                  Polygon? p = (Polygon)ui;
-                  if( null == p )
-                  {
-                     Logger.Log(LogEnum.LE_VIEW_UPDATE_MENU, "MainMenuViewer::UpdateCanvas_ShowZebulonLocations() => polygon is null");
-                     continue;
-                  }
-                  ITerritory? t = myGameInstance.ZebulonTerritories.Find(p.Name);
-                  if (null == t)
-                     p.Fill = aSolidColorBrush1;
-                  else
-                     p.Fill = aSolidColorBrush2;
-               }
-            }
-         }
-         else
-         {
-            myIsZebulonTerritoriesVisible = false;
-            foreach (UIElement ui in myCanvas.Children)
-            {
-               if (ui is Polygon)
-               {
-                  Polygon p = (Polygon)ui;
-                  p.Fill = aSolidColorBrush1;
-               }
-            }
-         }
+         //   foreach (UIElement ui in myCanvas.Children)
+         //   {
+         //      if (ui is Polygon)
+         //      {
+         //         Polygon? p = (Polygon)ui;
+         //         if( null == p )
+         //         {
+         //            Logger.Log(LogEnum.LE_VIEW_UPDATE_MENU, "MainMenuViewer::UpdateCanvas_ShowZebulonLocations() => polygon is null");
+         //            continue;
+         //         }
+         //         ITerritory? t = myGameInstance.ZebulonTerritories.Find(p.Name);
+         //         if (null == t)
+         //            p.Fill = aSolidColorBrush1;
+         //         else
+         //            p.Fill = aSolidColorBrush2;
+         //      }
+         //   }
+         //}
+         //else
+         //{
+         //   myIsZebulonTerritoriesVisible = false;
+         //   foreach (UIElement ui in myCanvas.Children)
+         //   {
+         //      if (ui is Polygon)
+         //      {
+         //         Polygon p = (Polygon)ui;
+         //         p.Fill = aSolidColorBrush1;
+         //      }
+         //   }
+         //}
          return true;
       }
       public void UpdateView(ref IGameInstance gi, GameAction action)
@@ -122,7 +118,7 @@ namespace PleasantvilleGame
          switch (action)
          {
             case GameAction.AlienStart:
-               if (true == myIsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   myIsAlienStarted = true;
                   myMenuItemNextAction.Header = "_Display Random Movement";
@@ -139,7 +135,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.TownspersonStart:
-               if (false == myIsAlien)
+               if (false == GameEngine.theIsAlien)
                {
                   myIsTownspersonStarted = true;
                   myMenuItemNextAction.Header = "_Display Random Movement";
@@ -156,21 +152,21 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.AlienDisplaysRandomMovement:
-               if (true == myIsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   myMenuItemNextAction.Header = "_Acknowledge Random Movement";
                   myMenuItemNextAction.InputGestureText = "Ctrl+D";
                }
                break;
             case GameAction.TownspersonDisplaysRandomMovement:
-               if (false == myIsAlien)
+               if (false == GameEngine.theIsAlien)
                {
                   myMenuItemNextAction.Header = "_Acknowledge Random Movement";
                   myMenuItemNextAction.InputGestureText = "Ctrl+D";
                }
                break;
             case GameAction.AlienAcksRandomMovement:
-               if (true == myIsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   myIsAlienAcked = true;
                   myMenuItemNextAction.Header = "_Complete Alien Movement";
@@ -188,7 +184,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.TownspersonAcksRandomMovement:
-               if (false == myIsAlien)
+               if (false == GameEngine.theIsAlien)
                {
                   myIsTownspersonAcked = true;
                   myMenuItemNextAction.Header = "_Acknowledge Alien Movement";
@@ -210,7 +206,7 @@ namespace PleasantvilleGame
                //Console.WriteLine("RESET");
                myIsTownspersonAcked = false;
                myIsAlienAcked = false;
-               if (true == myIsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   myMenuItemNextAction.Header = "_Acknowledge Townspeople Movement";
                   myMenuItemNextAction.InputGestureText = "Ctrl+A";
@@ -224,7 +220,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.TownspersonAcksAlienMovement:
-               if (false == myIsAlien)
+               if (false == GameEngine.theIsAlien)
                {
                   myMenuItemNextAction.Header = "_Complete Townspeople Movement";
                   myMenuItemNextAction.InputGestureText = "Ctrl+C";
@@ -244,7 +240,7 @@ namespace PleasantvilleGame
                myMenuItemNextAction.IsEnabled = true;
                break;
             case GameAction.TownpersonCompletesMovement:
-               if (true == myIsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   myMenuItemNextAction.Header = "_Acknowledge Townspeople Movement";
                   myMenuItemNextAction.InputGestureText = "Ctrl+A";
@@ -258,7 +254,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.AlienAcksTownspersonMovement:
-               if (true == myIsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   if (GamePhase.TownspersonMovement == gi.GamePhase)
                   {
@@ -358,7 +354,7 @@ namespace PleasantvilleGame
             case GameAction.TownspersonPerformsConversation:
                break;
             case GameAction.TownspersonCompletesConversations:
-               if (true == myIsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   if (GamePhase.Influences == gi.GamePhase)
                   {
@@ -440,7 +436,7 @@ namespace PleasantvilleGame
             case GameAction.TownspersonPerformsInfluencing:
                break;
             case GameAction.TownspersonCompletesInfluencing:
-               if (true == myIsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   if (GamePhase.Combat == gi.GamePhase)
                   {
@@ -512,7 +508,7 @@ namespace PleasantvilleGame
             case GameAction.TownspersonPerformCombat:
                break;
             case GameAction.TownspersonCompletesCombat:
-               if (true == myIsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   if (GamePhase.Combat == gi.GamePhase)
                   {
@@ -584,7 +580,7 @@ namespace PleasantvilleGame
             case GameAction.AlienPerformCombat:
                break;
             case GameAction.AlienCompletesCombat:
-               if (true == myIsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   if (GamePhase.Combat == gi.GamePhase)
                   {
@@ -646,7 +642,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.TownspersonIterrogates:
-               if (true == myIsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   myMenuItemNextAction.Header = "_Acknowledge Iterogations";
                   myMenuItemNextAction.InputGestureText = "Ctrl+C";
@@ -660,7 +656,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.TownspersonCompletesIterogations:
-               if (true == myIsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   myMenuItemNextAction.Header = "_Acknowledge Iterogations";
                   myMenuItemNextAction.InputGestureText = "Ctrl+C";
@@ -674,7 +670,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.AlienAcksIterogations:
-               if (true == myIsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   if (GamePhase.ImplantRemoval == gi.GamePhase)
                   {
@@ -714,7 +710,7 @@ namespace PleasantvilleGame
             case GameAction.TownspersonRemovesImplant:
                break;
             case GameAction.TownspersonCompletesRemoval:
-               if (true == myIsAlien)
+               if (true == GameEngine.theIsAlien)
                {
                   if (GamePhase.AlienTakeover == gi.GamePhase)
                   {
@@ -780,19 +776,19 @@ namespace PleasantvilleGame
          switch (myMenuItemNextAction.Header.ToString())
          {
             case "_Start":
-               if (true == myIsAlien)
+               if (true == GameEngine.theIsAlien)
                   action = GameAction.AlienStart;
                else
                   action = GameAction.TownspersonStart;
                break;
             case "_Display Random Movement":
-               if (true == myIsAlien)
+               if (true == GameEngine.theIsAlien)
                   action = GameAction.AlienDisplaysRandomMovement;
                else
                   action = GameAction.TownspersonDisplaysRandomMovement;
                break;
             case "_Acknowledge Random Movement":
-               if (true == myIsAlien)
+               if (true == GameEngine.theIsAlien)
                   action = GameAction.AlienAcksRandomMovement;
                else
                   action = GameAction.TownspersonAcksRandomMovement;
@@ -816,7 +812,7 @@ namespace PleasantvilleGame
                action = GameAction.TownspersonCompletesInfluencing;
                break;
             case "_Complete Combats":
-               if (true == myIsAlien)
+               if (true == GameEngine.theIsAlien)
                   action = GameAction.AlienCompletesCombat;
                else
                   action = GameAction.TownspersonCompletesCombat;
