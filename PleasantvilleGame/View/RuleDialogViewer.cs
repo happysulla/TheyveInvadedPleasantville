@@ -356,18 +356,13 @@ namespace PleasantvilleGame
          try
          {
             string filename = ConfigFileReader.theConfigDirectory + "Tables.txt"; 
-            ConfigFileReader cfr = new ConfigFileReader(filename); // combat calender is added in this method
+            ConfigFileReader cfr = new ConfigFileReader(filename); 
             if (true == cfr.CtorError)
             {
                Logger.Log(LogEnum.LE_ERROR, "CreateTables(): cfr.CtorError=true");
                return false;
             }
             myTables = cfr.Entries;
-            if (0 == myTables.Count)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "CreateTables(): myTables.Count=0");
-               return false;
-            }
             return true;
          }
          catch (Exception e)

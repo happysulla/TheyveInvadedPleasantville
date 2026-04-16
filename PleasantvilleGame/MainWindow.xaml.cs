@@ -129,12 +129,12 @@ namespace PleasantvilleGame
             myGameViewerWindow = new GameViewerWindow(myGameEngine, gi); // Start the main view
             if (true == myGameViewerWindow.CtorError)
             {
-               Logger.Log(LogEnum.LE_ERROR, "MainWindow(): GameViewerWindow() ctor error");
+               Logger.Log(LogEnum.LE_ERROR, "MainWindow(): myGameViewerWindow.CtorError=true");
                Application.Current.Shutdown();
                return;
             }
             //--------------------------------------------
-            string iconFilename = MapImage.theImageDirectory + "PattonsBest.ico";
+            string iconFilename = MapImage.theImageDirectory + "Pleasantville.ico";
             Uri iconUri = new Uri(iconFilename, UriKind.Absolute);
             this.Icon = BitmapFrame.Create(iconUri);
             //--------------------------------------------

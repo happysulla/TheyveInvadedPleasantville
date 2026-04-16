@@ -44,6 +44,24 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "GameInstance(): ReadTerritoriesXml() exception=\n" + e.ToString());
             return;
          }
+         //try
+         //{
+         //   GameLoadMgr gameLoadMgr = new GameLoadMgr();
+         //   string filename = ConfigFileReader.theConfigDirectory + "People.xml";
+         //   XmlTextReader? reader = new XmlTextReader(filename) { WhitespaceHandling = WhitespaceHandling.None };
+         //   if (null == reader)
+         //   {
+         //      Logger.Log(LogEnum.LE_ERROR, "GameInstance(): reader=null");
+         //      return;
+         //   }
+         //   if (false == gameLoadMgr.ReadXmlTownspeople(reader, MapItems.theMapItems))
+         //      Logger.Log(LogEnum.LE_ERROR, "GameInstance(): ReadXmlTownspeople() returned false for filename=" + filename);
+         //}
+         //catch (Exception e)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "GameInstance(): ReadXmlTownspeople() exception=\n" + e.ToString());
+         //   return;
+         //}
       }
       public void RegisterForUpdates(IView view)
       {

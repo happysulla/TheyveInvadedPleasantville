@@ -224,7 +224,7 @@ namespace PleasantvilleGame
          } // try
          catch (Exception e)
          {
-            Console.WriteLine("ReadDiceXml(): Exception:  e.Message={0} while reading filename={1}", e.Message, filename);
+            Logger.Log(LogEnum.LE_ERROR, "ReadDiceXml(): Exception:  e.Message=" + e.Message + " while reading filename=" + filename);
             return false;
          }
       }

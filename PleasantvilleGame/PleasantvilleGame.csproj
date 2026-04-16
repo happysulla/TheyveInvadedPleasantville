@@ -22,11 +22,37 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Config\Alien Loss.xml" />
+    <None Remove="Config\Combat Results.xml" />
+    <None Remove="Config\DiceRolls.xml" />
+    <None Remove="Config\Events.txt" />
+    <None Remove="Config\Implant Removal.xml" />
+    <None Remove="Config\Influence Results.xml" />
+    <None Remove="Config\Modifiers to Conversation.xml" />
+    <None Remove="Config\Modifiers to Influence Attempts.xml" />
+    <None Remove="Config\Rules.txt" />
+    <None Remove="Config\Target Building.xml" />
+    <None Remove="Config\Territories.xml" />
+    <None Remove="Config\Town Loss.xml" />
+    <None Remove="Config\Town Player Starting.xml" />
+    <None Remove="Config\Townspeople.xml" />
     <None Remove="Images\BankGuard.gif" />
     <None Remove="Images\BankPresident.gif" />
     <None Remove="Images\BarAndGrillOwner.gif" />
     <None Remove="Images\BarTender.gif" />
     <None Remove="Images\BlankWhite.gif" />
+    <None Remove="Images\c01dieRoll.gif" />
+    <None Remove="Images\c01dieRoll2.gif" />
+    <None Remove="Images\c02dieRoll.gif" />
+    <None Remove="Images\c02dieRoll2.gif" />
+    <None Remove="Images\c03dieRoll.gif" />
+    <None Remove="Images\c03dieRoll2.gif" />
+    <None Remove="Images\c04dieRoll.gif" />
+    <None Remove="Images\c04dieRoll2.gif" />
+    <None Remove="Images\c05dieRoll.gif" />
+    <None Remove="Images\c05dieRoll2.gif" />
+    <None Remove="Images\c06dieRoll.gif" />
+    <None Remove="Images\c06dieRoll2.gif" />
     <None Remove="Images\CheckoutGirl.gif" />
     <None Remove="Images\Continue.gif" />
     <None Remove="Images\Deny.gif" />
@@ -37,6 +63,7 @@
     <None Remove="Images\EndGameSuccess.gif" />
     <None Remove="Images\EndGameSuccess2.gif" />
     <None Remove="Images\FireChief.gif" />
+    <None Remove="Images\GameBox.gif" />
     <None Remove="Images\HotelOwner.gif" />
     <None Remove="Images\Judge.gif" />
     <None Remove="Images\Lawyer.gif" />
@@ -82,6 +109,51 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Config\DiceRolls.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Config\Alien Loss.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\Combat Results.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\Events.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\Implant Removal.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\Influence Results.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\Modifiers to Conversation.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\Modifiers to Influence Attempts.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\Rules.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\Target Building.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\Territories.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\Town Loss.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\Town Player Starting.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\Townspeople.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\BankGuard.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -95,6 +167,42 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\BlankWhite.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\c01dieRoll.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\c01dieRoll2.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\c02dieRoll.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\c02dieRoll2.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\c03dieRoll.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\c03dieRoll2.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\c04dieRoll.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\c04dieRoll2.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\c05dieRoll.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\c05dieRoll2.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\c06dieRoll.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\c06dieRoll2.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\CheckoutGirl.gif">
@@ -125,6 +233,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\FireChief.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\GameBox.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\HotelOwner.gif">

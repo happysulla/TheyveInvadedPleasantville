@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PleasantvilleGame"
         mc:Ignorable="d"
-        MinWidth="485" MinHeight="620" MaxWidth="485" MaxHeight="620" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="Manual" Cursor="Wait" IsEnabled="False" Topmost="True" ShowInTaskbar="False" Focusable="False" IsHitTestVisible="False" IsTabStop="False">
+        MinWidth="350" MinHeight="600" MaxWidth="350" MaxHeight="600" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="Manual" Cursor="Wait" IsEnabled="False" Topmost="True" ShowInTaskbar="False" Focusable="False" IsHitTestVisible="False" IsTabStop="False">
    <Viewbox Name="myViewBoxSplash" Stretch="UniformToFill" Cursor="Wait">
    </Viewbox>
 </Window>

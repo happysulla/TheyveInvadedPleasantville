@@ -102,43 +102,43 @@ namespace PleasantvilleGame
          SetOn(LogEnum.LE_ERROR);
          SetOn(LogEnum.LE_GAME_INIT);
          SetOn(LogEnum.LE_GAME_INIT_VERSION);
-         SetOn(LogEnum.LE_GAME_END);
-         SetOn(LogEnum.LE_GAME_END_CHECK);
-         SetOn(LogEnum.LE_NEXT_ACTION);
-         SetOn(LogEnum.LE_VIEW_UPDATE_WINDOW);
+         //SetOn(LogEnum.LE_GAME_END);
+         //SetOn(LogEnum.LE_GAME_END_CHECK);
+         //SetOn(LogEnum.LE_NEXT_ACTION);
+         //SetOn(LogEnum.LE_VIEW_UPDATE_WINDOW);
+         ////-------------
+         //SetOn(LogEnum.LE_MOVE_STACKING);
+         //SetOn(LogEnum.LE_MOVE_COUNT);
+         //SetOn(LogEnum.LE_MOVE_KIA_RESULTS);
+         //SetOn(LogEnum.LE_SHOW_STACK_ADD);
+         //SetOn(LogEnum.LE_SHOW_STACK_DEL);
+         //SetOn(LogEnum.LE_SHOW_STACK_VIEW);
+         //SetOn(LogEnum.LE_SHOW_MAIN_CLEAR);
+         //SetOn(LogEnum.LE_SHOW_ENTERED_HEX);
+         //SetOn(LogEnum.LE_SHOW_BUTTON_MOVE);
+         //SetOn(LogEnum.LE_SHOW_ROLL_STATE);
+         //SetOn(LogEnum.LE_SHOW_DICE_MOVING);
          //-------------
-         SetOn(LogEnum.LE_MOVE_STACKING);
-         SetOn(LogEnum.LE_MOVE_COUNT);
-         SetOn(LogEnum.LE_MOVE_KIA_RESULTS);
-         SetOn(LogEnum.LE_SHOW_STACK_ADD);
-         SetOn(LogEnum.LE_SHOW_STACK_DEL);
-         SetOn(LogEnum.LE_SHOW_STACK_VIEW);
-         SetOn(LogEnum.LE_SHOW_MAIN_CLEAR);
-         SetOn(LogEnum.LE_SHOW_ENTERED_HEX);
-         SetOn(LogEnum.LE_SHOW_BUTTON_MOVE);
-         SetOn(LogEnum.LE_SHOW_ROLL_STATE);
-         SetOn(LogEnum.LE_SHOW_DICE_MOVING);
-         //-------------
-         SetOn(LogEnum.LE_VIEW_SHOW_OPTIONS);
-         SetOn(LogEnum.LE_VIEW_SHOW_FEATS);
-         SetOn(LogEnum.LE_VIEW_SHOW_STATS);
-         SetOn(LogEnum.LE_VIEW_SHOW_GAMESAVES);
-         SetOn(LogEnum.LE_VIEW_SHOW_STATS_MIN);
-         //-------------
-         SetOn(LogEnum.LE_VIEW_SHOW_SETTINGS);
-         SetOn(LogEnum.LE_SHOW_UPLOAD_GAME);
-         SetOn(LogEnum.LE_SHOW_VP_TOTAL);
-         //-------------
-         SetOn(LogEnum.LE_SHOW_MIM_ADD);
-         SetOn(LogEnum.LE_SHOW_MIM_CLEAR);
-         SetOn(LogEnum.LE_SHOW_MIM_BEST_PATH);
-         //-------------
-         SetOn(LogEnum.LE_VIEW_UPDATE_MENU);
-         SetOn(LogEnum.LE_VIEW_UPDATE_STATUS_BAR);
-         SetOn(LogEnum.LE_VIEW_UPDATE_EVENTVIEWER);
-         SetOn(LogEnum.LE_VIEW_APPEND_EVENT);
-         SetOn(LogEnum.LE_VIEW_UPDATE_MENU);
-         SetOn(LogEnum.LE_VIEW_CONTROL_NAME);
+         //SetOn(LogEnum.LE_VIEW_SHOW_OPTIONS);
+         //SetOn(LogEnum.LE_VIEW_SHOW_FEATS);
+         //SetOn(LogEnum.LE_VIEW_SHOW_STATS);
+         //SetOn(LogEnum.LE_VIEW_SHOW_GAMESAVES);
+         //SetOn(LogEnum.LE_VIEW_SHOW_STATS_MIN);
+         ////-------------
+         //SetOn(LogEnum.LE_VIEW_SHOW_SETTINGS);
+         //SetOn(LogEnum.LE_SHOW_UPLOAD_GAME);
+         //SetOn(LogEnum.LE_SHOW_VP_TOTAL);
+         ////-------------
+         //SetOn(LogEnum.LE_SHOW_MIM_ADD);
+         //SetOn(LogEnum.LE_SHOW_MIM_CLEAR);
+         //SetOn(LogEnum.LE_SHOW_MIM_BEST_PATH);
+         ////-------------
+         //SetOn(LogEnum.LE_VIEW_UPDATE_MENU);
+         //SetOn(LogEnum.LE_VIEW_UPDATE_STATUS_BAR);
+         //SetOn(LogEnum.LE_VIEW_UPDATE_EVENTVIEWER);
+         //SetOn(LogEnum.LE_VIEW_APPEND_EVENT);
+         //SetOn(LogEnum.LE_VIEW_UPDATE_MENU);
+         //SetOn(LogEnum.LE_VIEW_CONTROL_NAME);
          return true;
       }
       static public void SetOn(LogEnum logLevel)
@@ -177,17 +177,19 @@ namespace PleasantvilleGame
             }
             catch (FileNotFoundException fileex)
             {
-              System.Diagnostics.Debug.WriteLine("Log(): ll=" + logLevel.ToString() + " desc=" + description + "\n" + fileex.ToString());
+               System.Diagnostics.Debug.WriteLine("Log(): ll=" + logLevel.ToString() + " desc=" + description + "\n" + fileex.ToString());
+               theMutex.ReleaseMutex();
             }
-            catch (IOException)
+            catch (IOException ioex)
             {
-               System.Diagnostics.Debug.WriteLine("Log(): ll=" + logLevel.ToString() + " desc=" + description);
+               //System.Diagnostics.Debug.WriteLine("Log(): ll=" + logLevel.ToString() + " desc=" + description + "\n" + ioex.ToString());
+               theMutex.ReleaseMutex();
             }
             catch (Exception ex)
             {
                System.Diagnostics.Debug.WriteLine("Log(): ll=" + logLevel.ToString() + " desc=" + description + "\n" + ex.ToString());
+               theMutex.ReleaseMutex();
             }
-            theMutex.ReleaseMutex();
          }
       }
    }

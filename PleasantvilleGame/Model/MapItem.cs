@@ -18,7 +18,7 @@ namespace PleasantvilleGame
       [NonSerialized] private static Random theRandom = new Random();
       [NonSerialized] public static IMapImages theMapImages = new MapImages();
       [NonSerialized] protected static BitmapImage? theImgAlien = theMapImages.GetBitmapImage("OAlien");
-      [NonSerialized] protected static BitmapImage? theImgBloodSpot = theMapImages.GetBitmapImage("OBloodSpot1");
+      [NonSerialized] protected static BitmapImage? theImgBloodSpot = theMapImages.GetBitmapImage("OBlood1");
       [NonSerialized] protected static BitmapImage? theImgImplant = theMapImages.GetBitmapImage("OImplant");
       [NonSerialized] protected static BitmapImage? theImgKia = theMapImages.GetBitmapImage("OKia");
       [NonSerialized] protected static BitmapImage? theKnockedOut = theMapImages.GetBitmapImage("OKnockedOut");

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.CodeDom;
+using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Globalization;
@@ -249,14 +250,14 @@ namespace PleasantvilleGame
          {
             if (null == t)
             {
-               Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:ctor: null territory in Territories.theTerritories");
+               Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): null territory in Territories.theTerritories");
                CtorError = true;
                return;
             }
             string? tagName = t.ToString();
             if (null == tagName)
             {
-               Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:ctor: tagName=null for t=" + t.Name);
+               Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): tagName=null for t=" + t.Name);
                CtorError = true;
                return;
             }
@@ -346,12 +347,12 @@ namespace PleasantvilleGame
          myRectangleSelection.Visibility = Visibility.Hidden;
          myCanvasMain.Children.Add(myRectangleSelection);
          Canvas.SetZIndex(myRectangleSelection, 1000);
-         if (false == UpdateCanvas(gi))// Update the canvase based on data in the GameInstance
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:ctor: UpdateCanvas() returned false");
-            CtorError = true;
-            return;
-         }
+         //if (false == UpdateCanvas(gi))// Update the canvas based on data in the GameInstance
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): UpdateCanvas() returned false");
+         //   CtorError = true;
+         //   return;
+         //}
          ClearActionPanel();
          //----------------------------------------------------------
          ge.RegisterForUpdates(civ); // Implement the Model View Controller (MVC) pattern by registering views with  the game engine such that when the model data is changed, the views are updated.
@@ -390,7 +391,7 @@ namespace PleasantvilleGame
          {
             try
             {
-               string iconSourcePath = System.IO.Path.Combine(MapImage.theImageDirectory, "PattonsBest.ico");
+               string iconSourcePath = System.IO.Path.Combine(MapImage.theImageDirectory, "Pleasantville.ico");
                var myUninstallKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Uninstall");
                string[] mySubKeyNames = myUninstallKey.GetSubKeyNames();
                for (int i = 0; i < mySubKeyNames.Length; i++)
@@ -422,48 +423,75 @@ namespace PleasantvilleGame
          GameAction outAction = GameAction.RemoveSplashScreen;
          myGameEngine.PerformAction(ref myGameInstance, ref outAction);
       }
-      private void SaveDefaultsToSettings(bool isWindowPlacementSaved = true)
+      private bool SaveDefaultsToSettings(bool isWindowPlacementSaved = true)
       {
          theSaveSettingsMutex.WaitOne();
          CultureInfo currentCulture = CultureInfo.CurrentCulture;
          System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture; // for saving doubles with decimal instead of comma for German users
-         //-------------------------------------------
-         if (true == isWindowPlacementSaved)
-         {
-            WindowPlacement wp; // Persist window placement details to application settings
-            var hwnd = new WindowInteropHelper(this).Handle;
-            if (false == GetWindowPlacement(hwnd, out wp))
-               Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): GetWindowPlacement() returned false");
-            string sWinPlace = Utilities.Serialize<WindowPlacement>(wp);
-            Properties.Settings.Default.WindowPlacement = sWinPlace;
-         }
-         //-------------------------------------------
-         Properties.Settings.Default.ZoomCanvas = Utilities.ZoomCanvas;
-         //-------------------------------------------
-         Properties.Settings.Default.ScrollViewerHeight = myScrollViewerMap.Height;
-         Properties.Settings.Default.ScrollViewerWidth = myScrollViewerMap.Width;
-         //-------------------------------------------
-         Logger.Log(LogEnum.LE_VIEW_SHOW_OPTIONS, "Save_DefaultsToSettings(): Options=" + myGameInstance.Options.ToString());
-         string? sOptions = SerializeOptions(myGameInstance.Options);
-         if (null == sOptions)
-            Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeOptions() returned false");
-         else
+         try
+         {                                                                              
+            if (true == isWindowPlacementSaved)
+            {
+               WindowPlacement wp; // Persist window placement details to application settings
+               var hwnd = new WindowInteropHelper(this).Handle;
+               if (false == GetWindowPlacement(hwnd, out wp))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): GetWindowPlacement() returned false");
+                  return false;
+               }
+               string sWinPlace = Utilities.Serialize<WindowPlacement>(wp);
+               Properties.Settings.Default.WindowPlacement = sWinPlace;
+            }
+            //-------------------------------------------
+            Properties.Settings.Default.ZoomCanvas = Utilities.ZoomCanvas;
+            //-------------------------------------------
+            Properties.Settings.Default.ScrollViewerHeight = myScrollViewerMap.Height;
+            Properties.Settings.Default.ScrollViewerWidth = myScrollViewerMap.Width;
+            //-------------------------------------------
+            Logger.Log(LogEnum.LE_VIEW_SHOW_OPTIONS, "Save_DefaultsToSettings(): Options=" + myGameInstance.Options.ToString());
+            string? sOptions = SerializeOptions(myGameInstance.Options);
+            if (null == sOptions)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeOptions() returned false");
+               return false;
+            }
             Properties.Settings.Default.GameOptions = sOptions;
-         //-------------------------------------------
-         Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Save_DefaultsToSettings():\n  SAVING feats=" + GameEngine.theInGameFeats.ToString());
-         if (false == SerializeGameFeats(GameEngine.theInGameFeats))
-            Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): Serialize_GameFeats() returned false");
-         //-------------------------------------------
-         if (false == SerializeGameStatistics(GameEngine.theAlienSoloStatistics, "stat0"))
-            Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeGameStatistics() returned false");
-         if (false == SerializeGameStatistics(GameEngine.theTownsSoloStatistics, "stat1"))
-            Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeGameStatistics(theTownsSoloStatistics) returned false");
-         if (false == SerializeGameStatistics(GameEngine.theAlienVersusStatistics, "stat2"))
-            Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeGameStatistics(theAlienVersusStatistics) returned false");
-         //-------------------------------------------
-         Properties.Settings.Default.Save();
-         System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
-         theSaveSettingsMutex.ReleaseMutex();
+            //-------------------------------------------
+            Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Save_DefaultsToSettings():\n  SAVING feats=" + GameEngine.theInGameFeats.ToString());
+            if (false == SerializeGameFeats(GameEngine.theInGameFeats))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): Serialize_GameFeats() returned false");
+               return false;
+            }
+            //-------------------------------------------
+            if (false == SerializeGameStatistics(GameEngine.theAlienSoloStatistics, "stat0"))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeGameStatistics() returned false");
+               return false;
+            }
+            if (false == SerializeGameStatistics(GameEngine.theTownsSoloStatistics, "stat1"))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeGameStatistics(theTownsSoloStatistics) returned false");
+               return false;
+            }
+            if (false == SerializeGameStatistics(GameEngine.theAlienVersusStatistics, "stat2"))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeGameStatistics(theAlienVersusStatistics) returned false");
+               return false;
+            }
+            return true;
+         }
+         catch (Exception ex)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "SaveDefaultsToSettings(): ex=" + ex.ToString());
+            return false;
+         }
+         finally
+         {
+            Properties.Settings.Default.Save();
+            System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
+            theSaveSettingsMutex.ReleaseMutex();
+         }
       }
       private string? SerializeOptions(Options options)
       {
@@ -1516,8 +1544,8 @@ namespace PleasantvilleGame
       protected override void OnClosing(CancelEventArgs e) //  // WARNING - Not fired when Application.SessionEnding is fired
       {
          base.OnClosing(e);
-         System.Diagnostics.Debug.WriteLine("GameViewerWindow.ClosedGameViewerWindow(): Called Save_DefaultsToSettings()");
-         SaveDefaultsToSettings();
+         if( false == SaveDefaultsToSettings())
+            Logger.Log(LogEnum.LE_ERROR, "OnClosing() SaveDefaultsToSettings() returned false");
       }
       //-------------UPDATE HELPER FUNCTIONS---------------------------------
       public void ClearActionPanel()

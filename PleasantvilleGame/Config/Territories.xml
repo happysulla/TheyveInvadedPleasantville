@@ -1,0 +1,9 @@
+﻿<Territories count="1">
+   <Territory value="Offboard">
+      <Parent value="Main" />
+      <Type value="A" />
+      <CenterPoint X="0.0" Y="0.0" />
+      <Points count="0"/>
+      <Adjacents count="0"/>
+   </Territory>
+</Territories>

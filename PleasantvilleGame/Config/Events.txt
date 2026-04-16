@@ -1,0 +1,11 @@
+e000	"<Bold>e000 Welcome to Patton's Best Solo Tank Battle Game</Bold>
+<LineBreak/><LineBreak/> <InlineUIContainer><CheckBox Name='SkipTutorial0' IsEnabled='True' Content='Skip in Future' FontFamily='Courier New'  FontSize='12'></CheckBox></InlineUIContainer>
+<LineBreak/><LineBreak/>
+Choose a button to begin:
+<LineBreak/><LineBreak/>
+<InlineUIContainer><Button Name='Read_Rules' Content='   Read Rules   ' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
+ - Can skip as rules are presented as needed <LineBreak/>
+<InlineUIContainer><Button Name='Host_Game' Content=' Host Game ' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
+ - Campaign from 07/44 to 04/45 <LineBreak/>
+<InlineUIContainer><Button Name='Play_Solo' Content=' Play Solo  ' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
+ - Choose tank and day of operations<LineBreak/>"
