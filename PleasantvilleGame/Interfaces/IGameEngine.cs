@@ -63,6 +63,7 @@ namespace PleasantvilleGame
       TownpersonMovement,
       TownpersonCompletesMovement,
       AlienAcksTownspersonMovement,
+      AlienStopsTownspersonMovement,
       TownspersonPerformsConversation,
       TownspersonCompletesConversations,
       TownspersonPerformsInfluencing,

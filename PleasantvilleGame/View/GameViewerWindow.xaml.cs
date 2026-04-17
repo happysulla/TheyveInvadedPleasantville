@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Xml;
+using static System.Windows.Forms.LinkLabel;
 using Application = System.Windows.Application;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
@@ -23,6 +24,7 @@ using Color = System.Windows.Media.Color;
 using Cursors = System.Windows.Input.Cursors;
 using FontFamily = System.Windows.Media.FontFamily;
 using Image = System.Windows.Controls.Image;
+using Label = System.Windows.Controls.Label;
 using MessageBox = System.Windows.MessageBox;
 using MouseEventArgs=System.Windows.Input.MouseEventArgs;
 using Point = System.Windows.Point;
@@ -87,7 +89,9 @@ namespace PleasantvilleGame
       //--------------------------------------------------------------
       private readonly FontFamily myFontFam = new FontFamily("Tahofma");
       private Storyboard? myStoryboard = null;
+#pragma warning disable CA1416 // Validate platform compatibility
       private System.Windows.Forms.Timer myTimer = new System.Windows.Forms.Timer();
+#pragma warning restore CA1416 // Validate platform compatibility
       private TextBlock myTextBoxMarquee; // Displayed at end to show Statistics of games
       private Double mySpeedRatioMarquee = 1.0;
       private Storyboard myStoryboardMarquee = new Storyboard();    // Show Statistics Marquee at end of game 
@@ -230,8 +234,12 @@ namespace PleasantvilleGame
          //else
          //   myTextBoxEntry.Foreground = Constants.theTownControlledBrush;
          //----------------------------------------------------------
+#pragma warning disable CA1416 // Validate platform compatibility
          myTimer.Interval = ANIMATE_SPEED * 1000 + 1000;
+#pragma warning restore CA1416 // Validate platform compatibility
+#pragma warning disable CA1416 // Validate platform compatibility
          myTimer.Tick += new EventHandler(TimerElasped);
+#pragma warning restore CA1416 // Validate platform compatibility
          //----------------------------------------------------------
          StringBuilder sb55 = new StringBuilder();
          if (true == GameEngine.theIsServer)
@@ -347,9 +355,9 @@ namespace PleasantvilleGame
          myRectangleSelection.Visibility = Visibility.Hidden;
          myCanvasMain.Children.Add(myRectangleSelection);
          Canvas.SetZIndex(myRectangleSelection, 1000);
-         //if (false == UpdateCanvas(gi))// Update the canvas based on data in the GameInstance
+         //if (false == UpdateCanvasMain(gi, action))// Update the canvas based on data in the GameInstance
          //{
-         //   Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): UpdateCanvas() returned false");
+         //   Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): Update_CanvasMain() returned false");
          //   CtorError = true;
          //   return;
          //}
@@ -995,7 +1003,10 @@ namespace PleasantvilleGame
             case GameAction.RemoveSplashScreen:
             case GameAction.UpdateNewGameEnd:
                if (false == UpdateCanvasMain(gi, action))
+               {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): UpdateCanvasMain() returned error ");
+                  return;
+               }
                mySplashScreen.Close();
                myScrollViewerMap.UpdateLayout();
                break;
@@ -1022,9 +1033,9 @@ namespace PleasantvilleGame
             case GameAction.AlienAcksRandomMovement:
                if (true == GameEngine.theIsAlien)
                {
-                  if (false == UpdateCanvas(gi))
+                  if (false == UpdateCanvasMain(gi, action))
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienAcksRandomMovement: UpdateCanvas() returned false");
+                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienAcksRandomMovement: Update_CanvasMain() returned false");
                      return;
                   }
                   myMovingMapItems.Clear();
@@ -1047,9 +1058,9 @@ namespace PleasantvilleGame
             case GameAction.TownspersonAcksRandomMovement:
                if (false == GameEngine.theIsAlien)
                {
-                  if (false == UpdateCanvas(gi))
+                  if (false == UpdateCanvasMain(gi, action))
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonAcksRandomMovement: UpdateCanvas() returned false");
+                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonAcksRandomMovement: Update_CanvasMain() returned false");
                      return;
                   }
                   myMovingMapItems.Clear();
@@ -1069,9 +1080,9 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.ResetMovement:
-               if (false == UpdateCanvas(gi, true))  // unhide the pologon line shown
+               if (false == UpdateCanvasMain(gi, action, true))  // unhide the pologon line shown
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): ResetMovement: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): ResetMovement: Update_CanvasMain() returned false");
                   return;
                }
                break;
@@ -1082,9 +1093,9 @@ namespace PleasantvilleGame
             case GameAction.AlienCompletesMovement:
                if (true == GameEngine.theIsAlien)
                {
-                  if (false == UpdateCanvas(gi))
+                  if (false == UpdateCanvasMain(gi, action))
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienCompletesMovement: UpdateCanvas() returned false");
+                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienCompletesMovement: UpdateCaUpdate_CanvasMainnvasMain() returned false");
                      return;
                   }
                   myMovingButton = null;
@@ -1093,9 +1104,9 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.TownspersonAcksAlienMovement:
-               if (false == UpdateCanvas(gi))
+               if (false == UpdateCanvasMain(gi, action))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonAcksAlienMovement: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonAcksAlienMovement: Update_CanvasMain() returned false");
                   return;
                }
                myMovingMapItems.Clear();
@@ -1140,9 +1151,9 @@ namespace PleasantvilleGame
                break;
             case GameAction.AlienModifiesTownspersonMovement:
                myIsAlienAbleToStopMove = false;
-               if (false == UpdateCanvas(gi, true))
+               if (false == UpdateCanvasMain(gi, action, true))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienModifiesTownspersonMovement: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienModifiesTownspersonMovement: Update_CanvasMain() returned false");
                   return;
                }
                UpdateViewMovement(gi);
@@ -1150,9 +1161,9 @@ namespace PleasantvilleGame
             case GameAction.TownpersonCompletesMovement:
                if (false == GameEngine.theIsAlien)
                {
-                  if (false == UpdateCanvas(gi))
+                  if (false == UpdateCanvasMain(gi, action))
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownpersonCompletesMovement: UpdateCanvas() returned false");
+                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownpersonCompletesMovement: Update_CanvasMain() returned false");
                      return;
                   }
                   myMovingButton = null;
@@ -1161,9 +1172,9 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.AlienAcksTownspersonMovement:
-               if (false == UpdateCanvas(gi))
+               if (false == UpdateCanvasMain(gi, action))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienAcksTownspersonMovement: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienAcksTownspersonMovement: Update_CanvasMain() returned false");
                   return;
                }
                UpdateViewState(gi);
@@ -1174,33 +1185,33 @@ namespace PleasantvilleGame
                myRectangleSelection.Visibility = Visibility.Hidden;
                break;
             case GameAction.TownspersonPerformsConversation:
-               if (false == UpdateCanvas(gi))
+               if (false == UpdateCanvasMain(gi, action))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonPerformsConversation: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonPerformsConversation: Update_CanvasMain() returned false");
                   return;
                }
                UpdateViewState(gi);
                break;
             case GameAction.TownspersonCompletesConversations:
-               if (false == UpdateCanvas(gi))
+               if (false == UpdateCanvasMain(gi, action))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesConversations: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesConversations: Update_CanvasMain() returned false");
                   return;
                }
                UpdateViewState(gi);
                break;
             case GameAction.TownspersonPerformsInfluencing:
-               if (false == UpdateCanvas(gi))
+               if (false == UpdateCanvasMain(gi, action))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonPerformsInfluencing: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonPerformsInfluencing: Update_CanvasMain() returned false");
                   return;
                }
                UpdateViewState(gi);
                break;
             case GameAction.TownspersonCompletesInfluencing:
-               if (false == UpdateCanvas(gi))
+               if (false == UpdateCanvasMain(gi, action))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesInfluencing: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesInfluencing: Update_CanvasMain() returned false");
                   return;
                }
                UpdateViewState(gi);
@@ -1208,9 +1219,9 @@ namespace PleasantvilleGame
             case GameAction.AlienInitiateCombat:
                if ((true == myIsCombatInitiatedForAlien) && (true == GameEngine.theIsAlien))
                {
-                  if (false == UpdateCanvas(gi))
+                  if (false == UpdateCanvasMain(gi, action))
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienInitiateCombat: UpdateCanvas() returned false");
+                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienInitiateCombat: Update_CanvasMain() returned false");
                      return;
                   }
                   Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, "UpdateView():AlienInitiateCombat: ALIEN Performs Combat");
@@ -1221,9 +1232,9 @@ namespace PleasantvilleGame
             case GameAction.TownspersonNackCombatSelection:
                if (true == GameEngine.theIsAlien)
                {
-                  if (false == UpdateCanvas(gi))
+                  if (false == UpdateCanvasMain(gi, action))
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonNackCombatSelection: UpdateCanvas() returned false");
+                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonNackCombatSelection: Update_CanvasMain() returned false");
                      return;
                   }
                   UpdateViewState(gi);
@@ -1232,9 +1243,9 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.AlienPerformCombat:
-               if (false == UpdateCanvas(gi))
+               if (false == UpdateCanvasMain(gi, action))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienPerformCombat: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienPerformCombat: Update_CanvasMain() returned false");
                   return;
                }
                if (null == gi.MapItemCombat)
@@ -1253,9 +1264,9 @@ namespace PleasantvilleGame
             case GameAction.TownspersonInitiateCombat:
                if ((true == myIsCombatInitiatedForTownsperson) && (false == GameEngine.theIsAlien))
                {
-                  if (false == UpdateCanvas(gi))
+                  if (false == UpdateCanvasMain(gi, action))
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonInitiateCombat: UpdateCanvas() returned false");
+                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonInitiateCombat: Update_CanvasMain() returned false");
                      return;
                   }
                   Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, "UpdateView():TownspersonInitiateCombat: TP PERFORMS COMBAT");
@@ -1266,9 +1277,9 @@ namespace PleasantvilleGame
             case GameAction.AlienNackCombatSelection:
                if (false == GameEngine.theIsAlien)
                {
-                  if (false == UpdateCanvas(gi))
+                  if (false == UpdateCanvasMain(gi, action))
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienNackCombatSelection: UpdateCanvas() returned false");
+                     Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienNackCombatSelection: Update_CanvasMain() returned false");
                      return;
                   }
                   UpdateViewState(gi);
@@ -1277,9 +1288,9 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.TownspersonPerformCombat:
-               if (false == UpdateCanvas(gi))
+               if (false == UpdateCanvasMain(gi, action))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonPerformCombat: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonPerformCombat: Update_CanvasMain() returned false");
                   return;
                }
                if (null == gi.MapItemCombat)
@@ -1303,9 +1314,9 @@ namespace PleasantvilleGame
                   myMovingRectangle = null;
                   myRectangleSelection.Visibility = Visibility.Hidden;
                }
-               if (false == UpdateCanvas(gi))
+               if (false == UpdateCanvasMain(gi, action))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesCombat: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesCombat: Update_CanvasMain() returned false");
                   return;
                }
                UpdateViewState(gi);
@@ -1320,9 +1331,9 @@ namespace PleasantvilleGame
                   myMovingRectangle = null;
                   myRectangleSelection.Visibility = Visibility.Hidden;
                }
-               if (false == UpdateCanvas(gi))
+               if (false == UpdateCanvasMain(gi, action))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienCompletesCombat: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienCompletesCombat: Update_CanvasMain() returned false");
                   return;
                }
                UpdateViewState(gi);
@@ -1331,49 +1342,49 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, sb3.ToString());
                break;
             case GameAction.TownspersonIterrogates:
-               if (false == UpdateCanvas(gi))
+               if (false == UpdateCanvasMain(gi, action))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonIterrogates: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonIterrogates: Update_CanvasMain() returned false");
                   return;
                }
                UpdateViewState(gi);
                break;
             case GameAction.TownspersonCompletesIterogations:
-               if (false == UpdateCanvas(gi))
+               if (false == UpdateCanvasMain(gi, action))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesIterogations: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesIterogations: Update_CanvasMain() returned false");
                   return;
                }
                UpdateViewState(gi);
                break;
             case GameAction.AlienAcksIterogations:
-               if (false == UpdateCanvas(gi))
+               if (false == UpdateCanvasMain(gi, action))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienAcksIterogations: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienAcksIterogations: Update_CanvasMain() returned false");
                   return;
                }
                UpdateViewState(gi);
                break;
             case GameAction.TownspersonRemovesImplant:
-               if (false == UpdateCanvas(gi))
+               if (false == UpdateCanvasMain(gi, action))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonRemovesImplant: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonRemovesImplant: Update_CanvasMain() returned false");
                   return;
                }
                UpdateViewState(gi);
                break;
             case GameAction.TownspersonCompletesRemoval:
-               if (false == UpdateCanvas(gi))
+               if (false == UpdateCanvasMain(gi, action))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesRemoval: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesRemoval: Update_CanvasMain() returned false");
                   return;
                }
                UpdateViewState(gi);
                break;
             case GameAction.AlienTakeover:
-               if (false == UpdateCanvas(gi))
+               if (false == UpdateCanvasMain(gi, action))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienTakeover: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienTakeover: Update_CanvasMain() returned false");
                   return;
                }
                if (null == gi.Takeover)
@@ -1403,9 +1414,9 @@ namespace PleasantvilleGame
                UpdateViewState(gi);
                break;
             case GameAction.AlienCompletesTakeovers:
-               if (false == UpdateCanvas(gi))
+               if (false == UpdateCanvasMain(gi, action))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienCompletesTakeovers: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienCompletesTakeovers: Update_CanvasMain() returned false");
                   return;
                }
                myIsTakeOverInOneRegion = false;
@@ -1455,9 +1466,9 @@ namespace PleasantvilleGame
                //   myLabelWinner.Content = "Towns People Win!!!!";
                //   myLabelWinner.Foreground = Constants.theTownControlledBrush;
                //}
-               if (false == UpdateCanvas(gi))
+               if (false == UpdateCanvasMain(gi, action))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): ShowEndGame: UpdateCanvas() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): ShowEndGame: Update_CanvasMain() returned false");
                   return;
                }
                UpdateViewState(gi);
@@ -1554,6 +1565,134 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "OnClosing() SaveDefaultsToSettings() returned false");
       }
       //-------------UPDATE HELPER FUNCTIONS---------------------------------
+      private bool UpdateCanvasMain(IGameInstance gi, GameAction action, bool isOnlyLastLineRemoved = false)
+      {
+         UpdateCanvasMainClear(myButtons, gi.Stacks, action, isOnlyLastLineRemoved);
+         //---------------------------------------------------------------
+         //IMapItem? zebulon = gi.Stacks.FindMapItem("Zebulon");
+         //if (null == zebulon)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMain(): could not find Zebulon in gi.Stacks");
+         //   return false;
+         //}
+         //if (true == zebulon.IsAlienKnown)
+         //{
+         //   Button? b = myButtons.Find("Zebulon");
+         //   if (null == zebulon)
+         //   {
+         //      Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMain(): could not find Zebulon in myButtons");
+         //      return false;
+         //   }
+         //   if (null != b)
+         //   {
+         //      b.Visibility = Visibility.Visible;
+         //      Canvas.SetZIndex(b, 100000);
+         //   }
+         //}
+         //---------------------------------------------------------------
+         foreach (Stack stack in gi.Stacks) // Update the Canvas with new MapItem locations
+         {
+            int counterCount = 0;
+            foreach (IMapItem mi in stack.MapItems)
+            {
+               Button? b = myButtons.Find(mi.Name);
+               if (null != b)
+               {
+                  b.BeginAnimation(Canvas.LeftProperty, null); // end animation offset
+                  b.BeginAnimation(Canvas.TopProperty, null);  // end animation offset
+                  if (true == mi.IsKilled)
+                  {
+                     if (Visibility.Visible == b.Visibility)
+                     {
+                        b.Visibility = Visibility.Hidden;
+                        Logger.Log(LogEnum.LE_MOVE_KIA_RESULTS, mi.Name + " is hidden");
+                     }
+                  }
+                  else
+                  {
+                     MapItem.SetButtonContent(b, mi, GameEngine.theIsAlien);
+                     mi.Location = new MapPoint(mi.TerritoryCurrent.CenterPoint.X - Utilities.theMapItemOffset + (counterCount * 3), mi.TerritoryCurrent.CenterPoint.Y - Utilities.theMapItemOffset + (counterCount * 3));
+                     ++counterCount;
+                     Canvas.SetLeft(b, mi.Location.X);
+                     Canvas.SetTop(b, mi.Location.Y);
+                     Canvas.SetZIndex(b, counterCount);
+                  }
+               }
+            }
+         }
+         return true;
+      }
+      private void UpdateCanvasMainClear(List<Button> buttons, IStacks stacks, GameAction action, bool isOnlyLastLineRemoved)
+      {
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMain_Clear(): " + stacks.ToString());
+         List<UIElement> lines = new List<UIElement>();  
+         List<UIElement> elements = new List<UIElement>();
+         foreach (UIElement ui in myCanvasMain.Children) // Clean the Canvas of all marks
+         {
+            if (ui is Button button)
+            {
+               if (true == button.Name.Contains("Die"))  // die buttons never disappear - only one copy of them
+                  continue;
+               IMapItem? mi = stacks.FindMapItem(button.Name);
+               if (null == mi) // If Button does not have corresponding MapItem, remove button.
+               {
+                  elements.Add(ui);
+                  buttons.Remove(button);
+                  IStack? stack = stacks.Find(button.Name);
+                  if (null == stack)
+                  {
+                     Logger.Log(LogEnum.LE_SHOW_STACK_DEL, "UpdateCanvasMain_Clear(): mi=" + button.Name + " does not belong to " + stacks.ToString());
+                  }
+                  else
+                  {
+                     Logger.Log(LogEnum.LE_SHOW_STACK_DEL, "UpdateCanvasMain_Clear(): Remove mi=" + button.Name + " from stack=" + stack.ToString());
+                     stack.MapItems.Remove(button.Name);
+                  }
+               }
+               else
+               {
+                  MapItem.SetButtonContent(button, mi, true, true);
+               }
+            }
+            else if (ui is Ellipse ellipse)
+            {
+               if ("CenterPoint" != ellipse.Name) // CenterPoint is a unit test ellipse
+                  elements.Add(ui);
+            }
+            else if (ui is Image img)
+            {
+               if (true == img.Name.Contains("Canvas"))
+                  continue;
+               elements.Add(ui);
+            }
+            else if (ui is Polygon polygon)
+               elements.Add(ui);
+            else if(ui is Label label)  // A Game Feat Label
+               elements.Add(ui);
+            else if(ui is Rectangle rect)
+               elements.Add(ui);
+            else if(ui is TextBlock tb)
+               elements.Add(ui);
+            else if (ui is Polyline polyline) 
+               lines.Add(ui);                  // Adding to lines instead of elements
+         }
+         foreach (UIElement ui1 in elements)
+            myCanvasMain.Children.Remove(ui1);
+         //---------------------------------------------------------------
+         if (false == isOnlyLastLineRemoved)
+         {
+            foreach (UIElement line in lines)
+               myCanvasMain.Children.Remove(line);
+         }
+         else
+         {
+            if (0 < lines.Count)
+               myCanvasMain.Children.Remove(lines.Last());
+         }
+         //---------------------------------------------------------------
+         foreach (Rectangle r in myRectangles)
+            r.Visibility = Visibility.Hidden;
+      }
       public void ClearActionPanel()
       {
          const int button1Left = 30;
@@ -1978,117 +2117,6 @@ namespace PleasantvilleGame
             default:
                break;
          }  // end switch
-      }
-      private bool UpdateCanvas(IGameInstance gi, bool isOnlyLastLegRemoved = false)
-      {
-         List<UIElement> lines = new List<UIElement>();  // Clean the Canvas of all marks
-         foreach (UIElement ui in myCanvasMain.Children)
-         {
-            if (ui is Polygon)
-            {
-               Polygon p1 = (Polygon)ui;
-               Canvas.SetZIndex(p1, 0);
-               if (null == p1.Tag)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateCanvas() Polygon p1.Tag is null");
-                  return false;
-               }
-               string tagString = (string)p1.Tag;
-               if (true == String.IsNullOrEmpty(tagString))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateCanvas() Polygon p1.Tag is not string");
-                  return false;
-               }
-               ITerritory? t = gi.ZebulonTerritories.Find(tagString);
-               switch (gi.GamePhase)
-               {
-                  case GamePhase.Iterrogations:
-                     if (null == t)
-                        p1.Fill = mySolidColorBrushClear;
-                     else
-                        p1.Fill = mySolidColorBrushBlack;
-                     break;
-                  case GamePhase.Conversations:
-                  case GamePhase.Influences:
-                  case GamePhase.Combat:
-                  case GamePhase.AlienTakeover:
-                     break;
-                  default:
-                     p1.Fill = mySolidColorBrushClear;
-                     myStoryboard = null;  // turn off flashing
-                     break;
-               }
-            }
-            if (ui is Polyline)
-               lines.Add(ui);
-         } // end foreach
-         //---------------------------------------------------------------
-         if (false == isOnlyLastLegRemoved)
-         {
-            foreach (UIElement line in lines)
-               myCanvasMain.Children.Remove(line);
-         }
-         else
-         {
-            if (0 < lines.Count)
-               myCanvasMain.Children.Remove(lines.Last());
-         }
-         //---------------------------------------------------------------
-         foreach (Rectangle r in myRectangles)
-            r.Visibility = Visibility.Hidden;
-         IMapItem? zebulon = gi.Stacks.FindMapItem("Zebulon");
-         if (null == zebulon)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "UpdateCanvas(): could not find Zebulon in gi.Stacks");
-            return false;
-         }
-         if (true == zebulon.IsAlienKnown)
-         {
-            Button? b = myButtons.Find("Zebulon");
-            if (null == zebulon)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "UpdateCanvas(): could not find Zebulon in myButtons");
-               return false;
-            }
-            if (null != b)
-            {
-               b.Visibility = Visibility.Visible;
-               Canvas.SetZIndex(b, 100000);
-            }
-         }
-         //---------------------------------------------------------------
-         foreach (Stack stack in gi.Stacks) // Update the Canvas with new MapItem locations
-         {
-            int counterCount = 0;
-            foreach (IMapItem mi in stack.MapItems)
-            {
-               Button? b = myButtons.Find(mi.Name);
-               if (null != b)
-               {
-                  b.BeginAnimation(Canvas.LeftProperty, null); // end animation offset
-                  b.BeginAnimation(Canvas.TopProperty, null);  // end animation offset
-
-                  if (true == mi.IsKilled)
-                  {
-                     if (Visibility.Visible == b.Visibility)
-                     {
-                        b.Visibility = Visibility.Hidden;
-                        Logger.Log(LogEnum.LE_MOVE_KIA_RESULTS, mi.Name + " is hidden");
-                     }
-                  }
-                  else
-                  {
-                     MapItem.SetButtonContent(b, mi, GameEngine.theIsAlien);
-                     mi.Location = new MapPoint(mi.TerritoryCurrent.CenterPoint.X - Utilities.theMapItemOffset + (counterCount * 3), mi.TerritoryCurrent.CenterPoint.Y - Utilities.theMapItemOffset + (counterCount * 3));
-                     ++counterCount;
-                     Canvas.SetLeft(b, mi.Location.X);
-                     Canvas.SetTop(b, mi.Location.Y);
-                     Canvas.SetZIndex(b, counterCount);
-                  }
-               }
-            }
-         }
-         return true;
       }
       //-------------HELPER FUNCTIONS---------------------------------
       private bool IsMoveStoppedByAlienBeforeStarted(IGameInstance gi)
@@ -4210,7 +4238,9 @@ namespace PleasantvilleGame
       }
       private void ContextMenuClickStopMove(object sender, RoutedEventArgs e)
       {
+#pragma warning disable CA1416 // Validate platform compatibility
          myTimer.Stop();
+#pragma warning restore CA1416 // Validate platform compatibility
          if (sender is MenuItem)
          {
             MenuItem mi = (MenuItem)sender;
@@ -4261,7 +4291,11 @@ namespace PleasantvilleGame
                            IMapItemMove modifiedMove = new MapItemMove(Territories.theTerritories, mim.MapItem, selectedMapItem.TerritoryCurrent); // Change to modified MapItemMove
                            myGameInstance.MapItemMoves[0] = modifiedMove;
                            mim.MapItem.MovementUsed = mim.MapItem.Movement; // ensure cannot move further
-                           UpdateCanvas(myGameInstance, true);
+                           if( false == UpdateCanvasMain(myGameInstance, GameAction.AlienStopsTownspersonMovement, true))
+                           {
+                              Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickStopMove() Update_CanvasMain() returned false");
+                              return;
+                           }
                            //--------------------------------
                            GameAction outAction = GameAction.AlienModifiesTownspersonMovement;
                            myGameEngine.PerformAction(ref myGameInstance, ref outAction);
@@ -4279,7 +4313,9 @@ namespace PleasantvilleGame
          {
             myIsAlienAbleToStopMove = false;
             Logger.Log(LogEnum.LE_TIMER_ELAPED, "TimerElasped():  Reset State myIsAlienAbleToStopMove=false");
+#pragma warning disable CA1416 // Validate platform compatibility
             myTimer.Stop();
+#pragma warning restore CA1416 // Validate platform compatibility
             //-------------------------------
             GameAction outAction = GameAction.AlienTimeoutOnMovement;
             myGameEngine.PerformAction(ref myGameInstance, ref outAction);
