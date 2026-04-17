@@ -193,7 +193,6 @@ namespace PleasantvilleGame
       }
       public bool AddTownperson(IMapItem mi)
       {
-         //-----------------------------------------
          if (false == mi.IsControlled)
          {
             if ((false == mi.IsTiedUp) && (true == mi.IsConscious) && (false == mi.IsStunned) && (false == mi.IsKilled))

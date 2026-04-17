@@ -235,13 +235,6 @@ namespace PleasantvilleGame
                   myDialogTableListing.Activate();
                }
                break;
-            case GameAction.ShowCombatCalendarDialog:
-               if( false == myRulesMgr.ShowTable("Calendar"))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): SmyRulesMgr.ShowTable(Calendar)=false");
-                  return;
-               }
-               break;
             case GameAction.ShowReportErrorDialog:
                if (null == myReportErrorDialog)
                {

@@ -231,7 +231,7 @@ namespace PleasantvilleGame
          //   myTextBoxEntry.Foreground = Constants.theTownControlledBrush;
          //----------------------------------------------------------
          myTimer.Interval = ANIMATE_SPEED * 1000 + 1000;
-         myTimer.Tick += new EventHandler(this.TimerElasped);
+         myTimer.Tick += new EventHandler(TimerElasped);
          //----------------------------------------------------------
          StringBuilder sb55 = new StringBuilder();
          if (true == GameEngine.theIsServer)
@@ -988,11 +988,17 @@ namespace PleasantvilleGame
             StringBuilder sb = new StringBuilder("---------------   TP   GameViewerWindow::UpdateView() ==> action="); sb.Append(action.ToString()); sb.Append("  ==> NextAction="); sb.Append(gi.NextAction);
             Logger.Log(LogEnum.LE_VIEW_UPDATE_WINDOW, sb.ToString());
          }
-
          myGameInstance = gi;
          GameAction outAction = GameAction.Error;
          switch (action) // Perform acton based on the current next action.
          {
+            case GameAction.RemoveSplashScreen:
+            case GameAction.UpdateNewGameEnd:
+               if (false == UpdateCanvasMain(gi, action))
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): UpdateCanvasMain() returned error ");
+               mySplashScreen.Close();
+               myScrollViewerMap.UpdateLayout();
+               break;
             case GameAction.AlienStart:
                break;
             case GameAction.TownspersonStart:
@@ -1419,7 +1425,7 @@ namespace PleasantvilleGame
                   }
                }
                //-------------------------------------------------------
-               bool isAlienWin = true;                    // Determine who won.
+               bool isAlienWin = true;
                IMapItem? zebulon = gi.Stacks.FindMapItem("Zebulon");
                if (null == zebulon)
                {
@@ -1427,16 +1433,16 @@ namespace PleasantvilleGame
                   break;
                }
                zebulon.IsAlienKnown = true;
-               if (true == zebulon.IsKilled)
-                  isAlienWin = false;
+               //if (true == zebulon.IsKilled)
+               //   isAlienWin = false;
 
-               double controlledRatio = ((double)gi.InfluenceCountTownspeople) / ((double)gi.InfluenceCountTotal);
-               if (0.499999 < controlledRatio)
-                  isAlienWin = false;
+               //double controlledRatio = ((double)gi.InfluenceCountTownspeople) / ((double)gi.InfluenceCountTotal);
+               //if (0.499999 < controlledRatio)
+               //   isAlienWin = false;
 
-               int alienInflunence = gi.InfluenceCountAlienUnknown + gi.InfluenceCountAlienKnown;
-               if (0 == alienInflunence)
-                  isAlienWin = false;
+               //int alienInflunence = gi.InfluenceCountAlienUnknown + gi.InfluenceCountAlienKnown;
+               //if (0 == alienInflunence)
+               //   isAlienWin = false;
 
                //myLabelWinner.Visibility = Visibility.Visible;  // Report the winner
                //if (true == isAlienWin)
@@ -4266,7 +4272,7 @@ namespace PleasantvilleGame
             }
          }
       }
-      private void TimerElasped(object sender, EventArgs e)
+      private void TimerElasped(object? sender, EventArgs e)
       {
          Logger.Log(LogEnum.LE_TIMER_ELAPED, "TimerElasped() called");
          if (true == myIsAlienAbleToStopMove)

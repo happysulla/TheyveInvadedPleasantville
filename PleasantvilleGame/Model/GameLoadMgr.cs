@@ -834,16 +834,10 @@ namespace PleasantvilleGame
          {
             case "RemoveSplashScreen": return GameAction.RemoveSplashScreen;
             case "UpdateStatusBar": return GameAction.UpdateStatusBar;
-            case "UpdateTankCard": return GameAction.UpdateTankCard;
-            case "UpdateAfterActionReport": return GameAction.UpdateAfterActionReport;
-            case "UpdateBattleBoard": return GameAction.UpdateBattleBoard;
-            case "UpdateTankExplosion": return GameAction.UpdateTankExplosion;
-            case "UpdateTankBrewUp": return GameAction.UpdateTankBrewUp;
             case "UpdateShowRegion": return GameAction.UpdateShowRegion;
             case "UpdateEventViewerDisplay": return GameAction.UpdateEventViewerDisplay;
             case "UpdateEventViewerActive": return GameAction.UpdateEventViewerActive;
             case "DieRollActionNone": return GameAction.DieRollActionNone;
-
             case "UpdateNewGame": return GameAction.UpdateNewGame;
             case "UpdateNewGameEnd": return GameAction.UpdateNewGameEnd;
             case "UpdateGameOptions": return GameAction.UpdateGameOptions;

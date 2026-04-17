@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Globalization;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Windows;
 using Application = System.Windows.Application;
@@ -30,7 +34,95 @@ namespace PleasantvilleGame
 				default: return new GameStateEnded();
 			}
 		}
-		public bool PerformMovement(IGameInstance gi, IMapItem mi)
+      protected void PrintDiagnosticInfoToLog()
+      {
+         StringBuilder sb = new StringBuilder();
+         sb.Append("\n\tGameVersion=");
+         Version? version = Assembly.GetExecutingAssembly().GetName().Version;
+         if (null != version)
+         {
+            sb.Append(version.ToString());
+            sb.Append("_");
+            DateTime linkerTime = Utilities.GetBuildDate(Assembly.GetExecutingAssembly());
+            sb.Append(linkerTime.ToString());
+         }
+         //--------------------------------------------
+         Assembly assem = Assembly.GetExecutingAssembly();
+         var attributes = assem.CustomAttributes;
+         foreach (var attribute in attributes)
+         {
+            if (attribute.AttributeType == typeof(TargetFrameworkAttribute))
+            {
+               var arg = attribute.ConstructorArguments.FirstOrDefault();
+               sb.Append("\n\tTargetFramework=");
+               sb.Append(arg.Value);
+               break;
+            }
+         }
+         sb.Append("\n\tOsVersion=");
+         sb.Append(Environment.OSVersion.Version.Build.ToString());
+         sb.Append("\n\tOS Desc=");
+         sb.Append(RuntimeInformation.OSDescription.ToString());
+         sb.Append("\n\tOS Arch=");
+         sb.Append(RuntimeInformation.OSArchitecture.ToString());
+         sb.Append("\n\tProcessorArch=");
+         sb.Append(RuntimeInformation.ProcessArchitecture.ToString());
+         sb.Append("\n\tnetVersion=");
+         sb.Append(Environment.Version.ToString());
+         sb.Append("\n\tCultureInfo=");
+         sb.Append(CultureInfo.CurrentCulture.ToString());
+         //--------------------------------------------
+         Screen? screen = Screen.PrimaryScreen;
+         if (null != screen)
+         {
+            var dpi = screen.Bounds.Width / System.Windows.SystemParameters.PrimaryScreenWidth;
+            sb.Append("\n\tDPI=(");
+            sb.Append(dpi.ToString("000.0"));
+         }
+         sb.Append(")\n\tAppDir=");
+         sb.Append(MainWindow.theAssemblyDirectory);
+         Logger.Log(LogEnum.LE_GAME_INIT_VERSION, sb.ToString());
+      }
+      protected bool ResetDieResults(IGameInstance gi)
+      {
+         try
+         {
+            Logger.Log(LogEnum.LE_RESET_ROLL_STATE, "Reset_DieResults(): resetting die rolls gi.DieResults.Count=" + gi.DieResults.Count.ToString());
+            if (0 == gi.DieResults.Count)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Reset_DieResults(): count=0;");
+               return false;
+            }
+            foreach (KeyValuePair<string, int[]> kvp in gi.DieResults)
+            {
+               for (int i = 0; i < 3; ++i)
+                  kvp.Value[i] = Utilities.NO_RESULT;
+            }
+         }
+         catch (Exception)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Reset_DieResults(): reset rolls");
+            return false;
+         }
+         return true;
+      }
+      protected bool LoadGame(ref IGameInstance gi)
+      {
+         //--------------------------------------------
+         IGameCommand? cmd = gi.GameCommands.GetLast();
+         if (null == cmd)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "UpdateViewForNewGame(): cmd=null");
+            return false;
+         }
+         GameAction action = cmd.Action;
+         gi.GamePhase = cmd.Phase;
+         gi.DieRollAction = cmd.ActionDieRoll;
+         Logger.Log(LogEnum.LE_SHOW_UPLOAD_GAME, " Load_Game(): p=" + cmd.Phase.ToString() + " a=" + action.ToString() + " dra=" + cmd.ActionDieRoll.ToString() + " e=" + gi.EventActive);
+         return true;
+      }
+      //------------
+      public bool PerformMovement(IGameInstance gi, IMapItem mi)
 		{
 			int r3 = Utilities.RandomGenerator.Next(5);
 			int r4 = Utilities.RandomGenerator.Next(6);
@@ -143,7 +235,8 @@ namespace PleasantvilleGame
 			gi.MapItemMoves.Insert(0, mim); // add at front
 			return true;
 		}
-	}
+
+   }
 	//----------------------------------------------------------------
 	class GameStateSetup : GameState
 	{
@@ -157,7 +250,36 @@ namespace PleasantvilleGame
 			string key = gi.EventActive;
 			switch (action)
 			{
-				case GameAction.AlienStart:
+            case GameAction.ShowGameFeatsDialog:
+            case GameAction.ShowRuleListingDialog:
+            case GameAction.ShowEventListingDialog:
+            case GameAction.ShowTableListing:
+            case GameAction.ShowReportErrorDialog:
+            case GameAction.ShowAboutDialog:
+            case GameAction.EndGameShowFeats:
+            case GameAction.UpdateStatusBar:
+            case GameAction.UpdateGameOptions:
+            case GameAction.UpdateShowRegion:
+            case GameAction.UpdateEventViewerDisplay: // Only change active event
+               break;
+            case GameAction.UpdateEventViewerActive: // Only change active event
+               gi.EventDisplayed = gi.EventActive; // next screen to show
+               break;
+            case GameAction.UpdateLoadingGame:
+               if (false == LoadGame(ref gi))
+               {
+                  returnStatus = "Load_Game() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateMovement.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.RemoveSplashScreen: // GameStateSetup.PerformAction()
+               if (false == SetupNewGame(gi, ref action))
+               {
+                  returnStatus = "SetupNewGame() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.AlienStart:
 					gi.IsAlienStarted = true;
 					if (true == gi.IsControlledStarted)
 					{
@@ -209,7 +331,30 @@ namespace PleasantvilleGame
 				Logger.Log(LogEnum.LE_ERROR, sb12.ToString());
 			return returnStatus;
 		}
-	}
+      private bool SetupNewGame(IGameInstance gi, ref GameAction outAction)
+      {
+         PrintDiagnosticInfoToLog();
+         gi.GamePhase = GamePhase.GameSetup;
+         gi.Statistics = new GameStatistics();
+         gi.Statistics.SetOriginalGameStatistics();
+         //-------------------------------------------------------
+         gi.DieRollAction = GameAction.DieRollActionNone;
+         //-------------------------------------------------------
+         Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "Setup_NewGame(): gi.MapItemMoves.Clear()");
+         gi.MapItemMoves.Clear();
+         //---------------------------------------------
+         if (false == AddStartingTestingState(gi)) // TestingStartAmbush
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Setup_NewGame():  Add_StartingTestingState() returned false");
+            return false;
+         }
+         return true;
+      }
+      private bool AddStartingTestingState(IGameInstance gi)
+      {
+         return true;
+      }
+   }
 	//----------------------------------------------------------------
 	class GameStateRandomMovement : GameState
 	{
@@ -1065,7 +1210,7 @@ namespace PleasantvilleGame
                bool isTownspersonCombat;
                if (false == GameStateChecker.CheckForTownspersonCombats(gi, out isTownspersonCombat))
                {
-                  returnStatus = "GameStateChecker.CheckForAlienCombats() returned false in AlienAcksTownspersonMovement action";
+                  returnStatus = "GameStateChecker.CheckForTownspersonCombats() returned false in AlienAcksTownspersonMovement action";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
                }
                bool isAnyMovement;

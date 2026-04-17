@@ -114,10 +114,12 @@ namespace PleasantvilleGame
             {
                if( false == dialog.IsVisible )
                   dialog.Show();
+#pragma warning disable CA1416 // Validate platform compatibility
                var currentMonitor = Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(dialog).Handle); // Get the current monitor the main window is on.
                var source = PresentationSource.FromVisual(dialog); // Find out if our WPF app is being scaled by the monitor
                double dpiScaling = (source != null && source.CompositionTarget != null ? source.CompositionTarget.TransformFromDevice.M11 : 1);
                System.Drawing.Rectangle workArea = currentMonitor.WorkingArea; // Get the available area of the monitor
+#pragma warning restore CA1416 // Validate platform compatibility
                var workAreaWidth = (int)Math.Floor(workArea.Width * dpiScaling);
                var workAreaHeight = (int)Math.Floor(workArea.Height * dpiScaling);
                dialog.Left = (((workAreaWidth - (dialog.Width * dpiScaling)) / 2) + (workArea.Left * dpiScaling)); // Move the window to the center by setting the top and left coordinates.
@@ -658,17 +660,7 @@ namespace PleasantvilleGame
       {
          Button b = (Button)sender;
          string key = (string)b.Content;
-         if (true == key.Contains("AAR")) // rules based click
-         {
-            GameAction action = GameAction.ShowAfterActionReportDialog;
-            myGameEngine.PerformAction(ref myGameInstance, ref action);
-         }
-         else if (true == key.Contains("Move Diagram")) // rules based click
-         {
-            GameAction action = GameAction.ShowMovementDiagramDialog;
-            myGameEngine.PerformAction(ref myGameInstance, ref action);
-         }
-         else if (true == key.StartsWith("r")) // rules based click
+         if (true == key.StartsWith("r")) // rules based click
          {
             if (false == ShowRule(key))
             {
