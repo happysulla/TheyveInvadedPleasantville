@@ -264,6 +264,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
+            case GameAction.UpdateNewGameEnd:
                break;
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show

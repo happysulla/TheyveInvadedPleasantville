@@ -986,6 +986,13 @@ namespace PleasantvilleGame
       //-------------INTERFACE FUNCTIONS---------------------------------
       public void UpdateView(ref IGameInstance gi, GameAction action)
       {
+         if ((GameAction.UpdateLoadingGame == action) || (GameAction.UpdateNewGame == action) || (GameAction.RemoveSplashScreen == action))
+         {
+            if (false == UpdateViewForNewGame(ref gi, action)) // This calls PerformAction() to get to proper event
+               Logger.Log(LogEnum.LE_ERROR, "Update_View(): UpdateViewForNewGame() returned false");
+            return;
+         }
+         //-------------------------------------------------------
          if (true == GameEngine.theIsAlien)
          {
             StringBuilder sb = new StringBuilder("---------------   ALIEN GameViewerWindow::UpdateView() ==> action="); sb.Append(action.ToString()); sb.Append("  ==> NextAction="); sb.Append(gi.NextAction);
@@ -1493,6 +1500,46 @@ namespace PleasantvilleGame
                break;
          }
       }
+      private bool UpdateViewForNewGame(ref IGameInstance gi, GameAction action) // GameAction.UpdateLoadingGame  GameAction.UpdateNewGame
+      {
+         Logger.Log(LogEnum.LE_SHOW_MAIN_CLEAR, "UpdateViewForNewGame(): Clearing action=" + action.ToString());
+         myGameInstance = gi;
+         myButtons.Clear();
+         UpdateCanvasMainClear(myButtons, gi.Stacks, action, false);
+         myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas); // UploadNewGame - Return to previous saved zoom level
+         //----------------------------------
+         GameAction nextAction = GameAction.Error;
+         if (GameAction.UpdateLoadingGame == action)
+         {
+            IGameCommand? cmd = gi.GameCommands.GetLast();
+            if (null == cmd)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "UpdateView_ForNewGame(): cmd=null");
+               return false;
+            }
+            nextAction = cmd.Action;
+            gi.GamePhase = cmd.Phase;
+            gi.DieRollAction = cmd.ActionDieRoll;
+            gi.EventDisplayed = gi.EventActive = cmd.EventActive;
+         }
+         else if (GameAction.UpdateNewGame == action)
+         {
+            nextAction = GameAction.UpdateNewGameEnd;
+         }
+         else if (GameAction.RemoveSplashScreen == action)
+         {
+            mySplashScreen.Close();
+            nextAction = GameAction.UpdateNewGameEnd;
+         }
+         //----------------------------------
+         //if (false == UpdateCanvasMain(gi, action))
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "UpdateView_ForNewGame(): UpdateCanvasMain() returned error ");
+         //   return false;
+         //}
+         myGameEngine.PerformAction(ref gi, ref nextAction, Utilities.NO_RESULT);
+         return true;
+      }
       //-------------GameViewerWindow---------------------------------
       private void ContentRenderedGameViewerWindow(object sender, EventArgs e)
       {
@@ -1515,10 +1562,6 @@ namespace PleasantvilleGame
          //-----------------------------------------------------
          myScrollViewerTextBlock.Height = mapPanelHeight - myCanvasHelper.ActualHeight - 5;
          myTextBlockDisplay.Height = mapPanelHeight - myCanvasHelper.ActualHeight;
-         //myTextBlockDisplay.Width = myScrollViewerTextBlock.ActualWidth;
-         //Visibility v = myScrollViewerTextBlock.ComputedVerticalScrollBarVisibility;
-         //if (v == Visibility.Visible)
-         //   myTextBlockDisplay.Width -= System.Windows.SystemParameters.VerticalScrollBarWidth;
          //-----------------------------------------------------
          double mapPanelWidth = myDockPanelTop.ActualWidth - myDockPanelControls.ActualWidth - System.Windows.SystemParameters.VerticalScrollBarWidth;
          myScrollViewerMap.Width = mapPanelWidth;

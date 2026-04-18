@@ -71,6 +71,9 @@ namespace PleasantvilleGame
                myTargetCursor = null;
                this.myCanvas.Cursor = System.Windows.Input.Cursors.Arrow; // get rid of the canvas cursor
                break;
+            case GameAction.UpdateNewGameEnd:
+               ShowGameMap(myCanvas);
+               break;
             case GameAction.UpdateLoadingGame:
                if (null != myTargetCursor)
                   myTargetCursor.Dispose();
@@ -155,6 +158,15 @@ namespace PleasantvilleGame
          Canvas.SetLeft(img, 0);
          Canvas.SetTop(img, 0);
          Canvas.SetZIndex(img, 99999);
+      }
+      private void ShowGameMap(Canvas c)
+      {
+         Image img = new Image() { Name = "CanvasMain", Width = 1617, Height = 880, Source = MapItem.theMapImages.GetBitmapImage("PleasantvilleMap") };
+         c.Children.Add(img);
+         double x = (c.ActualWidth - img.Width) * 0.5;
+         double y = (c.ActualHeight - img.Height) * 0.5;
+         Canvas.SetLeft(img, x);
+         Canvas.SetTop(img, y);
       }
    }
 }

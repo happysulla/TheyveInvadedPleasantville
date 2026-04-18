@@ -106,7 +106,7 @@ namespace PleasantvilleGame
          SetOn(LogEnum.LE_GAME_INIT_VERSION);
          //SetOn(LogEnum.LE_GAME_END);
          //SetOn(LogEnum.LE_GAME_END_CHECK);
-         //SetOn(LogEnum.LE_NEXT_ACTION);
+         SetOn(LogEnum.LE_NEXT_ACTION);
          //SetOn(LogEnum.LE_VIEW_UPDATE_WINDOW);
          ////-------------
          //SetOn(LogEnum.LE_MOVE_STACKING);

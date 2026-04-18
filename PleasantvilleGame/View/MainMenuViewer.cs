@@ -193,15 +193,53 @@ namespace PleasantvilleGame
       }
       public void UpdateView(ref IGameInstance gi, GameAction action)
       {
-         //myGameInstance = gi;
+         Logger.Log(LogEnum.LE_VIEW_UPDATE_MENU, "-----------------MainMenuViewer::Update_View() => action=" + action.ToString());
+         myGameInstance = gi;
+         switch (gi.GamePhase)
+         {
+            case GamePhase.GameSetup:
+               return;
+            case GamePhase.UnitTests:
+               IUnitTest ut = gi.UnitTests[gi.GameTurn];
+               myMenuItemTopLevel1.Header = ut.HeaderName;
+               if (0 < myMenuItemTopLevel1.Items.Count)
+               {
+                  MenuItem menuItem0 = (MenuItem)myMenuItemTopLevel1.Items[0];
+                  menuItem0.Header = ut.CommandName;
+               }
+               break;
+            default:
+               if (false == Directory.Exists(GameLoadMgr.theGamesDirectory)) // create directory if does not exists
+                  Directory.CreateDirectory(GameLoadMgr.theGamesDirectory);
+               string filepath = GameLoadMgr.theGamesDirectory + "CheckpointLastDay.pbg";
+               if (true == File.Exists(filepath))
+                  myMenuItemTopLevel22.IsEnabled = true;
+               else
+                  myMenuItemTopLevel22.IsEnabled = false;
+               //----------------------------------------
+               filepath = GameLoadMgr.theGamesDirectory + "CheckpointLastRound.pbg";
+               if (true == File.Exists(filepath))
+                  myMenuItemTopLevel23.IsEnabled = true;
+               else
+                  myMenuItemTopLevel23.IsEnabled = false;
+               //----------------------------------------
+               if (null == myGameInstance.UndoCmd)
+               {
+                  myMenuItemTopLevel21.IsEnabled = false;
+               }
+               else
+               {
+                  myMenuItemTopLevel21.IsEnabled = true;
+                  Logger.Log(LogEnum.LE_UNDO_COMMAND, "MainMenuViewer.UpdateView(): cmd=" + myGameInstance.UndoCmd.ToString());
+               }
+               return;
+         }
          //if (null == myMenuItemGamePhase)
          //{
          //   Logger.Log(LogEnum.LE_VIEW_UPDATE_MENU, "MainMenuViewer::Update_View() => myMenuItemGamePhase is null");
          //   return;
          //}
          //myMenuItemGamePhase.Header = gi.GameTurn;
-         StringBuilder sb = new StringBuilder("-----------------MainMenuViewer::Update_View() => action="); sb.Append(action.ToString()); sb.Append("  ==> NextAction="); sb.Append(gi.NextAction);
-         Logger.Log(LogEnum.LE_VIEW_UPDATE_MENU, sb.ToString());
          switch (action)
          {
             //case GameAction.AlienStart:
