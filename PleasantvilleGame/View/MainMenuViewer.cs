@@ -199,7 +199,7 @@ namespace PleasantvilleGame
          {
             case GamePhase.GameSetup:
                return;
-            case GamePhase.UnitTests:
+            case GamePhase.UnitTest:
                IUnitTest ut = gi.UnitTests[gi.GameTurn];
                myMenuItemTopLevel1.Header = ut.HeaderName;
                if (0 < myMenuItemTopLevel1.Items.Count)

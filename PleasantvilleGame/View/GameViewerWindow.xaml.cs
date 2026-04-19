@@ -369,6 +369,15 @@ namespace PleasantvilleGame
          ge.RegisterForUpdates(myEventViewer); // needs to be last so UploadGameView
          ge.RegisterForUpdates(this);
          Logger.Log(LogEnum.LE_GAME_INIT, "GameViewerWindow(): \nzoomCanvas=" + Properties.Settings.Default.ZoomCanvas.ToString() + "\nwp=" + Properties.Settings.Default.WindowPlacement + "\noptions=" + Properties.Settings.Default.GameOptions);
+#if UT1
+         if (false == ge.CreateUnitTests(gi, myDockPanelTop, this, myEventViewer, myDieRoller, civ))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): Create_UnitTests() returned false");
+            CtorError = true;
+            return;
+         }
+         gi.GamePhase = GamePhase.UnitTest;
+#endif
       }
       //-----------------------SUPPORTING FUNCTIONS--------------------
       private bool AddHotKeys(MainMenuViewer mmv)
@@ -1543,29 +1552,30 @@ namespace PleasantvilleGame
       //-------------GameViewerWindow---------------------------------
       private void ContentRenderedGameViewerWindow(object sender, EventArgs e)
       {
-         double mapPanelHeight = myDockPanelTop.ActualHeight - myMainMenu.ActualHeight - myStatusBar.ActualHeight;
-         myDockPanelInside.Height = mapPanelHeight;
-         myDockPanelControls.Height = mapPanelHeight;
-         //-----------------------------------------------------
-         myScrollViewerTextBlock.Height = mapPanelHeight - myCanvasHelper.ActualHeight - 5;
-         myTextBlockDisplay.Height = mapPanelHeight - myCanvasHelper.ActualHeight;
-         //-----------------------------------------------------
-         double mapPanelWidth = myDockPanelTop.ActualWidth - myDockPanelControls.ActualWidth - System.Windows.SystemParameters.VerticalScrollBarWidth;
-         myScrollViewerMap.Width = mapPanelWidth;
-         myScrollViewerMap.Height = mapPanelHeight;
+         //double mapPanelHeight = myDockPanelTop.ActualHeight - myMainMenu.ActualHeight - myStatusBar.ActualHeight - 50; // 50=titlebar;
+         //myDockPanelInside.Height = mapPanelHeight;
+         //myDockPanelControls.Height = mapPanelHeight;
+         ////-----------------------------------------------------
+         //myScrollViewerTextBlock.Height = mapPanelHeight - myCanvasHelper.ActualHeight - 5;
+         //myTextBlockDisplay.Height = mapPanelHeight - myCanvasHelper.ActualHeight;
+         ////-----------------------------------------------------
+         //double mapPanelWidth = myDockPanelTop.ActualWidth - myDockPanelControls.ActualWidth - System.Windows.SystemParameters.VerticalScrollBarWidth;
+         //myScrollViewerMap.Width = mapPanelWidth;
+         //myScrollViewerMap.Height = mapPanelHeight;
       }
       private void SizeChangedGameViewerWindow(object sender, SizeChangedEventArgs e)
       {
-         double mapPanelHeight = myDockPanelTop.ActualHeight - myMainMenu.ActualHeight - myStatusBar.ActualHeight;
-         myDockPanelInside.Height = mapPanelHeight;
-         myDockPanelControls.Height = mapPanelHeight;
-         //-----------------------------------------------------
-         myScrollViewerTextBlock.Height = mapPanelHeight - myCanvasHelper.ActualHeight - 5;
-         myTextBlockDisplay.Height = mapPanelHeight - myCanvasHelper.ActualHeight;
-         //-----------------------------------------------------
-         double mapPanelWidth = myDockPanelTop.ActualWidth - myDockPanelControls.ActualWidth - System.Windows.SystemParameters.VerticalScrollBarWidth;
-         myScrollViewerMap.Width = mapPanelWidth;
-         myScrollViewerMap.Height = mapPanelHeight;
+         //double mapPanelHeight = myDockPanelTop.ActualHeight - myMainMenu.ActualHeight - myStatusBar.ActualHeight - 50; // 50=titlebar
+         //myDockPanelInside.Height = mapPanelHeight;
+         //myDockPanelControls.Height = mapPanelHeight;
+         ////-----------------------------------------------------
+         //myScrollViewerTextBlock.Height = mapPanelHeight - myCanvasHelper.ActualHeight - 5;
+         //myTextBlockDisplay.Height = mapPanelHeight - myCanvasHelper.ActualHeight;
+         ////-----------------------------------------------------
+         //double mapPanelWidth = myDockPanelTop.ActualWidth - myDockPanelControls.ActualWidth - System.Windows.SystemParameters.VerticalScrollBarWidth;
+         //myScrollViewerMap.Width = mapPanelWidth;
+         //myScrollViewerMap.Height = mapPanelHeight;
+         //Logger.Log(LogEnum.LE_SHOW_SCREEN_SIZE, " SizeChangedGameViewerWindow(): mapPanelHeight=" + mapPanelHeight.ToString("F2") + " mapPanelWidth=" + mapPanelWidth.ToString("F2"));
       }
       private void ClosedGameViewerWindow(object sender, EventArgs e)
       {

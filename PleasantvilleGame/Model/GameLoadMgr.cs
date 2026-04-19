@@ -1437,7 +1437,7 @@ namespace PleasantvilleGame
             GamePhase phase = GamePhase.Error;
             switch (sGamePhase)
             {
-               case "UnitTests": phase = GamePhase.UnitTests; break;
+               case "UnitTest": phase = GamePhase.UnitTest; break;
                case "GameSetup": phase = GamePhase.GameSetup; break;
                default: Logger.Log(LogEnum.LE_ERROR, "ReadXmlGameCommands(): reached default sGamePhase=" + sGamePhase); return false;
             }

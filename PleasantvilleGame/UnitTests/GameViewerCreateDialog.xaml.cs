@@ -22,14 +22,12 @@ namespace PleasantvilleGame
       StatusBar? myStatusBar = null;
       DockPanel? myDockPanelInside = null;
       DockPanel? myDockPanelControls = null;
-      Canvas? myCanvasTank = null;
-      Image? myImageTank = null;
+      Canvas? myCanvasHelper = null;
       ScrollViewer? myScrollViewerText = null;
       TextBlock? myTextBlock = null;
       //-----------------------------------
       ScrollViewer? myScrollViewerMap = null;
       Canvas? myCanvasMap = null;
-      Image? myImageMap= null;
       //--------------------------------------------------------------------------------------
       public GameViewerCreateDialog(DockPanel topPanel)
       {
@@ -56,18 +54,13 @@ namespace PleasantvilleGame
                      myDockPanelControls = ui1 as DockPanel; 
                      if (null != myDockPanelControls)
                      {
-                        foreach (UIElement ui2 in myDockPanelControls.Children)  // myStackPanelControl holds myCanvasTank and myScrollViewerTextBox
+                        foreach (UIElement ui2 in myDockPanelControls.Children)  // myStackPanelControl holds myCanvasHelper and myScrollViewerTextBox
                         {
                            if (ui2 is Canvas)
                            {
-                              myCanvasTank = (Canvas)ui2;
-                              foreach (UIElement ui3 in myCanvasTank.Children)
+                              myCanvasHelper = (Canvas)ui2;
+                              foreach (UIElement ui3 in myCanvasHelper.Children)
                               {
-                                 if (ui3 is Image)
-                                 {
-                                    myImageTank = (Image)ui3;
-                                    break;
-                                 }
                               }
                            }
                            else if (ui2 is ScrollViewer)  // myScrollViewerTextBox holds myTextBoxDisplay
@@ -87,11 +80,6 @@ namespace PleasantvilleGame
                         myCanvasMap = (Canvas)myScrollViewerMap.Content;
                         foreach (UIElement ui2 in myCanvasMap.Children)
                         {
-                           if (ui2 is Image)
-                           {
-                              myImageMap = (Image)ui2;
-                              break;
-                           }
                         }
                      }
                   }
@@ -128,27 +116,15 @@ namespace PleasantvilleGame
             CtorError = true;
             return;
          }
-         if (null == myImageMap)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerCreateDialog(): myImageMap=null");
-            CtorError = true;
-            return;
-         }
          if (null == myDockPanelControls)
          {
             Logger.Log(LogEnum.LE_ERROR, "GameViewerCreateDialog(): myDockPanelControls=null");
             CtorError = true;
             return;
          }
-         if (null == myCanvasTank)
+         if (null == myCanvasHelper)
          {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerCreateDialog(): image=myCanvasTank");
-            CtorError = true;
-            return;
-         }
-         if (null == myImageTank)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerCreateDialog(): myImageTank=null");
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerCreateDialog(): image=myCanvasHelper");
             CtorError = true;
             return;
          }
@@ -201,24 +177,14 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "ShowSettings(): image=myCanvasMap");
             return;
          }
-         if (null == myImageMap)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "ShowSettings(): myImageMap=null");
-            return;
-         }
          if (null == myDockPanelControls)
          {
             Logger.Log(LogEnum.LE_ERROR, "ShowSettings(): myDockPanelControls=null");
             return;
          }
-         if (null == myCanvasTank)
+         if (null == myCanvasHelper)
          {
-            Logger.Log(LogEnum.LE_ERROR, "ShowSettings(): image=myCanvasTank");
-            return;
-         }
-         if (null == myImageTank)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "ShowSettings(): myImageTank=null");
+            Logger.Log(LogEnum.LE_ERROR, "ShowSettings(): image=myCanvasHelper");
             return;
          }
          if (null == myScrollViewerText)
@@ -248,22 +214,18 @@ namespace PleasantvilleGame
          // myDockPanelControl
          myTextBoxDockPanelControlSizeX.Text = myDockPanelControls.ActualWidth.ToString("00.0");
          myTextBoxDockPanelControlSizeY.Text = myDockPanelControls.ActualHeight.ToString("00.0");
-         myTextBoxCanvasTankSizeX.Text = myCanvasTank.ActualWidth.ToString("00.0");
-         myTextBoxCanvasTankSizeY.Text = myCanvasTank.ActualHeight.ToString("00.0");
-         myTextBoxImageTankSizeX.Text = myImageTank.ActualWidth.ToString("00.0");
-         myTextBoxImageTankSizeY.Text = myImageTank.ActualHeight.ToString("00.0");
+         myTextBoxCanvasTankSizeX.Text = myCanvasHelper.ActualWidth.ToString("00.0");
+         myTextBoxCanvasTankSizeY.Text = myCanvasHelper.ActualHeight.ToString("00.0");
          myTextBoxScrollViewerTextSizeX.Text = myScrollViewerText.ActualWidth.ToString("00.0");
          myTextBoxScrollViewerTextSizeY.Text = myScrollViewerText.ActualHeight.ToString("00.0");
          myTextBoxTextBoxSizeX.Text = myTextBlock.ActualWidth.ToString("00.0");
          myTextBoxTextBoxSizeY.Text = myTextBlock.ActualHeight.ToString("00.0");
          //---------------------------------------------------------------
-         // myScrollViewerMap, myCanvasMap, myImageMap
+         // myScrollViewerMap, myCanvasMap
          myTextBoxScrollViewerMapSizeX.Text = myScrollViewerMap.ActualWidth.ToString("00.0");
          myTextBoxScrollViewerMapSizeY.Text = myScrollViewerMap.ActualHeight.ToString("00.0");
          myTextBoxCanvasMapSizeX.Text = myCanvasMap.ActualWidth.ToString("00.0");
          myTextBoxCanvasMapSizeY.Text = myCanvasMap.ActualHeight.ToString("00.0");
-         myTextBoxImageMapSizeX.Text = myImageMap.ActualWidth.ToString("00.0");
-         myTextBoxImageMapSizeY.Text = myImageMap.ActualHeight.ToString("00.0");
          //--------------------------------------------------------------------------
          // ScrollViewer Vertical
          myTextBoxVScrollableHeight.Text = myScrollViewerMap.ScrollableHeight.ToString("00.0");
@@ -323,24 +285,14 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "ButtonApply_Click(): image=myCanvasMap");
             return;
          }
-         if (null == myImageMap)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "ButtonApply_Click(): myImageMap=null");
-            return;
-         }
          if (null == myDockPanelControls)
          {
             Logger.Log(LogEnum.LE_ERROR, "ButtonApply_Click(): myDockPanelControls=null");
             return;
          }
-         if (null == myCanvasTank)
+         if (null == myCanvasHelper)
          {
-            Logger.Log(LogEnum.LE_ERROR, "ButtonApply_Click(): image=myCanvasTank");
-            return;
-         }
-         if (null == myImageTank)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "ButtonApply_Click(): myImageTank=null");
+            Logger.Log(LogEnum.LE_ERROR, "ButtonApply_Click(): image=myCanvasHelper");
             return;
          }
          if (null == myScrollViewerText)
@@ -357,11 +309,9 @@ namespace PleasantvilleGame
          myDockPanelInside.Width = Double.Parse(myTextBoxInsideDockPanelSizeX.Text);
          //----------------------------------------------------------------------
          myDockPanelControls.Width = Double.Parse(myTextBoxDockPanelControlSizeX.Text);
-         myCanvasTank.Height = Double.Parse(myTextBoxCanvasTankSizeY.Text);
-         myCanvasTank.Width = Double.Parse(myTextBoxCanvasTankSizeX.Text);
-         myImageTank.Height = Double.Parse(myTextBoxImageTankSizeY.Text);
-         myImageTank.Width = Double.Parse(myTextBoxImageTankSizeX.Text);
-         double height = myDockPanelInside.Height - myCanvasTank.Height;
+         myCanvasHelper.Height = Double.Parse(myTextBoxCanvasTankSizeY.Text);
+         myCanvasHelper.Width = Double.Parse(myTextBoxCanvasTankSizeX.Text);
+         double height = myDockPanelInside.Height - myCanvasHelper.Height;
          myScrollViewerText.Height = height;
          myScrollViewerText.Width = Double.Parse(myTextBoxScrollViewerTextSizeX.Text);
          myTextBlock.Height = height;
@@ -371,8 +321,6 @@ namespace PleasantvilleGame
          myScrollViewerMap.Width = Double.Parse(myTextBoxScrollViewerMapSizeX.Text);
          myCanvasMap.Height = Double.Parse(myTextBoxCanvasMapSizeY.Text);
          myCanvasMap.Width = Double.Parse(myTextBoxCanvasMapSizeX.Text);
-         myImageMap.Height = Double.Parse(myTextBoxImageMapSizeY.Text);
-         myImageMap.Width = Double.Parse(myTextBoxImageMapSizeX.Text);
       }
       private void ButtonCancel_Click(object sender, RoutedEventArgs e)
       {
