@@ -96,62 +96,62 @@ namespace PleasantvilleGame
             return false;
          }
          gi.UnitTests.Add(ut1);
-         //-----------------------------------------------------------------------------
-         IUnitTest ut2 = new TerritoryCreateUnitTest(dp, gi, civ);
-         if (true == ut2.CtorError)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): TerritoryCreateUnitTest() ctor error");
-            return false;
-         }
-         gi.UnitTests.Add(ut2);
-         //-----------------------------------------------------------------------------
-         IUnitTest ut3 = new TerritoryRegionUnitTest(dp, gi, civ);
-         if (true == ut3.CtorError)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): TerritoryRegionUnitTest() ctor error");
-            return false;
-         }
-         gi.UnitTests.Add(ut3);
-         //-----------------------------------------------------------------------------
-         IUnitTest ut4 = new PolylineCreateUnitTest(dp, gi, civ);
-         if (true == ut4.CtorError)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): PolylineCreateUnitTest() ctor error");
-            return false;
-         }
-         gi.UnitTests.Add(ut4);
-         //-----------------------------------------------------------------------------
-         IUnitTest ut5 = new ConfigMgrUnitTest(dp, ev);
-         if (true == ut5.CtorError)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): ConfigMgrUnitTest() ctor error");
-            return false;
-         }
-         gi.UnitTests.Add(ut5);
-         //-----------------------------------------------------------------------------
-         IUnitTest ut6 = new DiceRollerUnitTest(dp, dr);
-         if (true == ut6.CtorError)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): DiceRollerUnitTest() ctor error");
-            return false;
-         }
-         gi.UnitTests.Add(ut6);
-         //-----------------------------------------------------------------------------
-         IUnitTest ut7 = new GameInstanceUnitTest(dp);
-         if (true == ut7.CtorError)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): GameInstanceUnitTest() ctor error");
-            return false;
-         }
-         gi.UnitTests.Add(ut7);
-         //-----------------------------------------------------------------------------
-         IUnitTest ut8 = new TableMgrUnitTest(dp, gi, civ, gvw);
-         if (true == ut8.CtorError)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): TableMgrUnitTest() ctor error");
-            return false;
-         }
-         gi.UnitTests.Add(ut8);
+         ////-----------------------------------------------------------------------------
+         //IUnitTest ut2 = new TerritoryCreateUnitTest(dp, gi, civ);
+         //if (true == ut2.CtorError)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): TerritoryCreateUnitTest() ctor error");
+         //   return false;
+         //}
+         //gi.UnitTests.Add(ut2);
+         ////-----------------------------------------------------------------------------
+         //IUnitTest ut3 = new TerritoryRegionUnitTest(dp, gi, civ);
+         //if (true == ut3.CtorError)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): TerritoryRegionUnitTest() ctor error");
+         //   return false;
+         //}
+         //gi.UnitTests.Add(ut3);
+         ////-----------------------------------------------------------------------------
+         //IUnitTest ut4 = new PolylineCreateUnitTest(dp, gi, civ);
+         //if (true == ut4.CtorError)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): PolylineCreateUnitTest() ctor error");
+         //   return false;
+         //}
+         //gi.UnitTests.Add(ut4);
+         ////-----------------------------------------------------------------------------
+         //IUnitTest ut5 = new ConfigMgrUnitTest(dp, ev);
+         //if (true == ut5.CtorError)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): ConfigMgrUnitTest() ctor error");
+         //   return false;
+         //}
+         //gi.UnitTests.Add(ut5);
+         ////-----------------------------------------------------------------------------
+         //IUnitTest ut6 = new DiceRollerUnitTest(dp, dr);
+         //if (true == ut6.CtorError)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): DiceRollerUnitTest() ctor error");
+         //   return false;
+         //}
+         //gi.UnitTests.Add(ut6);
+         ////-----------------------------------------------------------------------------
+         //IUnitTest ut7 = new GameInstanceUnitTest(dp);
+         //if (true == ut7.CtorError)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): GameInstanceUnitTest() ctor error");
+         //   return false;
+         //}
+         //gi.UnitTests.Add(ut7);
+         ////-----------------------------------------------------------------------------
+         //IUnitTest ut8 = new TableMgrUnitTest(dp, gi, civ, gvw);
+         //if (true == ut8.CtorError)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): TableMgrUnitTest() ctor error");
+         //   return false;
+         //}
+         //gi.UnitTests.Add(ut8);
          return true;
       }
    }

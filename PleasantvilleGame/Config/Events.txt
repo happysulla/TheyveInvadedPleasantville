@@ -1,4 +1,4 @@
-e000	"<Bold>e000 Welcome to Patton's Best Solo Tank Battle Game</Bold>
+e000	"<Bold>e000 Welcome </Bold>
 <LineBreak/><LineBreak/> <InlineUIContainer><CheckBox Name='SkipTutorial0' IsEnabled='True' Content='Skip in Future' FontFamily='Courier New'  FontSize='12'></CheckBox></InlineUIContainer>
 <LineBreak/><LineBreak/>
 Choose a button to begin:

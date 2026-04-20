@@ -25,7 +25,7 @@ namespace PleasantvilleGame
       private IGameInstance? myGameInstance = null;
       private string? myFileName = null;
       private DockPanel? myDockPanel = null;
-      private Canvas? myCanvasTank = null;
+      private Canvas? myCanvasHelper = null;
       private Canvas? myCanvasMain = null;
       private int myTankNum = 1;
       private CanvasImageViewer? myCanvasImageViewer = null;
@@ -79,30 +79,31 @@ namespace PleasantvilleGame
          //------------------------------------
          foreach (UIElement ui0 in myDockPanel.Children)
          {
-            if (ui0 is DockPanel dockPanelInside)
+            if (ui0 is StackPanel stackPanelInside) // DockPanel showing main play area
             {
-               foreach (UIElement ui1 in dockPanelInside.Children)
+               foreach (UIElement ui1 in stackPanelInside.Children)
                {
-                  if (ui1 is DockPanel dockpanelControl)
+                  if (ui1 is ScrollViewer)
                   {
-                     foreach (UIElement ui2 in dockpanelControl.Children)
-                     {
-                        if (ui2 is Canvas canvas)
-                           myCanvasTank = canvas;  // Find the Canvas in the visual tree
-                     }
+                     ScrollViewer sv = (ScrollViewer)ui1;
+                     if (sv.Content is Canvas)
+                        myCanvasMain = (Canvas)sv.Content;  // Find the Canvas in the visual tree
                   }
-                  if (ui1 is ScrollViewer sv)
+                  if (ui1 is DockPanel dockPanelControl) // DockPanel that holds the Map Image
                   {
-                     if (sv.Content is Canvas canvas)
-                        myCanvasMain = canvas;  // Find the Canvas in the visual tree
+                     foreach (UIElement ui2 in dockPanelControl.Children)
+                     {
+                        if (ui2 is Canvas)
+                           myCanvasHelper = (Canvas)ui2;
+                     }
                   }
                }
             }
          }
          //-------------------------------------
-         if (null == myCanvasTank)
+         if (null == myCanvasHelper)
          {
-            Logger.Log(LogEnum.LE_ERROR, "TerritoryRegionUnitTest(): myCanvasTank=null");
+            Logger.Log(LogEnum.LE_ERROR, "TerritoryRegionUnitTest(): myCanvasHelper=null");
             CtorError = true;
             return;
          }
@@ -119,7 +120,7 @@ namespace PleasantvilleGame
             {
                if (true == img.Name.Contains("TankMat"))
                {
-                  myCanvasTank.Children.Remove(img); // Remove the old image
+                  myCanvasHelper.Children.Remove(img); // Remove the old image
                   break;
                }
             }
@@ -134,9 +135,9 @@ namespace PleasantvilleGame
       }
       public bool Command(ref IGameInstance gi) // Performs function based on CommandName string
       {
-         if (null == myCanvasTank)
+         if (null == myCanvasHelper)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Command(): myCanvasTank=null");
+            Logger.Log(LogEnum.LE_ERROR, "Command(): myCanvasHelper=null");
             return false;
          }
          if (null == myCanvasMain)
@@ -206,7 +207,7 @@ namespace PleasantvilleGame
                {
                   if (true == img.Name.Contains("TankMat"))
                   {
-                     myCanvasTank.Children.Remove(img); // Remove the old image
+                     myCanvasHelper.Children.Remove(img); // Remove the old image
                      break;
                   }
                }
@@ -221,7 +222,7 @@ namespace PleasantvilleGame
             else
                tankMatName += ("0" + myTankNum.ToString());
             Image image = new Image() { Name = "TankMat", Width = 600, Height = 500, Stretch = Stretch.Fill, Source = MapItem.theMapImages.GetBitmapImage(tankMatName) };
-            myCanvasTank.Children.Add(image); // TankMat changes as get new tanks
+            myCanvasHelper.Children.Add(image); // TankMat changes as get new tanks
             Canvas.SetLeft(image, 0);
             Canvas.SetTop(image, 0);
             //-------------------------------------
@@ -256,9 +257,9 @@ namespace PleasantvilleGame
       }
       public bool NextTest(ref IGameInstance gi) // Move to the next test in this class's unit tests
       {
-         if (null == myCanvasTank)
+         if (null == myCanvasHelper)
          {
-            Logger.Log(LogEnum.LE_ERROR, "NextTest(): myCanvasTank=null");
+            Logger.Log(LogEnum.LE_ERROR, "NextTest(): myCanvasHelper=null");
             return false;
          }
          if (null == myCanvasMain)
@@ -270,7 +271,7 @@ namespace PleasantvilleGame
          {
             //-------------------------------------
             Image image = new Image() { Name = "TankMat", Width = 600, Height = 500, Stretch = Stretch.Fill, Source = MapItem.theMapImages.GetBitmapImage("TBD") };
-            myCanvasTank.Children.Add(image); // TankMat changes as get new tanks
+            myCanvasHelper.Children.Add(image); // TankMat changes as get new tanks
              //-------------------------------------
             Canvas.SetLeft(image, 0);
             Canvas.SetTop(image, 0);
@@ -456,14 +457,14 @@ namespace PleasantvilleGame
       }
       private bool DeleteEllipsesAndPolygons()
       {
-         if (null == myCanvasTank)
+         if (null == myCanvasHelper)
          {
-            Logger.Log(LogEnum.LE_ERROR, "DeleteEllipsesAndPolygons(): myCanvasTank=null");
+            Logger.Log(LogEnum.LE_ERROR, "DeleteEllipsesAndPolygons(): myCanvasHelper=null");
             return false;
          }
          //-------------------------------------------
          List<UIElement> results = new List<UIElement>();
-         foreach (UIElement ui in myCanvasTank.Children)
+         foreach (UIElement ui in myCanvasHelper.Children)
          {
             if (ui is Ellipse)
                results.Add(ui);
@@ -471,7 +472,7 @@ namespace PleasantvilleGame
                results.Add(ui);
          }
          foreach (UIElement ui1 in results)
-            myCanvasTank.Children.Remove(ui1);
+            myCanvasHelper.Children.Remove(ui1);
          //-------------------------------------------
          if (null == myCanvasMain)
          {
@@ -496,9 +497,9 @@ namespace PleasantvilleGame
       private bool CreateEllipses(bool isFirst)
       {
          myEllipses.Clear();
-         if (null == myCanvasTank)
+         if (null == myCanvasHelper)
          {
-            Logger.Log(LogEnum.LE_ERROR, "CreateEllipses(): myCanvasTank=null");
+            Logger.Log(LogEnum.LE_ERROR, "CreateEllipses(): myCanvasHelper=null");
             return false;
          }
          if (null == myCanvasMain)
@@ -559,8 +560,8 @@ namespace PleasantvilleGame
             }
             else
             {
-               myCanvasTank.Children.Add(aEllipse);
-               //myCanvasTank.Children.Add(aLabel);
+               myCanvasHelper.Children.Add(aEllipse);
+               //myCanvasHelper.Children.Add(aLabel);
             }
          }
          return true;
@@ -568,9 +569,9 @@ namespace PleasantvilleGame
       private bool CreatePolygons()
       {
          myPoints.Clear();
-         if (null == myCanvasTank)
+         if (null == myCanvasHelper)
          {
-            Logger.Log(LogEnum.LE_ERROR, "CreateEllipses(): myCanvasTank=null");
+            Logger.Log(LogEnum.LE_ERROR, "CreateEllipses(): myCanvasHelper=null");
             return false;
          }
          if (null == myCanvasMain)
@@ -611,7 +612,7 @@ namespace PleasantvilleGame
                if ("Main" == t.CanvasName)
                   myCanvasMain.Children.Add(aPolygon);
                else
-                  myCanvasTank.Children.Add(aPolygon);
+                  myCanvasHelper.Children.Add(aPolygon);
             }
          }
          return true;
@@ -772,9 +773,9 @@ namespace PleasantvilleGame
       //--------------------------------------------------------
       void MouseDownEllipse(object sender, MouseButtonEventArgs e)
       {
-         if (null == myCanvasTank)
+         if (null == myCanvasHelper)
          {
-            Logger.Log(LogEnum.LE_ERROR, "MouseDownEllipse(): myCanvasTank=null");
+            Logger.Log(LogEnum.LE_ERROR, "MouseDownEllipse(): myCanvasHelper=null");
             return;
          }
          if (null == myCanvasMain)
@@ -788,7 +789,7 @@ namespace PleasantvilleGame
          bool isMainCanvas = true;
          if (p.X < 0.0)
          {
-            p = e.GetPosition(myCanvasTank);
+            p = e.GetPosition(myCanvasHelper);
             isMainCanvas = false;
          }
          IMapPoint mp = new MapPoint(p.X, p.Y);
@@ -808,7 +809,7 @@ namespace PleasantvilleGame
             if (true == isMainCanvas)
                myCanvasMain.MouseDown += MouseDownCanvas;
             else
-               myCanvasTank.MouseDown += MouseDownCanvas;
+               myCanvasHelper.MouseDown += MouseDownCanvas;
             return;
          }
          if (matchingTerritory.Name == myAnchorTerritory.Name)
@@ -834,8 +835,8 @@ namespace PleasantvilleGame
             }
             else
             {
-               myCanvasTank.MouseDown -= MouseDownCanvas;
-               myCanvasTank.Children.Add(aPolygon);
+               myCanvasHelper.MouseDown -= MouseDownCanvas;
+               myCanvasHelper.Children.Add(aPolygon);
             }
          }
          e.Handled = true;
@@ -869,7 +870,7 @@ namespace PleasantvilleGame
          // The points to add are either new ones or ones that exist from adjacent territories.
          System.Windows.Point p = e.GetPosition(myCanvasMain);
          if (p.X < 0.0)
-            p = e.GetPosition(myCanvasTank);
+            p = e.GetPosition(myCanvasHelper);
          IMapPoint mp = new MapPoint(p.X, p.Y);
          if (false == CreatePoint(mp))
             Logger.Log(LogEnum.LE_ERROR, "MouseDownCanvas->CreatePoint()");
@@ -877,9 +878,9 @@ namespace PleasantvilleGame
       }
       void MouseDownPolygon(object sender, MouseButtonEventArgs e)
       {
-         if (null == myCanvasTank)
+         if (null == myCanvasHelper)
          {
-            Logger.Log(LogEnum.LE_ERROR, "CreateEllipse(): myCanvasTank=null");
+            Logger.Log(LogEnum.LE_ERROR, "CreateEllipse(): myCanvasHelper=null");
             return;
          }
          if (null == myCanvasMain)
@@ -893,7 +894,7 @@ namespace PleasantvilleGame
          bool isMainCanvas = true;
          if (p.X < 0.0)
          {
-            p = e.GetPosition(myCanvasTank);
+            p = e.GetPosition(myCanvasHelper);
             isMainCanvas = false;
          }
          IMapPoint mp = new MapPoint(p.X, p.Y);
@@ -913,7 +914,7 @@ namespace PleasantvilleGame
                if (true == isMainCanvas)
                   myCanvasMain.Children.Remove(aPolygon);
                else
-                  myCanvasTank.Children.Remove(aPolygon);
+                  myCanvasHelper.Children.Remove(aPolygon);
             }
          }
          else

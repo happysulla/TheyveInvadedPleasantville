@@ -88,18 +88,18 @@ namespace PleasantvilleGame
          //------------------------------------
          foreach (UIElement ui0 in myDockPanelTop.Children)
          {
-            if (ui0 is DockPanel dockPanelInside)
+            if (ui0 is StackPanel stackPanelInside) // DockPanel showing main play area
             {
-               foreach (UIElement ui1 in dockPanelInside.Children)
+               foreach (UIElement ui1 in stackPanelInside.Children)
                {
-                  if (ui1 is DockPanel dockpanelControl)
+                  if (ui1 is ScrollViewer)
                   {
-                     foreach (UIElement ui2 in dockpanelControl.Children)
+                  }
+                  if (ui1 is DockPanel dockPanelControl) // DockPanel that holds the Map Image
+                  {
+                     foreach (UIElement ui2 in dockPanelControl.Children)
                      {
                      }
-                  }
-                  if (ui1 is ScrollViewer sv)
-                  {
                   }
                }
             }

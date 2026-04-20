@@ -20,7 +20,7 @@ namespace PleasantvilleGame
       //--------------------------------------------------------
       private IGameInstance myGameInstance;
       private DockPanel? myDockPanel = null;
-      private Canvas? myCanvasTank = null;
+      private Canvas? myCanvasHelper = null;
       private Canvas? myCanvasMain = null;
       private CanvasImageViewer? myCanvasImageViewer = null;
       private int myIndexRoad = 0;
@@ -70,30 +70,31 @@ namespace PleasantvilleGame
          myDockPanel = dp;
          foreach (UIElement ui0 in myDockPanel.Children)
          {
-            if (ui0 is DockPanel dockPanelInside)
+            if (ui0 is StackPanel stackPanelInside) // DockPanel showing main play area
             {
-               foreach (UIElement ui1 in dockPanelInside.Children)
+               foreach (UIElement ui1 in stackPanelInside.Children)
                {
-                  if (ui1 is DockPanel dockpanelControl)
+                  if (ui1 is ScrollViewer)
                   {
-                     foreach (UIElement ui2 in dockpanelControl.Children)
-                     {
-                        if (ui2 is Canvas canvas)
-                           myCanvasTank = canvas;  // Find the Canvas in the visual tree
-                     }
+                     ScrollViewer sv = (ScrollViewer)ui1;
+                     if (sv.Content is Canvas)
+                        myCanvasMain = (Canvas)sv.Content;  // Find the Canvas in the visual tree
                   }
-                  if (ui1 is ScrollViewer sv)
+                  if (ui1 is DockPanel dockPanelControl) // DockPanel that holds the Map Image
                   {
-                     if (sv.Content is Canvas canvas)
-                        myCanvasMain = canvas;  // Find the Canvas in the visual tree
+                     foreach (UIElement ui2 in dockPanelControl.Children)
+                     {
+                        if (ui2 is Canvas)
+                           myCanvasHelper = (Canvas)ui2;
+                     }
                   }
                }
             }
          }
          //-------------------------------------
-         if (null == myCanvasTank)
+         if (null == myCanvasHelper)
          {
-            Logger.Log(LogEnum.LE_ERROR, "PolylineCreateUnitTest(): myCanvasTank=null");
+            Logger.Log(LogEnum.LE_ERROR, "PolylineCreateUnitTest(): myCanvasHelper=null");
             CtorError = true;
             return;
          }
@@ -109,9 +110,9 @@ namespace PleasantvilleGame
       }
       public bool Command(ref IGameInstance gi) // Performs function based on CommandName string
       {
-         if (null == myCanvasTank)
+         if (null == myCanvasHelper)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Command(): myCanvasTank=null");
+            Logger.Log(LogEnum.LE_ERROR, "Command(): myCanvasHelper=null");
             return false;
          }
          if (null == myCanvasMain)

@@ -161,14 +161,10 @@ namespace PleasantvilleGame
       }
       private void ShowGameMap(Canvas c)
       {
-         double width = Math.Min(c.Width, c.Height*0.86);
-
-         Image img = new Image() { Name = "CanvasMain", Width = width, Height = c.Height, Source = MapItem.theMapImages.GetBitmapImage("PleasantvilleMap") };
-         c.Children.Add(img);
-         double x = (c.ActualWidth - img.Width) * 0.5;
-         double y = (c.ActualHeight - img.Height) * 0.5;
-         Canvas.SetLeft(img, 0);
-         Canvas.SetTop(img, 0);
+         //double width = Math.Min(c.Width, c.Height*0.86);
+         //Image img = new Image() { Name = "CanvasMain", Width = c.ActualWidth, Height = c.ActualHeight, , Stretch = Stretch.Fill, Source = MapItem.theMapImages.GetBitmapImage("PleasantvilleMap") };
+         //Canvas.SetLeft(img, 0);
+         //Canvas.SetTop(img,0);
       }
    }
 }

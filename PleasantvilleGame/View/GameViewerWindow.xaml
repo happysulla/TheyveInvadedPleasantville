@@ -15,52 +15,62 @@
         SizeChanged="SizeChangedGameViewerWindow" 
         ContentRendered="ContentRenderedGameViewerWindow"
         Closed="ClosedGameViewerWindow" >
-   <DockPanel x:Name="myDockPanelTop">
-      <Menu x:Name="myMainMenu" DockPanel.Dock="Top">
-         <MenuItem Header="_File"  x:Name="myMenuItemTopLevel1" InputGestureText="Ctrl+F" Width="120" />
-         <MenuItem Header="_View" x:Name="myMenuItemTopLevel2" InputGestureText="Ctrl+V" Width="120"/>
-         <MenuItem Header="_Options" x:Name="myMenuItemTopLevel3" InputGestureText="Ctrl+O" Width="120"/>
-         <MenuItem Header="_Help" x:Name="myMenuItemTopLevel4" InputGestureText="Ctrl+H" Width="120" />
-      </Menu>
-      <StatusBar x:Name="myStatusBar" DockPanel.Dock="Bottom"></StatusBar>
-      <DockPanel Name="myDockPanelInside">
-         <DockPanel Name="myDockPanelControls" MinWidth="600"  MaxWidth="600" DockPanel.Dock="Left" Margin="0,0,0,0">
-            <Canvas Name="myCanvasHelper" DockPanel.Dock="Top" MinWidth="600"  MaxWidth="600" MinHeight="500" MaxHeight="500" >
-               <Button Content="OK" Name="myButtonOk" Click="myButtonOk_Click" Margin="249,145,0,460" HorizontalAlignment="Left" Width="71" Canvas.Top="6" Canvas.Left="22" />
-               <Button Content="Ignore" Height="23" HorizontalAlignment="Left" Margin="129,144,0,0" Name="myButtonIgnore" VerticalAlignment="Top" Width="75" Canvas.Top="6" Canvas.Left="22" Click="myButtonIgnoreClick" />
-               <Button Content="Button" Height="50" Name="myButton1" Width="50" Background="#FFFFD500" Click="myButton1_Click" Canvas.Left="30" Canvas.Top="60" />
-               <Button Content="Button" Height="50" Name="myButton2" Width="50" Background="#FFFFD500" Click="myButton2_Click" Canvas.Left="97" Canvas.Top="60" />
-               <Button Content="Button" Height="50" Name="myButton3" Width="50" Background="#FFFFD500" Click="myButton3_Click" Canvas.Left="166" Canvas.Top="60" />
-               <Label Content="-&gt;" Height="Auto" Name="myLabelArrow" FontSize="56" FontFamily="=&gt;" IsEnabled="False"  Margin="199,30,224,521" Canvas.Top="18" Canvas.Left="20" />
-               <Button Content="Button" Height="50" Name="myButton4" Width="50" Background="White" Click="myButton4_Click" Canvas.Left="288" Canvas.Top="60" />
-               <Button Content="Button" Height="50" Name="myButton5" Width="50" Background="White" Click="myButton5_Click" Canvas.Left="355" Canvas.Top="60" />
-               <Button Content="Button" Height="50" Name="myButton6" Width="50" Background="White" Click="myButton6_Click"  Canvas.Left="421" Canvas.Top="60" />
-               <Rectangle Height="50" Name="myRectangle1" Stroke="Red" Width="50" StrokeThickness="3" Canvas.Left="30" Canvas.Top="60" />
-               <Rectangle Height="50" Name="myRectangle2" Stroke="Red" Width="50" StrokeThickness="3" Canvas.Left="97" Canvas.Top="60" />
-               <Rectangle Height="50" Name="myRectangle3" Stroke="Red" Width="50" StrokeThickness="3" Canvas.Left="166" Canvas.Top="60" />
-               <Rectangle Height="50" Name="myRectangle4" Stroke="Red" Width="50" StrokeThickness="3" Canvas.Left="288" Canvas.Top="60" />
-               <Rectangle Height="50" Name="myRectangle5" Stroke="Red" Width="50" StrokeThickness="3"  Canvas.Left="355" Canvas.Top="60" />
-               <Rectangle Height="50" Name="myRectangle6" Stroke="Red" Width="50" StrokeThickness="3"  Canvas.Left="421" Canvas.Top="60" />
-               <Label Content="Choose One Target to ..." Height="29" Name="myLabelRightTop" Width="218" Margin="271,31,29,567" Grid.Row="1" Canvas.Top="4" Canvas.Left="14" />
-               <Label Content="Choose One Person To Perform ..." Height="31" Name="myLabelLeftTop" Width="236" Margin="11,31,271,565" Grid.Row="1" Grid.Column="1" Canvas.Top="2" Canvas.Left="12" />
-               <Label Content="Wary" Height="31" Name="myLabelButton1" Width="50"  Margin="17,101,451,495" Canvas.Top="8" Canvas.Left="10" />
-               <Label Content="Wary" Height="31" Name="myLabelButton2" Width="50"  Margin="84,101,384,495" Canvas.Top="8" Canvas.Left="10" />
-               <Label Content="Wary" Height="31" Name="myLabelButton3" Width="50"  Margin="154,101,314,495" Canvas.Top="8" Canvas.Left="10" />
-               <Label Content="Wary" Height="31" Name="myLabelButton4" Width="50"  Margin="277,101,191,495" Canvas.Top="8" Canvas.Left="10" />
-               <Label Content="Wary" Height="31" Name="myLabelButton5" Width="50" Margin="344,101,124,495" Canvas.Top="8" Canvas.Left="10" />
-               <Label Content="Wary" Height="31" Name="myLabelButton6" Width="50" Margin="411,101,57,0"  VerticalAlignment="Top" Canvas.Top="8" Canvas.Left="10" />
-               <TextBox Height="126" x:Name="myTextBoxResults" BorderBrush="{x:Null}" Margin="1038,165,43,336"/>
-               <Label Content="Heading" x:Name="myLabelHeading" FontSize="16" Height="40" Width="459" Canvas.Left="12" Canvas.Top="2" />
-            </Canvas>
-            <Separator Name="mySeparator4" DockPanel.Dock="Top" Height="5"/>
-            <ScrollViewer Name="myScrollViewerTextBlock" MaxWidth="600" VerticalScrollBarVisibility="Auto" Margin="0,0,0,0" Background="#FFB9EA9E">
-               <TextBlock Name="myTextBlockDisplay" MinWidth="573" MaxWidth="573"  FontFamily="Georgia" FontSize="24" TextWrapping="WrapWithOverflow" IsHyphenationEnabled="true" LineStackingStrategy="BlockLineHeight"  Margin="5,5,5,5"/>
+    <DockPanel x:Name="myDockPanelTop">
+        <Menu x:Name="myMainMenu" DockPanel.Dock="Top">
+            <MenuItem Header="_File"  x:Name="myMenuItemTopLevel1" InputGestureText="Ctrl+F" Width="120" />
+            <MenuItem Header="_View" x:Name="myMenuItemTopLevel2" InputGestureText="Ctrl+V" Width="120"/>
+            <MenuItem Header="_Options" x:Name="myMenuItemTopLevel3" InputGestureText="Ctrl+O" Width="120"/>
+            <MenuItem Header="_Help" x:Name="myMenuItemTopLevel4" InputGestureText="Ctrl+H" Width="120" />
+        </Menu>
+        <StatusBar x:Name="myStatusBar" DockPanel.Dock="Bottom"></StatusBar>
+        <StackPanel Name="myStockPanelInside" Orientation="Horizontal" >
+            <DockPanel Name="myDockPanelControls" MinWidth="500"  MaxWidth="500" DockPanel.Dock="Left" Margin="0,0,0,0">
+                <Canvas Name="myCanvasHelper" DockPanel.Dock="Top" MinWidth="500"  MinHeight="200" >
+                    <Button Content="OK" Name="myButtonOk" Click="myButtonOk_Click" Margin="249,145,0,460" HorizontalAlignment="Left" Width="71" Canvas.Top="6" Canvas.Left="22" />
+                    <Button Content="Ignore" Height="23" HorizontalAlignment="Left" Margin="129,144,0,0" Name="myButtonIgnore" VerticalAlignment="Top" Width="75" Canvas.Top="6" Canvas.Left="22" Click="myButtonIgnoreClick" />
+                    <Button Content="Button" Height="50" Name="myButton1" Width="50" Background="#FFFFD500" Click="myButton1_Click" Canvas.Left="30" Canvas.Top="60" />
+                    <Button Content="Button" Height="50" Name="myButton2" Width="50" Background="#FFFFD500" Click="myButton2_Click" Canvas.Left="97" Canvas.Top="60" />
+                    <Button Content="Button" Height="50" Name="myButton3" Width="50" Background="#FFFFD500" Click="myButton3_Click" Canvas.Left="166" Canvas.Top="60" />
+                    <Label Content="-&gt;" Height="Auto" Name="myLabelArrow" FontSize="56" FontFamily="=&gt;" IsEnabled="False"  Margin="199,30,224,521" Canvas.Top="18" Canvas.Left="20" />
+                    <Button Content="Button" Height="50" Name="myButton4" Width="50" Background="White" Click="myButton4_Click" Canvas.Left="288" Canvas.Top="60" />
+                    <Button Content="Button" Height="50" Name="myButton5" Width="50" Background="White" Click="myButton5_Click" Canvas.Left="355" Canvas.Top="60" />
+                    <Button Content="Button" Height="50" Name="myButton6" Width="50" Background="White" Click="myButton6_Click"  Canvas.Left="421" Canvas.Top="60" />
+                    <Rectangle Height="50" Name="myRectangle1" Stroke="Red" Width="50" StrokeThickness="3" Canvas.Left="30" Canvas.Top="60" />
+                    <Rectangle Height="50" Name="myRectangle2" Stroke="Red" Width="50" StrokeThickness="3" Canvas.Left="97" Canvas.Top="60" />
+                    <Rectangle Height="50" Name="myRectangle3" Stroke="Red" Width="50" StrokeThickness="3" Canvas.Left="166" Canvas.Top="60" />
+                    <Rectangle Height="50" Name="myRectangle4" Stroke="Red" Width="50" StrokeThickness="3" Canvas.Left="288" Canvas.Top="60" />
+                    <Rectangle Height="50" Name="myRectangle5" Stroke="Red" Width="50" StrokeThickness="3"  Canvas.Left="355" Canvas.Top="60" />
+                    <Rectangle Height="50" Name="myRectangle6" Stroke="Red" Width="50" StrokeThickness="3"  Canvas.Left="421" Canvas.Top="60" />
+                    <Label Content="Choose One Target to ..." Height="29" Name="myLabelRightTop" Width="218" Margin="271,31,29,567" Grid.Row="1" Canvas.Top="4" Canvas.Left="14" />
+                    <Label Content="Choose One Person To Perform ..." Height="31" Name="myLabelLeftTop" Width="236" Margin="11,31,271,565" Grid.Row="1" Grid.Column="1" Canvas.Top="2" Canvas.Left="12" />
+                    <Label Content="Wary" Height="31" Name="myLabelButton1" Width="50"  Margin="17,101,451,495" Canvas.Top="8" Canvas.Left="10" />
+                    <Label Content="Wary" Height="31" Name="myLabelButton2" Width="50"  Margin="84,101,384,495" Canvas.Top="8" Canvas.Left="10" />
+                    <Label Content="Wary" Height="31" Name="myLabelButton3" Width="50"  Margin="154,101,314,495" Canvas.Top="8" Canvas.Left="10" />
+                    <Label Content="Wary" Height="31" Name="myLabelButton4" Width="50"  Margin="277,101,191,495" Canvas.Top="8" Canvas.Left="10" />
+                    <Label Content="Wary" Height="31" Name="myLabelButton5" Width="50" Margin="344,101,124,495" Canvas.Top="8" Canvas.Left="10" />
+                    <Label Content="Wary" Height="31" Name="myLabelButton6" Width="50" Margin="411,101,57,0"  VerticalAlignment="Top" Canvas.Top="8" Canvas.Left="10" />
+                    <TextBox Height="126" x:Name="myTextBoxResults" BorderBrush="{x:Null}" Margin="1038,165,43,336"/>
+                    <Label Content="Heading" x:Name="myLabelHeading" FontSize="16" Height="40" Width="459" Canvas.Left="12" Canvas.Top="2" />
+                </Canvas>
+                <Separator Name="mySeparator4" DockPanel.Dock="Top" Height="5"/>
+                <ScrollViewer Name="myScrollViewerTextBlock" MaxWidth="500" VerticalScrollBarVisibility="Auto" Margin="0,0,0,0" Background="#FFB9EA9E">
+                    <TextBlock Name="myTextBlockDisplay" MinWidth="473" MaxWidth="473"  FontFamily="Georgia" FontSize="24" TextWrapping="WrapWithOverflow" IsHyphenationEnabled="true" LineStackingStrategy="BlockLineHeight"  Margin="5,5,5,5"/>
+                </ScrollViewer>
+            </DockPanel>
+            <ScrollViewer Name="myScrollViewerMain" Width="857" Height="955" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  >
+                <Canvas Name="myCanvasMain" MinWidth="830" MaxWidth="830" MinHeight="955" MaxHeight="955" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FFDC0E0E" >
+                    <TextBlock Name="myTextBlockComm" FontFamily="Georgia" FontSize="24" TextWrapping="WrapWithOverflow" IsHyphenationEnabled="true" LineStackingStrategy="BlockLineHeight" >
+                        Hello Where Am I
+                    </TextBlock>
+                </Canvas>
             </ScrollViewer>
-         </DockPanel>
-         <ScrollViewer Name="myScrollViewerMap" Width="1132" Height="983"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="0,0,0,0" >
-            <Canvas Name="myCanvasMain" Width="1132" Height="967" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
-            </Canvas>
-         </ScrollViewer>
-      </DockPanel>
-   </DockPanel>
+            <ScrollViewer Name="myScrollViewerComm1" MinWidth="520" MaxWidth="520" MinHeight="955" MaxHeight="955"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  >
+                <Canvas Name="myCanvasComm1" MinWidth="500" MaxWidth="500" MinHeight="955" MaxHeight="955" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FFDC0E0E" >
+                    <TextBlock Name="myTextBlockComm1" FontFamily="Georgia" FontSize="24" TextWrapping="WrapWithOverflow" IsHyphenationEnabled="true" LineStackingStrategy="BlockLineHeight" >
+                        Hello Where Am I
+                    </TextBlock>
+                </Canvas>
+            </ScrollViewer>
+        </StackPanel>
+    </DockPanel>
 </Window>

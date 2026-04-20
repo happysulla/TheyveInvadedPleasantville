@@ -462,8 +462,8 @@ namespace PleasantvilleGame
             //-------------------------------------------
             Properties.Settings.Default.ZoomCanvas = Utilities.ZoomCanvas;
             //-------------------------------------------
-            Properties.Settings.Default.ScrollViewerHeight = myScrollViewerMap.Height;
-            Properties.Settings.Default.ScrollViewerWidth = myScrollViewerMap.Width;
+            //Properties.Settings.Default.ScrollViewerHeight = myScrollViewerMain.Height;
+            //Properties.Settings.Default.ScrollViewerWidth = myScrollViewerMain.Width;
             //-------------------------------------------
             Logger.Log(LogEnum.LE_VIEW_SHOW_OPTIONS, "Save_DefaultsToSettings(): Options=" + myGameInstance.Options.ToString());
             string? sOptions = SerializeOptions(myGameInstance.Options);
@@ -1024,7 +1024,7 @@ namespace PleasantvilleGame
                   return;
                }
                mySplashScreen.Close();
-               myScrollViewerMap.UpdateLayout();
+               myScrollViewerMain.UpdateLayout();
                break;
             case GameAction.AlienStart:
                break;
@@ -1552,7 +1552,7 @@ namespace PleasantvilleGame
       //-------------GameViewerWindow---------------------------------
       private void ContentRenderedGameViewerWindow(object sender, EventArgs e)
       {
-         //double mapPanelHeight = myDockPanelTop.ActualHeight - myMainMenu.ActualHeight - myStatusBar.ActualHeight - 50; // 50=titlebar;
+         //double mapPanelHeight = myDockPanelTop.ActualHeight - myMainMenu.ActualHeight - myStatusBar.ActualHeight; // 50=titlebar;
          //myDockPanelInside.Height = mapPanelHeight;
          //myDockPanelControls.Height = mapPanelHeight;
          ////-----------------------------------------------------
@@ -1565,7 +1565,7 @@ namespace PleasantvilleGame
       }
       private void SizeChangedGameViewerWindow(object sender, SizeChangedEventArgs e)
       {
-         //double mapPanelHeight = myDockPanelTop.ActualHeight - myMainMenu.ActualHeight - myStatusBar.ActualHeight - 50; // 50=titlebar
+         //double mapPanelHeight = myDockPanelTop.ActualHeight - myMainMenu.ActualHeight - myStatusBar.ActualHeight; // 50=titlebar
          //myDockPanelInside.Height = mapPanelHeight;
          //myDockPanelControls.Height = mapPanelHeight;
          ////-----------------------------------------------------
@@ -1600,10 +1600,10 @@ namespace PleasantvilleGame
                if (false == SetWindowPlacement(hwnd, ref wp))
                   Logger.Log(LogEnum.LE_ERROR, "SetWindowPlacement() returned false");
             }
-            if (0.0 != Properties.Settings.Default.ScrollViewerHeight)
-               myScrollViewerMap.Height = Properties.Settings.Default.ScrollViewerHeight;
-            if (0.0 != Properties.Settings.Default.ScrollViewerWidth)
-               myScrollViewerMap.Width = Properties.Settings.Default.ScrollViewerWidth;
+            //if (0.0 != Properties.Settings.Default.ScrollViewerHeight)
+            //   myScrollViewerMain.Height = Properties.Settings.Default.ScrollViewerHeight;
+            //if (0.0 != Properties.Settings.Default.ScrollViewerWidth)
+            //   myScrollViewerMain.Width = Properties.Settings.Default.ScrollViewerWidth;
          }
          catch (Exception ex)
          {

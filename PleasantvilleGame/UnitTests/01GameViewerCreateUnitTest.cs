@@ -21,7 +21,7 @@ namespace PleasantvilleGame
       private Canvas? myCanvasMain = null;
       private DockPanel? myDockPanelTop = null;
       private ScrollViewer? myScrollViewerCanvas = null;
-      private Canvas? myCanvasTank = null;
+      private Canvas? myCanvasHelper = null;
       private double myScrollingTime = 12.0;
       private readonly FontFamily myFontFam = new FontFamily("Tahoma");
       //--------------------------------------------------------------------
@@ -69,9 +69,9 @@ namespace PleasantvilleGame
          myDockPanelTop = dp; // top most dock panel that holds menu, statusbar, left dockpanel, and right dockpanel
          foreach (UIElement ui0 in dp.Children)
          {
-            if (ui0 is DockPanel dockPanelInside) // DockPanel showing main play area
+            if (ui0 is StackPanel stackPanelInside) // DockPanel showing main play area
             {
-               foreach (UIElement ui1 in dockPanelInside.Children)
+               foreach (UIElement ui1 in stackPanelInside.Children)
                {
                   if (ui1 is ScrollViewer)
                   {
@@ -84,7 +84,7 @@ namespace PleasantvilleGame
                      foreach (UIElement ui2 in dockPanelControl.Children)
                      {
                         if (ui2 is Canvas)
-                           myCanvasTank = (Canvas)ui2;
+                           myCanvasHelper = (Canvas)ui2;
                      }
                   }
                }
@@ -96,9 +96,9 @@ namespace PleasantvilleGame
             CtorError = true;
             return;
          }
-         if (null == myCanvasTank) // log error and return if canvas not found
+         if (null == myCanvasHelper) // log error and return if canvas not found
          {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerCreateUnitTest(): myCanvasTank=null");
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerCreateUnitTest(): myCanvasHelper=null");
             CtorError = true;
             return;
          }
@@ -126,9 +126,9 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Command(): myCanvas=null");
             return false;
          }
-         if (null == myCanvasTank)
+         if (null == myCanvasHelper)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Command(): myCanvasTank=null");
+            Logger.Log(LogEnum.LE_ERROR, "Command(): myCanvasHelper=null");
             return false;
          }
          if (null == myScrollViewerCanvas)
