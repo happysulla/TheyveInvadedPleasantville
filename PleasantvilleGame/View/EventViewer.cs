@@ -178,111 +178,111 @@ namespace PleasantvilleGame
             return;
          }
          gi.IsGridActive = true;
-         switch (action)
-         {
-            case GameAction.UnitTestCommand:
-            case GameAction.UnitTestNext:
-            case GameAction.UpdateGameOptions:
-               break;
-            case GameAction.ShowRuleListingDialog:
-               if (null == myDialogRuleListing)
-               {
-                  myDialogRuleListing = new RuleListingDialog(myRulesMgr, false, CloseRuleListingDialog);
-                  if (true == myDialogRuleListing.CtorError)
-                  {
-                     Logger.Log(LogEnum.LE_ERROR, "UpdateView(): RuleListingDialog CtorError=true");
-                     return;
-                  }
-                  myDialogRuleListing.Show();
-               }
-               else
-               {
-                  myDialogRuleListing.WindowState = WindowState.Normal;
-                  myDialogRuleListing.Activate();
-               }
-               break;
-            case GameAction.ShowEventListingDialog:
-               if (null == myDialogEventListing)
-               {
-                  myDialogEventListing = new RuleListingDialog(myRulesMgr, false, CloseEventListingDialog);
-                  if (true == myDialogEventListing.CtorError)
-                  {
-                     Logger.Log(LogEnum.LE_ERROR, "UpdateView(): myDialogEventListing CtorError=true");
-                     return;
-                  }
-                  myDialogEventListing.Show();
-               }
-               else
-               {
-                  myDialogEventListing.WindowState = WindowState.Normal;
-                  myDialogEventListing.Activate();
-               }
-               break;
-            case GameAction.ShowTableListing:
-               if (null == myDialogTableListing)
-               {
-                  myDialogTableListing = new TableListingDialog(myRulesMgr, CloseTableListingDialog);
-                  if (true == myDialogTableListing.CtorError)
-                  {
-                     Logger.Log(LogEnum.LE_ERROR, "UpdateView(): myDialogTableListing CtorError=true");
-                     return;
-                  }
-                  myDialogTableListing.Show();
-               }
-               else
-               {
-                  myDialogTableListing.WindowState = WindowState.Normal;
-                  myDialogTableListing.Activate();
-               }
-               break;
-            case GameAction.ShowReportErrorDialog:
-               if (null == myReportErrorDialog)
-               {
-                  myReportErrorDialog = new ShowReportErrorDialog(CloseReportErrorDialog);
-                  myReportErrorDialog.Show();
-               }
-               else
-               {
-                  myReportErrorDialog.WindowState = WindowState.Normal;
-                  myReportErrorDialog.Activate();
-               }
-               break;
-            case GameAction.ShowAboutDialog:
-               if (null == myDialogAbout)
-               {
-                  myDialogAbout = new ShowAboutDialog(CloseShowAboutDialog);
-                  if (true == myDialogAbout.CtorError)
-                  {
-                     Logger.Log(LogEnum.LE_ERROR, "UpdateView(): myDialogAbout CtorError=true");
-                     return;
-                  }
-                  myDialogAbout.Show();
-               }
-               else
-               {
-                  myDialogAbout.WindowState = WindowState.Normal;
-                  myDialogAbout.Activate();
-               }
-               break;
-            case GameAction.ShowGameFeatsDialog:
-               ShowFeatDisplayDialog dialogShowFeats = new ShowFeatDisplayDialog(myRulesMgr);
-               if (true == dialogShowFeats.CtorError)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): FeatDisplayDialog CtorError=true");
-                  return;
-               }
-               if (true == dialogShowFeats.ShowDialog())
-               {
-               }
-               break;
-            case GameAction.EndGameLost:
-            case GameAction.EndGameWin:
-            default:
-               gi.IsGridActive = false;
-               if (false == OpenEvent(gi, gi.EventActive))
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): OpenEvent() returned false ae=" + myGameInstance.EventActive + " a=" + action.ToString());
-               break;
-         }
+         //switch (action)
+         //{
+         //   case GameAction.UnitTestCommand:
+         //   case GameAction.UnitTestNext:
+         //   case GameAction.UpdateGameOptions:
+         //      break;
+         //   case GameAction.ShowRuleListingDialog:
+         //      if (null == myDialogRuleListing)
+         //      {
+         //         myDialogRuleListing = new RuleListingDialog(myRulesMgr, false, CloseRuleListingDialog);
+         //         if (true == myDialogRuleListing.CtorError)
+         //         {
+         //            Logger.Log(LogEnum.LE_ERROR, "UpdateView(): RuleListingDialog CtorError=true");
+         //            return;
+         //         }
+         //         myDialogRuleListing.Show();
+         //      }
+         //      else
+         //      {
+         //         myDialogRuleListing.WindowState = WindowState.Normal;
+         //         myDialogRuleListing.Activate();
+         //      }
+         //      break;
+         //   case GameAction.ShowEventListingDialog:
+         //      if (null == myDialogEventListing)
+         //      {
+         //         myDialogEventListing = new RuleListingDialog(myRulesMgr, false, CloseEventListingDialog);
+         //         if (true == myDialogEventListing.CtorError)
+         //         {
+         //            Logger.Log(LogEnum.LE_ERROR, "UpdateView(): myDialogEventListing CtorError=true");
+         //            return;
+         //         }
+         //         myDialogEventListing.Show();
+         //      }
+         //      else
+         //      {
+         //         myDialogEventListing.WindowState = WindowState.Normal;
+         //         myDialogEventListing.Activate();
+         //      }
+         //      break;
+         //   case GameAction.ShowTableListing:
+         //      if (null == myDialogTableListing)
+         //      {
+         //         myDialogTableListing = new TableListingDialog(myRulesMgr, CloseTableListingDialog);
+         //         if (true == myDialogTableListing.CtorError)
+         //         {
+         //            Logger.Log(LogEnum.LE_ERROR, "UpdateView(): myDialogTableListing CtorError=true");
+         //            return;
+         //         }
+         //         myDialogTableListing.Show();
+         //      }
+         //      else
+         //      {
+         //         myDialogTableListing.WindowState = WindowState.Normal;
+         //         myDialogTableListing.Activate();
+         //      }
+         //      break;
+         //   case GameAction.ShowReportErrorDialog:
+         //      if (null == myReportErrorDialog)
+         //      {
+         //         myReportErrorDialog = new ShowReportErrorDialog(CloseReportErrorDialog);
+         //         myReportErrorDialog.Show();
+         //      }
+         //      else
+         //      {
+         //         myReportErrorDialog.WindowState = WindowState.Normal;
+         //         myReportErrorDialog.Activate();
+         //      }
+         //      break;
+         //   case GameAction.ShowAboutDialog:
+         //      if (null == myDialogAbout)
+         //      {
+         //         myDialogAbout = new ShowAboutDialog(CloseShowAboutDialog);
+         //         if (true == myDialogAbout.CtorError)
+         //         {
+         //            Logger.Log(LogEnum.LE_ERROR, "UpdateView(): myDialogAbout CtorError=true");
+         //            return;
+         //         }
+         //         myDialogAbout.Show();
+         //      }
+         //      else
+         //      {
+         //         myDialogAbout.WindowState = WindowState.Normal;
+         //         myDialogAbout.Activate();
+         //      }
+         //      break;
+         //   case GameAction.ShowGameFeatsDialog:
+         //      ShowFeatDisplayDialog dialogShowFeats = new ShowFeatDisplayDialog(myRulesMgr);
+         //      if (true == dialogShowFeats.CtorError)
+         //      {
+         //         Logger.Log(LogEnum.LE_ERROR, "UpdateView(): FeatDisplayDialog CtorError=true");
+         //         return;
+         //      }
+         //      if (true == dialogShowFeats.ShowDialog())
+         //      {
+         //      }
+         //      break;
+         //   case GameAction.EndGameLost:
+         //   case GameAction.EndGameWin:
+         //   default:
+         //      gi.IsGridActive = false;
+         //      if (false == OpenEvent(gi, gi.EventActive))
+         //         Logger.Log(LogEnum.LE_ERROR, "UpdateView(): OpenEvent() returned false ae=" + myGameInstance.EventActive + " a=" + action.ToString());
+         //      break;
+         //}
       }
       public bool OpenEvent(IGameInstance gi, string key)
       {

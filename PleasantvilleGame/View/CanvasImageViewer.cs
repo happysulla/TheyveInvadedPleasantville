@@ -97,36 +97,36 @@ namespace PleasantvilleGame
          }
       }
       //-------------------------------------------------
-      public void CleanCanvas(Canvas c)
-      {
-         List<UIElement> elements = new List<UIElement>();
-         foreach (UIElement ui in c.Children)
-         {
-            if (ui is Polygon polygon)
-               elements.Add(ui);
-            if (ui is Polyline polyline)
-               elements.Add(ui);
-            if (ui is Rectangle rectangle)
-                 elements.Add(ui);
-            if (ui is Ellipse ellipse)
-            {
-               if ("CenterPoint" != ellipse.Name) // CenterPoint is a unit test ellipse
-                  elements.Add(ui);
-            }
-            if (ui is System.Windows.Controls.Label label)  // A Game Feat Label
-               elements.Add(ui);
-            if (ui is Image img)
-            {
-               if (true == img.Name.Contains("Die"))
-                  continue;
-               elements.Add(ui);
-            }
-            if (ui is TextBlock tb)
-               elements.Add(ui);
-         }
-         foreach (UIElement ui1 in elements)
-            c.Children.Remove(ui1);
-      }
+      //public void CleanCanvas(Canvas c)
+      //{
+      //   List<UIElement> elements = new List<UIElement>();
+      //   foreach (UIElement ui in c.Children)
+      //   {
+      //      if (ui is Polygon polygon)
+      //         elements.Add(ui);
+      //      if (ui is Polyline polyline)
+      //         elements.Add(ui);
+      //      if (ui is Rectangle rectangle)
+      //           elements.Add(ui);
+      //      if (ui is Ellipse ellipse)
+      //      {
+      //         if ("CenterPoint" != ellipse.Name) // CenterPoint is a unit test ellipse
+      //            elements.Add(ui);
+      //      }
+      //      if (ui is System.Windows.Controls.Label label)  // A Game Feat Label
+      //         elements.Add(ui);
+      //      if (ui is Image img)
+      //      {
+      //         if (true == img.Name.Contains("Die"))
+      //            continue;
+      //         elements.Add(ui);
+      //      }
+      //      if (ui is TextBlock tb)
+      //         elements.Add(ui);
+      //   }
+      //   foreach (UIElement ui1 in elements)
+      //      c.Children.Remove(ui1);
+      //}
       public void ShowEndGameSuccess(Canvas c)
       {
          c.LayoutTransform = new ScaleTransform(1.0, 1.0);
@@ -161,10 +161,10 @@ namespace PleasantvilleGame
       }
       private void ShowGameMap(Canvas c)
       {
-         //double width = Math.Min(c.Width, c.Height*0.86);
-         //Image img = new Image() { Name = "CanvasMain", Width = c.ActualWidth, Height = c.ActualHeight, , Stretch = Stretch.Fill, Source = MapItem.theMapImages.GetBitmapImage("PleasantvilleMap") };
-         //Canvas.SetLeft(img, 0);
-         //Canvas.SetTop(img,0);
+         Image img = new Image() { Name = "CanvasMain", Width = c.ActualWidth, Height = c.ActualHeight, Stretch = Stretch.Fill, Source = MapItem.theMapImages.GetBitmapImage("PleasantvilleMap") };
+         c.Children.Add(img);
+         Canvas.SetLeft(img, 0);
+         Canvas.SetTop(img, 0);
       }
    }
 }

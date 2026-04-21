@@ -25,7 +25,7 @@
         <StatusBar x:Name="myStatusBar" DockPanel.Dock="Bottom"></StatusBar>
         <StackPanel Name="myStockPanelInside" Orientation="Horizontal" >
             <DockPanel Name="myDockPanelControls" MinWidth="500"  MaxWidth="500" DockPanel.Dock="Left" Margin="0,0,0,0">
-                <Canvas Name="myCanvasHelper" DockPanel.Dock="Top" MinWidth="500"  MinHeight="200" >
+                <Canvas Name="myCanvasHelper" DockPanel.Dock="Top" MinWidth="500"  MinHeight="200"  MaxWidth="500" MaxHeight="200">
                     <Button Content="OK" Name="myButtonOk" Click="myButtonOk_Click" Margin="249,145,0,460" HorizontalAlignment="Left" Width="71" Canvas.Top="6" Canvas.Left="22" />
                     <Button Content="Ignore" Height="23" HorizontalAlignment="Left" Margin="129,144,0,0" Name="myButtonIgnore" VerticalAlignment="Top" Width="75" Canvas.Top="6" Canvas.Left="22" Click="myButtonIgnoreClick" />
                     <Button Content="Button" Height="50" Name="myButton1" Width="50" Background="#FFFFD500" Click="myButton1_Click" Canvas.Left="30" Canvas.Top="60" />
@@ -57,14 +57,14 @@
                     <TextBlock Name="myTextBlockDisplay" MinWidth="473" MaxWidth="473"  FontFamily="Georgia" FontSize="24" TextWrapping="WrapWithOverflow" IsHyphenationEnabled="true" LineStackingStrategy="BlockLineHeight"  Margin="5,5,5,5"/>
                 </ScrollViewer>
             </DockPanel>
-            <ScrollViewer Name="myScrollViewerMain" Width="857" Height="955" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  >
-                <Canvas Name="myCanvasMain" MinWidth="830" MaxWidth="830" MinHeight="955" MaxHeight="955" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FFDC0E0E" >
-                    <TextBlock Name="myTextBlockComm" FontFamily="Georgia" FontSize="24" TextWrapping="WrapWithOverflow" IsHyphenationEnabled="true" LineStackingStrategy="BlockLineHeight" >
+            <ScrollViewer Name="myScrollViewerMain" Width="857" Height="955"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="10,0,0,0"  >
+                <Canvas Name="myCanvasMain" MinWidth="830" MaxWidth="830" MinHeight="955" MaxHeight="955" Background="#FF86DC0E" >
+                    <TextBlock Name="myTextBlockComm" FontFamily="Georgia" FontSize="24" TextWrapping="WrapWithOverflow" IsHyphenationEnabled="true" LineStackingStrategy="BlockLineHeight" Background="#FFB8B90A" VerticalAlignment="Center" HorizontalAlignment="Center" >
                         Hello Where Am I
                     </TextBlock>
                 </Canvas>
             </ScrollViewer>
-            <ScrollViewer Name="myScrollViewerComm1" MinWidth="520" MaxWidth="520" MinHeight="955" MaxHeight="955"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  >
+            <ScrollViewer Name="myScrollViewerComm1" MinWidth="520" MaxWidth="520" MinHeight="955" MaxHeight="955"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="10,0,0,0"  >
                 <Canvas Name="myCanvasComm1" MinWidth="500" MaxWidth="500" MinHeight="955" MaxHeight="955" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FFDC0E0E" >
                     <TextBlock Name="myTextBlockComm1" FontFamily="Georgia" FontSize="24" TextWrapping="WrapWithOverflow" IsHyphenationEnabled="true" LineStackingStrategy="BlockLineHeight" >
                         Hello Where Am I
