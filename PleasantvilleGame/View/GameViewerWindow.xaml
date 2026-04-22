@@ -57,7 +57,7 @@
                     <TextBlock Name="myTextBlockDisplay" MinWidth="473" MaxWidth="473"  FontFamily="Georgia" FontSize="24" TextWrapping="WrapWithOverflow" IsHyphenationEnabled="true" LineStackingStrategy="BlockLineHeight"  Margin="5,5,5,5"/>
                 </ScrollViewer>
             </DockPanel>
-            <ScrollViewer Name="myScrollViewerMain" Width="857" Height="955"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="10,0,0,0"  >
+            <ScrollViewer Name="myScrollViewerMain" Width="857" Height="967"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="10,0,0,0"  >
                 <Canvas Name="myCanvasMain" MinWidth="830" MaxWidth="830" MinHeight="950" MaxHeight="950" Background="#FF86DC0E" >
                     <TextBlock Name="myTextBlockComm" FontFamily="Georgia" FontSize="24" TextWrapping="WrapWithOverflow" IsHyphenationEnabled="true" LineStackingStrategy="BlockLineHeight" Background="#FFB8B90A" VerticalAlignment="Center" HorizontalAlignment="Center" >
                         Hello Where Am I
