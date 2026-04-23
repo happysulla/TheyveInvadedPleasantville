@@ -355,12 +355,6 @@ namespace PleasantvilleGame
          //myRectangleSelection.Visibility = Visibility.Hidden;
          //myCanvasMain.Children.Add(myRectangleSelection);
          //Canvas.SetZIndex(myRectangleSelection, 1000);
-         ////if (false == UpdateCanvasMain(gi, action))// Update the canvas based on data in the GameInstance
-         ////{
-         ////   Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): Update_CanvasMain() returned false");
-         ////   CtorError = true;
-         ////   return;
-         ////}
          //ClearActionPanel();
          //----------------------------------------------------------
          ge.RegisterForUpdates(civ); // Implement the Model View Controller (MVC) pattern by registering views with  the game engine such that when the model data is changed, the views are updated.
