@@ -364,13 +364,13 @@ namespace PleasantvilleGame
          ge.RegisterForUpdates(this);
          Logger.Log(LogEnum.LE_GAME_INIT, "GameViewerWindow(): \nzoomCanvas=" + Properties.Settings.Default.ZoomCanvas.ToString() + "\nwp=" + Properties.Settings.Default.WindowPlacement + "\noptions=" + Properties.Settings.Default.GameOptions);
 #if UT1
-         //if (false == ge.CreateUnitTests(gi, myDockPanelTop, this, myEventViewer, myDieRoller, civ))
-         //{
-         //   Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): Create_UnitTests() returned false");
-         //   CtorError = true;
-         //   return;
-         //}
-         //gi.GamePhase = GamePhase.UnitTest;
+         if (false == ge.CreateUnitTests(gi, myDockPanelTop, this, myEventViewer, myDieRoller, civ))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): Create_UnitTests() returned false");
+            CtorError = true;
+            return;
+         }
+         gi.GamePhase = GamePhase.UnitTest;
 #endif
       }
       //-----------------------SUPPORTING FUNCTIONS--------------------

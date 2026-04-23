@@ -69,9 +69,9 @@ namespace PleasantvilleGame
          myDockPanelTop = dp; // top most dock panel that holds menu, statusbar, left dockpanel, and right dockpanel
          foreach (UIElement ui0 in dp.Children)
          {
-            if (ui0 is StackPanel stackPanelInside) // DockPanel showing main play area
+            if (ui0 is DockPanel dockPanelInside) // DockPanel showing main play area
             {
-               foreach (UIElement ui1 in stackPanelInside.Children)
+               foreach (UIElement ui1 in dockPanelInside.Children)
                {
                   if (ui1 is ScrollViewer)
                   {
@@ -92,7 +92,7 @@ namespace PleasantvilleGame
          }
          if (null == myCanvasMain) // log error and return if canvas not found
          {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerCreateUnitTest(): myCanvas=null");
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerCreateUnitTest(): myCanvasMain=null");
             CtorError = true;
             return;
          }
@@ -147,23 +147,28 @@ namespace PleasantvilleGame
             }
             dialog.Show();
          }
+         //-----------------------------------------------------
          else if (CommandName == myCommandNames[1])
          {
             CreateMarquee(myCanvasMain);
          }
+         //-----------------------------------------------------
          else if (CommandName == myCommandNames[2])
          {
             IMapPoint mp = GetCanvasCenter(myScrollViewerCanvas, myCanvasMain);
             CreateEllipse(mp.X, mp.Y); // Add new elipses
          }
+         //-----------------------------------------------------
          else if (CommandName == myCommandNames[3])
          {
             myCanvasImageViewer.ShowEndGameFail(myCanvasMain);
          }
+         //-----------------------------------------------------
          else if (CommandName == myCommandNames[4])
          {
             myCanvasImageViewer.ShowEndGameSuccess(myCanvasMain);
          }
+         //-----------------------------------------------------
          else if (CommandName == myCommandNames[5])
          {
             if (false == Cleanup(ref gi))
@@ -302,14 +307,18 @@ namespace PleasantvilleGame
          {
             if (ui is Polygon polygon)
                elements.Add(ui);
-            if (ui is Polyline polyline)
+            else if (ui is Polyline polyline)
                elements.Add(ui);
-            if (ui is Ellipse ellipse)
+            else if (ui is Ellipse ellipse)
                elements.Add(ui);
-            if (ui is Image img)
+            else if (ui is TextBlock tb)
                elements.Add(ui);
-            if (ui is TextBlock tb)
+            else if (ui is Image img)
+            {
+               if (true == img.Name.Contains("Canvas"))
+                  continue;
                elements.Add(ui);
+            }
          }
          foreach (UIElement ui1 in elements)
             canvas.Children.Remove(ui1);
