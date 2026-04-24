@@ -228,24 +228,23 @@ namespace PleasantvilleGame
          List<UIElement> elements = new List<UIElement>();
          foreach (UIElement ui in myCanvasMain.Children)
          {
-            if (ui is Polygon polygon)
-               elements.Add(ui);
-            if (ui is Polyline polyline)
-               elements.Add(ui);
-            if (ui is Ellipse ellipse)
-               elements.Add(ui);
             if (ui is Image img)
+            {
+               if (true == img.Name.Contains("Canvas"))
+                  continue;
                elements.Add(ui);
-            if (ui is TextBlock tb)
+            }
+            else if (ui is Polygon polygon)
+               elements.Add(ui);
+            else if(ui is Polyline polyline)
+               elements.Add(ui);
+            else if(ui is Ellipse ellipse)
+               elements.Add(ui);
+            else if(ui is TextBlock tb)
                elements.Add(ui);
          }
          foreach (UIElement ui1 in elements)
             myCanvasMain.Children.Remove(ui1);
-         //--------------------------------------------------
-         Image imageMap = new Image() { Name = "Map", Width = 1115, Height = 880, Stretch = Stretch.Fill, Source = MapItem.theMapImages.GetBitmapImage("MapMovement") };
-         myCanvasMain.Children.Add(imageMap);
-         Canvas.SetLeft(imageMap, 0);
-         Canvas.SetTop(imageMap, 0);
          //--------------------------------------------------
          ++gi.GameTurn;
          return true;

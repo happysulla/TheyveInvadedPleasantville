@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Intrinsics.Arm;
 using System.Text;
@@ -19,8 +20,8 @@ namespace PleasantvilleGame
       //--------------------------------------------------------------------
       private DockPanel? myDockPanelTop = null;
       private ScrollViewer? myScrollViewerCanvas = null;
-      private Canvas? myCanvasMap = null;
-      private Canvas? myCanvasTank = null;
+      private Canvas? myCanvasMain = null;
+      private Canvas? myCanvasHelper = null;
       //private IGameInstance? myGameInstanceSave = null;
       //private IGameInstance? myGameInstanceLoad = null;
       //--------------------------------------------------------------------
@@ -55,28 +56,30 @@ namespace PleasantvilleGame
                   {
                      myScrollViewerCanvas = (ScrollViewer)ui1;
                      if (myScrollViewerCanvas.Content is Canvas)
-                        myCanvasMap = (Canvas)myScrollViewerCanvas.Content;  // Find the Canvas in the visual tree
+                        myCanvasMain = (Canvas)myScrollViewerCanvas.Content;  // Find the Canvas in the visual tree
                   }
                   if (ui1 is DockPanel dockPanelControl) // DockPanel that holds the Map Image
                   {
                      foreach (UIElement ui2 in dockPanelControl.Children)
                      {
                         if (ui2 is Canvas)
-                           myCanvasTank = (Canvas)ui2;
+                        {
+                           myCanvasHelper = (Canvas)ui2;
+                        }
                      }
                   }
                }
             }
          }
-         if (null == myCanvasMap) // log error and return if canvas not found
+         if (null == myCanvasMain) // log error and return if canvas not found
          {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerCreateUnitTest(): myCanvas=null");
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerCreateUnitTest(): myCanvasMain=null");
             CtorError = true;
             return;
          }
-         if (null == myCanvasTank) // log error and return if canvas not found
+         if (null == myCanvasHelper) // log error and return if canvas not found
          {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerCreateUnitTest(): myCanvasTank=null");
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerCreateUnitTest(): myCanvasHelper=null");
             CtorError = true;
             return;
          }
@@ -89,12 +92,12 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Command(): myDockPanelTop=null");
             return false;
          }
-         if (null == myCanvasMap)
+         if (null == myCanvasMain)
          {
             Logger.Log(LogEnum.LE_ERROR, "Command(): myCanvas=null");
             return false;
          }
-         if (null == myCanvasTank)
+         if (null == myCanvasHelper)
          {
             Logger.Log(LogEnum.LE_ERROR, "Command(): myCanvasTank=null");
             return false;
@@ -125,7 +128,7 @@ namespace PleasantvilleGame
       }
       public bool NextTest(ref IGameInstance gi) // Move to the next test in this class's unit tests
       {
-         if (null == myCanvasMap)
+         if (null == myCanvasMain)
          {
             Logger.Log(LogEnum.LE_ERROR, "NextTest(): myCanvas=null");
             return false;
@@ -154,7 +157,7 @@ namespace PleasantvilleGame
       }
       public bool Cleanup(ref IGameInstance gi) // Remove an elipses from the canvas and save off Territories.xml file
       {
-         if (null == myCanvasMap)
+         if (null == myCanvasMain)
          {
             Logger.Log(LogEnum.LE_ERROR, "Cleanup(): myCanvas=null");
             return false;
@@ -162,31 +165,29 @@ namespace PleasantvilleGame
          //--------------------------------------------------
          // Remove any existing UI elements from the Canvas
          List<UIElement> elements = new List<UIElement>();
-         foreach (UIElement ui in myCanvasMap.Children)
+         foreach (UIElement ui in myCanvasMain.Children)
          {
-            if (ui is Polygon polygon)
-               elements.Add(ui);
-            if (ui is Polyline polyline)
-               elements.Add(ui);
-            if (ui is Ellipse ellipse)
-               elements.Add(ui);
             if (ui is Image img)
+            {
+               if (true == img.Name.Contains("Canvas"))
+                  continue;
                elements.Add(ui);
-            if (ui is TextBlock tb)
+            }
+            else if (ui is Polygon polygon)
+               elements.Add(ui);
+            else if (ui is Polyline polyline)
+               elements.Add(ui);
+            else if (ui is Ellipse ellipse)
+               elements.Add(ui);
+            else if (ui is TextBlock tb)
                elements.Add(ui);
          }
          foreach (UIElement ui1 in elements)
-            myCanvasMap.Children.Remove(ui1);
-         //--------------------------------------------------
-         Image imageMap = new Image() { Name = "Map", Width = 1115, Height = 880, Stretch = Stretch.Fill, Source = MapItem.theMapImages.GetBitmapImage("MapMovement") };
-         myCanvasMap.Children.Add(imageMap);
-         Canvas.SetLeft(imageMap, 0);
-         Canvas.SetTop(imageMap, 0);
+            myCanvasMain.Children.Remove(ui1);
          //--------------------------------------------------
          ++gi.GameTurn; // moves to next unit test
          return true;
       }
       //--------------------------------------------------------------------
-
    }
 }

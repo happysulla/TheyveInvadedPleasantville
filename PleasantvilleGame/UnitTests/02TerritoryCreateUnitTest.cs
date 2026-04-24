@@ -25,7 +25,8 @@ namespace PleasantvilleGame
       //-----------------------------------------
       private string? myFileName = null;
       private DockPanel myDockPanelTop;
-      private Canvas? myCanvas = null;
+      private Canvas? myCanvasMain = null;
+      private Canvas? myCanvasHelper = null;
       private IGameInstance? myGameInstance = null;
       private CanvasImageViewer? myCanvasImageViewer = null;
       private UIElement? myEllipseSelected = null;
@@ -41,12 +42,11 @@ namespace PleasantvilleGame
       private List<string> myCommandNames = new List<string>();
       public string HeaderName { get { return myHeaderNames[myIndexName]; } }
       public string CommandName { get { return myCommandNames[myIndexName]; } }
+      //-----------------------------------------
       public TerritoryCreateUnitTest(DockPanel dp, IGameInstance gi, CanvasImageViewer civ)
       {
          myIndexName = 0;
          myHeaderNames.Add("02-Delete File");
-         myHeaderNames.Add("02-Switch Main Canvas");
-         myHeaderNames.Add("02-Switch Tank");
          myHeaderNames.Add("02-Delete Territory");
          myHeaderNames.Add("02-New Territories");
          myHeaderNames.Add("02-Set CenterPoints");
@@ -57,16 +57,12 @@ namespace PleasantvilleGame
          myHeaderNames.Add("02-Final");
          //------------------------------------
          myCommandNames.Add("00-Delete File");
-         myCommandNames.Add("01-Switch Main Image");
-         myCommandNames.Add("02-Change Tank Mat");
-         myCommandNames.Add("03-Delete Territory");
-         myCommandNames.Add("04-Click Canvas to Add");
-         myCommandNames.Add("05-Click Elispse to Move");
-         myCommandNames.Add("06-Click Ellispe to Verify");
-         myCommandNames.Add("07-Verify Adjacents");
-         myCommandNames.Add("08-Verify Paved");
-         myCommandNames.Add("09-Verify Unpaved");
-         myCommandNames.Add("10-Cleanup");
+         myCommandNames.Add("01-Delete Territory");
+         myCommandNames.Add("02-Click Canvas to Add");
+         myCommandNames.Add("03-Click Elispse to Move");
+         myCommandNames.Add("04-Click Ellispe to Verify");
+         myCommandNames.Add("05-Verify Adjacents");
+         myCommandNames.Add("06-Cleanup");
          //------------------------------------
          myDockPanelTop = dp;
          //------------------------------------
@@ -86,23 +82,38 @@ namespace PleasantvilleGame
          }
          myCanvasImageViewer = civ;
          //------------------------------------
-         foreach (UIElement ui0 in myDockPanelTop.Children)
+         foreach (UIElement ui0 in dp.Children)
          {
-            if (ui0 is StackPanel stackPanelInside) // DockPanel showing main play area
+            if (ui0 is DockPanel dockPanelInside) // DockPanel showing main play area
             {
-               foreach (UIElement ui1 in stackPanelInside.Children)
+               foreach (UIElement ui1 in dockPanelInside.Children)
                {
                   if (ui1 is ScrollViewer)
                   {
+                     ScrollViewer sv = (ScrollViewer)ui1;
+                     if (sv.Content is Canvas)
+                        myCanvasMain = (Canvas)sv.Content;  // Find the Canvas in the visual tree
                   }
                   if (ui1 is DockPanel dockPanelControl) // DockPanel that holds the Map Image
                   {
                      foreach (UIElement ui2 in dockPanelControl.Children)
                      {
+                        if (ui2 is Canvas)
+                           myCanvasHelper = (Canvas)ui2;
                      }
                   }
                }
             }
+         }
+         if (null == myCanvasMain) // log error and return if canvas not found
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerCreateUnitTest(): myCanvasMain=null");
+            CtorError = true;
+         }
+         if (null == myCanvasHelper) // log error and return if canvas not found
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerCreateUnitTest(): myCanvasHelper=null");
+            CtorError = true;
          }
          //----------------------------------
          if ( false == SetFileName())
@@ -140,62 +151,29 @@ namespace PleasantvilleGame
                return false;
             }
          }
-         else if (CommandName == myCommandNames[1])  // Switch Main Image
-         {
-            if( false == DeleteEllipses() )
-            {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): DeleteEllipses() returned false");
-               return false;
-            }
-            if( false == CreateEllipses() )
-            {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipses() returned false");
-               return false;
-            }
-         }
-         else if (CommandName == myCommandNames[2])  // Switch Tank Mat
-         {
-            if (false == DeleteEllipses())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): DeleteEllipses() returned false");
-               return false;
-            }
-            //-------------------------------------
-            if (false == CreateEllipses())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipses() returned false");
-               return false;
-            }
-         }
-         else if (CommandName == myCommandNames[3])  // Delete Territory
+         else if (CommandName == myCommandNames[1])  // Delete Territory
          {
 
          }
-         else if (CommandName == myCommandNames[4])  // New Territory
+         else if (CommandName == myCommandNames[2])  // New Territory
          {
 
          }
-         else if (CommandName == myCommandNames[5]) // Move territories
+         else if (CommandName == myCommandNames[3]) // Move territories
          {
 
          }
-         else if (CommandName == myCommandNames[6]) // verify territories
+         else if (CommandName == myCommandNames[4]) // verify territories
          {
 
          }
-         else if (CommandName == myCommandNames[7]) // set adjacents
+         else if (CommandName == myCommandNames[5]) // set adjacents
          {
             if (false == ShowAdjacents(Territories.theTerritories))
             {
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): ShowAdjacents() returned false");
                return false;
             }
-         }
-         else if (CommandName == myCommandNames[8]) // set paved
-         {
-         }
-         else if (CommandName == myCommandNames[9]) // set unpaved
-         {
          }
          else 
          {
@@ -214,52 +192,53 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "NextTest(): myGameInstance=null");
             return false;
          }
+         if (null == myCanvasMain)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Command(): myCanvasMain=null");
+            return false;
+         }
          //---------------------------------
          if (HeaderName == myHeaderNames[0])
          {
+            ++myIndexName;
+            myCanvasMain.MouseLeftButtonDown += this.MouseLeftButtonDownDeleteTerritory;
             if (false == CreateEllipses())
             {
                Logger.Log(LogEnum.LE_ERROR, "NextTest(): CreateEllipses() returned false");
                return false;
             }
          }
-         else if (HeaderName == myHeaderNames[1]) // Switch Main Canvas Image
+         else if (HeaderName == myHeaderNames[1])  // Click to Add
          {
             ++myIndexName;
+            myCanvasMain.MouseLeftButtonDown -= this.MouseLeftButtonDownDeleteTerritory;
+            myCanvasMain.MouseLeftButtonDown += this.MouseLeftButtonDownCreateTerritory;
          }
-         else if (HeaderName == myHeaderNames[2]) // Switch Tank Mat
+         else if (HeaderName == myHeaderNames[2])  // Click Elispse to Move
          {
             ++myIndexName;
+            myCanvasMain.MouseLeftButtonDown -= this.MouseLeftButtonDownCreateTerritory;
+            myCanvasMain.MouseLeftButtonDown += this.MouseDownEllipseSetCenterPoint;
          }
-         else if (HeaderName == myHeaderNames[3]) // Click to Add
+         else if (HeaderName == myHeaderNames[3]) // Click Elispse to Verify
          {
             ++myIndexName;
+            myCanvasMain.MouseLeftButtonDown -= this.MouseDownEllipseSetCenterPoint;
+            myCanvasMain.MouseLeftButtonDown += this.MouseDownEllipseVerify;
          }
-         else if (HeaderName == myHeaderNames[4]) // Click Elispse to Move
+         else if (HeaderName == myHeaderNames[4]) // Click Ellispe to Set Adjacents
          {
             ++myIndexName;
+            myCanvasMain.MouseLeftButtonDown -= this.MouseDownEllipseVerify;
+            myCanvasMain.MouseLeftButtonDown += this.MouseLeftButtonDownSetAdjacents;
          }
-         else if (HeaderName == myHeaderNames[5]) // Click Elispse to Verify
-         {
-            myAnchorTerritory = null;
-            ++myIndexName;
-         }
-         else if (HeaderName == myHeaderNames[6]) // Click Ellispe to Set Adjacents
-         {
-            myAnchorTerritory = null;
-            ++myIndexName;
-         }
-         else if (HeaderName == myHeaderNames[7]) // Click Ellispe to Set PavedRoads
+         else if (HeaderName == myHeaderNames[5]) // Click Ellispe to Set Adjacents
          {
             myAnchorTerritory = null;
             ++myIndexName;
+            myCanvasMain.MouseLeftButtonDown -= this.MouseLeftButtonDownSetAdjacents;
          }
-         else if (HeaderName == myHeaderNames[8]) // Click Ellispe to Set UnpavedRoads
-         {
-            myAnchorTerritory = null;
-            ++myIndexName;
-         }
-         else  // Verify Adjacents
+         else  
          {
             if (false == Cleanup(ref gi))
             {
@@ -360,6 +339,11 @@ namespace PleasantvilleGame
       }
       private bool CreateEllipse(ITerritory territory, IMapPoint mp)
       {
+         if( null == myCanvasMain)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateEllipse(): myCanvasMain=null");
+            return false;
+         }
          SolidColorBrush aSolidColorBrush1 = new SolidColorBrush{ Color = Colors.Black };
          Ellipse aEllipse = new Ellipse
          {
@@ -373,6 +357,7 @@ namespace PleasantvilleGame
          System.Windows.Point p = new System.Windows.Point(territory.CenterPoint.X, territory.CenterPoint.Y);
          p.X -= theEllipseOffset;
          p.Y -= theEllipseOffset;
+         myCanvasMain.Children.Add(aEllipse);
          Canvas.SetLeft(aEllipse, mp.X);
          Canvas.SetTop(aEllipse, mp.Y);
          myEllipses.Add(aEllipse);
@@ -468,15 +453,15 @@ namespace PleasantvilleGame
       //--------------------------------------------------------------------
       void MouseLeftButtonDownDeleteTerritory(object sender, MouseButtonEventArgs e)
       {
-         if( null == myCanvas )
+         if( null == myCanvasMain )
          {
-            Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownDeleteTerritory(): myCanvas=null");
+            Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownDeleteTerritory(): myCanvasMain=null");
             return;
          }
-         System.Windows.Point p = e.GetPosition(myCanvas);
+         System.Windows.Point p = e.GetPosition(myCanvasMain);
          //--------------------------------------------
          Ellipse? selectedEllipse = null;
-         foreach (UIElement ui in myCanvas.Children)
+         foreach (UIElement ui in myCanvasMain.Children)
          {
             if (ui is Ellipse)
             {
@@ -490,7 +475,7 @@ namespace PleasantvilleGame
          }
          if( null == selectedEllipse)
          {
-            foreach (UIElement ui in myCanvas.Children)
+            foreach (UIElement ui in myCanvasMain.Children)
             {
                if (ui is Ellipse)
                {
@@ -517,12 +502,12 @@ namespace PleasantvilleGame
          Territories.theTerritories.Remove(t);
          System.Windows.MessageBox.Show(selectedEllipse.Name);
          myEllipses.Remove(selectedEllipse);
-         myCanvas.Children.Remove(selectedEllipse);
+         myCanvasMain.Children.Remove(selectedEllipse);
       }
       void MouseLeftButtonDownCreateTerritory(object sender, MouseButtonEventArgs e)
       {
-         System.Windows.Point p = e.GetPosition(myCanvas);
-         TerritoryCreateDialog dialog = new TerritoryCreateDialog(myCanvas); // Get the name from user
+         System.Windows.Point p = e.GetPosition(myCanvasMain);
+         TerritoryCreateDialog dialog = new TerritoryCreateDialog(myCanvasMain); // Get the name from user
          dialog.myTextBoxName.Focus();
          if (true == dialog.ShowDialog())
          {
@@ -531,8 +516,6 @@ namespace PleasantvilleGame
             territory.CanvasName = TerritoryCreateDialog.theParentChecked;
             if( "Main" == territory.CanvasName)
                territory.Type = TerritoryCreateDialog.theTypeChecked;
-            else
-               territory.Type = TerritoryCreateDialog.theCardChecked;
             Territories.theTerritories.Add(territory);
             if ( false == CreateEllipse(territory, territory.CenterPoint))
             {
@@ -543,14 +526,14 @@ namespace PleasantvilleGame
       }
       void MouseDownEllipseSetCenterPoint(object sender, MouseButtonEventArgs e)
       {
-         if (null == myCanvas)
+         if (null == myCanvasMain)
          {
-            Logger.Log(LogEnum.LE_ERROR, "MouseDownEllipseSetCenterPoint(): myCanvas=null");
+            Logger.Log(LogEnum.LE_ERROR, "MouseDownEllipseSetCenterPoint(): myCanvasMain=null");
             return;
          }
-         System.Windows.Point p = e.GetPosition(myCanvas);
+         System.Windows.Point p = e.GetPosition(myCanvasMain);
          Console.WriteLine("TerritoryUnitTest.MouseDown(): {0}", p.ToString());
-         foreach (UIElement ui in myCanvas.Children)
+         foreach (UIElement ui in myCanvasMain.Children)
          {
             if (ui is Ellipse)
             {
@@ -567,7 +550,7 @@ namespace PleasantvilleGame
                }
             }
          }
-         foreach (UIElement ui in myCanvas.Children)
+         foreach (UIElement ui in myCanvasMain.Children)
          {
             if (ui is Ellipse)
             {
@@ -590,16 +573,7 @@ namespace PleasantvilleGame
          {
             if (null != myEllipseSelected)
             {
-               System.Windows.Point newPoint = e.GetPosition(myCanvas);
-               Canvas.SetTop(myEllipseSelected, newPoint.Y - theEllipseOffset);
-               Canvas.SetLeft(myEllipseSelected, newPoint.X - theEllipseOffset);
-            }
-         }
-         else if (true == myIsDraggingMapItem)
-         {
-            if (null != myEllipseSelected)
-            {
-               System.Windows.Point newPoint = e.GetPosition(myCanvas);
+               System.Windows.Point newPoint = e.GetPosition(myCanvasMain);
                Canvas.SetTop(myEllipseSelected, newPoint.Y - theEllipseOffset);
                Canvas.SetLeft(myEllipseSelected, newPoint.X - theEllipseOffset);
             }
@@ -609,10 +583,7 @@ namespace PleasantvilleGame
       {
          System.Windows.Point newPoint = new Point();
          if( true == myIsDraggingMapItem)
-            newPoint = e.GetPosition(myCanvas);
-         else
-            newPoint = e.GetPosition(myCanvas);
-         this.myIsDraggingMapItem = false;
+            newPoint = e.GetPosition(myCanvasMain);
          this.myIsDraggingMapItem = false;
          if (null != this.myEllipseSelected)
          {
@@ -653,12 +624,12 @@ namespace PleasantvilleGame
       }
       void MouseDownEllipseVerify(object sender, MouseButtonEventArgs e)
       {
-         if (null == myCanvas)
+         if (null == myCanvasMain)
          {
             Logger.Log(LogEnum.LE_ERROR, "MouseDownEllipseVerify(): myCanvasTank=null");
             return;
          }
-         foreach (UIElement ui in myCanvas.Children)
+         foreach (UIElement ui in myCanvasMain.Children)
          {
             if (ui is Ellipse)
             {
@@ -688,57 +659,20 @@ namespace PleasantvilleGame
                }
             }
          }
-         //-----------------------------------------------------------------------
-         if (null == myCanvas)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "MouseDownEllipseVerify(): myCanvas=null");
-            return;
-         }
-         foreach (UIElement ui in myCanvas.Children)
-         {
-            if (ui is Ellipse)
-            {
-               Ellipse ellipse = (Ellipse)ui;
-               if (true == ui.IsMouseOver)
-               {
-                  string? name = ellipse.Name;
-                  if (null == name)
-                  {
-                     Logger.Log(LogEnum.LE_ERROR, "MouseDownEllipseVerify(): name=null");
-                     return;
-                  }
-                  foreach (Territory t in Territories.theTerritories)
-                  {
-                     string? name1 = t.Name;
-                     if (name1 == name)
-                     {
-                        TerritoryVerifyDialog dialog = new TerritoryVerifyDialog(t);
-                        dialog.myButtonOk.Focus();
-                        if (true == dialog.ShowDialog())
-                        {
-                           t.CanvasName = dialog.RadioOutputParent;
-                           t.Type = dialog.RadioOutputType;
-                           return;
-                        }
-                     }
-                  }
-               }
-            }
-         }
       }
       void MouseLeftButtonDownSetAdjacents(object sender, MouseButtonEventArgs e)
       {
-         if (null == myCanvas)
+         if (null == myCanvasMain)
          {
-            Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownSetAdjacents(): myCanvas=null");
+            Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownSetAdjacents(): myCanvasMain=null");
             return;
          }
          SolidColorBrush aSolidColorBrush0 = new SolidColorBrush { Color = Color.FromArgb(100, 100, 100, 0) };
          SolidColorBrush aSolidColorBrush1 = new SolidColorBrush { Color = Color.FromArgb(010, 255, 100, 0) };
          SolidColorBrush aSolidColorBrush2 = new SolidColorBrush { Color = Color.FromArgb(255, 0, 0, 0) };
          SolidColorBrush aSolidColorBrush3 = new SolidColorBrush { Color = Colors.Red };
-         System.Windows.Point p = e.GetPosition(myCanvas);
-         foreach (UIElement ui in myCanvas.Children)
+         System.Windows.Point p = e.GetPosition(myCanvasMain);
+         foreach (UIElement ui in myCanvasMain.Children)
          {
             if (ui is Ellipse)
             {
@@ -797,7 +731,7 @@ namespace PleasantvilleGame
                      Console.WriteLine("Saving {0} ", selectedTerritory.Name);
                      MessageBox.Show(sb.ToString());
                      myAnchorTerritory = null;
-                     foreach (UIElement ui1 in myCanvas.Children)
+                     foreach (UIElement ui1 in myCanvasMain.Children)
                      {
                         if (ui1 is Ellipse)
                         {
@@ -818,101 +752,7 @@ namespace PleasantvilleGame
                   } // else (selectedTerritory.ToString() != myAnchorTerritory.ToString())
                } // if (true == ui.IsMouseOver)
             } // if (ui is Ellipse)
-         }  // foreach (UIElement ui in myCanvas.Children)
-      }
-      void MouseLeftButtonDownSetPaved(object sender, MouseButtonEventArgs e)
-      {
-         if (null == myCanvas)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownSetPaved(): myCanvas=null");
-            return;
-         }
-         SolidColorBrush aSolidColorBrush0 = new SolidColorBrush { Color = Color.FromArgb(100, 100, 100, 0) };
-         SolidColorBrush aSolidColorBrush1 = new SolidColorBrush { Color = Color.FromArgb(010, 255, 100, 0) };
-         SolidColorBrush aSolidColorBrush2 = new SolidColorBrush { Color = Color.FromArgb(255, 0, 0, 0) };
-         SolidColorBrush aSolidColorBrush3 = new SolidColorBrush { Color = Colors.Red };
-         System.Windows.Point p = e.GetPosition(myCanvas);
-         foreach (UIElement ui in myCanvas.Children)
-         {
-            if (ui is Ellipse)
-            {
-               Ellipse selectedEllipse = (Ellipse)ui;
-               if (true == ui.IsMouseOver)
-               {
-                  Territory? selectedTerritory = null;  // Find the corresponding Territory that user selected
-                  foreach (Territory t in Territories.theTerritories)
-                  {
-                     if (selectedEllipse.Name == t.Name)
-                     {
-                        selectedTerritory = t;
-                        break;
-                     }
-                  }
-                  if (selectedTerritory == null) // Check for error
-                  {
-                     MessageBox.Show("Unable to find " + selectedEllipse.Name);
-                     return;
-                  }
-                  if (null == myAnchorTerritory)  // If there is no anchor territory. Set it.
-                  {
-                     StringBuilder sb = new StringBuilder("Anchoring: ");
-                     sb.Append(selectedEllipse.Name);
-                     sb.Append(" ");
-                     sb.Append(selectedTerritory.Name);
-                     sb.Append(" ");
-                     Console.WriteLine("Anchoring {0} ", selectedTerritory.Name);
-                     MessageBox.Show(sb.ToString());
-                     myAnchorTerritory = selectedTerritory;
-                     myAnchorTerritory.PavedRoads.Clear();
-                     selectedEllipse.Fill = aSolidColorBrush3;
-                     return;
-                  }
-                  if (selectedTerritory.Name != myAnchorTerritory.Name)
-                  {
-                     // If the matching territory is not the anchor territory, change its color.
-                     selectedEllipse.Fill = aSolidColorBrush2;
-                     // Find if the territory is already in the list. Only add it if it is not already added.
-                     IEnumerable<string> results = from s in myAnchorTerritory.PavedRoads where s == selectedTerritory.Name select s;
-                     if (0 == results.Count())
-                     {
-                        Console.WriteLine("Adding {0} ", selectedTerritory.Name);
-                        myAnchorTerritory.PavedRoads.Add(selectedTerritory.Name);
-                     }
-                  }
-                  else
-                  {
-                     // If this is the matching territory is the anchor territory, the user is requesting that it they are done adding 
-                     // to the PavedRoad ellipse. Clear the data so another one can be selected.
-                     StringBuilder sb = new StringBuilder("Saving");
-                     sb.Append(selectedEllipse.Name);
-                     sb.Append(" "); sb.Append(myAnchorTerritory.Name);
-                     sb.Append(" "); sb.Append(selectedTerritory.Name);
-                     sb.Append(" ");
-                     Console.WriteLine("Saving {0} ", selectedTerritory.Name);
-                     MessageBox.Show(sb.ToString());
-                     myAnchorTerritory = null;
-                     foreach (UIElement ui1 in myCanvas.Children)
-                     {
-                        if (ui1 is Ellipse)
-                        {
-                           Ellipse ellipse1 = (Ellipse)ui1;
-                           foreach (Territory t in Territories.theTerritories)
-                           {
-                              if (ellipse1.Name == t.Name)
-                              {
-                                 if (0 == t.PavedRoads.Count)
-                                    ellipse1.Fill = aSolidColorBrush0;
-                                 else
-                                    ellipse1.Fill = aSolidColorBrush1;
-                                 break;
-                              }
-                           }
-                        }
-                     }
-                  } // else (selectedTerritory.ToString() != myAnchorTerritory.ToString())
-               } // if (true == ui.IsMouseOver)
-            } // if (ui is Ellipse)
-         }  // foreach (UIElement ui in myCanvas.Children)
+         }  // foreach (UIElement ui in myCanvasMain.Children)
       }
    }
 }

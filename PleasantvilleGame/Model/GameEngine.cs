@@ -96,14 +96,14 @@ namespace PleasantvilleGame
             return false;
          }
          gi.UnitTests.Add(ut1);
-         ////-----------------------------------------------------------------------------
-         //IUnitTest ut2 = new TerritoryCreateUnitTest(dp, gi, civ);
-         //if (true == ut2.CtorError)
-         //{
-         //   Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): TerritoryCreateUnitTest() ctor error");
-         //   return false;
-         //}
-         //gi.UnitTests.Add(ut2);
+         //-----------------------------------------------------------------------------
+         IUnitTest ut2 = new TerritoryCreateUnitTest(dp, gi, civ);
+         if (true == ut2.CtorError)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): TerritoryCreateUnitTest() ctor error");
+            return false;
+         }
+         gi.UnitTests.Add(ut2);
          ////-----------------------------------------------------------------------------
          //IUnitTest ut3 = new TerritoryRegionUnitTest(dp, gi, civ);
          //if (true == ut3.CtorError)
