@@ -512,17 +512,17 @@ namespace PleasantvilleGame
          {
             if (true == myIsBattleMapShown)
             {
-               if (("A" == t.Type) || ("B" == t.Type) || ("C" == t.Type) || ("D" == t.Type) || ("E" == t.Type))
+               if (("A" == t.ImageNum) || ("B" == t.ImageNum) || ("C" == t.ImageNum) || ("D" == t.ImageNum) || ("E" == t.ImageNum))
                   continue;
             }
             else
             {
-               if ("Battle" == t.Type)
+               if ("Battle" == t.ImageNum)
                   continue;
             }
-            if (("1" == t.Type) || ("2" == t.Type) || ("3" == t.Type) || ("4" == t.Type) || ("5" == t.Type) || ("6" == t.Type) || ("7" == t.Type) || ("8" == t.Type) || ("9" == t.Type) || ("10" == t.Type) || ("11" == t.Type) || ("12" == t.Type) || ("13" == t.Type) || ("14" == t.Type) || ("15" == t.Type) || ("16" == t.Type) || ("17" == t.Type) || ("18" == t.Type))
+            if (("1" == t.ImageNum) || ("2" == t.ImageNum) || ("3" == t.ImageNum) || ("4" == t.ImageNum) || ("5" == t.ImageNum) || ("6" == t.ImageNum) || ("7" == t.ImageNum) || ("8" == t.ImageNum) || ("9" == t.ImageNum) || ("10" == t.ImageNum) || ("11" == t.ImageNum) || ("12" == t.ImageNum) || ("13" == t.ImageNum) || ("14" == t.ImageNum) || ("15" == t.ImageNum) || ("16" == t.ImageNum) || ("17" == t.ImageNum) || ("18" == t.ImageNum))
             {
-               if (myTankNum.ToString() != t.Type)
+               if (myTankNum.ToString() != t.ImageNum)
                   continue;
             }
             Ellipse aEllipse = new Ellipse() { Name = t.Name };
@@ -588,17 +588,17 @@ namespace PleasantvilleGame
          {
             if (true == myIsBattleMapShown)
             {
-               if (("A" == t.Type) || ("B" == t.Type) || ("C" == t.Type) || ("D" == t.Type) || ("E" == t.Type) )
+               if (("A" == t.ImageNum) || ("B" == t.ImageNum) || ("C" == t.ImageNum) || ("D" == t.ImageNum) || ("E" == t.ImageNum) )
                   continue;
             }
             else
             {
-               if ("Battle" == t.Type)
+               if ("Battle" == t.ImageNum)
                   continue;
             }
-            if (("1" == t.Type) || ("2" == t.Type) || ("3" == t.Type) || ("4" == t.Type) || ("5" == t.Type) || ("6" == t.Type) || ("7" == t.Type) || ("8" == t.Type) || ("9" == t.Type) || ("10" == t.Type) || ("11" == t.Type) || ("12" == t.Type) || ("13" == t.Type) || ("14" == t.Type) || ("15" == t.Type) || ("16" == t.Type) || ("17" == t.Type) || ("18" == t.Type))
+            if (("1" == t.ImageNum) || ("2" == t.ImageNum) || ("3" == t.ImageNum) || ("4" == t.ImageNum) || ("5" == t.ImageNum) || ("6" == t.ImageNum) || ("7" == t.ImageNum) || ("8" == t.ImageNum) || ("9" == t.ImageNum) || ("10" == t.ImageNum) || ("11" == t.ImageNum) || ("12" == t.ImageNum) || ("13" == t.ImageNum) || ("14" == t.ImageNum) || ("15" == t.ImageNum) || ("16" == t.ImageNum) || ("17" == t.ImageNum) || ("18" == t.ImageNum))
             {
-               if (myTankNum.ToString() != t.Type)
+               if (myTankNum.ToString() != t.ImageNum)
                   continue;
             }
             if (1 < t.Points.Count)

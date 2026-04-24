@@ -299,21 +299,21 @@ namespace PleasantvilleGame
                reader.Read();
                if (false == reader.IsStartElement())
                {
-                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Territories(): IsStartElement(Type)=false");
+                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Territories(): IsStartElement(ImageNum)=false");
                   return false;
                }
-               if (reader.Name != "Type")
+               if (reader.Name != "ImageNum")
                {
-                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Territories(): Type != (node=" + reader.Name + ")");
+                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Territories(): ImageNum != (node=" + reader.Name + ")");
                   return false;
                }
                string? sAttribute1 = reader.GetAttribute("value");
                if (null == sAttribute1)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Territories(): GetAttribute(Type)=null");
+                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Territories(): GetAttribute(ImageNum)=null");
                   return false;
                }
-               territory.Type = sAttribute1;
+               territory.ImageNum = sAttribute1;
                //--------------------------------------
                reader.Read();
                if (false == reader.IsStartElement())
@@ -498,13 +498,13 @@ namespace PleasantvilleGame
                   return false;
                }
                //---------------------------------
-               elem = aXmlDocument.CreateElement("Type");
+               elem = aXmlDocument.CreateElement("ImageNum");
                if (null == elem)
                {
                   Logger.Log(LogEnum.LE_ERROR, "CreateXml_Territories(): CreateElement(terrElem) returned null");
                   return false;
                }
-               elem.SetAttribute("value", t.Type);
+               elem.SetAttribute("value", t.ImageNum.ToString());
                node = territoryNode.AppendChild(elem);
                if (null == node)
                {
@@ -667,7 +667,7 @@ namespace PleasantvilleGame
                reader.Read();
                if (false == reader.IsStartElement())
                {
-                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): IsStartElement(Type)=false");
+                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Townspeople(): IsStartElement(ImageNum)=false");
                   return false;
                }
                if (reader.Name != "BottomImageName")
@@ -759,20 +759,6 @@ namespace PleasantvilleGame
                }
                elem.SetAttribute("value", mi.TerritoryCurrent.Name);
                XmlNode? node = territoryNode.AppendChild(elem);
-               if (null == node)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "CreateXml_Townspeople(): AppendChild(node) returned null");
-                  return false;
-               }
-               //---------------------------------
-               elem = aXmlDocument.CreateElement("Sector");
-               if (null == elem)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "CreateXml_Townspeople(): CreateElement(Sector) returned null");
-                  return false;
-               }
-               elem.SetAttribute("value", mi.TerritoryCurrent.Sector.ToString());
-               node = territoryNode.AppendChild(elem);
                if (null == node)
                {
                   Logger.Log(LogEnum.LE_ERROR, "CreateXml_Townspeople(): AppendChild(node) returned null");
@@ -2412,7 +2398,7 @@ namespace PleasantvilleGame
                return false;
             }
             elem.SetAttribute("value", mi.TerritoryCurrent.Name);
-            elem.SetAttribute("type", mi.TerritoryCurrent.Type);
+            elem.SetAttribute("type", mi.TerritoryCurrent.ImageNum);
             node = miNode.AppendChild(elem);
             if (null == node)
             {
@@ -2427,7 +2413,7 @@ namespace PleasantvilleGame
                return false;
             }
             elem.SetAttribute("value", mi.TerritoryStarting.Name);
-            elem.SetAttribute("type", mi.TerritoryStarting.Type);
+            elem.SetAttribute("type", mi.TerritoryStarting.ImageNum);
             node = miNode.AppendChild(elem);
             if (null == node)
             {
@@ -2757,7 +2743,7 @@ namespace PleasantvilleGame
             else
             {
                elem.SetAttribute("value", mim.OldTerritory.Name);
-               elem.SetAttribute("type", mim.OldTerritory.Type);
+               elem.SetAttribute("type", mim.OldTerritory.ImageNum);
             }
             XmlNode? node = mimNode.AppendChild(elem);
             if (null == node)
@@ -2780,7 +2766,7 @@ namespace PleasantvilleGame
             else
             {
                elem.SetAttribute("value", mim.NewTerritory.Name);
-               elem.SetAttribute("type", mim.NewTerritory.Type);
+               elem.SetAttribute("type", mim.NewTerritory.ImageNum);
             }
             node = mimNode.AppendChild(elem);
             if (null == node)

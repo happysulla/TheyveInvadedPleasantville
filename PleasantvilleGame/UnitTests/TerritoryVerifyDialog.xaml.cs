@@ -14,7 +14,7 @@ namespace PleasantvilleGame
       {
          InitializeComponent();
          myTextBoxName.Text = t.Name;
-         switch (t.Type)
+         switch (t.ImageNum)
          {
             case "A": myRadioButtonA.IsChecked = true; break;
             case "B": myRadioButtonB.IsChecked = true; break;
@@ -41,7 +41,7 @@ namespace PleasantvilleGame
             case "17": myRadioButton17.IsChecked = true; break;
             case "18": myRadioButton18.IsChecked = true; break;
             default:
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryVerifyDialog(): unk type=" + t.Type);
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryVerifyDialog(): unk type=" + t.ImageNum);
                break;
          }
          if ("Main" == t.CanvasName)

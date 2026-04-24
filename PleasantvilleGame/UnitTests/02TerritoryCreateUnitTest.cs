@@ -515,7 +515,7 @@ namespace PleasantvilleGame
             territory.Name = dialog.myTextBoxName.Text;
             territory.CanvasName = TerritoryCreateDialog.theParentChecked;
             if( "Main" == territory.CanvasName)
-               territory.Type = TerritoryCreateDialog.theTypeChecked;
+               territory.ImageNum = TerritoryCreateDialog.theTypeChecked;
             Territories.theTerritories.Add(territory);
             if ( false == CreateEllipse(territory, territory.CenterPoint))
             {
@@ -612,7 +612,7 @@ namespace PleasantvilleGame
                if (true == dialog.ShowDialog())
                {
                   t.CanvasName = dialog.RadioOutputParent;
-                  t.Type = dialog.RadioOutputType;
+                  t.ImageNum = dialog.RadioOutputType;
                   return;
                }
             }
@@ -653,7 +653,7 @@ namespace PleasantvilleGame
                   if (true == dialog.ShowDialog())
                   {
                      t.CanvasName = dialog.RadioOutputParent;
-                     t.Type = dialog.RadioOutputType;
+                     t.ImageNum = dialog.RadioOutputType;
                      return;
                   }
                }

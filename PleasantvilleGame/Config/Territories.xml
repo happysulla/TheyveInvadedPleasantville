@@ -1,14 +1,14 @@
 ﻿<Territories count="2">
   <Territory value="Offboard">
     <Parent value="Main" />
-    <Type value="A" />
+    <ImageNum value="A" />
     <CenterPoint X="0000.00" Y="0000.00" />
     <Points count="0" />
     <Adjacents count="0" />
   </Territory>
   <Territory value="School">
     <Parent value="Main" />
-    <Type value="A" />
+    <ImageNum value="A" />
     <CenterPoint X="0070.50" Y="0228.04" />
     <Points count="0" />
     <Adjacents count="0" />

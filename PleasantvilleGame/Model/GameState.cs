@@ -150,7 +150,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "PerformMovement(): newTerritory is null for building=" + building + " selectedSector=" + selectedSector.ToString());
             return false;
          }
-         if ((mi.TerritoryCurrent.Name == newTerritory.Name) && (mi.TerritoryCurrent.Sector == newTerritory.Sector))
+         if ((mi.TerritoryCurrent.Name == newTerritory.Name) && (mi.TerritoryCurrent.ImageNum == newTerritory.ImageNum))
          {
             return false;
          }
@@ -1049,7 +1049,7 @@ namespace PleasantvilleGame
             if ((false == person.IsWary) && (false == person.IsControlled) && (false == person.IsMoveStoppedThisTurn) && ("Zebulon" != person.Name)
                   && (false == person.IsStunned) && (false == person.IsTiedUp) && (false == person.IsSurrendered) && (false == person.IsKilled))
             {
-               if ((person.TerritoryCurrent.Name == mim.OldTerritory.Name) && (person.TerritoryCurrent.Sector == mim.OldTerritory.Sector)) // Check if moving mapitem originates in territory controlled by alien
+               if ((person.TerritoryCurrent.Name == mim.OldTerritory.Name) && (person.TerritoryCurrent.ImageNum == mim.OldTerritory.ImageNum)) // Check if moving mapitem originates in territory controlled by alien
                {
                   Logger.Log(LogEnum.LE_TIMER_ELAPED, "Wait for Alien To Stop Move before started");
                   gi.NextAction = "Alien May Elect to Stop Move if Possible";
@@ -1059,7 +1059,7 @@ namespace PleasantvilleGame
                for (int i = 0; i < mim.BestPath.Territories.Count - 1; ++i) // Check if moving mapitem originates in territory controlled by alien -- Do not check the last territory moved into
                {
                   ITerritory t = mim.BestPath.Territories[i];
-                  if ((person.TerritoryCurrent.Name == t.Name) && (person.TerritoryCurrent.Sector == t.Sector))
+                  if ((person.TerritoryCurrent.Name == t.Name) && (person.TerritoryCurrent.ImageNum == t.ImageNum))
                   {
                      Logger.Log(LogEnum.LE_TIMER_ELAPED, "Wait for Alien To Modify move");
                      gi.NextAction = "Alien May Elect to Stop Move if Possible";
@@ -1133,7 +1133,7 @@ namespace PleasantvilleGame
          {
             if (false == zebulon.IsAlienKnown) // Determine if Zebulon is discovered
             {
-               if ((t.Name == zebulon.TerritoryCurrent.Name) && (t.Sector == zebulon.TerritoryCurrent.Sector))
+               if ((t.Name == zebulon.TerritoryCurrent.Name) && (t.ImageNum == zebulon.TerritoryCurrent.ImageNum))
                {
                   isZebulanDiscovered = true;
                   zebulon.IsAlienKnown = true;                     // Zebulon is now exposed
@@ -1773,7 +1773,7 @@ namespace PleasantvilleGame
          IMapItems wary = new MapItems();
          foreach (MapItem mi in gi.Persons)
          {
-            if ((combat.Territory.Name == mi.TerritoryCurrent.Name) && (combat.Territory.Sector == mi.TerritoryCurrent.Sector))
+            if ((combat.Territory.Name == mi.TerritoryCurrent.Name) && (combat.Territory.ImageNum == mi.TerritoryCurrent.ImageNum))
             {
                if ((false == mi.IsConscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsKilled) || (true == mi.IsSurrendered))
                   continue;

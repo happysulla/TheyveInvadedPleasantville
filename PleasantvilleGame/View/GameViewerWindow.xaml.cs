@@ -274,7 +274,7 @@ namespace PleasantvilleGame
          //      Polygon aPolygon = new Polygon();
          //      aPolygon.Fill = mySolidColorBrushClear;
          //      aPolygon.Tag = Utilities.RemoveSpaces(tagName);
-         //      aPolygon.Name = t.Name + t.Sector.ToString();
+         //      aPolygon.Name = t.Name + t.ImageNum.ToString();
          //      myCanvasMain.RegisterName(aPolygon.Name, aPolygon);
          //      List<Point> points = new List<Point>();
          //      foreach (IMapPoint mp in t.Points)
@@ -1991,7 +1991,7 @@ namespace PleasantvilleGame
                int counterCount1 = 0;
                foreach (IMapItem mi1 in gi.Persons)
                {
-                  if ((mi1.TerritoryCurrent.Name == mi.TerritoryStarting.Name) && (mi1.TerritoryCurrent.Sector == mi.TerritoryStarting.Sector))
+                  if ((mi1.TerritoryCurrent.Name == mi.TerritoryStarting.Name) && (mi1.TerritoryCurrent.ImageNum == mi.TerritoryStarting.ImageNum))
                      ++counterCount1;
                }
                mi.TerritoryCurrent = mi.TerritoryStarting;
@@ -2019,7 +2019,7 @@ namespace PleasantvilleGame
                int counterCount2 = 0;
                foreach (IMapItem mi2 in gi.Persons)
                {
-                  if ((mi2.TerritoryCurrent.Name == mim2.NewTerritory.Name) && (mi2.TerritoryCurrent.Sector == mim2.NewTerritory.Sector))
+                  if ((mi2.TerritoryCurrent.Name == mim2.NewTerritory.Name) && (mi2.TerritoryCurrent.ImageNum == mim2.NewTerritory.ImageNum))
                      ++counterCount2;
                }
                //-----------------------------------------------
@@ -2175,7 +2175,7 @@ namespace PleasantvilleGame
          ////stacks.AssignPeople(gi.Persons, GameEngine.theIsAlien);
          //IEnumerable<Stack> results = from stack in gi.Stacks
          //                             where stack.Territory.Name == mim.OldTerritory.Name
-         //                             where stack.Territory.Sector == mim.OldTerritory.Sector
+         //                             where stack.Territory.ImageNum == mim.OldTerritory.ImageNum
          //                             select stack;
          //if (0 == results.Count())
          //   return false;
@@ -2247,7 +2247,7 @@ namespace PleasantvilleGame
          //stacks.AssignPeople(persons, GameEngine.theIsAlien);
          //IEnumerable<Stack> results = from stack in stacks
          //                             where stack.Territory.Name == mim.NewTerritory.Name
-         //                             where stack.Territory.Sector == mim.NewTerritory.Sector
+         //                             where stack.Territory.ImageNum == mim.NewTerritory.ImageNum
          //                             select stack;
 
          //int stackCount = 0;
@@ -2384,7 +2384,7 @@ namespace PleasantvilleGame
          //   if ((0 == townspeopleControlled.Count) || (0 == townspeopleUncontrolled.Count))
          //      continue;
          //   // Turn the region red
-         //   String targetName = townspeopleControlled[0].TerritoryCurrent.Name + townspeopleControlled[0].TerritoryCurrent.Sector.ToString();
+         //   String targetName = townspeopleControlled[0].TerritoryCurrent.Name + townspeopleControlled[0].TerritoryCurrent.ImageNum.ToString();
          //   foreach (UIElement ui in myCanvasMain.Children)
          //   {
          //      if (ui is Polygon)
@@ -2611,7 +2611,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "DisplayInfluences() townspeopleControlled[0]=null");
                continue;
             }
-            String targetName = controlled.TerritoryCurrent.Name + controlled.TerritoryCurrent.Sector.ToString(); // Turn the region red
+            String targetName = controlled.TerritoryCurrent.Name + controlled.TerritoryCurrent.ImageNum.ToString(); // Turn the region red
             foreach (UIElement ui in myCanvasMain.Children)
             {
                if (ui is Polygon)
@@ -3004,7 +3004,7 @@ namespace PleasantvilleGame
             else
                myTerritoriesCombatForTownsperson.Add(combatTerritory);
             //------------------------------------------------------------------------------
-            String targetName = combatTerritory.Name + combatTerritory.Sector.ToString(); // Turn the region red
+            String targetName = combatTerritory.Name + combatTerritory.ImageNum.ToString(); // Turn the region red
             foreach (UIElement ui in myCanvasMain.Children)
             {
                if (ui is Polygon)
@@ -3069,7 +3069,7 @@ namespace PleasantvilleGame
          IMapItems wary = new MapItems();
          foreach (MapItem mi in gi.Persons)
          {
-            if ((selectedTerritory.Name == mi.TerritoryCurrent.Name) && (selectedTerritory.Sector == mi.TerritoryCurrent.Sector))
+            if ((selectedTerritory.Name == mi.TerritoryCurrent.Name) && (selectedTerritory.ImageNum == mi.TerritoryCurrent.ImageNum))
             {
                if ((false == mi.IsConscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsKilled) || (true == mi.IsSurrendered))
                   continue;
@@ -3358,7 +3358,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "DisplayIterogations() townspeopleControlled[0]=null");
                return false;
             }  
-            String targetName = controlled.TerritoryCurrent.Name + controlled.TerritoryCurrent.Sector.ToString();
+            String targetName = controlled.TerritoryCurrent.Name + controlled.TerritoryCurrent.ImageNum.ToString();
             foreach (UIElement ui in myCanvasMain.Children) // Turn the region red
             {
                if (ui is Polygon)
@@ -3426,7 +3426,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "DisplayImplantRemovals() controlledMapItems[0]=null");
                return false;
             }
-            String targetName = controlledMapItem.TerritoryCurrent.Name + controlledMapItem.TerritoryCurrent.Sector.ToString();  // Turn the region red
+            String targetName = controlledMapItem.TerritoryCurrent.Name + controlledMapItem.TerritoryCurrent.ImageNum.ToString();  // Turn the region red
             foreach (UIElement ui in myCanvasMain.Children)
             {
                if (ui is Polygon)
@@ -3665,7 +3665,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "DisplayTakeovers() possibleVictums[0]=null");
                return false;
             }  
-            String targetName = possibleVictum.TerritoryCurrent.Name + possibleVictum.TerritoryCurrent.Sector.ToString();  // Turn the region orange
+            String targetName = possibleVictum.TerritoryCurrent.Name + possibleVictum.TerritoryCurrent.ImageNum.ToString();  // Turn the region orange
             foreach (UIElement ui in myCanvasMain.Children)
             {
                if (ui is Polygon)
@@ -4683,7 +4683,7 @@ namespace PleasantvilleGame
                         Logger.Log(LogEnum.LE_ERROR, "MapItemCommonAction() myGameInstance.Stacks.FindMapItem(\"Zebulon\") returned null");
                         return;
                      }
-                     if ((zebulon.TerritoryCurrent.Name == selectedTerritory.Name) && (zebulon.TerritoryCurrent.Sector == selectedTerritory.Sector))
+                     if ((zebulon.TerritoryCurrent.Name == selectedTerritory.Name) && (zebulon.TerritoryCurrent.ImageNum == selectedTerritory.ImageNum))
                      {
                         zebulon.IsAlienKnown = true;
                         myGameInstance.NumIterogationsThisTurn = 0;
@@ -4727,7 +4727,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "MapItemMoveManually() myGameInstance.Stacks.FindMapItem() returned null for name=" + selectedButton.Name);
                return;
             }
-            if ((selectedTerritory.Name == movingMapItem.TerritoryCurrent.Name) && (selectedTerritory.Sector == movingMapItem.TerritoryCurrent.Sector))
+            if ((selectedTerritory.Name == movingMapItem.TerritoryCurrent.Name) && (selectedTerritory.ImageNum == movingMapItem.TerritoryCurrent.ImageNum))
             {
                this.RotateStack(selectedTerritory); // rotate the stack
             }
@@ -4810,7 +4810,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "IsAlienAbleToStopMove() gi.Stacks.FindMapItem() returned null for name=" + mim.MapItem.Name);
                   return false;
                }  
-               if ((mi.TerritoryCurrent.Name == mim.OldTerritory.Name) && (mi.TerritoryCurrent.Sector == mim.OldTerritory.Sector))
+               if ((mi.TerritoryCurrent.Name == mim.OldTerritory.Name) && (mi.TerritoryCurrent.ImageNum == mim.OldTerritory.ImageNum))
                {
                   if ((true == movingMI.IsControlled) && (false == movingMI.IsStunned) && (false == movingMI.IsTiedUp)
                      && (false == movingMI.IsSurrendered) && (false == movingMI.IsStunned) && (false == movingMI.IsKilled))
@@ -4823,7 +4823,7 @@ namespace PleasantvilleGame
                {
                   foreach (ITerritory t in mim.BestPath.Territories)
                   {
-                     if ((mi.TerritoryCurrent.Name == t.Name) && (mi.TerritoryCurrent.Sector == t.Sector))
+                     if ((mi.TerritoryCurrent.Name == t.Name) && (mi.TerritoryCurrent.ImageNum == t.ImageNum))
                      {
                         if ((true == movingMI.IsControlled) && (false == movingMI.IsStunned) && (false == movingMI.IsTiedUp)
                              && (false == movingMI.IsSurrendered) && (false == movingMI.IsStunned) && (false == movingMI.IsKilled)

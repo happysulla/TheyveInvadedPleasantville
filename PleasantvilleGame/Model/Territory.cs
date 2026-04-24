@@ -10,8 +10,7 @@ namespace PleasantvilleGame
 	{
 		public string Name { get; set; } = "Offboard";
 		public string CanvasName { get; set; } = "Main";
-		public string Type { get; set; } = "ERROR";
-		public int Sector { get; set; } = -1;
+		public string ImageNum { get; set; } = "ERROR";
 		public IMapPoint CenterPoint { get; set; } = new MapPoint();
 		public List<IMapPoint> Points { get; set; } = new List<IMapPoint>();
 		public List<string> Adjacents { get; set; } = new List<string>();
@@ -425,7 +424,7 @@ namespace PleasantvilleGame
 		}
 		public override string ToString()
 		{
-			string returnVal = Name + ":" + Type + ":" + Sector.ToString();
+			string returnVal = Name + ":" + ImageNum + ":" + ImageNum.ToString();
 			return returnVal;
 		}
 	}
@@ -470,19 +469,8 @@ namespace PleasantvilleGame
 			{
 				ITerritory t = (ITerritory)o;
 				string territoryName = Utilities.RemoveSpaces(t.Name);
-				string territoryType = Utilities.RemoveSpaces(t.Type);
+				string territoryType = Utilities.RemoveSpaces(t.ImageNum);
 				if ((tName == territoryName) && (tType == territoryType))
-					return t;
-			}
-			return null;
-		}
-		public ITerritory? Find(string tName, int sector)
-		{
-			foreach (object o in myList)
-			{
-				ITerritory t = (ITerritory)o;
-				string territoryName = Utilities.RemoveSpaces(t.Name);
-				if ((tName == territoryName) && (sector == t.Sector))
 					return t;
 			}
 			return null;
@@ -550,7 +538,7 @@ namespace PleasantvilleGame
 		{
 			try
 			{
-				IEnumerable<ITerritory> results = from territory in territories where (territory.Name == name && territory.Type == type) select territory;
+				IEnumerable<ITerritory> results = from territory in territories where (territory.Name == name && territory.ImageNum == type) select territory;
 				if (0 < results.Count())
 					return results.First();
 			}
