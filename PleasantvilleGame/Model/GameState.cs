@@ -144,7 +144,7 @@ namespace PleasantvilleGame
          }
          int selectedSector = Utilities.RandomGenerator.Next(numOfSectorsInBuilding);
          ++selectedSector;
-         ITerritory? newTerritory = Territories.theTerritories.Find(building, selectedSector);
+         ITerritory? newTerritory = Territories.theTerritories.Find(building, selectedSector.ToString());
          if (null == newTerritory)
          {
             Logger.Log(LogEnum.LE_ERROR, "PerformMovement(): newTerritory is null for building=" + building + " selectedSector=" + selectedSector.ToString());
