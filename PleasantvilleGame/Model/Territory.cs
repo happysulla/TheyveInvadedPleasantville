@@ -10,7 +10,7 @@ namespace PleasantvilleGame
 	{
 		public string Name { get; set; } = "Offboard";
 		public string CanvasName { get; set; } = "Main";
-		public string ImageNum { get; set; } = "ERROR";
+		public string Subname { get; set; } = "ERROR";
 		public IMapPoint CenterPoint { get; set; } = new MapPoint();
 		public List<IMapPoint> Points { get; set; } = new List<IMapPoint>();
 		public List<string> Adjacents { get; set; } = new List<string>();
@@ -424,7 +424,7 @@ namespace PleasantvilleGame
 		}
 		public override string ToString()
 		{
-			string returnVal = Name + ":" + ImageNum + ":" + ImageNum.ToString();
+			string returnVal = Name + ":" + Subname;
 			return returnVal;
 		}
 	}
@@ -463,14 +463,14 @@ namespace PleasantvilleGame
 			}
 			return null;
 		}
-		public ITerritory? Find(string tName, string tType)
+		public ITerritory? Find(string tName, string tSubName)
 		{
 			foreach (object o in myList)
 			{
 				ITerritory t = (ITerritory)o;
 				string territoryName = Utilities.RemoveSpaces(t.Name);
-				string territoryType = Utilities.RemoveSpaces(t.ImageNum);
-				if ((tName == territoryName) && (tType == territoryType))
+				string territoryType = Utilities.RemoveSpaces(t.Subname);
+				if ((tName == territoryName) && (tSubName == territoryType))
 					return t;
 			}
 			return null;
@@ -534,17 +534,17 @@ namespace PleasantvilleGame
 			}
 			return null;
 		}
-		public static ITerritory? Find(this IList<ITerritory> territories, string name, string type)
+		public static ITerritory? Find(this IList<ITerritory> territories, string name, string subname)
 		{
 			try
 			{
-				IEnumerable<ITerritory> results = from territory in territories where (territory.Name == name && territory.ImageNum == type) select territory;
+				IEnumerable<ITerritory> results = from territory in territories where (territory.Name == name && territory.Subname == subname) select territory;
 				if (0 < results.Count())
 					return results.First();
 			}
 			catch (Exception e)
 			{
-				Logger.Log(LogEnum.LE_ERROR, "MyTerritoryExtensions.Find(list, name): name=" + name + " type=" + type + " e.Message=\n" + e.ToString()); ;
+				Logger.Log(LogEnum.LE_ERROR, "MyTerritoryExtensions.Find(list, name): name=" + name + " subname=" + subname + " e.Message=\n" + e.ToString()); ;
 			}
 			return null;
 		}

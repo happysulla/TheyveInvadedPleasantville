@@ -23,7 +23,6 @@ namespace PleasantvilleGame
       private static Double theEllipseDiameter = 20;
       private static Double theEllipseOffset = theEllipseDiameter / 2.0;
       //-----------------------------------------
-      private string? myFileName = null;
       private DockPanel myDockPanelTop;
       private Canvas? myCanvasMain = null;
       private Canvas? myCanvasHelper = null;
@@ -35,6 +34,8 @@ namespace PleasantvilleGame
       private List<Ellipse> myEllipses = new List<Ellipse>();
       private readonly SolidColorBrush mySolidColorBrushWaterBlue = new SolidColorBrush { Color = Colors.DeepSkyBlue };
       private readonly FontFamily myFontFam = new FontFamily("Tahoma");
+      //-----------------------------------------
+      private string? myFileName = null;
       //-----------------------------------------
       private int myIndexName = 0;
       public bool CtorError { get; } = false;
@@ -122,6 +123,8 @@ namespace PleasantvilleGame
             CtorError = true;
             return;
          }
+         //----------------------------------
+
       }
       public bool Command(ref IGameInstance gi) // Performs function based on CommandName string
       {
@@ -202,9 +205,9 @@ namespace PleasantvilleGame
          {
             ++myIndexName;
             myCanvasMain.MouseLeftButtonDown += this.MouseLeftButtonDownDeleteTerritory;
-            if (false == CreateEllipses())
+            if (false == CreateEllipsesForDisplay())
             {
-               Logger.Log(LogEnum.LE_ERROR, "NextTest(): CreateEllipses() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "NextTest(): CreateEllipsesForDisplay() returned false");
                return false;
             }
          }
@@ -219,10 +222,14 @@ namespace PleasantvilleGame
             ++myIndexName;
             myCanvasMain.MouseLeftButtonDown -= this.MouseLeftButtonDownCreateTerritory;
             myCanvasMain.MouseLeftButtonDown += this.MouseDownEllipseSetCenterPoint;
+            myCanvasMain.MouseMove += MouseMove;
+            myCanvasMain.MouseUp += MouseUp;
          }
          else if (HeaderName == myHeaderNames[3]) // Click Elispse to Verify
          {
             ++myIndexName;
+            myCanvasMain.MouseMove -= MouseMove;
+            myCanvasMain.MouseUp -= MouseUp;
             myCanvasMain.MouseLeftButtonDown -= this.MouseDownEllipseSetCenterPoint;
             myCanvasMain.MouseLeftButtonDown += this.MouseDownEllipseVerify;
          }
@@ -347,7 +354,7 @@ namespace PleasantvilleGame
          SolidColorBrush aSolidColorBrush1 = new SolidColorBrush{ Color = Colors.Black };
          Ellipse aEllipse = new Ellipse
          {
-            Name = territory.Name,
+            Tag = territory.ToString(),
             Fill = aSolidColorBrush1,
             StrokeThickness = 1,
             Stroke = Brushes.Red,
@@ -363,13 +370,18 @@ namespace PleasantvilleGame
          myEllipses.Add(aEllipse);
          return true;
       }
-      private bool CreateEllipses()
+      private bool CreateEllipsesForDisplay()
       {
+         if (null == myCanvasMain)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateEllipsesForDisplay(): myCanvasMain=null");
+            return false;
+         }
          myEllipses.Clear();
          SolidColorBrush aSolidColorBrush0 = new SolidColorBrush { Color = System.Windows.Media.Color.FromArgb(100, 100, 100, 0) }; // nearly transparent but slightly colored
          foreach (Territory t in Territories.theTerritories)
          {
-            Ellipse aEllipse = new Ellipse () { Name = t.Name };
+            Ellipse aEllipse = new Ellipse () { Tag = t.ToString() };
             aEllipse.Fill = aSolidColorBrush0;
             aEllipse.StrokeThickness = 1;
             aEllipse.Stroke = Brushes.Red;
@@ -378,16 +390,17 @@ namespace PleasantvilleGame
             System.Windows.Point p = new System.Windows.Point(t.CenterPoint.X, t.CenterPoint.Y);
             p.X -= theEllipseOffset;
             p.Y -= theEllipseOffset;
+            myCanvasMain.Children.Add(aEllipse);
             Canvas.SetLeft(aEllipse, p.X);
             Canvas.SetTop(aEllipse, p.Y);
             myEllipses.Add(aEllipse);
             //-------------------------
-            Label aLabel = new Label() { Foreground = Brushes.Red, FontFamily = myFontFam, FontWeight = FontWeights.Bold, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = t.Name };
+            Label aLabel = new Label() { Foreground = Brushes.Red, FontFamily = myFontFam, FontWeight = FontWeights.Bold, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = t.ToString() };
             p.X -= theEllipseOffset;
             p.Y -= 2 * theEllipseOffset;
+            myCanvasMain.Children.Add(aLabel);
             Canvas.SetLeft(aLabel, p.X);
             Canvas.SetTop(aLabel, p.Y);
-            //-------------------------
          }
          return true;
       }
@@ -513,9 +526,8 @@ namespace PleasantvilleGame
          {
             Territory territory = new Territory() { CenterPoint = new MapPoint(p.X, p.Y) };
             territory.Name = dialog.myTextBoxName.Text;
-            territory.CanvasName = TerritoryCreateDialog.theParentChecked;
-            if( "Main" == territory.CanvasName)
-               territory.ImageNum = TerritoryCreateDialog.theTypeChecked;
+            territory.Subname = dialog.myTextBoxSubname.Text;
+            territory.CanvasName = TerritoryCreateDialog.theLastEnteredCanvasName;
             Territories.theTerritories.Add(territory);
             if ( false == CreateEllipse(territory, territory.CenterPoint))
             {
@@ -538,12 +550,12 @@ namespace PleasantvilleGame
             if (ui is Ellipse)
             {
                Ellipse ellipse = (Ellipse)ui;
+               string eName = (string)ellipse.Tag;
                if (true == ui.IsMouseOver)
                {
                   if (false == myIsDraggingMapItem)
                   {
-                     string showText = ellipse.Name + ":";
-                     MessageBox.Show(showText);
+                     MessageBox.Show(eName);
                      this.myIsDraggingMapItem = true;
                      this.myEllipseSelected = ui;
                   }
@@ -555,11 +567,12 @@ namespace PleasantvilleGame
             if (ui is Ellipse)
             {
                Ellipse ellipse = (Ellipse)ui;
+               string eName = (string)ellipse.Tag;
                if (true == ui.IsMouseOver)
                {
                   if (false == myIsDraggingMapItem)
                   {
-                     MessageBox.Show(ellipse.Name);
+                     MessageBox.Show(eName);
                      this.myIsDraggingMapItem = true;
                      this.myEllipseSelected = ui;
                   }
@@ -595,16 +608,18 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "MouseUp(): ellipse=null");
                   return;
                }
-               string? name1 = ellipse.Name;
-               if (null == name1)
+               string eName = (string)ellipse.Tag;
+               string[] aStringArray = eName.Split(new char[] { ':' });
+               int length = aStringArray.Length;
+               if (2 != length)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "MouseUp(): name1=null");
+                  Logger.Log(LogEnum.LE_ERROR, "MouseUp(): 2 != (length=" + length.ToString() + ")");
                   return;
                }
-               ITerritory? t = Territories.theTerritories.Find(name1);
+               ITerritory? t = Territories.theTerritories.Find(aStringArray[0], aStringArray[1]);
                if( null == t)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "MouseUp(): t=null for name1=" + name1);
+                  Logger.Log(LogEnum.LE_ERROR, "MouseUp(): t=null for eName=" + eName);
                   return;
                }
                TerritoryVerifyDialog dialog = new TerritoryVerifyDialog(t);
@@ -612,7 +627,7 @@ namespace PleasantvilleGame
                if (true == dialog.ShowDialog())
                {
                   t.CanvasName = dialog.RadioOutputParent;
-                  t.ImageNum = dialog.RadioOutputType;
+                  t.Subname = dialog.RadioOutputType;
                   return;
                }
             }
@@ -653,7 +668,7 @@ namespace PleasantvilleGame
                   if (true == dialog.ShowDialog())
                   {
                      t.CanvasName = dialog.RadioOutputParent;
-                     t.ImageNum = dialog.RadioOutputType;
+                     t.Subname = dialog.RadioOutputType;
                      return;
                   }
                }

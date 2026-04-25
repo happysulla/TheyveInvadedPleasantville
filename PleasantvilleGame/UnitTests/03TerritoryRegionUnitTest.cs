@@ -512,17 +512,17 @@ namespace PleasantvilleGame
          {
             if (true == myIsBattleMapShown)
             {
-               if (("A" == t.ImageNum) || ("B" == t.ImageNum) || ("C" == t.ImageNum) || ("D" == t.ImageNum) || ("E" == t.ImageNum))
+               if (("A" == t.Subname) || ("B" == t.Subname) || ("C" == t.Subname) || ("D" == t.Subname) || ("E" == t.Subname))
                   continue;
             }
             else
             {
-               if ("Battle" == t.ImageNum)
+               if ("Battle" == t.Subname)
                   continue;
             }
-            if (("1" == t.ImageNum) || ("2" == t.ImageNum) || ("3" == t.ImageNum) || ("4" == t.ImageNum) || ("5" == t.ImageNum) || ("6" == t.ImageNum) || ("7" == t.ImageNum) || ("8" == t.ImageNum) || ("9" == t.ImageNum) || ("10" == t.ImageNum) || ("11" == t.ImageNum) || ("12" == t.ImageNum) || ("13" == t.ImageNum) || ("14" == t.ImageNum) || ("15" == t.ImageNum) || ("16" == t.ImageNum) || ("17" == t.ImageNum) || ("18" == t.ImageNum))
+            if (("1" == t.Subname) || ("2" == t.Subname) || ("3" == t.Subname) || ("4" == t.Subname) || ("5" == t.Subname) || ("6" == t.Subname) || ("7" == t.Subname) || ("8" == t.Subname) || ("9" == t.Subname) || ("10" == t.Subname) || ("11" == t.Subname) || ("12" == t.Subname) || ("13" == t.Subname) || ("14" == t.Subname) || ("15" == t.Subname) || ("16" == t.Subname) || ("17" == t.Subname) || ("18" == t.Subname))
             {
-               if (myTankNum.ToString() != t.ImageNum)
+               if (myTankNum.ToString() != t.Subname)
                   continue;
             }
             Ellipse aEllipse = new Ellipse() { Name = t.Name };
@@ -588,17 +588,17 @@ namespace PleasantvilleGame
          {
             if (true == myIsBattleMapShown)
             {
-               if (("A" == t.ImageNum) || ("B" == t.ImageNum) || ("C" == t.ImageNum) || ("D" == t.ImageNum) || ("E" == t.ImageNum) )
+               if (("A" == t.Subname) || ("B" == t.Subname) || ("C" == t.Subname) || ("D" == t.Subname) || ("E" == t.Subname) )
                   continue;
             }
             else
             {
-               if ("Battle" == t.ImageNum)
+               if ("Battle" == t.Subname)
                   continue;
             }
-            if (("1" == t.ImageNum) || ("2" == t.ImageNum) || ("3" == t.ImageNum) || ("4" == t.ImageNum) || ("5" == t.ImageNum) || ("6" == t.ImageNum) || ("7" == t.ImageNum) || ("8" == t.ImageNum) || ("9" == t.ImageNum) || ("10" == t.ImageNum) || ("11" == t.ImageNum) || ("12" == t.ImageNum) || ("13" == t.ImageNum) || ("14" == t.ImageNum) || ("15" == t.ImageNum) || ("16" == t.ImageNum) || ("17" == t.ImageNum) || ("18" == t.ImageNum))
+            if (("1" == t.Subname) || ("2" == t.Subname) || ("3" == t.Subname) || ("4" == t.Subname) || ("5" == t.Subname) || ("6" == t.Subname) || ("7" == t.Subname) || ("8" == t.Subname) || ("9" == t.Subname) || ("10" == t.Subname) || ("11" == t.Subname) || ("12" == t.Subname) || ("13" == t.Subname) || ("14" == t.Subname) || ("15" == t.Subname) || ("16" == t.Subname) || ("17" == t.Subname) || ("18" == t.Subname))
             {
-               if (myTankNum.ToString() != t.ImageNum)
+               if (myTankNum.ToString() != t.Subname)
                   continue;
             }
             if (1 < t.Points.Count)

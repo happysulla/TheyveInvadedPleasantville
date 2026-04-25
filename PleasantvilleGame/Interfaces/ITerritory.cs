@@ -6,7 +6,7 @@ namespace PleasantvilleGame
    {
       string Name { get; set; }
       string CanvasName { get; set; } // There may be multiple canvases, so this is the name of the canvas that contains this territory
-      string ImageNum { get; set; }  // There may be multiple images on a canvas, so this is the name of the image that represents this territory
+      string Subname { get; set; }  // There may be multiple images on a canvas, so this is the name of the image that represents this territory
       IMapPoint CenterPoint { get; set; }
       List<IMapPoint> Points { set; get; }
       List<String> Adjacents { get; }

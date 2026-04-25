@@ -10,8 +10,9 @@ namespace PleasantvilleGame
 {
    public partial class TerritoryCreateDialog : Window
    {
-      public static string theTypeChecked = "A";
-      public static string theParentChecked = "Main";
+      public static string theLastEnteredName = "";
+      public static string theLastEnteredSubname = "";
+      public static string theLastEnteredCanvasName = "Main";
       private Canvas? myCanvasMain = null;
       public TerritoryCreateDialog(Canvas? c)
       {
@@ -24,69 +25,22 @@ namespace PleasantvilleGame
          //-----------------------------------------
          InitializeComponent();
          UpdateView();
-         foreach (UIElement ui in myStackPanelTerritory.Children)
-         {
-            if (ui is RadioButton rb)
-               rb.Checked += RadioButtonType_Checked;
-         }
          myRadioButtonMain.Checked += RadioButtonParent_Checked;
          myRadioButtonHelper.Checked += RadioButtonParent_Checked;
+         myTextBoxName.Text = theLastEnteredName;
+         myTextBoxSubname.Text = theLastEnteredSubname;
       }
       //-----------------------------------------------------
       void UpdateView()
       {
-         myRadioButtonMain.IsChecked = true;
-         foreach (UIElement ui in myStackPanelTerritory.Children)
-         {
-            if (ui is RadioButton rb)
-            {
-               if (rb.Content is string)
-               {
-                  rb.Visibility = Visibility.Visible;
-                  string s = (string)rb.Content;
-                  if (theTypeChecked == s)
-                     rb.IsChecked = true;
-               }
-            }
-         }
+
       }
       //---------------CONTROLLER FUNCTIONS------------------
       private void OkButton_Click(object sender, RoutedEventArgs e)
       {
+         theLastEnteredName = myTextBoxName.Text;
+         theLastEnteredSubname = myTextBoxSubname.Text;
          this.DialogResult = true;
-      }
-      private void RadioButtonType_Checked(object sender, RoutedEventArgs e)
-      {
-         if (null == myCanvasMain)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "RadioButton_Checked(): myCanvasMain=null");
-            return;
-         }
-         RadioButton? radioButton = (RadioButton)sender;
-         if (null == radioButton)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "RadioButton_Checked(): radioButton=null");
-            return;
-         }
-         if (null == radioButton.Content)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "RadioButton_Checked(): radioButton=null");
-            return;
-         }
-         string content = (string)radioButton.Content;
-         theTypeChecked = content;
-         switch (content)
-         {
-            case "A":
-            case "B":
-            case "C":
-            case "D":
-            case "E":
-               break;
-            default:
-               Logger.Log(LogEnum.LE_ERROR, "RadioButton_Checked(): reached default content=" + content);
-               break;
-         }
       }
       private void RadioButtonParent_Checked(object sender, RoutedEventArgs e)
       {
@@ -101,7 +55,7 @@ namespace PleasantvilleGame
             {
                String output = (String)radioButton.Content;
                if (null != output)
-                  theParentChecked = output;
+                  theLastEnteredCanvasName = output;
             }
          }
          UpdateView();
