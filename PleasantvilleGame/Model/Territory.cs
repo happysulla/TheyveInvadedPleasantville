@@ -424,7 +424,7 @@ namespace PleasantvilleGame
 		}
 		public override string ToString()
 		{
-			string returnVal = Name + ":" + Subname;
+			string returnVal = Name + "_" + Subname;
 			return returnVal;
 		}
 	}
@@ -458,7 +458,7 @@ namespace PleasantvilleGame
 			foreach (object o in myList)
 			{
 				ITerritory t = (ITerritory)o;
-				if (tName == Utilities.RemoveSpaces(t.Name))
+				if (tName == t.ToString())
 					return t;
 			}
 			return null;
