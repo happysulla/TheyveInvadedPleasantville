@@ -29,7 +29,7 @@ namespace PleasantvilleGame
       private IGameInstance? myGameInstance = null;
       private CanvasImageViewer? myCanvasImageViewer = null;
       private UIElement? myEllipseSelected = null;
-      private Territory? myAnchorTerritory = null;
+      private ITerritory? myAnchorTerritory = null;
       private bool myIsDraggingMapItem = false;
       private List<Ellipse> myEllipses = new List<Ellipse>();
       private readonly SolidColorBrush mySolidColorBrushWaterBlue = new SolidColorBrush { Color = Colors.DeepSkyBlue };
@@ -672,6 +672,7 @@ namespace PleasantvilleGame
          SolidColorBrush aSolidColorBrush2 = new SolidColorBrush { Color = Color.FromArgb(255, 0, 0, 0) };
          SolidColorBrush aSolidColorBrush3 = new SolidColorBrush { Color = Colors.Red };
          System.Windows.Point p = e.GetPosition(myCanvasMain);
+         bool isEndMatch = false;
          foreach (UIElement ui in myCanvasMain.Children)
          {
             if (ui is Ellipse)
@@ -679,15 +680,7 @@ namespace PleasantvilleGame
                Ellipse selectedEllipse = (Ellipse)ui;
                if (true == ui.IsMouseOver)
                {
-                  Territory? selectedTerritory = null;  // Find the corresponding Territory that user selected
-                  foreach (Territory t in Territories.theTerritories)
-                  {
-                     if ( selectedEllipse.Name == t.Name )
-                     {
-                        selectedTerritory = t;
-                        break;
-                     }
-                  }
+                  ITerritory? selectedTerritory = Territories.theTerritories.Find(selectedEllipse.Name);  // Find the corresponding Territory that user selected
                   if (selectedTerritory == null) // Check for error
                   {
                      MessageBox.Show("Unable to find " + selectedEllipse.Name);
@@ -698,61 +691,72 @@ namespace PleasantvilleGame
                      StringBuilder sb = new StringBuilder("Anchoring: ");
                      sb.Append(selectedEllipse.Name);
                      sb.Append(" ");
-                     sb.Append(selectedTerritory.Name);
-                     sb.Append(" ");
-                     Console.WriteLine("Anchoring {0} ", selectedTerritory.Name);
+                     Console.WriteLine("Anchoring {0} ", selectedTerritory.ToString());
                      MessageBox.Show(sb.ToString());
                      myAnchorTerritory = selectedTerritory;
                      myAnchorTerritory.Adjacents.Clear();
                      selectedEllipse.Fill = aSolidColorBrush3;
                      return;
                   }
-                  if (selectedTerritory.Name != myAnchorTerritory.Name)
+                  if (selectedTerritory.ToString() == myAnchorTerritory.ToString())
                   {
-                     // If the matching territory is not the anchor territory, change its color.
-                     selectedEllipse.Fill = aSolidColorBrush2;
-                     // Find if the territory is already in the list. Only add it if it is not already added.
-                     IEnumerable<string> results = from s in myAnchorTerritory.Adjacents where s == selectedTerritory.Name select s;
-                     if (0 == results.Count())
-                     {
-                        Console.WriteLine("Adding {0} ", selectedTerritory.Name);
-                        myAnchorTerritory.Adjacents.Add(selectedTerritory.Name);
-                     }
-                  }
-                  else
-                  {
-                     // If this is the matching territory is the anchor territory, the user is requesting that it they are done adding 
-                     // to the adjacents ellipse. Clear the data so another one can be selected.
-                     StringBuilder sb = new StringBuilder("Saving"); 
-                     sb.Append(selectedEllipse.Name); 
-                     sb.Append(" "); sb.Append(myAnchorTerritory.Name);
-                     sb.Append(" "); sb.Append(selectedTerritory.Name); 
+                     StringBuilder sb = new StringBuilder("Saving");
+                     sb.Append(myAnchorTerritory.ToString());
                      sb.Append(" ");
-                     Console.WriteLine("Saving {0} ", selectedTerritory.Name);
+                     Console.WriteLine("Saving {0} ", selectedTerritory.ToString());
                      MessageBox.Show(sb.ToString());
                      myAnchorTerritory = null;
-                     foreach (UIElement ui1 in myCanvasMain.Children)
+                     isEndMatch = true;
+                  } // else (selectedTerritory.ToString() != myAnchorTerritory.ToString())
+                  else
+                  {
+                     selectedEllipse.Fill = aSolidColorBrush2; // If the matching territory is not the anchor territory, change its color.
+                     string? tName = selectedTerritory.ToString();
+                     if (null == tName)
                      {
-                        if (ui1 is Ellipse)
+                        Logger.Log(LogEnum.LE_ERROR, "MouseDownEllipseVerify(): tName=null for selectedTerritory=" + selectedTerritory);
+                        return;
+                     }
+                     bool isMatch = false;
+                     foreach (string s in myAnchorTerritory.Adjacents)
+                     {
+                        if (s == tName)
                         {
-                           Ellipse ellipse1 = (Ellipse)ui1;
-                           ITerritory? t = Territories.theTerritories.Find(ellipse1.Name);
-                           if (null == t)
-                           {
-                              Logger.Log(LogEnum.LE_ERROR, "MouseDownEllipseVerify(): t=null for name=" + ellipse1.Name);
-                              return;
-                           }
-                           if (0 == t.Adjacents.Count)
-                              ellipse1.Fill = aSolidColorBrush0;
-                           else
-                              ellipse1.Fill = aSolidColorBrush1;
-                           break;
+                           isMatch = true; break;
                         }
                      }
-                  } // else (selectedTerritory.ToString() != myAnchorTerritory.ToString())
+                     if (false == isMatch)
+                     {
+                        Console.WriteLine("Adding {0} ", selectedTerritory.Name);
+                        myAnchorTerritory.Adjacents.Add(tName);
+                     }
+                  }
                } // if (true == ui.IsMouseOver)
             } // if (ui is Ellipse)
          }  // foreach (UIElement ui in myCanvasMain.Children)
+         //----------------------------------------------------------
+         // If this is the matching territory is the anchor territory, the user is requesting that it they are done adding 
+         // to the adjacents ellipse. Clear the data so another one can be selected.
+         if (true == isEndMatch)
+         {
+            foreach (UIElement ui1 in myCanvasMain.Children)
+            {
+               if (ui1 is Ellipse)
+               {
+                  Ellipse ellipse1 = (Ellipse)ui1;
+                  ITerritory? t = Territories.theTerritories.Find(ellipse1.Name);
+                  if (null == t)
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "MouseDownEllipseVerify(): t=null for name=" + ellipse1.Name);
+                     return;
+                  }
+                  if (0 == t.Adjacents.Count)
+                     ellipse1.Fill = mySolidColorBrushWaterBlue;
+                  else
+                     ellipse1.Fill = aSolidColorBrush1;
+               }
+            }
+         }
       }
    }
 }
