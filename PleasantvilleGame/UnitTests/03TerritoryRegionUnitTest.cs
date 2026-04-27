@@ -27,9 +27,7 @@ namespace PleasantvilleGame
       private DockPanel? myDockPanel = null;
       private Canvas? myCanvasHelper = null;
       private Canvas? myCanvasMain = null;
-      private int myTankNum = 1;
       private CanvasImageViewer? myCanvasImageViewer = null;
-      private bool myIsBattleMapShown = false;
       ITerritory? myAnchorTerritory = null;
       private List<Ellipse> myEllipses = new List<Ellipse>();
       private List<IMapPoint> myPoints = new List<IMapPoint>();
@@ -46,18 +44,14 @@ namespace PleasantvilleGame
       {
          myIndexName = 0;
          myHeaderNames.Add("03-Delete Regions");
-         myHeaderNames.Add("03-Switch Map");
-         myHeaderNames.Add("03-Switch Tank");
          myHeaderNames.Add("03-Add Regions");
          myHeaderNames.Add("03-Select Random Pt");
          myHeaderNames.Add("03-Finish");
          //------------------------------------
          myCommandNames.Add("00-Regions");
-         myCommandNames.Add("01-Switch Map");
-         myCommandNames.Add("02-Switch Tank");
-         myCommandNames.Add("03-Add Regions");
-         myCommandNames.Add("04-Random Pt");
-         myCommandNames.Add("05-Cleanup");
+         myCommandNames.Add("01-Add Regions");
+         myCommandNames.Add("02-Random Pt");
+         myCommandNames.Add("03-Cleanup");
          //------------------------------------
          myDockPanel = dp;
          //------------------------------------
@@ -79,9 +73,9 @@ namespace PleasantvilleGame
          //------------------------------------
          foreach (UIElement ui0 in myDockPanel.Children)
          {
-            if (ui0 is StackPanel stackPanelInside) // DockPanel showing main play area
+            if (ui0 is DockPanel dockPanelInside) // DockPanel showing main play area
             {
-               foreach (UIElement ui1 in stackPanelInside.Children)
+               foreach (UIElement ui1 in dockPanelInside.Children)
                {
                   if (ui1 is ScrollViewer)
                   {
@@ -113,18 +107,6 @@ namespace PleasantvilleGame
             CtorError = true;
             return;
          }
-         //-------------------------------------
-         foreach (UIElement ui in myCanvasMain.Children) // Clean the Canvas of all marks
-         {
-            if (ui is Image img)
-            {
-               if (true == img.Name.Contains("TankMat"))
-               {
-                  myCanvasHelper.Children.Remove(img); // Remove the old image
-                  break;
-               }
-            }
-         }
          //----------------------------------
          if (false == SetFileName())
          {
@@ -155,11 +137,11 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Command(): myCanvasImageViewer=null");
             return false;
          }
+         //-----------------------------------------------------------------
          if (CommandName == myCommandNames[0])
          {
-            //--------------------------------------------
-            // Remove all Ellipse and Polygons
-            if( false == DeleteEllipsesAndPolygons())
+            
+            if( false == DeleteEllipsesAndPolygons()) // Remove all Ellipse and Polygons
             {
                Logger.Log(LogEnum.LE_ERROR, "TerritoryRegionUnitTest.Command(): DeleteEllipsesAndPolygons() returned false");
                return false;
@@ -172,79 +154,22 @@ namespace PleasantvilleGame
                return false;
             }
          }
-         else if (CommandName == myCommandNames[1])
-         {
-            if (true == myIsBattleMapShown)
-            {
-               myIsBattleMapShown = false;
-            }
-            else
-            {
-               myIsBattleMapShown = true;
-            }
-            if (false == CreateEllipses(true))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipses() returned false");
-               return false;
-            }
-            if (false == CreatePolygons())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreatePolygons() returned false");
-               return false;
-            }
-         }
+         //-----------------------------------------------------------------
          else if (CommandName == myCommandNames[2])
          {
-            if (false == DeleteEllipsesAndPolygons())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): DeleteEllipsesAndPolygons() returned false");
-               return false;
-            }
-            //-------------------------------------
-            foreach (UIElement ui in myCanvasMain.Children) // Clean the Canvas of all marks
-            {
-               if (ui is Image img)
-               {
-                  if (true == img.Name.Contains("TankMat"))
-                  {
-                     myCanvasHelper.Children.Remove(img); // Remove the old image
-                     break;
-                  }
-               }
-            }
-            //-------------------------------------
-            myTankNum++;
-            if (18 < myTankNum)
-               myTankNum = 0;
-            string tankMatName = "m";
-            if (9 < myTankNum)
-               tankMatName += myTankNum.ToString();
-            else
-               tankMatName += ("0" + myTankNum.ToString());
-            Image image = new Image() { Name = "TankMat", Width = 600, Height = 500, Stretch = Stretch.Fill, Source = MapItem.theMapImages.GetBitmapImage(tankMatName) };
-            myCanvasHelper.Children.Add(image); // TankMat changes as get new tanks
-            Canvas.SetLeft(image, 0);
-            Canvas.SetTop(image, 0);
-            //-------------------------------------
-            if (false == CreateEllipses(true))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipses() returned false");
-               return false;
-            }
-            if (false == CreatePolygons())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreatePolygons() returned false");
-               return false;
-            }
+
          }
+         //-----------------------------------------------------------------
          else if (CommandName == myCommandNames[3])
          {
 
          }
+         //-----------------------------------------------------------------
          else if (CommandName == myCommandNames[4])
          {
 
          }
+         //-----------------------------------------------------------------
          else
          {
             if (false == Cleanup(ref gi))
@@ -269,12 +194,7 @@ namespace PleasantvilleGame
          }
          if (HeaderName == myHeaderNames[0])
          {
-            //-------------------------------------
-            Image image = new Image() { Name = "TankMat", Width = 600, Height = 500, Stretch = Stretch.Fill, Source = MapItem.theMapImages.GetBitmapImage("TBD") };
-            myCanvasHelper.Children.Add(image); // TankMat changes as get new tanks
              //-------------------------------------
-            Canvas.SetLeft(image, 0);
-            Canvas.SetTop(image, 0);
             ++myIndexName;
             if (false == CreateEllipses(true))
             {
@@ -421,16 +341,11 @@ namespace PleasantvilleGame
       {
          if (null != myAnchorTerritory) // Add points to the anchor territy that define the region
          {
-            string tType = myTankNum.ToString();
-            // Do an intersection with any other points that
-            // are part of any other region.  If a point is found
-            // that is very close, assume that is the correct
-            // point to add instead of the mouse click.
-            double minDistance = 5;
+            double minDistance = 5; // Do an intersection with any other points that are part of any other region.  If a point is found that is very close, assume that is the correct point to add instead of the mouse click.
             IMapPoint selectedMp = mp;
             foreach (String s in myAnchorTerritory.Adjacents)
             {
-               ITerritory? adjacentTerritory = Territories.theTerritories.Find(s, tType);
+               ITerritory? adjacentTerritory = Territories.theTerritories.Find(s);
                if (null == adjacentTerritory) // Check for error
                {
                   MessageBox.Show("Unable to find " + s);
@@ -438,10 +353,8 @@ namespace PleasantvilleGame
                }
                foreach (IMapPoint mp1 in adjacentTerritory.Points)
                {
-                  double distance = getRange(mp, mp1);
-                  // Find the minimum distance between this point and any adjacent territory point.
-                  // Use that point if it is below a set amount.
-                  if (distance < minDistance)
+                  double distance = GetRange(mp, mp1);
+                  if (distance < minDistance) // Find the minimum distance between this point and any adjacent territory point.  Use that point if it is below a set amount.
                   {
                      minDistance = distance;
                      selectedMp.X = mp1.X;
@@ -510,22 +423,8 @@ namespace PleasantvilleGame
          SolidColorBrush aSolidColorBrush0 = new SolidColorBrush { Color = Color.FromArgb(100, 100, 100, 0) }; // nearly transparent but slightly colored
          foreach (Territory t in Territories.theTerritories)
          {
-            if (true == myIsBattleMapShown)
-            {
-               if (("A" == t.Subname) || ("B" == t.Subname) || ("C" == t.Subname) || ("D" == t.Subname) || ("E" == t.Subname))
-                  continue;
-            }
-            else
-            {
-               if ("Battle" == t.Subname)
-                  continue;
-            }
-            if (("1" == t.Subname) || ("2" == t.Subname) || ("3" == t.Subname) || ("4" == t.Subname) || ("5" == t.Subname) || ("6" == t.Subname) || ("7" == t.Subname) || ("8" == t.Subname) || ("9" == t.Subname) || ("10" == t.Subname) || ("11" == t.Subname) || ("12" == t.Subname) || ("13" == t.Subname) || ("14" == t.Subname) || ("15" == t.Subname) || ("16" == t.Subname) || ("17" == t.Subname) || ("18" == t.Subname))
-            {
-               if (myTankNum.ToString() != t.Subname)
-                  continue;
-            }
-            Ellipse aEllipse = new Ellipse() { Name = t.Name };
+            Ellipse aEllipse = new Ellipse() { Name = t.ToString() };
+            aEllipse.Fill = aSolidColorBrush0;
             aEllipse.StrokeThickness = 1;
             aEllipse.Stroke = Brushes.Red;
             aEllipse.Width = theEllipseDiameter;
@@ -533,10 +432,11 @@ namespace PleasantvilleGame
             System.Windows.Point p = new System.Windows.Point(t.CenterPoint.X, t.CenterPoint.Y);
             p.X -= theEllipseOffset;
             p.Y -= theEllipseOffset;
+            myCanvasMain.Children.Add(aEllipse);
             Canvas.SetLeft(aEllipse, p.X);
             Canvas.SetTop(aEllipse, p.Y);
             myEllipses.Add(aEllipse);
-            if( true == isFirst)
+            if ( true == isFirst)
             {
                aEllipse.Fill = aSolidColorBrush0;
                aEllipse.MouseDown += this.MouseDownEllipse;
@@ -547,72 +447,34 @@ namespace PleasantvilleGame
                aEllipse.MouseDown += this.MouseDownEllipse2;
             }
             //-------------------------
-            Label aLabel = new Label() { Foreground = Brushes.Red, FontFamily = myFontFam, FontWeight = FontWeights.Bold, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = t.Name };
+            Label aLabel = new Label() { Foreground = Brushes.Red, FontFamily = myFontFam, FontWeight = FontWeights.Bold, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = t.ToString() };
             p.X -= theEllipseOffset;
             p.Y -= 2 * theEllipseOffset;
+            myCanvasMain.Children.Add(aLabel);
             Canvas.SetLeft(aLabel, p.X);
             Canvas.SetTop(aLabel, p.Y);
-            //-------------------------
-            if ("Main" == t.CanvasName)
-            {
-               myCanvasMain.Children.Add(aEllipse);
-               //myCanvasMain.Children.Add(aLabel);
-            }
-            else
-            {
-               myCanvasHelper.Children.Add(aEllipse);
-               //myCanvasHelper.Children.Add(aLabel);
-            }
          }
          return true;
       }
       private bool CreatePolygons()
       {
          myPoints.Clear();
-         if (null == myCanvasHelper)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "CreateEllipses(): myCanvasHelper=null");
-            return false;
-         }
          if (null == myCanvasMain)
          {
-            Logger.Log(LogEnum.LE_ERROR, "CreateEllipses(): myCanvasMain=null");
-            return false;
-         }
-         if (null == myCanvasMain)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "CreateEllipses(): myCanvasMain=null");
+            Logger.Log(LogEnum.LE_ERROR, "CreatePolygons(): myCanvasMain=null");
             return false;
          }
          foreach (Territory t in Territories.theTerritories)
          {
-            if (true == myIsBattleMapShown)
-            {
-               if (("A" == t.Subname) || ("B" == t.Subname) || ("C" == t.Subname) || ("D" == t.Subname) || ("E" == t.Subname) )
-                  continue;
-            }
-            else
-            {
-               if ("Battle" == t.Subname)
-                  continue;
-            }
-            if (("1" == t.Subname) || ("2" == t.Subname) || ("3" == t.Subname) || ("4" == t.Subname) || ("5" == t.Subname) || ("6" == t.Subname) || ("7" == t.Subname) || ("8" == t.Subname) || ("9" == t.Subname) || ("10" == t.Subname) || ("11" == t.Subname) || ("12" == t.Subname) || ("13" == t.Subname) || ("14" == t.Subname) || ("15" == t.Subname) || ("16" == t.Subname) || ("17" == t.Subname) || ("18" == t.Subname))
-            {
-               if (myTankNum.ToString() != t.Subname)
-                  continue;
-            }
             if (1 < t.Points.Count)
             {
                PointCollection points = new PointCollection();
                foreach (IMapPoint mp1 in t.Points)
                   points.Add(new System.Windows.Point(mp1.X, mp1.Y));
-               Polygon aPolygon = new Polygon { Fill= Utilities.theBrushRegion, Points = points, Name = t.Name, Visibility= Visibility.Visible };
+               Polygon aPolygon = new Polygon { Fill= Utilities.theBrushRegion, Points = points, Name = t.ToString(), Visibility= Visibility.Visible };
                aPolygon.MouseDown += this.MouseDownPolygon;
                Canvas.SetZIndex(aPolygon, 0);
-               if ("Main" == t.CanvasName)
-                  myCanvasMain.Children.Add(aPolygon);
-               else
-                  myCanvasHelper.Children.Add(aPolygon);
+               myCanvasMain.Children.Add(aPolygon);
             }
          }
          return true;
@@ -773,29 +635,17 @@ namespace PleasantvilleGame
       //--------------------------------------------------------
       void MouseDownEllipse(object sender, MouseButtonEventArgs e)
       {
-         if (null == myCanvasHelper)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "MouseDownEllipse(): myCanvasHelper=null");
-            return;
-         }
          if (null == myCanvasMain)
          {
             Logger.Log(LogEnum.LE_ERROR, "MouseDownEllipse(): myCanvasMain=null");
             return;
          }
-         string tType = myTankNum.ToString();
          //------------------------------------------------
          System.Windows.Point p = e.GetPosition(myCanvasMain);
-         bool isMainCanvas = true;
-         if (p.X < 0.0)
-         {
-            p = e.GetPosition(myCanvasHelper);
-            isMainCanvas = false;
-         }
          IMapPoint mp = new MapPoint(p.X, p.Y);
          System.Diagnostics.Debug.WriteLine("MouseDownEllipse(): {0}", mp.ToString());
          Ellipse mousedEllipse = (Ellipse)sender;
-         ITerritory? matchingTerritory = Territories.theTerritories.Find(mousedEllipse.Name, tType);
+         ITerritory? matchingTerritory = Territories.theTerritories.Find(mousedEllipse.Name);
          if (null == matchingTerritory) // Check for error
          {
             MessageBox.Show("Unable to find " + mousedEllipse.Name);
@@ -806,10 +656,7 @@ namespace PleasantvilleGame
             MessageBox.Show("Anchoring " + mousedEllipse.Name);
             myAnchorTerritory = matchingTerritory; // If there is no anchor territory. Set it.
             mousedEllipse.Fill = Brushes.Red;
-            if (true == isMainCanvas)
-               myCanvasMain.MouseDown += MouseDownCanvas;
-            else
-               myCanvasHelper.MouseDown += MouseDownCanvas;
+            myCanvasMain.MouseDown += MouseDownCanvas;
             return;
          }
          if (matchingTerritory.Name == myAnchorTerritory.Name)
@@ -821,23 +668,15 @@ namespace PleasantvilleGame
             PointCollection points = new PointCollection();
             foreach (IMapPoint mp1 in myPoints)
                points.Add(new System.Windows.Point(mp1.X, mp1.Y));
-            Polygon aPolygon = new Polygon { Fill = Brushes.Red, Points = points, Name = matchingTerritory.Name };
+            Polygon aPolygon = new Polygon { Fill = Brushes.Red, Points = points, Name = matchingTerritory.ToString() };
             aPolygon.MouseDown += this.MouseDownPolygon;
             aPolygon.Fill = Brushes.Black;
             mousedEllipse.Fill = Brushes.Black;
             myAnchorTerritory.Points = new List<IMapPoint>(myPoints);
             myPoints.Clear();
             myAnchorTerritory = null;
-            if (true == isMainCanvas)
-            {
-               myCanvasMain.MouseDown -= MouseDownCanvas;
-               myCanvasMain.Children.Add(aPolygon);
-            }
-            else
-            {
-               myCanvasHelper.MouseDown -= MouseDownCanvas;
-               myCanvasHelper.Children.Add(aPolygon);
-            }
+            myCanvasMain.MouseDown -= MouseDownCanvas;
+            myCanvasMain.Children.Add(aPolygon);
          }
          e.Handled = true;
       }
@@ -848,10 +687,13 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "MouseDownEllipse2(): myCanvasMain=null");
             return;
          }
-         string tType = myTankNum.ToString();
-         //------------------------------------------------
-         Ellipse mousedEllipse = (Ellipse)sender;
-         ITerritory? matchingTerritory = Territories.theTerritories.Find(mousedEllipse.Name, tType);
+         Ellipse? mousedEllipse = (Ellipse)sender;
+         if( null == mousedEllipse)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MouseDownEllipse2(): mousedEllipse=null");
+            return;
+         }  
+         ITerritory? matchingTerritory = Territories.theTerritories.Find(mousedEllipse.Name);
          if (null == matchingTerritory) // Check for error
          {
             MessageBox.Show("Unable to find " + mousedEllipse.Name);
@@ -878,32 +720,19 @@ namespace PleasantvilleGame
       }
       void MouseDownPolygon(object sender, MouseButtonEventArgs e)
       {
-         if (null == myCanvasHelper)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "CreateEllipse(): myCanvasHelper=null");
-            return;
-         }
          if (null == myCanvasMain)
          {
             Logger.Log(LogEnum.LE_ERROR, "MouseDownPolygon(): myCanvasMain=null");
             return;
          }
-         string tType = myTankNum.ToString();
          //------------------------------------------------
          System.Windows.Point p = e.GetPosition(myCanvasMain);
-         bool isMainCanvas = true;
-         if (p.X < 0.0)
-         {
-            p = e.GetPosition(myCanvasHelper);
-            isMainCanvas = false;
-         }
          IMapPoint mp = new MapPoint(p.X, p.Y);
          System.Diagnostics.Debug.WriteLine("TerritoryRegionUnitTest.MouseDownPolygon(): {0}", mp.ToString());
-         if (null == myAnchorTerritory)
+         if (null == myAnchorTerritory) // This function removes an existing polygon when it is clicked if no anchor territory exists
          {
-            // This function removes an existing polygon when it is clicked if no achor territory exists
-            Polygon aPolygon = (Polygon)sender;
-            ITerritory? matchingTerritory = Territories.theTerritories.Find(aPolygon.Name, tType);
+            Polygon aPolygon = (Polygon)sender; 
+            ITerritory? matchingTerritory = Territories.theTerritories.Find(aPolygon.Name);
             if (null == matchingTerritory) // Check for error
             {
                MessageBox.Show("Unable to find " + aPolygon.Name);
@@ -911,10 +740,7 @@ namespace PleasantvilleGame
             else if ((null == myAnchorTerritory) || matchingTerritory.Name == myAnchorTerritory.Name)
             {
                matchingTerritory.Points.Clear();
-               if (true == isMainCanvas)
-                  myCanvasMain.Children.Remove(aPolygon);
-               else
-                  myCanvasHelper.Children.Remove(aPolygon);
+               myCanvasMain.Children.Remove(aPolygon);
             }
          }
          else
@@ -924,7 +750,7 @@ namespace PleasantvilleGame
          }
          e.Handled = true;
       }
-      double getRange(IMapPoint p1, IMapPoint p2)
+      double GetRange(IMapPoint p1, IMapPoint p2)
       {
          double d1 = Math.Abs(p1.X - p2.X);
          double d2 = Math.Abs(p1.Y - p2.Y);
