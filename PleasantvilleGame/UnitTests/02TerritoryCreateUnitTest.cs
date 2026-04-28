@@ -455,12 +455,106 @@ namespace PleasantvilleGame
       }
       private bool ShowAdjacents(ITerritories territories)
       {
+         if (null == myCanvasMain)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ShowAdjacents(): myCanvasMain=null");
+            return false;
+         }
          myAnchorTerritory = null;
          SolidColorBrush aSolidColorBrush0 = new SolidColorBrush { Color = Color.FromArgb(100, 100, 100, 0) }; // completely clear
          SolidColorBrush aSolidColorBrush1 = new SolidColorBrush { Color = Color.FromArgb(010, 255, 100, 0) }; // almost clear
          SolidColorBrush aSolidColorBrush2 = new SolidColorBrush { Color = Color.FromArgb(255, 0, 0, 0) };     // black
          SolidColorBrush aSolidColorBrush3 = new SolidColorBrush { Color = Colors.Red };
          SolidColorBrush aSolidColorBrush4 = new SolidColorBrush { Color = Colors.Yellow };
+         foreach (Territory anchorTerritory in territories)
+         {
+            Ellipse? anchorEllipse = null; // Find the corresponding ellipse for this anchor territory
+            foreach (UIElement ui in myCanvasMain.Children)
+            {
+               if (ui is Ellipse)
+               {
+                  Ellipse ellipse = (Ellipse)ui;
+                  if (anchorTerritory.ToString() == ellipse.ToString())
+                  {
+                     anchorEllipse = ellipse;
+                     break;
+                  }
+               }
+            }
+            if (null == anchorEllipse)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ShowAdjacents(): anchorEllipse=null for " + anchorTerritory.Name);
+               return false;
+            }
+            if (0 < anchorTerritory.Adjacents.Count)
+               anchorEllipse.Fill = aSolidColorBrush4;
+            // At this point, the anchorEllipse and the anchorTerritory are found.
+            foreach (string s in anchorTerritory.Adjacents)
+            {
+               ITerritory? adjacentTerritory = null;
+               foreach (ITerritory t in territories) // Find the River Territory corresponding to this name
+               {
+                  if (t.ToString() == s)
+                  {
+                     adjacentTerritory = t;
+                     break;
+                  }
+               }
+               if (null == adjacentTerritory)
+               {
+                  MessageBox.Show("ShowAdjacents(): Not Found s=" + s);
+                  return false;
+               }
+               string? adjacentName = adjacentTerritory.ToString();
+               if( null == adjacentName)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "ShowAdjacents(): adjacentName=null for " + anchorTerritory.Name);
+                  return false;
+               }
+               Ellipse? adjacentEllipse = null; // Find the corresponding ellipse for this territory
+               foreach (UIElement ui in myCanvasMain.Children)
+               {
+                  if (ui is Ellipse)
+                  {
+                     Ellipse ellipse = (Ellipse)ui;
+                     if (adjacentName == ellipse.Name)
+                     {
+                        adjacentEllipse = ellipse;
+                        break;
+                     }
+                  }
+               }
+               if (null == adjacentEllipse)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, adjacentName);
+                  MessageBox.Show(anchorTerritory.ToString());
+                  return false;
+               }
+               //-------------------------------------------------
+               bool isReturnFound = false;
+               foreach (String s1 in adjacentTerritory.Adjacents) // Search the Adjacent Territory  List to make sure the anchor territory is in that list. It should be bi directional.
+               {
+                  string returnName = s1;
+                  if (returnName == anchorTerritory.ToString())
+                  {
+                     isReturnFound = true; // Yes the adjacent River has a entry to return the River back to the anchor territory
+                     break;
+                  }
+               }
+               // Anchor Property not found in the adjacent property territory.  This is an error condition.
+               if (false == isReturnFound)
+               {
+                  anchorEllipse.Fill = aSolidColorBrush3; // change color of two ellipses to signify error
+                  adjacentEllipse.Fill = aSolidColorBrush2;
+                  StringBuilder sb = new StringBuilder("anchor=");
+                  sb.Append(anchorTerritory.Name);
+                  sb.Append(" NOT in list for adjacent=");
+                  sb.Append(adjacentName);
+                  MessageBox.Show(sb.ToString());
+                  return false;
+               }
+            }
+         }
          return true;
       }
       //--------------------------------------------------------------------

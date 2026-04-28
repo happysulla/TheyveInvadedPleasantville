@@ -89,6 +89,14 @@ namespace PleasantvilleGame
       public bool CreateUnitTests(IGameInstance gi, DockPanel dp, GameViewerWindow gvw, EventViewer ev, IDieRoller dr, CanvasImageViewer civ)
       {
          //-----------------------------------------------------------------------------
+         IUnitTest ut3 = new TerritoryRegionUnitTest(dp, gi, civ);
+         if (true == ut3.CtorError)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): TerritoryRegionUnitTest() ctor error");
+            return false;
+         }
+         gi.UnitTests.Add(ut3);
+         //-----------------------------------------------------------------------------
          IUnitTest ut1 = new GameViewerCreateUnitTest(dp, gi, civ);
          if (true == ut1.CtorError)
          {
@@ -104,14 +112,7 @@ namespace PleasantvilleGame
             return false;
          }
          gi.UnitTests.Add(ut2);
-         ////-----------------------------------------------------------------------------
-         //IUnitTest ut3 = new TerritoryRegionUnitTest(dp, gi, civ);
-         //if (true == ut3.CtorError)
-         //{
-         //   Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): TerritoryRegionUnitTest() ctor error");
-         //   return false;
-         //}
-         //gi.UnitTests.Add(ut3);
+
          ////-----------------------------------------------------------------------------
          //IUnitTest ut4 = new PolylineCreateUnitTest(dp, gi, civ);
          //if (true == ut4.CtorError)

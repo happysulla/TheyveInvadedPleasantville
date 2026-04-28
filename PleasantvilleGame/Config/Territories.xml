@@ -279,14 +279,23 @@
     <Subname value="26" />
     <CenterPoint X="0359.75" Y="0239.52" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Road_22" />
+      <adjacent value="Grass_25" />
+      <adjacent value="Grass_33" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="27" />
     <CenterPoint X="0662.25" Y="0226.02" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_26" />
+      <adjacent value="Road_25" />
+      <adjacent value="Grass_38" />
+      <adjacent value="Grass_37" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -304,63 +313,108 @@
     <Subname value="30" />
     <CenterPoint X="0079.25" Y="0325.52" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="School_3" />
+      <adjacent value="Grass_29" />
+      <adjacent value="Grass_31" />
+      <adjacent value="Grass_40" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="32" />
     <CenterPoint X="0295.75" Y="0282.02" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="Road_55" />
+      <adjacent value="Road_54" />
+      <adjacent value="Grass_25" />
+      <adjacent value="Grass_33" />
+      <adjacent value="Grass_26" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="33" />
     <CenterPoint X="0346.75" Y="0299.02" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Grass_32" />
+      <adjacent value="Grass_26" />
+      <adjacent value="Road_55" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="34" />
     <CenterPoint X="0564.25" Y="0350.52" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="Grass_35" />
+      <adjacent value="Grass_43" />
+      <adjacent value="Grass_42" />
+      <adjacent value="Road_5" />
+      <adjacent value="Road_4" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="35" />
     <CenterPoint X="0611.25" Y="0342.02" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="DocOffice_2" />
+      <adjacent value="Grass_34" />
+      <adjacent value="Grass_43" />
+      <adjacent value="Road_33" />
+      <adjacent value="Grass_36" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="36" />
     <CenterPoint X="0653.25" Y="0324.52" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Grass_37" />
+      <adjacent value="Grass_35" />
+      <adjacent value="Road_33" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="37" />
     <CenterPoint X="0652.25" Y="0278.02" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Grass_27" />
+      <adjacent value="Grass_38" />
+      <adjacent value="Grass_36" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="38" />
     <CenterPoint X="0712.75" Y="0275.52" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="House_3" />
+      <adjacent value="Road_29" />
+      <adjacent value="Grass_37" />
+      <adjacent value="Grass_27" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="39" />
     <CenterPoint X="0810.25" Y="0253.52" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_29" />
+      <adjacent value="Road_28" />
+      <adjacent value="Grass_28" />
+      <adjacent value="Grass_44" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -391,28 +445,50 @@
     <Subname value="42" />
     <CenterPoint X="0550.67" Y="0409.66" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="Grass_34" />
+      <adjacent value="Grass_43" />
+      <adjacent value="Road_5" />
+      <adjacent value="Road_6" />
+      <adjacent value="Grass_54" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="43" />
     <CenterPoint X="0609.25" Y="0394.52" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="6">
+      <adjacent value="House_5" />
+      <adjacent value="Grass_35" />
+      <adjacent value="Road_33" />
+      <adjacent value="Road_34" />
+      <adjacent value="Grass_34" />
+      <adjacent value="Grass_42" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="44" />
     <CenterPoint X="0808.25" Y="0300.52" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Grass_39" />
+      <adjacent value="Road_30" />
+      <adjacent value="Grass_45" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="45" />
     <CenterPoint X="0809.25" Y="0349.02" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Grass_44" />
+      <adjacent value="Road_30" />
+      <adjacent value="Road_31" />
+      <adjacent value="Grass_55" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -431,7 +507,11 @@
     <Subname value="51" />
     <CenterPoint X="0122.75" Y="0446.02" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Grass_50" />
+      <adjacent value="Road_49" />
+      <adjacent value="Road_48" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -462,19 +542,29 @@
     <Subname value="54" />
     <CenterPoint X="0539.33" Y="0462.32" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="Grass_42" />
+      <adjacent value="Road_6" />
+      <adjacent value="Road_7" />
+      <adjacent value="Road_62" />
+      <adjacent value="Road_63" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="55" />
     <CenterPoint X="0791.25" Y="0397.52" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Road_31" />
+      <adjacent value="Grass_45" />
+      <adjacent value="Grass_58" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="56" />
-    <CenterPoint X="0029.75" Y="0468.52" />
+    <CenterPoint X="0025.80" Y="0464.79" />
     <Points count="0" />
     <Adjacents count="2">
       <adjacent value="Grass_59" />
@@ -486,19 +576,28 @@
     <Subname value="57" />
     <CenterPoint X="0703.25" Y="0468.02" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Road_64" />
+      <adjacent value="Road_35" />
+      <adjacent value="Road_34" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="58" />
     <CenterPoint X="0786.25" Y="0459.02" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Grass_55" />
+      <adjacent value="Grass_57" />
+      <adjacent value="Road_65" />
+      <adjacent value="Road_64" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="59" />
-    <CenterPoint X="0023.25" Y="0519.24" />
+    <CenterPoint X="0022.60" Y="0521.59" />
     <Points count="0" />
     <Adjacents count="3">
       <adjacent value="Grass_60" />
@@ -511,7 +610,12 @@
     <Subname value="60" />
     <CenterPoint X="0083.25" Y="0540.74" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Grass_65" />
+      <adjacent value="Road_50" />
+      <adjacent value="Grass_59" />
+      <adjacent value="MachineShop_1" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -529,19 +633,27 @@
     <Subname value="62" />
     <CenterPoint X="0617.75" Y="0550.74" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_63" />
+      <adjacent value="Road_35" />
+      <adjacent value="Grass_67" />
+      <adjacent value="Road_36" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="63" />
-    <CenterPoint X="0807.40" Y="0535.23" />
+    <CenterPoint X="0807.40" Y="0541.63" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="2">
+      <adjacent value="Road_65" />
+      <adjacent value="Grass_68" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="64" />
-    <CenterPoint X="0018.25" Y="0578.24" />
+    <CenterPoint X="0018.60" Y="0579.99" />
     <Points count="0" />
     <Adjacents count="3">
       <adjacent value="MachineShop_1" />
@@ -554,7 +666,12 @@
     <Subname value="65" />
     <CenterPoint X="0122.25" Y="0577.74" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Grass_60" />
+      <adjacent value="Road_50" />
+      <adjacent value="Road_51" />
+      <adjacent value="Grass_70" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -573,19 +690,27 @@
     <Subname value="67" />
     <CenterPoint X="0617.25" Y="0607.24" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_37" />
+      <adjacent value="Road_36" />
+      <adjacent value="Grass_62" />
+      <adjacent value="Grass_72" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="68" />
-    <CenterPoint X="0811.25" Y="0597.74" />
+    <CenterPoint X="0809.00" Y="0597.63" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="2">
+      <adjacent value="Grass_63" />
+      <adjacent value="Grass_73" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="69" />
-    <CenterPoint X="0018.25" Y="0625.24" />
+    <CenterPoint X="0020.20" Y="0627.19" />
     <Points count="0" />
     <Adjacents count="2">
       <adjacent value="Grass_64" />
@@ -597,12 +722,19 @@
     <Subname value="70" />
     <CenterPoint X="0162.25" Y="0618.74" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="6">
+      <adjacent value="Grass_65" />
+      <adjacent value="MachineShop_4" />
+      <adjacent value="Road_52" />
+      <adjacent value="Road_12" />
+      <adjacent value="Road_13" />
+      <adjacent value="Road_51" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="71" />
-    <CenterPoint X="0017.75" Y="0678.24" />
+    <CenterPoint X="0018.60" Y="0681.59" />
     <Points count="0" />
     <Adjacents count="2">
       <adjacent value="Road_15" />
@@ -614,182 +746,349 @@
     <Subname value="72" />
     <CenterPoint X="0607.75" Y="0660.74" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_38" />
+      <adjacent value="Road_37" />
+      <adjacent value="Grass_67" />
+      <adjacent value="Grass_78" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="73" />
-    <CenterPoint X="0813.75" Y="0665.74" />
+    <CenterPoint X="0809.80" Y="0665.63" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Grass_68" />
+      <adjacent value="Graveyard_1" />
+      <adjacent value="Grass_81" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="74" />
     <CenterPoint X="0145.25" Y="0743.24" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_13" />
+      <adjacent value="Road_14" />
+      <adjacent value="Grass_84" />
+      <adjacent value="Grass_83" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="75" />
     <CenterPoint X="0365.25" Y="0757.24" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="7">
+      <adjacent value="Road_10" />
+      <adjacent value="House_8" />
+      <adjacent value="Road_11" />
+      <adjacent value="Grass_85" />
+      <adjacent value="StockPen_1" />
+      <adjacent value="Grass_96" />
+      <adjacent value="Grass_95" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="76" />
     <CenterPoint X="0476.75" Y="0699.24" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="Grass_77" />
+      <adjacent value="Grass_86" />
+      <adjacent value="Grass_85" />
+      <adjacent value="Road_10" />
+      <adjacent value="Road_9" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="77" />
     <CenterPoint X="0526.25" Y="0700.74" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="HotelAndRestaurant_5" />
+      <adjacent value="Grass_76" />
+      <adjacent value="Grass_78" />
+      <adjacent value="Grass_87" />
+      <adjacent value="Grass_86" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="78" />
     <CenterPoint X="0583.25" Y="0710.74" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="Grass_72" />
+      <adjacent value="Grass_77" />
+      <adjacent value="Grass_87" />
+      <adjacent value="Road_39" />
+      <adjacent value="Road_38" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="79" />
     <CenterPoint X="0685.80" Y="0723.99" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="6">
+      <adjacent value="Graveyard_1" />
+      <adjacent value="Road_38" />
+      <adjacent value="Road_39" />
+      <adjacent value="Grass_89" />
+      <adjacent value="Grass_88" />
+      <adjacent value="Grass_80" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="80" />
     <CenterPoint X="0756.75" Y="0739.74" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="6">
+      <adjacent value="Grass_81" />
+      <adjacent value="Graveyard_1" />
+      <adjacent value="Grass_79" />
+      <adjacent value="Grass_89" />
+      <adjacent value="RR_21" />
+      <adjacent value="RR_22" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="81" />
     <CenterPoint X="0805.75" Y="0734.24" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="Graveyard_1" />
+      <adjacent value="Grass_73" />
+      <adjacent value="Grass_80" />
+      <adjacent value="RR_23" />
+      <adjacent value="RR_22" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="82" />
     <CenterPoint X="0021.75" Y="0819.24" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_15" />
+      <adjacent value="Grass_83" />
+      <adjacent value="Grass_91" />
+      <adjacent value="Grass_90" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="83" />
     <CenterPoint X="0078.75" Y="0791.74" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="6">
+      <adjacent value="Road_15" />
+      <adjacent value="Grass_82" />
+      <adjacent value="Grass_91" />
+      <adjacent value="Grass_84" />
+      <adjacent value="Grass_74" />
+      <adjacent value="Road_14" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="84" />
     <CenterPoint X="0137.75" Y="0792.74" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="Grass_74" />
+      <adjacent value="Grass_83" />
+      <adjacent value="Grass_92" />
+      <adjacent value="Grass_93" />
+      <adjacent value="Grass_91" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="85" />
     <CenterPoint X="0429.25" Y="0747.24" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="StockPen_1" />
+      <adjacent value="Grass_86" />
+      <adjacent value="Grass_76" />
+      <adjacent value="Road_10" />
+      <adjacent value="Grass_75" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="86" />
     <CenterPoint X="0485.25" Y="0746.24" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="StockPen_1" />
+      <adjacent value="Grass_85" />
+      <adjacent value="Grass_76" />
+      <adjacent value="Grass_77" />
+      <adjacent value="Grass_87" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="87" />
     <CenterPoint X="0544.25" Y="0753.74" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="6">
+      <adjacent value="Grass_86" />
+      <adjacent value="Grass_77" />
+      <adjacent value="Grass_78" />
+      <adjacent value="Road_39" />
+      <adjacent value="Road_40" />
+      <adjacent value="Grass_97" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="88" />
     <CenterPoint X="0640.25" Y="0772.74" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="7">
+      <adjacent value="RR_19" />
+      <adjacent value="RR_18" />
+      <adjacent value="RR_17" />
+      <adjacent value="Road_40" />
+      <adjacent value="Road_39" />
+      <adjacent value="Grass_79" />
+      <adjacent value="Grass_89" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="89" />
     <CenterPoint X="0708.25" Y="0765.74" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="6">
+      <adjacent value="Grass_79" />
+      <adjacent value="Grass_80" />
+      <adjacent value="Grass_88" />
+      <adjacent value="RR_20" />
+      <adjacent value="RR_21" />
+      <adjacent value="RR_19" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="90" />
     <CenterPoint X="0032.25" Y="0871.24" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="Grass_82" />
+      <adjacent value="Grass_91" />
+      <adjacent value="RR_3" />
+      <adjacent value="RR_2" />
+      <adjacent value="RR_1" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="91" />
     <CenterPoint X="0083.25" Y="0853.24" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="7">
+      <adjacent value="RR_3" />
+      <adjacent value="RR_4" />
+      <adjacent value="Grass_92" />
+      <adjacent value="Grass_84" />
+      <adjacent value="Grass_83" />
+      <adjacent value="Grass_82" />
+      <adjacent value="Grass_90" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="92" />
     <CenterPoint X="0142.25" Y="0846.74" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="RR_5" />
+      <adjacent value="RR_4" />
+      <adjacent value="Grass_84" />
+      <adjacent value="Grass_93" />
+      <adjacent value="Grass_91" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="93" />
     <CenterPoint X="0186.25" Y="0828.24" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="BarAndGrill_2" />
+      <adjacent value="Grass_84" />
+      <adjacent value="RR_5" />
+      <adjacent value="RR_6" />
+      <adjacent value="Grass_94" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="94" />
     <CenterPoint X="0246.25" Y="0824.74" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="6">
+      <adjacent value="House_8" />
+      <adjacent value="Grass_93" />
+      <adjacent value="RR_6" />
+      <adjacent value="RR_7" />
+      <adjacent value="RR_8" />
+      <adjacent value="Grass_95" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="95" />
     <CenterPoint X="0316.25" Y="0815.24" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="6">
+      <adjacent value="Grass_94" />
+      <adjacent value="RR_8" />
+      <adjacent value="RR_9" />
+      <adjacent value="RR_10" />
+      <adjacent value="Grass_96" />
+      <adjacent value="Grass_75" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="96" />
     <CenterPoint X="0373.25" Y="0816.24" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="6">
+      <adjacent value="Grass_75" />
+      <adjacent value="Grass_95" />
+      <adjacent value="RR_10" />
+      <adjacent value="RR_11" />
+      <adjacent value="RR_12" />
+      <adjacent value="StockPen_1" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
     <Subname value="97" />
     <CenterPoint X="0525.25" Y="0798.74" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="7">
+      <adjacent value="Grass_87" />
+      <adjacent value="Grass_86" />
+      <adjacent value="StockPen_1" />
+      <adjacent value="RR_14" />
+      <adjacent value="RR_15" />
+      <adjacent value="RR_16" />
+      <adjacent value="Road_40" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1023,7 +1322,11 @@
     <Subname value="31" />
     <CenterPoint X="0132.25" Y="0326.52" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Road_47" />
+      <adjacent value="Grass_30" />
+      <adjacent value="Road_46" />
+    </Adjacents>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1061,56 +1364,80 @@
     <Subname value="K" />
     <CenterPoint X="0126.60" Y="0386.43" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="2">
+      <adjacent value="Road_48" />
+      <adjacent value="Grass_40" />
+    </Adjacents>
   </Territory>
   <Territory value="House">
     <CanvasName value="Main" />
     <Subname value="2" />
     <CenterPoint X="0233.00" Y="0242.43" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="2">
+      <adjacent value="Grass_25" />
+      <adjacent value="Road_53" />
+    </Adjacents>
   </Territory>
   <Territory value="House">
     <CanvasName value="Main" />
     <Subname value="3" />
     <CenterPoint X="0717.80" Y="0231.23" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="2">
+      <adjacent value="Road_27" />
+      <adjacent value="Grass_38" />
+    </Adjacents>
   </Territory>
   <Territory value="House">
     <CanvasName value="Main" />
     <Subname value="6" />
     <CenterPoint X="0716.20" Y="0420.79" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="2">
+      <adjacent value="Grass_58" />
+      <adjacent value="Road_34" />
+    </Adjacents>
   </Territory>
   <Territory value="House">
     <CanvasName value="Main" />
     <Subname value="5" />
     <CenterPoint X="0602.60" Y="0451.99" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="2">
+      <adjacent value="Grass_43" />
+      <adjacent value="Road_63" />
+    </Adjacents>
   </Territory>
   <Territory value="House">
     <CanvasName value="Main" />
     <Subname value="7" />
     <CenterPoint X="0400.20" Y="0492.03" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="2">
+      <adjacent value="Grass_53" />
+      <adjacent value="Road_61" />
+    </Adjacents>
   </Territory>
   <Territory value="House">
     <CanvasName value="Main" />
     <Subname value="4" />
     <CenterPoint X="0094.60" Y="0493.63" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="2">
+      <adjacent value="Grass_50" />
+      <adjacent value="Road_50" />
+    </Adjacents>
   </Territory>
   <Territory value="House">
     <CanvasName value="Main" />
     <Subname value="8" />
     <CenterPoint X="0293.80" Y="0751.19" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="2">
+      <adjacent value="Grass_94" />
+      <adjacent value="Grass_75" />
+    </Adjacents>
   </Territory>
   <Territory value="Tavern">
     <CanvasName value="Main" />
@@ -1326,42 +1653,64 @@
     <Subname value="1" />
     <CenterPoint X="0441.00" Y="0231.23" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Road_23" />
+      <adjacent value="Bank_2" />
+      <adjacent value="Bank_3" />
+    </Adjacents>
   </Territory>
   <Territory value="Bank">
     <CanvasName value="Main" />
     <Subname value="2" />
     <CenterPoint X="0398.60" Y="0299.23" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_56" />
+      <adjacent value="Bank_4" />
+      <adjacent value="Bank_3" />
+      <adjacent value="Bank_1" />
+    </Adjacents>
   </Territory>
   <Territory value="Bank">
     <CanvasName value="Main" />
     <Subname value="3" />
     <CenterPoint X="0456.20" Y="0285.63" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Bank_1" />
+      <adjacent value="Bank_2" />
+      <adjacent value="Bank_4" />
+    </Adjacents>
   </Territory>
   <Territory value="Bank">
     <CanvasName value="Main" />
     <Subname value="4" />
     <CenterPoint X="0441.00" Y="0337.63" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="2">
+      <adjacent value="Bank_2" />
+      <adjacent value="Bank_3" />
+    </Adjacents>
   </Territory>
   <Territory value="DocOffice">
     <CanvasName value="Main" />
     <Subname value="1" />
     <CenterPoint X="0605.00" Y="0230.43" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="2">
+      <adjacent value="DocOffice_2" />
+      <adjacent value="Road_25" />
+    </Adjacents>
   </Territory>
   <Territory value="DocOffice">
     <CanvasName value="Main" />
     <Subname value="2" />
     <CenterPoint X="0589.80" Y="0282.43" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="2">
+      <adjacent value="DocOffice_1" />
+      <adjacent value="Grass_35" />
+    </Adjacents>
   </Territory>
   <Territory value="VFW">
     <CanvasName value="Main" />
@@ -1443,42 +1792,67 @@
     <Subname value="1" />
     <CenterPoint X="0542.60" Y="0551.23" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Road_62" />
+      <adjacent value="HotelAndRestaurant_2" />
+      <adjacent value="HotelAndRestaurant_3" />
+    </Adjacents>
   </Territory>
   <Territory value="HotelAndRestaurant">
     <CanvasName value="Main" />
     <Subname value="2" />
     <CenterPoint X="0506.60" Y="0601.63" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="HotelAndRestaurant_3" />
+      <adjacent value="HotelAndRestaurant_1" />
+      <adjacent value="HotelAndRestaurant_5" />
+      <adjacent value="HotelAndRestaurant_4" />
+    </Adjacents>
   </Territory>
   <Territory value="HotelAndRestaurant">
     <CanvasName value="Main" />
     <Subname value="3" />
     <CenterPoint X="0565.80" Y="0598.43" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="HotelAndRestaurant_1" />
+      <adjacent value="HotelAndRestaurant_2" />
+      <adjacent value="HotelAndRestaurant_5" />
+    </Adjacents>
   </Territory>
   <Territory value="HotelAndRestaurant">
     <CanvasName value="Main" />
     <Subname value="4" />
     <CenterPoint X="0490.60" Y="0654.43" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="2">
+      <adjacent value="HotelAndRestaurant_5" />
+      <adjacent value="HotelAndRestaurant_2" />
+    </Adjacents>
   </Territory>
   <Territory value="HotelAndRestaurant">
     <CanvasName value="Main" />
     <Subname value="5" />
     <CenterPoint X="0550.60" Y="0648.03" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="HotelAndRestaurant_3" />
+      <adjacent value="HotelAndRestaurant_2" />
+      <adjacent value="HotelAndRestaurant_4" />
+      <adjacent value="Grass_77" />
+    </Adjacents>
   </Territory>
   <Territory value="Church">
     <CanvasName value="Main" />
     <Subname value="1" />
     <CenterPoint X="0709.00" Y="0576.79" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Church_2" />
+      <adjacent value="Church_4" />
+      <adjacent value="Church_3" />
+    </Adjacents>
   </Territory>
   <Territory value="Church">
     <CanvasName value="Main" />
@@ -1497,56 +1871,90 @@
     <Subname value="3" />
     <CenterPoint X="0696.20" Y="0639.99" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Graveyard_1" />
+      <adjacent value="Church_4" />
+      <adjacent value="Church_1" />
+    </Adjacents>
   </Territory>
   <Territory value="Church">
     <CanvasName value="Main" />
     <Subname value="4" />
     <CenterPoint X="0734.60" Y="0640.79" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Church_3" />
+      <adjacent value="Church_1" />
+      <adjacent value="Church_2" />
+      <adjacent value="Church_5" />
+    </Adjacents>
   </Territory>
   <Territory value="Church">
     <CanvasName value="Main" />
     <Subname value="5" />
     <CenterPoint X="0773.00" Y="0640.79" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="2">
+      <adjacent value="Church_4" />
+      <adjacent value="Church_2" />
+    </Adjacents>
   </Territory>
   <Territory value="Graveyard">
     <CanvasName value="Main" />
     <Subname value="1" />
     <CenterPoint X="0730.60" Y="0683.19" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="6">
+      <adjacent value="Church_3" />
+      <adjacent value="Grass_73" />
+      <adjacent value="Grass_81" />
+      <adjacent value="Grass_80" />
+      <adjacent value="Grass_79" />
+      <adjacent value="Road_38" />
+    </Adjacents>
   </Territory>
   <Territory value="MachineShop">
     <CanvasName value="Main" />
     <Subname value="1" />
     <CenterPoint X="0064.20" Y="0582.39" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Grass_60" />
+      <adjacent value="Grass_64" />
+      <adjacent value="MachineShop_2" />
+    </Adjacents>
   </Territory>
   <Territory value="MachineShop">
     <CanvasName value="Main" />
     <Subname value="2" />
     <CenterPoint X="0083.40" Y="0623.19" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="MachineShop_3" />
+      <adjacent value="MachineShop_4" />
+      <adjacent value="MachineShop_1" />
+    </Adjacents>
   </Territory>
   <Territory value="MachineShop">
     <CanvasName value="Main" />
     <Subname value="3" />
     <CenterPoint X="0062.60" Y="0671.99" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="2">
+      <adjacent value="MachineShop_2" />
+      <adjacent value="MachineShop_4" />
+    </Adjacents>
   </Territory>
   <Territory value="MachineShop">
     <CanvasName value="Main" />
     <Subname value="4" />
     <CenterPoint X="0121.80" Y="0647.99" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Grass_70" />
+      <adjacent value="MachineShop_2" />
+      <adjacent value="MachineShop_3" />
+    </Adjacents>
   </Territory>
   <Territory value="TownHall">
     <CanvasName value="Main" />
@@ -1586,21 +1994,37 @@
     <Subname value="1" />
     <CenterPoint X="0228.20" Y="0731.99" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="2">
+      <adjacent value="Road_12" />
+      <adjacent value="BarAndGrill_2" />
+    </Adjacents>
   </Territory>
   <Territory value="BarAndGrill">
     <CanvasName value="Main" />
     <Subname value="2" />
     <CenterPoint X="0221.00" Y="0777.59" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="2">
+      <adjacent value="BarAndGrill_1" />
+      <adjacent value="Grass_93" />
+    </Adjacents>
   </Territory>
   <Territory value="StockPen">
     <CanvasName value="Main" />
     <Subname value="1" />
     <CenterPoint X="0449.80" Y="0794.39" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="9">
+      <adjacent value="RR_12" />
+      <adjacent value="RR_13" />
+      <adjacent value="RR_14" />
+      <adjacent value="Grass_97" />
+      <adjacent value="Grass_87" />
+      <adjacent value="Grass_86" />
+      <adjacent value="Grass_85" />
+      <adjacent value="Grass_75" />
+      <adjacent value="Grass_96" />
+    </Adjacents>
   </Territory>
   <Territory value="TrainStation">
     <CanvasName value="Main" />
@@ -1628,7 +2052,9 @@
     <Subname value="1" />
     <CenterPoint X="0713.80" Y="0319.19" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="1">
+      <adjacent value="Road_32" />
+    </Adjacents>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -1952,84 +2378,144 @@
     <Subname value="3" />
     <CenterPoint X="0537.80" Y="0201.63" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_25" />
+      <adjacent value="Road_2" />
+      <adjacent value="Road_24" />
+      <adjacent value="Road_4" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="4" />
     <CenterPoint X="0521.80" Y="0283.23" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Road_3" />
+      <adjacent value="Road_5" />
+      <adjacent value="Grass_34" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="5" />
     <CenterPoint X="0505.00" Y="0344.83" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_4" />
+      <adjacent value="Grass_34" />
+      <adjacent value="Grass_42" />
+      <adjacent value="Road_6" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="6" />
     <CenterPoint X="0489.80" Y="0411.23" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="Road_5" />
+      <adjacent value="Road_57" />
+      <adjacent value="Road_7" />
+      <adjacent value="Grass_54" />
+      <adjacent value="Grass_42" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="7" />
     <CenterPoint X="0470.60" Y="0483.23" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_6" />
+      <adjacent value="Grass_54" />
+      <adjacent value="Road_62" />
+      <adjacent value="Road_8" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="8" />
     <CenterPoint X="0449.80" Y="0561.63" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Road_7" />
+      <adjacent value="Road_61" />
+      <adjacent value="Road_9" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="9" />
     <CenterPoint X="0433.80" Y="0633.63" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Road_8" />
+      <adjacent value="Road_10" />
+      <adjacent value="Grass_76" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="10" />
     <CenterPoint X="0399.40" Y="0689.63" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="Road_11" />
+      <adjacent value="Road_9" />
+      <adjacent value="Grass_76" />
+      <adjacent value="Grass_85" />
+      <adjacent value="Grass_75" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="11" />
     <CenterPoint X="0323.40" Y="0680.03" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Road_12" />
+      <adjacent value="Road_10" />
+      <adjacent value="Grass_75" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="12" />
     <CenterPoint X="0239.40" Y="0672.03" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="6">
+      <adjacent value="Road_52" />
+      <adjacent value="Grass_70" />
+      <adjacent value="Road_13" />
+      <adjacent value="BarAndGrill_1" />
+      <adjacent value="Road_11" />
+      <adjacent value="Grass_66" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="13" />
     <CenterPoint X="0163.40" Y="0686.43" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_14" />
+      <adjacent value="Grass_74" />
+      <adjacent value="Road_12" />
+      <adjacent value="Grass_70" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="14" />
     <CenterPoint X="0100.20" Y="0713.63" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_15" />
+      <adjacent value="Grass_74" />
+      <adjacent value="Grass_83" />
+      <adjacent value="Road_13" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -2096,35 +2582,61 @@
     <Subname value="20" />
     <CenterPoint X="0231.40" Y="0188.03" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Road_19" />
+      <adjacent value="Tavern_3" />
+      <adjacent value="Road_21" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="21" />
     <CenterPoint X="0297.00" Y="0188.03" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_20" />
+      <adjacent value="Grass_21" />
+      <adjacent value="Grass_25" />
+      <adjacent value="Road_22" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="22" />
     <CenterPoint X="0363.40" Y="0187.23" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="6">
+      <adjacent value="Road_21" />
+      <adjacent value="VetOffice_2" />
+      <adjacent value="Grass_26" />
+      <adjacent value="Grass_25" />
+      <adjacent value="Road_23" />
+      <adjacent value="Grass_22" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="23" />
     <CenterPoint X="0424.20" Y="0188.03" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="GeneralStore_3" />
+      <adjacent value="Grass_22" />
+      <adjacent value="Road_22" />
+      <adjacent value="Bank_1" />
+      <adjacent value="Road_24" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="24" />
     <CenterPoint X="0477.00" Y="0187.23" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="GeneralStore_4" />
+      <adjacent value="Road_23" />
+      <adjacent value="Road_3" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -2180,84 +2692,152 @@
     <Subname value="29" />
     <CenterPoint X="0765.80" Y="0260.83" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Grass_39" />
+      <adjacent value="Grass_38" />
+      <adjacent value="Road_30" />
+      <adjacent value="Grass_44" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="30" />
     <CenterPoint X="0767.40" Y="0313.63" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_29" />
+      <adjacent value="Grass_44" />
+      <adjacent value="Grass_45" />
+      <adjacent value="Road_31" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="31" />
     <CenterPoint X="0761.80" Y="0360.03" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_30" />
+      <adjacent value="Grass_45" />
+      <adjacent value="Grass_55" />
+      <adjacent value="Road_32" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="32" />
     <CenterPoint X="0713.80" Y="0364.03" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="LawyersOffice_1" />
+      <adjacent value="Road_31" />
+      <adjacent value="Road_33" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="33" />
     <CenterPoint X="0660.20" Y="0368.03" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="Grass_36" />
+      <adjacent value="Grass_35" />
+      <adjacent value="Grass_43" />
+      <adjacent value="Road_34" />
+      <adjacent value="Road_32" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="34" />
     <CenterPoint X="0657.80" Y="0436.03" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="House_6" />
+      <adjacent value="Grass_43" />
+      <adjacent value="Road_33" />
+      <adjacent value="Grass_57" />
+      <adjacent value="Road_35" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="35" />
     <CenterPoint X="0656.20" Y="0507.23" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="Road_34" />
+      <adjacent value="Road_63" />
+      <adjacent value="Road_36" />
+      <adjacent value="Road_64" />
+      <adjacent value="Grass_57" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="36" />
     <CenterPoint X="0657.80" Y="0575.23" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Grass_62" />
+      <adjacent value="Road_35" />
+      <adjacent value="Road_37" />
+      <adjacent value="Grass_67" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="37" />
     <CenterPoint X="0656.20" Y="0630.39" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_36" />
+      <adjacent value="Grass_67" />
+      <adjacent value="Grass_72" />
+      <adjacent value="Road_38" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="38" />
     <CenterPoint X="0652.20" Y="0684.79" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="6">
+      <adjacent value="Road_37" />
+      <adjacent value="Grass_72" />
+      <adjacent value="Grass_78" />
+      <adjacent value="Road_39" />
+      <adjacent value="Grass_79" />
+      <adjacent value="Graveyard_1" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="39" />
     <CenterPoint X="0615.40" Y="0739.19" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="6">
+      <adjacent value="Grass_78" />
+      <adjacent value="Road_38" />
+      <adjacent value="Grass_79" />
+      <adjacent value="Grass_88" />
+      <adjacent value="Road_40" />
+      <adjacent value="Grass_87" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="40" />
     <CenterPoint X="0581.00" Y="0786.39" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="6">
+      <adjacent value="Road_39" />
+      <adjacent value="Grass_87" />
+      <adjacent value="Grass_97" />
+      <adjacent value="RR_16" />
+      <adjacent value="RR_17" />
+      <adjacent value="Grass_88" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -2314,146 +2894,253 @@
     <Subname value="45" />
     <CenterPoint X="0179.40" Y="0244.83" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="School_4" />
+      <adjacent value="Road_19" />
+      <adjacent value="Road_46" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="46" />
     <CenterPoint X="0179.40" Y="0294.43" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_45" />
+      <adjacent value="Grass_31" />
+      <adjacent value="Road_47" />
+      <adjacent value="Road_53" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="47" />
     <CenterPoint X="0179.40" Y="0348.83" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_46" />
+      <adjacent value="VFW_1" />
+      <adjacent value="Road_48" />
+      <adjacent value="Grass_31" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="48" />
     <CenterPoint X="0183.40" Y="0409.63" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="House_K" />
+      <adjacent value="Road_47" />
+      <adjacent value="Road_58" />
+      <adjacent value="Road_49" />
+      <adjacent value="Grass_51" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="49" />
     <CenterPoint X="0161.80" Y="0468.03" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="SheriffFireDept_1" />
+      <adjacent value="Road_48" />
+      <adjacent value="Grass_51" />
+      <adjacent value="Road_50" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="50" />
     <CenterPoint X="0140.20" Y="0520.83" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="House_4" />
+      <adjacent value="Road_51" />
+      <adjacent value="Grass_65" />
+      <adjacent value="Grass_60" />
+      <adjacent value="Road_49" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="51" />
     <CenterPoint X="0170.60" Y="0570.43" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="SheriffFireDept_3" />
+      <adjacent value="Road_52" />
+      <adjacent value="Grass_70" />
+      <adjacent value="Grass_65" />
+      <adjacent value="Road_50" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="52" />
     <CenterPoint X="0213.00" Y="0612.03" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_12" />
+      <adjacent value="Grass_70" />
+      <adjacent value="Grass_66" />
+      <adjacent value="Road_51" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="53" />
     <CenterPoint X="0233.80" Y="0307.23" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="House_2" />
+      <adjacent value="Road_46" />
+      <adjacent value="Road_54" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="54" />
     <CenterPoint X="0283.40" Y="0325.63" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Grass_32" />
+      <adjacent value="Road_53" />
+      <adjacent value="Road_55" />
+      <adjacent value="Grass_41" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="55" />
     <CenterPoint X="0331.40" Y="0344.03" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="Grass_33" />
+      <adjacent value="Grass_32" />
+      <adjacent value="Road_54" />
+      <adjacent value="Grass_41" />
+      <adjacent value="Road_56" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="56" />
     <CenterPoint X="0382.60" Y="0364.03" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Bank_2" />
+      <adjacent value="Road_55" />
+      <adjacent value="Road_57" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="57" />
     <CenterPoint X="0427.40" Y="0380.83" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="ClothingStore_2" />
+      <adjacent value="Road_56" />
+      <adjacent value="Road_6" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="58" />
     <CenterPoint X="0239.40" Y="0445.63" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Road_59" />
+      <adjacent value="Grass_52" />
+      <adjacent value="Road_48" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="59" />
     <CenterPoint X="0286.60" Y="0479.23" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="Grass_52" />
+      <adjacent value="Road_58" />
+      <adjacent value="Grass_53" />
+      <adjacent value="Road_60" />
+      <adjacent value="SheriffFireDept_2" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="60" />
     <CenterPoint X="0333.00" Y="0510.43" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Road_59" />
+      <adjacent value="Grass_61" />
+      <adjacent value="Grass_53" />
+      <adjacent value="Road_61" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="61" />
     <CenterPoint X="0382.60" Y="0541.63" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="House_7" />
+      <adjacent value="Road_60" />
+      <adjacent value="TownHall_1" />
+      <adjacent value="TownHall_3" />
+      <adjacent value="Road_8" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="62" />
     <CenterPoint X="0532.20" Y="0504.03" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="4">
+      <adjacent value="Grass_54" />
+      <adjacent value="Road_63" />
+      <adjacent value="HotelAndRestaurant_1" />
+      <adjacent value="Road_7" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="63" />
     <CenterPoint X="0589.00" Y="0504.83" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="House_5" />
+      <adjacent value="Road_62" />
+      <adjacent value="HotelAndRestaurant_1" />
+      <adjacent value="Grass_62" />
+      <adjacent value="Road_35" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="64" />
     <CenterPoint X="0742.60" Y="0504.83" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="5">
+      <adjacent value="Grass_58" />
+      <adjacent value="Grass_57" />
+      <adjacent value="Church_2" />
+      <adjacent value="Road_35" />
+      <adjacent value="Road_65" />
+    </Adjacents>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
     <Subname value="65" />
     <CenterPoint X="0806.60" Y="0504.83" />
     <Points count="0" />
-    <Adjacents count="0" />
+    <Adjacents count="3">
+      <adjacent value="Grass_58" />
+      <adjacent value="Road_64" />
+      <adjacent value="Grass_63" />
+    </Adjacents>
   </Territory>
 </Territories>
