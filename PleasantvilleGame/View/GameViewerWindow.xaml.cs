@@ -1508,7 +1508,6 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_SHOW_MAIN_CLEAR, "UpdateViewForNewGame(): Clearing action=" + action.ToString());
          myGameInstance = gi;
          myButtons.Clear();
-         UpdateCanvasMainClear(myButtons, gi.Stacks, action, false);
          myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas); // UploadNewGame - Return to previous saved zoom level
          ////----------------------------------
          GameAction nextAction = GameAction.Error;

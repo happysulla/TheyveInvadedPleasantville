@@ -155,17 +155,17 @@ namespace PleasantvilleGame
             }
          }
          //-----------------------------------------------------------------
+         else if (CommandName == myCommandNames[1])
+         {
+
+         }
+         //-----------------------------------------------------------------
          else if (CommandName == myCommandNames[2])
          {
 
          }
          //-----------------------------------------------------------------
          else if (CommandName == myCommandNames[3])
-         {
-
-         }
-         //-----------------------------------------------------------------
-         else if (CommandName == myCommandNames[4])
          {
 
          }
@@ -370,23 +370,6 @@ namespace PleasantvilleGame
       }
       private bool DeleteEllipsesAndPolygons()
       {
-         if (null == myCanvasHelper)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "DeleteEllipsesAndPolygons(): myCanvasHelper=null");
-            return false;
-         }
-         //-------------------------------------------
-         List<UIElement> results = new List<UIElement>();
-         foreach (UIElement ui in myCanvasHelper.Children)
-         {
-            if (ui is Ellipse)
-               results.Add(ui);
-            if (ui is Polygon)
-               results.Add(ui);
-         }
-         foreach (UIElement ui1 in results)
-            myCanvasHelper.Children.Remove(ui1);
-         //-------------------------------------------
          if (null == myCanvasMain)
          {
             Logger.Log(LogEnum.LE_ERROR, "DeleteEllipsesAndPolygons(): myCanvasMain=null");
@@ -446,13 +429,6 @@ namespace PleasantvilleGame
                aEllipse.Fill = Brushes.Pink;
                aEllipse.MouseDown += this.MouseDownEllipse2;
             }
-            //-------------------------
-            Label aLabel = new Label() { Foreground = Brushes.Red, FontFamily = myFontFam, FontWeight = FontWeights.Bold, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = t.ToString() };
-            p.X -= theEllipseOffset;
-            p.Y -= 2 * theEllipseOffset;
-            myCanvasMain.Children.Add(aLabel);
-            Canvas.SetLeft(aLabel, p.X);
-            Canvas.SetTop(aLabel, p.Y);
          }
          return true;
       }
@@ -471,9 +447,9 @@ namespace PleasantvilleGame
                PointCollection points = new PointCollection();
                foreach (IMapPoint mp1 in t.Points)
                   points.Add(new System.Windows.Point(mp1.X, mp1.Y));
-               Polygon aPolygon = new Polygon { Fill= Utilities.theBrushRegion, Points = points, Name = t.ToString(), Visibility= Visibility.Visible };
+               Polygon aPolygon = new Polygon { Fill= Brushes.Black, Points = points, Name = t.ToString()};
                aPolygon.MouseDown += this.MouseDownPolygon;
-               Canvas.SetZIndex(aPolygon, 0);
+               Canvas.SetZIndex(aPolygon, 10000);
                myCanvasMain.Children.Add(aPolygon);
             }
          }
@@ -670,8 +646,6 @@ namespace PleasantvilleGame
                points.Add(new System.Windows.Point(mp1.X, mp1.Y));
             Polygon aPolygon = new Polygon { Fill = Brushes.Red, Points = points, Name = matchingTerritory.ToString() };
             aPolygon.MouseDown += this.MouseDownPolygon;
-            aPolygon.Fill = Brushes.Black;
-            mousedEllipse.Fill = Brushes.Black;
             myAnchorTerritory.Points = new List<IMapPoint>(myPoints);
             myPoints.Clear();
             myAnchorTerritory = null;
@@ -737,7 +711,7 @@ namespace PleasantvilleGame
             {
                MessageBox.Show("Unable to find " + aPolygon.Name);
             }
-            else if ((null == myAnchorTerritory) || matchingTerritory.Name == myAnchorTerritory.Name)
+            else if ((null == myAnchorTerritory) || matchingTerritory.ToString() == myAnchorTerritory.ToString())
             {
                matchingTerritory.Points.Clear();
                myCanvasMain.Children.Remove(aPolygon);
