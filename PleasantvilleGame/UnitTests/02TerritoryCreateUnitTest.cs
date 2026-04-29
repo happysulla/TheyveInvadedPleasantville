@@ -411,6 +411,7 @@ namespace PleasantvilleGame
       }
       private bool CreateXml(ITerritories territories)
       {
+         CultureInfo currentCulture = CultureInfo.CurrentCulture;
          if (null == myFileName)
          {
             Logger.Log(LogEnum.LE_ERROR, "CreateXml(): myFileName=null");
@@ -418,6 +419,8 @@ namespace PleasantvilleGame
          }
          try
          {
+            System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            //-----------------------------------------------------
             System.IO.File.Delete(myFileName);           // Delete Existing Territories.xml file and create a new one based on myGameEngine.Territories container
             //-----------------------------------------------------
             System.Xml.XmlDocument aXmlDocument = new XmlDocument();
@@ -425,17 +428,16 @@ namespace PleasantvilleGame
             if (null == aXmlDocument.DocumentElement)
             {
                Logger.Log(LogEnum.LE_ERROR, "CreateXml(): aXmlDocument.DocumentElement=null");
+               System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
                return false;
             }
             GameLoadMgr loadMgr = new GameLoadMgr();
-            CultureInfo currentCulture = CultureInfo.CurrentCulture;
-            System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             if (false == loadMgr.CreateXmlTerritories(aXmlDocument, territories))
             {
                Logger.Log(LogEnum.LE_ERROR, "CreateXml(): CreateXmlTerritories() returned false");
+               System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
                return false;
             }
-            System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
             //-----------------------------------------------------
             using (FileStream writer = new FileStream(myFileName, FileMode.OpenOrCreate, FileAccess.Write))
             {
@@ -449,8 +451,10 @@ namespace PleasantvilleGame
          catch (Exception e)
          {
             Logger.Log(LogEnum.LE_ERROR, "Cleanup(): exeption=\n" + e.Message);
+            System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
             return false;
          }
+         System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
          return true;
       }
       private bool ShowAdjacents(ITerritories territories)

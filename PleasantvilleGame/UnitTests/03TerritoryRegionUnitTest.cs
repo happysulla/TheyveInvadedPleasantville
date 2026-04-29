@@ -196,14 +196,14 @@ namespace PleasantvilleGame
          {
              //-------------------------------------
             ++myIndexName;
-            if (false == CreateEllipses(true))
+            if (false == CreateEllipses(false))
             {
-               Logger.Log(LogEnum.LE_ERROR, "NextTest(): CreateEllipses() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "NextTest(): Create_Ellipses() returned false");
                return false;
             }
             if (false == CreatePolygons())
             {
-               Logger.Log(LogEnum.LE_ERROR, "NextTest(): CreatePolygons() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "NextTest(): Create_Polygons() returned false");
                return false;
             }
          }
@@ -223,9 +223,9 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): DeleteEllipsesAndPolygons() returned false");
                return false;
             }
-            if (false == CreateEllipses(false))
+            if (false == CreateEllipses(true))
             {
-               Logger.Log(LogEnum.LE_ERROR, "NextTest(): CreateEllipses() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "NextTest(): Create_Ellipses() returned false");
                return false;
             }
          }
@@ -341,7 +341,7 @@ namespace PleasantvilleGame
       {
          if (null != myAnchorTerritory) // Add points to the anchor territy that define the region
          {
-            double minDistance = 5; // Do an intersection with any other points that are part of any other region.  If a point is found that is very close, assume that is the correct point to add instead of the mouse click.
+            double minDistance = 6; // Do an intersection with any other points that are part of any other region.  If a point is found that is very close, assume that is the correct point to add instead of the mouse click.
             IMapPoint selectedMp = mp;
             foreach (String s in myAnchorTerritory.Adjacents)
             {
@@ -390,17 +390,17 @@ namespace PleasantvilleGame
          myEllipses.Clear();
          return true;
       }
-      private bool CreateEllipses(bool isFirst)
+      private bool CreateEllipses(bool isTestingRandomPtInRegion )
       {
          myEllipses.Clear();
          if (null == myCanvasHelper)
          {
-            Logger.Log(LogEnum.LE_ERROR, "CreateEllipses(): myCanvasHelper=null");
+            Logger.Log(LogEnum.LE_ERROR, "Create_Ellipses(): myCanvasHelper=null");
             return false;
          }
          if (null == myCanvasMain)
          {
-            Logger.Log(LogEnum.LE_ERROR, "CreateEllipses(): myCanvasMain=null");
+            Logger.Log(LogEnum.LE_ERROR, "Create_Ellipses(): myCanvasMain=null");
             return false;
          }
          SolidColorBrush aSolidColorBrush0 = new SolidColorBrush { Color = Color.FromArgb(100, 100, 100, 0) }; // nearly transparent but slightly colored
@@ -419,7 +419,7 @@ namespace PleasantvilleGame
             Canvas.SetLeft(aEllipse, p.X);
             Canvas.SetTop(aEllipse, p.Y);
             myEllipses.Add(aEllipse);
-            if ( true == isFirst)
+            if ( false == isTestingRandomPtInRegion)
             {
                aEllipse.Fill = aSolidColorBrush0;
                aEllipse.MouseDown += this.MouseDownEllipse;
@@ -437,7 +437,7 @@ namespace PleasantvilleGame
          myPoints.Clear();
          if (null == myCanvasMain)
          {
-            Logger.Log(LogEnum.LE_ERROR, "CreatePolygons(): myCanvasMain=null");
+            Logger.Log(LogEnum.LE_ERROR, "Create_Polygons(): myCanvasMain=null");
             return false;
          }
          foreach (Territory t in Territories.theTerritories)
@@ -474,13 +474,14 @@ namespace PleasantvilleGame
             if (null == aXmlDocument.DocumentElement)
             {
                Logger.Log(LogEnum.LE_ERROR, "CreateXml(): aXmlDocument.DocumentElement=null");
+               System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
                return false;
             }
             GameLoadMgr loadMgr = new GameLoadMgr();
-
             if (false == loadMgr.CreateXmlTerritories(aXmlDocument, territories))
             {
                Logger.Log(LogEnum.LE_ERROR, "CreateXml(): CreateXmlTerritories() returned false");
+               System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
                return false;
             }
             //-----------------------------------------------------
@@ -622,7 +623,7 @@ namespace PleasantvilleGame
          System.Diagnostics.Debug.WriteLine("MouseDownEllipse(): {0}", mp.ToString());
          Ellipse mousedEllipse = (Ellipse)sender;
          ITerritory? matchingTerritory = Territories.theTerritories.Find(mousedEllipse.Name);
-         if (null == matchingTerritory) // Check for error
+          if (null == matchingTerritory) // Check for error
          {
             MessageBox.Show("Unable to find " + mousedEllipse.Name);
             return;
@@ -635,7 +636,7 @@ namespace PleasantvilleGame
             myCanvasMain.MouseDown += MouseDownCanvas;
             return;
          }
-         if (matchingTerritory.Name == myAnchorTerritory.Name)
+         if (matchingTerritory.ToString() == myAnchorTerritory.ToString())
          {
             // If the matching territory is the anchor territory, the user
             // is requesting that they are done adding points for
@@ -682,9 +683,7 @@ namespace PleasantvilleGame
       }
       void MouseDownCanvas(object sender, MouseButtonEventArgs e)
       {
-         // This function adds points to the myPoints collection when an anchor territory is active.
-         // The points to add are either new ones or ones that exist from adjacent territories.
-         System.Windows.Point p = e.GetPosition(myCanvasMain);
+         System.Windows.Point p = e.GetPosition(myCanvasMain); // This function adds points to the myPoints collection when an anchor territory is active.  The points to add are either new ones or ones that exist from adjacent territories.
          if (p.X < 0.0)
             p = e.GetPosition(myCanvasHelper);
          IMapPoint mp = new MapPoint(p.X, p.Y);
