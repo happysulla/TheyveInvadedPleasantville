@@ -3,7 +3,14 @@
     <CanvasName value="Main" />
     <Subname value="1" />
     <CenterPoint X="0046.25" Y="0022.02" />
-    <Points count="0" />
+    <Points count="6">
+      <regionPoint X="0000.17" Y="0000.01" />
+      <regionPoint X="0088.17" Y="0000.35" />
+      <regionPoint X="0094.17" Y="0041.35" />
+      <regionPoint X="0088.17" Y="0043.35" />
+      <regionPoint X="0088.17" Y="0043.35" />
+      <regionPoint X="0000.22" Y="0048.46" />
+    </Points>
     <Adjacents count="3">
       <adjacent value="Grass_2" />
       <adjacent value="Grass_14" />
@@ -14,7 +21,12 @@
     <CanvasName value="Main" />
     <Subname value="2" />
     <CenterPoint X="0121.25" Y="0020.02" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0094.17" Y="0041.35" />
+      <regionPoint X="0148.17" Y="0041.35" />
+      <regionPoint X="0152.50" Y="0000.35" />
+      <regionPoint X="0088.17" Y="0000.35" />
+    </Points>
     <Adjacents count="2">
       <adjacent value="Grass_1" />
       <adjacent value="Grass_3" />
@@ -24,7 +36,16 @@
     <CanvasName value="Main" />
     <Subname value="3" />
     <CenterPoint X="0175.25" Y="0024.52" />
-    <Points count="0" />
+    <Points count="8">
+      <regionPoint X="0152.50" Y="0000.35" />
+      <regionPoint X="0193.83" Y="0000.35" />
+      <regionPoint X="0206.17" Y="0052.35" />
+      <regionPoint X="0197.50" Y="0053.01" />
+      <regionPoint X="0197.17" Y="0047.01" />
+      <regionPoint X="0161.83" Y="0047.35" />
+      <regionPoint X="0161.50" Y="0041.01" />
+      <regionPoint X="0148.17" Y="0041.35" />
+    </Points>
     <Adjacents count="3">
       <adjacent value="Grass_2" />
       <adjacent value="Road_43" />
@@ -35,7 +56,12 @@
     <CanvasName value="Main" />
     <Subname value="4" />
     <CenterPoint X="0230.75" Y="0026.02" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0193.83" Y="0000.35" />
+      <regionPoint X="0259.17" Y="0000.35" />
+      <regionPoint X="0261.83" Y="0052.01" />
+      <regionPoint X="0206.17" Y="0052.35" />
+    </Points>
     <Adjacents count="3">
       <adjacent value="Grass_3" />
       <adjacent value="Tavern_1" />
@@ -46,7 +72,16 @@
     <CanvasName value="Main" />
     <Subname value="5" />
     <CenterPoint X="0296.25" Y="0030.52" />
-    <Points count="0" />
+    <Points count="8">
+      <regionPoint X="0259.17" Y="0000.35" />
+      <regionPoint X="0328.17" Y="0000.68" />
+      <regionPoint X="0329.50" Y="0069.01" />
+      <regionPoint X="0325.17" Y="0069.68" />
+      <regionPoint X="0323.83" Y="0075.01" />
+      <regionPoint X="0283.17" Y="0067.68" />
+      <regionPoint X="0285.83" Y="0053.01" />
+      <regionPoint X="0261.83" Y="0052.01" />
+    </Points>
     <Adjacents count="3">
       <adjacent value="Grass_4" />
       <adjacent value="Grass_16" />
@@ -57,7 +92,12 @@
     <CanvasName value="Main" />
     <Subname value="6" />
     <CenterPoint X="0356.25" Y="0032.02" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0328.17" Y="0000.68" />
+      <regionPoint X="0396.50" Y="0000.35" />
+      <regionPoint X="0374.50" Y="0069.01" />
+      <regionPoint X="0329.50" Y="0069.01" />
+    </Points>
     <Adjacents count="3">
       <adjacent value="Grass_5" />
       <adjacent value="VetOffice_1" />
@@ -68,7 +108,16 @@
     <CanvasName value="Main" />
     <Subname value="7" />
     <CenterPoint X="0412.25" Y="0040.52" />
-    <Points count="0" />
+    <Points count="8">
+      <regionPoint X="0396.50" Y="0000.35" />
+      <regionPoint X="0440.17" Y="0000.68" />
+      <regionPoint X="0442.50" Y="0075.68" />
+      <regionPoint X="0433.50" Y="0075.01" />
+      <regionPoint X="0431.50" Y="0081.35" />
+      <regionPoint X="0393.50" Y="0074.68" />
+      <regionPoint X="0394.50" Y="0069.68" />
+      <regionPoint X="0374.50" Y="0069.01" />
+    </Points>
     <Adjacents count="3">
       <adjacent value="Grass_6" />
       <adjacent value="Grass_17" />
@@ -79,7 +128,13 @@
     <CanvasName value="Main" />
     <Subname value="8" />
     <CenterPoint X="0466.75" Y="0031.52" />
-    <Points count="0" />
+    <Points count="5">
+      <regionPoint X="0440.17" Y="0000.68" />
+      <regionPoint X="0489.17" Y="0000.68" />
+      <regionPoint X="0491.83" Y="0035.68" />
+      <regionPoint X="0474.17" Y="0079.01" />
+      <regionPoint X="0442.50" Y="0075.68" />
+    </Points>
     <Adjacents count="4">
       <adjacent value="Grass_7" />
       <adjacent value="GeneralStore_1" />
@@ -91,7 +146,12 @@
     <CanvasName value="Main" />
     <Subname value="9" />
     <CenterPoint X="0521.25" Y="0019.52" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0489.17" Y="0000.68" />
+      <regionPoint X="0553.83" Y="0000.35" />
+      <regionPoint X="0542.17" Y="0046.68" />
+      <regionPoint X="0491.83" Y="0035.68" />
+    </Points>
     <Adjacents count="3">
       <adjacent value="GasPumps_1" />
       <adjacent value="Grass_8" />
@@ -102,7 +162,12 @@
     <CanvasName value="Main" />
     <Subname value="10" />
     <CenterPoint X="0640.20" Y="0016.03" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0621.83" Y="0000.35" />
+      <regionPoint X="0668.50" Y="0000.68" />
+      <regionPoint X="0665.17" Y="0035.68" />
+      <regionPoint X="0613.50" Y="0036.68" />
+    </Points>
     <Adjacents count="2">
       <adjacent value="Road_1" />
       <adjacent value="Grass_11" />
@@ -112,7 +177,12 @@
     <CanvasName value="Main" />
     <Subname value="11" />
     <CenterPoint X="0698.25" Y="0016.02" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0668.50" Y="0000.68" />
+      <regionPoint X="0733.50" Y="0000.68" />
+      <regionPoint X="0723.83" Y="0035.01" />
+      <regionPoint X="0665.17" Y="0035.68" />
+    </Points>
     <Adjacents count="2">
       <adjacent value="Grass_10" />
       <adjacent value="Grass_12" />
@@ -122,7 +192,14 @@
     <CanvasName value="Main" />
     <Subname value="12" />
     <CenterPoint X="0774.75" Y="0016.52" />
-    <Points count="0" />
+    <Points count="6">
+      <regionPoint X="0733.50" Y="0000.68" />
+      <regionPoint X="0828.83" Y="0001.01" />
+      <regionPoint X="0828.83" Y="0021.35" />
+      <regionPoint X="0779.50" Y="0041.68" />
+      <regionPoint X="0780.83" Y="0034.35" />
+      <regionPoint X="0723.83" Y="0035.01" />
+    </Points>
     <Adjacents count="2">
       <adjacent value="Grass_11" />
       <adjacent value="Grass_18" />
@@ -167,7 +244,13 @@
     <CanvasName value="Main" />
     <Subname value="15" />
     <CenterPoint X="0134.75" Y="0107.02" />
-    <Points count="0" />
+    <Points count="5">
+      <regionPoint X="0107.83" Y="0087.35" />
+      <regionPoint X="0160.17" Y="0087.68" />
+      <regionPoint X="0160.83" Y="0122.68" />
+      <regionPoint X="0112.50" Y="0129.68" />
+      <regionPoint X="0091.83" Y="0128.01" />
+    </Points>
     <Adjacents count="4">
       <adjacent value="Grass_14" />
       <adjacent value="Grass_20" />
@@ -199,7 +282,12 @@
     <CanvasName value="Main" />
     <Subname value="18" />
     <CenterPoint X="0804.25" Y="0077.52" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0779.50" Y="0041.68" />
+      <regionPoint X="0828.83" Y="0021.35" />
+      <regionPoint X="0829.50" Y="0124.68" />
+      <regionPoint X="0765.50" Y="0104.01" />
+    </Points>
     <Adjacents count="3">
       <adjacent value="Grass_23" />
       <adjacent value="Supermarket_3" />
@@ -268,7 +356,12 @@
     <CanvasName value="Main" />
     <Subname value="24" />
     <CenterPoint X="0018.75" Y="0232.02" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0000.83" Y="0205.68" />
+      <regionPoint X="0040.50" Y="0205.35" />
+      <regionPoint X="0040.17" Y="0256.68" />
+      <regionPoint X="0000.50" Y="0261.35" />
+    </Points>
     <Adjacents count="2">
       <adjacent value="Road_16" />
       <adjacent value="Grass_29" />
@@ -433,7 +526,13 @@
     <CanvasName value="Main" />
     <Subname value="40" />
     <CenterPoint X="0048.75" Y="0375.52" />
-    <Points count="0" />
+    <Points count="5">
+      <regionPoint X="0000.50" Y="0365.01" />
+      <regionPoint X="0055.83" Y="0347.68" />
+      <regionPoint X="0087.50" Y="0350.68" />
+      <regionPoint X="0086.17" Y="0396.68" />
+      <regionPoint X="0000.50" Y="0402.68" />
+    </Points>
     <Adjacents count="4">
       <adjacent value="Grass_29" />
       <adjacent value="Grass_30" />
@@ -507,7 +606,15 @@
     <CanvasName value="Main" />
     <Subname value="50" />
     <CenterPoint X="0059.25" Y="0428.02" />
-    <Points count="0" />
+    <Points count="7">
+      <regionPoint X="0000.50" Y="0402.68" />
+      <regionPoint X="0086.17" Y="0396.68" />
+      <regionPoint X="0085.83" Y="0420.01" />
+      <regionPoint X="0098.50" Y="0420.68" />
+      <regionPoint X="0093.17" Y="0469.68" />
+      <regionPoint X="0067.17" Y="0470.68" />
+      <regionPoint X="0000.50" Y="0420.01" />
+    </Points>
     <Adjacents count="4">
       <adjacent value="House_4" />
       <adjacent value="Grass_56" />
@@ -578,7 +685,12 @@
     <CanvasName value="Main" />
     <Subname value="56" />
     <CenterPoint X="0025.80" Y="0464.79" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0000.50" Y="0420.01" />
+      <regionPoint X="0067.17" Y="0470.68" />
+      <regionPoint X="0056.50" Y="0494.35" />
+      <regionPoint X="0000.83" Y="0487.35" />
+    </Points>
     <Adjacents count="2">
       <adjacent value="Grass_59" />
       <adjacent value="Grass_50" />
@@ -611,7 +723,15 @@
     <CanvasName value="Main" />
     <Subname value="59" />
     <CenterPoint X="0022.60" Y="0521.59" />
-    <Points count="0" />
+    <Points count="7">
+      <regionPoint X="0000.83" Y="0487.35" />
+      <regionPoint X="0056.50" Y="0494.35" />
+      <regionPoint X="0047.50" Y="0516.35" />
+      <regionPoint X="0044.17" Y="0550.01" />
+      <regionPoint X="0040.17" Y="0549.68" />
+      <regionPoint X="0039.83" Y="0560.35" />
+      <regionPoint X="0000.50" Y="0540.01" />
+    </Points>
     <Adjacents count="3">
       <adjacent value="Grass_60" />
       <adjacent value="Grass_56" />
@@ -667,7 +787,12 @@
     <CanvasName value="Main" />
     <Subname value="64" />
     <CenterPoint X="0018.60" Y="0579.99" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0000.50" Y="0540.01" />
+      <regionPoint X="0039.83" Y="0560.35" />
+      <regionPoint X="0039.50" Y="0602.68" />
+      <regionPoint X="0000.50" Y="0605.35" />
+    </Points>
     <Adjacents count="3">
       <adjacent value="MachineShop_1" />
       <adjacent value="Grass_69" />
@@ -724,7 +849,14 @@
     <CanvasName value="Main" />
     <Subname value="69" />
     <CenterPoint X="0020.20" Y="0627.19" />
-    <Points count="0" />
+    <Points count="6">
+      <regionPoint X="0000.50" Y="0605.35" />
+      <regionPoint X="0039.50" Y="0602.68" />
+      <regionPoint X="0039.17" Y="0625.35" />
+      <regionPoint X="0039.17" Y="0644.01" />
+      <regionPoint X="0038.83" Y="0650.68" />
+      <regionPoint X="0000.50" Y="0646.35" />
+    </Points>
     <Adjacents count="2">
       <adjacent value="Grass_64" />
       <adjacent value="Grass_71" />
@@ -748,7 +880,12 @@
     <CanvasName value="Main" />
     <Subname value="71" />
     <CenterPoint X="0018.60" Y="0681.59" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0000.50" Y="0646.35" />
+      <regionPoint X="0038.83" Y="0650.68" />
+      <regionPoint X="0038.50" Y="0702.68" />
+      <regionPoint X="0000.83" Y="0718.01" />
+    </Points>
     <Adjacents count="2">
       <adjacent value="Road_15" />
       <adjacent value="Grass_69" />
@@ -888,7 +1025,13 @@
     <CanvasName value="Main" />
     <Subname value="82" />
     <CenterPoint X="0021.75" Y="0819.24" />
-    <Points count="0" />
+    <Points count="5">
+      <regionPoint X="0000.83" Y="0798.49" />
+      <regionPoint X="0049.83" Y="0774.83" />
+      <regionPoint X="0045.83" Y="0815.49" />
+      <regionPoint X="0042.17" Y="0846.83" />
+      <regionPoint X="0000.50" Y="0855.16" />
+    </Points>
     <Adjacents count="4">
       <adjacent value="Road_15" />
       <adjacent value="Grass_83" />
@@ -996,7 +1139,14 @@
     <CanvasName value="Main" />
     <Subname value="90" />
     <CenterPoint X="0032.25" Y="0871.24" />
-    <Points count="0" />
+    <Points count="6">
+      <regionPoint X="0000.50" Y="0855.16" />
+      <regionPoint X="0042.17" Y="0846.83" />
+      <regionPoint X="0079.50" Y="0880.49" />
+      <regionPoint X="0073.83" Y="0882.16" />
+      <regionPoint X="0037.17" Y="0887.83" />
+      <regionPoint X="0000.50" Y="0892.83" />
+    </Points>
     <Adjacents count="5">
       <adjacent value="Grass_82" />
       <adjacent value="Grass_91" />
@@ -1107,7 +1257,13 @@
     <CanvasName value="Main" />
     <Subname value="98" />
     <CenterPoint X="0037.00" Y="0937.59" />
-    <Points count="0" />
+    <Points count="5">
+      <regionPoint X="0000.50" Y="0927.16" />
+      <regionPoint X="0043.17" Y="0920.49" />
+      <regionPoint X="0071.83" Y="0916.49" />
+      <regionPoint X="0070.50" Y="0948.83" />
+      <regionPoint X="0000.50" Y="0949.16" />
+    </Points>
     <Adjacents count="3">
       <adjacent value="RR_1" />
       <adjacent value="RR_2" />
@@ -1345,7 +1501,15 @@
     <CanvasName value="Main" />
     <Subname value="29" />
     <CenterPoint X="0023.75" Y="0312.52" />
-    <Points count="0" />
+    <Points count="7">
+      <regionPoint X="0000.50" Y="0261.35" />
+      <regionPoint X="0040.17" Y="0256.68" />
+      <regionPoint X="0040.17" Y="0256.68" />
+      <regionPoint X="0039.83" Y="0301.01" />
+      <regionPoint X="0053.17" Y="0301.68" />
+      <regionPoint X="0055.83" Y="0347.68" />
+      <regionPoint X="0000.50" Y="0365.01" />
+    </Points>
     <Adjacents count="3">
       <adjacent value="Grass_30" />
       <adjacent value="Grass_40" />
@@ -1356,13 +1520,12 @@
     <CanvasName value="Main" />
     <Subname value="A" />
     <CenterPoint X="0124.20" Y="0064.83" />
-    <Points count="6">
-      <regionPoint X="0088.17" Y="0043.35" />
+    <Points count="5">
       <regionPoint X="0094.17" Y="0042.01" />
-      <regionPoint X="0147.50" Y="0041.68" />
-      <regionPoint X="0161.17" Y="0042.35" />
-      <regionPoint X="0161.17" Y="0086.68" />
+      <regionPoint X="0162.17" Y="0042.35" />
+      <regionPoint X="0161.17" Y="0087.01" />
       <regionPoint X="0087.83" Y="0087.35" />
+      <regionPoint X="0088.17" Y="0043.35" />
     </Points>
     <Adjacents count="2">
       <adjacent value="Grass_14" />
@@ -1515,7 +1678,12 @@
     <CanvasName value="Main" />
     <Subname value="1" />
     <CenterPoint X="0509.00" Y="0061.63" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0491.83" Y="0035.68" />
+      <regionPoint X="0542.17" Y="0046.68" />
+      <regionPoint X="0532.17" Y="0085.35" />
+      <regionPoint X="0474.17" Y="0079.01" />
+    </Points>
     <Adjacents count="3">
       <adjacent value="Grass_8" />
       <adjacent value="Grass_9" />
@@ -1526,7 +1694,12 @@
     <CanvasName value="Main" />
     <Subname value="1" />
     <CenterPoint X="0450.60" Y="0103.23" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0433.50" Y="0075.35" />
+      <regionPoint X="0474.50" Y="0079.68" />
+      <regionPoint X="0469.83" Y="0127.35" />
+      <regionPoint X="0420.50" Y="0127.35" />
+    </Points>
     <Adjacents count="4">
       <adjacent value="Grass_8" />
       <adjacent value="GeneralStore_3" />
@@ -1538,7 +1711,12 @@
     <CanvasName value="Main" />
     <Subname value="2" />
     <CenterPoint X="0500.20" Y="0104.03" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0474.50" Y="0079.68" />
+      <regionPoint X="0532.17" Y="0086.01" />
+      <regionPoint X="0522.17" Y="0126.68" />
+      <regionPoint X="0471.17" Y="0119.01" />
+    </Points>
     <Adjacents count="2">
       <adjacent value="GeneralStore_4" />
       <adjacent value="GeneralStore_1" />
@@ -1548,7 +1726,12 @@
     <CanvasName value="Main" />
     <Subname value="3" />
     <CenterPoint X="0442.60" Y="0148.03" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0420.50" Y="0127.35" />
+      <regionPoint X="0469.83" Y="0127.35" />
+      <regionPoint X="0465.83" Y="0168.68" />
+      <regionPoint X="0409.83" Y="0168.35" />
+    </Points>
     <Adjacents count="3">
       <adjacent value="GeneralStore_4" />
       <adjacent value="GeneralStore_1" />
@@ -1559,7 +1742,12 @@
     <CanvasName value="Main" />
     <Subname value="4" />
     <CenterPoint X="0492.20" Y="0145.63" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0471.17" Y="0119.01" />
+      <regionPoint X="0522.17" Y="0126.68" />
+      <regionPoint X="0511.83" Y="0168.35" />
+      <regionPoint X="0465.83" Y="0168.68" />
+    </Points>
     <Adjacents count="3">
       <adjacent value="Road_24" />
       <adjacent value="GeneralStore_3" />
@@ -1570,7 +1758,12 @@
     <CanvasName value="Main" />
     <Subname value="1" />
     <CenterPoint X="0636.20" Y="0064.03" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0612.83" Y="0036.68" />
+      <regionPoint X="0675.17" Y="0035.68" />
+      <regionPoint X="0652.83" Y="0095.68" />
+      <regionPoint X="0601.50" Y="0088.68" />
+    </Points>
     <Adjacents count="2">
       <adjacent value="Supermarket_2" />
       <adjacent value="Supermarket_4" />
@@ -1580,7 +1773,12 @@
     <CanvasName value="Main" />
     <Subname value="2" />
     <CenterPoint X="0692.20" Y="0072.83" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0675.17" Y="0035.68" />
+      <regionPoint X="0724.17" Y="0035.35" />
+      <regionPoint X="0720.83" Y="0104.68" />
+      <regionPoint X="0652.83" Y="0095.68" />
+    </Points>
     <Adjacents count="4">
       <adjacent value="Supermarket_1" />
       <adjacent value="Supermarket_4" />
@@ -1592,7 +1790,12 @@
     <CanvasName value="Main" />
     <Subname value="3" />
     <CenterPoint X="0748.20" Y="0075.23" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0724.17" Y="0035.35" />
+      <regionPoint X="0780.83" Y="0034.35" />
+      <regionPoint X="0763.50" Y="0110.68" />
+      <regionPoint X="0720.83" Y="0104.68" />
+    </Points>
     <Adjacents count="3">
       <adjacent value="Supermarket_2" />
       <adjacent value="Supermarket_5" />
@@ -2080,7 +2283,12 @@
     <CanvasName value="Main" />
     <Subname value="1" />
     <CenterPoint X="0020.20" Y="0907.19" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0000.50" Y="0892.83" />
+      <regionPoint X="0037.17" Y="0887.83" />
+      <regionPoint X="0043.17" Y="0920.49" />
+      <regionPoint X="0000.50" Y="0927.16" />
+    </Points>
     <Adjacents count="3">
       <adjacent value="Grass_98" />
       <adjacent value="RR_2" />
@@ -2375,7 +2583,12 @@
     <CanvasName value="Main" />
     <Subname value="1" />
     <CenterPoint X="0579.40" Y="0039.23" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0553.83" Y="0000.35" />
+      <regionPoint X="0621.83" Y="0000.35" />
+      <regionPoint X="0603.83" Y="0079.68" />
+      <regionPoint X="0533.83" Y="0081.68" />
+    </Points>
     <Adjacents count="4">
       <adjacent value="Grass_9" />
       <adjacent value="GasPumps_1" />
@@ -2387,7 +2600,12 @@
     <CanvasName value="Main" />
     <Subname value="2" />
     <CenterPoint X="0559.40" Y="0117.63" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0533.83" Y="0081.68" />
+      <regionPoint X="0603.83" Y="0079.68" />
+      <regionPoint X="0585.50" Y="0154.35" />
+      <regionPoint X="0515.50" Y="0154.35" />
+    </Points>
     <Adjacents count="2">
       <adjacent value="Road_1" />
       <adjacent value="Road_3" />
@@ -2541,7 +2759,14 @@
     <CanvasName value="Main" />
     <Subname value="15" />
     <CenterPoint X="0030.60" Y="0746.43" />
-    <Points count="0" />
+    <Points count="6">
+      <regionPoint X="0000.83" Y="0718.01" />
+      <regionPoint X="0038.50" Y="0702.68" />
+      <regionPoint X="0046.83" Y="0699.83" />
+      <regionPoint X="0082.83" Y="0758.49" />
+      <regionPoint X="0049.83" Y="0774.83" />
+      <regionPoint X="0000.83" Y="0798.49" />
+    </Points>
     <Adjacents count="4">
       <adjacent value="Grass_71" />
       <adjacent value="Road_14" />
@@ -2553,7 +2778,12 @@
     <CanvasName value="Main" />
     <Subname value="16" />
     <CenterPoint X="0020.20" Y="0189.63" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0000.83" Y="0169.35" />
+      <regionPoint X="0035.17" Y="0169.35" />
+      <regionPoint X="0047.83" Y="0205.01" />
+      <regionPoint X="0000.83" Y="0205.68" />
+    </Points>
     <Adjacents count="3">
       <adjacent value="Grass_19" />
       <adjacent value="Grass_24" />
@@ -2564,7 +2794,13 @@
     <CanvasName value="Main" />
     <Subname value="17" />
     <CenterPoint X="0077.80" Y="0188.83" />
-    <Points count="0" />
+    <Points count="5">
+      <regionPoint X="0035.17" Y="0169.35" />
+      <regionPoint X="0050.17" Y="0168.68" />
+      <regionPoint X="0108.17" Y="0170.01" />
+      <regionPoint X="0107.50" Y="0205.01" />
+      <regionPoint X="0047.83" Y="0205.01" />
+    </Points>
     <Adjacents count="4">
       <adjacent value="House_1" />
       <adjacent value="Road_16" />
@@ -2889,7 +3125,12 @@
     <CanvasName value="Main" />
     <Subname value="43" />
     <CenterPoint X="0180.20" Y="0075.23" />
-    <Points count="0" />
+    <Points count="4">
+      <regionPoint X="0161.83" Y="0047.35" />
+      <regionPoint X="0197.17" Y="0047.01" />
+      <regionPoint X="0197.50" Y="0096.68" />
+      <regionPoint X="0161.83" Y="0097.01" />
+    </Points>
     <Adjacents count="4">
       <adjacent value="House_A" />
       <adjacent value="Grass_3" />

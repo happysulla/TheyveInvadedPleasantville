@@ -19,6 +19,7 @@ namespace PleasantvilleGame
 {
    public class TerritoryRegionUnitTest : IUnitTest
    {
+      private static Double theMinDistance = 4; // Do an intersection with any other points that are part of any other region.  If a point is found that is very close, assume that is the correct point to add instead of the mouse click.
       private static Double theEllipseDiameter = 20;
       private static Double theEllipseOffset = theEllipseDiameter / 2.0;
       //--------------------------------------------------------
@@ -341,7 +342,6 @@ namespace PleasantvilleGame
       {
          if (null != myAnchorTerritory) // Add points to the anchor territy that define the region
          {
-            double minDistance = 6; // Do an intersection with any other points that are part of any other region.  If a point is found that is very close, assume that is the correct point to add instead of the mouse click.
             IMapPoint selectedMp = mp;
             foreach (String s in myAnchorTerritory.Adjacents)
             {
@@ -354,9 +354,8 @@ namespace PleasantvilleGame
                foreach (IMapPoint mp1 in adjacentTerritory.Points)
                {
                   double distance = GetRange(mp, mp1);
-                  if (distance < minDistance) // Find the minimum distance between this point and any adjacent territory point.  Use that point if it is below a set amount.
+                  if (distance < theMinDistance) // Find the minimum distance between this point and any adjacent territory point.  Use that point if it is below a set amount.
                   {
-                     minDistance = distance;
                      selectedMp.X = mp1.X;
                      selectedMp.Y = mp1.Y;
                      System.Diagnostics.Debug.WriteLine("\t\t==> {0} from {1} with d={2}", selectedMp.ToString(), adjacentTerritory.Name, distance);
