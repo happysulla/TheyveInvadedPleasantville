@@ -211,14 +211,6 @@ namespace PleasantvilleGame
          else if (HeaderName == myHeaderNames[1])
          {
             ++myIndexName;
-         }
-         else if (HeaderName == myHeaderNames[2])
-         {
-            ++myIndexName;
-         }
-         else if (HeaderName == myHeaderNames[3])
-         {
-            ++myIndexName;
             if (false == DeleteEllipsesAndPolygons())
             {
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): DeleteEllipsesAndPolygons() returned false");
@@ -230,7 +222,7 @@ namespace PleasantvilleGame
                return false;
             }
          }
-         else if (HeaderName == myHeaderNames[4])
+         else if (HeaderName == myHeaderNames[2])
          {
             ++myIndexName;
          }
@@ -515,8 +507,7 @@ namespace PleasantvilleGame
             return false;
          }
          //----------------------------------------------------
-         // Make a StreamGeometry object from t.Points 
-         StreamGeometry geometry = new StreamGeometry();
+         StreamGeometry geometry = new StreamGeometry(); // Make a StreamGeometry object from t.Points 
          using (StreamGeometryContext ctx = geometry.Open())
          {
             IMapPoint mp0 = t.Points[0];
@@ -543,9 +534,9 @@ namespace PleasantvilleGame
          {
             double XCenter = (double)Utilities.RandomGenerator.Next((int)rect.Left, (int)rect.Right) + Utilities.theMapItemOffset; // Get a random point in the bounding box
             double YCenter = (double)Utilities.RandomGenerator.Next((int)rect.Top, (int)rect.Bottom) + Utilities.theMapItemOffset;
-            Ellipse ellipse = new Ellipse() { Fill = Brushes.Black, Stroke = Brushes.Black, Width = 10, Height = 10, StrokeThickness = 1 };
-            Canvas.SetLeft(ellipse, XCenter - 5);
-            Canvas.SetTop(ellipse, YCenter - 5);
+            Ellipse ellipse = new Ellipse() { Fill = Brushes.Black, Stroke = Brushes.Black, Width = 8, Height = 8, StrokeThickness = 1 };
+            Canvas.SetLeft(ellipse, XCenter - 4);
+            Canvas.SetTop(ellipse, YCenter - 4);
             myCanvasMain.Children.Add(ellipse);
             System.Windows.Point pCenter = new System.Windows.Point(XCenter, YCenter);
             if ( true == geometry.FillContains(pCenter) )
@@ -637,10 +628,7 @@ namespace PleasantvilleGame
          }
          if (matchingTerritory.ToString() == myAnchorTerritory.ToString())
          {
-            // If the matching territory is the anchor territory, the user
-            // is requesting that they are done adding points for
-            // defining the Region.  The Region is used set as part of the Territory. 
-            MessageBox.Show("Saving " + mousedEllipse.Name);
+            MessageBox.Show("Saving " + mousedEllipse.Name); // If the matching territory is the anchor territory, the user is requesting that they are done adding points for defining the Region.  The Region is used set as part of the Territory.
             PointCollection points = new PointCollection();
             foreach (IMapPoint mp1 in myPoints)
                points.Add(new System.Windows.Point(mp1.X, mp1.Y));

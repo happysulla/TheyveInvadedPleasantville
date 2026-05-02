@@ -13,7 +13,8 @@ namespace PleasantvilleGame
       //----------------------------------------------------------------------------
       private ScrollViewer? myScrollViewerCanvas = null;
       private ScrollViewer? myScrollViewerTextBlock = null;
-      private Canvas? myCanvas = null;
+      private Canvas? myCanvasMain = null;
+      private Canvas? myCanvasHelper = null;
       private EventViewer? myEventViewer = null;
       private int myKeyIndex = 1;
       //----------------------------------------------------------------------------
@@ -26,14 +27,14 @@ namespace PleasantvilleGame
       public ConfigMgrUnitTest(DockPanel dp, EventViewer ev)
       {
          myIndexName = 0;
-         myHeaderNames.Add("05-Show Events");
          myHeaderNames.Add("05-Show Rules");
+         myHeaderNames.Add("05-Show Events");
          myHeaderNames.Add("05-Show Tables");
          //------------------------------------------
-         myCommandNames.Add("Show Event");
          myCommandNames.Add("Show Rule");
+         myCommandNames.Add("Show Event");
          myCommandNames.Add("Show Table");
-         //------------------------------------------
+         //------------------------------------
          foreach (UIElement ui0 in dp.Children)
          {
             if (ui0 is DockPanel dockPanelInside)
@@ -44,7 +45,7 @@ namespace PleasantvilleGame
                   {
                      myScrollViewerCanvas = (ScrollViewer)ui1;
                      if (myScrollViewerCanvas.Content is Canvas)
-                        myCanvas = (Canvas)myScrollViewerCanvas.Content;  // Find the Canvas in the visual tree
+                        myCanvasMain = (Canvas)myScrollViewerCanvas.Content;  // Find the Canvas in the visual tree
                   }
                   if (ui1 is DockPanel dockPanelControls)
                   {
@@ -60,9 +61,10 @@ namespace PleasantvilleGame
                }
             }
          }
-         if (null == myCanvas)
+         //-------------------------------------
+         if (null == myCanvasMain)
          {
-            Logger.Log(LogEnum.LE_ERROR, "MapItemSetupUnitTest(): myCanvas=null");
+            Logger.Log(LogEnum.LE_ERROR, "MapItemSetupUnitTest(): myCanvasMain=null");
             CtorError = true;
             return;
          }
@@ -96,6 +98,18 @@ namespace PleasantvilleGame
          }
          if(CommandName == myCommandNames[0])
          {
+            string key = myEventViewer.myRulesMgr.Rules.Keys.ElementAt(myKeyIndex);
+            if (false == myEventViewer.ShowRule(key))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Command(): ShowRule() returned false");
+               return false;
+            }
+            ++myKeyIndex;
+            if (myEventViewer.myRulesMgr.Rules.Keys.Count <= myKeyIndex)
+               myKeyIndex = 0;
+         }
+         else if (CommandName == myCommandNames[1])
+         {
             string key = myEventViewer.myRulesMgr.Events.Keys.ElementAt(myKeyIndex);
             gi.EventActive = key;
             if (false == myEventViewer.OpenEvent(gi, key))
@@ -105,18 +119,6 @@ namespace PleasantvilleGame
             }
             ++myKeyIndex;
             if (myEventViewer.myRulesMgr.Events.Keys.Count <= myKeyIndex)
-               myKeyIndex = 0;
-         }
-         else if (CommandName == myCommandNames[1])
-         {
-            string key = myEventViewer.myRulesMgr.Rules.Keys.ElementAt(myKeyIndex);
-            if (false == myEventViewer.ShowRule(key))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): ShowRule() returned false");
-               return false;
-            }
-            ++myKeyIndex;
-            if (myEventViewer.myRulesMgr.Rules.Keys.Count <= myKeyIndex)
                myKeyIndex = 0;
          }
          else if(CommandName == myCommandNames[2])
@@ -152,22 +154,6 @@ namespace PleasantvilleGame
       }
       public bool Cleanup(ref IGameInstance gi) // Remove an elipses from the canvas and save off Territories.xml file
       {
-         if (null == myCanvas)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Cleanup(): myCanvas=null");
-            return false;
-         }
-         //--------------------------------------------------
-         // Remove any existing UI elements from the Canvas
-         List<UIElement> results = new List<UIElement>();
-         foreach (UIElement ui in myCanvas.Children)
-         {
-            if (ui is Ellipse)
-               results.Add(ui);
-         }
-         foreach (UIElement ui1 in results)
-            myCanvas.Children.Remove(ui1);
-         //--------------------------------------------------
          ++gi.GameTurn;
          return true;
       }

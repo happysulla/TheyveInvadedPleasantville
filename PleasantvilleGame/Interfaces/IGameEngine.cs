@@ -43,6 +43,7 @@ namespace PleasantvilleGame
       ShowRuleListingDialog,
       ShowEventListingDialog,
       ShowTableListing,
+      ShowCharacterDescription,
       ShowGameFeatsDialog,
       ShowReportErrorDialog,
       ShowAboutDialog,

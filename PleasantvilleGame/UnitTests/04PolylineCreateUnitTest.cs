@@ -68,11 +68,11 @@ namespace PleasantvilleGame
          myCanvasImageViewer = civ;
          //------------------------------------
          myDockPanel = dp;
-         foreach (UIElement ui0 in myDockPanel.Children)
+         foreach (UIElement ui0 in dp.Children)
          {
-            if (ui0 is StackPanel stackPanelInside) // DockPanel showing main play area
+            if (ui0 is DockPanel dockPanelInside) // DockPanel showing main play area
             {
-               foreach (UIElement ui1 in stackPanelInside.Children)
+               foreach (UIElement ui1 in dockPanelInside.Children)
                {
                   if (ui1 is ScrollViewer)
                   {
@@ -91,7 +91,7 @@ namespace PleasantvilleGame
                }
             }
          }
-         //-------------------------------------
+         //------------------------------------
          if (null == myCanvasHelper)
          {
             Logger.Log(LogEnum.LE_ERROR, "PolylineCreateUnitTest(): myCanvasHelper=null");
@@ -104,7 +104,7 @@ namespace PleasantvilleGame
             CtorError = true;
             return;
          }
-         //-------------------------------------
+         //------------------------------------
          myDashArray.Add(5);  // used for dotted lines
          myDashArray.Add(2);  // used for dotted lines
       }

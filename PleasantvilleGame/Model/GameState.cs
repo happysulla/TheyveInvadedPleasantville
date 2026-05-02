@@ -258,6 +258,7 @@ namespace PleasantvilleGame
             case GameAction.ShowEventListingDialog:
             case GameAction.ShowTableListing:
             case GameAction.ShowReportErrorDialog:
+            case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
             case GameAction.UpdateStatusBar:
@@ -353,6 +354,7 @@ namespace PleasantvilleGame
             case GameAction.ShowEventListingDialog:
             case GameAction.ShowTableListing:
             case GameAction.ShowReportErrorDialog:
+            case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
             case GameAction.UpdateStatusBar:
@@ -2576,6 +2578,7 @@ namespace PleasantvilleGame
             case GameAction.ShowEventListingDialog:
             case GameAction.ShowTableListing:
             case GameAction.ShowReportErrorDialog:
+            case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
             case GameAction.UpdateStatusBar:

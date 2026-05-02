@@ -31,8 +31,8 @@ namespace PleasantvilleGame
       public static int MapItemNum { set; get; } = 1000;
       //--------------------------------------------
       public static double ZoomCanvas { get; set; } = 1.5;
-      public static double theMapItemOffset = 20;
-      public static double theMapItemSize = 40;  // size of a MapItem black
+      public static double theMapItemOffset = 12;
+      public static double theMapItemSize = 24;  // size of a MapItem black
       public static int theStackSize = 1000;
       //--------------------------------------------
       static private int theRandomIndex = 0;

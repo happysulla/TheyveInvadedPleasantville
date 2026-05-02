@@ -28,8 +28,6 @@
     <None Remove="Config\Events.txt" />
     <None Remove="Config\Implant Removal.xml" />
     <None Remove="Config\Influence Results.xml" />
-    <None Remove="Config\Modifiers to Conversation.xml" />
-    <None Remove="Config\Modifiers to Influence Attempts.xml" />
     <None Remove="Config\Rules.txt" />
     <None Remove="Config\Target Building.xml" />
     <None Remove="Config\Territories.xml" />
@@ -55,6 +53,7 @@
     <None Remove="Images\c06dieRoll2.gif" />
     <None Remove="Images\CheckoutGirl.gif" />
     <None Remove="Images\Continue.gif" />
+    <None Remove="Images\CrossedAntenna.gif" />
     <None Remove="Images\Deny.gif" />
     <None Remove="Images\Deputy.gif" />
     <None Remove="Images\Doctor.gif" />
@@ -67,6 +66,13 @@
     <None Remove="Images\HotelOwner.gif" />
     <None Remove="Images\Judge.gif" />
     <None Remove="Images\Lawyer.gif" />
+    <None Remove="Images\Lawyer1.gif" />
+    <None Remove="Images\Lawyer2.gif" />
+    <None Remove="Images\Lawyer3.gif" />
+    <None Remove="Images\Lawyer4.gif" />
+    <None Remove="Images\Lawyer5.gif" />
+    <None Remove="Images\LawyerStunned.gif" />
+    <None Remove="Images\LawyerTiedUp.gif" />
     <None Remove="Images\Maid.gif" />
     <None Remove="Images\MaitreD.gif" />
     <None Remove="Images\Mayor.gif" />
@@ -81,6 +87,7 @@
     <None Remove="Images\OTiedUp.gif" />
     <None Remove="Images\OWary.gif" />
     <None Remove="Images\Paperboy.gif" />
+    <None Remove="Images\Parchment.gif" />
     <None Remove="Images\Pleasantville.ico" />
     <None Remove="Images\PleasantvilleMap.gif" />
     <None Remove="Images\Plumber.gif" />
@@ -107,6 +114,7 @@
     <None Remove="Images\Win4.gif" />
     <None Remove="Images\Win5.gif" />
     <None Remove="Images\Zebulon.gif" />
+    <None Remove="Images\ZebulonBlack.gif" />
   </ItemGroup>
 
   <ItemGroup>
@@ -131,10 +139,10 @@
     <Content Include="Config\Influence Results.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Config\Modifiers to Conversation.xml">
+    <Content Include="Config\Conversation Modifiers.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Config\Modifiers to Influence Attempts.xml">
+    <Content Include="Config\Influence Modifiers.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Config\Rules.txt">
@@ -212,6 +220,9 @@
     <Content Include="Images\Continue.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\CrossedAntenna.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\Deny.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -246,6 +257,27 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Lawyer.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Lawyer1.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Lawyer2.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Lawyer3.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Lawyer4.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Lawyer5.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\LawyerStunned.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\LawyerTiedUp.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Maid.gif">
@@ -288,6 +320,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Paperboy.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Parchment.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Pleasantville.ico">
@@ -363,6 +398,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Zebulon.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ZebulonBlack.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

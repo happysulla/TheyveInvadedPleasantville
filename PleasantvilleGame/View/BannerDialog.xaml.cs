@@ -41,8 +41,8 @@ namespace PleasantvilleGame
          ImageBrush brush = new ImageBrush(img);
          this.Background = brush;
          //-------------------------------
-         Image imageRifles = new Image() { Source = MapItem.theMapImages.GetBitmapImage("CrossedRifles") };
-         myButtonClose.Content = imageRifles;
+         Image imageAntenna = new Image() { Source = MapItem.theMapImages.GetBitmapImage("CrossedAntenna") };
+         myButtonClose.Content = imageAntenna;
          //-------------------------------
          myCheckBoxFont.IsChecked = theIsCheckBoxChecked;
          //-------------------------------

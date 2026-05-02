@@ -51,256 +51,65 @@ namespace PleasantvilleGame
          this.myFlowDocumentScrollViewer.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas);
          switch (Key)
          {
-            case "Activation":
-               this.Title = "Activation Tables";
+            case "Alien Loss":
+               this.Title = "Alien Loss";
                this.Background = theBrushTan;
                heightOfConcern = 460.0;
                widthOfConcern = 450.0;
                break;
-            case "Ammo":
-               this.Title = "Ammo Tables";
-               this.Background = theBrushOrange;
-               heightOfConcern = 370.0;
-               widthOfConcern = 610.0;
-               break;
-            case "AP To Kill (75)":
-               this.Title = "AP To Kill (75)";
-               this.Background = theBrushGreen;
-               heightOfConcern = 450.0;
-               widthOfConcern = 670.0;
-               break;
-            case "AP To Kill (76L)":
-               this.Title = "AP To Kill (76L)";
-               this.Background = theBrushGreen;
-               heightOfConcern = 450.0;
-               widthOfConcern = 670.0;
-               break;
-            case "AP To Kill (76LL)":
-               this.Title = "AP To Kill (76LL)";
-               this.Background = theBrushGreen;
-               heightOfConcern = 420.0;
-               widthOfConcern = 670.0;
-               break;
-            case "Bail Out":
-               this.Title = "Bail Out Table";
-               this.Background = theBrushOrange;
-               heightOfConcern = 200.0;
-               widthOfConcern = 300.0;
-               break;
-            case "Bogged Down":
-               this.Title = "Bogged Down Movement Table";
-               this.Background = theBrushOrange;
-               heightOfConcern = 250.0;
-               widthOfConcern = 350.0;
-               break;
-            case "Brew Up":
-               this.Title = "Brew Up Table";
-               this.Background = theBrushOrange;
-               heightOfConcern = 210.0;
-               widthOfConcern = 365.0;
-               break;
-            case "Calendar":
-               this.Title = "Combat Calendar";
-               heightOfConcern = 880.0;
-               widthOfConcern = 1280.0;
-               break;
-            case "Collateral":
-               this.Title = "Collateral Damage Table";
-               this.Background = theBrushOrange;
-               heightOfConcern = 350.0;
-               widthOfConcern = 460.0;
-               break;
-            case "Decorations":
-               this.Title = "Decorations Table";
+            case "Combat Results":
+               this.Title = "Combat Results";
                this.Background = theBrushTan;
-               heightOfConcern = 250.0;
-               widthOfConcern = 530.0;
-               break;
-            case "Deployment":
-               this.Title = "Deployment Tables";
-               this.Background = theBrushOrange;
-               heightOfConcern = 365.0;
-               widthOfConcern = 530.0;
-               break;
-            case "Enemy Advance":
-               this.Title = "Enemy Action: Advance Scenario";
-               this.Background = theBrushBlue;
-               heightOfConcern = 770.0;
-               widthOfConcern = 690.0;
-               break;
-            case "Enemy AP To Hit":
-               this.Title = "Enemy AP To Hit";
-               this.Background = theBrushBlue;
-               heightOfConcern = 430.0;
-               widthOfConcern = 530.0;
-               break;
-            case "Enemy AP To Kill":
-               this.Title = "Enemy AP % To Kill";
-               this.Background = theBrushBlue;
-               heightOfConcern = 440.0;
-               widthOfConcern = 750.0;
-               break;
-            case "Enemy Appearance":
-               this.Title = "Enemy Vehicle/Gun Appearance Table";
-               this.Background = theBrushTan;
-               heightOfConcern = 350.0;
-               widthOfConcern = 560.0;
-               break;
-            case "Enemy Battle":
-               this.Title = "Enemy Action: Battle Scenario";
-               this.Background = theBrushBlue;
-               heightOfConcern = 770.0;
-               widthOfConcern = 550.0;
-               break;
-            case "Enemy Counterattack":
-               this.Title = "Enemy Action: CounterAttack Scenario";
-               this.Background = theBrushBlue;
-               heightOfConcern = 690.0;
-               widthOfConcern = 550.0;
-               break;
-            case "Exit Areas":
-               this.Title = "Exit Areas";
-               this.Background = theBrushTan;
-               heightOfConcern = 310.0;
-               widthOfConcern = 630.0;
-               break;
-            case "Explosion":
-               this.Title = "Tank Explosion Table";
-               this.Background = theBrushOrange;
-               heightOfConcern = 160.0;
-               widthOfConcern = 320.0;
-               break;
-            case "Friendly Action":
-               this.Title = "Friendly Action";
-               this.Background = theBrushBlue;
-               heightOfConcern = 650.0;
-               widthOfConcern = 530.0;
-               break;
-            case "Gun Malfunction":
-               this.Title = "Gun Malfunction Repair Table";
-               this.Background = theBrushGreen;
-               heightOfConcern = 380.0;
+               heightOfConcern = 460.0;
                widthOfConcern = 450.0;
                break;
-            case "HE To Kill (75)":
-               this.Title = "HE To Kill (75) Vehicles";
-               this.Background = theBrushGreen;
-               heightOfConcern = 430.0;
-               widthOfConcern = 670.0;
-               break;
-            case "HE To Kill (76)":
-               this.Title = "HE To Kill (76) Vehicles";
-               this.Background = theBrushGreen;
-               heightOfConcern = 430.0;
-               widthOfConcern = 670.0;
-               break;
-            case "Hit Location Crew":
-               this.Title = "Hit Location Crew Wound Effects";
-               this.Background = theBrushOrange;
-               heightOfConcern = 320.0;
-               widthOfConcern = 610.0;
-               break;
-            case "Hit Location":
-               this.Title = "Hit Location Table";
-               this.Background = theBrushGreen;
-               heightOfConcern = 280.0;
-               widthOfConcern = 370.0;
-               break;
-            case "Hit Location Tank":
-               this.Title = "Hit Location Table";
-               this.Background = theBrushBlue;
-               heightOfConcern = 275.0;
-               widthOfConcern = 370.0;
-               break;
-            case "Minefield":
-               this.Title = "Minefield Attack Table";
-               this.Background = theBrushBlue;
-               heightOfConcern = 230.0;
-               widthOfConcern = 600.0;
-               break;
-            case "Movement":
-               this.Title = "Movement Tables";
-               this.Background = theBrushOrange;
-               heightOfConcern = 880.0;
-               widthOfConcern = 795.0;
-               break;
-            case "Panzerfaust":
-               this.Title = "Panzerfaust Attack Tables";
-               this.Background = theBrushBlue;
-               heightOfConcern = 570.0;
-               widthOfConcern = 490.0;
-               break;
-            case "Placement":
-               this.Title = "Battle Board Placement Tables";
+            case "Implant Removal":
+               this.Title = "Implant Removal";
                this.Background = theBrushTan;
-               heightOfConcern = 590.0;
-               widthOfConcern = 770.0;
-               break;
-            case "Random Events":
-               this.Title = "Random Events Table";
-               this.Background = theBrushBlue;
-               heightOfConcern = 510.0;
-               widthOfConcern = 650.0;
-               break;
-            case "Rate of Fire":
-               this.Title = "Rate of Fire Table";
-               this.Background = theBrushGreen;
-               heightOfConcern = 300.0;
-               widthOfConcern = 440.0;
-               break;
-            case "Replacement":
-               this.Title = "Tank Replacement Table";
-               this.Background = theBrushTan;
-               heightOfConcern = 420.0;
-               widthOfConcern = 710.0;
-               break;
-            case "Resistance":
-               this.Title = "Resistance Table";
-               this.Background = theBrushTan;
-               heightOfConcern = 240.0;
-               widthOfConcern = 460.0;
-               break;
-            case "Sherman MG":
-               this.Title = "Sherman Machine Guns vs Infantry Targets";
-               this.Background = theBrushGreen;
-               heightOfConcern = 610.0;
-               widthOfConcern = 540.0;
-               break;
-            case "Spotting":
-               this.Title = "Spotting Table";
-               this.Background = theBrushTan;
-               heightOfConcern = 410.0;
-               widthOfConcern = 650.0;
-               break;
-            case "Time":
-               this.Title = "Time Tables";
-               this.Background = theBrushOrange;
-               heightOfConcern = 580.0;
-               widthOfConcern = 620.0;
-               break;
-            case "To Hit Target":
-               this.Title = "To Hit Target";
-               this.Background = theBrushGreen;
-               heightOfConcern = 730.0;
-               widthOfConcern = 590.0;
-               break;
-            case "To Kill Infantry":
-               this.Title = "To Kill Infantry Targets";
-               this.Background = theBrushGreen;
-               heightOfConcern = 340.0;
-               widthOfConcern = 580.0;
-               break;
-            case "Weather":
-               this.Title = "Weather Tables";
-               this.Background = theBrushOrange;
-               heightOfConcern = 690.0;
-               widthOfConcern = 680.0;
-               break;
-            case "Wounds":
-               this.Title = "Wounds Tables";
-               this.Background = theBrushOrange;
                heightOfConcern = 460.0;
-               widthOfConcern = 630.0;
+               widthOfConcern = 450.0;
+               break;
+            case "Influence Results":
+               this.Title = "Implant Removal";
+               this.Background = theBrushTan;
+               heightOfConcern = 460.0;
+               widthOfConcern = 450.0;
+               break;
+            case "Conversation Modifiers":
+               this.Title = "Modifiers to Conversation";
+               this.Background = theBrushTan;
+               heightOfConcern = 460.0;
+               widthOfConcern = 450.0;
+               break;
+            case "Influence Modifiers":
+               this.Title = "Modifiers to Influence Attempts";
+               this.Background = theBrushTan;
+               heightOfConcern = 460.0;
+               widthOfConcern = 450.0;
+               break;
+            case "Target Building":
+               this.Title = "Target Building";
+               this.Background = theBrushTan;
+               heightOfConcern = 460.0;
+               widthOfConcern = 450.0;
+               break;
+            case "Town Loss":
+               this.Title = "Town Loss";
+               this.Background = theBrushTan;
+               heightOfConcern = 460.0;
+               widthOfConcern = 450.0;
+               break;
+            case "Town Player Starting":
+               this.Title = "Town Player Starting";
+               this.Background = theBrushTan;
+               heightOfConcern = 460.0;
+               widthOfConcern = 450.0;
+               break;
+            case "Townspeople":
+               this.Title = "Townspeople";
+               this.Background = theBrushTan;
+               heightOfConcern = 460.0;
+               widthOfConcern = 450.0;
                break;
             default:
                Logger.Log(LogEnum.LE_ERROR, "TableDialog_Loaded(): reached default key=" + Key);
