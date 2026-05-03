@@ -8,14 +8,14 @@
 			<TableCell ColumnSpan='2' TextAlignment='Center' BorderBrush='Black' BorderThickness='1'>
 				<Paragraph>
 					<LineBreak/>
-					Modifiers to Invluence Attempts
+					Modifiers to Influence Attempts
 					<LineBreak/>
 				</Paragraph>
 			</TableCell>
 		</TableRow>
 	</TableRowGroup>
 	<TableRowGroup>
-		<TableRow  FontSize='12' >
+		<TableRow  FontSize='12' Background='BurlyWood'>
 			<TableCell BorderBrush='Black' BorderThickness='1'>
 				<Paragraph><Bold>
 				<Run Text='Description'></Run>
@@ -37,7 +37,7 @@
 				<Paragraph><Run Text='-1'></Run></Paragraph>
 			</TableCell>
 		</TableRow>
-	    <TableRow  FontSize='12' >
+	    <TableRow  FontSize='12' Background='BurlyWood'>
 			<TableCell BorderBrush='Black' BorderThickness='1'>
 				<Paragraph><Run Text='Townsperson is wary'></Run></Paragraph>
 			</TableCell>

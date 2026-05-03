@@ -12,7 +12,7 @@ namespace PleasantvilleGame
    {
       public string[] theTables = new string[]
            {
-              "Alien Loss","Combat Results","Implant Removal","Influence Results","Conversation Modifiers","Influence Modifiers","Target Building","Town Loss","Town Player Starting","Townspeople"
+              "Alien Loss","Combat Results","Conversation Modifiers","Implant Removal","Influence Modifiers","Influence Results","Observation","Target Building","Town Loss","Town Player Starting","Townspeople"
            };
       public static string theConfigDirectory = "";
       public bool CtorError { get; } = false;

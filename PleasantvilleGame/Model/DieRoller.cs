@@ -27,6 +27,7 @@ namespace PleasantvilleGame
       private const double ACCELERATION_RATIO = 0.05;  // how fast the animation decelerates
       private const double BUTTON_BOARDER = 15;        // add for the button border
       private const double ZOOM_DICE = 1.707;
+      private const int ARRAY_SIZE = 12;
       private RollEndCallback? myCallbackEndRoll;
       private LoadEndCallback myCallbackEndLoad;
       private int myDieRollResults = 0;
@@ -84,10 +85,9 @@ namespace PleasantvilleGame
          foreach (Button b in theDice)
             HideDie();
          IMapPoint mp = GetCanvasCenter(sv, c);
-         int randomNum = Utilities.RandomGenerator.Next(0, 10);
+         int randomNum = Utilities.RandomGenerator.Next(0, 6);
          int die1 = RollStationaryDie(mp, randomNum);
-         if (0 == die1)
-            die1 = 10;
+         die1 += 1; // 1 - 6
          myDieRollResults = die1;
          return myDieRollResults;
       }
@@ -99,16 +99,23 @@ namespace PleasantvilleGame
          HideDie();
          IMapPoint mp = GetCanvasCenter(sv, c);
          IMapPoint mp1 = new MapPoint(mp.X, mp.Y - 0.65 * Utilities.theMapItemSize / Utilities.ZoomCanvas);
-         int randomNum = Utilities.RandomGenerator.Next(0, 10);
+         int randomNum = Utilities.RandomGenerator.Next(0, 6);
          int die1 = RollStationaryDie(mp1, randomNum);
+         if (0 == die1)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "RollStationaryDice(): RollStationaryDie() returned 0");
+            return 0;
+         }
          //----------------------------------------------------------------------------------------
          IMapPoint mp2 = new MapPoint(mp.X, mp.Y + 0.65 * Utilities.theMapItemSize / Utilities.ZoomCanvas);
          randomNum = Utilities.RandomGenerator.Next(6, 12);
          int die2 = RollStationaryDie(mp2, randomNum);
-         if (0 == die1 && 0 == die2)
-            myDieRollResults = 100;
-         else
-            myDieRollResults = die1 + 10 * die2;
+         if (0 == die2)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "RollStationaryDice(): RollStationaryDie() returned 0");
+            return 0;
+         }
+         myDieRollResults = die1 + die2;
          return myDieRollResults;
       }
       public int RollMovingDie(Canvas c, RollEndCallback cb)
@@ -118,10 +125,13 @@ namespace PleasantvilleGame
          ScrollViewer sv = (ScrollViewer)c.Parent;
          HideDie();
          IMapPoint mp = GetCanvasCenter(sv, c);
-         int randomNum = Utilities.RandomGenerator.Next(0, 10);
+         int randomNum = Utilities.RandomGenerator.Next(0, 6);
          int die1 = RollMovingDie(sv, c, mp, randomNum);
          if (0 == die1)
-            die1 = 10;
+         {
+            Logger.Log(LogEnum.LE_ERROR, "RollStationaryDice(): RollStationaryDie() returned 0");
+            return 0;
+         }
          myDieRollResults = die1;
          return myDieRollResults;
       }
@@ -131,23 +141,27 @@ namespace PleasantvilleGame
          HideDie();
          IMapPoint mp = GetCanvasCenter(sv, c);
          IMapPoint mp1 = new MapPoint(mp.X, mp.Y - 0.65 * Utilities.theMapItemSize / Utilities.ZoomCanvas);
-         int randomNum = Utilities.RandomGenerator.Next(0, 10);
-         int die1 = RollMovingDie(sv, c, mp1, randomNum);
+         int randomNum1 = Utilities.RandomGenerator.Next(0, 6);
+         int die1 = RollMovingDie(sv, c, mp1, randomNum1);
+         if (0 == die1)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "RollMovingDice(): 1-RollMovingDice() returned 0");
+            return 0;
+         }
          //--------------------------------------------------------
          myDieRollResults = 0;
          myCallbackEndRoll = cb;
          IMapPoint mp2 = new MapPoint(mp.X, mp.Y + 0.65 * Utilities.theMapItemSize / Utilities.ZoomCanvas);
-         randomNum = Utilities.RandomGenerator.Next(10, 20);
-         int die2 = RollMovingDie(sv, c, mp2, randomNum);
-         if (0 == die1 && 0 == die2)
-            myDieRollResults = 100;
-         else
-            myDieRollResults = die1 + 10 * die2;
-         theBlueDie = die2;
-         if (0 == die1)
-            theWhiteDie = 10;
-         else
-            theWhiteDie = die1;
+         int randomNum2 = Utilities.RandomGenerator.Next(6, 12);
+         int die2 = RollMovingDie(sv, c, mp2, randomNum2);
+         if (0 == die2)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "RollMovingDice(): 2-RollMovingDice() returned 0");
+            return 0;
+         }
+         myDieRollResults = die1 + die2;
+         int dieRollRandomNum = randomNum1 + randomNum2 - 4;
+         Logger.Log(LogEnum.LE_SHOW_DICE_MOVING, "\t!!!!!RollMovingDice(): r1=" + randomNum1.ToString() + " r2=" + randomNum2 + " d1=" + die1.ToString() + " d2=" + die2.ToString());
          return myDieRollResults;
       }
       //-----------------------------------------------------------
@@ -230,6 +244,11 @@ namespace PleasantvilleGame
       }
       private int RollStationaryDie(IMapPoint mp, int randomNum)
       {
+         if ((randomNum < 0) || (ARRAY_SIZE <= randomNum))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "RollStationaryDie(): invalid range randomNum=" + randomNum.ToString());
+            return 0;
+         }
          Button b = theDice[randomNum];
          if (null == theDice[randomNum])
          {
@@ -252,11 +271,16 @@ namespace PleasantvilleGame
          controller.Play();
          Canvas.SetLeft(theDice[randomNum], mp.X - zoom * Utilities.theMapItemOffset);
          Canvas.SetTop(theDice[randomNum], mp.Y - zoom * Utilities.theMapItemOffset);
-         Panel.SetZIndex(theDice[randomNum], 10000);
-         return randomNum % 10;
+         Canvas.SetZIndex(theDice[randomNum], 10000);
+         return (randomNum % 6 + 1);
       }
       private int RollMovingDie(ScrollViewer sv, Canvas c, IMapPoint mp, int randomNum)
       {
+         if( (randomNum < 0) || (ARRAY_SIZE <= randomNum) )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "RollStationaryDie(): invalid range randomNum=" + randomNum.ToString());
+            return 0;
+         }
          Button b = theDice[randomNum];
          if (null == b)
          {
@@ -280,7 +304,7 @@ namespace PleasantvilleGame
          IMapPoint centerPoint = new MapPoint(mp.X - zoom * Utilities.theMapItemOffset, mp.Y - zoom * Utilities.theMapItemOffset);
          Canvas.SetLeft(b, centerPoint.X);
          Canvas.SetTop(b, centerPoint.Y);
-         Panel.SetZIndex(theDice[randomNum], 10000);
+         Canvas.SetZIndex(theDice[randomNum], 10000);
          Thread.Sleep(100);
          //----------------------------------------------------
          if (false == DiceAnimate(sv, c, b, centerPoint))
@@ -288,7 +312,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "RollMovingDie(): MovePathAnimate() returned false");
             return 0;
          }
-         return randomNum % 10;
+         return (randomNum % 6 + 1);
       }
       private bool DiceAnimate(ScrollViewer sv, Canvas c, Button b, IMapPoint startPoint)
       {

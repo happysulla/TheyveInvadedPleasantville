@@ -26,7 +26,6 @@
     <None Remove="Config\Combat Results.xml" />
     <None Remove="Config\DiceRolls.xml" />
     <None Remove="Config\Events.txt" />
-    <None Remove="Config\Implant Removal.xml" />
     <None Remove="Config\Influence Results.xml" />
     <None Remove="Config\Rules.txt" />
     <None Remove="Config\Target Building.xml" />
@@ -118,6 +117,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Config\Implant Removal.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\Observation.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Config\DiceRolls.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -131,9 +136,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Config\Events.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Config\Implant Removal.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Config\Influence Results.xml">

@@ -18,33 +18,33 @@
 		</TableRow>
 	</TableRowGroup>
 	<TableRowGroup>
-		<TableRow  FontSize='12' >
+		<TableRow  FontSize='12' Background='BurlyWood'>
 			<TableCell BorderBrush='Black' TextAlignment='Center' BorderThickness='1'>
-				<Paragraph><Bold><Run Text='Dice'/><LinkBreak/><Run Text='Roll'/></Bold></Paragraph>
+				<Paragraph><Bold><Run Text='Dice'/><LineBreak/><Run Text='Roll'/></Bold></Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' TextAlignment='Center' BorderThickness='1'>
-				<Paragraph><Bold><Run Text='1-3 or'/><LinkBreak/><Run Text='Worse'/></Bold></Paragraph>
+				<Paragraph><Bold><Run Text='1-3 or'/><LineBreak/><Run Text='Worse'/></Bold></Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' TextAlignment='Center' BorderThickness='1'>
-				<Paragraph><Bold><LinkBreak/><Run Text='1-2'></Run></Bold></Paragraph>
+				<Paragraph><Bold><LineBreak/><Run Text='1-2'></Run></Bold></Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' TextAlignment='Center' BorderThickness='1'>
-				<Paragraph><Bold><LinkBreak/><Run Text='2-3'></Run></Bold></Paragraph>
+				<Paragraph><Bold><LineBreak/><Run Text='2-3'></Run></Bold></Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' TextAlignment='Center' BorderThickness='1'>
-				<Paragraph><Bold><LinkBreak/><Run Text='1-1'></Run></Bold></Paragraph>
+				<Paragraph><Bold><LineBreak/><Run Text='1-1'></Run></Bold></Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
-				<Paragraph><Bold><LinkBreak/><Run Text='3-2'></Run></Bold></Paragraph>
+				<Paragraph><Bold><LineBreak/><Run Text='3-2'></Run></Bold></Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
-				<Paragraph><Bold><LinkBreak/><Run Text='2-1'></Run></Bold></Paragraph>
+				<Paragraph><Bold><LineBreak/><Run Text='2-1'></Run></Bold></Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
-				<Paragraph><Bold><LinkBreak/><Run Text='3-1'></Run></Bold></Paragraph>
+				<Paragraph><Bold><LineBreak/><Run Text='3-1'></Run></Bold></Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
-				<Paragraph><Bold><Run Text='4-1 or'/><LinkBreak/><Run Text='More'/></Bold></Paragraph>
+				<Paragraph><Bold><Run Text='4-1 or'/><LineBreak/><Run Text='More'/></Bold></Paragraph>
 			</TableCell>
 		</TableRow>
 	</TableRowGroup>
@@ -78,7 +78,7 @@
 				<Paragraph><Run Text='N'></Run></Paragraph>
 			</TableCell>			
 		</TableRow>
-		<TableRow  FontSize='12' >
+		<TableRow  FontSize='12' Background='BurlyWood'>
 		    <TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
 				<Paragraph><Run Text='3'></Run></Paragraph>
 			</TableCell>
@@ -136,7 +136,7 @@
 				<Paragraph><Run Text='C'></Run></Paragraph>
 			</TableCell>			
 		</TableRow>	
-		<TableRow  FontSize='12' >
+		<TableRow  FontSize='12' Background='BurlyWood'>
 		    <TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
 				<Paragraph><Run Text='5'></Run></Paragraph>
 			</TableCell>
@@ -194,7 +194,7 @@
 				<Paragraph><Run Text='C'></Run></Paragraph>
 			</TableCell>			
 		</TableRow>		
-		<TableRow  FontSize='12' >
+		<TableRow  FontSize='12' Background='BurlyWood'>
 		    <TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
 				<Paragraph><Run Text='7'></Run></Paragraph>
 			</TableCell>
@@ -252,7 +252,7 @@
 				<Paragraph><Run Text='C'></Run></Paragraph>
 			</TableCell>			
 		</TableRow>	
-		<TableRow  FontSize='12' >
+		<TableRow  FontSize='12' Background='BurlyWood'>
 		    <TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
 				<Paragraph><Run Text='9'></Run></Paragraph>
 			</TableCell>
@@ -310,7 +310,7 @@
 				<Paragraph><Run Text='C'></Run></Paragraph>
 			</TableCell>			
 		</TableRow>	
-		<TableRow  FontSize='12' >
+		<TableRow  FontSize='12' Background='BurlyWood'>
 		    <TableCell BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
 				<Paragraph><Run Text='11'></Run></Paragraph>
 			</TableCell>

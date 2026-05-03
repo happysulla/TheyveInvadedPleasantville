@@ -1,7 +1,7 @@
 ﻿<Table CellSpacing="2" BorderBrush="Black" BorderThickness="3">
 	<Table.Columns>
-		<TableColumn Width='120'/>
-		<TableColumn Width='120'/>
+		<TableColumn Width='80'/>
+		<TableColumn Width='660'/>
 	</Table.Columns>
 	<TableRowGroup>
 		<TableRow  FontSize='18' >
@@ -15,7 +15,7 @@
 		</TableRow>
 	</TableRowGroup>
 	<TableRowGroup>
-		<TableRow  FontSize='12' >
+		<TableRow  FontSize='12' Background='BurlyWood'>
 			<TableCell BorderBrush='Black' BorderThickness='1'>
 				<Paragraph>
 					<Bold>
@@ -39,7 +39,7 @@
 					<Run Text='2-4'></Run>
 				</Paragraph>
 			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
+			<TableCell BorderBrush='Black' BorderThickness='1' TextAlignment='Left'>
 				<Paragraph>
 					<Bold>
 						<Run Text='Killed!'/>
@@ -48,13 +48,13 @@
 				</Paragraph>
 			</TableCell>
 		</TableRow>
-		<TableRow  FontSize='12' >
-			<TableCell BorderBrush='Black' BorderThickness='1'>
+		<TableRow  FontSize='12' Background='BurlyWood'>
+			<TableCell BorderBrush='Black' BorderThickness='1' >
 				<Paragraph>
 					<Run Text='5-6'></Run>
 				</Paragraph>
 			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
+			<TableCell BorderBrush='Black' BorderThickness='1' TextAlignment='Left'>
 				<Paragraph>
 					<Bold>
 						<Run Text='Knocked out'/>
@@ -69,7 +69,7 @@
 					<Run Text='7-12'></Run>
 				</Paragraph>
 			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
+			<TableCell BorderBrush='Black' BorderThickness='1' TextAlignment='Left'>
 				<Paragraph>
 					<Bold>
 						<Run Text='Surrenders'/>

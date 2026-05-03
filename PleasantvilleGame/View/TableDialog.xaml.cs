@@ -54,62 +54,68 @@ namespace PleasantvilleGame
             case "Alien Loss":
                this.Title = "Alien Loss";
                this.Background = theBrushTan;
-               heightOfConcern = 460.0;
-               widthOfConcern = 450.0;
+               heightOfConcern = 180;
+               widthOfConcern = 790;
                break;
             case "Combat Results":
                this.Title = "Combat Results";
                this.Background = theBrushTan;
-               heightOfConcern = 460.0;
-               widthOfConcern = 450.0;
-               break;
-            case "Implant Removal":
-               this.Title = "Implant Removal";
-               this.Background = theBrushTan;
-               heightOfConcern = 460.0;
-               widthOfConcern = 450.0;
-               break;
-            case "Influence Results":
-               this.Title = "Implant Removal";
-               this.Background = theBrushTan;
-               heightOfConcern = 460.0;
-               widthOfConcern = 450.0;
+               heightOfConcern = 450.0;
+               widthOfConcern = 420.0;
                break;
             case "Conversation Modifiers":
                this.Title = "Modifiers to Conversation";
                this.Background = theBrushTan;
-               heightOfConcern = 460.0;
-               widthOfConcern = 450.0;
+               heightOfConcern = 230.0;
+               widthOfConcern = 290.0;
+               break;
+            case "Implant Removal":
+               this.Title = "Implant Removal";
+               this.Background = theBrushTan;
+               heightOfConcern = 200;
+               widthOfConcern = 790;
                break;
             case "Influence Modifiers":
                this.Title = "Modifiers to Influence Attempts";
                this.Background = theBrushTan;
-               heightOfConcern = 460.0;
-               widthOfConcern = 450.0;
+               heightOfConcern = 210.0;
+               widthOfConcern = 290.0;
+               break;
+            case "Influence Results":
+               this.Title = "Implant Removal";
+               this.Background = theBrushTan;
+               heightOfConcern = 350.0;
+               widthOfConcern = 605.0;
+               break;
+            case "Observation":
+               this.Title = "Observation";
+               this.Background = theBrushTan;
+               heightOfConcern = 280.0;
+               widthOfConcern = 410.0;
                break;
             case "Target Building":
                this.Title = "Target Building";
                this.Background = theBrushTan;
-               heightOfConcern = 460.0;
-               widthOfConcern = 450.0;
+               heightOfConcern = 410.0;
+               widthOfConcern = 410.0;
                break;
             case "Town Loss":
                this.Title = "Town Loss";
                this.Background = theBrushTan;
-               heightOfConcern = 460.0;
-               widthOfConcern = 450.0;
+               heightOfConcern = 230;
+               widthOfConcern = 790;
                break;
             case "Town Player Starting":
                this.Title = "Town Player Starting";
                this.Background = theBrushTan;
-               heightOfConcern = 460.0;
-               widthOfConcern = 450.0;
+               heightOfConcern = 240.0;
+               widthOfConcern = 230.0;
                break;
             case "Townspeople":
                this.Title = "Townspeople";
                this.Background = theBrushTan;
-               heightOfConcern = 460.0;
-               widthOfConcern = 450.0;
+               heightOfConcern = 410.0;
+               widthOfConcern = 410.0;
                break;
             default:
                Logger.Log(LogEnum.LE_ERROR, "TableDialog_Loaded(): reached default key=" + Key);

@@ -126,8 +126,8 @@ namespace PleasantvilleGame
          {
             RemoveEllipses();
             RollEndCallback callback = ShowResults;
-            int dice = myDieRoller.RollStationaryDie(myCanvas, callback);
-            if (0 == dice) // Roll one die
+            int die = myDieRoller.RollStationaryDie(myCanvas, callback);
+            if (0 == die) // Roll one die
             {
                Logger.Log(LogEnum.LE_ERROR, "Command(): RollStationaryDie(myMapItemDie1) returned false");
                return false;
@@ -137,8 +137,8 @@ namespace PleasantvilleGame
          {
             RemoveEllipses();
             RollEndCallback callback = ShowResults;
-            int dice = myDieRoller.RollMovingDie(myCanvas, callback);
-            if (0 == dice) // Roll one die
+            int die = myDieRoller.RollMovingDie(myCanvas, callback);
+            if (0 == die) // Roll one die
             {
                Logger.Log(LogEnum.LE_ERROR, "Command(): RollStationaryDie(myMapItemDie1) returned false");
                return false;
@@ -149,7 +149,7 @@ namespace PleasantvilleGame
             RemoveEllipses();
             RollEndCallback callback = ShowResults;
             int dice = myDieRoller.RollStationaryDice(myCanvas, callback);
-            if (0 == dice) // Roll one die
+            if (0 == dice) // Roll two die
             {
                Logger.Log(LogEnum.LE_ERROR, "Command(): RollStationaryDie(myMapItemDie1) returned false");
                return false;
@@ -160,7 +160,7 @@ namespace PleasantvilleGame
             RemoveEllipses();
             RollEndCallback callback = ShowResults;
             int dice = myDieRoller.RollMovingDice(myCanvas, callback);
-            if (0 == dice) // Roll one die
+            if (0 == dice) // Roll two die
             {
                Logger.Log(LogEnum.LE_ERROR, "Command(): RollStationaryDie(myMapItemDie1) returned false");
                return false;
@@ -232,7 +232,7 @@ namespace PleasantvilleGame
       private void ShowResults(int dieRoll)
       {
          //MessageBox.Show("ShowResults=" + dieRoll.ToString());
-         Logger.Log(LogEnum.LE_SHOW_ROLL_STATE, "dieRoll=" + dieRoll.ToString());
+         Logger.Log(LogEnum.LE_SHOW_ROLL_STATE, "DiceRollerUnitTest.ShowResults(): dieRoll=" + dieRoll.ToString());
       }
       private void RemoveEllipses()
       {

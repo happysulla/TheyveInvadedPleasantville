@@ -89,13 +89,13 @@ namespace PleasantvilleGame
       public bool CreateUnitTests(IGameInstance gi, DockPanel dp, GameViewerWindow gvw, EventViewer ev, IDieRoller dr, CanvasImageViewer civ)
       {
          //-----------------------------------------------------------------------------
-         IUnitTest ut5 = new ConfigMgrUnitTest(dp, ev);
-         if (true == ut5.CtorError)
+         IUnitTest ut6 = new DiceRollerUnitTest(dp, dr);
+         if (true == ut6.CtorError)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): ConfigMgrUnitTest() ctor error");
+            Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): DiceRollerUnitTest() ctor error");
             return false;
          }
-         gi.UnitTests.Add(ut5);
+         gi.UnitTests.Add(ut6);
          //-----------------------------------------------------------------------------
          IUnitTest ut1 = new GameViewerCreateUnitTest(dp, gi, civ);
          if (true == ut1.CtorError)
@@ -121,22 +121,21 @@ namespace PleasantvilleGame
          }
          gi.UnitTests.Add(ut3);
          //-----------------------------------------------------------------------------
-         IUnitTest ut4 = new PolylineCreateUnitTest(dp, gi, civ);
-         if (true == ut4.CtorError)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): PolylineCreateUnitTest() ctor error");
-            return false;
-         }
-         gi.UnitTests.Add(ut4);
-
+         //IUnitTest ut4 = new PolylineCreateUnitTest(dp, gi, civ);
+         //if (true == ut4.CtorError)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): PolylineCreateUnitTest() ctor error");
+         //   return false;
+         //}
+         //gi.UnitTests.Add(ut4);
          //-----------------------------------------------------------------------------
-         IUnitTest ut6 = new DiceRollerUnitTest(dp, dr);
-         if (true == ut6.CtorError)
+         IUnitTest ut5 = new ConfigMgrUnitTest(dp, ev);
+         if (true == ut5.CtorError)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): DiceRollerUnitTest() ctor error");
+            Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): ConfigMgrUnitTest() ctor error");
             return false;
          }
-         gi.UnitTests.Add(ut6);
+         gi.UnitTests.Add(ut5);
          //-----------------------------------------------------------------------------
          IUnitTest ut7 = new GameInstanceUnitTest(dp);
          if (true == ut7.CtorError)

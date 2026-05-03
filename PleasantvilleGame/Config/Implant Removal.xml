@@ -1,46 +1,32 @@
 ﻿<Table CellSpacing="2" BorderBrush="Black" BorderThickness="3">
 	<Table.Columns>
-		<TableColumn Width='120'/>
-		<TableColumn Width='120'/>
-		<TableColumn Width='120'/>
+		<TableColumn Width='80'/>
+		<TableColumn Width='660'/>
 	</Table.Columns>
 	<TableRowGroup>
 		<TableRow  FontSize='18' >
-			<TableCell ColumnSpan='3' TextAlignment='Center' BorderBrush='Black' BorderThickness='1'>
+			<TableCell ColumnSpan='2' TextAlignment='Center' BorderBrush='Black' BorderThickness='1'>
 				<Paragraph>
 					<LineBreak/>
-					OBSERVATION TABLE
+					IMPLANT REMOVAL TABLE
 					<LineBreak/>
 				</Paragraph>
 			</TableCell>
 		</TableRow>
 	</TableRowGroup>
 	<TableRowGroup>
-		<TableRow  FontSize='12' >
+		<TableRow  FontSize='12' Background='BurlyWood'>
 			<TableCell BorderBrush='Black' BorderThickness='1'>
 				<Paragraph>
 					<Bold>
-						<Run Text='Location of'></Run>
-						<LineBreak/>
-						<Run Text='removed pieces'></Run>
+						<Run Text='Dice Roll'></Run>
 					</Bold>
 				</Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' BorderThickness='1'>
 				<Paragraph>
 					<Bold>
-						<Run Text='Location of'></Run>
-						<LineBreak/>
-						<Run Text='the observer'></Run>
-					</Bold>
-				</Paragraph>
-			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Bold>
-						<Run Text='Die roll needed'></Run>
-						<LineBreak/>
-						<Run Text='for successful observation'></Run>
+						<Run Text='Result'></Run>
 					</Bold>
 				</Paragraph>
 			</TableCell>
@@ -50,138 +36,62 @@
 		<TableRow  FontSize='12' >
 			<TableCell BorderBrush='Black' BorderThickness='1'>
 				<Paragraph>
-					<Run Text='Inside Building'></Run>
+					<Run Text='2-3'></Run>
 				</Paragraph>
 			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
+			<TableCell BorderBrush='Black' BorderThickness='1' TextAlignment='Left'>
 				<Paragraph>
-					<Run Text='Outside the building'></Run>
+					<Bold>
+						<Run Text='Implant Explodes!'/>
+					</Bold>
+					<Run Text=' The victim and the townsperson trying to remove the implant are killed and removed from play.'></Run>
 				</Paragraph>
 			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
+		</TableRow>
+		<TableRow  FontSize='12' Background='BurlyWood'>
+			<TableCell BorderBrush='Black' BorderThickness='1' >
 				<Paragraph>
-					<Run Text='Not possible'></Run>
+					<Run Text='4-6'></Run>
+				</Paragraph>
+			</TableCell>
+			<TableCell BorderBrush='Black' BorderThickness='1' TextAlignment='Left'>
+				<Paragraph>
+					<Bold>
+						<Run Text='Implant too tightly attached. '/>
+					</Bold>
+					<Run Text=' It cannot be removed this turn, but another try may be made next turn during the post-combat activity phase.'></Run>
 				</Paragraph>
 			</TableCell>
 		</TableRow>
 		<TableRow  FontSize='12' >
 			<TableCell BorderBrush='Black' BorderThickness='1'>
 				<Paragraph>
-					<Run Text='Inside Building'></Run>
+					<Run Text='7-10'></Run>
 				</Paragraph>
 			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
+			<TableCell BorderBrush='Black' BorderThickness='1' TextAlignment='Left'>
 				<Paragraph>
-					<Run Text='Same Space'></Run>
-				</Paragraph>
-			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Run Text='1-4'></Run>
+					<Bold>
+						<Run Text='Implant Removed! '/>
+					</Bold>
+					<Run Text=' However, it immediately disintegrates and cannot be used as evidence'></Run>
 				</Paragraph>
 			</TableCell>
 		</TableRow>
-		<TableRow  FontSize='12' >
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Run Text='Inside Building'></Run>
-				</Paragraph>
-			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Run Text='1 space away'></Run>
-				</Paragraph>
-			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Run Text='1-3'></Run>
-				</Paragraph>
-			</TableCell>
-		</TableRow>
-		<TableRow  FontSize='12' >
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Run Text='Inside Building'></Run>
-				</Paragraph>
-			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Run Text='2 spaces away'></Run>
-				</Paragraph>
-			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Run Text='1-2'></Run>
-				</Paragraph>
-			</TableCell>
-		</TableRow>
-		<TableRow  FontSize='12' >
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Run Text='Outdoors'></Run>
-				</Paragraph>
-			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Run Text='Same space'></Run>
-				</Paragraph>
-			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Run Text='1-4'></Run>
-				</Paragraph>
-			</TableCell>
-		</TableRow>
-		<TableRow  FontSize='12' >
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Run Text='Outdoors'></Run>
-				</Paragraph>
-			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Run Text='1 space away'></Run>
-				</Paragraph>
-			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Run Text='1-3'></Run>
-				</Paragraph>
-			</TableCell>
-		</TableRow>
-		<TableRow  FontSize='12' >
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Run Text='Outdoors'></Run>
-				</Paragraph>
-			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Run Text='2 spaces away'></Run>
-				</Paragraph>
-			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Run Text='1-2'></Run>
-				</Paragraph>
-			</TableCell>
-		</TableRow>
-		<TableRow  FontSize='12' >
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Run Text='Outdoors'></Run>
-				</Paragraph>
-			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Run Text='3 spaces away'></Run>
-				</Paragraph>
-			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph>
-					<Run Text='1'></Run>
-				</Paragraph>
-			</TableCell>
-		</TableRow>
+      <TableRow  FontSize='12' Background='BurlyWood'>
+         <TableCell BorderBrush='Black' BorderThickness='1' >
+            <Paragraph>
+               <Run Text='11-12'></Run>
+            </Paragraph>
+         </TableCell>
+         <TableCell BorderBrush='Black' BorderThickness='1' TextAlignment='Left'>
+            <Paragraph>
+               <Bold>
+                  <Run Text='Implant removed intact! '/>
+               </Bold>
+               <Run Text=' Evidence of Aliens is obtained.'></Run>
+            </Paragraph>
+         </TableCell>
+      </TableRow>
 	</TableRowGroup>
 </Table>
