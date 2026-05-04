@@ -39,6 +39,8 @@ namespace PleasantvilleGame
       private ScrollViewer? myScrollViewerTextBlock;
       private Canvas? myCanvasMain = null;
       private TextBlock? myTextBlock = null;
+      private SolidColorBrush myBrushScrollViewerActive = new SolidColorBrush();
+      private SolidColorBrush myBrushScrollViewerInActive = new SolidColorBrush();
       //--------------------------------------------------------------------
       private readonly FontFamily myFontFam1 = new FontFamily("Courier New");
       //--------------------------------------------------------------------
@@ -86,6 +88,8 @@ namespace PleasantvilleGame
          }
          myScrollViewerTextBlock = sv;
          //--------------------------------------------------------
+         myBrushScrollViewerActive.Color = System.Windows.Media.Color.FromArgb(0xFF, 0xB9, 0xEA, 0x9E); // light green 
+         myBrushScrollViewerInActive.Color = Colors.LightGray;
          if (myScrollViewerTextBlock.Content is TextBlock)
             myTextBlock = (TextBlock)myScrollViewerTextBlock.Content;  // Find the TextBox in the visual tree
          if (null == myTextBlock)
@@ -414,8 +418,6 @@ namespace PleasantvilleGame
                      string imageName = img.Name;
                      if (true == img.Name.Contains("Continue"))
                         imageName = "Continue";
-                     else if (true == img.Name.Contains("Ambulance"))
-                        imageName = "Ambulance";
                      else if( true == img.Name.Contains("DieRollWhite"))
                      {
                         imageName = "DieRollWhite";
@@ -476,7 +478,7 @@ namespace PleasantvilleGame
          } // end while
            //--------------------------------------------------
          myDieRoller.DieMutex.WaitOne();
-         if( false == UpdateEventContent(gi, key))
+         if (false == UpdateEventContent(gi, key))
          {
             Logger.Log(LogEnum.LE_ERROR, "OpenEvent(): UpdateEventContent() returned false");
             return false;
@@ -485,15 +487,14 @@ namespace PleasantvilleGame
          //--------------------------------------------------
          if (gi.EventDisplayed == gi.EventActive)
          {
-            myScrollViewerTextBlock.Background = Utilities.theBrushScrollViewerActive;
-            myTextBlock.Background = Utilities.theBrushScrollViewerActive;
+            myScrollViewerTextBlock.Background = myBrushScrollViewerActive;
+            myTextBlock.Background = myBrushScrollViewerActive;
          }
          else
          {
-            myScrollViewerTextBlock.Background = Utilities.theBrushScrollViewerInActive;
-            myTextBlock.Background = Utilities.theBrushScrollViewerInActive;
+            myScrollViewerTextBlock.Background = myBrushScrollViewerInActive;
+            myTextBlock.Background = myBrushScrollViewerInActive;
          }
-            
          return true;
       }
       public bool ShowRule(string key)

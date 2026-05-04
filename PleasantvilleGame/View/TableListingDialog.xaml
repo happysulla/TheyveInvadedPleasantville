@@ -28,9 +28,9 @@
          </Grid.ColumnDefinitions>
          <Button Grid.Row="0" Grid.Column="0" Content="Alien Loss" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
          <Button Grid.Row="1" Grid.Column="0" Content="Combat Results" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
-         <Button Grid.Row="2" Grid.Column="0" Content="Conversion Modifiers" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
+         <Button Grid.Row="2" Grid.Column="0" Content="Conversation Modifiers" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
          <Button Grid.Row="3" Grid.Column="0" Content="Implant Removal" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
-         <Button Grid.Row="4" Grid.Column="0" Content="Influence Modifers" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
+         <Button Grid.Row="4" Grid.Column="0" Content="Influence Modifiers" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
          <Button Grid.Row="5" Grid.Column="0" Content="Observation" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
          <Button Grid.Row="6" Grid.Column="0" Content="Target Building" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
          <Button Grid.Row="7" Grid.Column="0" Content="Town Loss" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>

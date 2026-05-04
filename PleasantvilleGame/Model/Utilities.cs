@@ -25,8 +25,6 @@ namespace PleasantvilleGame
       public static SolidColorBrush theBrushRegion = new SolidColorBrush();
       public static SolidColorBrush theBrushRegionClear = new SolidColorBrush();
       public static SolidColorBrush theBrushControlButton = new SolidColorBrush();
-      public static SolidColorBrush theBrushScrollViewerActive = new SolidColorBrush();
-      public static SolidColorBrush theBrushScrollViewerInActive = new SolidColorBrush();
       //--------------------------------------------
       public static int MapItemNum { set; get; } = 1000;
       //--------------------------------------------

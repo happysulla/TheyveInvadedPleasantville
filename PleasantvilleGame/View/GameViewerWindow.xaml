@@ -53,13 +53,13 @@
                     <Label Content="Heading" x:Name="myLabelHeading" FontSize="16" Height="40" Width="459" Canvas.Left="12" Canvas.Top="2" />
                 </Canvas>
                 <Separator Name="mySeparator4" DockPanel.Dock="Top" Height="5"/>
-                <ScrollViewer Name="myScrollViewerTextBlock" MaxWidth="500" VerticalScrollBarVisibility="Auto" Margin="0,0,0,0" Background="#FFB9EA9E">
+                <ScrollViewer Name="myScrollViewerTextBlock" MaxWidth="500" VerticalScrollBarVisibility="Auto" Background="#FFB9EA9E"  Margin="10,0,0,0">
                     <TextBlock Name="myTextBlockDisplay" MinWidth="473" MaxWidth="473"  FontFamily="Georgia" FontSize="24" TextWrapping="WrapWithOverflow" IsHyphenationEnabled="true" LineStackingStrategy="BlockLineHeight"  Margin="5,5,5,5"/>
                 </ScrollViewer>
             </DockPanel>
-            <ScrollViewer Name="myScrollViewerMain" Width="857" Height="967"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="10,0,0,0"  >
-                <Canvas Name="myCanvasMain" MinWidth="830" MaxWidth="830" MinHeight="950" MaxHeight="950" Background="#FF86DC0E" >
-                    <TextBlock Name="myTextBlockComm" FontFamily="Georgia" FontSize="24" TextWrapping="WrapWithOverflow" IsHyphenationEnabled="true" LineStackingStrategy="BlockLineHeight" Background="#FFB8B90A" VerticalAlignment="Center" HorizontalAlignment="Center" >
+            <ScrollViewer Name="myScrollViewerMain" Width="857" Height="967"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="0,0,0,0"  >
+                <Canvas Name="myCanvasMain" MinWidth="830" MaxWidth="830" MinHeight="950" MaxHeight="950" Background="#FF86DC0E"    >
+                    <TextBlock Name="myTextBlockComm" FontFamily="Georgia" FontSize="24" TextWrapping="WrapWithOverflow" IsHyphenationEnabled="true" LineStackingStrategy="BlockLineHeight" Background="#FFB8B90A" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0">
                         Hello Where Am I
                     </TextBlock>
                 </Canvas>
