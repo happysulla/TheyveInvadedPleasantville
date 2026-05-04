@@ -1075,6 +1075,13 @@ namespace PleasantvilleGame
                }
                myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                break;
+            case "   Read Rules   ":
+               if (false == ShowRule("r0.0"))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Button_ClickShowOther(): ShowRule(r1.1) returned false");
+                  return false;
+               }
+               break;
             default:
                if (false == ShowTable(content))
                {
