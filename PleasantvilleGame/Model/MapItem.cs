@@ -10,6 +10,7 @@ using System.Xml;
 using System.Collections;
 using Button = System.Windows.Controls.Button;
 using Image = System.Windows.Controls.Image;
+using Brushes = System.Windows.Media.Brushes;
 
 namespace PleasantvilleGame
 {
@@ -21,11 +22,11 @@ namespace PleasantvilleGame
       [NonSerialized] protected static BitmapImage? theImgBloodSpot = theMapImages.GetBitmapImage("OBlood1");
       [NonSerialized] protected static BitmapImage? theImgImplant = theMapImages.GetBitmapImage("OImplant");
       [NonSerialized] protected static BitmapImage? theImgKia = theMapImages.GetBitmapImage("OKia");
-      [NonSerialized] protected static BitmapImage? theKnockedOut = theMapImages.GetBitmapImage("OKnockedOut");
-      [NonSerialized] protected static BitmapImage? theStunned = theMapImages.GetBitmapImage("OStunned");
-      [NonSerialized] protected static BitmapImage? theSurrendered = theMapImages.GetBitmapImage("OSurrendered");
-      [NonSerialized] protected static BitmapImage? theTieUp = theMapImages.GetBitmapImage("OTiedUp");
-      [NonSerialized] protected static BitmapImage? theBloodSpot = theMapImages.GetBitmapImage("OWary");
+      [NonSerialized] protected static BitmapImage? theImgKnockedOut = theMapImages.GetBitmapImage("OKnockedOut");
+      [NonSerialized] protected static BitmapImage? theImgStunned = theMapImages.GetBitmapImage("OStunned");
+      [NonSerialized] protected static BitmapImage? theImgSurrendered = theMapImages.GetBitmapImage("OSurrendered");
+      [NonSerialized] protected static BitmapImage? theImgTieUp = theMapImages.GetBitmapImage("OTiedUp");
+      [NonSerialized] protected static BitmapImage? theImgWary= theMapImages.GetBitmapImage("OWary");
       //--------------------------------------------------
       public string Name { get; set; } = string.Empty;
       public string TopImageName { get; set; } = string.Empty;
@@ -298,83 +299,87 @@ namespace PleasantvilleGame
             Image img = new Image() { Source = theMapImages.GetBitmapImage(mi.TopImageName), Stretch = Stretch.Fill };
             img.Source = theMapImages.GetBitmapImage(mi.TopImageName);
             g.Children.Add(img);
+            Canvas c = new Canvas() { };
+            g.Children.Add(c);
+            if (true == mi.IsAlienKnown) // Add an alien head if the Controlled person knowns.
+            {
+               Image imgAlien = new Image() { Source = theImgAlien };
+               c.Children.Add(imgAlien);
+               Canvas.SetLeft(imgAlien, 0);
+               Canvas.SetTop(imgAlien, 0);
+            }
+            if (true == mi.IsTiedUp) // Add an tied up icon if tied up
+            {
+               Image imgTiedUp = new Image() { Source = theImgTieUp };
+               c.Children.Add(imgTiedUp);
+               Canvas.SetLeft(imgTiedUp, 0);
+               Canvas.SetTop(imgTiedUp, 0);
+            }
+            if (true == mi.IsImplantHeld)
+            {
+               Image imgImplant = new Image() { Source = theImgImplant };
+               c.Children.Add(imgImplant);
+               Canvas.SetLeft(imgImplant, 0);
+               Canvas.SetTop(imgImplant, 0);
+            }
+            //---------------------------------------------
+            if (true == mi.IsKilled) // Add additional words on image based on status. Only one of the following images is allowed.
+            {
+               Image imgKia = new Image() { Source = theImgKia };
+               c.Children.Add(imgKia);
+               Canvas.SetLeft(imgKia, 0);
+               Canvas.SetTop(imgKia, 0);
+            }
+            else if (true == mi.IsSurrendered)
+            {
+               Image imgSurrendered = new Image() { Source = theImgSurrendered };
+               c.Children.Add(imgSurrendered);
+               Canvas.SetLeft(imgSurrendered, 0);
+               Canvas.SetTop(imgSurrendered, 0);
+            }
+            else if (false == mi.IsConscious)
+            {
+               Image imgKnockedOut = new Image() { Source = theImgKnockedOut };
+               c.Children.Add(imgKnockedOut);
+               Canvas.SetLeft(imgKnockedOut, 0);
+               Canvas.SetTop(imgKnockedOut, 0);
+            }
+            else if (true == mi.IsStunned)
+            {
+               Image imgStunned = new Image() { Source = theImgStunned };
+               c.Children.Add(imgStunned);
+               Canvas.SetLeft(imgStunned, 0);
+               Canvas.SetTop(imgStunned, 0);
+            }
          }
-            //Grid buttonContent = new Grid();
-            //Image img = new Image();
-            //img.Source = theImages.GetImage(mi.TopImageName);
-            //buttonContent.Children.Add(img);
-
-            //// Add an alien head if the Controlled person knowns.
-
-            //if (true == mi.IsAlienKnown)
-            //{
-            //   Image overlay = new Image();
-            //   overlay.Source = theImages.GetImage("Alien");
-            //   buttonContent.Children.Add(overlay);
-            //}
-
-            //// Add an tied up icon if tied up
-
-            //if (true == mi.IsTiedUp)
-            //{
-            //   Image overlay = new Image();
-            //   overlay.Source = theImages.GetImage("TiedUp");
-            //   buttonContent.Children.Add(overlay);
-            //}
-
-            //if (true == mi.IsImplantHeld)
-            //{
-            //   Image overlay = new Image();
-            //   overlay.Source = theImages.GetImage("Implant");
-            //   buttonContent.Children.Add(overlay);
-            //}
-
-            //// Add additional words on image based on status.
-            //// Only one of the following images is allowed.
-
-            //if (true == mi.IsKilled)
-            //{
-            //   Image overlay = new Image();
-            //   overlay.Source = theImages.GetImage("KIA");
-            //   buttonContent.Children.Add(overlay);
-            //}
-            //else if (true == mi.IsSurrendered)
-            //{
-            //   Image overlay = new Image();
-            //   overlay.Source = theImages.GetImage("Surrendered");
-            //   buttonContent.Children.Add(overlay);
-            //}
-            //else if (false == mi.IsConscious)
-            //{
-            //   Image overlay = new Image();
-            //   overlay.Source = theImages.GetImage("KnockedOut");
-            //   buttonContent.Children.Add(overlay);
-            //}
-            //else if (true == mi.IsStunned)
-            //{
-            //   Image overlay = new Image();
-            //   overlay.Source = theImages.GetImage("Stunned");
-            //   buttonContent.Children.Add(overlay);
-            //}
-
-            //b.Content = buttonContent;
-
-            //if ("Zebulon" == mi.Name)
-            //   b.Background = Brushes.Black;
-            //else if (true == mi.IsAlienKnown)
-            //   b.Background = Utilities.theAlienControlledBrush;
-            //else if ((true == mi.IsAlienUnknown) && (true == isAlienView))
-            //   b.Background = Utilities.theAlienControlledBrush;
-            //else if (true == mi.IsControlled)
-            //   b.Background = Utilities.theTownControlledBrush;
-            //else if (true == mi.IsSkeptical)
-            //   b.Background = Utilities.theSkepticalBrush;
-            //else if (true == mi.IsWary)
-            //   b.Background = Utilities.theWaryBrush;
-            //else
-            //   b.Background = Brushes.White;
-
+         else
+         {
+            IMapImage? mii = theMapImages.Find(mi.TopImageName);
+            if (null == mii)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "SetButtonContent(): mii=null");
+            }
+            else
+            {
+               g.Children.Add(mii.ImageControl);
+            }
          }
+         b.Content = g;
+         if ("Zebulon" == mi.Name)
+            b.Background = Brushes.Black;
+         else if (true == mi.IsAlienKnown)
+            b.Background = Constants.theAlienControlledBrush;
+         else if ((true == mi.IsAlienUnknown) && (true == isAlienView))
+            b.Background = Constants.theAlienControlledBrush;
+         else if (true == mi.IsControlled)
+            b.Background = Constants.theTownControlledBrush;
+         else if (true == mi.IsSkeptical)
+            b.Background = Constants.theSkepticalBrush;
+         else if (true == mi.IsWary)
+            b.Background = Constants.theWaryBrush;
+         else
+            b.Background = Brushes.White;
+      }
       public override string ToString()
       {
          StringBuilder sb = new StringBuilder();

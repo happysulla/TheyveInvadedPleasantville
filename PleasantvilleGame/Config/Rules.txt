@@ -1,6 +1,6 @@
-r0.0	"<Bold>r0.0 They&apos;ve Invaded Pleasantville</Bold>
+r0.0	"<Bold>r0.0 Introduction</Bold>
 <LineBreak/><LineBreak/>
-<Bold>Pleasantville</Bold> minigame is a two-player game of a secret invasion by space aliens. One player, the Alien player, moves the Alien controlled and uncontrolled pieces, and the other player, the Town player, moves the Town-controlled pieces. 
+<Bold>They&apos;ve Invaded Pleasantville</Bold> minigame is a two-player game of a secret invasion by space aliens. One player, the Alien player, moves the Alien controlled and uncontrolled pieces, and the other player, the Town player, moves the Town-controlled pieces. 
 <LineBreak/><LineBreak/>
 There are 12 game-turns in this game. In any given turn, playing pieces representing various townspeople will be moved across the mapboard, which is a map of Pleasantville.
 <LineBreak/><LineBreak/>

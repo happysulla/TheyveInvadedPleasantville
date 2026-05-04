@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Topmost="True"         
         Name ="myDialogRuleListing"
-        Title="Rule Listing" Height="900" Width="450" MinWidth="450" MaxWidth="500" WindowStartupLocation="CenterScreen"
+        Title="Rule Listing" Height="400" Width="450" MinWidth="450" MaxWidth="500" WindowStartupLocation="CenterScreen"
         Closed="Window_Closed">
    <ScrollViewer Name="myScrollViewer" VerticalScrollBarVisibility="Auto" Margin="0,0,0,0">
       <Grid Name="myGrid" >
@@ -18,7 +18,6 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
          </Grid.ColumnDefinitions>
-         
       </Grid>
    </ScrollViewer>
 </Window>
