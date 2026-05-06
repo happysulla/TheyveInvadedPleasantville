@@ -458,7 +458,4 @@ If the Alien player is defeated in an attack on the wary townsperson, the result
 <InlineUIContainer><Button Content='r8.6' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>."
 r9.2.2	"<Bold>r9.2.2 Observation Restrictions</Bold><LineBreak/><LineBreak/>
 Observation cannot take place more than 3 spaces away. Observations are blocked by corners and walls. Townspeople have no chance of observing through doors, building walls, or around corners. Other townspeople do not black this line of sight.  To determine corners, a straight line is made between the center of the observer's space to the observation space. 
-<LineBreak/><LineBreak/>
-Each townsperson able to make an observation attempt may do so only once per turn. Counters that are taken off the mapboard during a take-over cannot observe. 
-<LineBreak/><LineBreak/>Alien controlled townspeople do not observe Alien take-overs. If the Town player tries to observe with an undiscovered Alien controlled townsperson and succeeds, the Alien player tells the Town player that the townsperson observed nothing because the counter  is actually under Alien control!"
-
+<LineBreak/><LineBreak/>Each townsperson able to make an observation attempt may do so only once per turn. Counters that are taken off the mapboard during a take-over cannot observe.<LineBreak/><LineBreak/>Alien controlled townspeople do not observe Alien take-overs. If the Town player tries to observe with an undiscovered Alien controlled townsperson and succeeds, the Alien player tells the Town player that the townsperson observed nothing because the counter  is actually under Alien control!"

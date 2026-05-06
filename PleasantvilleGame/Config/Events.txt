@@ -7,16 +7,24 @@ One player must host the game on their computer, and the other player joins the 
 <LineBreak/><LineBreak/>
 Choose a button to begin:
 <LineBreak/><LineBreak/>
-<InlineUIContainer><Button Name='ReadRules' Content=' Read Rules ' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
+<InlineUIContainer><Button Name='ReadRules' Content=' Read Rules ' FontFamily='Courier New'  FontSize='12' IsEnabled='False'> </Button></InlineUIContainer>
  - Rules presented as needed if choose to skip<LineBreak/>
 <InlineUIContainer><Button Name='HostGame' Content=' Host Game  ' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
  - Host a game on your computer <LineBreak/>
 <InlineUIContainer><Button Name='JoinGame' Content=' Join Game  ' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
- - join a game somebody is hosting<LineBreak/>
+ - Join a game somebody is hosting<LineBreak/>
 <InlineUIContainer><Button Name='PlayTown' Content=' Town Solo  ' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
- - play as the Townsplayer against computer<LineBreak/>
+ - Play as the Townsplayer against computer<LineBreak/>
 <InlineUIContainer><Button Name='PlayAlien' Content=' Alien Solo ' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
- - play as Alien against computer<LineBreak/>"
+ - Play as Alien against computer<LineBreak/>"
+e001	"<Bold>e001 Secretly Select HQ Area</Bold><LineBreak/><LineBreak/> 
+The first step is for the Alien player to secretly choose where the Alien Sub-Commander is running his operations.
+<LineBreak/><LineBreak/>
+The headquarters (HQ) must be a specified building, such as <Bold>House 4</Bold> the <Bold>Stock Pen</Bold> , the <Bold>Town Hall</Bold>, etc. 
+<LineBreak/><LineBreak/>
+If the building chosen as the Alien HQ has more than one space, the Alien player must choose which area of the building is the Alien HQ. This information is secret to the Alien Player.
+<LineBreak/><LineBreak/>
+                            <InlineUIContainer><Image Name='ZebulonBlack'  Height='150' Width='150'></Image></InlineUIContainer>"
 e501	"<Bold>e501 Game Won!!!</Bold>
 <LineBreak/><LineBreak/>"
 e502	"<Bold>e502 Game Lost</Bold>
