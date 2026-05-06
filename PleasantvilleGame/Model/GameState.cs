@@ -271,9 +271,19 @@ namespace PleasantvilleGame
                gi.EventDisplayed = gi.EventActive; // next screen to show
                break;
             case GameAction.GameSetupHostGame:
+               returnStatus = "GameSetupHostGame not implemented";
+               Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               break;
             case GameAction.GameSetupJoinGame:
+               returnStatus = "GameSetupJoinGame not implemented";
+               Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               break;
             case GameAction.GameSetupPlayAlien:
+               returnStatus = "GameSetupPlayAlien not implemented";
+               Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               break;
             case GameAction.GameSetupPlayTownsperson:
+
                break;
             case GameAction.UpdateLoadingGame:
                if (false == LoadGame(ref gi))

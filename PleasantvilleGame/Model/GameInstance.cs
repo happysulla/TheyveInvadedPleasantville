@@ -11,6 +11,9 @@ namespace PleasantvilleGame
       public bool CtorError { get; } = false;
       private Dictionary<string, int[]> myDieResults = new Dictionary<string, int[]>();
       public Dictionary<string, int[]> DieResults { get => myDieResults; }
+      //----------------------------------------------
+      public IPlayerTown? PlayerTown { set; get; } = null;
+      public IPlayerAlien? PlayerAlien { set; get; } = null;
       //------------------------------------------------
       public IGameCommands GameCommands { set; get; } = new GameCommands();
       public Options Options { get; set; } = new Options();

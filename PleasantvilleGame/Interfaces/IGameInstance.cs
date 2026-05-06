@@ -8,6 +8,9 @@ namespace PleasantvilleGame
       bool CtorError { get; }
       Dictionary<string, int[]> DieResults { get; }
       //----------------------------------------------
+      IPlayerTown? PlayerTown { set; get; }
+      IPlayerAlien? PlayerAlien { set; get; }
+      //----------------------------------------------
       IGameCommands GameCommands { set; get; }
       Options Options { get; set; }
       GameStatistics Statistics { get; set; }
