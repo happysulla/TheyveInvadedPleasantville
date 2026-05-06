@@ -48,6 +48,11 @@ namespace PleasantvilleGame
       ShowReportErrorDialog,
       ShowAboutDialog,
 
+      GameSetupHostGame,
+      GameSetupJoinGame,
+      GameSetupPlayAlien,
+      GameSetupPlayTownsperson,
+
       AlienStart,
       TownspersonStart,
       AlienDisplaysRandomMovement,

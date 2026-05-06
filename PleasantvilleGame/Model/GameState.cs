@@ -270,6 +270,11 @@ namespace PleasantvilleGame
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show
                break;
+            case GameAction.GameSetupHostGame:
+            case GameAction.GameSetupJoinGame:
+            case GameAction.GameSetupPlayAlien:
+            case GameAction.GameSetupPlayTownsperson:
+               break;
             case GameAction.UpdateLoadingGame:
                if (false == LoadGame(ref gi))
                {

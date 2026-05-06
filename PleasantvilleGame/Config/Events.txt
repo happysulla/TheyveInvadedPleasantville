@@ -1,11 +1,29 @@
-e000	"<Bold>e000 Welcome </Bold>
-<LineBreak/><LineBreak/> <InlineUIContainer><CheckBox Name='SkipTutorial0' IsEnabled='True' Content='Skip in Future' FontFamily='Courier New'  FontSize='12'></CheckBox></InlineUIContainer>
+e000	"<Bold>e000 Game Introduction</Bold><LineBreak/><LineBreak/> 
+<Bold>They&apos;ve Invaded Pleasantville</Bold> minigame is a two-player game of a secret invasion by space aliens.
+<LineBreak/><LineBreak/>
+One player, the Alien player, moves the Alien controlled and uncontrolled pieces, and the other player, the Town player, moves the Town-controlled pieces. 
+<LineBreak/><LineBreak/>
+One player must host the game on their computer, and the other player joins the game. Alternatively, you can elect to play solo with the other player played by the computer.
 <LineBreak/><LineBreak/>
 Choose a button to begin:
 <LineBreak/><LineBreak/>
-<InlineUIContainer><Button Name='Read_Rules' Content='   Read Rules   ' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
- - Can skip as rules are presented as needed <LineBreak/>
-<InlineUIContainer><Button Name='Host_Game' Content=' Host Game ' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
- - Campaign from 07/44 to 04/45 <LineBreak/>
-<InlineUIContainer><Button Name='Play_Solo' Content=' Play Solo  ' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
- - Choose tank and day of operations<LineBreak/>"
+<InlineUIContainer><Button Name='ReadRules' Content=' Read Rules ' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
+ - Rules presented as needed if choose to skip<LineBreak/>
+<InlineUIContainer><Button Name='HostGame' Content=' Host Game  ' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
+ - Host a game on your computer <LineBreak/>
+<InlineUIContainer><Button Name='JoinGame' Content=' Join Game  ' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
+ - join a game somebody is hosting<LineBreak/>
+<InlineUIContainer><Button Name='PlayTown' Content=' Town Solo  ' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
+ - play as the Townsplayer against computer<LineBreak/>
+<InlineUIContainer><Button Name='PlayAlien' Content=' Alien Solo ' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
+ - play as Alien against computer<LineBreak/>"
+e501	"<Bold>e501 Game Won!!!</Bold>
+<LineBreak/><LineBreak/>"
+e502	"<Bold>e502 Game Lost</Bold>
+<LineBreak/><LineBreak/>"
+e503	"<Bold>e503 End Game Statistics and Feats </Bold>
+<LineBreak/><LineBreak/>"
+e503a	"<Bold>e503a Game Feats </Bold>
+<LineBreak/><LineBreak/>You completed an achievement that requires great courage, skill, and persistence.
+<LineBreak/><LineBreak/>Congratulations!
+<LineBreak/><LineBreak/>Click star to continue."

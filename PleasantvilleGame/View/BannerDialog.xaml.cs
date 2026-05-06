@@ -18,8 +18,8 @@ namespace PleasantvilleGame
       public bool CtorError { get; } = false;
       private string myKey = "";
       public string Key { get => myKey; }
-      private TextBlock myTextBlockDisplay = new TextBlock();
-      public TextBlock TextBoxDiplay { get => myTextBlockDisplay; }
+      private TextBlock myTextBlockBanner = new TextBlock();
+      public TextBlock TextBoxDiplay { get => myTextBlockBanner; }
       public static bool theIsCheckBoxChecked = false;
       private bool myIsReopen = false;
       public bool IsReopen { get => myIsReopen; }
@@ -49,8 +49,8 @@ namespace PleasantvilleGame
          try
          {
             XmlTextReader xr = new XmlTextReader(sr);
-            myTextBlockDisplay = (TextBlock)XamlReader.Load(xr); // TextBox created in RuleManager.ShowRule()
-            foreach (Inline inline in myTextBlockDisplay.Inlines)
+            myTextBlockBanner = (TextBlock)XamlReader.Load(xr); // TextBox created in RuleManager.ShowRule()
+            foreach (Inline inline in myTextBlockBanner.Inlines)
             {
                if (inline is InlineUIContainer)
                {
@@ -69,8 +69,8 @@ namespace PleasantvilleGame
                   }
                }
             }
-            myScrollViewerBanner.Content = myTextBlockDisplay;
-            myTextBlockDisplay.MouseLeftButtonDown += Window_MouseLeftButtonDown;
+            myScrollViewerBanner.Content = myTextBlockBanner;
+            myTextBlockBanner.MouseLeftButtonDown += Window_MouseLeftButtonDown;
             myKey = key;
          }
          catch (Exception e)
@@ -84,7 +84,7 @@ namespace PleasantvilleGame
       private void BannerLoaded(object sender, System.EventArgs e)
       {
          myScrollViewerBanner.Height = myDockPanel.ActualHeight - myButtonClose.Height - 50;
-         myTextBlockDisplay.Height = myTextBlockDisplay.ActualHeight;
+         myTextBlockBanner.Height = myTextBlockBanner.ActualHeight;
       }
       private void ButtonClose_Click(object sender, RoutedEventArgs e)
       {

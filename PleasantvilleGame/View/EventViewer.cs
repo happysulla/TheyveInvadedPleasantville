@@ -353,7 +353,7 @@ namespace PleasantvilleGame
          try
          {
             StringBuilder sb = new StringBuilder();
-            sb.Append(@"<TextBlock xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' Name='myTextBlockDisplay' xml:space='preserve' Width='573' Background='#FFB9EA9E' FontFamily='Georgia' FontSize='18' TextWrapping='WrapWithOverflow' IsHyphenationEnabled='true' LineStackingStrategy='BlockLineHeight' Margin='0,0,0,0'>");
+            sb.Append(@"<TextBlock xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' Name='myTextBlockDisplay' xml:space='preserve' Width='483' Background='#FFB9EA9E' FontFamily='Georgia' FontSize='18' TextWrapping='WrapWithOverflow' IsHyphenationEnabled='true' LineStackingStrategy='BlockLineHeight' Margin='0,0,0,0'>");
             sb.Append(myRulesMgr.Events[key]);
             sb.Append(@"</TextBlock>");
             StringReader sr = new StringReader(sb.ToString());
@@ -1056,7 +1056,7 @@ namespace PleasantvilleGame
             case "   -   ":
                switch (name)
                {
-                  case "Button_ShowOptions":
+                  case "TO BE IMPLEMENTED":
                      break;
                   default:
                      Logger.Log(LogEnum.LE_ERROR, "Button_ClickShowOther(): reached default Unknown name=" + name);
@@ -1067,7 +1067,7 @@ namespace PleasantvilleGame
             case "   +   ":
                switch (name)
                {
-                  case "Button_ShowOptions":
+                  case "TO BE IMPLEMENTED":
                      break;
                   default:
                      Logger.Log(LogEnum.LE_ERROR, "Button_ClickShowOther(): reached default Unknown name=" + name);
@@ -1075,12 +1075,28 @@ namespace PleasantvilleGame
                }
                myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                break;
-            case "   Read Rules   ":
+            case " Read Rules ":
                if (false == ShowRule("r0.0"))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "Button_ClickShowOther(): ShowRule(r1.1) returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "Button_ClickShowOther(): ShowRule(r0.0) returned false");
                   return false;
                }
+               break;
+            case " Host Game  ":
+               action = GameAction.GameSetupHostGame;
+               myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+               break;
+            case " Join Game  ":
+               action = GameAction.GameSetupJoinGame;
+               myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+               break;
+            case " Town Solo  ":
+               action = GameAction.GameSetupPlayTownsperson;
+               myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+               break;
+            case " Alien Solo ":
+               action = GameAction.GameSetupPlayAlien; 
+               myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                break;
             default:
                if (false == ShowTable(content))
