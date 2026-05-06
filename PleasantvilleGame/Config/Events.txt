@@ -17,7 +17,8 @@ Choose a button to begin:
  - Play as the Townsplayer against computer<LineBreak/>
 <InlineUIContainer><Button Name='PlayAlien' Content=' Alien Solo ' FontFamily='Courier New'  FontSize='12'  IsEnabled='False'> </Button></InlineUIContainer>
  - Play as Alien against computer<LineBreak/>"
-e001	"<Bold>e001 Secretly Select HQ Area</Bold><LineBreak/><LineBreak/> 
+e001	"<Bold>e001 Secretly Select HQ Area</Bold>  <InlineUIContainer><Button Content='r3.1' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
+<LineBreak/><LineBreak/> 
 The first step is for the Alien player to secretly choose where the Alien Sub-Commander is running his operations.
 <LineBreak/><LineBreak/>
 The headquarters (HQ) must be a specified building, such as <Bold>House 4</Bold> the <Bold>Stock Pen</Bold> , the <Bold>Town Hall</Bold>, etc. 
