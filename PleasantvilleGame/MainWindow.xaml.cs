@@ -117,6 +117,13 @@ namespace PleasantvilleGame
             //--------------------------------------------
             Utilities.InitializeRandomNumGenerators();
             //--------------------------------------------
+            if (false == StartingHqMgr.SetInitial())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "MainWindow(): SurnameMgr.SetInitial() returned false");
+               Application.Current.Shutdown();
+               return;
+            }
+            //--------------------------------------------
             IGameInstance gi = new GameInstance();
             if (true == gi.CtorError)
             {
