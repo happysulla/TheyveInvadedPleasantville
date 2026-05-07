@@ -26,6 +26,7 @@
     <None Remove="Config\Events.txt" />
     <None Remove="Config\Influence Results.xml" />
     <None Remove="Config\Rules.txt" />
+    <None Remove="Config\StartingHqTerritories.txt" />
     <None Remove="Config\Target Building.xml" />
     <None Remove="Config\Territories.xml" />
     <None Remove="Config\Town Loss.xml" />
@@ -146,6 +147,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Config\Rules.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\StartingHqTerritories.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Config\Target Building.xml">
