@@ -532,7 +532,7 @@ namespace PleasantvilleGame
          }
          gi.MapItemMoves.Clear();
          //-----------------------------------------------------------
-         foreach (IMapItem mi in gi.Persons) // Check if anybody can move
+         foreach (IMapItem mi in gi.Townspeople) // Check if anybody can move
          {
             if ((true == mi.IsKilled) || (false == mi.IsConscious) || (true == mi.IsSurrendered)
                 || (true == mi.IsStunned) || (true == mi.IsTiedUp)
@@ -561,7 +561,7 @@ namespace PleasantvilleGame
          int killedInfluence = 0;
          int errorInfluence = 0;
 
-         foreach (IMapItem mi in gi.Persons)
+         foreach (IMapItem mi in gi.Townspeople)
          {
             totalInfluence += mi.Influence;
 

@@ -174,7 +174,7 @@ namespace PleasantvilleGame
             int r1 = Utilities.RandomGenerator.Next(5);
             int r2 = Utilities.RandomGenerator.Next(6);
             string person = Utilities.RemoveSpaces(TableMgr.theTownpersonsTable[r1, r2]);
-            IMapItem? personMoving = gi.Persons.Find(person);
+            IMapItem? personMoving = gi.Townspeople.Find(person);
             if (null == personMoving)
             {
                ++numPeopleSkipped;
@@ -692,7 +692,7 @@ namespace PleasantvilleGame
                gi.NextAction = "Townsperson Acks Alien Movement";
                break;
             case GameAction.TownspersonAcksAlienMovement:
-               foreach (IMapItem mi in gi.Persons)
+               foreach (IMapItem mi in gi.Townspeople)
                {
                   mi.TerritoryStarting = mi.TerritoryCurrent;
                   mi.IsMoved = false;
@@ -913,7 +913,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.AlienAcksTownspersonMovement:
-               foreach (IMapItem mi in gi.Persons)
+               foreach (IMapItem mi in gi.Townspeople)
                {
                   mi.TerritoryStarting = mi.TerritoryCurrent;
                   mi.IsMoved = false;
@@ -1061,7 +1061,7 @@ namespace PleasantvilleGame
             return false;
          }
          //-------------------------------------------------
-         foreach (IMapItem person in gi.Persons)
+         foreach (IMapItem person in gi.Townspeople)
          {
             if ((false == person.IsWary) && (false == person.IsControlled) && (false == person.IsMoveStoppedThisTurn) && ("Zebulon" != person.Name)
                   && (false == person.IsStunned) && (false == person.IsTiedUp) && (false == person.IsSurrendered) && (false == person.IsKilled))
@@ -1129,13 +1129,13 @@ namespace PleasantvilleGame
       private bool IsZebulonDiscovered(IGameInstance gi, IMapItemMove mim, out bool isZebulanDiscovered)
       {
          isZebulanDiscovered = false;
-         IMapItem? movingMi = gi.Persons.Find(mim.MapItem.Name);
+         IMapItem? movingMi = gi.Townspeople.Find(mim.MapItem.Name);
          if (null == movingMi)
          {
             Logger.Log(LogEnum.LE_ERROR, "Is_ZebulonDiscovered(): movingMi=null for mim=" + mim.ToString());
             return false;
          }
-         IMapItem? zebulon = gi.Persons.Find("Zebulon"); // Determine if Zebulon is along the path of this move. If so, back out to this new territory.
+         IMapItem? zebulon = gi.Townspeople.Find("Zebulon"); // Determine if Zebulon is along the path of this move. If so, back out to this new territory.
          if (null == zebulon)
          {
             Logger.Log(LogEnum.LE_ERROR, "Is_ZebulonDiscovered(): zebulon=null for mim=" + mim.ToString());
@@ -1788,7 +1788,7 @@ namespace PleasantvilleGame
          IMapItems controlled = new MapItems();
          IMapItems uncontrolled = new MapItems();
          IMapItems wary = new MapItems();
-         foreach (MapItem mi in gi.Persons)
+         foreach (MapItem mi in gi.Townspeople)
          {
             if ((combat.Territory.Name == mi.TerritoryCurrent.Name) && (combat.Territory.Subname == mi.TerritoryCurrent.Subname))
             {

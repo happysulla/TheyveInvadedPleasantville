@@ -1988,7 +1988,7 @@ namespace PleasantvilleGame
             {
                IMapItem mi = mim.MapItem;
                int counterCount1 = 0;
-               foreach (IMapItem mi1 in gi.Persons)
+               foreach (IMapItem mi1 in gi.Townspeople)
                {
                   if ((mi1.TerritoryCurrent.Name == mi.TerritoryStarting.Name) && (mi1.TerritoryCurrent.Subname == mi.TerritoryStarting.Subname))
                      ++counterCount1;
@@ -2016,7 +2016,7 @@ namespace PleasantvilleGame
                }
                IMapItem mi = mim2.MapItem;
                int counterCount2 = 0;
-               foreach (IMapItem mi2 in gi.Persons)
+               foreach (IMapItem mi2 in gi.Townspeople)
                {
                   if ((mi2.TerritoryCurrent.Name == mim2.NewTerritory.Name) && (mi2.TerritoryCurrent.Subname == mim2.NewTerritory.Subname))
                      ++counterCount2;
@@ -2042,7 +2042,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_SHOW_MIM_MOVING_COUNT, sb1.ToString());
                }
                MovePathDisplay(mim2);
-               MovePathAnimate(mim2, gi.Persons);
+               MovePathAnimate(mim2, gi.Townspeople);
                mi.TerritoryCurrent = mim2.NewTerritory; // Reset to its final position
                mi.Location = new MapPoint(mi.TerritoryCurrent.CenterPoint.X - Utilities.theMapItemOffset + (counterCount2 * 3), mi.TerritoryCurrent.CenterPoint.Y - Utilities.theMapItemOffset + (counterCount2 * 3));
                if (mi.Movement <= mi.MovementUsed)
@@ -3066,7 +3066,7 @@ namespace PleasantvilleGame
          IMapItems controlled = new MapItems();
          IMapItems uncontrolled = new MapItems();
          IMapItems wary = new MapItems();
-         foreach (MapItem mi in gi.Persons)
+         foreach (MapItem mi in gi.Townspeople)
          {
             if ((selectedTerritory.Name == mi.TerritoryCurrent.Name) && (selectedTerritory.Subname == mi.TerritoryCurrent.Subname))
             {
@@ -4989,7 +4989,7 @@ namespace PleasantvilleGame
          if (null == bottomButton)
             return true;
          alivePeopleInStack.Remove(bottomMi.Name);
-         gi.Persons.Remove(bottomMi.Name);
+         gi.Townspeople.Remove(bottomMi.Name);
          foreach (Rectangle r in myRectangles)
          {
             if ((Canvas.GetLeft(r) == Canvas.GetLeft(bottomButton)) && (Canvas.GetTop(r) == Canvas.GetTop(bottomButton)))
@@ -5029,7 +5029,7 @@ namespace PleasantvilleGame
                ++counterCount;
             }
          }
-         gi.Persons.Add(bottomMi); // Add back the bottom items to the top
+         gi.Townspeople.Add(bottomMi); // Add back the bottom items to the top
          bottomMi.Location = new MapPoint(bottomMi.TerritoryCurrent.CenterPoint.X - Utilities.theMapItemOffset + (counterCount * 3), bottomMi.TerritoryCurrent.CenterPoint.Y - Utilities.theMapItemOffset + (counterCount * 3));
          Canvas.SetLeft(bottomButton, bottomMi.Location.X);
          Canvas.SetTop(bottomButton, bottomMi.Location.Y);

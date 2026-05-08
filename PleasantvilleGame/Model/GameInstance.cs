@@ -39,7 +39,7 @@ namespace PleasantvilleGame
       public string EndGameReason { set; get; } = "";
       //----------------------------------------------
       public ITerritories ZebulonTerritories { set; get; } = new Territories();
-      public IMapItems Persons { set; get; } = new MapItems();
+      public IMapItems Townspeople { set; get; } = new MapItems();
       public IMapItems PersonsStunned { set; get; } = new MapItems();
       public IMapItems PersonsKnockedOut { set; get; } = new MapItems();
       public IMapItemCombat? MapItemCombat { set; get; } = null;
@@ -86,6 +86,206 @@ namespace PleasantvilleGame
          return sb.ToString();
       }
       //---------------------------------------------------------------
+      public bool CreateTownspeople()
+      {
+         this.Townspeople.Clear();
+         //------------------------------------
+         int randomNum = Utilities.RandomGenerator.Next(4);
+         string tName = "Bank" + randomNum.ToString();
+         ITerritory? t = Territories.theTerritories.Find(tName);
+         if( null == t )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            return false;
+         }
+         string name = "BankGuard";
+         string miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         IMapItem mi = new MapItem(miName, 1.0, name, t, 5, 10, 8);
+         this.Townspeople.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(4);
+         tName = "Bank" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            return false;
+         }
+         name = "BankPresident";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 4, 19, 5);
+         this.Townspeople.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(2);
+         tName = "BarAndGrill" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            return false;
+         }
+         name = "BarAndGrillOwner";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 5, 10, 7);
+         this.Townspeople.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(3);
+         tName = "Tavern" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            return false;
+         }
+         name = "BarTender";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 6, 11, 7);
+         this.Townspeople.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(5);
+         tName = "Supermarket" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            return false;
+         }
+         name = "CheckoutGirl";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 5, 7, 5);
+         this.Townspeople.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(4);
+         tName = "SheriffFireDept" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            return false;
+         }
+         name = "Deputy";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 6, 11, 9);
+         this.Townspeople.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(2);
+         tName = "DocOffice" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            return false;
+         }
+         name = "Doctor";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 5, 18, 7);
+         this.Townspeople.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(4);
+         tName = "SheriffFireDept" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            return false;
+         }
+         name = "FireChief";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 6, 12, 8);
+         this.Townspeople.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(5);
+         tName = "HotelAndRestaurant" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            return false;
+         }
+         name = "HotelOwner";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 5, 11, 5);
+         this.Townspeople.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(3);
+         tName = "TownHall" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            return false;
+         }
+         name = "Judge";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 5, 11, 5);
+         this.Townspeople.Add(mi);
+         //------------------------------------
+         tName = "LawyersOffice_1";
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            return false;
+         }
+         name = "Lawyer";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 5, 11, 6);
+         this.Townspeople.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(5);
+         tName = "HotelAndRestaurant" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            return false;
+         }
+         name = "Maid";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 5, 10, 5);
+         this.Townspeople.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(5);
+         tName = "HotelAndRestaurant" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            return false;
+         }
+         name = "MaitreD";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 5, 9, 4);
+         this.Townspeople.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(4);
+         tName = "GeneralStore" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            return false;
+         }
+         name = "Mayor";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 5, 16, 7);
+         this.Townspeople.Add(mi);
+         return true;
+      }
       public bool AddUnknownAlien(IMapItem newAlien)
       {
          StringBuilder sb = new StringBuilder("AddUnknownAlien():"); 

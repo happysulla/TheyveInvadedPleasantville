@@ -34,7 +34,7 @@ namespace PleasantvilleGame
       String EndGameReason { set; get; }
       //----------------------------------------------
       ITerritories ZebulonTerritories { set; get; }
-      IMapItems Persons { set; get; }
+      IMapItems Townspeople { set; get; }
       IMapItems PersonsStunned { set; get; }
       IMapItems PersonsKnockedOut { set; get; }
       IMapItemCombat? MapItemCombat { set; get; }
