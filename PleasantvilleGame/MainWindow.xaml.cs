@@ -124,6 +124,8 @@ namespace PleasantvilleGame
                return;
             }
             //--------------------------------------------
+            myGameEngine = new GameEngine(this);
+            //--------------------------------------------
             IGameInstance gi = new GameInstance();
             if (true == gi.CtorError)
             {
@@ -132,7 +134,6 @@ namespace PleasantvilleGame
                return;
             }
             //--------------------------------------------
-            myGameEngine = new GameEngine(this);
             myGameViewerWindow = new GameViewerWindow(myGameEngine, gi); // Start the main view
             if (true == myGameViewerWindow.CtorError)
             {

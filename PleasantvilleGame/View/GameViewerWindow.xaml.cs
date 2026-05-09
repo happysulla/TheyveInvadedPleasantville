@@ -1613,8 +1613,8 @@ namespace PleasantvilleGame
       //-------------UPDATE HELPER FUNCTIONS---------------------------------
       private bool UpdateCanvasMain(IGameInstance gi, GameAction action, bool isOnlyLastLineRemoved = false)
       {
-         //UpdateCanvasMainClear(myButtons, gi.Stacks, action, isOnlyLastLineRemoved);
-         //---------------------------------------------------------------
+         UpdateCanvasMainClear(myButtons, gi.Stacks, action, isOnlyLastLineRemoved);
+         //--------------------------------------------------------------
          //IMapItem? zebulon = gi.Stacks.FindMapItem("Zebulon");
          //if (null == zebulon)
          //{
@@ -1636,36 +1636,40 @@ namespace PleasantvilleGame
          //   }
          //}
          //---------------------------------------------------------------
-         //foreach (Stack stack in gi.Stacks) // Update the Canvas with new MapItem locations
-         //{
-         //   int counterCount = 0;
-         //   foreach (IMapItem mi in stack.MapItems)
-         //   {
-         //      Button? b = myButtons.Find(mi.Name);
-         //      if (null != b)
-         //      {
-         //         b.BeginAnimation(Canvas.LeftProperty, null); // end animation offset
-         //         b.BeginAnimation(Canvas.TopProperty, null);  // end animation offset
-         //         if (true == mi.IsKilled)
-         //         {
-         //            if (Visibility.Visible == b.Visibility)
-         //            {
-         //               b.Visibility = Visibility.Hidden;
-         //               Logger.Log(LogEnum.LE_MOVE_KIA_RESULTS, mi.Name + " is hidden");
-         //            }
-         //         }
-         //         else
-         //         {
-         //            MapItem.SetButtonContent(b, mi, GameEngine.theIsAlien);
-         //            mi.Location = new MapPoint(mi.TerritoryCurrent.CenterPoint.X - Utilities.theMapItemOffset + (counterCount * 3), mi.TerritoryCurrent.CenterPoint.Y - Utilities.theMapItemOffset + (counterCount * 3));
-         //            ++counterCount;
-         //            Canvas.SetLeft(b, mi.Location.X);
-         //            Canvas.SetTop(b, mi.Location.Y);
-         //            Canvas.SetZIndex(b, counterCount);
-         //         }
-         //      }
-         //   }
-         //}
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMainMapItems(): " + gi.Stacks.ToString());
+         foreach (IStack stack in gi.Stacks)
+         {
+            ITerritory t = stack.Territory;
+            foreach (IMapItem mi in stack.MapItems)
+            {
+               if (null == mi)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMainMapItems(): mi=null");
+                  return false;
+               }
+               //---------------------------------------------
+               Button? b = myButtons.Find(mi.Name);
+               if (null != b)
+               {
+                  b.BeginAnimation(Canvas.LeftProperty, null); // end animation offset
+                  b.BeginAnimation(Canvas.TopProperty, null);  // end animation offset
+                  Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMainMapItems(): Updating mi=" + mi.Name + " X=" + mi.Location.X.ToString() + " Y=" + mi.Location.Y.ToString());
+                  Canvas.SetLeft(b, mi.Location.X);
+                  Canvas.SetTop(b, mi.Location.Y);
+                  Canvas.SetZIndex(b, 10000);
+               }
+               else
+               {
+                  Logger.Log(LogEnum.LE_SHOW_STACK_ADD, "UpdateCanvasMainMapItems(): Adding mi=" + mi.Name + " to stack@" + stack.ToString());
+                  System.Windows.Controls.Button newButton = new Button { Name = mi.Name, Width = mi.Zoom * Utilities.theMapItemSize, Height = mi.Zoom * Utilities.theMapItemSize, BorderThickness = new Thickness(0), Background = new SolidColorBrush(Colors.Transparent), Foreground = new SolidColorBrush(Colors.Transparent) };
+                  MapItem.SetButtonContent(newButton, mi, true, true); // This sets the image as the button's content
+                  myButtons.Add(newButton);
+                  Canvas.SetLeft(newButton, mi.Location.X);
+                  Canvas.SetTop(newButton, mi.Location.Y);
+                  myCanvasMain.Children.Add(newButton);
+               }
+            }
+         }
          return true;
       }
       private void UpdateCanvasMainClear(List<Button> buttons, IStacks stacks, GameAction action, bool isOnlyLastLineRemoved)

@@ -69,7 +69,12 @@ namespace PleasantvilleGame
       //==============================================================
       public GameInstance() // Constructor - set log levels
       {
-
+         if( false == CreateTownspeople())
+         {
+            CtorError = true;
+            Logger.Log(LogEnum.LE_ERROR, "GameInstance(): Create_Townspeople() returned false");
+            return;
+         }
       }
       public GameInstance(Options newGameOptions) // Constructor - set log levels
       {
@@ -91,11 +96,11 @@ namespace PleasantvilleGame
          this.Townspeople.Clear();
          //------------------------------------
          int randomNum = Utilities.RandomGenerator.Next(4);
-         string tName = "Bank" + randomNum.ToString();
+         string tName = "Bank_" + randomNum.ToString();
          ITerritory? t = Territories.theTerritories.Find(tName);
          if( null == t )
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
             return false;
          }
          string name = "BankGuard";
@@ -103,13 +108,14 @@ namespace PleasantvilleGame
          Utilities.MapItemNum++;
          IMapItem mi = new MapItem(miName, 1.0, name, t, 5, 10, 8);
          this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
          //------------------------------------
          randomNum = Utilities.RandomGenerator.Next(4);
-         tName = "Bank" + randomNum.ToString();
+         tName = "Bank_" + randomNum.ToString();
          t = Territories.theTerritories.Find(tName);
          if (null == t)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
             return false;
          }
          name = "BankPresident";
@@ -117,13 +123,14 @@ namespace PleasantvilleGame
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 1.0, name, t, 4, 19, 5);
          this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
          //------------------------------------
          randomNum = Utilities.RandomGenerator.Next(2);
-         tName = "BarAndGrill" + randomNum.ToString();
+         tName = "BarAndGrill_" + randomNum.ToString();
          t = Territories.theTerritories.Find(tName);
          if (null == t)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
             return false;
          }
          name = "BarAndGrillOwner";
@@ -131,13 +138,14 @@ namespace PleasantvilleGame
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 1.0, name, t, 5, 10, 7);
          this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
          //------------------------------------
          randomNum = Utilities.RandomGenerator.Next(3);
-         tName = "Tavern" + randomNum.ToString();
+         tName = "Tavern_" + randomNum.ToString();
          t = Territories.theTerritories.Find(tName);
          if (null == t)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
             return false;
          }
          name = "BarTender";
@@ -145,13 +153,14 @@ namespace PleasantvilleGame
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 1.0, name, t, 6, 11, 7);
          this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
          //------------------------------------
          randomNum = Utilities.RandomGenerator.Next(5);
-         tName = "Supermarket" + randomNum.ToString();
+         tName = "Supermarket_" + randomNum.ToString();
          t = Territories.theTerritories.Find(tName);
          if (null == t)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
             return false;
          }
          name = "CheckoutGirl";
@@ -159,13 +168,14 @@ namespace PleasantvilleGame
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 1.0, name, t, 5, 7, 5);
          this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
          //------------------------------------
          randomNum = Utilities.RandomGenerator.Next(4);
-         tName = "SheriffFireDept" + randomNum.ToString();
+         tName = "SheriffFireDept_" + randomNum.ToString();
          t = Territories.theTerritories.Find(tName);
          if (null == t)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
             return false;
          }
          name = "Deputy";
@@ -173,13 +183,14 @@ namespace PleasantvilleGame
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 1.0, name, t, 6, 11, 9);
          this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
          //------------------------------------
          randomNum = Utilities.RandomGenerator.Next(2);
-         tName = "DocOffice" + randomNum.ToString();
+         tName = "DocOffice_" + randomNum.ToString();
          t = Territories.theTerritories.Find(tName);
          if (null == t)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
             return false;
          }
          name = "Doctor";
@@ -187,13 +198,14 @@ namespace PleasantvilleGame
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 1.0, name, t, 5, 18, 7);
          this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
          //------------------------------------
          randomNum = Utilities.RandomGenerator.Next(4);
-         tName = "SheriffFireDept" + randomNum.ToString();
+         tName = "SheriffFireDept_" + randomNum.ToString();
          t = Territories.theTerritories.Find(tName);
          if (null == t)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
             return false;
          }
          name = "FireChief";
@@ -201,13 +213,14 @@ namespace PleasantvilleGame
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 1.0, name, t, 6, 12, 8);
          this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
          //------------------------------------
          randomNum = Utilities.RandomGenerator.Next(5);
-         tName = "HotelAndRestaurant" + randomNum.ToString();
+         tName = "HotelAndRestaurant_" + randomNum.ToString();
          t = Territories.theTerritories.Find(tName);
          if (null == t)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
             return false;
          }
          name = "HotelOwner";
@@ -215,13 +228,14 @@ namespace PleasantvilleGame
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 1.0, name, t, 5, 11, 5);
          this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
          //------------------------------------
          randomNum = Utilities.RandomGenerator.Next(3);
-         tName = "TownHall" + randomNum.ToString();
+         tName = "TownHall_" + randomNum.ToString();
          t = Territories.theTerritories.Find(tName);
          if (null == t)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
             return false;
          }
          name = "Judge";
@@ -229,12 +243,13 @@ namespace PleasantvilleGame
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 1.0, name, t, 5, 11, 5);
          this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
          //------------------------------------
-         tName = "LawyersOffice_1";
+         tName = "LawyersOffice_0";
          t = Territories.theTerritories.Find(tName);
          if (null == t)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
             return false;
          }
          name = "Lawyer";
@@ -242,13 +257,14 @@ namespace PleasantvilleGame
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 1.0, name, t, 5, 11, 6);
          this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
          //------------------------------------
          randomNum = Utilities.RandomGenerator.Next(5);
-         tName = "HotelAndRestaurant" + randomNum.ToString();
+         tName = "HotelAndRestaurant_" + randomNum.ToString();
          t = Territories.theTerritories.Find(tName);
          if (null == t)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
             return false;
          }
          name = "Maid";
@@ -256,13 +272,14 @@ namespace PleasantvilleGame
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 1.0, name, t, 5, 10, 5);
          this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
          //------------------------------------
          randomNum = Utilities.RandomGenerator.Next(5);
-         tName = "HotelAndRestaurant" + randomNum.ToString();
+         tName = "HotelAndRestaurant_" + randomNum.ToString();
          t = Territories.theTerritories.Find(tName);
          if (null == t)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
             return false;
          }
          name = "MaitreD";
@@ -270,13 +287,14 @@ namespace PleasantvilleGame
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 1.0, name, t, 5, 9, 4);
          this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
          //------------------------------------
          randomNum = Utilities.RandomGenerator.Next(4);
-         tName = "GeneralStore" + randomNum.ToString();
+         tName = "GeneralStore_" + randomNum.ToString();
          t = Territories.theTerritories.Find(tName);
          if (null == t)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): tName=" + tName);
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
             return false;
          }
          name = "Mayor";
@@ -284,6 +302,244 @@ namespace PleasantvilleGame
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 1.0, name, t, 5, 16, 7);
          this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(5);
+         tName = "Church_" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+            return false;
+         }
+         name = "Minister";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 5, 20, 6);
+         this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
+         //------------------------------------
+         tName = "House_K";
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+            return false;
+         }
+         name = "Paperboy";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 6, 9, 5);
+         this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(4);
+         tName = "MachineShop_" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+            return false;
+         }
+         name = "Plumber";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 5, 8, 8);
+         this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(4);
+         tName = "MachineShop_" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+            return false;
+         }
+         name = "RepairShopOwner";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 5, 9, 7);
+         this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(4);
+         tName = "SheriffFireDept_" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+            return false;
+         }
+         name = "Sheriff";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 6, 15, 10);
+         this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
+         //------------------------------------
+         tName = "GasPumps_0";
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+            return false;
+         }
+         name = "StationAttendant";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 5, 8, 7);
+         this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(5);
+         tName = "Supermarket_" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+            return false;
+         }
+         name = "SuperMarketManager";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 5, 10, 6);
+         this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(2);
+         tName = "ClothingStore_" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+            return false;
+         }
+         name = "Tailor";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 4, 11, 5);
+         this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(4);
+         tName = "School_" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+            return false;
+         }
+         name = "Teacher";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 5, 17, 4);
+         this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(4);
+         tName = "Bank_" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+            return false;
+         }
+         name = "Teller";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 5, 9, 6);
+         this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(3);
+         tName = "Tavern_" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+            return false;
+         }
+         name = "TownDrunk";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 3, 3, 8);
+         this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(2);
+         tName = "VetOffice_" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+            return false;
+         }
+         name = "Vet";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 5, 13, 6);
+         this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(5);
+         tName = "HotelAndRestaurant_" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+            return false;
+         }
+         name = "Waitress";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 5, 9, 6);
+         this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(2);
+         tName = "TrainStation_" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+            return false;
+         }
+         name = "WarVeteran";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 4, 12, 4);
+         this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
+         //------------------------------------
+         randomNum = Utilities.RandomGenerator.Next(4);
+         tName = "MachineShop_" + randomNum.ToString();
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+            return false;
+         }
+         name = "Welder";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 5, 10, 7);
+         this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
+         //------------------------------------
+         tName = "House_A";
+         t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+            return false;
+         }
+         name = "Wife";
+         miName = name + Utilities.MapItemNum.ToString();
+         Utilities.MapItemNum++;
+         mi = new MapItem(miName, 1.0, name, t, 4, 8, 4);
+         this.Townspeople.Add(mi);
+         this.Stacks.Add(mi);
          return true;
       }
       public bool AddUnknownAlien(IMapItem newAlien)

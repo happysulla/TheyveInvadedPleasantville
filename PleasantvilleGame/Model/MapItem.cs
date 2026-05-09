@@ -171,7 +171,7 @@ namespace PleasantvilleGame
          Location.Y = territory.CenterPoint.Y - zoom * Utilities.theMapItemOffset;
       }
       public MapItem(string name, double zoom, string topImageName, ITerritory territory, int movement, int influence, int combat) :
-                  this(name, zoom, false, topImageName)
+                  this(name, zoom, topImageName, territory)
       {
          this.Movement = movement;
          this.Influence = influence;

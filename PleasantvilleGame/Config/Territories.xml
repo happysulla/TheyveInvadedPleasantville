@@ -2146,7 +2146,7 @@
   </Territory>
   <Territory value="Tavern">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0219.40" Y="0083.23" />
     <Points count="4">
       <regionPoint X="0197.29" Y="0053.35" />
@@ -2162,7 +2162,7 @@
   </Territory>
   <Territory value="Tavern">
     <CanvasName value="Main" />
-    <Subname value="2" />
+    <Subname value="1" />
     <CenterPoint X="0260.20" Y="0086.43" />
     <Points count="4">
       <regionPoint X="0246.62" Y="0052.35" />
@@ -2177,7 +2177,7 @@
   </Territory>
   <Territory value="Tavern">
     <CanvasName value="Main" />
-    <Subname value="3" />
+    <Subname value="2" />
     <CenterPoint X="0234.60" Y="0143.23" />
     <Points count="4">
       <regionPoint X="0197.25" Y="0110.68" />
@@ -2193,7 +2193,7 @@
   </Territory>
   <Territory value="VetOffice">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0355.40" Y="0097.63" />
     <Points count="4">
       <regionPoint X="0325.29" Y="0069.01" />
@@ -2208,7 +2208,7 @@
   </Territory>
   <Territory value="VetOffice">
     <CanvasName value="Main" />
-    <Subname value="2" />
+    <Subname value="1" />
     <CenterPoint X="0346.60" Y="0144.83" />
     <Points count="4">
       <regionPoint X="0315.95" Y="0110.68" />
@@ -2223,7 +2223,7 @@
   </Territory>
   <Territory value="GasPumps">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0509.00" Y="0061.63" />
     <Points count="4">
       <regionPoint X="0474.17" Y="0079.01" />
@@ -2239,7 +2239,7 @@
   </Territory>
   <Territory value="GeneralStore">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0450.60" Y="0103.23" />
     <Points count="4">
       <regionPoint X="0433.50" Y="0075.35" />
@@ -2256,7 +2256,7 @@
   </Territory>
   <Territory value="GeneralStore">
     <CanvasName value="Main" />
-    <Subname value="2" />
+    <Subname value="1" />
     <CenterPoint X="0500.20" Y="0104.03" />
     <Points count="4">
       <regionPoint X="0474.50" Y="0079.68" />
@@ -2271,7 +2271,7 @@
   </Territory>
   <Territory value="GeneralStore">
     <CanvasName value="Main" />
-    <Subname value="3" />
+    <Subname value="2" />
     <CenterPoint X="0442.60" Y="0148.03" />
     <Points count="4">
       <regionPoint X="0420.50" Y="0127.35" />
@@ -2287,7 +2287,7 @@
   </Territory>
   <Territory value="GeneralStore">
     <CanvasName value="Main" />
-    <Subname value="4" />
+    <Subname value="3" />
     <CenterPoint X="0492.20" Y="0145.63" />
     <Points count="4">
       <regionPoint X="0471.17" Y="0119.01" />
@@ -2303,7 +2303,7 @@
   </Territory>
   <Territory value="Supermarket">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0636.20" Y="0064.03" />
     <Points count="4">
       <regionPoint X="0612.83" Y="0036.68" />
@@ -2318,7 +2318,7 @@
   </Territory>
   <Territory value="Supermarket">
     <CanvasName value="Main" />
-    <Subname value="2" />
+    <Subname value="1" />
     <CenterPoint X="0692.20" Y="0072.83" />
     <Points count="4">
       <regionPoint X="0675.17" Y="0035.68" />
@@ -2335,7 +2335,7 @@
   </Territory>
   <Territory value="Supermarket">
     <CanvasName value="Main" />
-    <Subname value="3" />
+    <Subname value="2" />
     <CenterPoint X="0748.20" Y="0075.23" />
     <Points count="4">
       <regionPoint X="0724.17" Y="0035.35" />
@@ -2351,7 +2351,7 @@
   </Territory>
   <Territory value="Supermarket">
     <CanvasName value="Main" />
-    <Subname value="4" />
+    <Subname value="3" />
     <CenterPoint X="0631.40" Y="0132.03" />
     <Points count="5">
       <regionPoint X="0601.50" Y="0088.68" />
@@ -2369,7 +2369,7 @@
   </Territory>
   <Territory value="Supermarket">
     <CanvasName value="Main" />
-    <Subname value="5" />
+    <Subname value="4" />
     <CenterPoint X="0716.20" Y="0138.43" />
     <Points count="4">
       <regionPoint X="0688.83" Y="0100.68" />
@@ -2386,7 +2386,7 @@
   </Territory>
   <Territory value="School">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0071.40" Y="0230.43" />
     <Points count="4">
       <regionPoint X="0041.50" Y="0206.01" />
@@ -2401,7 +2401,7 @@
   </Territory>
   <Territory value="School">
     <CanvasName value="Main" />
-    <Subname value="2" />
+    <Subname value="1" />
     <CenterPoint X="0131.40" Y="0228.83" />
     <Points count="5">
       <regionPoint X="0103.83" Y="0205.68" />
@@ -2419,7 +2419,7 @@
   </Territory>
   <Territory value="School">
     <CanvasName value="Main" />
-    <Subname value="3" />
+    <Subname value="2" />
     <CenterPoint X="0068.20" Y="0278.43" />
     <Points count="6">
       <regionPoint X="0040.17" Y="0262.01" />
@@ -2438,7 +2438,7 @@
   </Territory>
   <Territory value="School">
     <CanvasName value="Main" />
-    <Subname value="4" />
+    <Subname value="3" />
     <CenterPoint X="0131.40" Y="0280.03" />
     <Points count="4">
       <regionPoint X="0095.17" Y="0264.01" />
@@ -2454,7 +2454,7 @@
   </Territory>
   <Territory value="Bank">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0441.00" Y="0231.23" />
     <Points count="5">
       <regionPoint X="0395.60" Y="0205.20" />
@@ -2471,7 +2471,7 @@
   </Territory>
   <Territory value="Bank">
     <CanvasName value="Main" />
-    <Subname value="2" />
+    <Subname value="1" />
     <CenterPoint X="0398.60" Y="0299.23" />
     <Points count="4">
       <regionPoint X="0381.94" Y="0258.54" />
@@ -2488,7 +2488,7 @@
   </Territory>
   <Territory value="Bank">
     <CanvasName value="Main" />
-    <Subname value="3" />
+    <Subname value="2" />
     <CenterPoint X="0456.20" Y="0285.63" />
     <Points count="4">
       <regionPoint X="0430.94" Y="0258.54" />
@@ -2504,7 +2504,7 @@
   </Territory>
   <Territory value="Bank">
     <CanvasName value="Main" />
-    <Subname value="4" />
+    <Subname value="3" />
     <CenterPoint X="0441.00" Y="0337.63" />
     <Points count="4">
       <regionPoint X="0416.94" Y="0308.87" />
@@ -2519,7 +2519,7 @@
   </Territory>
   <Territory value="DocOffice">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0605.00" Y="0230.43" />
     <Points count="5">
       <regionPoint X="0573.59" Y="0204.01" />
@@ -2535,7 +2535,7 @@
   </Territory>
   <Territory value="DocOffice">
     <CanvasName value="Main" />
-    <Subname value="2" />
+    <Subname value="1" />
     <CenterPoint X="0589.80" Y="0282.43" />
     <Points count="4">
       <regionPoint X="0563.65" Y="0245.01" />
@@ -2550,7 +2550,7 @@
   </Territory>
   <Territory value="VFW">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0234.60" Y="0369.63" />
     <Points count="4">
       <regionPoint X="0197.42" Y="0313.01" />
@@ -2565,7 +2565,7 @@
   </Territory>
   <Territory value="SheriffFireDept">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0206.60" Y="0480.83" />
     <Points count="4">
       <regionPoint X="0193.83" Y="0441.35" />
@@ -2581,7 +2581,7 @@
   </Territory>
   <Territory value="SheriffFireDept">
     <CanvasName value="Main" />
-    <Subname value="2" />
+    <Subname value="1" />
     <CenterPoint X="0252.20" Y="0514.43" />
     <Points count="4">
       <regionPoint X="0234.50" Y="0468.01" />
@@ -2598,7 +2598,7 @@
   </Territory>
   <Territory value="SheriffFireDept">
     <CanvasName value="Main" />
-    <Subname value="3" />
+    <Subname value="2" />
     <CenterPoint X="0190.60" Y="0528.83" />
     <Points count="5">
       <regionPoint X="0169.83" Y="0497.01" />
@@ -2616,7 +2616,7 @@
   </Territory>
   <Territory value="SheriffFireDept">
     <CanvasName value="Main" />
-    <Subname value="4" />
+    <Subname value="3" />
     <CenterPoint X="0233.00" Y="0565.63" />
     <Points count="6">
       <regionPoint X="0201.83" Y="0571.01" />
@@ -2633,7 +2633,7 @@
   </Territory>
   <Territory value="ClothingStore">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0355.40" Y="0409.63" />
     <Points count="4">
       <regionPoint X="0332.52" Y="0364.01" />
@@ -2648,7 +2648,7 @@
   </Territory>
   <Territory value="ClothingStore">
     <CanvasName value="Main" />
-    <Subname value="2" />
+    <Subname value="1" />
     <CenterPoint X="0417.00" Y="0434.43" />
     <Points count="4">
       <regionPoint X="0397.98" Y="0388.54" />
@@ -2663,7 +2663,7 @@
   </Territory>
   <Territory value="HotelAndRestaurant">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0542.60" Y="0551.23" />
     <Points count="4">
       <regionPoint X="0497.17" Y="0522.20" />
@@ -2679,7 +2679,7 @@
   </Territory>
   <Territory value="HotelAndRestaurant">
     <CanvasName value="Main" />
-    <Subname value="2" />
+    <Subname value="1" />
     <CenterPoint X="0506.60" Y="0601.63" />
     <Points count="4">
       <regionPoint X="0485.50" Y="0570.20" />
@@ -2696,7 +2696,7 @@
   </Territory>
   <Territory value="HotelAndRestaurant">
     <CanvasName value="Main" />
-    <Subname value="3" />
+    <Subname value="2" />
     <CenterPoint X="0565.80" Y="0598.43" />
     <Points count="4">
       <regionPoint X="0543.17" Y="0576.54" />
@@ -2712,7 +2712,7 @@
   </Territory>
   <Territory value="HotelAndRestaurant">
     <CanvasName value="Main" />
-    <Subname value="4" />
+    <Subname value="3" />
     <CenterPoint X="0490.60" Y="0654.43" />
     <Points count="4">
       <regionPoint X="0471.84" Y="0623.20" />
@@ -2727,7 +2727,7 @@
   </Territory>
   <Territory value="HotelAndRestaurant">
     <CanvasName value="Main" />
-    <Subname value="5" />
+    <Subname value="4" />
     <CenterPoint X="0550.60" Y="0648.03" />
     <Points count="4">
       <regionPoint X="0528.50" Y="0620.54" />
@@ -2744,7 +2744,7 @@
   </Territory>
   <Territory value="Church">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0709.00" Y="0576.79" />
     <Points count="4">
       <regionPoint X="0675.83" Y="0521.20" />
@@ -2760,7 +2760,7 @@
   </Territory>
   <Territory value="Church">
     <CanvasName value="Main" />
-    <Subname value="2" />
+    <Subname value="1" />
     <CenterPoint X="0761.80" Y="0576.79" />
     <Points count="4">
       <regionPoint X="0735.17" Y="0521.54" />
@@ -2777,7 +2777,7 @@
   </Territory>
   <Territory value="Church">
     <CanvasName value="Main" />
-    <Subname value="3" />
+    <Subname value="2" />
     <CenterPoint X="0696.20" Y="0639.99" />
     <Points count="4">
       <regionPoint X="0675.83" Y="0616.54" />
@@ -2793,7 +2793,7 @@
   </Territory>
   <Territory value="Church">
     <CanvasName value="Main" />
-    <Subname value="4" />
+    <Subname value="3" />
     <CenterPoint X="0734.60" Y="0640.79" />
     <Points count="4">
       <regionPoint X="0715.50" Y="0616.87" />
@@ -2810,7 +2810,7 @@
   </Territory>
   <Territory value="Church">
     <CanvasName value="Main" />
-    <Subname value="5" />
+    <Subname value="4" />
     <CenterPoint X="0773.00" Y="0640.79" />
     <Points count="4">
       <regionPoint X="0751.17" Y="0662.87" />
@@ -2825,7 +2825,7 @@
   </Territory>
   <Territory value="Graveyard">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0730.60" Y="0683.19" />
     <Points count="5">
       <regionPoint X="0675.83" Y="0663.20" />
@@ -2845,7 +2845,7 @@
   </Territory>
   <Territory value="MachineShop">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0064.20" Y="0582.39" />
     <Points count="4">
       <regionPoint X="0040.17" Y="0550.35" />
@@ -2861,7 +2861,7 @@
   </Territory>
   <Territory value="MachineShop">
     <CanvasName value="Main" />
-    <Subname value="2" />
+    <Subname value="1" />
     <CenterPoint X="0083.40" Y="0623.19" />
     <Points count="5">
       <regionPoint X="0039.17" Y="0625.35" />
@@ -2878,7 +2878,7 @@
   </Territory>
   <Territory value="MachineShop">
     <CanvasName value="Main" />
-    <Subname value="3" />
+    <Subname value="2" />
     <CenterPoint X="0062.60" Y="0671.99" />
     <Points count="4">
       <regionPoint X="0038.83" Y="0644.35" />
@@ -2893,7 +2893,7 @@
   </Territory>
   <Territory value="MachineShop">
     <CanvasName value="Main" />
-    <Subname value="4" />
+    <Subname value="3" />
     <CenterPoint X="0121.80" Y="0647.99" />
     <Points count="4">
       <regionPoint X="0081.83" Y="0650.01" />
@@ -2909,7 +2909,7 @@
   </Territory>
   <Territory value="TownHall">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0337.80" Y="0571.23" />
     <Points count="4">
       <regionPoint X="0324.52" Y="0526.01" />
@@ -2925,7 +2925,7 @@
   </Territory>
   <Territory value="TownHall">
     <CanvasName value="Main" />
-    <Subname value="2" />
+    <Subname value="1" />
     <CenterPoint X="0309.00" Y="0619.23" />
     <Points count="4">
       <regionPoint X="0291.47" Y="0595.35" />
@@ -2941,7 +2941,7 @@
   </Territory>
   <Territory value="TownHall">
     <CanvasName value="Main" />
-    <Subname value="3" />
+    <Subname value="2" />
     <CenterPoint X="0373.80" Y="0613.63" />
     <Points count="4">
       <regionPoint X="0374.80" Y="0559.01" />
@@ -2957,7 +2957,7 @@
   </Territory>
   <Territory value="BarAndGrill">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0228.20" Y="0731.99" />
     <Points count="4">
       <regionPoint X="0188.50" Y="0705.35" />
@@ -2972,7 +2972,7 @@
   </Territory>
   <Territory value="BarAndGrill">
     <CanvasName value="Main" />
-    <Subname value="2" />
+    <Subname value="1" />
     <CenterPoint X="0221.00" Y="0777.59" />
     <Points count="4">
       <regionPoint X="0180.68" Y="0754.35" />
@@ -2987,7 +2987,7 @@
   </Territory>
   <Territory value="StockPen">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0449.80" Y="0794.39" />
     <Points count="6">
       <regionPoint X="0391.80" Y="0794.01" />
@@ -3011,7 +3011,7 @@
   </Territory>
   <Territory value="TrainStation">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0621.00" Y="0867.19" />
     <Points count="4">
       <regionPoint X="0592.17" Y="0836.16" />
@@ -3027,7 +3027,7 @@
   </Territory>
   <Territory value="TrainStation">
     <CanvasName value="Main" />
-    <Subname value="2" />
+    <Subname value="1" />
     <CenterPoint X="0669.80" Y="0862.39" />
     <Points count="4">
       <regionPoint X="0645.50" Y="0828.49" />
@@ -3042,7 +3042,7 @@
   </Territory>
   <Territory value="LawyersOffice">
     <CanvasName value="Main" />
-    <Subname value="1" />
+    <Subname value="0" />
     <CenterPoint X="0713.80" Y="0319.19" />
     <Points count="4">
       <regionPoint X="0676.83" Y="0292.54" />
