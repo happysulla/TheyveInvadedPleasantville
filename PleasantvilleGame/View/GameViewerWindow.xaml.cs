@@ -1660,7 +1660,7 @@ namespace PleasantvilleGame
                }
                else
                {
-                  Logger.Log(LogEnum.LE_SHOW_STACK_ADD, "UpdateCanvasMainMapItems(): Adding mi=" + mi.Name + " to stack@" + stack.ToString());
+                  Logger.Log(LogEnum.LE_SHOW_STACK_ADD, "UpdateCanvasMainMapItems(): Adding Button for mi=" + mi.Name + " in stack@" + stack.ToString());
                   System.Windows.Controls.Button newButton = new Button { Name = mi.Name, Width = mi.Zoom * Utilities.theMapItemSize, Height = mi.Zoom * Utilities.theMapItemSize, BorderThickness = new Thickness(0), Background = new SolidColorBrush(Colors.Transparent), Foreground = new SolidColorBrush(Colors.Transparent) };
                   MapItem.SetButtonContent(newButton, mi, true, true); // This sets the image as the button's content
                   myButtons.Add(newButton);
