@@ -1618,7 +1618,7 @@ namespace PleasantvilleGame
          //IMapItem? zebulon = gi.Stacks.FindMapItem("Zebulon");
          //if (null == zebulon)
          //{
-         //   Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMain(): could not find Zebulon in gi.Stacks");
+         //   Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMain_MapItems(): could not find Zebulon in gi.Stacks");
          //   return false;
          //}
          //if (true == zebulon.IsAlienKnown)
@@ -1626,7 +1626,7 @@ namespace PleasantvilleGame
          //   Button? b = myButtons.Find("Zebulon");
          //   if (null == zebulon)
          //   {
-         //      Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMain(): could not find Zebulon in myButtons");
+         //      Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMain_MapItems(): could not find Zebulon in myButtons");
          //      return false;
          //   }
          //   if (null != b)
@@ -1636,7 +1636,7 @@ namespace PleasantvilleGame
          //   }
          //}
          //---------------------------------------------------------------
-         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMainMapItems(): " + gi.Stacks.ToString());
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMain_MapItems(): " + gi.Stacks.ToString());
          foreach (IStack stack in gi.Stacks)
          {
             ITerritory t = stack.Territory;
@@ -1644,7 +1644,7 @@ namespace PleasantvilleGame
             {
                if (null == mi)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMainMapItems(): mi=null");
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMain_MapItems(): mi=null");
                   return false;
                }
                //---------------------------------------------
@@ -1653,28 +1653,30 @@ namespace PleasantvilleGame
                {
                   b.BeginAnimation(Canvas.LeftProperty, null); // end animation offset
                   b.BeginAnimation(Canvas.TopProperty, null);  // end animation offset
-                  Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMainMapItems(): Updating mi=" + mi.Name + " X=" + mi.Location.X.ToString() + " Y=" + mi.Location.Y.ToString());
+                  Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMain_MapItems(): Updating mi=" + mi.Name + " X=" + mi.Location.X.ToString() + " Y=" + mi.Location.Y.ToString());
                   Canvas.SetLeft(b, mi.Location.X);
                   Canvas.SetTop(b, mi.Location.Y);
-                  Canvas.SetZIndex(b, 10000);
+                  Canvas.SetZIndex(b, 1000);
                }
                else
                {
-                  Logger.Log(LogEnum.LE_SHOW_STACK_ADD, "UpdateCanvasMainMapItems(): Adding Button for mi=" + mi.Name + " in stack@" + stack.ToString());
+                  Logger.Log(LogEnum.LE_SHOW_STACK_ADD, "UpdateCanvasMain_MapItems(): Adding Button for mi=" + mi.Name + " X=" + mi.Location.X.ToString("F2") + " Y=" + mi.Location.Y.ToString("F2") + " in stack@" + stack.ToString());
                   System.Windows.Controls.Button newButton = new Button { Name = mi.Name, Width = mi.Zoom * Utilities.theMapItemSize, Height = mi.Zoom * Utilities.theMapItemSize, BorderThickness = new Thickness(0), Background = new SolidColorBrush(Colors.Transparent), Foreground = new SolidColorBrush(Colors.Transparent) };
-                  MapItem.SetButtonContent(newButton, mi, true, true); // This sets the image as the button's content
+                  MapItem.SetButtonContent(newButton, mi, false, true); // This sets the image as the button's content
                   myButtons.Add(newButton);
                   Canvas.SetLeft(newButton, mi.Location.X);
                   Canvas.SetTop(newButton, mi.Location.Y);
+                  Canvas.SetZIndex(newButton, 999);
                   myCanvasMain.Children.Add(newButton);
                }
             }
          }
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMain_MapItems(): action=" + action.ToString() + " stacks=" + gi.Stacks.ToString());
          return true;
       }
       private void UpdateCanvasMainClear(List<Button> buttons, IStacks stacks, GameAction action, bool isOnlyLastLineRemoved)
       {
-         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Update_CanvasMainClear(): " + stacks.ToString());
+         Logger.Log(LogEnum.LE_SHOW_MAIN_CLEAR, "Update_CanvasMainClear(): Clearing action=" + action.ToString() + " stacks=" + stacks.ToString());
          List<UIElement> lines = new List<UIElement>();  
          List<UIElement> elements = new List<UIElement>();
          foreach (UIElement ui in myCanvasMain.Children) // Clean the Canvas of all marks
@@ -1717,9 +1719,9 @@ namespace PleasantvilleGame
             }
             else if (ui is Polygon polygon)
                elements.Add(ui);
-            else if(ui is Label label)  // A Game Feat Label
+            else if (ui is Label label)  // A Game Feat Label
                elements.Add(ui);
-            else if(ui is Rectangle rect)
+            else if (ui is Rectangle rect)
                elements.Add(ui);
             else if (ui is TextBlock tb)
                elements.Add(ui);
@@ -2372,7 +2374,7 @@ namespace PleasantvilleGame
          //   IMapItems townspeopleUncontrolled = new MapItems();
          //   foreach (MapItem mi in stack.MapItems)
          //   {
-         //      if ((true == mi.IsConversedThisTurn) || (true == mi.IsKilled) || (false == mi.IsConscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsWary))
+         //      if ((true == mi.IsConversedThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsWary))
          //         continue;
          //      if (true == mi.IsControlled)
          //      {
@@ -2437,7 +2439,7 @@ namespace PleasantvilleGame
          //   myRightMapItemsInActionPanel.Clear();
          //   foreach (IMapItem mi in peopleInStack)
          //   {
-         //      if ((true == mi.IsConversedThisTurn) || (true == mi.IsKilled) || (false == mi.IsConscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsWary))
+         //      if ((true == mi.IsConversedThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsWary))
          //         continue;
 
          //      if (true == mi.IsControlled)
@@ -2593,7 +2595,7 @@ namespace PleasantvilleGame
             IMapItems townspeopleUncontrolled = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (false == mi.IsConscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
+               if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
                   continue;
                if (true == mi.IsControlled)
                {
@@ -2666,7 +2668,7 @@ namespace PleasantvilleGame
             myRightMapItemsInActionPanel.Clear();
             foreach (IMapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (false == mi.IsConscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
+               if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
                   continue;
 
                if (true == mi.IsControlled)
@@ -2947,7 +2949,7 @@ namespace PleasantvilleGame
             IMapItems unknownAliens = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsCombatThisTurn) || (true == mi.IsKilled) || (false == mi.IsConscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
+               if ((true == mi.IsCombatThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
                   continue;
                if (true == mi.IsControlled)
                   controlled.Add(mi);
@@ -3074,7 +3076,7 @@ namespace PleasantvilleGame
          {
             if ((selectedTerritory.Name == mi.TerritoryCurrent.Name) && (selectedTerritory.Subname == mi.TerritoryCurrent.Subname))
             {
-               if ((false == mi.IsConscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsKilled) || (true == mi.IsSurrendered))
+               if ((false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsKilled) || (true == mi.IsSurrendered))
                   continue;
 
                if (true == mi.IsAlienKnown)
@@ -3338,7 +3340,7 @@ namespace PleasantvilleGame
             IMapItems surrenderedAliens = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsInterrogatedThisTurn) || (true == mi.IsInterrogated) || (true == mi.IsKilled) || (false == mi.IsConscious) || (true == mi.IsStunned))
+               if ((true == mi.IsInterrogatedThisTurn) || (true == mi.IsInterrogated) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsStunned))
                   continue;
 
                if (true == mi.IsControlled)
@@ -3415,9 +3417,9 @@ namespace PleasantvilleGame
             {
                if ((true == mi.IsImplantRemovalThisTurn) || (true == mi.IsKilled))
                   continue;
-               if ((true == mi.IsControlled) && (true == mi.IsConscious) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
+               if ((true == mi.IsControlled) && (true == mi.IsUnconscious) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
                   controlledMapItems.Add(mi);
-               else if ((true == mi.IsAlienKnown) && ("Zebulon" != mi.Name) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (false == mi.IsConscious)))
+               else if ((true == mi.IsAlienKnown) && ("Zebulon" != mi.Name) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (false == mi.IsUnconscious)))
                   aliens.Add(mi);
             }
             if ((0 == controlledMapItems.Count) || (0 == aliens.Count))
@@ -3483,9 +3485,9 @@ namespace PleasantvilleGame
                if ((true == mi.IsImplantRemovalThisTurn) || (true == mi.IsKilled))
                   continue;
 
-               if ((true == mi.IsControlled) && (true == mi.IsConscious) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
+               if ((true == mi.IsControlled) && (true == mi.IsUnconscious) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
                   myLeftMapItemsInActionPanel.Add(mi);
-               else if ((true == mi.IsAlienKnown) && ("Zebulon" != mi.Name) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (false == mi.IsConscious)))
+               else if ((true == mi.IsAlienKnown) && ("Zebulon" != mi.Name) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (false == mi.IsUnconscious)))
                   myRightMapItemsInActionPanel.Add(mi);
             }
 
@@ -3626,7 +3628,7 @@ namespace PleasantvilleGame
             {
                if (stack.MapItems.Count < 2)
                   continue;
-               if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (false == mi.IsConscious) || (true == mi.IsSurrendered) || ("Zebulon" == mi.Name))
+               if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsSurrendered) || ("Zebulon" == mi.Name))
                   continue;
 
                if ((true == mi.IsControlled) || (true == mi.IsWary))
@@ -3729,7 +3731,7 @@ namespace PleasantvilleGame
                if (stack.MapItems.Count < 2)
                   continue;
 
-               if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (false == mi.IsConscious) || (true == mi.IsSurrendered) || ("Zebulon" == mi.Name))
+               if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsSurrendered) || ("Zebulon" == mi.Name))
                   continue;
 
                if ((true == mi.IsControlled) || (true == mi.IsWary))
@@ -3922,7 +3924,7 @@ namespace PleasantvilleGame
                         return;  // do nothing
                      }
                      if (("Zebulon" == selectedMapItem.Name) || ("Alien Performs Movement" != gi.NextAction)
-                         || (false == selectedMapItem.IsConscious) || (true == selectedMapItem.IsControlled) || (true == selectedMapItem.IsKilled)
+                         || (false == selectedMapItem.IsUnconscious) || (true == selectedMapItem.IsControlled) || (true == selectedMapItem.IsKilled)
                          || (true == selectedMapItem.IsSurrendered) || (true == selectedMapItem.IsStunned) || (true == selectedMapItem.IsTiedUp) || (true == selectedMapItem.IsWary))
                      {
                         if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
@@ -3935,7 +3937,7 @@ namespace PleasantvilleGame
                   if (null == myMovingButton)
                   {
                      if ((("Townsperson Selects Counter to Move" != gi.NextAction) || (true == GameEngine.theIsAlien)
-                         || (false == selectedMapItem.IsConscious) || (false == selectedMapItem.IsControlled) || (true == selectedMapItem.IsKilled)
+                         || (false == selectedMapItem.IsUnconscious) || (false == selectedMapItem.IsControlled) || (true == selectedMapItem.IsKilled)
                          || (true == selectedMapItem.IsStunned) || (true == selectedMapItem.IsTiedUp) || (true == myIsAlienAbleToStopMove)))
                      {
                         if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))

@@ -553,7 +553,7 @@ namespace PleasantvilleGame
          }
          if (false == mi.IsAlienUnknown)
          {
-            if ((false == mi.IsTiedUp) && (true == mi.IsConscious) && (false == mi.IsStunned) && (false == mi.IsSurrendered) && (false == mi.IsKilled))
+            if ((false == mi.IsTiedUp) && (true == mi.IsUnconscious) && (false == mi.IsStunned) && (false == mi.IsSurrendered) && (false == mi.IsKilled))
             {
                if (true == mi.IsControlled)
                {
@@ -601,7 +601,7 @@ namespace PleasantvilleGame
          {
             // Stunned, tied-up, and surrendered townspeople can be taken over. 
             // However, influence probably not going to be added to Alien total until  condition expires.
-            if ((false == mi.IsTiedUp) && (true == mi.IsConscious) && (false == mi.IsStunned) && (false == mi.IsSurrendered) && (false == mi.IsKilled))
+            if ((false == mi.IsTiedUp) && (true == mi.IsUnconscious) && (false == mi.IsStunned) && (false == mi.IsSurrendered) && (false == mi.IsKilled))
             {
                if (true == mi.IsControlled)
                {
@@ -654,7 +654,7 @@ namespace PleasantvilleGame
       {
          if (false == mi.IsControlled)
          {
-            if ((false == mi.IsTiedUp) && (true == mi.IsConscious) && (false == mi.IsStunned) && (false == mi.IsKilled))
+            if ((false == mi.IsTiedUp) && (true == mi.IsUnconscious) && (false == mi.IsStunned) && (false == mi.IsKilled))
             {
                if ((true == mi.IsAlienKnown) && (false == mi.IsSurrendered))
                {

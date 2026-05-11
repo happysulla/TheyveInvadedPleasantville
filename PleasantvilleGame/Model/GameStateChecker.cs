@@ -20,7 +20,7 @@ namespace PleasantvilleGame
             IMapItems townspeopleUncontrolled = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsConversedThisTurn) || (true == mi.IsKilled) || (false == mi.IsConscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsWary))
+               if ((true == mi.IsConversedThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsWary))
                   continue;
 
                if (true == mi.IsControlled)
@@ -50,7 +50,7 @@ namespace PleasantvilleGame
             IMapItems townspeopleUncontrolled = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (false == mi.IsConscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
+               if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
                   continue;
                if (true == mi.IsControlled)
                {
@@ -99,7 +99,7 @@ namespace PleasantvilleGame
             IMapItems aliens = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsCombatThisTurn) || (true == mi.IsKilled) || (false == mi.IsConscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
+               if ((true == mi.IsCombatThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
                   continue;
                if (true == mi.IsControlled)
                   controlled.Add(mi);
@@ -147,7 +147,7 @@ namespace PleasantvilleGame
             IMapItems aliens = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsCombatThisTurn) || (true == mi.IsKilled) || (false == mi.IsConscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
+               if ((true == mi.IsCombatThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
                   continue;
                if (true == mi.IsControlled)
                   controlled.Add(mi);
@@ -213,7 +213,7 @@ namespace PleasantvilleGame
 
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsInterrogatedThisTurn) || (true == mi.IsInterrogated) || (true == mi.IsKilled) || (false == mi.IsConscious) || (true == mi.IsStunned))
+               if ((true == mi.IsInterrogatedThisTurn) || (true == mi.IsInterrogated) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsStunned))
                   continue;
 
                if (true == mi.IsControlled)
@@ -255,9 +255,9 @@ namespace PleasantvilleGame
                if ((true == mi.IsImplantRemovalThisTurn) || (true == mi.IsKilled))
                   continue;
 
-               if ((true == mi.IsControlled) && (true == mi.IsConscious) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
+               if ((true == mi.IsControlled) && (true == mi.IsUnconscious) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
                   controlled.Add(mi);
-               else if ((true == mi.IsAlienKnown) && ("Zebulon" != mi.Name) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (false == mi.IsConscious)))
+               else if ((true == mi.IsAlienKnown) && ("Zebulon" != mi.Name) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (false == mi.IsUnconscious)))
                   aliens.Add(mi);
             }
 
@@ -279,7 +279,7 @@ namespace PleasantvilleGame
             {
                // Unconscious or dead cannot be taken over
 
-               if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (false == mi.IsConscious) || (true == mi.IsSurrendered) || ("Zebulon" == mi.Name))
+               if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsSurrendered) || ("Zebulon" == mi.Name))
                   continue;
 
                if ((true == mi.IsControlled) || (true == mi.IsWary))
@@ -354,7 +354,7 @@ namespace PleasantvilleGame
                   sb1.Append(" ");
                   sb1.Append(mi.Name);
                }
-               if ((false == mi.IsTiedUp) && (true == mi.IsConscious) && (false == mi.IsStunned))
+               if ((false == mi.IsTiedUp) && (true == mi.IsUnconscious) && (false == mi.IsStunned))
                {
                   if (true == mi.IsAlienKnown)
                   {
@@ -377,7 +377,7 @@ namespace PleasantvilleGame
                   alien.IsTiedUp = false;
                   sb1.Append(" untied alien=");
                   sb1.Append(alien.Name);
-                  if ((true == alien.IsConscious) && (false == alien.IsStunned))
+                  if ((true == alien.IsUnconscious) && (false == alien.IsStunned))
                   {
                      gi.InfluenceCountTotal += alien.Influence;
                      sb = new StringBuilder("CheckForEndOfGame(): untie "); sb.Append(alien.Name); sb.Append(" ++++ to Total "); sb.Append(alien.Influence.ToString());
@@ -405,7 +405,7 @@ namespace PleasantvilleGame
                   controlled.IsTiedUp = false;
                   sb1.Append(" untied TP=");
                   sb1.Append(controlled.Name);
-                  if ((true == controlled.IsConscious) && (false == controlled.IsStunned))
+                  if ((true == controlled.IsUnconscious) && (false == controlled.IsStunned))
                   {
                      gi.InfluenceCountTotal += controlled.Influence;
                      sb = new StringBuilder("CheckForEndOfGame(): untie "); sb.Append(controlled.Name); sb.Append(" ++++ to Total "); sb.Append(controlled.Influence.ToString());
@@ -477,7 +477,7 @@ namespace PleasantvilleGame
          //-----------------------------------------------------------
          foreach (IMapItem mi in gi.PersonsKnockedOut) // Knocked Out Map Items - For each person who was not recently knocked out, it converts to a stunned counter.
          {
-            mi.IsConscious = true;
+            mi.IsUnconscious = true;
             mi.IsStunned = true;
          }
          gi.PersonsKnockedOut.Clear();
@@ -534,7 +534,7 @@ namespace PleasantvilleGame
          //-----------------------------------------------------------
          foreach (IMapItem mi in gi.Townspeople) // Check if anybody can move
          {
-            if ((true == mi.IsKilled) || (false == mi.IsConscious) || (true == mi.IsSurrendered)
+            if ((true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsSurrendered)
                 || (true == mi.IsStunned) || (true == mi.IsTiedUp)
                 || (true == mi.IsControlled) || (true == mi.IsAlienKnown))
                continue;
@@ -565,7 +565,7 @@ namespace PleasantvilleGame
          {
             totalInfluence += mi.Influence;
 
-            if ((false == mi.IsTiedUp) && (true == mi.IsConscious) && (false == mi.IsStunned) && (false == mi.IsSurrendered) && (false == mi.IsKilled))
+            if ((false == mi.IsTiedUp) && (true == mi.IsUnconscious) && (false == mi.IsStunned) && (false == mi.IsSurrendered) && (false == mi.IsKilled))
             {
                cogentInfluence += mi.Influence;
                if (true == mi.IsControlled)
@@ -584,7 +584,7 @@ namespace PleasantvilleGame
                   killedInfluence += mi.Influence;
                else if (true == mi.IsSurrendered)
                   surrenderedInfluence += mi.Influence;
-               else if (false == mi.IsConscious)
+               else if (false == mi.IsUnconscious)
                   unconsciousInfluence += mi.Influence;
                else if (true == mi.IsStunned)
                   stunnedInfluence += mi.Influence;

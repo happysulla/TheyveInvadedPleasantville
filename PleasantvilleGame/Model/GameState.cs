@@ -185,7 +185,7 @@ namespace PleasantvilleGame
             // If the counter is moved or tied up or known to be alien controlled, do not move.
             if ((true == personMoving.IsMoved) || (true == personMoving.IsControlled) || (true == personMoving.IsAlienKnown) ||
                (true == personMoving.IsStunned) || (true == personMoving.IsSurrendered) ||
-               (true == personMoving.IsTiedUp) || (true == personMoving.IsWary) || (false == personMoving.IsConscious))
+               (true == personMoving.IsTiedUp) || (true == personMoving.IsWary) || (false == personMoving.IsUnconscious))
             {
                ++numPeopleSkipped;
                //                    Console.WriteLine("PerformMovements(): {0} Skipping Person {1}: {2},{3},{4},{5},{6},{7},{8},{9}",
@@ -195,7 +195,7 @@ namespace PleasantvilleGame
                //                                       personMoving.IsControlled.ToString(), personMoving.IsAlienKnown.ToString(),
                //                                       personMoving.IsStunned.ToString(), personMoving.IsSurrendered.ToString(),
                //                                       personMoving.IsTiedUp.ToString(), personMoving.IsWary.ToString(),
-               //                                       personMoving.IsConscious.ToString());
+               //                                       personMoving.IsUnconscious.ToString());
                continue;
             }
 
@@ -641,7 +641,7 @@ namespace PleasantvilleGame
             {
                if (true == mi.IsStunned)
                   gi.PersonsStunned.Add(mi); // Keep a list of which MapItems are Stunned.
-               if (false == mi.IsConscious)
+               if (false == mi.IsUnconscious)
                   gi.PersonsKnockedOut.Add(mi); // Keep a list of which MapItems start the turn knocked out.
             }
          }
@@ -1792,7 +1792,7 @@ namespace PleasantvilleGame
          {
             if ((combat.Territory.Name == mi.TerritoryCurrent.Name) && (combat.Territory.Subname == mi.TerritoryCurrent.Subname))
             {
-               if ((false == mi.IsConscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsKilled) || (true == mi.IsSurrendered))
+               if ((false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsKilled) || (true == mi.IsSurrendered))
                   continue;
 
                if (true == mi.IsAlienKnown)
@@ -2115,7 +2115,7 @@ namespace PleasantvilleGame
          }
          else if (lossTableRoll < 7)
          {
-            mi.IsConscious = false;
+            mi.IsUnconscious = false;
             if (true == mi.IsAlienKnown)
                mi.IsTiedUp = true;
          }
@@ -2427,7 +2427,7 @@ namespace PleasantvilleGame
             {
                if (gi.Takeover.Uncontrolled.Name == person.Name)
                   continue;
-               if ((true == person.IsWary) || (true == person.IsAlienKnown) || (true == person.IsAlienUnknown) || (false == person.IsConscious) || (true == person.IsStunned) || (true == person.IsKilled))
+               if ((true == person.IsWary) || (true == person.IsAlienKnown) || (true == person.IsAlienUnknown) || (false == person.IsUnconscious) || (true == person.IsStunned) || (true == person.IsKilled))
                   continue;
                int dieRoll = Utilities.RandomGenerator.Next(6) + 1;
                switch (path.Territories.Count)

@@ -165,6 +165,7 @@ namespace PleasantvilleGame
          c.Children.Add(img);
          Canvas.SetLeft(img, 0);
          Canvas.SetTop(img, 0);
+         Canvas.SetZIndex(img, 0);
       }
    }
 }
