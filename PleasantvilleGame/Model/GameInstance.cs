@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Windows;
 using System.Xml;
 using MessageBox=System.Windows.MessageBox;
@@ -106,7 +107,7 @@ namespace PleasantvilleGame
          string name = "BankGuard";
          string miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         IMapItem mi = new MapItem(miName, 1.0, name, t, 5, 10, 8);
+         IMapItem mi = new MapItem(miName, 0.8, name, t, 5, 10, 8);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -121,7 +122,7 @@ namespace PleasantvilleGame
          name = "BankPresident";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 4, 19, 5);
+         mi = new MapItem(miName, 0.8, name, t, 4, 19, 5);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -136,7 +137,7 @@ namespace PleasantvilleGame
          name = "BarAndGrillOwner";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 5, 10, 7);
+         mi = new MapItem(miName, 0.8, name, t, 5, 10, 7);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -151,7 +152,7 @@ namespace PleasantvilleGame
          name = "BarTender";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 6, 11, 7);
+         mi = new MapItem(miName, 0.8, name, t, 6, 11, 7);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -166,7 +167,7 @@ namespace PleasantvilleGame
          name = "CheckoutGirl";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 5, 7, 5);
+         mi = new MapItem(miName, 0.8, name, t, 5, 7, 5);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -181,7 +182,7 @@ namespace PleasantvilleGame
          name = "Deputy";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 6, 11, 9);
+         mi = new MapItem(miName, 0.8, name, t, 6, 11, 9);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -196,7 +197,7 @@ namespace PleasantvilleGame
          name = "Doctor";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 5, 18, 7);
+         mi = new MapItem(miName, 0.8, name, t, 5, 18, 7);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -211,7 +212,7 @@ namespace PleasantvilleGame
          name = "FireChief";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 6, 12, 8);
+         mi = new MapItem(miName, 0.8, name, t, 6, 12, 8);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -226,7 +227,7 @@ namespace PleasantvilleGame
          name = "HotelOwner";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 5, 11, 5);
+         mi = new MapItem(miName, 0.8, name, t, 5, 11, 5);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -241,7 +242,7 @@ namespace PleasantvilleGame
          name = "Judge";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 5, 11, 5);
+         mi = new MapItem(miName, 0.8, name, t, 5, 11, 5);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -255,7 +256,7 @@ namespace PleasantvilleGame
          name = "Lawyer";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 5, 11, 6);
+         mi = new MapItem(miName, 0.8, name, t, 5, 11, 6);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -270,7 +271,7 @@ namespace PleasantvilleGame
          name = "Maid";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 5, 10, 5);
+         mi = new MapItem(miName, 0.8, name, t, 5, 10, 5);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -285,7 +286,7 @@ namespace PleasantvilleGame
          name = "MaitreD";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 5, 9, 4);
+         mi = new MapItem(miName, 0.8, name, t, 5, 9, 4);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -300,7 +301,7 @@ namespace PleasantvilleGame
          name = "Mayor";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 5, 16, 7);
+         mi = new MapItem(miName, 0.8, name, t, 5, 16, 7);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -315,7 +316,7 @@ namespace PleasantvilleGame
          name = "Minister";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 5, 20, 6);
+         mi = new MapItem(miName, 0.8, name, t, 5, 20, 6);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -329,7 +330,7 @@ namespace PleasantvilleGame
          name = "Paperboy";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 6, 9, 5);
+         mi = new MapItem(miName, 0.8, name, t, 6, 9, 5);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -344,7 +345,7 @@ namespace PleasantvilleGame
          name = "Plumber";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 5, 8, 8);
+         mi = new MapItem(miName, 0.8, name, t, 5, 8, 8);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -359,7 +360,7 @@ namespace PleasantvilleGame
          name = "RepairShopOwner";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 5, 9, 7);
+         mi = new MapItem(miName, 0.8, name, t, 5, 9, 7);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -374,7 +375,7 @@ namespace PleasantvilleGame
          name = "Sheriff";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 6, 15, 10);
+         mi = new MapItem(miName, 0.8, name, t, 6, 15, 10);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -388,7 +389,7 @@ namespace PleasantvilleGame
          name = "StationAttendant";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 5, 8, 7);
+         mi = new MapItem(miName, 0.8, name, t, 5, 8, 7);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -403,7 +404,7 @@ namespace PleasantvilleGame
          name = "SuperMarketManager";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 5, 10, 6);
+         mi = new MapItem(miName, 0.8, name, t, 5, 10, 6);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -418,7 +419,7 @@ namespace PleasantvilleGame
          name = "Tailor";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 4, 11, 5);
+         mi = new MapItem(miName, 0.8, name, t, 4, 11, 5);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -433,7 +434,7 @@ namespace PleasantvilleGame
          name = "Teacher";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 5, 17, 4);
+         mi = new MapItem(miName, 0.8, name, t, 5, 17, 4);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -448,7 +449,7 @@ namespace PleasantvilleGame
          name = "Teller";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 5, 9, 6);
+         mi = new MapItem(miName, 0.8, name, t, 5, 9, 6);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -463,7 +464,7 @@ namespace PleasantvilleGame
          name = "TownDrunk";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 3, 3, 8);
+         mi = new MapItem(miName, 0.8, name, t, 3, 3, 8);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -478,7 +479,7 @@ namespace PleasantvilleGame
          name = "Vet";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 5, 13, 6);
+         mi = new MapItem(miName, 0.8, name, t, 5, 13, 6);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -493,7 +494,7 @@ namespace PleasantvilleGame
          name = "Waitress";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 5, 9, 6);
+         mi = new MapItem(miName, 0.8, name, t, 5, 9, 6);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -508,7 +509,7 @@ namespace PleasantvilleGame
          name = "WarVeteran";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 4, 12, 4);
+         mi = new MapItem(miName, 0.8, name, t, 4, 12, 4);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -523,7 +524,7 @@ namespace PleasantvilleGame
          name = "Welder";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 5, 10, 7);
+         mi = new MapItem(miName, 0.8, name, t, 5, 10, 7);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
          //------------------------------------
@@ -537,9 +538,20 @@ namespace PleasantvilleGame
          name = "Wife";
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 1.0, name, t, 4, 8, 4);
+         mi = new MapItem(miName, 0.8, name, t, 4, 8, 4);
          this.Townspeople.Add(mi);
          this.Stacks.Add(mi);
+         //------------------------------------
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): " + this.Stacks.ToString());
+         foreach (IStack stack in this.Stacks) // For each stack that has more than one MI, randomnize the location
+         {
+            if (1 < stack.MapItems.Count)
+            {
+               foreach (IMapItem mi1 in stack.MapItems)
+                  mi.Location = Territory.GetRandomPoint(stack.Territory, mi.Zoom * Utilities.theMapItemOffset);
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): stack[" + stack.Territory.ToString() + "]=" + this.Stacks.ToString());
+            }
+         }
          return true;
       }
       public bool AddUnknownAlien(IMapItem newAlien)

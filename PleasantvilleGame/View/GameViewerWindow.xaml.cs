@@ -1640,8 +1640,10 @@ namespace PleasantvilleGame
          foreach (IStack stack in gi.Stacks)
          {
             ITerritory t = stack.Territory;
+            double count = 0;
             foreach (IMapItem mi in stack.MapItems)
             {
+               double offset = (count * 3.0) + (mi.Zoom * Utilities.theMapItemOffset);
                if (null == mi)
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMain_MapItems(): mi=null");
@@ -1654,21 +1656,38 @@ namespace PleasantvilleGame
                   b.BeginAnimation(Canvas.LeftProperty, null); // end animation offset
                   b.BeginAnimation(Canvas.TopProperty, null);  // end animation offset
                   Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMain_MapItems(): Updating mi=" + mi.Name + " X=" + mi.Location.X.ToString() + " Y=" + mi.Location.Y.ToString());
-                  Canvas.SetLeft(b, mi.Location.X);
-                  Canvas.SetTop(b, mi.Location.Y);
-                  Canvas.SetZIndex(b, 1000);
+                  if (true == stack.IsStacked)
+                  {
+                     Canvas.SetLeft(b, t.CenterPoint.X - offset);
+                     Canvas.SetTop(b, t.CenterPoint.Y - offset);
+                  }
+                  else
+                  {
+                     Canvas.SetLeft(b, mi.Location.X);
+                     Canvas.SetTop(b, mi.Location.Y);
+                  }
+                  Canvas.SetZIndex(b, 999 + (int)count);
                }
                else
                {
                   Logger.Log(LogEnum.LE_SHOW_STACK_ADD, "UpdateCanvasMain_MapItems(): Adding Button for mi=" + mi.Name + " X=" + mi.Location.X.ToString("F2") + " Y=" + mi.Location.Y.ToString("F2") + " in stack@" + stack.ToString());
-                  System.Windows.Controls.Button newButton = new Button { Name = mi.Name, Width = mi.Zoom * Utilities.theMapItemSize, Height = mi.Zoom * Utilities.theMapItemSize, BorderThickness = new Thickness(0), Background = new SolidColorBrush(Colors.Transparent), Foreground = new SolidColorBrush(Colors.Transparent) };
+                  System.Windows.Controls.Button newButton = new Button { Name = mi.Name, Width = mi.Zoom * Utilities.theMapItemSize, Height = mi.Zoom * Utilities.theMapItemSize, BorderThickness = new Thickness(1), Background = new SolidColorBrush(Colors.Transparent), Foreground = new SolidColorBrush(Colors.Transparent) };
                   MapItem.SetButtonContent(newButton, mi, false, true); // This sets the image as the button's content
                   myButtons.Add(newButton);
-                  Canvas.SetLeft(newButton, mi.Location.X);
-                  Canvas.SetTop(newButton, mi.Location.Y);
-                  Canvas.SetZIndex(newButton, 999);
+                  if (true == stack.IsStacked)
+                  {
+                     Canvas.SetLeft(newButton, t.CenterPoint.X - offset);
+                     Canvas.SetTop(newButton, t.CenterPoint.Y - offset);
+                  }
+                  else
+                  {
+                     Canvas.SetLeft(newButton, mi.Location.X);
+                     Canvas.SetTop(newButton, mi.Location.Y);
+                  }
+                  Canvas.SetZIndex(newButton, 999 + (int)count);
                   myCanvasMain.Children.Add(newButton);
                }
+               count++;
             }
          }
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMain_MapItems(): action=" + action.ToString() + " stacks=" + gi.Stacks.ToString());

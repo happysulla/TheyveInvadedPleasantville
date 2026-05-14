@@ -10,7 +10,7 @@ namespace PleasantvilleGame
    {
       public ITerritory Territory { get; set; }
       public IMapItems MapItems { get; set; } = new MapItems();
-      public bool IsStacked { get; set; } = false;
+      public bool IsStacked { get; set; } = true;
       public Stack(ITerritory t)
       {
          Territory = t;
@@ -75,7 +75,7 @@ namespace PleasantvilleGame
          foreach (object o in myList)
          {
             IStack stack = (IStack)o;
-            if (t.Name == stack.Territory.Name)
+            if (t.ToString() == stack.Territory.ToString())
                return stack;
          }
          return null;
@@ -98,7 +98,7 @@ namespace PleasantvilleGame
          foreach (object o in myList)
          {
             IStack stack = (IStack)o;
-            if (territoryName == stack.Territory.Name)
+            if (territoryName == stack.Territory.ToString())
                return stack;
          }
          return null;
