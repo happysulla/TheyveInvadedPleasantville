@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 using System.Xml;
 using MessageBox=System.Windows.MessageBox;
 
@@ -22,6 +23,7 @@ namespace PleasantvilleGame
       //---------------------------------------------------------------
       public IMapItemMoves MapItemMoves { get; set; } = new MapItemMoves();
       public IStacks Stacks { get; set; } = new Stacks();
+      public IStack? SelectedStack { get; set; } = null;
       private List<EnteredHex> myEnteredHexes = new List<EnteredHex>();
       public List<EnteredHex> EnteredHexes { get => myEnteredHexes; }
       //------------------------------------------------
@@ -43,6 +45,7 @@ namespace PleasantvilleGame
       public IMapItems Townspeople { set; get; } = new MapItems();
       public IMapItems PersonsStunned { set; get; } = new MapItems();
       public IMapItems PersonsKnockedOut { set; get; } = new MapItems();
+      public IMapItem? SelectedMapItem { set; get; } = null;
       public IMapItemCombat? MapItemCombat { set; get; } = null;
       public IMapItemTakeover? Takeover { set; get; } = null;
       public IMapItemMove? PreviousMapItemMove { set; get; } = null;
@@ -547,9 +550,13 @@ namespace PleasantvilleGame
          {
             if (1 < stack.MapItems.Count)
             {
+               double count = 0;
                foreach (IMapItem mi1 in stack.MapItems)
-                  mi.Location = Territory.GetRandomPoint(stack.Territory, mi.Zoom * Utilities.theMapItemOffset);
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): stack[" + stack.Territory.ToString() + "]=" + this.Stacks.ToString());
+               {
+                  double offset = (count * 3.0) + (mi.Zoom * Utilities.theMapItemOffset);
+                  mi.Location.X = stack.Territory.CenterPoint.X - offset;
+                  mi.Location.Y = stack.Territory.CenterPoint.Y - offset;
+               }
             }
          }
          return true;

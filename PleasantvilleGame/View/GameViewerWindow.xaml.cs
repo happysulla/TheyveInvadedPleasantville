@@ -60,6 +60,8 @@ namespace PleasantvilleGame
       private MainMenuViewer? myMainMenuViewer = null;
       //--------------------------------------------------------------
       private List<Button> myButtons = new List<Button>();
+      private Button? myDraggedButton = null;
+      private ContextMenu myContextMenuButton = new ContextMenu();
       private bool myIsFlagSetForAlienMoveCountExceeded = false;  // Alien only allowed to move 5 counters
       private bool myIsFlagSetForMoveReset = false;               // Players cannot reset counter when selected
       private bool myIsFlagSetForOverstack = false;               // MapItem cannot move into hex due to overstack
@@ -85,7 +87,6 @@ namespace PleasantvilleGame
       private Rectangle myRectangleSelection = new Rectangle();   // Player has manually selected this button
       //--------------------------------------------------------------
       private readonly SplashDialog mySplashScreen;
-      private ContextMenu myContextMenuCanvas = new ContextMenu();
       //--------------------------------------------------------------
       private readonly FontFamily myFontFam = new FontFamily("Tahofma");
       private Storyboard? myStoryboard = null;
@@ -195,6 +196,36 @@ namespace PleasantvilleGame
          //---------------------------------------------------------------
          SetDisplayIconForUninstall(); // This is specialized code to add to Windows Registry the icon for uninstall
          //-----------------------------------------------
+         MenuItem mi0 = new MenuItem();
+         mi0.Header = "_Scatter Stack";
+         mi0.InputGestureText = "Ctrl+S";
+         mi0.Click += this.ContextMenuClickScatter;
+         myContextMenuButton.Items.Add(mi0);
+         MenuItem mi1 = new MenuItem();
+         mi1.Header = "_Rotate Stack";
+         mi1.InputGestureText = "Ctrl+R";
+         mi1.Click += this.ContextMenuClickRotate;
+         myContextMenuButton.Items.Add(mi1);
+         MenuItem mi2 = new MenuItem();
+         mi2.Header = "_Return to Starting point";
+         mi2.InputGestureText = "Shift+S";
+         mi2.Click += this.ContextMenuClickReturnToStart;
+         myContextMenuButton.Items.Add(mi2);
+         if (true == GameEngine.theIsAlien)
+         {
+            MenuItem mi3 = new MenuItem();
+            mi3.Header = "_Expose";
+            mi3.InputGestureText = "Ctrl+E";
+            mi3.Click += this.ContextMenuClickExposeAlien;
+            myContextMenuButton.Items.Add(mi3);
+            MenuItem mi4 = new MenuItem();
+            mi4.Header = "_Stop Townsperson Move";
+            mi4.InputGestureText = "Ctrl+Shift+P";
+            mi4.Click += this.ContextMenuClickStopMove;
+            myContextMenuButton.Items.Add(mi4);
+         }
+         myContextMenuButton.Loaded += this.ContextMenuLoadedButton;
+         //-----------------------------------------------
          this.BorderBrush = Constants.theNeutralBrush;
          mySolidColorBrushClear.Color = Color.FromArgb(0, 0, 1, 0);
          myBrushes.Add(Brushes.Green);  // Create a container of brushes for painting paths.
@@ -253,6 +284,7 @@ namespace PleasantvilleGame
          this.Title = sb55.ToString();
          myCanvasMain.MouseLeftButtonDown += this.MouseLeftButtonDownCanvas;
          myCanvasMain.MouseRightButtonDown += this.MouseRightButtonDownCanvas;
+         this.PreviewMouseMove += MouseMoveGameViewerWindow;
          //----------------------------------------------------------
          //foreach (ITerritory t in Territories.theTerritories) // Create the regions associated with the territories. All the information of Territories is static and does not change.
          //{
@@ -285,7 +317,7 @@ namespace PleasantvilleGame
          //   }
          //}
          //------------------------------------------
-         //myContextMenuCanvas.Loaded += this.ContextMenuLoaded;  // Setup Context Menu for Buttons
+         //myContextMenuCanvas.Loaded += this.ContextMenuLoadedButton;  // Setup Context Menu for Buttons
          //MenuItem mi1 = new MenuItem();
          //mi1.Header = "_Return to Starting point";
          //mi1.InputGestureText = "Ctrl+S";
@@ -324,7 +356,7 @@ namespace PleasantvilleGame
          //      b.ContextMenu = myContextMenuCanvas;
          //      Canvas.SetLeft(b, person.Location.X - Utilities.theMapItemOffset);
          //      Canvas.SetTop(b, person.Location.Y - Utilities.theMapItemOffset);
-         //      b.Click += this.ClickMapItem;
+         //      b.Click += this.ClickButtonMapItem;
          //      b.MouseDoubleClick += this.MouseDoubleClickMapItem;
          //      b.Name = person.Name;
          //      b.Height = 50.0;
@@ -1006,502 +1038,501 @@ namespace PleasantvilleGame
          //   StringBuilder sb = new StringBuilder("---------------   TP   GameViewerWindow::UpdateView() ==> action="); sb.Append(action.ToString()); sb.Append("  ==> NextAction="); sb.Append(gi.NextAction);
          //   Logger.Log(LogEnum.LE_VIEW_UPDATE_WINDOW, sb.ToString());
          //}
-         //myGameInstance = gi;
-         //GameAction outAction = GameAction.Error;
-         //switch (action) // Perform acton based on the current next action.
-         //{
-         //   case GameAction.RemoveSplashScreen:
-         //   case GameAction.UpdateNewGameEnd:
-         //      if (false == UpdateCanvasMain(gi, action))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
-         //         return;
-         //      }
-         //      mySplashScreen.Close();
-         //      //myScrollViewerMain.UpdateLayout();
-         //      break;
-         //   case GameAction.AlienStart:
-         //      break;
-         //   case GameAction.TownspersonStart:
-         //      break;
-         //   case GameAction.AlienDisplaysRandomMovement:
-         //      if (true == GameEngine.theIsAlien)
-         //      {
-         //         myStoryboard = null;
-         //         UpdateViewMovement(gi);
-         //         ClearActionPanel();
-         //      }
-         //      break;
-         //   case GameAction.TownspersonDisplaysRandomMovement:
-         //      if (false == GameEngine.theIsAlien)
-         //      {
-         //         myStoryboard = null;
-         //         UpdateViewMovement(gi);
-         //         ClearActionPanel();
-         //      }
-         //      break;
-         //   case GameAction.AlienAcksRandomMovement:
-         //      if (true == GameEngine.theIsAlien)
-         //      {
-         //         if (false == UpdateCanvasMain(gi, action))
-         //         {
-         //            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienAcksRandomMovement: Update_CanvasMain() returned false");
-         //            return;
-         //         }
-         //         myMovingMapItems.Clear();
-         //         myMovingButton = null;
-         //         myIsFlagSetForAlienMoveCountExceeded = false;
-         //         myMovingRectangle = null;
-         //         myRectangleSelection.Visibility = Visibility.Hidden;
-         //         myIsCombatInitiatedForAlien = false;
-         //         myIsCombatInitiatedForTownsperson = false;
-         //         myConversationsCompleted = false;
-         //         myInfluencesCompleted = false;
-         //         myAlienCombatCompleted = false;
-         //         myTownspeopleCombatCompleted = false;
-         //         myInterogationsCompleted = false;
-         //         myImplateRemovalsCompleted = false;
-         //         myTakeoversCompleted = false;
-         //         myTimer.Interval = ANIMATE_SPEED * 1000 + 3000;  // reset timer
-         //      }
-         //      break;
-         //   case GameAction.TownspersonAcksRandomMovement:
-         //      if (false == GameEngine.theIsAlien)
-         //      {
-         //         if (false == UpdateCanvasMain(gi, action))
-         //         {
-         //            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonAcksRandomMovement: Update_CanvasMain() returned false");
-         //            return;
-         //         }
-         //         myMovingMapItems.Clear();
-         //         myMovingButton = null;
-         //         myIsFlagSetForAlienMoveCountExceeded = false;
-         //         myMovingRectangle = null;
-         //         myRectangleSelection.Visibility = Visibility.Hidden;
-         //         myIsCombatInitiatedForAlien = false;
-         //         myIsCombatInitiatedForTownsperson = false;
-         //         myConversationsCompleted = false;
-         //         myInfluencesCompleted = false;
-         //         myAlienCombatCompleted = false;
-         //         myTownspeopleCombatCompleted = false;
-         //         myInterogationsCompleted = false;
-         //         myImplateRemovalsCompleted = false;
-         //         myTakeoversCompleted = false;
-         //      }
-         //      break;
-         //   case GameAction.ResetMovement:
-         //      if (false == UpdateCanvasMain(gi, action, true))  // unhide the pologon line shown
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): ResetMovement: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      break;
-         //   case GameAction.AlienMovement:
-         //      UpdateViewMovement(gi);
-         //      ClearActionPanel();
-         //      break;
-         //   case GameAction.AlienCompletesMovement:
-         //      if (true == GameEngine.theIsAlien)
-         //      {
-         //         if (false == UpdateCanvasMain(gi, action))
-         //         {
-         //            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienCompletesMovement: UpdateCaUpdate_CanvasMainnvasMain() returned false");
-         //            return;
-         //         }
-         //         myMovingButton = null;
-         //         myMovingRectangle = null;
-         //         myRectangleSelection.Visibility = Visibility.Hidden;
-         //      }
-         //      break;
-         //   case GameAction.TownspersonAcksAlienMovement:
-         //      if (false == UpdateCanvasMain(gi, action))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonAcksAlienMovement: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      myMovingMapItems.Clear();
-         //      myMovingButton = null;
-         //      myIsFlagSetForAlienMoveCountExceeded = false;
-         //      myMovingRectangle = null;
-         //      myRectangleSelection.Visibility = Visibility.Hidden;
-         //      break;
-         //   case GameAction.TownpersonProposesMovement:
-         //      if (true == GameEngine.theIsAlien)
-         //      {
-         //         myIsAlienAbleToStopMove = true;
-         //         if (false == IsMoveStoppedByAlienBeforeStarted(gi))
-         //         {
-         //            UpdateViewMovement(gi);
-         //            myTimer.Start(); // give the Alien time to look at move
-         //         }
-         //         else
-         //         {
-         //            outAction = GameAction.AlienModifiesTownspersonMovement;
-         //            myGameEngine.PerformAction(ref gi, ref outAction);
-         //         }
-         //      }
-         //      else
-         //      {
-         //         myMovingButton = null;
-         //         myMovingRectangle = null;
-         //         myRectangleSelection.Visibility = Visibility.Hidden;
-         //      }
-         //      break;
-         //   case GameAction.TownpersonMovement:
-         //      myIsAlienAbleToStopMove = false;
-         //      myTimer.Stop();
-         //      UpdateViewMovement(gi);
-         //      break;
-         //   case GameAction.AlienTimeoutOnMovement:
-         //      if (false == GameEngine.theIsAlien)
-         //      {
-         //         myIsAlienAbleToStopMove = false;
-         //         UpdateViewMovement(gi);
-         //      }
-         //      break;
-         //   case GameAction.AlienModifiesTownspersonMovement:
-         //      myIsAlienAbleToStopMove = false;
-         //      if (false == UpdateCanvasMain(gi, action, true))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienModifiesTownspersonMovement: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      UpdateViewMovement(gi);
-         //      break;
-         //   case GameAction.TownpersonCompletesMovement:
-         //      if (false == GameEngine.theIsAlien)
-         //      {
-         //         if (false == UpdateCanvasMain(gi, action))
-         //         {
-         //            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownpersonCompletesMovement: Update_CanvasMain() returned false");
-         //            return;
-         //         }
-         //         myMovingButton = null;
-         //         myMovingRectangle = null;
-         //         myRectangleSelection.Visibility = Visibility.Hidden;
-         //      }
-         //      break;
-         //   case GameAction.AlienAcksTownspersonMovement:
-         //      if (false == UpdateCanvasMain(gi, action))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienAcksTownspersonMovement: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      UpdateViewState(gi);
-         //      myMovingMapItems.Clear();
-         //      myMovingButton = null;
-         //      myIsFlagSetForAlienMoveCountExceeded = false;
-         //      myMovingRectangle = null;
-         //      myRectangleSelection.Visibility = Visibility.Hidden;
-         //      break;
-         //   case GameAction.TownspersonPerformsConversation:
-         //      if (false == UpdateCanvasMain(gi, action))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonPerformsConversation: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      UpdateViewState(gi);
-         //      break;
-         //   case GameAction.TownspersonCompletesConversations:
-         //      if (false == UpdateCanvasMain(gi, action))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesConversations: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      UpdateViewState(gi);
-         //      break;
-         //   case GameAction.TownspersonPerformsInfluencing:
-         //      if (false == UpdateCanvasMain(gi, action))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonPerformsInfluencing: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      UpdateViewState(gi);
-         //      break;
-         //   case GameAction.TownspersonCompletesInfluencing:
-         //      if (false == UpdateCanvasMain(gi, action))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesInfluencing: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      UpdateViewState(gi);
-         //      break;
-         //   case GameAction.AlienInitiateCombat:
-         //      if ((true == myIsCombatInitiatedForAlien) && (true == GameEngine.theIsAlien))
-         //      {
-         //         if (false == UpdateCanvasMain(gi, action))
-         //         {
-         //            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienInitiateCombat: Update_CanvasMain() returned false");
-         //            return;
-         //         }
-         //         Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, "UpdateView():AlienInitiateCombat: ALIEN Performs Combat");
-         //         outAction = GameAction.AlienPerformCombat;
-         //         myGameEngine.PerformAction(ref gi, ref outAction);
-         //      }
-         //      break;
-         //   case GameAction.TownspersonNackCombatSelection:
-         //      if (true == GameEngine.theIsAlien)
-         //      {
-         //         if (false == UpdateCanvasMain(gi, action))
-         //         {
-         //            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonNackCombatSelection: Update_CanvasMain() returned false");
-         //            return;
-         //         }
-         //         UpdateViewState(gi);
-         //         myIsCombatInitiatedForAlien = false;
-         //         Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, "UpdateView():TownspersonNackCombatSelection: ALIEN myIsCombatInitiatedForAlien=false");
-         //      }
-         //      break;
-         //   case GameAction.AlienPerformCombat:
-         //      if (false == UpdateCanvasMain(gi, action))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienPerformCombat: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      if (null == gi.MapItemCombat)
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "UpdateView():AlienPerformCombat gi.MapItemCombat=null");
-         //      }
-         //      else
-         //      {
-         //         if (null != gi.MapItemCombat.Territory)
-         //         {
-         //            if ((0 != gi.MapItemCombat.Attackers.Count) && (0 != gi.MapItemCombat.Defenders.Count))
-         //               DisplayCombatResults(gi);
-         //         }
-         //      }
-         //      break;
-         //   case GameAction.TownspersonInitiateCombat:
-         //      if ((true == myIsCombatInitiatedForTownsperson) && (false == GameEngine.theIsAlien))
-         //      {
-         //         if (false == UpdateCanvasMain(gi, action))
-         //         {
-         //            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonInitiateCombat: Update_CanvasMain() returned false");
-         //            return;
-         //         }
-         //         Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, "UpdateView():TownspersonInitiateCombat: TP PERFORMS COMBAT");
-         //         outAction = GameAction.TownspersonPerformCombat;
-         //         myGameEngine.PerformAction(ref gi, ref outAction);
-         //      }
-         //      break;
-         //   case GameAction.AlienNackCombatSelection:
-         //      if (false == GameEngine.theIsAlien)
-         //      {
-         //         if (false == UpdateCanvasMain(gi, action))
-         //         {
-         //            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienNackCombatSelection: Update_CanvasMain() returned false");
-         //            return;
-         //         }
-         //         UpdateViewState(gi);
-         //         myIsCombatInitiatedForTownsperson = false;
-         //         Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, "UpdateView():AlienNackCombatSelection: TP    myIsCombatInitiatedForTownsperson=false");
-         //      }
-         //      break;
-         //   case GameAction.TownspersonPerformCombat:
-         //      if (false == UpdateCanvasMain(gi, action))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonPerformCombat: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      if (null == gi.MapItemCombat)
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "UpdateView():TownspersonPerformCombat gi.MapItemCombat=null");
-         //         return;
-         //      }
-         //      else
-         //      {
-         //         if ((0 != gi.MapItemCombat.Attackers.Count) && (0 != gi.MapItemCombat.Defenders.Count))
-         //         {
-         //            DisplayCombatResults(gi);
-         //         }
-         //      }
-         //      break;
-         //   case GameAction.TownspersonCompletesCombat:
-         //      myRectangleSelection.Visibility = Visibility.Hidden;
-         //      if (true == GameEngine.theIsAlien)
-         //      {
-         //         myMovingButton = null;
-         //         myMovingRectangle = null;
-         //         myRectangleSelection.Visibility = Visibility.Hidden;
-         //      }
-         //      if (false == UpdateCanvasMain(gi, action))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesCombat: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      UpdateViewState(gi);
-         //      myIsCombatInitiatedForTownsperson = false;
-         //      StringBuilder sb2 = new StringBuilder("UpdateView():TownspersonCompletesCombat: "); sb2.Append(GameEngine.theIsAlien.ToString()); sb2.Append("myIsCombatInitiatedForTownsperson=false");
-         //      Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, sb2.ToString());
-         //      break;
-         //   case GameAction.AlienCompletesCombat:
-         //      if (false == GameEngine.theIsAlien)
-         //      {
-         //         myMovingButton = null;
-         //         myMovingRectangle = null;
-         //         myRectangleSelection.Visibility = Visibility.Hidden;
-         //      }
-         //      if (false == UpdateCanvasMain(gi, action))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienCompletesCombat: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      UpdateViewState(gi);
-         //      myIsCombatInitiatedForAlien = false;
-         //      StringBuilder sb3 = new StringBuilder("UpdateView():AlienCompletesCombat: "); sb3.Append(GameEngine.theIsAlien.ToString()); sb3.Append("myIsCombatInitiatedForAlien=false");
-         //      Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, sb3.ToString());
-         //      break;
-         //   case GameAction.TownspersonIterrogates:
-         //      if (false == UpdateCanvasMain(gi, action))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonIterrogates: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      UpdateViewState(gi);
-         //      break;
-         //   case GameAction.TownspersonCompletesIterogations:
-         //      if (false == UpdateCanvasMain(gi, action))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesIterogations: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      UpdateViewState(gi);
-         //      break;
-         //   case GameAction.AlienAcksIterogations:
-         //      if (false == UpdateCanvasMain(gi, action))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienAcksIterogations: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      UpdateViewState(gi);
-         //      break;
-         //   case GameAction.TownspersonRemovesImplant:
-         //      if (false == UpdateCanvasMain(gi, action))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonRemovesImplant: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      UpdateViewState(gi);
-         //      break;
-         //   case GameAction.TownspersonCompletesRemoval:
-         //      if (false == UpdateCanvasMain(gi, action))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesRemoval: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      UpdateViewState(gi);
-         //      break;
-         //   case GameAction.AlienTakeover:
-         //      if (false == UpdateCanvasMain(gi, action))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienTakeover: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      if (null == gi.Takeover)
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "UpdateView():AlienTakeover gi.Takeover=null");
-         //      }
-         //      else
-         //      {
-         //         if (null == gi.Takeover.Alien)
-         //         {
-         //            Logger.Log(LogEnum.LE_ERROR, "UpdateView():AlienTakeover gi.Takeover.Alien=null");
-         //         }
-         //         else
-         //         {
-         //            if (true == GameEngine.theIsAlien)
-         //            {
-         //               myTextBoxResults.Text = gi.Takeover.Observations;
-         //               UpdateActionPanelButtons(gi);
-         //            }
-         //            else
-         //            {
-         //               if ("Nobody Noticed" != gi.Takeover.Observations)
-         //                  PerformTakeoverObserved(gi);
-         //            }
-         //         }
-         //      }
-         //      UpdateViewState(gi);
-         //      break;
-         //   case GameAction.AlienCompletesTakeovers:
-         //      if (false == UpdateCanvasMain(gi, action))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienCompletesTakeovers: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      myIsTakeOverInOneRegion = false;
-         //      myIsTakeOverPromptNeededToFoolOpponent = false;
-         //      break;
-         //   case GameAction.ShowEndGame:
-         //      ClearActionPanel();
-         //      foreach (IStack stack in gi.Stacks)         // Show all the stacks
-         //      {
-         //         foreach (IMapItem mi in stack.MapItems)
-         //         {
-         //            if (true == mi.IsAlienUnknown)
-         //            {
-         //               if (false == gi.AddKnownAlien(mi))
-         //                  Logger.Log(LogEnum.LE_ERROR, "UpdateView() returned error");
-         //            }
-         //         }
-         //      }
-         //      //-------------------------------------------------------
-         //      bool isAlienWin = true;
-         //      IMapItem? zebulon = gi.Stacks.FindMapItem("Zebulon");
-         //      if (null == zebulon)
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "UpdateView() could not find Zebulon in gi.Stacks");
-         //         break;
-         //      }
-         //      zebulon.IsAlienKnown = true;
-         //      //if (true == zebulon.IsKilled)
-         //      //   isAlienWin = false;
+         myGameInstance = gi;
+         GameAction outAction = GameAction.Error;
+         switch (action) // Perform acton based on the current next action.
+         {
+            case GameAction.GameSetupHostGame:
+               break;
+            case GameAction.GameSetupJoinGame:
+               break;
+            case GameAction.GameSetupPlayAlien:
+               break;
+            case GameAction.GameSetupPlayTownsperson:
+               break;
+            case GameAction.AlienStart:
+               break;
+            case GameAction.TownspersonStart:
+               break;
+            //   case GameAction.AlienDisplaysRandomMovement:
+            //      if (true == GameEngine.theIsAlien)
+            //      {
+            //         myStoryboard = null;
+            //         UpdateViewMovement(gi);
+            //         ClearActionPanel();
+            //      }
+            //      break;
+            //   case GameAction.TownspersonDisplaysRandomMovement:
+            //      if (false == GameEngine.theIsAlien)
+            //      {
+            //         myStoryboard = null;
+            //         UpdateViewMovement(gi);
+            //         ClearActionPanel();
+            //      }
+            //      break;
+            //   case GameAction.AlienAcksRandomMovement:
+            //      if (true == GameEngine.theIsAlien)
+            //      {
+            //         if (false == UpdateCanvasMain(gi, action))
+            //         {
+            //            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienAcksRandomMovement: Update_CanvasMain() returned false");
+            //            return;
+            //         }
+            //         myMovingMapItems.Clear();
+            //         myMovingButton = null;
+            //         myIsFlagSetForAlienMoveCountExceeded = false;
+            //         myMovingRectangle = null;
+            //         myRectangleSelection.Visibility = Visibility.Hidden;
+            //         myIsCombatInitiatedForAlien = false;
+            //         myIsCombatInitiatedForTownsperson = false;
+            //         myConversationsCompleted = false;
+            //         myInfluencesCompleted = false;
+            //         myAlienCombatCompleted = false;
+            //         myTownspeopleCombatCompleted = false;
+            //         myInterogationsCompleted = false;
+            //         myImplateRemovalsCompleted = false;
+            //         myTakeoversCompleted = false;
+            //         myTimer.Interval = ANIMATE_SPEED * 1000 + 3000;  // reset timer
+            //      }
+            //      break;
+            //   case GameAction.TownspersonAcksRandomMovement:
+            //      if (false == GameEngine.theIsAlien)
+            //      {
+            //         if (false == UpdateCanvasMain(gi, action))
+            //         {
+            //            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonAcksRandomMovement: Update_CanvasMain() returned false");
+            //            return;
+            //         }
+            //         myMovingMapItems.Clear();
+            //         myMovingButton = null;
+            //         myIsFlagSetForAlienMoveCountExceeded = false;
+            //         myMovingRectangle = null;
+            //         myRectangleSelection.Visibility = Visibility.Hidden;
+            //         myIsCombatInitiatedForAlien = false;
+            //         myIsCombatInitiatedForTownsperson = false;
+            //         myConversationsCompleted = false;
+            //         myInfluencesCompleted = false;
+            //         myAlienCombatCompleted = false;
+            //         myTownspeopleCombatCompleted = false;
+            //         myInterogationsCompleted = false;
+            //         myImplateRemovalsCompleted = false;
+            //         myTakeoversCompleted = false;
+            //      }
+            //      break;
+            //   case GameAction.ResetMovement:
+            //      if (false == UpdateCanvasMain(gi, action, true))  // unhide the pologon line shown
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): ResetMovement: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      break;
+            //   case GameAction.AlienMovement:
+            //      UpdateViewMovement(gi);
+            //      ClearActionPanel();
+            //      break;
+            //   case GameAction.AlienCompletesMovement:
+            //      if (true == GameEngine.theIsAlien)
+            //      {
+            //         if (false == UpdateCanvasMain(gi, action))
+            //         {
+            //            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienCompletesMovement: UpdateCaUpdate_CanvasMainnvasMain() returned false");
+            //            return;
+            //         }
+            //         myMovingButton = null;
+            //         myMovingRectangle = null;
+            //         myRectangleSelection.Visibility = Visibility.Hidden;
+            //      }
+            //      break;
+            //   case GameAction.TownspersonAcksAlienMovement:
+            //      if (false == UpdateCanvasMain(gi, action))
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonAcksAlienMovement: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      myMovingMapItems.Clear();
+            //      myMovingButton = null;
+            //      myIsFlagSetForAlienMoveCountExceeded = false;
+            //      myMovingRectangle = null;
+            //      myRectangleSelection.Visibility = Visibility.Hidden;
+            //      break;
+            //   case GameAction.TownpersonProposesMovement:
+            //      if (true == GameEngine.theIsAlien)
+            //      {
+            //         myIsAlienAbleToStopMove = true;
+            //         if (false == IsMoveStoppedByAlienBeforeStarted(gi))
+            //         {
+            //            UpdateViewMovement(gi);
+            //            myTimer.Start(); // give the Alien time to look at move
+            //         }
+            //         else
+            //         {
+            //            outAction = GameAction.AlienModifiesTownspersonMovement;
+            //            myGameEngine.PerformAction(ref gi, ref outAction);
+            //         }
+            //      }
+            //      else
+            //      {
+            //         myMovingButton = null;
+            //         myMovingRectangle = null;
+            //         myRectangleSelection.Visibility = Visibility.Hidden;
+            //      }
+            //      break;
+            //   case GameAction.TownpersonMovement:
+            //      myIsAlienAbleToStopMove = false;
+            //      myTimer.Stop();
+            //      UpdateViewMovement(gi);
+            //      break;
+            //   case GameAction.AlienTimeoutOnMovement:
+            //      if (false == GameEngine.theIsAlien)
+            //      {
+            //         myIsAlienAbleToStopMove = false;
+            //         UpdateViewMovement(gi);
+            //      }
+            //      break;
+            //   case GameAction.AlienModifiesTownspersonMovement:
+            //      myIsAlienAbleToStopMove = false;
+            //      if (false == UpdateCanvasMain(gi, action, true))
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienModifiesTownspersonMovement: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      UpdateViewMovement(gi);
+            //      break;
+            //   case GameAction.TownpersonCompletesMovement:
+            //      if (false == GameEngine.theIsAlien)
+            //      {
+            //         if (false == UpdateCanvasMain(gi, action))
+            //         {
+            //            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownpersonCompletesMovement: Update_CanvasMain() returned false");
+            //            return;
+            //         }
+            //         myMovingButton = null;
+            //         myMovingRectangle = null;
+            //         myRectangleSelection.Visibility = Visibility.Hidden;
+            //      }
+            //      break;
+            //   case GameAction.AlienAcksTownspersonMovement:
+            //      if (false == UpdateCanvasMain(gi, action))
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienAcksTownspersonMovement: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      UpdateViewState(gi);
+            //      myMovingMapItems.Clear();
+            //      myMovingButton = null;
+            //      myIsFlagSetForAlienMoveCountExceeded = false;
+            //      myMovingRectangle = null;
+            //      myRectangleSelection.Visibility = Visibility.Hidden;
+            //      break;
+            //   case GameAction.TownspersonPerformsConversation:
+            //      if (false == UpdateCanvasMain(gi, action))
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonPerformsConversation: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      UpdateViewState(gi);
+            //      break;
+            //   case GameAction.TownspersonCompletesConversations:
+            //      if (false == UpdateCanvasMain(gi, action))
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesConversations: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      UpdateViewState(gi);
+            //      break;
+            //   case GameAction.TownspersonPerformsInfluencing:
+            //      if (false == UpdateCanvasMain(gi, action))
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonPerformsInfluencing: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      UpdateViewState(gi);
+            //      break;
+            //   case GameAction.TownspersonCompletesInfluencing:
+            //      if (false == UpdateCanvasMain(gi, action))
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesInfluencing: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      UpdateViewState(gi);
+            //      break;
+            //   case GameAction.AlienInitiateCombat:
+            //      if ((true == myIsCombatInitiatedForAlien) && (true == GameEngine.theIsAlien))
+            //      {
+            //         if (false == UpdateCanvasMain(gi, action))
+            //         {
+            //            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienInitiateCombat: Update_CanvasMain() returned false");
+            //            return;
+            //         }
+            //         Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, "UpdateView():AlienInitiateCombat: ALIEN Performs Combat");
+            //         outAction = GameAction.AlienPerformCombat;
+            //         myGameEngine.PerformAction(ref gi, ref outAction);
+            //      }
+            //      break;
+            //   case GameAction.TownspersonNackCombatSelection:
+            //      if (true == GameEngine.theIsAlien)
+            //      {
+            //         if (false == UpdateCanvasMain(gi, action))
+            //         {
+            //            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonNackCombatSelection: Update_CanvasMain() returned false");
+            //            return;
+            //         }
+            //         UpdateViewState(gi);
+            //         myIsCombatInitiatedForAlien = false;
+            //         Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, "UpdateView():TownspersonNackCombatSelection: ALIEN myIsCombatInitiatedForAlien=false");
+            //      }
+            //      break;
+            //   case GameAction.AlienPerformCombat:
+            //      if (false == UpdateCanvasMain(gi, action))
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienPerformCombat: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      if (null == gi.MapItemCombat)
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "UpdateView():AlienPerformCombat gi.MapItemCombat=null");
+            //      }
+            //      else
+            //      {
+            //         if (null != gi.MapItemCombat.Territory)
+            //         {
+            //            if ((0 != gi.MapItemCombat.Attackers.Count) && (0 != gi.MapItemCombat.Defenders.Count))
+            //               DisplayCombatResults(gi);
+            //         }
+            //      }
+            //      break;
+            //   case GameAction.TownspersonInitiateCombat:
+            //      if ((true == myIsCombatInitiatedForTownsperson) && (false == GameEngine.theIsAlien))
+            //      {
+            //         if (false == UpdateCanvasMain(gi, action))
+            //         {
+            //            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonInitiateCombat: Update_CanvasMain() returned false");
+            //            return;
+            //         }
+            //         Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, "UpdateView():TownspersonInitiateCombat: TP PERFORMS COMBAT");
+            //         outAction = GameAction.TownspersonPerformCombat;
+            //         myGameEngine.PerformAction(ref gi, ref outAction);
+            //      }
+            //      break;
+            //   case GameAction.AlienNackCombatSelection:
+            //      if (false == GameEngine.theIsAlien)
+            //      {
+            //         if (false == UpdateCanvasMain(gi, action))
+            //         {
+            //            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienNackCombatSelection: Update_CanvasMain() returned false");
+            //            return;
+            //         }
+            //         UpdateViewState(gi);
+            //         myIsCombatInitiatedForTownsperson = false;
+            //         Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, "UpdateView():AlienNackCombatSelection: TP    myIsCombatInitiatedForTownsperson=false");
+            //      }
+            //      break;
+            //   case GameAction.TownspersonPerformCombat:
+            //      if (false == UpdateCanvasMain(gi, action))
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonPerformCombat: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      if (null == gi.MapItemCombat)
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "UpdateView():TownspersonPerformCombat gi.MapItemCombat=null");
+            //         return;
+            //      }
+            //      else
+            //      {
+            //         if ((0 != gi.MapItemCombat.Attackers.Count) && (0 != gi.MapItemCombat.Defenders.Count))
+            //         {
+            //            DisplayCombatResults(gi);
+            //         }
+            //      }
+            //      break;
+            //   case GameAction.TownspersonCompletesCombat:
+            //      myRectangleSelection.Visibility = Visibility.Hidden;
+            //      if (true == GameEngine.theIsAlien)
+            //      {
+            //         myMovingButton = null;
+            //         myMovingRectangle = null;
+            //         myRectangleSelection.Visibility = Visibility.Hidden;
+            //      }
+            //      if (false == UpdateCanvasMain(gi, action))
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesCombat: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      UpdateViewState(gi);
+            //      myIsCombatInitiatedForTownsperson = false;
+            //      StringBuilder sb2 = new StringBuilder("UpdateView():TownspersonCompletesCombat: "); sb2.Append(GameEngine.theIsAlien.ToString()); sb2.Append("myIsCombatInitiatedForTownsperson=false");
+            //      Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, sb2.ToString());
+            //      break;
+            //   case GameAction.AlienCompletesCombat:
+            //      if (false == GameEngine.theIsAlien)
+            //      {
+            //         myMovingButton = null;
+            //         myMovingRectangle = null;
+            //         myRectangleSelection.Visibility = Visibility.Hidden;
+            //      }
+            //      if (false == UpdateCanvasMain(gi, action))
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienCompletesCombat: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      UpdateViewState(gi);
+            //      myIsCombatInitiatedForAlien = false;
+            //      StringBuilder sb3 = new StringBuilder("UpdateView():AlienCompletesCombat: "); sb3.Append(GameEngine.theIsAlien.ToString()); sb3.Append("myIsCombatInitiatedForAlien=false");
+            //      Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, sb3.ToString());
+            //      break;
+            //   case GameAction.TownspersonIterrogates:
+            //      if (false == UpdateCanvasMain(gi, action))
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonIterrogates: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      UpdateViewState(gi);
+            //      break;
+            //   case GameAction.TownspersonCompletesIterogations:
+            //      if (false == UpdateCanvasMain(gi, action))
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesIterogations: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      UpdateViewState(gi);
+            //      break;
+            //   case GameAction.AlienAcksIterogations:
+            //      if (false == UpdateCanvasMain(gi, action))
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienAcksIterogations: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      UpdateViewState(gi);
+            //      break;
+            //   case GameAction.TownspersonRemovesImplant:
+            //      if (false == UpdateCanvasMain(gi, action))
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonRemovesImplant: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      UpdateViewState(gi);
+            //      break;
+            //   case GameAction.TownspersonCompletesRemoval:
+            //      if (false == UpdateCanvasMain(gi, action))
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): TownspersonCompletesRemoval: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      UpdateViewState(gi);
+            //      break;
+            //   case GameAction.AlienTakeover:
+            //      if (false == UpdateCanvasMain(gi, action))
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienTakeover: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      if (null == gi.Takeover)
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "UpdateView():AlienTakeover gi.Takeover=null");
+            //      }
+            //      else
+            //      {
+            //         if (null == gi.Takeover.Alien)
+            //         {
+            //            Logger.Log(LogEnum.LE_ERROR, "UpdateView():AlienTakeover gi.Takeover.Alien=null");
+            //         }
+            //         else
+            //         {
+            //            if (true == GameEngine.theIsAlien)
+            //            {
+            //               myTextBoxResults.Text = gi.Takeover.Observations;
+            //               UpdateActionPanelButtons(gi);
+            //            }
+            //            else
+            //            {
+            //               if ("Nobody Noticed" != gi.Takeover.Observations)
+            //                  PerformTakeoverObserved(gi);
+            //            }
+            //         }
+            //      }
+            //      UpdateViewState(gi);
+            //      break;
+            //   case GameAction.AlienCompletesTakeovers:
+            //      if (false == UpdateCanvasMain(gi, action))
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): AlienCompletesTakeovers: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      myIsTakeOverInOneRegion = false;
+            //      myIsTakeOverPromptNeededToFoolOpponent = false;
+            //      break;
+            //   case GameAction.ShowEndGame:
+            //      ClearActionPanel();
+            //      foreach (IStack stack in gi.Stacks)         // Show all the stacks
+            //      {
+            //         foreach (IMapItem mi in stack.MapItems)
+            //         {
+            //            if (true == mi.IsAlienUnknown)
+            //            {
+            //               if (false == gi.AddKnownAlien(mi))
+            //                  Logger.Log(LogEnum.LE_ERROR, "UpdateView() returned error");
+            //            }
+            //         }
+            //      }
+            //      //-------------------------------------------------------
+            //      bool isAlienWin = true;
+            //      IMapItem? zebulon = gi.Stacks.FindMapItem("Zebulon");
+            //      if (null == zebulon)
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "UpdateView() could not find Zebulon in gi.Stacks");
+            //         break;
+            //      }
+            //      zebulon.IsAlienKnown = true;
+            //      //if (true == zebulon.IsKilled)
+            //      //   isAlienWin = false;
 
-         //      //double controlledRatio = ((double)gi.InfluenceCountTownspeople) / ((double)gi.InfluenceCountTotal);
-         //      //if (0.499999 < controlledRatio)
-         //      //   isAlienWin = false;
+            //      //double controlledRatio = ((double)gi.InfluenceCountTownspeople) / ((double)gi.InfluenceCountTotal);
+            //      //if (0.499999 < controlledRatio)
+            //      //   isAlienWin = false;
 
-         //      //int alienInflunence = gi.InfluenceCountAlienUnknown + gi.InfluenceCountAlienKnown;
-         //      //if (0 == alienInflunence)
-         //      //   isAlienWin = false;
+            //      //int alienInflunence = gi.InfluenceCountAlienUnknown + gi.InfluenceCountAlienKnown;
+            //      //if (0 == alienInflunence)
+            //      //   isAlienWin = false;
 
-         //      //myLabelWinner.Visibility = Visibility.Visible;  // Report the winner
-         //      //if (true == isAlienWin)
-         //      //{
-         //      //   myLabelWinner.Content = "Aliens Win!!!!";
-         //      //   myLabelWinner.Foreground = Brushes.Orange;
-         //      //}
-         //      //else
-         //      //{
-         //      //   myLabelWinner.Content = "Towns People Win!!!!";
-         //      //   myLabelWinner.Foreground = Constants.theTownControlledBrush;
-         //      //}
-         //      if (false == UpdateCanvasMain(gi, action))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): ShowEndGame: Update_CanvasMain() returned false");
-         //         return;
-         //      }
-         //      UpdateViewState(gi);
-         //      break;
-         //   case GameAction.ShowAlien:
-         //      foreach (Stack stack in gi.Stacks)
-         //      {
-         //         foreach (IMapItem mi in stack.MapItems)
-         //         {
-         //            if (true == mi.IsAlienKnown)
-         //            {
-         //               Button? b = myButtons.Find(mi.Name);
-         //               if (null != b)
-         //                  MapItem.SetButtonContent(b, mi, GameEngine.theIsAlien);
-         //            }
-         //         }
-         //      }
-         //      UpdateViewState(gi);
-         //      break;
-         //   default:
-         //      Console.WriteLine("ERROR: GameViewerWindow::UpdateView() reached default next action={0}", action.ToString());
-         //      break;
-         //}
+            //      //myLabelWinner.Visibility = Visibility.Visible;  // Report the winner
+            //      //if (true == isAlienWin)
+            //      //{
+            //      //   myLabelWinner.Content = "Aliens Win!!!!";
+            //      //   myLabelWinner.Foreground = Brushes.Orange;
+            //      //}
+            //      //else
+            //      //{
+            //      //   myLabelWinner.Content = "Towns People Win!!!!";
+            //      //   myLabelWinner.Foreground = Constants.theTownControlledBrush;
+            //      //}
+            //      if (false == UpdateCanvasMain(gi, action))
+            //      {
+            //         Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow:UpdateView(): ShowEndGame: Update_CanvasMain() returned false");
+            //         return;
+            //      }
+            //      UpdateViewState(gi);
+            //      break;
+            //   case GameAction.ShowAlien:
+            //      foreach (Stack stack in gi.Stacks)
+            //      {
+            //         foreach (IMapItem mi in stack.MapItems)
+            //         {
+            //            if (true == mi.IsAlienKnown)
+            //            {
+            //               Button? b = myButtons.Find(mi.Name);
+            //               if (null != b)
+            //                  MapItem.SetButtonContent(b, mi, GameEngine.theIsAlien);
+            //            }
+            //         }
+            //      }
+            //      UpdateViewState(gi);
+            //      break;
+            default:
+               if (false == UpdateCanvasMain(gi, action))
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
+               break;
+         }
       }
       private bool UpdateViewForNewGame(ref IGameInstance gi, GameAction action) // GameAction.UpdateLoadingGame  GameAction.UpdateNewGame
       {
@@ -1655,7 +1686,7 @@ namespace PleasantvilleGame
                {
                   b.BeginAnimation(Canvas.LeftProperty, null); // end animation offset
                   b.BeginAnimation(Canvas.TopProperty, null);  // end animation offset
-                  Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMain_MapItems(): Updating mi=" + mi.Name + " X=" + mi.Location.X.ToString() + " Y=" + mi.Location.Y.ToString());
+                  Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMain_MapItems(): Updating mi=" + mi.Name + " X=" + mi.Location.X.ToString("F2") + " Y=" + mi.Location.Y.ToString("F2"));
                   if (true == stack.IsStacked)
                   {
                      Canvas.SetLeft(b, t.CenterPoint.X - offset);
@@ -1686,6 +1717,9 @@ namespace PleasantvilleGame
                   }
                   Canvas.SetZIndex(newButton, 999 + (int)count);
                   myCanvasMain.Children.Add(newButton);
+                  newButton.ContextMenu = myContextMenuButton;
+                  newButton.PreviewMouseLeftButtonDown += PreviewMouseLeftButtonDownMapItem;
+                  newButton.PreviewMouseLeftButtonUp += PreviewMouseLeftButtonUpMapItem;
                }
                count++;
             }
@@ -3875,7 +3909,7 @@ namespace PleasantvilleGame
             mySpeedRatioMarquee = 0.5;
          myStoryboardMarquee.SetSpeedRatio(this, mySpeedRatioMarquee);
       }
-      private void myTextBoxEntryTextChanged(object sender, TextChangedEventArgs e)
+      private void TextBoxEntryTextChanged(object sender, TextChangedEventArgs e)
       {
          //if (null != myGameEngine)
          //{
@@ -3894,130 +3928,206 @@ namespace PleasantvilleGame
          //   }
          //}
       }
-      private void ClickMapItem(object sender, RoutedEventArgs e)
+      private void PreviewMouseLeftButtonDownMapItem(object sender, System.Windows.Input.MouseEventArgs e)
+      {
+         if (e.LeftButton == MouseButtonState.Pressed)
+         {
+            Button? button = sender as Button;
+            if (null == button)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PreviewMouseLeftButtonDown_MapItem(): button=null");
+               return;
+            }
+            Logger.Log(LogEnum.LE_SHOW_BUTTON_MOVE, "PreviewMouseLeftButtonDown_MapItem(): selected button.Name=" + button.Name);
+            myDraggedButton = button;
+         }
+      }
+      private void PreviewMouseLeftButtonUpMapItem(object sender, System.Windows.Input.MouseEventArgs e)
+      {
+         if (null == myDraggedButton)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "PreviewMouseLeftButtonUp_MapItem(): myDraggedButton=null");
+            return;
+         }
+         Logger.Log(LogEnum.LE_SHOW_BUTTON_MOVE, "PreviewMouseLeftButtonUp_MapItem(): unselecting button.Name=" + myDraggedButton.Name);
+         IMapItem? mi = myGameInstance.Stacks.FindMapItem(myDraggedButton.Name);
+         if( null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "PreviewMouseLeftButtonUp_MapItem(): unable to find mi=" + myDraggedButton.Name);
+            return;
+         }
+         string? tName = mi.TerritoryCurrent.ToString();
+         if (null == tName)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "PreviewMouseLeftButtonUp_MapItem(): mi.TerritoryCurrent.ToString()=null");
+            return;
+         }
+         IStack? stack = myGameInstance.Stacks.Find(tName);
+         if ( null == stack )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "PreviewMouseLeftButtonUp_MapItem(): unable to find stack=" + tName);
+            return;
+         }
+         stack.IsStacked = false;
+         myDraggedButton = null;
+      }
+      private void MouseMoveGameViewerWindow(object sender, MouseEventArgs e)
+      {
+         if (null == myDraggedButton)
+         {
+            base.OnMouseMove(e);
+            return;
+         }
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MouseMove_GameViewerWindow(): myGameInstance=null");
+            return;
+         }
+         //-----------------------------------
+         IMapItem? selectedMapItem = myGameInstance.Stacks.FindMapItem(myDraggedButton.Name); // selectedMapItem is the new target
+         if (null == selectedMapItem)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MouseMove_GameViewerWindow(): selectedMapItem=null for button.Name=" + myDraggedButton.Name);
+            return;
+         }
+         //-----------------------------------
+         System.Windows.Point newPoint = e.GetPosition(myCanvasMain);
+         if (true == Territory.IsPointInPolygon(selectedMapItem.TerritoryCurrent, newPoint))
+         {
+            Logger.Log(LogEnum.LE_SHOW_BUTTON_MOVE, "MouseMove_GameViewerWindow(): button.Name=" + myDraggedButton.Name + " moving to p=(" + newPoint.X.ToString("###") + "," + newPoint.Y.ToString("###") + ")");
+            double offset = selectedMapItem.Zoom * Utilities.theMapItemOffset;
+            selectedMapItem.Location.X = newPoint.X - offset;
+            selectedMapItem.Location.Y = newPoint.Y - offset;
+            Canvas.SetLeft(myDraggedButton, newPoint.X - offset);
+            Canvas.SetTop(myDraggedButton, newPoint.Y - offset);
+         }
+         e.Handled = true;
+      }
+      private void ClickButtonMapItem(object sender, RoutedEventArgs e)
       {
          if (null == myGameInstance)
          {
-            Logger.Log(LogEnum.LE_ERROR, "ClickMapItem() myGameInstance=null");
+            Logger.Log(LogEnum.LE_ERROR, "ClickButton_MapItem() myGameInstance=null");
             return;
          }
-         IGameInstance gi = myGameInstance;
-         if (sender is Button)
+         Button? selectedButton = sender as Button;
+         if (null == selectedButton)
          {
-            Button selectedButton = (Button)sender;
-            IMapItem? selectedMapItem = gi.Stacks.FindMapItem(selectedButton.Name);
-            if (null == selectedMapItem)
-            {
-               Console.WriteLine("Selected Map Item {0} no longer found", selectedButton.Name);
+            Logger.Log(LogEnum.LE_ERROR, "ClickButton_MapItem(): selectedButton=null");
+            return;
+         }
+         IMapItem? selectedMapItem = myGameInstance.Stacks.FindMapItem(selectedButton.Name);
+         if (null == selectedMapItem)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ClickButton_MapItem() Did not find MapItem associated with selectedButton=" + selectedButton.Name);
+            return;
+         }
+         if (true == selectedMapItem.IsKilled)  // If killed, do nothing
+         {
+            if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
+               Logger.Log(LogEnum.LE_ERROR, "ClickButton_MapItem(): RotateStack() returned false");
+            return;
+         }
+         //--------------------------------------
+         switch (myGameInstance.GamePhase)
+         {
+            case GamePhase.AlienMovement:
+               if (null == myMovingButton)
+               {
+                  if (false == GameEngine.theIsAlien)
+                  {
+                     if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
+                        Logger.Log(LogEnum.LE_ERROR, "ClickButton_MapItem(): RotateStack() returned false");
+                     return;  // do nothing
+                  }
+                  if (4 < myMovingMapItems.Count)
+                  {
+                     if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "ClickButton_MapItem(): RotateStack() returned false");
+                        return;
+                     }
+                     if (true == myIsFlagSetForAlienMoveCountExceeded)
+                        MessageBox.Show("Alien only allowed to move five people");
+                     else
+                        myIsFlagSetForAlienMoveCountExceeded = true;
+                     return;  // do nothing
+                  }
+                  if (("Zebulon" == selectedMapItem.Name) || ("Alien Performs Movement" != myGameInstance.NextAction)
+                        || (false == selectedMapItem.IsUnconscious) || (true == selectedMapItem.IsControlled) || (true == selectedMapItem.IsKilled)
+                        || (true == selectedMapItem.IsSurrendered) || (true == selectedMapItem.IsStunned) || (true == selectedMapItem.IsTiedUp) || (true == selectedMapItem.IsWary))
+                  {
+                     if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
+                        Logger.Log(LogEnum.LE_ERROR, "ClickButton_MapItem(): RotateStack() returned false");
+                     return;
+                  }
+               }
+               break;
+            case GamePhase.TownspersonMovement:
+               if (null == myMovingButton)
+               {
+                  if ((("Townsperson Selects Counter to Move" != myGameInstance.NextAction) || (true == GameEngine.theIsAlien)
+                        || (false == selectedMapItem.IsUnconscious) || (false == selectedMapItem.IsControlled) || (true == selectedMapItem.IsKilled)
+                        || (true == selectedMapItem.IsStunned) || (true == selectedMapItem.IsTiedUp) || (true == myIsAlienAbleToStopMove)))
+                  {
+                     if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
+                        Logger.Log(LogEnum.LE_ERROR, "ClickButton_MapItem(): RotateStack() returned false");
+                     return;
+                  }
+               }
+               break;
+            default:
+               MapItemCommonAction(selectedMapItem.TerritoryCurrent);
                return;
-            }
-            if (true == selectedMapItem.IsKilled)  // If killed, do nothing
+         }
+         //--------------------------------------
+         // There is already a moving button.  Do not do any actions until
+         // the alien player responds or there is a timeout on the alien response.
+         // When that happens, myIsAlienAbleToStopMove=false.
+         if (true == myIsAlienAbleToStopMove)
+            return;
+         // This section of code only applies if attempting to move a MapItem, i.e.,
+         // either the AlienMovement Phase or the TownspersonMOvementPhase.
+         if (null == myMovingButton)
+         {
+            if (true == selectedMapItem.IsMoveStoppedThisTurn)
             {
+               MessageBox.Show("Not allowed to Move This Turn");
                if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
-                  Logger.Log(LogEnum.LE_ERROR, "ClickMapItem(): RotateStack() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "ClickButton_MapItem(): RotateStack() returned false");
                return;
             }
-            //--------------------------------------
-            switch (gi.GamePhase)
+            if (selectedMapItem.Movement <= selectedMapItem.MovementUsed)
             {
-               case GamePhase.AlienMovement:
-                  if (null == myMovingButton)
-                  {
-                     if (false == GameEngine.theIsAlien)
-                     {
-                        if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
-                           Logger.Log(LogEnum.LE_ERROR, "ClickMapItem(): RotateStack() returned false");
-                        return;  // do nothing
-                     }
-                     if (4 < myMovingMapItems.Count)
-                     {
-                        if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
-                        {
-                           Logger.Log(LogEnum.LE_ERROR, "ClickMapItem(): RotateStack() returned false");
-                           return;
-                        }
-                        if (true == myIsFlagSetForAlienMoveCountExceeded)
-                           MessageBox.Show("Alien only allowed to move five people");
-                        else
-                           myIsFlagSetForAlienMoveCountExceeded = true;
-                        return;  // do nothing
-                     }
-                     if (("Zebulon" == selectedMapItem.Name) || ("Alien Performs Movement" != gi.NextAction)
-                         || (false == selectedMapItem.IsUnconscious) || (true == selectedMapItem.IsControlled) || (true == selectedMapItem.IsKilled)
-                         || (true == selectedMapItem.IsSurrendered) || (true == selectedMapItem.IsStunned) || (true == selectedMapItem.IsTiedUp) || (true == selectedMapItem.IsWary))
-                     {
-                        if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
-                           Logger.Log(LogEnum.LE_ERROR, "ClickMapItem(): RotateStack() returned false");
-                        return;
-                     }
-                  }
-                  break;
-               case GamePhase.TownspersonMovement:
-                  if (null == myMovingButton)
-                  {
-                     if ((("Townsperson Selects Counter to Move" != gi.NextAction) || (true == GameEngine.theIsAlien)
-                         || (false == selectedMapItem.IsUnconscious) || (false == selectedMapItem.IsControlled) || (true == selectedMapItem.IsKilled)
-                         || (true == selectedMapItem.IsStunned) || (true == selectedMapItem.IsTiedUp) || (true == myIsAlienAbleToStopMove)))
-                     {
-                        if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
-                           Logger.Log(LogEnum.LE_ERROR, "ClickMapItem(): RotateStack() returned false");
-                        return;
-                     }
-                  }
-                  break;
-               default:
-                  MapItemCommonAction(selectedMapItem.TerritoryCurrent);
-                  return;
-            }
-            //--------------------------------------
-            // There is already a moving button.  Do not do any actions until
-            // the alien player responds or there is a timeout on the alien response.
-            // When that happens, myIsAlienAbleToStopMove=false.
-            if (true == myIsAlienAbleToStopMove)
+
+               if (true == myIsFlagSetForMaxMove)
+               {
+                  MessageBox.Show("Already Reached Maximum Movement");
+                  myIsFlagSetForMaxMove = false;
+               }
+               myIsFlagSetForMaxMove = true;
+               if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
+                  Logger.Log(LogEnum.LE_ERROR, "ClickButton_MapItem(): RotateStack() returned false");
                return;
-            // This section of code only applies if attempting to move a MapItem, i.e.,
-            // either the AlienMovement Phase or the TownspersonMOvementPhase.
-            if (null == myMovingButton)
+            }
+
+            myRectangleSelection.BeginAnimation(Canvas.LeftProperty, null);
+            myRectangleSelection.BeginAnimation(Canvas.TopProperty, null);
+            Canvas.SetLeft(myRectangleSelection, selectedMapItem.Location.X);
+            Canvas.SetTop(myRectangleSelection, selectedMapItem.Location.Y);
+            myRectangleSelection.Visibility = Visibility.Visible;             // highlight the moving button with a rectangle
+            myMovingButton = selectedButton;
+         }
+         else
+         {
+            if (selectedButton.Name == myMovingButton.Name) // case: MapItem already selected to move -- clicking the moving button again causes it to be unhighlighted
             {
-               if (true == selectedMapItem.IsMoveStoppedThisTurn)
-               {
-                  MessageBox.Show("Not allowed to Move This Turn");
-                  if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
-                     Logger.Log(LogEnum.LE_ERROR, "ClickMapItem(): RotateStack() returned false");
-                  return;
-               }
-               if (selectedMapItem.Movement <= selectedMapItem.MovementUsed)
-               {
-
-                  if (true == myIsFlagSetForMaxMove)
-                  {
-                     MessageBox.Show("Already Reached Maximum Movement");
-                     myIsFlagSetForMaxMove = false;
-                  }
-                  myIsFlagSetForMaxMove = true;
-                  if (false == this.RotateStack(selectedMapItem.TerritoryCurrent))
-                     Logger.Log(LogEnum.LE_ERROR, "ClickMapItem(): RotateStack() returned false");
-                  return;
-               }
-
-               myRectangleSelection.BeginAnimation(Canvas.LeftProperty, null);
-               myRectangleSelection.BeginAnimation(Canvas.TopProperty, null);
-               Canvas.SetLeft(myRectangleSelection, selectedMapItem.Location.X);
-               Canvas.SetTop(myRectangleSelection, selectedMapItem.Location.Y);
-               myRectangleSelection.Visibility = Visibility.Visible;             // highlight the moving button with a rectangle
-               myMovingButton = selectedButton;
+               myMovingButton = null;
+               myRectangleSelection.Visibility = Visibility.Hidden;
             }
             else
             {
-               if (selectedButton.Name == myMovingButton.Name) // case: MapItem already selected to move -- clicking the moving button again causes it to be unhighlighted
-               {
-                  myMovingButton = null;
-                  myRectangleSelection.Visibility = Visibility.Hidden;
-               }
-               else
-               {
-                  MapItemMoveManually(selectedMapItem.TerritoryCurrent, myMovingButton);
-               }
+               MapItemMoveManually(selectedMapItem.TerritoryCurrent, myMovingButton);
             }
          }
       }
@@ -4025,7 +4135,7 @@ namespace PleasantvilleGame
       {
          if (null == myGameInstance)
          {
-            Logger.Log(LogEnum.LE_ERROR, "ClickMapItem() myGameInstance=null");
+            Logger.Log(LogEnum.LE_ERROR, "ClickButtonMapItem() myGameInstance=null");
             return;
          }
          IGameInstance gi = myGameInstance;
@@ -4143,22 +4253,21 @@ namespace PleasantvilleGame
          {
             Button selectedButton = (Button)sender;
             if( false == MapItemReturnToStart(selectedButton))
-               Logger.Log(LogEnum.LE_ERROR, "ContextMenuLoaded() MapItemReturnToStart() returned error");
+               Logger.Log(LogEnum.LE_ERROR, "MouseDoubleClickMapItem() MapItemReturnToStart() returned error");
          }
       }
-      private void ContextMenuLoaded(object sender, RoutedEventArgs e)
+      private void ContextMenuLoadedButton(object sender, RoutedEventArgs e)
       {
          if( null == myGameInstance)
          {
-            Logger.Log(LogEnum.LE_ERROR, "ContextMenuLoaded() myGameInstance=null");
+            Logger.Log(LogEnum.LE_ERROR, "ContextMenuLoaded_Button() myGameInstance=null");
             return;
          }
          //--------------------------------------------------
          if (sender is ContextMenu)
          {
             ContextMenu cm = (ContextMenu)sender;
-            // Gray out all menu items as default
-            for (int i = 0; i < cm.Items.Count; ++i)
+            for (int i = 0; i < cm.Items.Count; ++i) // Gray out all menu items as default
             {
                if (cm.Items[i] is MenuItem)
                {
@@ -4170,15 +4279,55 @@ namespace PleasantvilleGame
             {
                Button b = (Button)cm.PlacementTarget;
                IMapItem? mi = myGameInstance.Stacks.FindMapItem(b.Name);
-               if( null == mi )
+               if (null == mi)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "ContextMenuLoaded(): myGameInstance.Stacks.FindMapItem() returned null for name=" + b.Name);
+                  Logger.Log(LogEnum.LE_ERROR, "ContextMenu_Loaded(): myGameInstance.Stacks.FindMapItem() returned null for name=" + b.Name);
                   return;
                }
-               // Gray out the "Retun to Starting Point" menu item
-               if ((0 < cm.Items.Count) && (true == mi.IsMoveAllowedToResetThisTurn))
+               if (null == mi.TerritoryCurrent)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "ContextMenu_Loaded(): mi.TerritoryCurrent=null for mi=" + mi.Name);
+                  return;
+               }
+               string? tName = mi.TerritoryCurrent.ToString();
+               if (null == tName)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "ContextMenu_Loaded(): mi.TerritoryCurrent.ToString() for mi=" + mi.Name);
+                  return;
+               }
+               myGameInstance.SelectedStack = myGameInstance.Stacks.Find(tName);
+               if (null == myGameInstance.SelectedStack)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "ContextMenu_Loaded(): unable to find stack for tName=" + tName + " for mi=" + mi.Name);
+                  return;
+               }
+               //-----------------------------------
+               if ((0 < cm.Items.Count) ) // Set eitehr Scatter or Stack
                {
                   if (cm.Items[0] is MenuItem)
+                  {
+                     MenuItem menuItem = (MenuItem)cm.Items[0];
+                     menuItem.IsEnabled = true;
+                     if(true == myGameInstance.SelectedStack.IsStacked)
+                        menuItem.Header = "_Scatter";
+                     else
+                        menuItem.Header = "_Stack";
+                  }
+               }
+               //-----------------------------------
+               if (1 < cm.Items.Count) // Gray out the "Rotate Stack" menu item
+               {
+                  if (cm.Items[1] is MenuItem)
+                  {
+                     MenuItem menuItem = (MenuItem)cm.Items[1];
+                     if ((1 < myGameInstance.SelectedStack.MapItems.Count) && (true == myGameInstance.SelectedStack.IsStacked) )
+                        menuItem.IsEnabled = true;
+                  }
+               }
+               //-----------------------------------
+               if ((2 < cm.Items.Count) && (true == mi.IsMoveAllowedToResetThisTurn)) // Gray out the "Retun to Starting Point" menu item
+               {
+                  if (cm.Items[2] is MenuItem)
                   {
                      MenuItem menuItem = (MenuItem)cm.Items[0];
                      if ((true == GameEngine.theIsAlien) && (GamePhase.AlienMovement == myGameInstance.GamePhase) && (true == mi.IsMoved))
@@ -4187,24 +4336,9 @@ namespace PleasantvilleGame
                         menuItem.IsEnabled = true;
                   }
                }
-               // Gray out the "Rotate Stack" menu item
-               //if (1 < cm.Items.Count)
-               //{
-               //   if (cm.Items[1] is MenuItem)
-               //   {
-               //      MenuItem menuItem = (MenuItem)cm.Items[1];
-               //      List<Stack> stacks = new List<Stack>();
-               //      stacks.AssignPeople(gi.Persons, GameEngine.theIsAlien);
-               //      IMapItems mapItems = stacks.FindPeople(mi.TerritoryCurrent);
-               //      if (null != mapItems)
-               //      {
-               //         if (1 < mapItems.Count)
-               //            menuItem.IsEnabled = true;
-               //      }
-               //   }
-               //}
+               //-----------------------------------
                // Gray out the "Expose" menu item
-               if (2 < cm.Items.Count)
+               if (3 < cm.Items.Count)
                {
                   if (cm.Items[2] is MenuItem)
                   {
@@ -4213,16 +4347,16 @@ namespace PleasantvilleGame
                         menuItem.IsEnabled = true;
                   }
                }
-               // Gray out the "Stop Movement" menu item
-               if (3 < cm.Items.Count)
+               //-----------------------------------
+               if (4 < cm.Items.Count)  // Gray out the "Stop Movement" menu item
                {
                   if (cm.Items[3] is MenuItem)
                   {
                      MenuItem menuItem = (MenuItem)cm.Items[3];
                      bool isMenuEnabled;
-                     if( false == IsAlienAbleToStopMove(myGameInstance, mi, out isMenuEnabled))
+                     if (false == IsAlienAbleToStopMove(myGameInstance, mi, out isMenuEnabled))
                      {
-                        Logger.Log(LogEnum.LE_ERROR, "ContextMenuLoaded(): IsAlienAbleToStopMove() returned false");
+                        Logger.Log(LogEnum.LE_ERROR, "ContextMenuLoadedButton(): IsAlienAbleToStopMove() returned false");
                         return;
                      }
                      menuItem.IsEnabled = isMenuEnabled;
@@ -4250,31 +4384,13 @@ namespace PleasantvilleGame
       }
       private void ContextMenuClickRotate(object sender, RoutedEventArgs e)
       {
-         if (null == myGameInstance)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "ContextMenuLoaded(): myGameInstance=null");
-            return;
-         }
-         //--------------------------------------------------
-         if (sender is MenuItem)
-         {
-            MenuItem mi = (MenuItem)sender;
-            if (mi.Parent is ContextMenu)
-            {
-               ContextMenu cm = (ContextMenu)mi.Parent;
-               if (cm.PlacementTarget is Button)
-               {
-                  Button b = (Button)cm.PlacementTarget;
-                  IMapItem? selectedMapItem = myGameInstance.Stacks.FindMapItem(b.Name);
-                  if (null == selectedMapItem)
-                  {
-                     Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickRotate() selectedMapItem=null for name=" + b.Name);
-                     return;
-                  }
-                  this.RotateStack(selectedMapItem.TerritoryCurrent);
-               }
-            }
-         }
+         GameAction outAction = GameAction.UpdateRotateStack;
+         myGameEngine.PerformAction(ref myGameInstance, ref outAction);
+      }
+      private void ContextMenuClickScatter(object sender, RoutedEventArgs e)
+      {
+         GameAction outAction = GameAction.UpdateScatterStack;
+         myGameEngine.PerformAction(ref myGameInstance, ref outAction);
       }
       private void ContextMenuClickExposeAlien(object sender, RoutedEventArgs e)
       {
@@ -4672,6 +4788,22 @@ namespace PleasantvilleGame
          Application app = Application.Current;
          app.Shutdown();
       }
+      private void MouseEnterMapItem(object sender, System.Windows.Input.MouseEventArgs e)
+      {
+         Button b = (Button)sender;
+         //if (1 < myGameInstance.PartyMembers.Count)
+         //{
+         //   myPartyDisplayDialog = new PartyDisplayDialog(myGameInstance, myCanvas, b);
+         //   Logger.Log(LogEnum.LE_VIEW_DIALOG_PARTY, "MouseEnterMapItem(): Showing due to 1 < partyCount=" + myGameInstance.PartyMembers.Count.ToString());
+         //   myPartyDisplayDialog.Show();
+         //}
+      }
+      private void MouseLeaveMapItem(object sender, System.Windows.Input.MouseEventArgs e)
+      {
+         //if (null != myPartyDisplayDialog)
+         //   myPartyDisplayDialog.Close();
+         //myPartyDisplayDialog = null;
+      }
       //-------------CONTROLLER HELPER FUNCTIONS---------------------------------
       private void MapItemCommonAction(ITerritory selectedTerritory)
       {
@@ -4704,7 +4836,7 @@ namespace PleasantvilleGame
                      IMapItem? zebulon = myGameInstance.Stacks.FindMapItem("Zebulon");
                      if( null == zebulon)
                      {
-                        Logger.Log(LogEnum.LE_ERROR, "MapItemCommonAction() myGameInstance.Stacks.FindMapItem(\"Zebulon\") returned null");
+                        Logger.Log(LogEnum.LE_ERROR, "MapItem_CommonAction() myGameInstance.Stacks.FindMapItem(\"Zebulon\") returned null");
                         return;
                      }
                      if ((zebulon.TerritoryCurrent.Name == selectedTerritory.Name) && (zebulon.TerritoryCurrent.Subname == selectedTerritory.Subname))

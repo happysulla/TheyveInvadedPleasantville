@@ -270,6 +270,72 @@ namespace PleasantvilleGame
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show
                break;
+            case GameAction.UpdateRotateStack:
+               if( null == gi.SelectedStack)
+               {
+                  returnStatus = "gi.SelectedStack=null";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(UpdateRotateStack): " + returnStatus);
+               }
+               else
+               {
+                  int count = gi.SelectedStack.MapItems.Count;
+                  if (count < 2 )
+                  {
+                     returnStatus = "gi.SelectedStack.MapItem.Count=" + count.ToString();
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(UpdateRotateStack): " + returnStatus);
+                  }
+                  else
+                  {
+                     IMapItem? bottom = gi.SelectedStack.MapItems[0];
+                     if( null == bottom)
+                     {
+                        returnStatus = "bottom=null";
+                        Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(UpdateRotateStack): " + returnStatus);
+                     }
+                     else
+                     {
+
+                        for(int i=1; i< count; i++)
+                           gi.SelectedStack.MapItems[i-1] = gi.SelectedStack.MapItems[i];
+                        gi.SelectedStack.MapItems[count - 1] = bottom;
+                        double countOffset = 0.0;
+                        foreach (IMapItem mi in gi.SelectedStack.MapItems)
+                        {
+                           double offset = (countOffset * 3.0) + (mi.Zoom * Utilities.theMapItemOffset);
+                           mi.Location.X = gi.SelectedStack.Territory.CenterPoint.X - offset;
+                           mi.Location.Y = gi.SelectedStack.Territory.CenterPoint.Y - offset;
+                        }
+                     }
+                  }
+               }
+               break;
+            case GameAction.UpdateScatterStack:
+               if (null == gi.SelectedStack)
+               {
+                  returnStatus = "gi.SelectedStack=null";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(UpdateRotateStack): " + returnStatus);
+               }
+               else
+               {
+                  if( true == gi.SelectedStack.IsStacked)
+                  {
+                     gi.SelectedStack.IsStacked = false;
+                     foreach (IMapItem mi in gi.SelectedStack.MapItems)
+                        mi.Location = Territory.GetRandomPoint(gi.SelectedStack.Territory, mi.Zoom * Utilities.theMapItemOffset);
+                  }
+                  else
+                  {
+                     gi.SelectedStack.IsStacked = true;
+                     double count = 0;
+                     foreach (IMapItem mi in gi.SelectedStack.MapItems)
+                     {
+                        double offset = (count * 3.0) + (mi.Zoom * Utilities.theMapItemOffset);
+                        mi.Location.X = gi.SelectedStack.Territory.CenterPoint.X - offset;
+                        mi.Location.Y = gi.SelectedStack.Territory.CenterPoint.Y - offset;
+                     }
+                  }
+               }
+               break;
             case GameAction.GameSetupHostGame:
                returnStatus = "GameSetupHostGame not implemented";
                Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
@@ -279,11 +345,10 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                break;
             case GameAction.GameSetupPlayAlien:
-               returnStatus = "GameSetupPlayAlien not implemented";
-               Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               GameEngine.theIsAlien = true;
                break;
             case GameAction.GameSetupPlayTownsperson:
-
+               GameEngine.theIsAlien = false;
                break;
             case GameAction.UpdateLoadingGame:
                if (false == LoadGame(ref gi))

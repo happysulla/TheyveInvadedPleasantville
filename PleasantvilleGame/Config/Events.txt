@@ -9,13 +9,13 @@ Choose a button to begin:
 <LineBreak/><LineBreak/>
 <InlineUIContainer><Button Name='ReadRules' Content=' Read Rules ' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
  - Rules presented as needed if choose to skip<LineBreak/>
-<InlineUIContainer><Button Name='HostGame' Content=' Host Game  ' FontFamily='Courier New'  FontSize='12'  IsEnabled='False'> </Button></InlineUIContainer>
+<InlineUIContainer><Button Name='HostGame' Content=' Host Game  ' FontFamily='Courier New'  FontSize='12'  > </Button></InlineUIContainer>
  - Host a game on your computer <LineBreak/>
-<InlineUIContainer><Button Name='JoinGame' Content=' Join Game  ' FontFamily='Courier New'  FontSize='12'  IsEnabled='False'> </Button></InlineUIContainer>
+<InlineUIContainer><Button Name='JoinGame' Content=' Join Game  ' FontFamily='Courier New'  FontSize='12'  > </Button></InlineUIContainer>
  - Join a game somebody is hosting<LineBreak/>
 <InlineUIContainer><Button Name='PlayTown' Content=' Town Solo  ' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
  - Play as the Townsplayer against computer<LineBreak/>
-<InlineUIContainer><Button Name='PlayAlien' Content=' Alien Solo ' FontFamily='Courier New'  FontSize='12'  IsEnabled='False'> </Button></InlineUIContainer>
+<InlineUIContainer><Button Name='PlayAlien' Content=' Alien Solo ' FontFamily='Courier New'  FontSize='12'  > </Button></InlineUIContainer>
  - Play as Alien against computer<LineBreak/>"
 e001	"<Bold>e001 Secretly Select HQ Area</Bold>  <InlineUIContainer><Button Content='r3.1' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
 <LineBreak/><LineBreak/> 

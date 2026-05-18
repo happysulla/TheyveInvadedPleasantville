@@ -823,6 +823,23 @@ namespace PleasantvilleGame
          }
          switch (key)
          {
+            case "e000":
+               switch (b.Name)
+               {
+                  case "ReadRules":
+                  case "PlayTown":
+                  case "PlayAlien":
+                     b.IsEnabled = true;
+                     break;
+                  case "HostGame":
+                  case "JoinGame":
+                     b.IsEnabled = false;
+                     break;
+                  default:
+                     Logger.Log(LogEnum.LE_ERROR, "Set_ButtonState(): reached default content=" + content);
+                     return false;
+               }
+               break;
             default:
                break;
          }

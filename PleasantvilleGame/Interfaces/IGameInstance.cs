@@ -17,6 +17,7 @@ namespace PleasantvilleGame
       //----------------------------------------------
       IMapItemMoves MapItemMoves { set; get; }
       IStacks Stacks { set; get; }
+      IStack? SelectedStack { get; set; }
       List<EnteredHex> EnteredHexes { get; }
       //----------------------------------------------
       bool IsMultipleSelectForDieResult { set; get; } // In EventViewer, show buttons instead of die results for user to choose from
@@ -37,6 +38,7 @@ namespace PleasantvilleGame
       IMapItems Townspeople { set; get; }
       IMapItems PersonsStunned { set; get; }
       IMapItems PersonsKnockedOut { set; get; }
+      IMapItem? SelectedMapItem { set; get; }
       IMapItemCombat? MapItemCombat { set; get; }
       IMapItemTakeover? Takeover { set; get; }
       IMapItemMove? PreviousMapItemMove { set; get; }
