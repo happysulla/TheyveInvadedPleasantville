@@ -114,10 +114,10 @@ namespace PleasantvilleGame
          //SetOn(LogEnum.LE_MOVE_STACKING);
          //SetOn(LogEnum.LE_MOVE_COUNT);
          //SetOn(LogEnum.LE_MOVE_KIA_RESULTS);
-         SetOn(LogEnum.LE_SHOW_STACK_ADD);
-         SetOn(LogEnum.LE_SHOW_STACK_DEL);
-         SetOn(LogEnum.LE_SHOW_STACK_VIEW);
-         SetOn(LogEnum.LE_SHOW_MAIN_CLEAR);
+         //SetOn(LogEnum.LE_SHOW_STACK_ADD);
+         //SetOn(LogEnum.LE_SHOW_STACK_DEL);
+         //SetOn(LogEnum.LE_SHOW_STACK_VIEW);
+         //SetOn(LogEnum.LE_SHOW_MAIN_CLEAR);
          //SetOn(LogEnum.LE_SHOW_ENTERED_HEX);
          //SetOn(LogEnum.LE_SHOW_BUTTON_MOVE);
          //SetOn(LogEnum.LE_SHOW_ROLL_STATE);

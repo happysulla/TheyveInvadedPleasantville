@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
 using System.Windows;
+using System.Windows.Input;
 using Application = System.Windows.Application;
 using Color = System.Windows.Media.Color;
 using MessageBox = System.Windows.MessageBox;
@@ -270,6 +271,20 @@ namespace PleasantvilleGame
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show
                break;
+            case GameAction.UpdateLoadingGame:
+               if (false == LoadGame(ref gi))
+               {
+                  returnStatus = "Load_Game() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateMovement.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.RemoveSplashScreen: // GameStateSetup.PerformAction()
+               if (false == SetupNewGame(gi, ref action))
+               {
+                  returnStatus = "SetupNewGame() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
+               break;
             case GameAction.UpdateRotateStack:
                if( null == gi.SelectedStack)
                {
@@ -346,22 +361,28 @@ namespace PleasantvilleGame
                break;
             case GameAction.GameSetupPlayAlien:
                GameEngine.theIsAlien = true;
+               gi.EventActive = gi.EventDisplayed = "e002";
+               gi.DieRollAction = GameAction.GameSetupStartingTownsplayerSet;
                break;
             case GameAction.GameSetupPlayTownsperson:
                GameEngine.theIsAlien = false;
+               gi.EventActive = gi.EventDisplayed = "e002";
+               gi.DieRollAction = GameAction.GameSetupStartingTownsplayerSetRoll;
                break;
-            case GameAction.UpdateLoadingGame:
-               if (false == LoadGame(ref gi))
+            case GameAction.GameSetupStartingTownsplayerSetRoll:
+               if( Utilities.NO_RESULT == gi.DieResults[key][0])
                {
-                  returnStatus = "Load_Game() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateMovement.PerformAction(): " + returnStatus);
+                  gi.DieResults[key][0] = dieRoll;
+                  gi.DieRollAction = GameAction.DieRollActionNone;
+                  if( false == AssignStartingTownsplayer(gi, dieRoll) )
+                  {
+                     returnStatus = "AssignStartingTownsplayer() returned false";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                  }
                }
-               break;
-            case GameAction.RemoveSplashScreen: // GameStateSetup.PerformAction()
-               if (false == SetupNewGame(gi, ref action))
+               else
                {
-                  returnStatus = "SetupNewGame() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+
                }
                break;
             default:
@@ -413,6 +434,30 @@ namespace PleasantvilleGame
       }
       private bool AddStartingTestingState(IGameInstance gi)
       {
+         return true;
+      }
+      private bool AssignStartingTownsplayer(IGameInstance gi, int dieRoll)
+      {
+         string name = "";
+         switch (dieRoll)
+         {
+            case 1: name="BandPresident"; break;
+            case 2: name = "Doctor";  break;
+            case 3: name = "Mayor"; break;
+            case 4: name = "Minister"; break;
+            case 5: name = "Teacher"; break;
+            case 6: name = "Sheriff"; break;
+            default:
+               Logger.Log(LogEnum.LE_ERROR, "Assign_StartingTownsplayer(e002): reached default with dieRoll=" + dieRoll.ToString());
+               return false;
+         }
+         IMapItem? startingTownsplayer = gi.Stacks.FindMapItem(name);
+         if( null == startingTownsplayer)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingTownsplayer(e002): startingTownsplayer=null for name=" + name);
+            return false;
+         }
+         startingTownsplayer.IsControlled = true;
          return true;
       }
    }

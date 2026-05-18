@@ -19,13 +19,17 @@ Choose a button to begin:
  - Play as Alien against computer<LineBreak/>"
 e001	"<Bold>e001 Secretly Select HQ Area</Bold>  <InlineUIContainer><Button Content='r3.1' FontFamily='Courier New'  FontSize='12'> </Button></InlineUIContainer>
 <LineBreak/><LineBreak/> 
-The first step is for the Alien player to secretly choose where the Alien Sub-Commander is running his operations.
+The Alien player secretly chooses where the Alien Sub-Commander is running his operations.
 <LineBreak/><LineBreak/>
 The headquarters (HQ) must be a specified building, such as <Bold>House 4</Bold> the <Bold>Stock Pen</Bold> , the <Bold>Town Hall</Bold>, etc. 
 <LineBreak/><LineBreak/>
 If the building chosen as the Alien HQ has more than one space, the Alien player must choose which area of the building is the Alien HQ. This information is secret to the Alien Player.
 <LineBreak/><LineBreak/>
                             <InlineUIContainer><Image Name='ZebulonBlack'  Height='150' Width='150'></Image></InlineUIContainer>"
+e002	"<Bold>e002 Select Towns Player Counter</Bold><LineBreak/><LineBreak/>
+Town player rolls a die to determine which townsperson counter begins the game under his or her control according to 
+<InlineUIContainer><Button Content='Town Player Starting' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table.
+<LineBreak/><LineBreak/>"
 e501	"<Bold>e501 Game Won!!!</Bold>
 <LineBreak/><LineBreak/>"
 e502	"<Bold>e502 Game Lost</Bold>

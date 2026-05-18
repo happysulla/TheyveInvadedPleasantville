@@ -54,6 +54,7 @@
     <None Remove="Images\CrossedAntenna.gif" />
     <None Remove="Images\Deny.gif" />
     <None Remove="Images\Deputy.gif" />
+    <None Remove="Images\dieRoll.gif" />
     <None Remove="Images\Doctor.gif" />
     <None Remove="Images\DoorClosing.gif" />
     <None Remove="Images\EndGameFail.gif" />
@@ -231,6 +232,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Deputy.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\dieRoll.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Doctor.gif">

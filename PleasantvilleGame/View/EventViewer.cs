@@ -418,18 +418,13 @@ namespace PleasantvilleGame
                      string imageName = img.Name;
                      if (true == img.Name.Contains("Continue"))
                         imageName = "Continue";
-                     else if( true == img.Name.Contains("DieRollWhite"))
+                     else if( true == img.Name.Contains("DieRoll"))
                      {
-                        imageName = "DieRollWhite";
+                        imageName = "dieRoll";
                      }
-                     else if (true == img.Name.Contains("DieRollBlue"))
+                     else if (true == img.Name.Contains("DiceRoll"))
                      {
-                        imageName = "DieRollBlue";
-                     }
-                     else if (true == img.Name.Contains("DieRoll"))
-                     {
-                        Logger.Log(LogEnum.LE_ERROR, "OpenEvent(): imageName=DieRoll for key=" + key);
-                        return false;
+                        imageName = "dieRoll";
                      }
                      string fullImagePath = MapImage.theImageDirectory + Utilities.RemoveSpaces(imageName) + ".gif";
                      System.Windows.Media.Imaging.BitmapImage bitImage = new BitmapImage();
@@ -438,12 +433,8 @@ namespace PleasantvilleGame
                      bitImage.EndInit();
                      img.Source = bitImage;
                      ImageBehavior.SetAnimatedSource(img, img.Source);
-                     if ((true == img.Name.Contains("DieRollWhite")) || (true == img.Name.Contains("DieRollBlue")))
+                     if ((true == img.Name.Contains("DieRoll")) || (true == img.Name.Contains("DiceRoll")))
                      {
-                        //RoutedCommand command = new RoutedCommand();
-                        //KeyGesture keyGesture = new KeyGesture(Key.Enter, ModifierKeys.None);
-                        //myTextBlock.InputBindings.Add(new KeyBinding(command, keyGesture));
-                        //myTextBlock.CommandBindings.Add(new CommandBinding(command, myTextBlock.MouseDown));
                         if (true == isDieShown[dieCount])
                         {
                            if (Utilities.NO_RESULT == eventDieRolls[dieNumIndex]) // if true, perform a one time insert b/c dieNumIndex increments by one
@@ -589,6 +580,45 @@ namespace PleasantvilleGame
          int firstDieResult = gi.DieResults[key][0];
          switch (key)
          {
+            case "e002":
+               myTextBlock.Inlines.Add(new LineBreak());
+               myTextBlock.Inlines.Add(new Run("Roll for for Starting Townsplayer: "));
+               if (Utilities.NO_RESULT == gi.DieResults[key][0])
+               {
+                  BitmapImage bmi = new BitmapImage();
+                  bmi.BeginInit();
+                  bmi.UriSource = new Uri(MapImage.theImageDirectory + "dieRoll.gif", UriKind.Absolute);
+                  bmi.EndInit();
+                  Image imgDie = new Image { Name = "DieRoll", Source = bmi, Width = Utilities.theMapItemOffset, Height = Utilities.theMapItemOffset };
+                  ImageBehavior.SetAnimatedSource(imgDie, bmi);
+                  myTextBlock.Inlines.Add(new InlineUIContainer(imgDie));
+               }
+               if( Utilities.NO_RESULT < firstDieResult)
+               {
+                  StringBuilder sb = new StringBuilder(firstDieResult.ToString());
+                  switch (firstDieResult)
+                  {
+                     case 1:sb.Append("  =  Bank President"); break;
+                     case 2: sb.Append("  =  Doctor"); break;
+                     case 3: sb.Append("  =  Mayor"); break;
+                     case 4: sb.Append("  =  Minister"); break;
+                     case 5: sb.Append("  =  School Teacher"); break;
+                     case 6: sb.Append("  =  Sheriff"); break;
+                     default:
+                        Logger.Log(LogEnum.LE_ERROR, "UpdateEventContent(e002): reached default with firstDieResult=" + firstDieResult.ToString());
+                        return false;
+                  }
+                  myTextBlock.Inlines.Add(new Run(sb.ToString()));
+                  myTextBlock.Inlines.Add(new LineBreak());
+                  myTextBlock.Inlines.Add(new LineBreak());
+                  myTextBlock.Inlines.Add(new Run("                                            "));
+                  Image imge54b = new Image { Name = "Continue002", Width = 100, Height = 100, Source = MapItem.theMapImages.GetBitmapImage("Continue") };
+                  myTextBlock.Inlines.Add(new InlineUIContainer(imge54b));
+                  myTextBlock.Inlines.Add(new LineBreak());
+                  myTextBlock.Inlines.Add(new LineBreak());
+                  myTextBlock.Inlines.Add("Click image to continue.");
+               }
+               break;
             case "e101":
                break;
             case "e102":
@@ -968,11 +998,11 @@ namespace PleasantvilleGame
                      RollEndCallback rollEndCallback = ShowDieResult;
                      switch (img.Name)
                      {
-                        case "DieRollWhite":
+                        case "DieRoll":
                            myDieRoller.RollMovingDie(myCanvasMain, rollEndCallback);
                            img.Visibility = Visibility.Hidden;
                            return;
-                        case "DieRollBlue":
+                        case "DiceRoll":
                            myDieRoller.RollMovingDice(myCanvasMain, rollEndCallback);
                            img.Visibility = Visibility.Hidden;
                            return;
