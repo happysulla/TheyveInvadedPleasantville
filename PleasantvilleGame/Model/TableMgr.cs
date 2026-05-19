@@ -67,6 +67,20 @@ namespace PleasantvilleGame
       {
          CreateCombatTable();
       }
+      static string GetTownsperson(IGameInstance gi, int firstRoll, int secondRoll)
+      {
+         if( firstRoll < 1 || 5 < firstRoll )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GetTownsperson() returned error with firstRoll=" + firstRoll.ToString());
+            return "ERROR";
+         }
+         if (secondRoll < 1 || 6 < secondRoll)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GetTownsperson() returned error with secondRoll=" + secondRoll.ToString());
+            return "ERROR";
+         }
+         return theTownpersonsTable[firstRoll, secondRoll];
+      }
       private void CreateCombatTable()
       {
          theTable[0, 0] = CombatResult.DefenderWins;

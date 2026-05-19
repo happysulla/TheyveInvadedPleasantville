@@ -382,7 +382,24 @@ namespace PleasantvilleGame
                }
                else
                {
-
+                  gi.EventActive = gi.EventDisplayed = "e003";
+                  gi.DieRollAction = GameAction.GameSetupStartingAlienSetRoll;
+               }
+               break;
+            case GameAction.GameSetupStartingAlienSetRoll:
+               if (Utilities.NO_RESULT == gi.DieResults[key][0])
+               {
+                  gi.DieResults[key][0] = dieRoll;
+                  gi.DieRollAction = GameAction.GameSetupStartingAlienSetRoll;
+               }
+               else if (Utilities.NO_RESULT == gi.DieResults[key][1])
+               {
+                  gi.DieResults[key][1] = dieRoll;
+                  gi.DieRollAction = GameAction.DieRollActionNone;
+               }
+               else
+               {
+                  gi.EventActive = gi.EventDisplayed = "e004";
                }
                break;
             default:

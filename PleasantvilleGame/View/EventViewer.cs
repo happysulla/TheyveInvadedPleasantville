@@ -582,7 +582,7 @@ namespace PleasantvilleGame
          {
             case "e002":
                myTextBlock.Inlines.Add(new LineBreak());
-               myTextBlock.Inlines.Add(new Run("Roll for for Starting Townsplayer: "));
+               myTextBlock.Inlines.Add(new Run("Roll for for starting townsplayer: "));
                if (Utilities.NO_RESULT == gi.DieResults[key][0])
                {
                   BitmapImage bmi = new BitmapImage();
@@ -612,8 +612,51 @@ namespace PleasantvilleGame
                   myTextBlock.Inlines.Add(new LineBreak());
                   myTextBlock.Inlines.Add(new LineBreak());
                   myTextBlock.Inlines.Add(new Run("                                            "));
-                  Image imge54b = new Image { Name = "Continue002", Width = 100, Height = 100, Source = MapItem.theMapImages.GetBitmapImage("Continue") };
-                  myTextBlock.Inlines.Add(new InlineUIContainer(imge54b));
+                  Image imge002= new Image { Name = "Continue002", Width = 100, Height = 100, Source = MapItem.theMapImages.GetBitmapImage("Continue") };
+                  myTextBlock.Inlines.Add(new InlineUIContainer(imge002));
+                  myTextBlock.Inlines.Add(new LineBreak());
+                  myTextBlock.Inlines.Add(new LineBreak());
+                  myTextBlock.Inlines.Add("Click image to continue.");
+               }
+               break;
+            case "e003":
+               myTextBlock.Inlines.Add(new Run("Roll first die for starting alien: "));
+               if (Utilities.NO_RESULT == gi.DieResults[key][0])
+               {
+                  BitmapImage bmi = new BitmapImage();
+                  bmi.BeginInit();
+                  bmi.UriSource = new Uri(MapImage.theImageDirectory + "dieRoll.gif", UriKind.Absolute);
+                  bmi.EndInit();
+                  Image imgDie = new Image { Name = "DieRoll", Source = bmi, Width = Utilities.theMapItemOffset, Height = Utilities.theMapItemOffset };
+                  ImageBehavior.SetAnimatedSource(imgDie, bmi);
+                  myTextBlock.Inlines.Add(new InlineUIContainer(imgDie));
+               }
+               else if (Utilities.NO_RESULT == gi.DieResults[key][1])
+               {
+                  myTextBlock.Inlines.Add(new Run(firstDieResult.ToString()));
+                  myTextBlock.Inlines.Add(new LineBreak());
+                  myTextBlock.Inlines.Add(new LineBreak());
+                  myTextBlock.Inlines.Add(new Run("Roll 2nd die for starting alien: "));
+                  BitmapImage bmi = new BitmapImage();
+                  bmi.BeginInit();
+                  bmi.UriSource = new Uri(MapImage.theImageDirectory + "dieRoll.gif", UriKind.Absolute);
+                  bmi.EndInit();
+                  Image imgDie = new Image { Name = "DieRoll", Source = bmi, Width = Utilities.theMapItemOffset, Height = Utilities.theMapItemOffset };
+                  ImageBehavior.SetAnimatedSource(imgDie, bmi);
+                  myTextBlock.Inlines.Add(new InlineUIContainer(imgDie));
+               }
+               else
+               {
+                  myTextBlock.Inlines.Add(new Run(firstDieResult.ToString()));
+                  myTextBlock.Inlines.Add(new LineBreak());
+                  myTextBlock.Inlines.Add(new LineBreak());
+                  myTextBlock.Inlines.Add(new Run("Roll 2nd die for starting alien: "));
+                  myTextBlock.Inlines.Add(new Run(gi.DieResults[key][1].ToString()));
+                  myTextBlock.Inlines.Add(new LineBreak());
+                  myTextBlock.Inlines.Add(new LineBreak());
+                  myTextBlock.Inlines.Add(new Run("                                            "));
+                  Image imge003 = new Image { Name = "Continue003", Width = 100, Height = 100, Source = MapItem.theMapImages.GetBitmapImage("Continue") };
+                  myTextBlock.Inlines.Add(new InlineUIContainer(imge003));
                   myTextBlock.Inlines.Add(new LineBreak());
                   myTextBlock.Inlines.Add(new LineBreak());
                   myTextBlock.Inlines.Add("Click image to continue.");
@@ -1005,6 +1048,14 @@ namespace PleasantvilleGame
                         case "DiceRoll":
                            myDieRoller.RollMovingDice(myCanvasMain, rollEndCallback);
                            img.Visibility = Visibility.Hidden;
+                           return;
+                        case "Continue002":
+                           action = GameAction.GameSetupStartingTownsplayerSetRoll;
+                           myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+                           return;
+                        case "Continue003":
+                           action = GameAction.GameSetupStartingAlienSetRoll;
+                           myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
                         case "ExitGame":
                            action = GameAction.EndGameExit;

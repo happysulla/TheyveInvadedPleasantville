@@ -56,6 +56,8 @@ namespace PleasantvilleGame
       GameSetupPlayTownsperson,
       GameSetupStartingTownsplayerSetRoll,
       GameSetupStartingTownsplayerSet,
+      GameSetupStartingAlienSetRoll,
+      GameSetupStartingAlienSet,
 
       AlienStart,
       TownspersonStart,
