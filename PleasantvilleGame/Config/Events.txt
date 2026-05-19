@@ -30,6 +30,15 @@ e002	"<Bold>e002 Select Towns Player Counter</Bold><LineBreak/><LineBreak/>
 Town player rolls a die to determine which townsperson counter begins the game under his or her control according to 
 <InlineUIContainer><Button Content='Town Player Starting' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table.
 <LineBreak/><LineBreak/>"
+e003	"<Bold>e003 Roll for Alien Controlled Counter</Bold><LineBreak/><LineBreak/>
+The Alien player secretly rolls the dice twice on the <InlineUIContainer><Button Content='Townspeople' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table 
+to determine which two townspersons begin the game under Alien control. 
+<LineBreak/><LineBreak/>"
+e003a	"<Bold>e003a Roll for Alien Controlled Counter</Bold><LineBreak/><LineBreak/>
+The computer secretly rolls the dice twice on the <InlineUIContainer><Button Content='Townspeople' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table 
+to determine which two townspersons begin the game under Alien control. This information is hidden from Towns player.
+<LineBreak/><LineBreak/>
+                                            <InlineUIContainer><Image Name='Continue003a' Height='100' Width='100'></Image></InlineUIContainer>"
 e501	"<Bold>e501 Game Won!!!</Bold>
 <LineBreak/><LineBreak/>"
 e502	"<Bold>e502 Game Lost</Bold>

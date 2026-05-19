@@ -619,6 +619,13 @@ namespace PleasantvilleGame
                   myTextBlock.Inlines.Add("Click image to continue.");
                }
                break;
+            case "e003a":
+               Image imge003a = new Image { Name = "Continue003a", Width = 100, Height = 100, Source = MapItem.theMapImages.GetBitmapImage("Continue") };
+               myTextBlock.Inlines.Add(new InlineUIContainer(imge003a));
+               myTextBlock.Inlines.Add(new LineBreak());
+               myTextBlock.Inlines.Add(new LineBreak());
+               myTextBlock.Inlines.Add("Click image to continue.");
+               break;
             case "e101":
                break;
             case "e102":
