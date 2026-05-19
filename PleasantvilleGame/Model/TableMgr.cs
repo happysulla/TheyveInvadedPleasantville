@@ -143,5 +143,19 @@ namespace PleasantvilleGame
          theTable[9, 4] = CombatResult.DefenderWins;
          theTable[10, 4] = CombatResult.DefenderWins;
       }
+      static public string GetTownspersonName(int die1, int die2)
+      {
+         if( die1 < 0 || 5 < die1 )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "TableMgr.GetTownspersonName(): die1 out of range: " + die1);
+            return "ERROR";
+         }
+         if (die2 < 0 || 6 < die2)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "TableMgr.GetTownspersonName(): die2 out of range: " + die2);
+            return "ERROR";
+         }
+         return theTownpersonsTable[die1, die2];
+      }
    }
 }
