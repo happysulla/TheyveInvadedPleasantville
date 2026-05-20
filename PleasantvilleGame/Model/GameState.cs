@@ -406,8 +406,7 @@ namespace PleasantvilleGame
             case GameAction.GameSetupStartingAlienSet:
                if( false == AssignStartingAlien(gi))
                {
-                   returnStatus = "AssignStartingAlien() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+
                }
                gi.EventActive = gi.EventDisplayed = "e004";
                gi.DieRollAction = GameAction.DieRollActionNone;
