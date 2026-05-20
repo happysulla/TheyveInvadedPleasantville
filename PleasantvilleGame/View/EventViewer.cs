@@ -906,7 +906,7 @@ namespace PleasantvilleGame
                      break;
                   case "HostGame":
                   case "JoinGame":
-                     b.IsEnabled = false;
+                     b.IsEnabled = true;
                      break;
                   default:
                      Logger.Log(LogEnum.LE_ERROR, "Set_ButtonState(): reached default content=" + content);

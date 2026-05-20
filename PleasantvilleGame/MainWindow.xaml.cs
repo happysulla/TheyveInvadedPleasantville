@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using PleasantvilleGame.Networking;
 using Application = System.Windows.Application;
 
 namespace PleasantvilleGame
@@ -69,8 +70,9 @@ namespace PleasantvilleGame
    public partial class MainWindow : Window
    {
       public static string theAssemblyDirectory = "";
-      private IGameEngine? myGameEngine = null;
+      public static GameViewerWindow? theGameViewerWindow { get; set; }
       private GameViewerWindow? myGameViewerWindow = null;
+      private IGameEngine? myGameEngine = null;
       public MainWindow()
       {
          InitializeComponent();
@@ -125,6 +127,7 @@ namespace PleasantvilleGame
             }
             //--------------------------------------------
             myGameEngine = new GameEngine(this);
+            GameEngine.theMultiplayerSessionManager = new MultiplayerSessionManager(myGameEngine);
             //--------------------------------------------
             IGameInstance gi = new GameInstance();
             if (true == gi.CtorError)
@@ -141,6 +144,7 @@ namespace PleasantvilleGame
                Application.Current.Shutdown();
                return;
             }
+            theGameViewerWindow = myGameViewerWindow;
             //--------------------------------------------
             string iconFilename = MapImage.theImageDirectory + "Pleasantville.ico";
             Uri iconUri = new Uri(iconFilename, UriKind.Absolute);

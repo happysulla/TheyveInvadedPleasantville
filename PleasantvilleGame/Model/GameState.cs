@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
+using PleasantvilleGame.Networking;
 using Application = System.Windows.Application;
 using Color = System.Windows.Media.Color;
 using MessageBox = System.Windows.MessageBox;
@@ -357,12 +358,89 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.GameSetupHostGame:
-               returnStatus = action.ToString() + " not implemented";
-               Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               HostGameDialog hostDialog = new HostGameDialog();
+               if (Application.Current?.MainWindow is not null)
+               {
+                  hostDialog.Owner = MainWindow.theGameViewerWindow;
+               }
+               if (true == hostDialog.ShowDialog())
+               {
+                  if (null == GameEngine.theMultiplayerSessionManager)
+                  {
+                     returnStatus = "Multiplayer session manager is not available";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                     break;
+                  }
+                  GameEngine.theIsAlien = true;
+                  GameEngine.theIsComputerOpponent = false;
+                  GameEngine.theIsServer = true;
+                  HostSessionResultDto hostResult = GameEngine.theMultiplayerSessionManager.StartHosting(gi, hostDialog.SessionName, hostDialog.Port);
+                  if (false == hostResult.IsSuccess || null == hostResult.Session)
+                  {
+                     returnStatus = "Unable to host multiplayer game: " + hostResult.ErrorMessage;
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                     MessageBox.Show("Unable to host multiplayer game.\n\n" + hostResult.ErrorMessage, "Host Game");
+                     break;
+                  }
+                  gi.EventActive = gi.EventDisplayed = "e002";
+                  gi.DieRollAction = GameAction.GameSetupStartingTownsplayerSetRoll;
+                  StringBuilder hostMessage = new StringBuilder();
+                  hostMessage.Append("Hosting started.\n\n");
+                  hostMessage.Append("Session Id: ");
+                  hostMessage.Append(hostResult.Session.SessionId);
+                  hostMessage.Append("\nJoin Code: ");
+                  hostMessage.Append(hostResult.Session.JoinCode);
+                  hostMessage.Append("\nAddress: ");
+                  hostMessage.Append(hostResult.Session.HostAddress);
+                  hostMessage.Append(":");
+                  hostMessage.Append(hostResult.Session.HostPort.ToString());
+                  hostMessage.Append("\n\nThis first scaffold hosts the Alien side locally and exposes a gRPC endpoint for the Town player.");
+                  MessageBox.Show(hostMessage.ToString(), "Host Game");
+               }
                break;
             case GameAction.GameSetupJoinGame:
-               returnStatus = action.ToString() + " not implemented";
-               Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               JoinGameDialog joinDialog = new JoinGameDialog();
+               if (Application.Current?.MainWindow is not null)
+               {
+                  joinDialog.Owner = Application.Current.MainWindow;
+               }
+               if (true == joinDialog.ShowDialog())
+               {
+                  if (null == GameEngine.theMultiplayerSessionManager)
+                  {
+                     returnStatus = "Multiplayer session manager is not available";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                     break;
+                  }
+                  JoinSessionResultDto joinResult = GameEngine.theMultiplayerSessionManager.JoinSession(joinDialog.ServerAddress, joinDialog.SessionId, joinDialog.JoinCode);
+                  if (false == joinResult.IsSuccess || null == joinResult.Session || null == joinResult.State)
+                  {
+                     returnStatus = "Unable to join multiplayer game: " + joinResult.ErrorMessage;
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                     MessageBox.Show("Unable to join multiplayer game.\n\n" + joinResult.ErrorMessage, "Join Game");
+                     break;
+                  }
+                  GameEngine.theIsAlien = false;
+                  GameEngine.theIsComputerOpponent = false;
+                  GameEngine.theIsServer = false;
+                  if (false == MultiplayerStateApplier.ApplyVisibleState(gi, joinResult.State, MultiplayerRole.Town))
+                  {
+                     returnStatus = "Failed to apply the visible host state";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                     MessageBox.Show("Connected to host, but failed to apply the visible game state.", "Join Game");
+                     break;
+                  }
+                  StringBuilder joinMessage = new StringBuilder();
+                  joinMessage.Append("Joined multiplayer session as the Town side.\n\n");
+                  joinMessage.Append("Session: ");
+                  joinMessage.Append(joinResult.Session.SessionName);
+                  joinMessage.Append("\nHost: ");
+                  joinMessage.Append(joinResult.Session.HostAddress);
+                  joinMessage.Append(":");
+                  joinMessage.Append(joinResult.Session.HostPort.ToString());
+                  joinMessage.Append("\n\nThis first scaffold loads the host's visible state into the client. Full live turn replication is the next step.");
+                  MessageBox.Show(joinMessage.ToString(), "Join Game");
+               }
                break;
             case GameAction.GameSetupPlayAlien:
                GameEngine.theIsAlien = true;

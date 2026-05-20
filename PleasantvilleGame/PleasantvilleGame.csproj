@@ -421,8 +421,23 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Protobuf Include="Protos\pleasantville_multiplayer.proto" GrpcServices="Client,Server" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
     <PackageReference Include="XamlAnimatedGif" Version="2.3.1" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.66.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.66.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.66.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Google.Protobuf" Version="3.27.3" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+option csharp_namespace = "PleasantvilleGame.Networking";
+
+package pleasantville.multiplayer;
+
+service PleasantvilleMultiplayer {
+  rpc CreateSession (CreateSessionRequest) returns (CreateSessionResponse);
+  rpc JoinSession (JoinSessionRequest) returns (JoinSessionResponse);
+  rpc GetVisibleState (GetVisibleStateRequest) returns (GetVisibleStateResponse);
+  rpc SubmitAction (SubmitActionRequest) returns (SubmitActionResponse);
+}
+
+enum PlayerRole {
+  UNSPECIFIED = 0;
+  ALIEN = 1;
+  TOWN = 2;
+}
+
+message SessionDescriptor {
+  string session_id = 1;
+  string session_name = 2;
+  string join_code = 3;
+  string host_address = 4;
+  int32 host_port = 5;
+  bool is_host = 6;
+  bool is_connected = 7;
+  PlayerRole local_role = 8;
+}
+
+message CreateSessionRequest {
+  string requested_session_name = 1;
+  int32 listen_port = 2;
+}
+
+message CreateSessionResponse {
+  bool success = 1;
+  string error_message = 2;
+  SessionDescriptor session = 3;
+  VisibleGameState state = 4;
+}
+
+message JoinSessionRequest {
+  string session_id = 1;
+  string join_code = 2;
+}
+
+message JoinSessionResponse {
+  bool success = 1;
+  string error_message = 2;
+  SessionDescriptor session = 3;
+  VisibleGameState state = 4;
+}
+
+message GetVisibleStateRequest {
+  string session_id = 1;
+  string join_code = 2;
+  PlayerRole player_role = 3;
+}
+
+message GetVisibleStateResponse {
+  bool success = 1;
+  string error_message = 2;
+  VisibleGameState state = 3;
+}
+
+message MultiplayerAction {
+  string action_name = 1;
+  int32 die_roll = 2;
+  string payload_json = 3;
+}
+
+message SubmitActionRequest {
+  string session_id = 1;
+  string join_code = 2;
+  PlayerRole player_role = 3;
+  MultiplayerAction action = 4;
+}
+
+message SubmitActionResponse {
+  bool accepted = 1;
+  string error_message = 2;
+  VisibleGameState state = 3;
+}
+
+message VisibleCounter {
+  string name = 1;
+  string territory_name = 2;
+  string territory_subname = 3;
+  int32 movement = 4;
+  int32 movement_used = 5;
+  int32 influence = 6;
+  int32 combat = 7;
+  bool is_controlled_by_local_player = 8;
+  bool is_controlled_by_remote_player = 9;
+  bool is_alien_controlled_visible = 10;
+  bool is_unconscious = 11;
+  bool is_stunned = 12;
+  bool is_surrendered = 13;
+  bool is_tied_up = 14;
+  bool is_wary = 15;
+  bool is_killed = 16;
+  bool is_implant_held = 17;
+}
+
+message VisibleGameState {
+  string game_guid = 1;
+  string event_active = 2;
+  string event_displayed = 3;
+  string player_turn = 4;
+  string next_action = 5;
+  string game_phase = 6;
+  int32 game_turn = 7;
+  int32 day = 8;
+  int32 influence_total = 9;
+  int32 influence_townspeople = 10;
+  int32 influence_alien_unknown = 11;
+  int32 influence_alien_known = 12;
+  repeated VisibleCounter counters = 13;
+}

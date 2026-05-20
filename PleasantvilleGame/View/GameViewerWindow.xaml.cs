@@ -272,16 +272,7 @@ namespace PleasantvilleGame
          myTimer.Tick += new EventHandler(TimerElasped);
 #pragma warning restore CA1416 // Validate platform compatibility
          //----------------------------------------------------------
-         StringBuilder sb55 = new StringBuilder();
-         if (true == GameEngine.theIsServer)
-            sb55.Append("SERVER: ");
-         else
-            sb55.Append("CLIENT: ");
-         if (true == GameEngine.theIsAlien)
-            sb55.Append("Pleasantville For Aliens");
-         else
-            sb55.Append("Pleasantville For Humans");
-         this.Title = sb55.ToString();
+         UpdateWindowTitle();
          myCanvasMain.MouseLeftButtonDown += this.MouseLeftButtonDownCanvas;
          myCanvasMain.MouseRightButtonDown += this.MouseRightButtonDownCanvas;
          this.PreviewMouseMove += MouseMoveGameViewerWindow;
@@ -1018,6 +1009,19 @@ namespace PleasantvilleGame
          }
          return true;
       }
+      private void UpdateWindowTitle()
+      {
+         StringBuilder sb55 = new StringBuilder();
+         if (true == GameEngine.theIsServer)
+            sb55.Append("SERVER: ");
+         else
+            sb55.Append("CLIENT: ");
+         if (true == GameEngine.theIsAlien)
+            sb55.Append("Pleasantville For Aliens");
+         else
+            sb55.Append("Pleasantville For Humans");
+         this.Title = sb55.ToString();
+      }
       //-------------INTERFACE FUNCTIONS---------------------------------
       public void UpdateView(ref IGameInstance gi, GameAction action)
       {
@@ -1043,12 +1047,16 @@ namespace PleasantvilleGame
          switch (action) // Perform acton based on the current next action.
          {
             case GameAction.GameSetupHostGame:
+               UpdateWindowTitle();
                break;
             case GameAction.GameSetupJoinGame:
+               UpdateWindowTitle();
                break;
             case GameAction.GameSetupPlayAlien:
+               UpdateWindowTitle();
                break;
             case GameAction.GameSetupPlayTownsperson:
+               UpdateWindowTitle();
                break;
             case GameAction.AlienStart:
                break;

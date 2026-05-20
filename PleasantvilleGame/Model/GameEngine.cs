@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Windows.Controls;
 using System.Xml;
+using PleasantvilleGame.Networking;
 
 namespace PleasantvilleGame
 {
@@ -10,6 +11,7 @@ namespace PleasantvilleGame
       static public bool theIsAlien = false;
       static public bool theIsComputerOpponent = false;
       static public bool theIsServer = false;
+      static public MultiplayerSessionManager? theMultiplayerSessionManager = null;
       static public GameFeats theInGameFeats = new GameFeats();          // feats that change from starting as this session runs
       static public GameFeats theStartingFeats = new GameFeats();  // starting feats read in at app initialization
       //---------------------------------------------------------------------
@@ -70,6 +72,7 @@ namespace PleasantvilleGame
       }
       public void PerformAction(ref IGameInstance gi, ref GameAction action, int dieRoll)
       {
+         theMultiplayerSessionManager?.TrackGameInstance(gi);
          IGameState? state = GameState.GetGameState(gi.GamePhase); // First get the current game state. Then call performNextAction() on the game state.
          if (null == state)
          {
@@ -85,6 +88,7 @@ namespace PleasantvilleGame
             sb1.Append(" r="); sb1.Append(returnStatus);
             Logger.Log(LogEnum.LE_ERROR, sb1.ToString());
          }
+         theMultiplayerSessionManager?.TrackGameInstance(gi);
          myMainWindow.UpdateViews(gi, action); // Update all registered views when performNextAction() is called
       }
       public bool CreateUnitTests(IGameInstance gi, DockPanel dp, GameViewerWindow gvw, EventViewer ev, IDieRoller dr, CanvasImageViewer civ)
