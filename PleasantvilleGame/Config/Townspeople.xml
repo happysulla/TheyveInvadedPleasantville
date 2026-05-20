@@ -137,7 +137,7 @@
 			</TableCell>
 			<TableCell BorderBrush='Black' BorderThickness='1'>
 				<Paragraph>
-					<Run Text='Hotel Ownder'></Run>
+					<Run Text='Hotel Owner'></Run>
 				</Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' BorderThickness='1'>

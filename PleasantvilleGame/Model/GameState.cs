@@ -411,7 +411,8 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                break;
             case GameAction.GameSetupShowMap:
-               if( false == CreateTownspeople(gi))
+               gi.EventActive = gi.EventDisplayed = "e004";
+               if ( false == CreateTownspeople(gi))
                {
                   returnStatus = "Create_Townspeople() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
@@ -426,6 +427,10 @@ namespace PleasantvilleGame
                   returnStatus = "Assign_StartingAlien() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                }
+               break;
+            case GameAction.GameSetupFinished:
+               gi.GamePhase = GamePhase.RandomMovement;
+               gi.EventActive = gi.EventDisplayed = "e005";
                break;
             default:
                returnStatus = "reached default action=" + action.ToString();

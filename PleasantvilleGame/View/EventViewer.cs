@@ -1061,6 +1061,10 @@ namespace PleasantvilleGame
                            action = GameAction.GameSetupShowMap;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
+                        case "Continue004":
+                           action = GameAction.GameSetupFinished;
+                           myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+                           return;
                         case "ExitGame":
                            action = GameAction.EndGameExit;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
