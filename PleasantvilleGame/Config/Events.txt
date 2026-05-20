@@ -36,9 +36,23 @@ to determine which two townspersons begin the game under Alien control.
 <LineBreak/><LineBreak/>"
 e003a	"<Bold>e003a Roll for Alien Controlled Counter</Bold><LineBreak/><LineBreak/>
 The computer secretly rolls the dice twice on the <InlineUIContainer><Button Content='Townspeople' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table 
-to determine which two townspersons begin the game under Alien control. This information is hidden from Towns player.
+to determine which two townspersons begin the game under Alien control. This information is hidden from Towns player. Click image to continue.
 <LineBreak/><LineBreak/>
-                                            <InlineUIContainer><Image Name='Continue003a' Height='100' Width='100'></Image></InlineUIContainer>"
+                                  <InlineUIContainer><Image Name='Continue003a' Height='100' Width='100'></Image></InlineUIContainer>"
+e004	"<Bold>e004 Setting Up Map</Bold><LineBreak/><LineBreak/>
+The starting locations for each piece is printed in the upper-left of the corner of the counter per <InlineUIContainer><Button Content='r2.2.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. Every counter is placed on the map.
+<LineBreak/><LineBreak/>
+If a building has more than one space in it, the counter is placed randomly in one of the spaces. However, only one counter may be placed in each space. 
+<LineBreak/><LineBreak/>
+The starting townplayer is shown in green. The alien is only one to see starting aliens until they become known. They are showed in gold. Click image to continue.
+<LineBreak/><LineBreak/>
+                                  <InlineUIContainer><Image Name='Continue004' Height='100' Width='100'></Image></InlineUIContainer>"
+e005	"<Bold>e005 Random Movement</Bold> <InlineUIContainer><Button Content='r6.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+<LineBreak/><LineBreak/>
+Four townspeople (if not under Town player control) move randomly in any given turn. The <InlineUIContainer><Button Content='Townspeople' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table determines who moves. 
+<LineBreak/><LineBreak/>
+The destination is per the 
+<InlineUIContainer><Button Content='Target Building' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table."
 e501	"<Bold>e501 Game Won!!!</Bold>
 <LineBreak/><LineBreak/>"
 e502	"<Bold>e502 Game Lost</Bold>

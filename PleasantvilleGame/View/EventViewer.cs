@@ -611,7 +611,7 @@ namespace PleasantvilleGame
                   myTextBlock.Inlines.Add(new Run(sb.ToString()));
                   myTextBlock.Inlines.Add(new LineBreak());
                   myTextBlock.Inlines.Add(new LineBreak());
-                  myTextBlock.Inlines.Add(new Run("                                            "));
+                  myTextBlock.Inlines.Add(new Run("                                  "));
                   Image imge002= new Image { Name = "Continue002", Width = 100, Height = 100, Source = MapItem.theMapImages.GetBitmapImage("Continue") };
                   myTextBlock.Inlines.Add(new InlineUIContainer(imge002));
                   myTextBlock.Inlines.Add(new LineBreak());
@@ -654,20 +654,13 @@ namespace PleasantvilleGame
                   myTextBlock.Inlines.Add(new Run(gi.DieResults[key][1].ToString()));
                   myTextBlock.Inlines.Add(new LineBreak());
                   myTextBlock.Inlines.Add(new LineBreak());
-                  myTextBlock.Inlines.Add(new Run("                                            "));
+                  myTextBlock.Inlines.Add(new Run("                                  "));
                   Image imge003 = new Image { Name = "Continue003", Width = 100, Height = 100, Source = MapItem.theMapImages.GetBitmapImage("Continue") };
                   myTextBlock.Inlines.Add(new InlineUIContainer(imge003));
                   myTextBlock.Inlines.Add(new LineBreak());
                   myTextBlock.Inlines.Add(new LineBreak());
                   myTextBlock.Inlines.Add("Click image to continue.");
                }
-               break;
-            case "e003a":
-               Image imge003a = new Image { Name = "Continue003a", Width = 100, Height = 100, Source = MapItem.theMapImages.GetBitmapImage("Continue") };
-               myTextBlock.Inlines.Add(new InlineUIContainer(imge003a));
-               myTextBlock.Inlines.Add(new LineBreak());
-               myTextBlock.Inlines.Add(new LineBreak());
-               myTextBlock.Inlines.Add("Click image to continue.");
                break;
             case "e101":
                break;
@@ -1062,6 +1055,10 @@ namespace PleasantvilleGame
                            return;
                         case "Continue003":
                            action = GameAction.GameSetupStartingAlienSetRoll;
+                           myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+                           return;
+                        case "Continue003a":
+                           action = GameAction.GameSetupShowMap;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
                         case "ExitGame":

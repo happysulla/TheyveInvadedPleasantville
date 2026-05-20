@@ -12,11 +12,11 @@ namespace PleasantvilleGame
       public const int FN_ERROR = -1000;
       public readonly static string[,] theTownpersonsTable = new string[5, 6]
       {
-         {"Mayor","Sheriff","Plumber","Lawyer","Hotel Owner","Judge"},
-         {"Repair Shop Owner","Maitre D","Doctor","Teacher","Minister","Bank President"},
-         {"Vet","Bar And Grill Owner","Teller","Station Attendant","Checkout Girl","PaperBoy"},
-         {"Maid","Bank Guard","Town Drunk","Tailor","BarTender","War Veteran"},
-         {"Waitress","Supermarket Manager","Fire Chief","Wife","Welder", "Deputy"},
+         {"Mayor","Sheriff","Plumber","Lawyer","HotelOwner","Judge"},
+         {"RepairShopOwner","MaitreD","Doctor","Teacher","Minister","BankPresident"},
+         {"Vet","BarAndGrillOwner","Teller","StationAttendant","CheckoutGirl","PaperBoy"},
+         {"Maid","BankGuard","TownDrunk","Tailor","BarTender","WarVeteran"},
+         {"Waitress","SuperMarketManager","FireChief","Wife","Welder", "Deputy"},
       };
       //---------------------------------------------------------------------
       public readonly static string[,] theTargetBuildingTable = new string[5, 6]
@@ -30,7 +30,7 @@ namespace PleasantvilleGame
       //---------------------------------------------------------------------
       public readonly static string[] theTownPlayerStartingTable = new string[6]
       {
-          "Bank President",
+          "BankPresident",
           "Doctor",
           "Mayor",
           "Minister",

@@ -7,6 +7,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using System.Xml.Linq;
 using Application = System.Windows.Application;
 using Color = System.Windows.Media.Color;
 using MessageBox = System.Windows.MessageBox;
@@ -245,6 +246,7 @@ namespace PleasantvilleGame
    //----------------------------------------------------------------
    class GameStateSetup : GameState
    {
+      static string[] theStartingPlayers = new string[3];
       public override string PerformAction(ref IGameInstance gi, ref GameAction action, int dieRoll)
       {
          GamePhase previousPhase = gi.GamePhase;
@@ -273,6 +275,7 @@ namespace PleasantvilleGame
                gi.EventDisplayed = gi.EventActive; // next screen to show
                break;
             case GameAction.UpdateLoadingGame:
+               theStartingPlayers = new string[3];
                if (false == LoadGame(ref gi))
                {
                   returnStatus = "Load_Game() returned false";
@@ -280,6 +283,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.RemoveSplashScreen: // GameStateSetup.PerformAction()
+               theStartingPlayers = new string[3];
                if (false == SetupNewGame(gi, ref action))
                {
                   returnStatus = "SetupNewGame() returned false";
@@ -377,25 +381,28 @@ namespace PleasantvilleGame
                {
                   gi.DieResults[key][0] = dieRoll;
                   gi.DieRollAction = GameAction.DieRollActionNone;
+                  if( false == GetStartingTownsperson(gi, dieRoll))
+                  {
+                     returnStatus = "Get_StartingTownsperson() returned false";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(GameSetupStartingTownsplayerSetRoll): " + returnStatus);
+                  }
                }
                else
                {
-                  gi.EventActive = gi.EventDisplayed = "e002";
-                  gi.DieRollAction = GameAction.GameSetupStartingTownsplayerSetRoll;
-                  if (false == CreateTownspeople(gi))
-                  {
-                     returnStatus = "CreateTownspeople() returned false";
-                     Logger.Log(LogEnum.LE_ERROR, "GameInstance(): Create_Townspeople() returned false");
-                  }
-                  if (false == AssignStartingTownsplayer(gi, gi.DieResults["e002"][0]))
-                  {
-                     returnStatus = "AssignStartingTownsplayer() returned false";
-                     Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
-                  }
                   if( true == GameEngine.theIsComputerOpponent )
                   {
                      gi.EventActive = gi.EventDisplayed = "e003a";
-                     gi.DieRollAction = GameAction.GameSetupStartingAlienSet;
+                     gi.DieRollAction = GameAction.DieRollActionNone;
+                     if (false == GetStartingAlien(gi))
+                     {
+                        returnStatus = "Get_StartingAlien() returned false";
+                        Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                     }
+                  }
+                  else
+                  {
+                     gi.EventActive = gi.EventDisplayed = "e003";
+                     gi.DieRollAction = GameAction.GameSetupStartingAlienSetRoll;
                   }
                }
                break;
@@ -403,13 +410,22 @@ namespace PleasantvilleGame
                returnStatus = action.ToString() + " not implemented";
                Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                break;
-            case GameAction.GameSetupStartingAlienSet:
-               if( false == AssignStartingAlien(gi))
+            case GameAction.GameSetupShowMap:
+               if( false == CreateTownspeople(gi))
                {
-
+                  returnStatus = "Create_Townspeople() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                }
-               gi.EventActive = gi.EventDisplayed = "e004";
-               gi.DieRollAction = GameAction.DieRollActionNone;
+               else if( false == AssignStartingTownsplayer(gi))
+               {
+                  returnStatus = "Assign_StartingTownsplayer() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
+               else if (false == AssignStartingAlien(gi))
+               {
+                  returnStatus = "Assign_StartingAlien() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
                break;
             default:
                returnStatus = "reached default action=" + action.ToString();
@@ -460,6 +476,64 @@ namespace PleasantvilleGame
       }
       private bool AddStartingTestingState(IGameInstance gi)
       {
+         return true;
+      }
+      private bool GetStartingTownsperson(IGameInstance gi, int dieRoll)
+      {
+         switch (dieRoll)
+         {
+            case 1: theStartingPlayers[0] = "BankPresident"; break;
+            case 2: theStartingPlayers[0] = "Doctor"; break;
+            case 3: theStartingPlayers[0] = "Mayor"; break;
+            case 4: theStartingPlayers[0] = "Minister"; break;
+            case 5: theStartingPlayers[0] = "Teacher"; break;
+            case 6: theStartingPlayers[0] = "Sheriff"; break;
+            default:
+               Logger.Log(LogEnum.LE_ERROR, "Get_StartingTownsperson(): reached default dieRoll=" + dieRoll.ToString());
+               return false;
+         }
+         Logger.Log(LogEnum.LE_SHOW_TOWNS_ADD, "Get_StartingTownsperson(): Added name=" + theStartingPlayers[0]);
+         return true;
+      }
+      private bool GetStartingAlien(IGameInstance gi)
+      {
+         int count = 1000;
+         while ( 0 < count-- )
+         {
+            int die1 = Utilities.RandomGenerator.Next(0, 5);
+            if (6 == die1) // first die cannot be a 6
+               continue;
+            int die2 = Utilities.RandomGenerator.Next(0, 6);
+            theStartingPlayers[1] = TableMgr.GetTownspersonName(die1, die2);
+            if ("ERROR" == theStartingPlayers[1])
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Get_StartingAlien(): first TableMgr.GetTownspersonName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
+               return false;
+            }
+            if (theStartingPlayers[0] == theStartingPlayers[1])
+               continue;
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Get_StartingAlien(): Added name=" + theStartingPlayers[1]);
+            //----------------------------------------------
+            die1 = Utilities.RandomGenerator.Next(0, 5);
+            if (6 == die1) // first die cannot be a 6
+               continue;
+            die2 = Utilities.RandomGenerator.Next(0, 6);
+            theStartingPlayers[2] = TableMgr.GetTownspersonName(die1, die2);
+            if ("ERROR" == theStartingPlayers[2])
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Get_StartingAlien(): 2nd TableMgr.GetTownspersonName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
+               return false;
+            }
+            if (theStartingPlayers[0] == theStartingPlayers[2])
+               continue;
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Get_StartingAlien(): Added name=" + theStartingPlayers[2]);
+            break;
+         }
+         if( count < 0 )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Get_StartingAlien(): never found aliens");
+            return false;
+         }
          return true;
       }
       public bool CreateTownspeople(IGameInstance gi)
@@ -928,25 +1002,17 @@ namespace PleasantvilleGame
          }
          return true;
       }
-      private bool AssignStartingTownsplayer(IGameInstance gi, int dieRoll)
+      private bool AssignStartingTownsplayer(IGameInstance gi)
       {
-         string name = "";
-         switch (dieRoll)
+         if (null == theStartingPlayers[0])
          {
-            case 1: name = "BandPresident"; break;
-            case 2: name = "Doctor";  break;
-            case 3: name = "Mayor"; break;
-            case 4: name = "Minister"; break;
-            case 5: name = "Teacher"; break;
-            case 6: name = "Sheriff"; break;
-            default:
-               Logger.Log(LogEnum.LE_ERROR, "Assign_StartingTownsplayer(e002): reached default with dieRoll=" + dieRoll.ToString());
-               return false;
+            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingTownsplayer():  theStartingPlayers[0]=null");
+            return false;
          }
-         IMapItem? startingTownsplayer = gi.Stacks.FindMapItem(name);
+         IMapItem? startingTownsplayer = gi.Stacks.FindMapItem(theStartingPlayers[0]);
          if( null == startingTownsplayer)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingTownsplayer(e002): startingTownsplayer=null for name=" + name);
+            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingTownsplayer(): startingTownsplayer=null for name=" + theStartingPlayers[0]);
             return false;
          }
          startingTownsplayer.IsControlled = true;
@@ -954,67 +1020,32 @@ namespace PleasantvilleGame
       }
       private bool AssignStartingAlien(IGameInstance gi)
       {
-         IMapItem? startingTownsplayer = null;
-         foreach(IStack stack in gi.Stacks)
+         if( null == theStartingPlayers[1])
          {
-            foreach(IMapItem mi in stack.MapItems)
-            {
-               if (true == mi.IsControlled)
-               {
-                  startingTownsplayer = mi;
-                  break;
-               }
-            }
-         }
-         if( null == startingTownsplayer)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien(): unable to find startingTownsplayer");
+            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien():  theStartingPlayers[1]=null");
             return false;
          }
-         //---------------------------------------
-         for (int i = 0; i < 1000; i++)
+         if (null == theStartingPlayers[2])
          {
-            int die1 = Utilities.RandomGenerator.Next(0, 5);
-            if (6 == die1) // first die cannot be a 6
-               continue;
-            int die2 = Utilities.RandomGenerator.Next(0, 6);
-            string name = TableMgr.GetTownspersonName(die1, die2);
-            if( "ERROR" == name)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien(): first TableMgr.GetTownspersonName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
-               return false;
-            }  
-            IMapItem? alien = gi.Stacks.FindMapItem(name);
-            if (null == alien)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Assign_StartingTownsplayer(): first alien=null for name=" + name);
-               return false;
-            }
-            if (alien.Name == startingTownsplayer.Name) // cannot be a starting townsperson
-               continue;
-            alien.IsAlienUnknown = true;
-            //----------------------------------------------
-            die1 = Utilities.RandomGenerator.Next(0, 5);
-            if (6 == die1) // first die cannot be a 6
-               continue;
-            die2 = Utilities.RandomGenerator.Next(0, 6);
-            name = TableMgr.GetTownspersonName(die1, die2);
-            if ("ERROR" == name)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien(): 2nd TableMgr.GetTownspersonName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
-               return false;
-            }
-            alien = gi.Stacks.FindMapItem(name);
-            if (null == alien)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Assign_StartingTownsplayer(): 2nd alien=null for name=" + name);
-               return false;
-            }
-            if (alien.Name == startingTownsplayer.Name) // cannot be a starting townsperson
-               continue;
-            alien.IsAlienUnknown = true;
-            break;
+            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien():  theStartingPlayers[2]=null");
+            return false;
          }
+         //------------------------------------
+         IMapItem? startingAlien = gi.Stacks.FindMapItem(theStartingPlayers[1]);
+         if (null == startingAlien)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien(): startingAlien=null for name=" + theStartingPlayers[1]);
+            return false;
+         }
+         startingAlien.IsAlienUnknown = true;
+         //------------------------------------
+         startingAlien = gi.Stacks.FindMapItem(theStartingPlayers[2]);
+         if (null == startingAlien)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien(): startingAlien=null for name=" + theStartingPlayers[2]);
+            return false;
+         }
+         startingAlien.IsAlienUnknown = true;
          return true;
       }
    }
