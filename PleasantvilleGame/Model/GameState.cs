@@ -635,11 +635,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "BankPresident";
          miName = name + Utilities.MapItemNum.ToString();
@@ -662,11 +659,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): mi=" + mi.Name + " tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "BarAndGrillOwner";
          miName = name + Utilities.MapItemNum.ToString();
@@ -689,11 +683,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "BarTender";
          miName = name + Utilities.MapItemNum.ToString();
@@ -716,11 +707,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "CheckoutGirl";
          miName = name + Utilities.MapItemNum.ToString();
@@ -743,11 +731,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "Deputy";
          miName = name + Utilities.MapItemNum.ToString();
@@ -770,11 +755,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "Doctor";
          miName = name + Utilities.MapItemNum.ToString();
@@ -797,11 +779,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "FireChief";
          miName = name + Utilities.MapItemNum.ToString();
@@ -824,11 +803,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "HotelOwner";
          miName = name + Utilities.MapItemNum.ToString();
@@ -851,11 +827,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "Judge";
          miName = name + Utilities.MapItemNum.ToString();
@@ -878,11 +851,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "Lawyer";
          miName = name + Utilities.MapItemNum.ToString();
@@ -905,11 +875,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "Maid";
          miName = name + Utilities.MapItemNum.ToString();
@@ -932,11 +899,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "MaitreD";
          miName = name + Utilities.MapItemNum.ToString();
@@ -959,11 +923,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "Mayor";
          miName = name + Utilities.MapItemNum.ToString();
@@ -986,11 +947,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "Minister";
          miName = name + Utilities.MapItemNum.ToString();
@@ -1013,11 +971,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "Paperboy";
          miName = name + Utilities.MapItemNum.ToString();
@@ -1040,11 +995,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "Plumber";
          miName = name + Utilities.MapItemNum.ToString();
@@ -1067,11 +1019,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "RepairShopOwner";
          miName = name + Utilities.MapItemNum.ToString();
@@ -1094,11 +1043,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "Sheriff";
          miName = name + Utilities.MapItemNum.ToString();
@@ -1121,11 +1067,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "StationAttendant";
          miName = name + Utilities.MapItemNum.ToString();
@@ -1148,11 +1091,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "SuperMarketManager";
          miName = name + Utilities.MapItemNum.ToString();
@@ -1175,11 +1115,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "Tailor";
          miName = name + Utilities.MapItemNum.ToString();
@@ -1202,11 +1139,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "Teacher";
          miName = name + Utilities.MapItemNum.ToString();
@@ -1229,11 +1163,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "Teller";
          miName = name + Utilities.MapItemNum.ToString();
@@ -1256,11 +1187,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "TownDrunk";
          miName = name + Utilities.MapItemNum.ToString();
@@ -1283,11 +1211,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "Vet";
          miName = name + Utilities.MapItemNum.ToString();
@@ -1310,11 +1235,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "Waitress";
          miName = name + Utilities.MapItemNum.ToString();
@@ -1337,11 +1259,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "WarVeteran";
          miName = name + Utilities.MapItemNum.ToString();
@@ -1364,11 +1283,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "Welder";
          miName = name + Utilities.MapItemNum.ToString();
@@ -1391,11 +1307,8 @@ namespace PleasantvilleGame
                return false;
             }
             IStack? tStack = gi.Stacks.Find(t);
-            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-            {
-               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
-               continue;
-            }
+            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+               break;
          }
          name = "Wife";
          miName = name + Utilities.MapItemNum.ToString();
