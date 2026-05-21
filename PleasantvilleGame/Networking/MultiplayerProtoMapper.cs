@@ -12,7 +12,7 @@ namespace PleasantvilleGame.Networking
          };
       }
 
-      public static MultiplayerRole ToDtoRole(PlayerRole role)
+      public static MultiplayerRole ToDataTranferObjectRole(PlayerRole role)
       {
          return role switch
          {
@@ -22,7 +22,7 @@ namespace PleasantvilleGame.Networking
          };
       }
 
-      public static SessionDescriptor ToProto(SessionDescriptorDto dto)
+      public static SessionDescriptor ToProto(SessionDescriptorDataTranferObject dto)
       {
          return new SessionDescriptor
          {
@@ -37,9 +37,9 @@ namespace PleasantvilleGame.Networking
          };
       }
 
-      public static SessionDescriptorDto ToDto(SessionDescriptor proto)
+      public static SessionDescriptorDataTranferObject ToDataTranferObject(SessionDescriptor proto)
       {
-         return new SessionDescriptorDto
+         return new SessionDescriptorDataTranferObject
          {
             SessionId = proto.SessionId,
             SessionName = proto.SessionName,
@@ -48,11 +48,11 @@ namespace PleasantvilleGame.Networking
             HostPort = proto.HostPort,
             IsHost = proto.IsHost,
             IsConnected = proto.IsConnected,
-            LocalRole = ToDtoRole(proto.LocalRole)
+            LocalRole = ToDataTranferObjectRole(proto.LocalRole)
          };
       }
 
-      public static VisibleGameState ToProto(VisibleGameStateDto dto)
+      public static VisibleGameState ToProto(VisibleGameStateDataTranferObject dto)
       {
          VisibleGameState state = new VisibleGameState
          {
@@ -70,7 +70,7 @@ namespace PleasantvilleGame.Networking
             InfluenceAlienKnown = dto.InfluenceAlienKnown
          };
 
-         foreach (VisibleCounterDto counter in dto.Counters)
+         foreach (VisibleCounterDataTranferObject counter in dto.Counters)
          {
             state.Counters.Add(new VisibleCounter
             {
@@ -97,9 +97,9 @@ namespace PleasantvilleGame.Networking
          return state;
       }
 
-      public static VisibleGameStateDto ToDto(VisibleGameState proto)
+      public static VisibleGameStateDataTranferObject ToDataTranferObject(VisibleGameState proto)
       {
-         VisibleGameStateDto dto = new VisibleGameStateDto
+         VisibleGameStateDataTranferObject dto = new VisibleGameStateDataTranferObject
          {
             GameGuid = proto.GameGuid,
             EventActive = proto.EventActive,
@@ -117,7 +117,7 @@ namespace PleasantvilleGame.Networking
 
          foreach (VisibleCounter counter in proto.Counters)
          {
-            dto.Counters.Add(new VisibleCounterDto
+            dto.Counters.Add(new VisibleCounterDataTranferObject
             {
                Name = counter.Name,
                TerritoryName = counter.TerritoryName,

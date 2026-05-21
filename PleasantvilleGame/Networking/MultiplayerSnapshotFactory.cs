@@ -2,9 +2,9 @@ namespace PleasantvilleGame.Networking
 {
    public static class MultiplayerSnapshotFactory
    {
-      public static VisibleGameStateDto CreateVisibleState(IGameInstance gameInstance, MultiplayerRole role)
+      public static VisibleGameStateDataTranferObject CreateVisibleState(IGameInstance gameInstance, MultiplayerRole role)
       {
-         VisibleGameStateDto dto = new VisibleGameStateDto
+         VisibleGameStateDataTranferObject dto = new VisibleGameStateDataTranferObject
          {
             GameGuid = gameInstance.GameGuid.ToString(),
             EventActive = gameInstance.EventActive,
@@ -22,7 +22,7 @@ namespace PleasantvilleGame.Networking
 
          foreach (IMapItem mapItem in gameInstance.Townspeople)
          {
-            VisibleCounterDto counter = new VisibleCounterDto
+            VisibleCounterDataTranferObject counter = new VisibleCounterDataTranferObject
             {
                Name = mapItem.Name,
                TerritoryName = mapItem.TerritoryCurrent.Name,

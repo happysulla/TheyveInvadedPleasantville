@@ -63,14 +63,14 @@ namespace PleasantvilleGame.Networking
       private GrpcChannel? myGrpcChannel;
       private PleasantvilleMultiplayer.PleasantvilleMultiplayerClient? myRemoteClient;
       private IGameInstance? myTrackedGameInstance;
-      private SessionDescriptorDto? mySession;
+      private SessionDescriptorDataTranferObject? mySession;
 
       public MultiplayerSessionManager(IGameEngine gameEngine)
       {
          myGameEngine = gameEngine;
       }
 
-      public SessionDescriptorDto? CurrentSession
+      public SessionDescriptorDataTranferObject? CurrentSession
       {
          get
          {
@@ -89,18 +89,18 @@ namespace PleasantvilleGame.Networking
          }
       }
 
-      public HostSessionResultDto StartHosting(IGameInstance gameInstance, string sessionName, int listenPort)
+      public HostSessionResultDataTranferObject StartHosting(IGameInstance gameInstance, string sessionName, int listenPort)
       {
          lock (mySync)
          {
             if (myGrpcHost is not null || myRemoteClient is not null)
             {
-               return new HostSessionResultDto { ErrorMessage = "A multiplayer session is already active." };
+               return new HostSessionResultDataTranferObject { ErrorMessage = "A multiplayer session is already active." };
             }
          }
 
          string safeSessionName = string.IsNullOrWhiteSpace(sessionName) ? "Pleasantville Session" : sessionName.Trim();
-         SessionDescriptorDto session = new SessionDescriptorDto
+         SessionDescriptorDataTranferObject session = new SessionDescriptorDataTranferObject
          {
             SessionId = Guid.NewGuid().ToString("N"),
             SessionName = safeSessionName,
@@ -150,7 +150,7 @@ namespace PleasantvilleGame.Networking
                mySession = session;
             }
 
-            return new HostSessionResultDto
+            return new HostSessionResultDataTranferObject
             {
                IsSuccess = true,
                Session = session,
@@ -160,17 +160,17 @@ namespace PleasantvilleGame.Networking
          catch (Exception ex)
          {
             Logger.Log(LogEnum.LE_ERROR, "StartHosting(): " + ex);
-            return new HostSessionResultDto { ErrorMessage = "Unable to start the gRPC host." };
+            return new HostSessionResultDataTranferObject { ErrorMessage = "Unable to start the gRPC host." };
          }
       }
 
-      public JoinSessionResultDto JoinSession(string serverAddress, string sessionId, string joinCode)
+      public JoinSessionResultDataTranferObject JoinSession(string serverAddress, string sessionId, string joinCode)
       {
          lock (mySync)
          {
             if (myGrpcHost is not null || myRemoteClient is not null)
             {
-               return new JoinSessionResultDto { ErrorMessage = "A multiplayer session is already active." };
+               return new JoinSessionResultDataTranferObject { ErrorMessage = "A multiplayer session is already active." };
             }
          }
 
@@ -188,10 +188,10 @@ namespace PleasantvilleGame.Networking
             if (!response.Success)
             {
                channel.Dispose();
-               return new JoinSessionResultDto { ErrorMessage = response.ErrorMessage };
+               return new JoinSessionResultDataTranferObject { ErrorMessage = response.ErrorMessage };
             }
 
-            SessionDescriptorDto session = MultiplayerProtoMapper.ToDto(response.Session);
+            SessionDescriptorDataTranferObject session = MultiplayerProtoMapper.ToDataTranferObject(response.Session);
             lock (mySync)
             {
                myGrpcChannel = channel;
@@ -199,24 +199,24 @@ namespace PleasantvilleGame.Networking
                mySession = session;
             }
 
-            return new JoinSessionResultDto
+            return new JoinSessionResultDataTranferObject
             {
                IsSuccess = true,
                Session = session,
-               State = response.State is null ? null : MultiplayerProtoMapper.ToDto(response.State)
+               State = response.State is null ? null : MultiplayerProtoMapper.ToDataTranferObject(response.State)
             };
          }
          catch (Exception ex)
          {
             Logger.Log(LogEnum.LE_ERROR, "JoinSession(): " + ex);
-            return new JoinSessionResultDto { ErrorMessage = "Unable to join the remote gRPC host." };
+            return new JoinSessionResultDataTranferObject { ErrorMessage = "Unable to join the remote gRPC host." };
          }
       }
 
-      public VisibleGameStateDto? GetRemoteVisibleState()
+      public VisibleGameStateDataTranferObject? GetRemoteVisibleState()
       {
          PleasantvilleMultiplayer.PleasantvilleMultiplayerClient? client;
-         SessionDescriptorDto? session;
+         SessionDescriptorDataTranferObject? session;
 
          lock (mySync)
          {
@@ -243,7 +243,7 @@ namespace PleasantvilleGame.Networking
                return null;
             }
 
-            return MultiplayerProtoMapper.ToDto(response.State);
+            return MultiplayerProtoMapper.ToDataTranferObject(response.State);
          }
          catch (Exception ex)
          {
@@ -254,7 +254,7 @@ namespace PleasantvilleGame.Networking
 
       internal CreateSessionResponse HandleCreateSessionRequest()
       {
-         SessionDescriptorDto? session = CurrentSession;
+         SessionDescriptorDataTranferObject? session = CurrentSession;
          if (session is null)
          {
             return new CreateSessionResponse
@@ -264,7 +264,7 @@ namespace PleasantvilleGame.Networking
             };
          }
 
-         VisibleGameStateDto? state = BuildStateForRole(MultiplayerRole.Alien);
+         VisibleGameStateDataTranferObject? state = BuildStateForRole(MultiplayerRole.Alien);
          return new CreateSessionResponse
          {
             Success = state is not null,
@@ -276,7 +276,7 @@ namespace PleasantvilleGame.Networking
 
       internal JoinSessionResponse HandleJoinSessionRequest(string sessionId, string joinCode)
       {
-         SessionDescriptorDto? session = CurrentSession;
+         SessionDescriptorDataTranferObject? session = CurrentSession;
          if (session is null || !string.Equals(session.SessionId, sessionId, StringComparison.Ordinal) || !string.Equals(session.JoinCode, joinCode, StringComparison.Ordinal))
          {
             return new JoinSessionResponse
@@ -286,7 +286,7 @@ namespace PleasantvilleGame.Networking
             };
          }
 
-         VisibleGameStateDto? state = BuildStateForRole(MultiplayerRole.Town);
+         VisibleGameStateDataTranferObject? state = BuildStateForRole(MultiplayerRole.Town);
          if (state is null)
          {
             return new JoinSessionResponse
@@ -296,7 +296,7 @@ namespace PleasantvilleGame.Networking
             };
          }
 
-         SessionDescriptorDto remoteSession = new SessionDescriptorDto
+         SessionDescriptorDataTranferObject remoteSession = new SessionDescriptorDataTranferObject
          {
             SessionId = session.SessionId,
             SessionName = session.SessionName,
@@ -326,7 +326,7 @@ namespace PleasantvilleGame.Networking
 
       internal GetVisibleStateResponse HandleGetVisibleStateRequest(string sessionId, string joinCode, PlayerRole playerRole)
       {
-         SessionDescriptorDto? session = CurrentSession;
+         SessionDescriptorDataTranferObject? session = CurrentSession;
          if (session is null || !string.Equals(session.SessionId, sessionId, StringComparison.Ordinal) || !string.Equals(session.JoinCode, joinCode, StringComparison.Ordinal))
          {
             return new GetVisibleStateResponse
@@ -336,7 +336,7 @@ namespace PleasantvilleGame.Networking
             };
          }
 
-         VisibleGameStateDto? state = BuildStateForRole(MultiplayerProtoMapper.ToDtoRole(playerRole));
+         VisibleGameStateDataTranferObject? state = BuildStateForRole(MultiplayerProtoMapper.ToDataTranferObjectRole(playerRole));
          return new GetVisibleStateResponse
          {
             Success = state is not null,
@@ -347,7 +347,7 @@ namespace PleasantvilleGame.Networking
 
       internal SubmitActionResponse HandleSubmitActionRequest(string sessionId, string joinCode, PlayerRole playerRole, MultiplayerAction? actionMessage)
       {
-         SessionDescriptorDto? session = CurrentSession;
+         SessionDescriptorDataTranferObject? session = CurrentSession;
          if (session is null || !string.Equals(session.SessionId, sessionId, StringComparison.Ordinal) || !string.Equals(session.JoinCode, joinCode, StringComparison.Ordinal))
          {
             return new SubmitActionResponse
@@ -366,7 +366,7 @@ namespace PleasantvilleGame.Networking
             };
          }
 
-         MultiplayerRole role = MultiplayerProtoMapper.ToDtoRole(playerRole);
+         MultiplayerRole role = MultiplayerProtoMapper.ToDataTranferObjectRole(playerRole);
          if (!Enum.TryParse(actionMessage.ActionName, true, out GameAction parsedAction))
          {
             return new SubmitActionResponse
@@ -405,7 +405,7 @@ namespace PleasantvilleGame.Networking
             GameAction nextAction = parsedAction;
             myGameEngine.PerformAction(ref trackedGameInstance, ref nextAction, actionMessage.DieRoll);
             TrackGameInstance(trackedGameInstance);
-            VisibleGameStateDto? state = BuildStateForRole(role);
+            VisibleGameStateDataTranferObject? state = BuildStateForRole(role);
             return new SubmitActionResponse
             {
                Accepted = state is not null,
@@ -457,7 +457,7 @@ namespace PleasantvilleGame.Networking
          }
       }
 
-      private VisibleGameStateDto? BuildStateForRole(MultiplayerRole role)
+      private VisibleGameStateDataTranferObject? BuildStateForRole(MultiplayerRole role)
       {
          IGameInstance? trackedGameInstance;
          lock (mySync)

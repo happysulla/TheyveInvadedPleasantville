@@ -8,8 +8,8 @@ namespace PleasantvilleGame.Networking
       Alien = 1,
       Town = 2
    }
-
-   public sealed class SessionDescriptorDto
+   //--------------------------------------------------
+   public sealed class SessionDescriptorDataTranferObject
    {
       public string SessionId { get; set; } = string.Empty;
       public string SessionName { get; set; } = string.Empty;
@@ -20,8 +20,8 @@ namespace PleasantvilleGame.Networking
       public bool IsConnected { get; set; }
       public MultiplayerRole LocalRole { get; set; } = MultiplayerRole.Unknown;
    }
-
-   public sealed class VisibleCounterDto
+   //--------------------------------------------------
+   public sealed class VisibleCounterDataTranferObject
    {
       public string Name { get; set; } = string.Empty;
       public string TerritoryName { get; set; } = string.Empty;
@@ -41,8 +41,8 @@ namespace PleasantvilleGame.Networking
       public bool IsKilled { get; set; }
       public bool IsImplantHeld { get; set; }
    }
-
-   public sealed class VisibleGameStateDto
+   //--------------------------------------------------
+   public sealed class VisibleGameStateDataTranferObject
    {
       public string GameGuid { get; set; } = string.Empty;
       public string EventActive { get; set; } = string.Empty;
@@ -56,29 +56,29 @@ namespace PleasantvilleGame.Networking
       public int InfluenceTownspeople { get; set; }
       public int InfluenceAlienUnknown { get; set; }
       public int InfluenceAlienKnown { get; set; }
-      public List<VisibleCounterDto> Counters { get; } = new List<VisibleCounterDto>();
+      public List<VisibleCounterDataTranferObject> Counters { get; } = new List<VisibleCounterDataTranferObject>();
    }
-
-   public sealed class HostSessionResultDto
+   //--------------------------------------------------
+   public sealed class HostSessionResultDataTranferObject
    {
       public bool IsSuccess { get; set; }
       public string ErrorMessage { get; set; } = string.Empty;
-      public SessionDescriptorDto? Session { get; set; }
-      public VisibleGameStateDto? State { get; set; }
+      public SessionDescriptorDataTranferObject? Session { get; set; }
+      public VisibleGameStateDataTranferObject? State { get; set; }
    }
-
-   public sealed class JoinSessionResultDto
+   //--------------------------------------------------
+   public sealed class JoinSessionResultDataTranferObject
    {
       public bool IsSuccess { get; set; }
       public string ErrorMessage { get; set; } = string.Empty;
-      public SessionDescriptorDto? Session { get; set; }
-      public VisibleGameStateDto? State { get; set; }
+      public SessionDescriptorDataTranferObject? Session { get; set; }
+      public VisibleGameStateDataTranferObject? State { get; set; }
    }
-
-   public sealed class SubmitActionResultDto
+   //--------------------------------------------------
+   public sealed class SubmitActionResultDataTranferObject
    {
       public bool IsAccepted { get; set; }
       public string ErrorMessage { get; set; } = string.Empty;
-      public VisibleGameStateDto? State { get; set; }
+      public VisibleGameStateDataTranferObject? State { get; set; }
    }
 }

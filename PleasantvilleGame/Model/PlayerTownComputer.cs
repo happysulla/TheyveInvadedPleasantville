@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace PleasantvilleGame
 {
-   public class PlayerTownHuman : Player, IPlayerTown
+   public class PlayerTownComputer : Player, IPlayerTown
    {
-      public PlayerTownHuman() : base(false)
+      public PlayerTownComputer() : base(false)
       {
 
       }

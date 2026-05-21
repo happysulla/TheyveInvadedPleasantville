@@ -5,7 +5,7 @@ namespace PleasantvilleGame.Networking
 {
    public static class MultiplayerStateApplier
    {
-      public static bool ApplyVisibleState(IGameInstance gameInstance, VisibleGameStateDto state, MultiplayerRole localRole)
+      public static bool ApplyVisibleState(IGameInstance gameInstance, VisibleGameStateDataTranferObject state, MultiplayerRole localRole)
       {
          if (gameInstance is null)
          {
@@ -46,7 +46,7 @@ namespace PleasantvilleGame.Networking
             gameInstance.GamePhase = parsedPhase;
          }
 
-         foreach (VisibleCounterDto counter in state.Counters)
+         foreach (VisibleCounterDataTranferObject counter in state.Counters)
          {
             string baseName = GetBaseCounterName(counter.Name);
             ITerritory? territory = Territories.theTerritories.Find(counter.TerritoryName, counter.TerritorySubname);

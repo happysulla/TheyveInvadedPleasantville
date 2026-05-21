@@ -247,7 +247,6 @@ namespace PleasantvilleGame
    //----------------------------------------------------------------
    class GameStateSetup : GameState
    {
-      static string[] theStartingPlayers = new string[3];
       public override string PerformAction(ref IGameInstance gi, ref GameAction action, int dieRoll)
       {
          GamePhase previousPhase = gi.GamePhase;
@@ -276,7 +275,6 @@ namespace PleasantvilleGame
                gi.EventDisplayed = gi.EventActive; // next screen to show
                break;
             case GameAction.UpdateLoadingGame:
-               theStartingPlayers = new string[3];
                if (false == LoadGame(ref gi))
                {
                   returnStatus = "Load_Game() returned false";
@@ -284,7 +282,6 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.RemoveSplashScreen: // GameStateSetup.PerformAction()
-               theStartingPlayers = new string[3];
                if (false == SetupNewGame(gi, ref action))
                {
                   returnStatus = "SetupNewGame() returned false";
@@ -359,98 +356,117 @@ namespace PleasantvilleGame
                break;
             case GameAction.GameSetupHostGame:
                HostGameDialog hostDialog = new HostGameDialog();
-               if (Application.Current?.MainWindow is not null)
+               if (MainWindow.theGameViewerWindow is null)
                {
-                  hostDialog.Owner = MainWindow.theGameViewerWindow;
+                  returnStatus = "MainWindow.theGameViewerWindow=null";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(GameSetupJoinGame): " + returnStatus);
                }
-               if (true == hostDialog.ShowDialog())
+               else
                {
-                  if (null == GameEngine.theMultiplayerSessionManager)
+                  if (true == hostDialog.ShowDialog())
                   {
-                     returnStatus = "Multiplayer session manager is not available";
-                     Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
-                     break;
+                     if (null == GameEngine.theMultiplayerSessionManager)
+                     {
+                        returnStatus = "Multiplayer session manager is not available";
+                        Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                     }
+                     else
+                     {
+                        GameEngine.theIsAlien = true;
+                        GameEngine.theIsComputerOpponent = false;
+                        GameEngine.theIsServer = true;
+                        HostSessionResultDataTranferObject hostResult = GameEngine.theMultiplayerSessionManager.StartHosting(gi, hostDialog.SessionName, hostDialog.Port);
+                        if (false == hostResult.IsSuccess || null == hostResult.Session)
+                        {
+                           returnStatus = "Unable to host multiplayer game: " + hostResult.ErrorMessage;
+                           Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                           MessageBox.Show("Unable to host multiplayer game.\n\n" + hostResult.ErrorMessage, "Host Game");
+                        }
+                        else
+                        {
+                           gi.EventActive = gi.EventDisplayed = "e002";
+                           gi.DieRollAction = GameAction.GameSetupStartingTownsplayerSetRoll;
+                           StringBuilder hostMessage = new StringBuilder();
+                           hostMessage.Append("Hosting started.\n\n");
+                           hostMessage.Append("Session Id: ");
+                           hostMessage.Append(hostResult.Session.SessionId);
+                           hostMessage.Append("\nJoin Code: ");
+                           hostMessage.Append(hostResult.Session.JoinCode);
+                           hostMessage.Append("\nAddress: ");
+                           hostMessage.Append(hostResult.Session.HostAddress);
+                           hostMessage.Append(":");
+                           hostMessage.Append(hostResult.Session.HostPort.ToString());
+                           hostMessage.Append("\n\nThis first scaffold hosts the Alien side locally and exposes a gRPC endpoint for the Town player.");
+                           MessageBox.Show(hostMessage.ToString(), "Host Game");
+                        }
+                     }
                   }
-                  GameEngine.theIsAlien = true;
-                  GameEngine.theIsComputerOpponent = false;
-                  GameEngine.theIsServer = true;
-                  HostSessionResultDto hostResult = GameEngine.theMultiplayerSessionManager.StartHosting(gi, hostDialog.SessionName, hostDialog.Port);
-                  if (false == hostResult.IsSuccess || null == hostResult.Session)
-                  {
-                     returnStatus = "Unable to host multiplayer game: " + hostResult.ErrorMessage;
-                     Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
-                     MessageBox.Show("Unable to host multiplayer game.\n\n" + hostResult.ErrorMessage, "Host Game");
-                     break;
-                  }
-                  gi.EventActive = gi.EventDisplayed = "e002";
-                  gi.DieRollAction = GameAction.GameSetupStartingTownsplayerSetRoll;
-                  StringBuilder hostMessage = new StringBuilder();
-                  hostMessage.Append("Hosting started.\n\n");
-                  hostMessage.Append("Session Id: ");
-                  hostMessage.Append(hostResult.Session.SessionId);
-                  hostMessage.Append("\nJoin Code: ");
-                  hostMessage.Append(hostResult.Session.JoinCode);
-                  hostMessage.Append("\nAddress: ");
-                  hostMessage.Append(hostResult.Session.HostAddress);
-                  hostMessage.Append(":");
-                  hostMessage.Append(hostResult.Session.HostPort.ToString());
-                  hostMessage.Append("\n\nThis first scaffold hosts the Alien side locally and exposes a gRPC endpoint for the Town player.");
-                  MessageBox.Show(hostMessage.ToString(), "Host Game");
                }
                break;
             case GameAction.GameSetupJoinGame:
                JoinGameDialog joinDialog = new JoinGameDialog();
-               if (Application.Current?.MainWindow is not null)
+               if (MainWindow.theGameViewerWindow is null)
                {
-                  joinDialog.Owner = Application.Current.MainWindow;
+                  returnStatus = "MainWindow.theGameViewerWindow=null";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(GameSetupJoinGame): " + returnStatus);
                }
-               if (true == joinDialog.ShowDialog())
+               else
                {
-                  if (null == GameEngine.theMultiplayerSessionManager)
+                  joinDialog.Owner = MainWindow.theGameViewerWindow;
+                  if (true == joinDialog.ShowDialog())
                   {
-                     returnStatus = "Multiplayer session manager is not available";
-                     Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
-                     break;
+                     if (null == GameEngine.theMultiplayerSessionManager)
+                     {
+                        returnStatus = "Multiplayer session manager is not available";
+                        Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                     }
+                     else
+                     {
+                        JoinSessionResultDataTranferObject joinResult = GameEngine.theMultiplayerSessionManager.JoinSession(joinDialog.ServerAddress, joinDialog.SessionId, joinDialog.JoinCode);
+                        if (false == joinResult.IsSuccess || null == joinResult.Session || null == joinResult.State)
+                        {
+                           returnStatus = "Unable to join multiplayer game: " + joinResult.ErrorMessage;
+                           Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                        }
+                        else
+                        {
+                           GameEngine.theIsAlien = false;
+                           GameEngine.theIsComputerOpponent = false;
+                           GameEngine.theIsServer = false;
+                           if (false == MultiplayerStateApplier.ApplyVisibleState(gi, joinResult.State, MultiplayerRole.Town))
+                           {
+                              returnStatus = "Failed to apply the visible host state";
+                              Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                           }
+                           else
+                           {
+                              StringBuilder joinMessage = new StringBuilder();
+                              joinMessage.Append("Joined multiplayer session as the Town side.\n\n");
+                              joinMessage.Append("Session: ");
+                              joinMessage.Append(joinResult.Session.SessionName);
+                              joinMessage.Append("\nHost: ");
+                              joinMessage.Append(joinResult.Session.HostAddress);
+                              joinMessage.Append(":");
+                              joinMessage.Append(joinResult.Session.HostPort.ToString());
+                              joinMessage.Append("\n\nThis first scaffold loads the host's visible state into the client. Full live turn replication is the next step.");
+                              MessageBox.Show(joinMessage.ToString(), "Join Game");
+                           }
+                        }
+                     }
                   }
-                  JoinSessionResultDto joinResult = GameEngine.theMultiplayerSessionManager.JoinSession(joinDialog.ServerAddress, joinDialog.SessionId, joinDialog.JoinCode);
-                  if (false == joinResult.IsSuccess || null == joinResult.Session || null == joinResult.State)
-                  {
-                     returnStatus = "Unable to join multiplayer game: " + joinResult.ErrorMessage;
-                     Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
-                     MessageBox.Show("Unable to join multiplayer game.\n\n" + joinResult.ErrorMessage, "Join Game");
-                     break;
-                  }
-                  GameEngine.theIsAlien = false;
-                  GameEngine.theIsComputerOpponent = false;
-                  GameEngine.theIsServer = false;
-                  if (false == MultiplayerStateApplier.ApplyVisibleState(gi, joinResult.State, MultiplayerRole.Town))
-                  {
-                     returnStatus = "Failed to apply the visible host state";
-                     Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
-                     MessageBox.Show("Connected to host, but failed to apply the visible game state.", "Join Game");
-                     break;
-                  }
-                  StringBuilder joinMessage = new StringBuilder();
-                  joinMessage.Append("Joined multiplayer session as the Town side.\n\n");
-                  joinMessage.Append("Session: ");
-                  joinMessage.Append(joinResult.Session.SessionName);
-                  joinMessage.Append("\nHost: ");
-                  joinMessage.Append(joinResult.Session.HostAddress);
-                  joinMessage.Append(":");
-                  joinMessage.Append(joinResult.Session.HostPort.ToString());
-                  joinMessage.Append("\n\nThis first scaffold loads the host's visible state into the client. Full live turn replication is the next step.");
-                  MessageBox.Show(joinMessage.ToString(), "Join Game");
                }
                break;
             case GameAction.GameSetupPlayAlien:
                GameEngine.theIsAlien = true;
-               GameEngine.theIsComputerOpponent = true;
+               gi.PlayerAlien = new PlayerAlienHuman();
+               gi.PlayerTown = new PlayerTownComputer();
                gi.EventActive = gi.EventDisplayed = "e002";
                gi.DieRollAction = GameAction.GameSetupStartingTownsplayerSetRoll;
                break;
             case GameAction.GameSetupPlayTownsperson:
                GameEngine.theIsAlien = false;
-               GameEngine.theIsComputerOpponent = true;
+               gi.PlayerAlien = new PlayerAlienComputer();
+               gi.PlayerTown = new PlayerTownHuman();
                gi.EventActive = gi.EventDisplayed = "e002";
                gi.DieRollAction = GameAction.GameSetupStartingTownsplayerSetRoll;
                break;
@@ -459,7 +475,7 @@ namespace PleasantvilleGame
                {
                   gi.DieResults[key][0] = dieRoll;
                   gi.DieRollAction = GameAction.DieRollActionNone;
-                  if( false == GetStartingTownsperson(gi, dieRoll))
+                  if( false == gi.PlayerTown.GetStartingTownsperson(gi, dieRoll))
                   {
                      returnStatus = "Get_StartingTownsperson() returned false";
                      Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(GameSetupStartingTownsplayerSetRoll): " + returnStatus);
@@ -467,26 +483,25 @@ namespace PleasantvilleGame
                }
                else
                {
-                  if( true == GameEngine.theIsComputerOpponent )
-                  {
-                     gi.EventActive = gi.EventDisplayed = "e003a";
-                     gi.DieRollAction = GameAction.DieRollActionNone;
-                     if (false == GetStartingAlien(gi))
-                     {
-                        returnStatus = "Get_StartingAlien() returned false";
-                        Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
-                     }
-                  }
-                  else
-                  {
-                     gi.EventActive = gi.EventDisplayed = "e003";
-                     gi.DieRollAction = GameAction.GameSetupStartingAlienSetRoll;
-                  }
+                  gi.EventActive = gi.EventDisplayed = "e003";
+                  gi.DieRollAction = GameAction.GameSetupStartingAlienSetRoll;
                }
                break;
             case GameAction.GameSetupStartingAlienSetRoll:
-               returnStatus = action.ToString() + " not implemented";
-               Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               if (Utilities.NO_RESULT == gi.DieResults[key][0])
+               {
+                  gi.DieResults[key][0] = dieRoll;
+                  gi.DieRollAction = GameAction.GameSetupStartingAlienSetRoll;
+               }
+               else if (Utilities.NO_RESULT == gi.DieResults[key][1])
+               {
+                  gi.DieResults[key][1] = dieRoll;
+                  gi.DieRollAction = GameAction.GameSetupStartingAlienSetRoll;
+               }
+               else
+               {
+
+               }
                break;
             case GameAction.GameSetupShowMap:
                gi.EventActive = gi.EventDisplayed = "e004";
@@ -559,64 +574,6 @@ namespace PleasantvilleGame
       }
       private bool AddStartingTestingState(IGameInstance gi)
       {
-         return true;
-      }
-      private bool GetStartingTownsperson(IGameInstance gi, int dieRoll)
-      {
-         switch (dieRoll)
-         {
-            case 1: theStartingPlayers[0] = "BankPresident"; break;
-            case 2: theStartingPlayers[0] = "Doctor"; break;
-            case 3: theStartingPlayers[0] = "Mayor"; break;
-            case 4: theStartingPlayers[0] = "Minister"; break;
-            case 5: theStartingPlayers[0] = "Teacher"; break;
-            case 6: theStartingPlayers[0] = "Sheriff"; break;
-            default:
-               Logger.Log(LogEnum.LE_ERROR, "Get_StartingTownsperson(): reached default dieRoll=" + dieRoll.ToString());
-               return false;
-         }
-         Logger.Log(LogEnum.LE_SHOW_TOWNS_ADD, "Get_StartingTownsperson(): Added name=" + theStartingPlayers[0]);
-         return true;
-      }
-      private bool GetStartingAlien(IGameInstance gi)
-      {
-         int count = 1000;
-         while ( 0 < count-- )
-         {
-            int die1 = Utilities.RandomGenerator.Next(0, 5);
-            if (6 == die1) // first die cannot be a 6
-               continue;
-            int die2 = Utilities.RandomGenerator.Next(0, 6);
-            theStartingPlayers[1] = TableMgr.GetTownspersonName(die1, die2);
-            if ("ERROR" == theStartingPlayers[1])
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Get_StartingAlien(): first TableMgr.GetTownspersonName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
-               return false;
-            }
-            if (theStartingPlayers[0] == theStartingPlayers[1])
-               continue;
-            Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Get_StartingAlien(): Added name=" + theStartingPlayers[1]);
-            //----------------------------------------------
-            die1 = Utilities.RandomGenerator.Next(0, 5);
-            if (6 == die1) // first die cannot be a 6
-               continue;
-            die2 = Utilities.RandomGenerator.Next(0, 6);
-            theStartingPlayers[2] = TableMgr.GetTownspersonName(die1, die2);
-            if ("ERROR" == theStartingPlayers[2])
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Get_StartingAlien(): 2nd TableMgr.GetTownspersonName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
-               return false;
-            }
-            if (theStartingPlayers[0] == theStartingPlayers[2])
-               continue;
-            Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Get_StartingAlien(): Added name=" + theStartingPlayers[2]);
-            break;
-         }
-         if( count < 0 )
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Get_StartingAlien(): never found aliens");
-            return false;
-         }
          return true;
       }
       public bool CreateTownspeople(IGameInstance gi)
@@ -1087,15 +1044,16 @@ namespace PleasantvilleGame
       }
       private bool AssignStartingTownsplayer(IGameInstance gi)
       {
-         if (null == theStartingPlayers[0])
+         string name = gi.PlayerTown.StartingTownspeople[0];
+         if (true == String.IsNullOrEmpty(name))
          {
-            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingTownsplayer():  theStartingPlayers[0]=null");
+            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingTownsplayer():  gi.PlayerTown.StartingTownspeople[0] is empty");
             return false;
          }
-         IMapItem? startingTownsplayer = gi.Stacks.FindMapItem(theStartingPlayers[0]);
+         IMapItem? startingTownsplayer = gi.Stacks.FindMapItem(name);
          if( null == startingTownsplayer)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingTownsplayer(): startingTownsplayer=null for name=" + theStartingPlayers[0]);
+            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingTownsplayer(): startingTownsplayer=null for name=" + name);
             return false;
          }
          startingTownsplayer.IsControlled = true;
@@ -1103,29 +1061,30 @@ namespace PleasantvilleGame
       }
       private bool AssignStartingAlien(IGameInstance gi)
       {
-         if( null == theStartingPlayers[1])
+         string name = gi.PlayerAlien.StartingTownspeople[0];
+         if (true == String.IsNullOrEmpty(name))
          {
-            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien():  theStartingPlayers[1]=null");
+            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingTownsplayer():  gi.PlayerAlien.StartingTownspeople[0] is empty");
             return false;
          }
-         if (null == theStartingPlayers[2])
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien():  theStartingPlayers[2]=null");
-            return false;
-         }
-         //------------------------------------
-         IMapItem? startingAlien = gi.Stacks.FindMapItem(theStartingPlayers[1]);
+         IMapItem? startingAlien = gi.Stacks.FindMapItem(name);
          if (null == startingAlien)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien(): startingAlien=null for name=" + theStartingPlayers[1]);
+            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien(): startingAlien=null for name=" + name);
             return false;
          }
          startingAlien.IsAlienUnknown = true;
          //------------------------------------
-         startingAlien = gi.Stacks.FindMapItem(theStartingPlayers[2]);
+         name = gi.PlayerAlien.StartingTownspeople[1];
+         if (true == String.IsNullOrEmpty(name))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingTownsplayer():  gi.PlayerAlien.StartingTownspeople[1] is empty");
+            return false;
+         }
+         startingAlien = gi.Stacks.FindMapItem(name);
          if (null == startingAlien)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien(): startingAlien=null for name=" + theStartingPlayers[2]);
+            Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien(): startingAlien=null for name=" + name);
             return false;
          }
          startingAlien.IsAlienUnknown = true;
