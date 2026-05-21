@@ -6,11 +6,25 @@ using System.Threading.Tasks;
 
 namespace PleasantvilleGame
 {
-   public class PlayerTownHuman : Player, IPlayerTown
+   public class PlayerTownHuman : PlayerBase, IPlayerTown
    {
       public PlayerTownHuman() : base(false)
       {
 
+      }
+      //===============================================================
+      public override bool GetNextState(IGameInstance gi)
+      {
+         string key = gi.EventActive;
+         switch (key)
+         {
+            case "e003":
+               break;
+            default:
+               Logger.Log(LogEnum.LE_ERROR, "PlayerTownHuman.GetNextState(): unhandled key=" + key);
+               return false;
+         }
+         return true;
       }
       public bool GetStartingTownsperson(IGameInstance gi, int die1)
       {

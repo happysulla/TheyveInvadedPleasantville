@@ -19,7 +19,6 @@ namespace PleasantvilleGame.Networking
             InfluenceAlienUnknown = role == MultiplayerRole.Alien ? gameInstance.InfluenceCountAlienUnknown : 0,
             InfluenceAlienKnown = gameInstance.InfluenceCountAlienKnown
          };
-
          foreach (IMapItem mapItem in gameInstance.Townspeople)
          {
             VisibleCounterDataTranferObject counter = new VisibleCounterDataTranferObject
@@ -39,7 +38,6 @@ namespace PleasantvilleGame.Networking
                IsKilled = mapItem.IsKilled,
                IsImplantHeld = mapItem.IsImplantHeld
             };
-
             if (role == MultiplayerRole.Alien)
             {
                counter.IsControlledByLocalPlayer = mapItem.IsAlienKnown || mapItem.IsAlienUnknown;
@@ -52,10 +50,8 @@ namespace PleasantvilleGame.Networking
                counter.IsControlledByRemotePlayer = mapItem.IsAlienKnown;
                counter.IsAlienControlledVisible = mapItem.IsAlienKnown;
             }
-
             dto.Counters.Add(counter);
          }
-
          return dto;
       }
    }

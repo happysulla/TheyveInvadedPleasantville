@@ -11,7 +11,7 @@ namespace PleasantvilleGame.Networking
             _ => PlayerRole.Unspecified
          };
       }
-
+      //--------------------------------------------------------------------
       public static MultiplayerRole ToDataTranferObjectRole(PlayerRole role)
       {
          return role switch
@@ -21,7 +21,7 @@ namespace PleasantvilleGame.Networking
             _ => MultiplayerRole.Unknown
          };
       }
-
+      //--------------------------------------------------------------------
       public static SessionDescriptor ToProto(SessionDescriptorDataTranferObject dto)
       {
          return new SessionDescriptor
@@ -36,7 +36,7 @@ namespace PleasantvilleGame.Networking
             LocalRole = ToProtoRole(dto.LocalRole)
          };
       }
-
+      //--------------------------------------------------------------------
       public static SessionDescriptorDataTranferObject ToDataTranferObject(SessionDescriptor proto)
       {
          return new SessionDescriptorDataTranferObject
@@ -51,7 +51,7 @@ namespace PleasantvilleGame.Networking
             LocalRole = ToDataTranferObjectRole(proto.LocalRole)
          };
       }
-
+      //--------------------------------------------------------------------
       public static VisibleGameState ToProto(VisibleGameStateDataTranferObject dto)
       {
          VisibleGameState state = new VisibleGameState
@@ -69,7 +69,7 @@ namespace PleasantvilleGame.Networking
             InfluenceAlienUnknown = dto.InfluenceAlienUnknown,
             InfluenceAlienKnown = dto.InfluenceAlienKnown
          };
-
+         //-------------------------------------
          foreach (VisibleCounterDataTranferObject counter in dto.Counters)
          {
             state.Counters.Add(new VisibleCounter
@@ -93,10 +93,9 @@ namespace PleasantvilleGame.Networking
                IsImplantHeld = counter.IsImplantHeld
             });
          }
-
          return state;
       }
-
+      //--------------------------------------------------------------------
       public static VisibleGameStateDataTranferObject ToDataTranferObject(VisibleGameState proto)
       {
          VisibleGameStateDataTranferObject dto = new VisibleGameStateDataTranferObject
@@ -114,7 +113,7 @@ namespace PleasantvilleGame.Networking
             InfluenceAlienUnknown = proto.InfluenceAlienUnknown,
             InfluenceAlienKnown = proto.InfluenceAlienKnown
          };
-
+         //-------------------------------------
          foreach (VisibleCounter counter in proto.Counters)
          {
             dto.Counters.Add(new VisibleCounterDataTranferObject
@@ -138,7 +137,6 @@ namespace PleasantvilleGame.Networking
                IsImplantHeld = counter.IsImplantHeld
             });
          }
-
          return dto;
       }
    }

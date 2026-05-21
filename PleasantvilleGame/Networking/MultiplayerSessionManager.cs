@@ -37,7 +37,7 @@ namespace PleasantvilleGame.Networking
          GameAction.TownspersonRemovesImplant,
          GameAction.TownspersonCompletesRemoval
       };
-
+      //----------------------------------------------------------------------------------------
       private static readonly HashSet<GameAction> theAlienAllowedActions = new HashSet<GameAction>
       {
          GameAction.GameSetupStartingAlienSetRoll,
@@ -55,7 +55,7 @@ namespace PleasantvilleGame.Networking
          GameAction.AlienTakeover,
          GameAction.AlienCompletesTakeovers
       };
-
+      //----------------------------------------------------------------------------------------
       private readonly object mySync = new object();
       private readonly IGameEngine myGameEngine;
 
@@ -69,7 +69,7 @@ namespace PleasantvilleGame.Networking
       {
          myGameEngine = gameEngine;
       }
-
+      //----------------------------------------------------------------------------------------
       public SessionDescriptorDataTranferObject? CurrentSession
       {
          get
@@ -80,7 +80,7 @@ namespace PleasantvilleGame.Networking
             }
          }
       }
-
+      //----------------------------------------------------------------------------------------
       public void TrackGameInstance(IGameInstance gameInstance)
       {
          lock (mySync)
@@ -88,7 +88,7 @@ namespace PleasantvilleGame.Networking
             myTrackedGameInstance = gameInstance;
          }
       }
-
+      //----------------------------------------------------------------------------------------
       public HostSessionResultDataTranferObject StartHosting(IGameInstance gameInstance, string sessionName, int listenPort)
       {
          lock (mySync)
@@ -98,7 +98,6 @@ namespace PleasantvilleGame.Networking
                return new HostSessionResultDataTranferObject { ErrorMessage = "A multiplayer session is already active." };
             }
          }
-
          string safeSessionName = string.IsNullOrWhiteSpace(sessionName) ? "Pleasantville Session" : sessionName.Trim();
          SessionDescriptorDataTranferObject session = new SessionDescriptorDataTranferObject
          {
@@ -111,7 +110,6 @@ namespace PleasantvilleGame.Networking
             IsConnected = true,
             LocalRole = MultiplayerRole.Alien
          };
-
          try
          {
             IHost host = Host.CreateDefaultBuilder()
@@ -142,14 +140,12 @@ namespace PleasantvilleGame.Networking
                .Build();
 
             host.StartAsync().GetAwaiter().GetResult();
-
             lock (mySync)
             {
                myGrpcHost = host;
                myTrackedGameInstance = gameInstance;
                mySession = session;
             }
-
             return new HostSessionResultDataTranferObject
             {
                IsSuccess = true,
@@ -163,7 +159,7 @@ namespace PleasantvilleGame.Networking
             return new HostSessionResultDataTranferObject { ErrorMessage = "Unable to start the gRPC host." };
          }
       }
-
+      //----------------------------------------------------------------------------------------
       public JoinSessionResultDataTranferObject JoinSession(string serverAddress, string sessionId, string joinCode)
       {
          lock (mySync)
@@ -212,7 +208,7 @@ namespace PleasantvilleGame.Networking
             return new JoinSessionResultDataTranferObject { ErrorMessage = "Unable to join the remote gRPC host." };
          }
       }
-
+      //----------------------------------------------------------------------------------------
       public VisibleGameStateDataTranferObject? GetRemoteVisibleState()
       {
          PleasantvilleMultiplayer.PleasantvilleMultiplayerClient? client;
@@ -273,7 +269,7 @@ namespace PleasantvilleGame.Networking
             State = state is null ? new VisibleGameState() : MultiplayerProtoMapper.ToProto(state)
          };
       }
-
+      //----------------------------------------------------------------------------------------
       internal JoinSessionResponse HandleJoinSessionRequest(string sessionId, string joinCode)
       {
          SessionDescriptorDataTranferObject? session = CurrentSession;
@@ -285,7 +281,6 @@ namespace PleasantvilleGame.Networking
                ErrorMessage = "The session could not be found or the join code was invalid."
             };
          }
-
          VisibleGameStateDataTranferObject? state = BuildStateForRole(MultiplayerRole.Town);
          if (state is null)
          {
@@ -295,7 +290,6 @@ namespace PleasantvilleGame.Networking
                ErrorMessage = "The hosted game state is unavailable."
             };
          }
-
          SessionDescriptorDataTranferObject remoteSession = new SessionDescriptorDataTranferObject
          {
             SessionId = session.SessionId,
@@ -307,7 +301,6 @@ namespace PleasantvilleGame.Networking
             IsConnected = true,
             LocalRole = MultiplayerRole.Town
          };
-
          lock (mySync)
          {
             if (mySession is not null)
@@ -315,7 +308,6 @@ namespace PleasantvilleGame.Networking
                mySession.IsConnected = true;
             }
          }
-
          return new JoinSessionResponse
          {
             Success = true,
@@ -323,7 +315,7 @@ namespace PleasantvilleGame.Networking
             State = MultiplayerProtoMapper.ToProto(state)
          };
       }
-
+      //----------------------------------------------------------------------------------------
       internal GetVisibleStateResponse HandleGetVisibleStateRequest(string sessionId, string joinCode, PlayerRole playerRole)
       {
          SessionDescriptorDataTranferObject? session = CurrentSession;
@@ -344,7 +336,7 @@ namespace PleasantvilleGame.Networking
             State = state is null ? new VisibleGameState() : MultiplayerProtoMapper.ToProto(state)
          };
       }
-
+      //----------------------------------------------------------------------------------------
       internal SubmitActionResponse HandleSubmitActionRequest(string sessionId, string joinCode, PlayerRole playerRole, MultiplayerAction? actionMessage)
       {
          SessionDescriptorDataTranferObject? session = CurrentSession;
@@ -356,7 +348,6 @@ namespace PleasantvilleGame.Networking
                ErrorMessage = "The session could not be found or the join code was invalid."
             };
          }
-
          if (actionMessage is null || string.IsNullOrWhiteSpace(actionMessage.ActionName))
          {
             return new SubmitActionResponse
@@ -365,7 +356,6 @@ namespace PleasantvilleGame.Networking
                ErrorMessage = "The multiplayer action was missing."
             };
          }
-
          MultiplayerRole role = MultiplayerProtoMapper.ToDataTranferObjectRole(playerRole);
          if (!Enum.TryParse(actionMessage.ActionName, true, out GameAction parsedAction))
          {
@@ -375,7 +365,6 @@ namespace PleasantvilleGame.Networking
                ErrorMessage = "The requested game action is not recognized."
             };
          }
-
          if (!IsActionAllowed(role, parsedAction))
          {
             return new SubmitActionResponse
@@ -384,13 +373,11 @@ namespace PleasantvilleGame.Networking
                ErrorMessage = "The requested game action is not permitted for this player."
             };
          }
-
          IGameInstance? trackedGameInstance;
          lock (mySync)
          {
             trackedGameInstance = myTrackedGameInstance;
          }
-
          if (trackedGameInstance is null)
          {
             return new SubmitActionResponse
@@ -399,7 +386,6 @@ namespace PleasantvilleGame.Networking
                ErrorMessage = "The hosted game state is unavailable."
             };
          }
-
          try
          {
             GameAction nextAction = parsedAction;
@@ -423,7 +409,7 @@ namespace PleasantvilleGame.Networking
             };
          }
       }
-
+      //----------------------------------------------------------------------------------------
       public void Dispose()
       {
          lock (mySync)
@@ -435,7 +421,6 @@ namespace PleasantvilleGame.Networking
             catch
             {
             }
-
             if (myGrpcHost is not null)
             {
                try
@@ -448,7 +433,6 @@ namespace PleasantvilleGame.Networking
 
                myGrpcHost.Dispose();
             }
-
             myGrpcHost = null;
             myGrpcChannel = null;
             myRemoteClient = null;
@@ -456,7 +440,7 @@ namespace PleasantvilleGame.Networking
             myTrackedGameInstance = null;
          }
       }
-
+      //----------------------------------------------------------------------------------------
       private VisibleGameStateDataTranferObject? BuildStateForRole(MultiplayerRole role)
       {
          IGameInstance? trackedGameInstance;
@@ -473,7 +457,7 @@ namespace PleasantvilleGame.Networking
          MultiplayerRole effectiveRole = role == MultiplayerRole.Unknown ? MultiplayerRole.Town : role;
          return MultiplayerSnapshotFactory.CreateVisibleState(trackedGameInstance, effectiveRole);
       }
-
+      //----------------------------------------------------------------------------------------
       private static bool IsActionAllowed(MultiplayerRole role, GameAction action)
       {
          return role switch
@@ -483,7 +467,7 @@ namespace PleasantvilleGame.Networking
             _ => false
          };
       }
-
+      //----------------------------------------------------------------------------------------
       private static string NormalizeAddress(string serverAddress)
       {
          string trimmed = serverAddress.Trim();
@@ -494,7 +478,7 @@ namespace PleasantvilleGame.Networking
 
          return trimmed;
       }
-
+      //----------------------------------------------------------------------------------------
       private static string DiscoverAdvertisedHost()
       {
          try
@@ -508,7 +492,7 @@ namespace PleasantvilleGame.Networking
             return "127.0.0.1";
          }
       }
-
+      //----------------------------------------------------------------------------------------
       private static string GenerateJoinCode()
       {
          const string alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -519,7 +503,6 @@ namespace PleasantvilleGame.Networking
          {
             chars[i] = alphabet[buffer[i] % alphabet.Length];
          }
-
          return new string(chars);
       }
    }

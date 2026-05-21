@@ -631,6 +631,18 @@ namespace PleasantvilleGame
                   ImageBehavior.SetAnimatedSource(imgDie, bmi);
                   myTextBlock.Inlines.Add(new InlineUIContainer(imgDie));
                }
+               else if (5 == gi.DieResults[key][0])
+               {
+                  myTextBlock.Inlines.Add(new Run("6 - Reroll required"));
+                  myTextBlock.Inlines.Add(new LineBreak());
+                  myTextBlock.Inlines.Add(new LineBreak());
+                  myTextBlock.Inlines.Add(new Run("                                  "));
+                  Image imge003 = new Image { Name = "Continue003", Width = 100, Height = 100, Source = MapItem.theMapImages.GetBitmapImage("Continue") };
+                  myTextBlock.Inlines.Add(new InlineUIContainer(imge003));
+                  myTextBlock.Inlines.Add(new LineBreak());
+                  myTextBlock.Inlines.Add(new LineBreak());
+                  myTextBlock.Inlines.Add("Click image to continue.");
+               }
                else if (Utilities.NO_RESULT == gi.DieResults[key][1])
                {
                   myTextBlock.Inlines.Add(new Run(firstDieResult.ToString()));

@@ -294,7 +294,7 @@ namespace PleasantvilleGame
             mapItems = newOrder;
          }
       }
-      public static void SetButtonContent(Button b, IMapItem mi, bool isAlienView, bool isMapItemZoom = false, bool isDecoration = true, bool isBloodSpotsShown = true)
+      public static void SetButtonContent(Button b, IMapItem mi, bool isMapItemZoom = false, bool isDecoration = true, bool isBloodSpotsShown = true)
       {
          double zoom = Utilities.ZOOM;
          if (true == isMapItemZoom)
@@ -374,9 +374,7 @@ namespace PleasantvilleGame
          b.Content = g;
          if ("Zebulon" == mi.Name)
             b.Background = Brushes.Black;
-         else if (true == mi.IsAlienKnown)
-            b.Background = Constants.theAlienControlledBrush;
-         else if ((true == mi.IsAlienUnknown) && (true == isAlienView))
+         else if ( (true == mi.IsAlienKnown) || ((true == mi.IsAlienUnknown) && (true == GameEngine.theIsAlien)) )
             b.Background = Constants.theAlienControlledBrush;
          else if (true == mi.IsControlled)
             b.Background = Constants.theTownControlledBrush;

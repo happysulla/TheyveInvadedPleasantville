@@ -10,6 +10,7 @@ namespace PleasantvilleGame
    {
       String[] StartingTownspeople { get; set; }
       bool IsComputer { set; get; }
+      bool GetNextState(IGameInstance gi);
    }
    public interface IPlayerTown : IPlayer
    {
@@ -19,6 +20,6 @@ namespace PleasantvilleGame
    {
       ITerritory ZebulonLocation{ set; get; }
       bool ChooseStartingHqArea();
-      bool GetStartingTownspeople(IGameInstance gi, int die1, int die2);
+      bool GetStartingAlien(IGameInstance gi);
    }
 }

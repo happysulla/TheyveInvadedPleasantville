@@ -6,20 +6,33 @@ using System.Threading.Tasks;
 
 namespace PleasantvilleGame
 {
-   public class PlayerAlienHuman : Player, IPlayerAlien
+   public class PlayerAlienHuman : PlayerBase, IPlayerAlien
    {
       public ITerritory ZebulonLocation{ set; get; } = new Territory();
       //---------------------------------------------------------------
-      public PlayerAlienHuman() : base(true)
+      public PlayerAlienHuman() : base(false)
       {
 
       }
       //===============================================================
+      public override bool GetNextState(IGameInstance gi)
+      {
+         string key = gi.EventActive;
+         switch (key)
+         {
+            case "e003":
+               break;
+            default:
+               Logger.Log(LogEnum.LE_ERROR, "PlayerAlienHuman.GetNextState(): unhandled key=" + key);
+               return false;
+         }
+         return true;
+      }
       public bool ChooseStartingHqArea()
       {
          return true;
       }
-      public bool GetStartingTownspeople(IGameInstance gi, int die1, int die2)
+      public bool GetStartingAlien(IGameInstance gi)
       {
          return true;
       }

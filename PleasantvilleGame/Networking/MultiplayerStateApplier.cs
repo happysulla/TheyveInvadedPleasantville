@@ -11,7 +11,6 @@ namespace PleasantvilleGame.Networking
          {
             return false;
          }
-
          gameInstance.Townspeople.Clear();
          gameInstance.Stacks.Clear();
          gameInstance.PersonsKnockedOut.Clear();
@@ -23,12 +22,10 @@ namespace PleasantvilleGame.Networking
          gameInstance.PreviousMapItemMove = null;
          gameInstance.MapItemMoves.Clear();
          gameInstance.ZebulonTerritories.Clear();
-
          if (Guid.TryParse(state.GameGuid, out Guid parsedGuid))
          {
             gameInstance.GameGuid = parsedGuid;
          }
-
          gameInstance.EventActive = state.EventActive;
          gameInstance.EventDisplayed = state.EventDisplayed;
          gameInstance.PlayerTurn = state.PlayerTurn;
@@ -40,12 +37,10 @@ namespace PleasantvilleGame.Networking
          gameInstance.InfluenceCountAlienUnknown = state.InfluenceAlienUnknown;
          gameInstance.InfluenceCountAlienKnown = state.InfluenceAlienKnown;
          gameInstance.DieRollAction = GameAction.DieRollActionNone;
-
          if (Enum.TryParse(state.GamePhase, true, out GamePhase parsedPhase))
          {
             gameInstance.GamePhase = parsedPhase;
          }
-
          foreach (VisibleCounterDataTranferObject counter in state.Counters)
          {
             string baseName = GetBaseCounterName(counter.Name);
@@ -55,7 +50,6 @@ namespace PleasantvilleGame.Networking
                Logger.Log(LogEnum.LE_ERROR, "ApplyVisibleState(): missing territory for " + counter.Name + " at " + counter.TerritoryName + ":" + counter.TerritorySubname);
                continue;
             }
-
             MapItem mapItem = new MapItem(counter.Name, 0.8, baseName, territory, counter.Movement, counter.Influence, counter.Combat)
             {
                MovementUsed = counter.MovementUsed,
@@ -70,10 +64,8 @@ namespace PleasantvilleGame.Networking
                IsWary = counter.IsWary,
                IsKilled = counter.IsKilled
             };
-
             gameInstance.Townspeople.Add(mapItem);
             gameInstance.Stacks.Add(mapItem);
-
             if (counter.IsUnconscious)
             {
                gameInstance.PersonsKnockedOut.Add(mapItem);
@@ -83,17 +75,15 @@ namespace PleasantvilleGame.Networking
                gameInstance.PersonsStunned.Add(mapItem);
             }
          }
-
          return true;
       }
-
+      //----------------------------------------------------------------------------------------
       private static string GetBaseCounterName(string counterName)
       {
          if (string.IsNullOrWhiteSpace(counterName))
          {
             return string.Empty;
          }
-
          return Regex.Replace(counterName, "\\d+$", string.Empty);
       }
    }

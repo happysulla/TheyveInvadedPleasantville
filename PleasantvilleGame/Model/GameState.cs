@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Google.Protobuf.WellKnownTypes;
+using PleasantvilleGame.Networking;
+using System;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -8,7 +10,6 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
-using PleasantvilleGame.Networking;
 using Application = System.Windows.Application;
 using Color = System.Windows.Media.Color;
 using MessageBox = System.Windows.MessageBox;
@@ -485,22 +486,34 @@ namespace PleasantvilleGame
                {
                   gi.EventActive = gi.EventDisplayed = "e003";
                   gi.DieRollAction = GameAction.GameSetupStartingAlienSetRoll;
+                  if( false == gi.PlayerAlien.GetNextState(gi))
+                  {
+                     returnStatus = "Get_NextState() returned false";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(GameSetupStartingTownsplayerSetRoll): " + returnStatus);
+                  }
                }
                break;
             case GameAction.GameSetupStartingAlienSetRoll:
                if (Utilities.NO_RESULT == gi.DieResults[key][0])
                {
                   gi.DieResults[key][0] = dieRoll;
-                  gi.DieRollAction = GameAction.GameSetupStartingAlienSetRoll;
                }
                else if (Utilities.NO_RESULT == gi.DieResults[key][1])
                {
-                  gi.DieResults[key][1] = dieRoll;
-                  gi.DieRollAction = GameAction.GameSetupStartingAlienSetRoll;
+                  if (gi.DieResults[key][0] < 5)
+                     gi.DieResults[key][0] = Utilities.NO_RESULT;
+                  else
+                     gi.DieResults[key][1] = dieRoll;
                }
                else
                {
-
+                  if( false == gi.PlayerAlien.GetStartingAlien(gi))
+                  {
+                     returnStatus = "Get_StartingAlien() returned false";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(GameSetupStartingAlienSetRoll): " + returnStatus);
+                  }
+                  gi.DieResults[key][0] = Utilities.NO_RESULT;
+                  gi.DieResults[key][1] = Utilities.NO_RESULT;
                }
                break;
             case GameAction.GameSetupShowMap:
@@ -580,13 +593,26 @@ namespace PleasantvilleGame
       {
          gi.Townspeople.Clear();
          //------------------------------------
-         int randomNum = Utilities.RandomGenerator.Next(4);
-         string tName = "Bank_" + randomNum.ToString();
-         ITerritory? t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         string tName = "";
+         ITerritory? t = null;
+         int maxNum = 4;
+         int randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i=0; i< maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "Bank_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          string name = "BankGuard";
          string miName = name + Utilities.MapItemNum.ToString();
@@ -594,14 +620,26 @@ namespace PleasantvilleGame
          IMapItem mi = new MapItem(miName, 0.8, name, t, 5, 10, 8);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(4);
-         tName = "Bank_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 4;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "Bank_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "BankPresident";
          miName = name + Utilities.MapItemNum.ToString();
@@ -609,14 +647,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 4, 19, 5);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(2);
-         tName = "BarAndGrill_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 2;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "BarAndGrill_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): mi=" + mi.Name + " tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "BarAndGrillOwner";
          miName = name + Utilities.MapItemNum.ToString();
@@ -624,14 +674,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 5, 10, 7);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(3);
-         tName = "Tavern_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 3;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "Tavern_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "BarTender";
          miName = name + Utilities.MapItemNum.ToString();
@@ -639,14 +701,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 6, 11, 7);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(5);
-         tName = "Supermarket_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 5;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "Supermarket_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "CheckoutGirl";
          miName = name + Utilities.MapItemNum.ToString();
@@ -654,14 +728,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 5, 7, 5);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(4);
-         tName = "SheriffFireDept_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 4;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "SheriffFireDept_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "Deputy";
          miName = name + Utilities.MapItemNum.ToString();
@@ -669,14 +755,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 6, 11, 9);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(2);
-         tName = "DocOffice_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 2;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "DocOffice_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "Doctor";
          miName = name + Utilities.MapItemNum.ToString();
@@ -684,14 +782,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 5, 18, 7);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(4);
-         tName = "SheriffFireDept_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 4;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "SheriffFireDept_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "FireChief";
          miName = name + Utilities.MapItemNum.ToString();
@@ -699,14 +809,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 6, 12, 8);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(5);
-         tName = "HotelAndRestaurant_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 5;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "HotelAndRestaurant_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "HotelOwner";
          miName = name + Utilities.MapItemNum.ToString();
@@ -714,14 +836,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 5, 11, 5);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(3);
-         tName = "TownHall_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 3;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "TownHall_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "Judge";
          miName = name + Utilities.MapItemNum.ToString();
@@ -729,13 +863,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 5, 11, 5);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         tName = "LawyersOffice_0";
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 1;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "LawyersOffice_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "Lawyer";
          miName = name + Utilities.MapItemNum.ToString();
@@ -743,14 +890,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 5, 11, 6);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(5);
-         tName = "HotelAndRestaurant_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 5;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "HotelAndRestaurant_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "Maid";
          miName = name + Utilities.MapItemNum.ToString();
@@ -758,14 +917,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 5, 10, 5);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(5);
-         tName = "HotelAndRestaurant_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 5;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "HotelAndRestaurant_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "MaitreD";
          miName = name + Utilities.MapItemNum.ToString();
@@ -773,14 +944,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 5, 9, 4);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(4);
-         tName = "GeneralStore_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 4;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "GeneralStore_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "Mayor";
          miName = name + Utilities.MapItemNum.ToString();
@@ -788,14 +971,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 5, 16, 7);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.Name + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(5);
-         tName = "Church_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 5;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "Church_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "Minister";
          miName = name + Utilities.MapItemNum.ToString();
@@ -803,13 +998,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 5, 20, 6);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.Name + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         tName = "House_K";
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 1;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "House_K";
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "Paperboy";
          miName = name + Utilities.MapItemNum.ToString();
@@ -817,14 +1025,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 6, 9, 5);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(4);
-         tName = "MachineShop_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 4;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "MachineShop_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "Plumber";
          miName = name + Utilities.MapItemNum.ToString();
@@ -832,14 +1052,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 5, 8, 8);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(4);
-         tName = "MachineShop_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 4;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "MachineShop_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "RepairShopOwner";
          miName = name + Utilities.MapItemNum.ToString();
@@ -847,14 +1079,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 5, 9, 7);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(4);
-         tName = "SheriffFireDept_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 4;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "SheriffFireDept_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "Sheriff";
          miName = name + Utilities.MapItemNum.ToString();
@@ -862,13 +1106,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 6, 15, 10);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         tName = "GasPumps_0";
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 1;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "GasPumps_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "StationAttendant";
          miName = name + Utilities.MapItemNum.ToString();
@@ -876,14 +1133,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 5, 8, 7);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(5);
-         tName = "Supermarket_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 5;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "Supermarket_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "SuperMarketManager";
          miName = name + Utilities.MapItemNum.ToString();
@@ -891,14 +1160,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 5, 10, 6);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(2);
-         tName = "ClothingStore_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 2;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "ClothingStore_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "Tailor";
          miName = name + Utilities.MapItemNum.ToString();
@@ -906,14 +1187,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 4, 11, 5);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(4);
-         tName = "School_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 4;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "School_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "Teacher";
          miName = name + Utilities.MapItemNum.ToString();
@@ -921,14 +1214,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 5, 17, 4);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(4);
-         tName = "Bank_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 4;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "Bank_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "Teller";
          miName = name + Utilities.MapItemNum.ToString();
@@ -936,14 +1241,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 5, 9, 6);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(3);
-         tName = "Tavern_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 3;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "Tavern_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "TownDrunk";
          miName = name + Utilities.MapItemNum.ToString();
@@ -951,14 +1268,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 3, 3, 8);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(2);
-         tName = "VetOffice_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 2;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "VetOffice_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "Vet";
          miName = name + Utilities.MapItemNum.ToString();
@@ -966,14 +1295,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 5, 13, 6);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(5);
-         tName = "HotelAndRestaurant_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 5;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "HotelAndRestaurant_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "Waitress";
          miName = name + Utilities.MapItemNum.ToString();
@@ -981,14 +1322,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 5, 9, 6);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(2);
-         tName = "TrainStation_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 2;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "TrainStation_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "WarVeteran";
          miName = name + Utilities.MapItemNum.ToString();
@@ -996,14 +1349,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 4, 12, 4);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         randomNum = Utilities.RandomGenerator.Next(4);
-         tName = "MachineShop_" + randomNum.ToString();
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 4;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "MachineShop_" + tNum.ToString();
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "Welder";
          miName = name + Utilities.MapItemNum.ToString();
@@ -1011,13 +1376,26 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 5, 10, 7);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         tName = "House_A";
-         t = Territories.theTerritories.Find(tName);
-         if (null == t)
+         maxNum = 1;
+         randomNum = Utilities.RandomGenerator.Next(maxNum);
+         for (int i = 0; i < maxNum; i++)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-            return false;
+            int tNum = (randomNum + i) % maxNum;
+            tName = "House_A";
+            t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            IStack? tStack = gi.Stacks.Find(t);
+            if (null != tStack) // if stack exists, then mapitem already exists at this location. Skip it.
+            {
+               Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
+               continue;
+            }
          }
          name = "Wife";
          miName = name + Utilities.MapItemNum.ToString();
@@ -1025,21 +1403,8 @@ namespace PleasantvilleGame
          mi = new MapItem(miName, 0.8, name, t, 4, 8, 4);
          gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): " + gi.Stacks.ToString());
-         foreach (IStack stack in gi.Stacks) // For each stack that has more than one MI, randomnize the location
-         {
-            if (1 < stack.MapItems.Count)
-            {
-               double count = 0;
-               foreach (IMapItem mi1 in stack.MapItems)
-               {
-                  double offset = (count * 3.0) + (mi.Zoom * Utilities.theMapItemOffset);
-                  mi.Location.X = stack.Territory.CenterPoint.X - offset;
-                  mi.Location.Y = stack.Territory.CenterPoint.Y - offset;
-               }
-            }
-         }
          return true;
       }
       private bool AssignStartingTownsplayer(IGameInstance gi)
