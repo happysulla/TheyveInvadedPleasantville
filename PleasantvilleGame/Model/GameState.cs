@@ -131,12 +131,130 @@ namespace PleasantvilleGame
          return true;
       }
       //------------
+      protected bool RotateStack(IGameInstance gi)
+      {
+         if (null == gi.SelectedStack)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(UpdateRotateStack): gi.SelectedStack=null");
+            return false;
+         }
+         int count = gi.SelectedStack.MapItems.Count;
+         if (count < 2)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(UpdateRotateStack): gi.SelectedStack.MapItem.Count=" + count.ToString());
+            return false;
+         }
+         IMapItem? bottom = gi.SelectedStack.MapItems[0];
+         if (null == bottom)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(UpdateRotateStack): bottom = null");
+            return false;
+         }
+         for (int i = 1; i < count; i++)
+            gi.SelectedStack.MapItems[i - 1] = gi.SelectedStack.MapItems[i];
+         gi.SelectedStack.MapItems[count - 1] = bottom;
+         double countOffset = 0.0;
+         foreach (IMapItem mi in gi.SelectedStack.MapItems)
+         {
+            double offset = (countOffset * 3.0) + (mi.Zoom * Utilities.theMapItemOffset);
+            mi.Location.X = gi.SelectedStack.Territory.CenterPoint.X - offset;
+            mi.Location.Y = gi.SelectedStack.Territory.CenterPoint.Y - offset;
+         }
+         return true;
+      }
+      protected bool ScatterStack(IGameInstance gi)
+      {
+         if (null == gi.SelectedStack)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(UpdateRotateStack): gi.SelectedStack=null");
+            return false;
+         }
+         if (true == gi.SelectedStack.IsStacked)
+         {
+            gi.SelectedStack.IsStacked = false;
+            foreach (IMapItem mi in gi.SelectedStack.MapItems)
+               mi.Location = Territory.GetRandomPoint(gi.SelectedStack.Territory, mi.Zoom * Utilities.theMapItemOffset);
+         }
+         else
+         {
+            gi.SelectedStack.IsStacked = true;
+            double count = 0;
+            foreach (IMapItem mi in gi.SelectedStack.MapItems)
+            {
+               double offset = (count * 3.0) + (mi.Zoom * Utilities.theMapItemOffset);
+               mi.Location.X = gi.SelectedStack.Territory.CenterPoint.X - offset;
+               mi.Location.Y = gi.SelectedStack.Territory.CenterPoint.Y - offset;
+            }
+         }
+         return true;
+      }
+      //------------
+      public bool PerformMovements(IGameInstance gi, int numPeopleToMove)
+      {
+         int numPeopleSkipped = 0;
+         int numPeopleMoved = 0;
+         int loopCount = 200;
+         while ((numPeopleMoved < numPeopleToMove) && (0 < loopCount--))
+         {
+            int die1 = Utilities.RandomGenerator.Next(5);
+            int die2 = Utilities.RandomGenerator.Next(6);
+            string name = TableMgr.GetTownspersonName(die1, die2);
+            if( true == String.IsNullOrEmpty(name))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_Movements(): TableMgr.GetTownspersonName() returned null");
+               return false;
+            }
+            IMapItem? miMoving = gi.Townspeople.Find(name);
+            if (null == miMoving)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_Movements(): unable to find name=" + name);
+               return false;
+            }
+            //------------------------------------------------------------
+            // If the counter is moved or tied up or known to be alien controlled, do not move.
+            if ((true == miMoving.IsMoved) || (true == miMoving.IsControlled) || (true == miMoving.IsAlienKnown) || (true == miMoving.IsStunned) || (true == miMoving.IsSurrendered) || (true == miMoving.IsTiedUp) || (true == miMoving.IsWary) || (false == miMoving.IsUnconscious))
+            {
+               ++numPeopleSkipped;
+               StringBuilder sb = new StringBuilder("Perform_Movements(): skipped=");
+               sb.Append(numPeopleSkipped.ToString());
+               sb.Append(" mi=");
+               sb.Append(miMoving.Name);
+               sb.Append(" m?=");
+               sb.Append(miMoving.IsMoved.ToString());
+               sb.Append(" c?=");
+               sb.Append(miMoving.IsControlled.ToString());
+               sb.Append(" k?=");
+               sb.Append(miMoving.IsAlienKnown.ToString());
+               sb.Append(" stun?=");
+               sb.Append(miMoving.IsStunned.ToString());
+               sb.Append(" surr?=");
+               sb.Append(miMoving.IsSurrendered.ToString());
+               sb.Append(" tu?=");
+               sb.Append(miMoving.IsTiedUp.ToString());
+               sb.Append(" w?=");
+               sb.Append(miMoving.IsWary.ToString());
+               sb.Append(" con?=");
+               sb.Append(miMoving.IsUnconscious.ToString());
+               Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, sb.ToString());
+               continue;
+            }
+            //------------------------------------------------------------
+            if (false == PerformMovement(gi, miMoving))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_Movements(): PerformMovement() returned false for miMoving=" + miMoving.Name);
+               return false;
+            }
+            ++numPeopleMoved;  // Keep track of number of people moved
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Perform_Movements(): moved miMoving=" + miMoving.Name + " numPeopleMoved=" + numPeopleMoved.ToString());
+         }  // end while()
+         return true;
+      }
       public bool PerformMovement(IGameInstance gi, IMapItem mi)
       {
          int r3 = Utilities.RandomGenerator.Next(5);
          int r4 = Utilities.RandomGenerator.Next(6);
          string building = Utilities.RemoveSpaces(TableMgr.theTargetBuildingTable[r3, r4]); // Find the target building location.
-                                                                                            //-----------------------------------------
+          //-----------------------------------------
          int numOfSectorsInBuilding = 0;
          for (int i1 = 0; i1 < TableMgr.theBuildingSizes.GetLength(0); i1++)   // If moving to a build, randomly select a space from the building. GetLength(0) gets the length of the array.
          {
@@ -152,7 +270,7 @@ namespace PleasantvilleGame
          ITerritory? newTerritory = Territories.theTerritories.Find(building, selectedSector.ToString());
          if (null == newTerritory)
          {
-            Logger.Log(LogEnum.LE_ERROR, "PerformMovement(): newTerritory is null for building=" + building + " selectedSector=" + selectedSector.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "Perform_Movement(): newTerritory is null for building=" + building + " selectedSector=" + selectedSector.ToString());
             return false;
          }
          if ((mi.TerritoryCurrent.Name == newTerritory.Name) && (mi.TerritoryCurrent.Subname == newTerritory.Subname))
@@ -160,62 +278,14 @@ namespace PleasantvilleGame
             return false;
          }
          //-----------------------------------------
-         Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Move_TaskForceToNewArea(): mi=" + mi.Name + " entering t=" + newTerritory.Name);
+         Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Perform_Movement(): mi=" + mi.Name + " entering t=" + newTerritory.Name);
          if (false == CreateMapItemMove(gi, mi, newTerritory))
          {
-            Logger.Log(LogEnum.LE_ERROR, "Move_TaskForceToNewArea(): AddMapItemMove() returned false");
+            Logger.Log(LogEnum.LE_ERROR, "Perform_Movement(): Create_MapItemMove() returned false");
             return false;
          }
          mi.IsMoved = true;
          return true;
-      }
-      public void PerformMovements(IGameInstance gi, int numPeopleToMove)
-      {
-         int numPeopleSkipped = 0;
-         int numPeopleMoved = 0;
-         int loopCount = 0;
-         while ((numPeopleMoved < numPeopleToMove) && (++loopCount < 200))
-         {
-            int r1 = Utilities.RandomGenerator.Next(5);
-            int r2 = Utilities.RandomGenerator.Next(6);
-            string person = Utilities.RemoveSpaces(TableMgr.theTownpersonsTable[r1, r2]);
-            IMapItem? personMoving = gi.Townspeople.Find(person);
-            if (null == personMoving)
-            {
-               ++numPeopleSkipped;
-               //Console.WriteLine("PerformMovements(): {0} Unknown {1}", numPeopleSkipped.ToString(), person);
-               continue;
-            }
-
-            // If the counter is moved or tied up or known to be alien controlled, do not move.
-            if ((true == personMoving.IsMoved) || (true == personMoving.IsControlled) || (true == personMoving.IsAlienKnown) ||
-               (true == personMoving.IsStunned) || (true == personMoving.IsSurrendered) ||
-               (true == personMoving.IsTiedUp) || (true == personMoving.IsWary) || (false == personMoving.IsUnconscious))
-            {
-               ++numPeopleSkipped;
-               //                    Console.WriteLine("PerformMovements(): {0} Skipping Person {1}: {2},{3},{4},{5},{6},{7},{8},{9}",
-               //                                       numPeopleSkipped.ToString(),
-               //                                       personMoving.Name,
-               //                                       personMoving.IsMoved.ToString(),
-               //                                       personMoving.IsControlled.ToString(), personMoving.IsAlienKnown.ToString(),
-               //                                       personMoving.IsStunned.ToString(), personMoving.IsSurrendered.ToString(),
-               //                                       personMoving.IsTiedUp.ToString(), personMoving.IsWary.ToString(),
-               //                                       personMoving.IsUnconscious.ToString());
-               continue;
-            }
-
-            if (false == PerformMovement(gi, personMoving))
-            {
-               ++numPeopleSkipped;
-               Console.WriteLine("PerformMovements(): {0} Same Building {1}", numPeopleSkipped.ToString(), person);
-               continue;
-            }
-            else
-            {
-               ++numPeopleMoved;  // Keep track of number of people moved
-                                  //                    Console.WriteLine("PerformMovements(): {0} Moved {1}", numPeopleMoved.ToString(), person);
-            }
-         }  // end while()
       }
       protected bool CreateMapItemMove(IGameInstance gi, IMapItem mi, ITerritory newT)
       {
@@ -279,7 +349,21 @@ namespace PleasantvilleGame
                if (false == LoadGame(ref gi))
                {
                   returnStatus = "Load_Game() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateMovement.PerformAction(): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateRotateStack:
+               if( false == RotateStack(gi))
+               {
+                  returnStatus = "Rotate_Stack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateScatterStack:
+               if (false == ScatterStack(gi))
+               {
+                  returnStatus = "Scatter_Stack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                }
                break;
             case GameAction.RemoveSplashScreen: // GameStateSetup.PerformAction()
@@ -287,72 +371,6 @@ namespace PleasantvilleGame
                {
                   returnStatus = "SetupNewGame() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
-               }
-               break;
-            case GameAction.UpdateRotateStack:
-               if( null == gi.SelectedStack)
-               {
-                  returnStatus = "gi.SelectedStack=null";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(UpdateRotateStack): " + returnStatus);
-               }
-               else
-               {
-                  int count = gi.SelectedStack.MapItems.Count;
-                  if (count < 2 )
-                  {
-                     returnStatus = "gi.SelectedStack.MapItem.Count=" + count.ToString();
-                     Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(UpdateRotateStack): " + returnStatus);
-                  }
-                  else
-                  {
-                     IMapItem? bottom = gi.SelectedStack.MapItems[0];
-                     if( null == bottom)
-                     {
-                        returnStatus = "bottom=null";
-                        Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(UpdateRotateStack): " + returnStatus);
-                     }
-                     else
-                     {
-
-                        for(int i=1; i< count; i++)
-                           gi.SelectedStack.MapItems[i-1] = gi.SelectedStack.MapItems[i];
-                        gi.SelectedStack.MapItems[count - 1] = bottom;
-                        double countOffset = 0.0;
-                        foreach (IMapItem mi in gi.SelectedStack.MapItems)
-                        {
-                           double offset = (countOffset * 3.0) + (mi.Zoom * Utilities.theMapItemOffset);
-                           mi.Location.X = gi.SelectedStack.Territory.CenterPoint.X - offset;
-                           mi.Location.Y = gi.SelectedStack.Territory.CenterPoint.Y - offset;
-                        }
-                     }
-                  }
-               }
-               break;
-            case GameAction.UpdateScatterStack:
-               if (null == gi.SelectedStack)
-               {
-                  returnStatus = "gi.SelectedStack=null";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(UpdateRotateStack): " + returnStatus);
-               }
-               else
-               {
-                  if( true == gi.SelectedStack.IsStacked)
-                  {
-                     gi.SelectedStack.IsStacked = false;
-                     foreach (IMapItem mi in gi.SelectedStack.MapItems)
-                        mi.Location = Territory.GetRandomPoint(gi.SelectedStack.Territory, mi.Zoom * Utilities.theMapItemOffset);
-                  }
-                  else
-                  {
-                     gi.SelectedStack.IsStacked = true;
-                     double count = 0;
-                     foreach (IMapItem mi in gi.SelectedStack.MapItems)
-                     {
-                        double offset = (count * 3.0) + (mi.Zoom * Utilities.theMapItemOffset);
-                        mi.Location.X = gi.SelectedStack.Territory.CenterPoint.X - offset;
-                        mi.Location.Y = gi.SelectedStack.Territory.CenterPoint.Y - offset;
-                     }
-                  }
                }
                break;
             case GameAction.GameSetupHostGame:
@@ -1394,6 +1412,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
+            case GameAction.UpdateNewGameEnd:
                break;
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show
@@ -1402,7 +1421,21 @@ namespace PleasantvilleGame
                if (false == LoadGame(ref gi))
                {
                   returnStatus = "Load_Game() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateMovement.PerformAction(): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateRotateStack:
+               if (false == RotateStack(gi))
+               {
+                  returnStatus = "Rotate_Stack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateScatterStack:
+               if (false == ScatterStack(gi))
+               {
+                  returnStatus = "Scatter_Stack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                }
                break;
             case GameAction.AlienStart:
@@ -1494,7 +1527,44 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
+            case GameAction.ShowGameFeatsDialog:
+            case GameAction.ShowRuleListingDialog:
+            case GameAction.ShowEventListingDialog:
+            case GameAction.ShowTableListing:
+            case GameAction.ShowReportErrorDialog:
+            case GameAction.ShowCharacterDescription:
+            case GameAction.ShowAboutDialog:
+            case GameAction.EndGameShowFeats:
+            case GameAction.UpdateStatusBar:
+            case GameAction.UpdateGameOptions:
+            case GameAction.UpdateShowRegion:
+            case GameAction.UpdateEventViewerDisplay: // Only change active event
+            case GameAction.UpdateNewGameEnd:
             case GameAction.ShowAlien:
+               break;
+            case GameAction.UpdateEventViewerActive: // Only change active event
+               gi.EventDisplayed = gi.EventActive; // next screen to show
+               break;
+            case GameAction.UpdateLoadingGame:
+               if (false == LoadGame(ref gi))
+               {
+                  returnStatus = "Load_Game() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateRotateStack:
+               if (false == RotateStack(gi))
+               {
+                  returnStatus = "Rotate_Stack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateScatterStack:
+               if (false == ScatterStack(gi))
+               {
+                  returnStatus = "Scatter_Stack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
                break;
             case GameAction.AlienDisplaysRandomMovement:
                gi.IsAlienDisplayedRandomMovement = true;
