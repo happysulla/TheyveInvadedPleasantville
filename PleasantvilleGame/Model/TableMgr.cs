@@ -24,8 +24,8 @@ namespace PleasantvilleGame
          {"Tavern","Vet","Clothing Store","General Store","Gas Pumps","Supermarket"},
          {"School","Bank","Doc","VFW","Bar And Grill","Machine Shop"},
          {"Sheriff","Town Hall","Hotel","Church","Graveyard","Stock Pen"},
-         {"Train Station","House","House","House","House","House"},
-         {"House","House","House","House","Lawyer","House"},
+         {"Train Station","House_A","House_1","House_2","House_3","House_4"},
+         {"House_5","House_6","House_7","House_8","Lawyer","House_K"},
       };
       //---------------------------------------------------------------------
       public readonly static string[] theTownPlayerStartingTable = new string[6]
@@ -66,20 +66,6 @@ namespace PleasantvilleGame
       public TableMgr()
       {
          CreateCombatTable();
-      }
-      static string GetTownsperson(IGameInstance gi, int firstRoll, int secondRoll)
-      {
-         if( firstRoll < 1 || 5 < firstRoll )
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GetTownsperson() returned error with firstRoll=" + firstRoll.ToString());
-            return "ERROR";
-         }
-         if (secondRoll < 1 || 6 < secondRoll)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GetTownsperson() returned error with secondRoll=" + secondRoll.ToString());
-            return "ERROR";
-         }
-         return theTownpersonsTable[firstRoll, secondRoll];
       }
       private void CreateCombatTable()
       {
@@ -145,7 +131,7 @@ namespace PleasantvilleGame
       }
       static public string GetTownspersonName(int die1, int die2)
       {
-         if( die1 < 0 || 5 < die1 )
+         if (die1 < 0 || 5 < die1)
          {
             Logger.Log(LogEnum.LE_ERROR, "TableMgr.GetTownspersonName(): die1 out of range: " + die1);
             return "ERROR";
@@ -156,6 +142,39 @@ namespace PleasantvilleGame
             return "ERROR";
          }
          return theTownpersonsTable[die1, die2];
+      }
+      //---------------------------------------------------------------------
+      static public string GetTargetBuildingName(int die1, int die2)
+      {
+         if (die1 < 0 || 5 < die1)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "TableMgr.GetTargetBuildingName(): die1 out of range: " + die1);
+            return "ERROR";
+         }
+         if (die2 < 0 || 6 < die2)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "TableMgr.GetTargetBuildingName(): die2 out of range: " + die2);
+            return "ERROR";
+         }
+         string buildingName = theTargetBuildingTable[die1, die2];
+         if (true ==  buildingName.Contains("House") )
+         {
+            return buildingName;
+         }
+         else
+         {
+            for (int i = 0; i < theBuildingSizes.GetLength(0); i++)
+            {
+               if (theBuildingSizes[i, 0] == buildingName)
+               {
+                  int maxNum = Convert.ToInt32(theBuildingSizes[i, 1]);
+                  int randNum = Utilities.RandomGenerator.Next(maxNum);
+                  return buildingName + " _ ";
+               }
+            }
+         }
+         Logger.Log(LogEnum.LE_ERROR, "TableMgr.GetTargetBuildingName(): reached default with name=" + buildingName);
+         return "ERROR";
       }
    }
 }

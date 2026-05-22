@@ -20,7 +20,6 @@ namespace PleasantvilleGame.Networking
       {
          GameAction.GameSetupStartingTownsplayerSetRoll,
          GameAction.GameSetupShowMap,
-         GameAction.GameSetupFinished,
          GameAction.UpdateEventViewerActive,
          GameAction.UpdateEventViewerDisplay,
          GameAction.TownpersonProposesMovement,

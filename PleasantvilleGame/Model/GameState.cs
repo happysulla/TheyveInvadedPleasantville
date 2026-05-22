@@ -239,42 +239,43 @@ namespace PleasantvilleGame
                continue;
             }
             //------------------------------------------------------------
-            if (false == PerformMovement(gi, miMoving))
+            die1 = Utilities.RandomGenerator.Next(5);
+            die2 = Utilities.RandomGenerator.Next(6);
+            string buildingName = TableMgr.GetTargetBuildingName(die1, die2); // Find the target building location.
+            ITerritory? newTerritory = Territories.theTerritories.Find(buildingName);
+            if (null == newTerritory)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_Movements(): PerformMovement() returned false for miMoving=" + miMoving.Name);
+               Logger.Log(LogEnum.LE_ERROR, "Perform_Movement(): newTerritory is null for buildingName=" + buildingName);
                return false;
             }
+            //------------------------------------------------------------
+            Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Perform_Movement(): mi=" + miMoving.Name + " entering t=" + newTerritory.Name);
+            if (false == CreateMapItemMove(gi, miMoving, newTerritory))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_Movement(): Create_MapItemMove() returned false");
+               return false;
+            }
+            miMoving.IsMoved = true;
+            //------------------------------------------------------------
             ++numPeopleMoved;  // Keep track of number of people moved
             Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Perform_Movements(): moved miMoving=" + miMoving.Name + " numPeopleMoved=" + numPeopleMoved.ToString());
          }  // end while()
+         if( 0 < loopCount )
+         {
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Perform_Movements(): invalid state loopCount=" + loopCount.ToString());
+            return false;
+         }
          return true;
       }
       public bool PerformMovement(IGameInstance gi, IMapItem mi)
       {
-         int r3 = Utilities.RandomGenerator.Next(5);
-         int r4 = Utilities.RandomGenerator.Next(6);
-         string building = Utilities.RemoveSpaces(TableMgr.theTargetBuildingTable[r3, r4]); // Find the target building location.
-          //-----------------------------------------
-         int numOfSectorsInBuilding = 0;
-         for (int i1 = 0; i1 < TableMgr.theBuildingSizes.GetLength(0); i1++)   // If moving to a build, randomly select a space from the building. GetLength(0) gets the length of the array.
-         {
-            string buildingToCompare = Utilities.RemoveSpaces(TableMgr.theBuildingSizes[i1, 0]);
-            if (buildingToCompare == building)
-            {
-               numOfSectorsInBuilding = Int32.Parse(TableMgr.theBuildingSizes[i1, 1]);
-               break;
-            }
-         }
-         int selectedSector = Utilities.RandomGenerator.Next(numOfSectorsInBuilding);
-         ++selectedSector;
-         ITerritory? newTerritory = Territories.theTerritories.Find(building, selectedSector.ToString());
+         int die1 = Utilities.RandomGenerator.Next(5);
+         int die2 = Utilities.RandomGenerator.Next(6);
+         string buildingName = TableMgr.GetTargetBuildingName(die1, die2); // Find the target building location.
+         ITerritory? newTerritory = Territories.theTerritories.Find(buildingName);
          if (null == newTerritory)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_Movement(): newTerritory is null for building=" + building + " selectedSector=" + selectedSector.ToString());
-            return false;
-         }
-         if ((mi.TerritoryCurrent.Name == newTerritory.Name) && (mi.TerritoryCurrent.Subname == newTerritory.Subname))
-         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_Movement(): newTerritory is null for buildingName=" + buildingName );
             return false;
          }
          //-----------------------------------------
@@ -552,9 +553,12 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                }
                break;
-            case GameAction.GameSetupFinished:
+            case GameAction.GameSetupRandomMovementSetup:
                gi.GamePhase = GamePhase.RandomMovement;
                gi.EventActive = gi.EventDisplayed = "e005";
+               break;
+            case GameAction.RandomMovementStart:
+               gi.GamePhase = GamePhase.RandomMovement;
                break;
             default:
                returnStatus = "reached default action=" + action.ToString();
@@ -1384,133 +1388,6 @@ namespace PleasantvilleGame
             return false;
          }
          startingAlien.IsAlienUnknown = true;
-         return true;
-      }
-   }
-   //----------------------------------------------------------------
-   class AlienStart : GameState
-   {
-      public override string PerformAction(ref IGameInstance gi, ref GameAction action, int dieRoll)
-      {
-         GamePhase previousPhase = gi.GamePhase;
-         GameAction previousAction = action;
-         GameAction previousDieAction = gi.DieRollAction;
-         string previousEvent = gi.EventActive;
-         string returnStatus = "OK";
-         string key = gi.EventActive;
-         switch (action)
-         {
-            case GameAction.ShowGameFeatsDialog:
-            case GameAction.ShowRuleListingDialog:
-            case GameAction.ShowEventListingDialog:
-            case GameAction.ShowTableListing:
-            case GameAction.ShowReportErrorDialog:
-            case GameAction.ShowCharacterDescription:
-            case GameAction.ShowAboutDialog:
-            case GameAction.EndGameShowFeats:
-            case GameAction.UpdateStatusBar:
-            case GameAction.UpdateGameOptions:
-            case GameAction.UpdateShowRegion:
-            case GameAction.UpdateEventViewerDisplay: // Only change active event
-            case GameAction.UpdateNewGameEnd:
-               break;
-            case GameAction.UpdateEventViewerActive: // Only change active event
-               gi.EventDisplayed = gi.EventActive; // next screen to show
-               break;
-            case GameAction.UpdateLoadingGame:
-               if (false == LoadGame(ref gi))
-               {
-                  returnStatus = "Load_Game() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
-               }
-               break;
-            case GameAction.UpdateRotateStack:
-               if (false == RotateStack(gi))
-               {
-                  returnStatus = "Rotate_Stack() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
-               }
-               break;
-            case GameAction.UpdateScatterStack:
-               if (false == ScatterStack(gi))
-               {
-                  returnStatus = "Scatter_Stack() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
-               }
-               break;
-            case GameAction.AlienStart:
-               gi.IsAlienStarted = true;
-               if (true == gi.IsControlledStarted)
-               {
-                  gi.GamePhase = GamePhase.RandomMovement;
-                  gi.NextAction = "Display Random Movement";
-               }
-               else
-               {
-                  gi.NextAction = "Awaiting Townsperson Start";
-               }
-               break;
-            case GameAction.TownspersonStart:
-               gi.IsControlledStarted = true;
-               if (true == gi.IsAlienStarted)
-               {
-                  gi.GamePhase = GamePhase.RandomMovement;
-                  gi.NextAction = "Display Random Movement";
-               }
-               else
-               {
-                  gi.NextAction = "Awaiting Alien Start";
-               }
-               break;
-            default:
-               returnStatus = "reached default action=" + action.ToString();
-               Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
-               break;
-         }
-         StringBuilder sb12 = new StringBuilder();
-         if ("OK" != returnStatus)
-            sb12.Append("<<<<ERROR2::::::AlienStart.PerformAction():");
-         sb12.Append("===>p=");
-         sb12.Append(previousPhase.ToString());
-         if (previousPhase != gi.GamePhase)
-         { sb12.Append("=>"); sb12.Append(gi.GamePhase.ToString()); }
-         sb12.Append(" a="); sb12.Append(previousAction.ToString());
-         if (previousAction != action)
-         { sb12.Append("=>"); sb12.Append(action.ToString()); }
-         sb12.Append(" dra="); sb12.Append(previousDieAction.ToString());
-         if (previousDieAction != gi.DieRollAction)
-         { sb12.Append("=>"); sb12.Append(gi.DieRollAction.ToString()); }
-         sb12.Append(" e="); sb12.Append(previousEvent);
-         if (previousEvent != gi.EventActive)
-         { sb12.Append("=>"); sb12.Append(gi.EventActive); }
-         sb12.Append(" dr="); sb12.Append(dieRoll.ToString());
-         if ("OK" == returnStatus)
-            Logger.Log(LogEnum.LE_NEXT_ACTION, sb12.ToString());
-         else
-            Logger.Log(LogEnum.LE_ERROR, sb12.ToString());
-         return returnStatus;
-      }
-      private bool SetupNewGame(IGameInstance gi, ref GameAction outAction)
-      {
-         PrintDiagnosticInfoToLog();
-         gi.GamePhase = GamePhase.GameSetup;
-         gi.Statistics = new GameStatistics();
-         gi.Statistics.SetOriginalGameStatistics();
-         //-------------------------------------------------------
-         gi.DieRollAction = GameAction.DieRollActionNone;
-         //-------------------------------------------------------
-         Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "Setup_NewGame(): gi.MapItemMoves.Clear()");
-         gi.MapItemMoves.Clear();
-         //---------------------------------------------
-         if (false == AddStartingTestingState(gi)) // TestingStartAmbush
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Setup_NewGame():  Add_StartingTestingState() returned false");
-            return false;
-         }
-         return true;
-      }
-      private bool AddStartingTestingState(IGameInstance gi)
-      {
          return true;
       }
    }
@@ -3750,6 +3627,133 @@ namespace PleasantvilleGame
          else
             Logger.Log(LogEnum.LE_ERROR, sb12.ToString());
          return returnStatus;
+      }
+   }
+   //----------------------------------------------------------------
+   class AlienStart : GameState
+   {
+      public override string PerformAction(ref IGameInstance gi, ref GameAction action, int dieRoll)
+      {
+         GamePhase previousPhase = gi.GamePhase;
+         GameAction previousAction = action;
+         GameAction previousDieAction = gi.DieRollAction;
+         string previousEvent = gi.EventActive;
+         string returnStatus = "OK";
+         string key = gi.EventActive;
+         switch (action)
+         {
+            case GameAction.ShowGameFeatsDialog:
+            case GameAction.ShowRuleListingDialog:
+            case GameAction.ShowEventListingDialog:
+            case GameAction.ShowTableListing:
+            case GameAction.ShowReportErrorDialog:
+            case GameAction.ShowCharacterDescription:
+            case GameAction.ShowAboutDialog:
+            case GameAction.EndGameShowFeats:
+            case GameAction.UpdateStatusBar:
+            case GameAction.UpdateGameOptions:
+            case GameAction.UpdateShowRegion:
+            case GameAction.UpdateEventViewerDisplay: // Only change active event
+            case GameAction.UpdateNewGameEnd:
+               break;
+            case GameAction.UpdateEventViewerActive: // Only change active event
+               gi.EventDisplayed = gi.EventActive; // next screen to show
+               break;
+            case GameAction.UpdateLoadingGame:
+               if (false == LoadGame(ref gi))
+               {
+                  returnStatus = "Load_Game() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateRotateStack:
+               if (false == RotateStack(gi))
+               {
+                  returnStatus = "Rotate_Stack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateScatterStack:
+               if (false == ScatterStack(gi))
+               {
+                  returnStatus = "Scatter_Stack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.AlienStart:
+               gi.IsAlienStarted = true;
+               if (true == gi.IsControlledStarted)
+               {
+                  gi.GamePhase = GamePhase.RandomMovement;
+                  gi.NextAction = "Display Random Movement";
+               }
+               else
+               {
+                  gi.NextAction = "Awaiting Townsperson Start";
+               }
+               break;
+            case GameAction.TownspersonStart:
+               gi.IsControlledStarted = true;
+               if (true == gi.IsAlienStarted)
+               {
+                  gi.GamePhase = GamePhase.RandomMovement;
+                  gi.NextAction = "Display Random Movement";
+               }
+               else
+               {
+                  gi.NextAction = "Awaiting Alien Start";
+               }
+               break;
+            default:
+               returnStatus = "reached default action=" + action.ToString();
+               Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               break;
+         }
+         StringBuilder sb12 = new StringBuilder();
+         if ("OK" != returnStatus)
+            sb12.Append("<<<<ERROR2::::::AlienStart.PerformAction():");
+         sb12.Append("===>p=");
+         sb12.Append(previousPhase.ToString());
+         if (previousPhase != gi.GamePhase)
+         { sb12.Append("=>"); sb12.Append(gi.GamePhase.ToString()); }
+         sb12.Append(" a="); sb12.Append(previousAction.ToString());
+         if (previousAction != action)
+         { sb12.Append("=>"); sb12.Append(action.ToString()); }
+         sb12.Append(" dra="); sb12.Append(previousDieAction.ToString());
+         if (previousDieAction != gi.DieRollAction)
+         { sb12.Append("=>"); sb12.Append(gi.DieRollAction.ToString()); }
+         sb12.Append(" e="); sb12.Append(previousEvent);
+         if (previousEvent != gi.EventActive)
+         { sb12.Append("=>"); sb12.Append(gi.EventActive); }
+         sb12.Append(" dr="); sb12.Append(dieRoll.ToString());
+         if ("OK" == returnStatus)
+            Logger.Log(LogEnum.LE_NEXT_ACTION, sb12.ToString());
+         else
+            Logger.Log(LogEnum.LE_ERROR, sb12.ToString());
+         return returnStatus;
+      }
+      private bool SetupNewGame(IGameInstance gi, ref GameAction outAction)
+      {
+         PrintDiagnosticInfoToLog();
+         gi.GamePhase = GamePhase.GameSetup;
+         gi.Statistics = new GameStatistics();
+         gi.Statistics.SetOriginalGameStatistics();
+         //-------------------------------------------------------
+         gi.DieRollAction = GameAction.DieRollActionNone;
+         //-------------------------------------------------------
+         Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "Setup_NewGame(): gi.MapItemMoves.Clear()");
+         gi.MapItemMoves.Clear();
+         //---------------------------------------------
+         if (false == AddStartingTestingState(gi)) // TestingStartAmbush
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Setup_NewGame():  Add_StartingTestingState() returned false");
+            return false;
+         }
+         return true;
+      }
+      private bool AddStartingTestingState(IGameInstance gi)
+      {
+         return true;
       }
    }
 }

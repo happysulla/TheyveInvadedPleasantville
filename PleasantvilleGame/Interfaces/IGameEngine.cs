@@ -59,7 +59,9 @@ namespace PleasantvilleGame
       GameSetupStartingAlienSetRoll,
       GameSetupStartingAlienSet,
       GameSetupShowMap,
-      GameSetupFinished,
+      GameSetupRandomMovementSetup,
+
+      RandomMovementStart,
 
       AlienStart,
       TownspersonStart,

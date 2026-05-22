@@ -288,6 +288,13 @@ namespace PleasantvilleGame
             //   {
             //   }
             //   break;
+            case GameAction.RandomMovementStart:
+               EventViewerRandomMovement evRandomMovementMgr = new EventViewerRandomMovement(myGameEngine, myGameInstance, myCanvasMain, myScrollViewerTextBlock, myRulesMgr, myDieRoller);
+               if (true == evRandomMovementMgr.CtorError)
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): evRandomMovementMgr.CtorError=true");
+               else if (false == evRandomMovementMgr.PerformRandomMovement(ShowRandomMoveResults))
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Perform_RandomMovement() returned false");
+               break;
             case GameAction.EndGameLost:
             case GameAction.EndGameWin:
             default:
@@ -997,6 +1004,27 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_VIEW_UPDATE_EVENTVIEWER, sb11.ToString());
          myGameEngine.PerformAction(ref myGameInstance, ref action, dieRoll);
       }
+      public bool ShowRandomMoveResults()
+      {
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ShowRandomMoveResults(): myGameInstance=null");
+            return false;
+         }
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ShowRandomMoveResults(): myGameEngine=null");
+            return false;
+         }
+         GameAction outAction = GameAction.Error;
+         StringBuilder sb11 = new StringBuilder("     ######ShowRandomMoveResults() :");
+         sb11.Append(" p="); sb11.Append(myGameInstance.GamePhase.ToString());
+         sb11.Append(" ae="); sb11.Append(myGameInstance.EventActive);
+         sb11.Append(" a="); sb11.Append(outAction.ToString());
+         Logger.Log(LogEnum.LE_VIEW_UPDATE_EVENTVIEWER, sb11.ToString());
+         myGameEngine.PerformAction(ref myGameInstance, ref outAction);
+         return true;
+      }
       //--------------------------------------------------------------------
       private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
       {
@@ -1074,7 +1102,11 @@ namespace PleasantvilleGame
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
                         case "Continue004":
-                           action = GameAction.GameSetupFinished;
+                           action = GameAction.GameSetupRandomMovementSetup;
+                           myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+                           return;
+                        case "Continue005":
+                           action = GameAction.RandomMovementStart;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
                         case "ExitGame":
