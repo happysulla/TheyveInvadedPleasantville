@@ -1737,6 +1737,8 @@ namespace PleasantvilleGame
       }
       private void UpdateCanvasMainClear(List<Button> buttons, IStacks stacks, GameAction action, bool isOnlyLastLineRemoved)
       {
+         if (GamePhase.UnitTest == myGameInstance.GamePhase)
+            return;
          Logger.Log(LogEnum.LE_SHOW_MAIN_CLEAR, "Update_CanvasMainClear(): Clearing action=" + action.ToString() + " stacks=" + stacks.ToString());
          List<UIElement> lines = new List<UIElement>();  
          List<UIElement> elements = new List<UIElement>();

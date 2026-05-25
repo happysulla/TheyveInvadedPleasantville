@@ -12,9 +12,9 @@
       <regionPoint X="0000.22" Y="0048.46" />
     </Points>
     <Adjacents count="3">
-      <adjacent value="Grass_2" />
-      <adjacent value="Grass_14" />
       <adjacent value="Grass_13" />
+      <adjacent value="Grass_14" />
+      <adjacent value="Grass_2" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -64,7 +64,7 @@
     </Points>
     <Adjacents count="3">
       <adjacent value="Grass_3" />
-      <adjacent value="Tavern_1" />
+      <adjacent value="Tavern_0" />
       <adjacent value="Grass_5" />
     </Adjacents>
   </Territory>
@@ -100,7 +100,7 @@
     </Points>
     <Adjacents count="3">
       <adjacent value="Grass_5" />
-      <adjacent value="VetOffice_1" />
+      <adjacent value="VetOffice_0" />
       <adjacent value="Grass_7" />
     </Adjacents>
   </Territory>
@@ -136,9 +136,9 @@
       <regionPoint X="0491.83" Y="0035.68" />
     </Points>
     <Adjacents count="4">
+      <adjacent value="GeneralStore_0" />
       <adjacent value="Grass_7" />
-      <adjacent value="GeneralStore_1" />
-      <adjacent value="GasPumps_1" />
+      <adjacent value="GasPumps_0" />
       <adjacent value="Grass_9" />
     </Adjacents>
   </Territory>
@@ -153,8 +153,8 @@
       <regionPoint X="0491.83" Y="0035.68" />
     </Points>
     <Adjacents count="3">
-      <adjacent value="GasPumps_1" />
       <adjacent value="Grass_8" />
+      <adjacent value="GasPumps_0" />
       <adjacent value="Road_1" />
     </Adjacents>
   </Territory>
@@ -169,8 +169,8 @@
       <regionPoint X="0613.50" Y="0036.68" />
     </Points>
     <Adjacents count="2">
-      <adjacent value="Road_1" />
       <adjacent value="Grass_11" />
+      <adjacent value="Road_1" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -234,10 +234,12 @@
       <regionPoint X="0091.83" Y="0128.01" />
       <regionPoint X="0059.83" Y="0127.68" />
     </Points>
-    <Adjacents count="3">
+    <Adjacents count="5">
+      <adjacent value="Grass_1" />
+      <adjacent value="Grass_13" />
+      <adjacent value="Grass_19" />
       <adjacent value="Grass_15" />
       <adjacent value="House_A" />
-      <adjacent value="Grass_19" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -299,8 +301,8 @@
       <regionPoint X="0765.50" Y="0104.01" />
     </Points>
     <Adjacents count="3">
+      <adjacent value="Supermarket_2" />
       <adjacent value="Grass_23" />
-      <adjacent value="Supermarket_3" />
       <adjacent value="Grass_12" />
     </Adjacents>
   </Territory>
@@ -435,10 +437,11 @@
       <regionPoint X="0376.27" Y="0278.54" />
       <regionPoint X="0326.27" Y="0265.54" />
     </Points>
-    <Adjacents count="3">
-      <adjacent value="Road_22" />
+    <Adjacents count="4">
       <adjacent value="Grass_25" />
+      <adjacent value="Grass_32" />
       <adjacent value="Grass_33" />
+      <adjacent value="Road_22" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -452,10 +455,10 @@
       <regionPoint X="0635.98" Y="0246.01" />
     </Points>
     <Adjacents count="4">
-      <adjacent value="Road_26" />
       <adjacent value="Road_25" />
-      <adjacent value="Grass_38" />
+      <adjacent value="Road_26" />
       <adjacent value="Grass_37" />
+      <adjacent value="Grass_38" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -487,10 +490,10 @@
       <regionPoint X="0055.83" Y="0347.68" />
     </Points>
     <Adjacents count="4">
-      <adjacent value="School_3" />
-      <adjacent value="Grass_29" />
+      <adjacent value="School_2" />
       <adjacent value="Grass_31" />
       <adjacent value="Grass_40" />
+      <adjacent value="Grass_29" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -504,11 +507,11 @@
       <regionPoint X="0269.19" Y="0299.68" />
     </Points>
     <Adjacents count="5">
+      <adjacent value="Grass_25" />
+      <adjacent value="Grass_26" />
+      <adjacent value="Grass_33" />
       <adjacent value="Road_55" />
       <adjacent value="Road_54" />
-      <adjacent value="Grass_25" />
-      <adjacent value="Grass_33" />
-      <adjacent value="Grass_26" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -558,11 +561,11 @@
       <regionPoint X="0590.48" Y="0372.87" />
     </Points>
     <Adjacents count="5">
-      <adjacent value="DocOffice_2" />
-      <adjacent value="Grass_34" />
+      <adjacent value="DocOffice_1" />
       <adjacent value="Grass_43" />
-      <adjacent value="Road_33" />
+      <adjacent value="Grass_34" />
       <adjacent value="Grass_36" />
+      <adjacent value="Road_33" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -666,9 +669,9 @@
       <regionPoint X="0269.19" Y="0400.35" />
     </Points>
     <Adjacents count="4">
+      <adjacent value="ClothingStore_0" />
       <adjacent value="Road_55" />
       <adjacent value="Road_54" />
-      <adjacent value="ClothingStore_1" />
       <adjacent value="Grass_52" />
     </Adjacents>
   </Territory>
@@ -722,7 +725,8 @@
       <regionPoint X="0829.17" Y="0315.68" />
       <regionPoint X="0785.50" Y="0322.68" />
     </Points>
-    <Adjacents count="3">
+    <Adjacents count="4">
+      <adjacent value="Road_29" />
       <adjacent value="Grass_39" />
       <adjacent value="Road_30" />
       <adjacent value="Grass_45" />
@@ -828,8 +832,8 @@
       <regionPoint X="0507.98" Y="0484.87" />
     </Points>
     <Adjacents count="5">
-      <adjacent value="Grass_42" />
       <adjacent value="Road_6" />
+      <adjacent value="Grass_42" />
       <adjacent value="Road_7" />
       <adjacent value="Road_62" />
       <adjacent value="Road_63" />
@@ -878,7 +882,8 @@
       <regionPoint X="0734.32" Y="0484.68" />
       <regionPoint X="0677.98" Y="0484.68" />
     </Points>
-    <Adjacents count="3">
+    <Adjacents count="4">
+      <adjacent value="Grass_58" />
       <adjacent value="Road_64" />
       <adjacent value="Road_35" />
       <adjacent value="Road_34" />
@@ -896,11 +901,12 @@
       <regionPoint X="0727.17" Y="0451.68" />
       <regionPoint X="0754.17" Y="0450.01" />
     </Points>
-    <Adjacents count="4">
+    <Adjacents count="5">
+      <adjacent value="House_6" />
       <adjacent value="Grass_55" />
       <adjacent value="Grass_57" />
-      <adjacent value="Road_65" />
       <adjacent value="Road_64" />
+      <adjacent value="Road_65" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -918,8 +924,8 @@
     </Points>
     <Adjacents count="3">
       <adjacent value="Grass_60" />
-      <adjacent value="Grass_56" />
       <adjacent value="Grass_64" />
+      <adjacent value="Grass_56" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -936,10 +942,10 @@
       <regionPoint X="0044.17" Y="0550.01" />
     </Points>
     <Adjacents count="4">
+      <adjacent value="MachineShop_0" />
       <adjacent value="Grass_65" />
       <adjacent value="Road_50" />
       <adjacent value="Grass_59" />
-      <adjacent value="MachineShop_1" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -953,9 +959,9 @@
       <regionPoint X="0260.85" Y="0562.68" />
     </Points>
     <Adjacents count="3">
-      <adjacent value="Grass_66" />
-      <adjacent value="Road_60" />
       <adjacent value="Road_59" />
+      <adjacent value="Road_60" />
+      <adjacent value="Grass_66" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -971,8 +977,8 @@
     <Adjacents count="4">
       <adjacent value="Road_63" />
       <adjacent value="Road_35" />
-      <adjacent value="Grass_67" />
       <adjacent value="Road_36" />
+      <adjacent value="Grass_67" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -1001,9 +1007,9 @@
       <regionPoint X="0000.50" Y="0605.35" />
     </Points>
     <Adjacents count="3">
-      <adjacent value="MachineShop_1" />
-      <adjacent value="Grass_69" />
       <adjacent value="Grass_59" />
+      <adjacent value="MachineShop_0" />
+      <adjacent value="Grass_69" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -1035,10 +1041,10 @@
       <regionPoint X="0241.85" Y="0610.35" />
     </Points>
     <Adjacents count="4">
-      <adjacent value="TownHall_2" />
+      <adjacent value="TownHall_1" />
+      <adjacent value="Grass_61" />
       <adjacent value="Road_12" />
       <adjacent value="Road_52" />
-      <adjacent value="Grass_61" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -1100,11 +1106,11 @@
       <regionPoint X="0122.17" Y="0608.01" />
     </Points>
     <Adjacents count="6">
-      <adjacent value="Grass_65" />
-      <adjacent value="MachineShop_4" />
+      <adjacent value="MachineShop_3" />
       <adjacent value="Road_52" />
-      <adjacent value="Road_12" />
       <adjacent value="Road_13" />
+      <adjacent value="Road_12" />
+      <adjacent value="Grass_65" />
       <adjacent value="Road_51" />
     </Adjacents>
   </Territory>
@@ -1155,7 +1161,7 @@
     </Points>
     <Adjacents count="3">
       <adjacent value="Grass_68" />
-      <adjacent value="Graveyard_1" />
+      <adjacent value="Graveyard_0" />
       <adjacent value="Grass_81" />
     </Adjacents>
   </Territory>
@@ -1189,13 +1195,13 @@
       <regionPoint X="0322.47" Y="0771.68" />
     </Points>
     <Adjacents count="7">
-      <adjacent value="Road_10" />
-      <adjacent value="House_8" />
-      <adjacent value="Road_11" />
+      <adjacent value="StockPen_0" />
       <adjacent value="Grass_85" />
-      <adjacent value="StockPen_1" />
       <adjacent value="Grass_96" />
       <adjacent value="Grass_95" />
+      <adjacent value="House_8" />
+      <adjacent value="Road_11" />
+      <adjacent value="Road_10" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -1227,9 +1233,9 @@
       <regionPoint X="0498.60" Y="0724.68" />
     </Points>
     <Adjacents count="5">
-      <adjacent value="HotelAndRestaurant_5" />
-      <adjacent value="Grass_76" />
+      <adjacent value="HotelAndRestaurant_4" />
       <adjacent value="Grass_78" />
+      <adjacent value="Grass_76" />
       <adjacent value="Grass_87" />
       <adjacent value="Grass_86" />
     </Adjacents>
@@ -1248,10 +1254,10 @@
     </Points>
     <Adjacents count="5">
       <adjacent value="Grass_72" />
-      <adjacent value="Grass_77" />
-      <adjacent value="Grass_87" />
-      <adjacent value="Road_39" />
       <adjacent value="Road_38" />
+      <adjacent value="Road_39" />
+      <adjacent value="Grass_87" />
+      <adjacent value="Grass_77" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -1266,12 +1272,12 @@
       <regionPoint X="0629.68" Y="0744.35" />
     </Points>
     <Adjacents count="6">
-      <adjacent value="Graveyard_1" />
       <adjacent value="Road_38" />
-      <adjacent value="Road_39" />
+      <adjacent value="Graveyard_0" />
+      <adjacent value="Grass_80" />
       <adjacent value="Grass_89" />
       <adjacent value="Grass_88" />
-      <adjacent value="Grass_80" />
+      <adjacent value="Road_39" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -1285,12 +1291,12 @@
       <regionPoint X="0740.50" Y="0782.01" />
     </Points>
     <Adjacents count="6">
-      <adjacent value="Grass_81" />
-      <adjacent value="Graveyard_1" />
-      <adjacent value="Grass_79" />
-      <adjacent value="Grass_89" />
-      <adjacent value="RR_21" />
       <adjacent value="RR_22" />
+      <adjacent value="RR_21" />
+      <adjacent value="Grass_89" />
+      <adjacent value="Grass_79" />
+      <adjacent value="Graveyard_0" />
+      <adjacent value="Grass_81" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -1304,9 +1310,9 @@
       <regionPoint X="0779.83" Y="0775.68" />
     </Points>
     <Adjacents count="5">
-      <adjacent value="Graveyard_1" />
-      <adjacent value="Grass_73" />
       <adjacent value="Grass_80" />
+      <adjacent value="Graveyard_0" />
+      <adjacent value="Grass_73" />
       <adjacent value="RR_23" />
       <adjacent value="RR_22" />
     </Adjacents>
@@ -1380,7 +1386,7 @@
       <regionPoint X="0406.13" Y="0782.01" />
     </Points>
     <Adjacents count="5">
-      <adjacent value="StockPen_1" />
+      <adjacent value="StockPen_0" />
       <adjacent value="Grass_86" />
       <adjacent value="Grass_76" />
       <adjacent value="Road_10" />
@@ -1399,7 +1405,7 @@
       <regionPoint X="0454.94" Y="0764.68" />
     </Points>
     <Adjacents count="5">
-      <adjacent value="StockPen_1" />
+      <adjacent value="StockPen_0" />
       <adjacent value="Grass_85" />
       <adjacent value="Grass_76" />
       <adjacent value="Grass_77" />
@@ -1419,13 +1425,14 @@
       <regionPoint X="0504.38" Y="0773.35" />
       <regionPoint X="0498.27" Y="0772.01" />
     </Points>
-    <Adjacents count="6">
+    <Adjacents count="7">
       <adjacent value="Grass_86" />
-      <adjacent value="Grass_77" />
-      <adjacent value="Grass_78" />
-      <adjacent value="Road_39" />
-      <adjacent value="Road_40" />
       <adjacent value="Grass_97" />
+      <adjacent value="Road_40" />
+      <adjacent value="StockPen_0" />
+      <adjacent value="Road_39" />
+      <adjacent value="Grass_78" />
+      <adjacent value="Grass_77" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -1520,11 +1527,11 @@
       <regionPoint X="0117.17" Y="0875.68" />
     </Points>
     <Adjacents count="5">
-      <adjacent value="RR_5" />
-      <adjacent value="RR_4" />
-      <adjacent value="Grass_84" />
       <adjacent value="Grass_93" />
+      <adjacent value="Grass_84" />
       <adjacent value="Grass_91" />
+      <adjacent value="RR_4" />
+      <adjacent value="RR_5" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -1538,12 +1545,13 @@
       <regionPoint X="0208.68" Y="0861.16" />
       <regionPoint X="0171.35" Y="0866.83" />
     </Points>
-    <Adjacents count="5">
-      <adjacent value="BarAndGrill_2" />
+    <Adjacents count="6">
+      <adjacent value="BarAndGrill_1" />
+      <adjacent value="Grass_94" />
       <adjacent value="Grass_84" />
       <adjacent value="RR_5" />
       <adjacent value="RR_6" />
-      <adjacent value="Grass_94" />
+      <adjacent value="Grass_92" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -1601,11 +1609,11 @@
     </Points>
     <Adjacents count="6">
       <adjacent value="Grass_75" />
-      <adjacent value="Grass_95" />
-      <adjacent value="RR_10" />
-      <adjacent value="RR_11" />
+      <adjacent value="StockPen_0" />
       <adjacent value="RR_12" />
-      <adjacent value="StockPen_1" />
+      <adjacent value="RR_11" />
+      <adjacent value="RR_10" />
+      <adjacent value="Grass_95" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -1618,14 +1626,12 @@
       <regionPoint X="0542.38" Y="0811.68" />
       <regionPoint X="0494.60" Y="0819.35" />
     </Points>
-    <Adjacents count="7">
-      <adjacent value="Grass_87" />
-      <adjacent value="Grass_86" />
-      <adjacent value="StockPen_1" />
-      <adjacent value="RR_14" />
+    <Adjacents count="5">
       <adjacent value="RR_15" />
       <adjacent value="RR_16" />
       <adjacent value="Road_40" />
+      <adjacent value="Grass_87" />
+      <adjacent value="StockPen_0" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -1808,13 +1814,13 @@
       <regionPoint X="0704.17" Y="0870.49" />
     </Points>
     <Adjacents count="7">
-      <adjacent value="TrainStation_2" />
-      <adjacent value="Grass_108" />
-      <adjacent value="Grass_114" />
-      <adjacent value="Grass_113" />
+      <adjacent value="TrainStation_1" />
       <adjacent value="RR_20" />
       <adjacent value="RR_21" />
       <adjacent value="RR_22" />
+      <adjacent value="Grass_108" />
+      <adjacent value="Grass_114" />
+      <adjacent value="Grass_113" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -1881,11 +1887,11 @@
       <regionPoint X="0543.17" Y="0948.83" />
     </Points>
     <Adjacents count="5">
+      <adjacent value="Grass_106" />
+      <adjacent value="TrainStation_0" />
+      <adjacent value="Grass_112" />
       <adjacent value="Road_42" />
       <adjacent value="Road_41" />
-      <adjacent value="Grass_106" />
-      <adjacent value="TrainStation_1" />
-      <adjacent value="Grass_112" />
     </Adjacents>
   </Territory>
   <Territory value="Grass">
@@ -2155,8 +2161,8 @@
       <regionPoint X="0197.25" Y="0110.68" />
     </Points>
     <Adjacents count="3">
-      <adjacent value="Tavern_3" />
       <adjacent value="Tavern_2" />
+      <adjacent value="Tavern_1" />
       <adjacent value="Grass_4" />
     </Adjacents>
   </Territory>
@@ -2171,8 +2177,8 @@
       <regionPoint X="0235.95" Y="0116.01" />
     </Points>
     <Adjacents count="2">
-      <adjacent value="Tavern_1" />
-      <adjacent value="Tavern_3" />
+      <adjacent value="Tavern_0" />
+      <adjacent value="Tavern_2" />
     </Adjacents>
   </Territory>
   <Territory value="Tavern">
@@ -2187,7 +2193,7 @@
     </Points>
     <Adjacents count="3">
       <adjacent value="Tavern_1" />
-      <adjacent value="Tavern_2" />
+      <adjacent value="Tavern_0" />
       <adjacent value="Road_20" />
     </Adjacents>
   </Territory>
@@ -2202,7 +2208,7 @@
       <regionPoint X="0315.95" Y="0110.68" />
     </Points>
     <Adjacents count="2">
-      <adjacent value="VetOffice_2" />
+      <adjacent value="VetOffice_1" />
       <adjacent value="Grass_6" />
     </Adjacents>
   </Territory>
@@ -2217,7 +2223,7 @@
       <regionPoint X="0303.62" Y="0167.68" />
     </Points>
     <Adjacents count="2">
-      <adjacent value="VetOffice_1" />
+      <adjacent value="VetOffice_0" />
       <adjacent value="Road_22" />
     </Adjacents>
   </Territory>
@@ -2249,8 +2255,8 @@
     </Points>
     <Adjacents count="4">
       <adjacent value="Grass_8" />
+      <adjacent value="GeneralStore_1" />
       <adjacent value="GeneralStore_3" />
-      <adjacent value="GeneralStore_4" />
       <adjacent value="GeneralStore_2" />
     </Adjacents>
   </Territory>
@@ -2265,8 +2271,8 @@
       <regionPoint X="0471.17" Y="0119.01" />
     </Points>
     <Adjacents count="2">
-      <adjacent value="GeneralStore_4" />
-      <adjacent value="GeneralStore_1" />
+      <adjacent value="GeneralStore_0" />
+      <adjacent value="GeneralStore_3" />
     </Adjacents>
   </Territory>
   <Territory value="GeneralStore">
@@ -2280,9 +2286,9 @@
       <regionPoint X="0409.83" Y="0168.35" />
     </Points>
     <Adjacents count="3">
-      <adjacent value="GeneralStore_4" />
-      <adjacent value="GeneralStore_1" />
       <adjacent value="Road_23" />
+      <adjacent value="GeneralStore_0" />
+      <adjacent value="GeneralStore_3" />
     </Adjacents>
   </Territory>
   <Territory value="GeneralStore">
@@ -2295,10 +2301,11 @@
       <regionPoint X="0511.83" Y="0168.35" />
       <regionPoint X="0465.83" Y="0168.68" />
     </Points>
-    <Adjacents count="3">
-      <adjacent value="Road_24" />
-      <adjacent value="GeneralStore_3" />
+    <Adjacents count="4">
       <adjacent value="GeneralStore_2" />
+      <adjacent value="GeneralStore_0" />
+      <adjacent value="GeneralStore_1" />
+      <adjacent value="Road_24" />
     </Adjacents>
   </Territory>
   <Territory value="Supermarket">
@@ -2312,8 +2319,8 @@
       <regionPoint X="0601.50" Y="0088.68" />
     </Points>
     <Adjacents count="2">
-      <adjacent value="Supermarket_2" />
-      <adjacent value="Supermarket_4" />
+      <adjacent value="Supermarket_3" />
+      <adjacent value="Supermarket_1" />
     </Adjacents>
   </Territory>
   <Territory value="Supermarket">
@@ -2327,9 +2334,9 @@
       <regionPoint X="0652.83" Y="0095.68" />
     </Points>
     <Adjacents count="4">
-      <adjacent value="Supermarket_1" />
+      <adjacent value="Supermarket_0" />
+      <adjacent value="Supermarket_2" />
       <adjacent value="Supermarket_4" />
-      <adjacent value="Supermarket_5" />
       <adjacent value="Supermarket_3" />
     </Adjacents>
   </Territory>
@@ -2344,9 +2351,9 @@
       <regionPoint X="0720.83" Y="0104.68" />
     </Points>
     <Adjacents count="3">
-      <adjacent value="Supermarket_2" />
-      <adjacent value="Supermarket_5" />
       <adjacent value="Grass_18" />
+      <adjacent value="Supermarket_4" />
+      <adjacent value="Supermarket_1" />
     </Adjacents>
   </Territory>
   <Territory value="Supermarket">
@@ -2361,10 +2368,10 @@
       <regionPoint X="0583.59" Y="0165.68" />
     </Points>
     <Adjacents count="4">
-      <adjacent value="Road_25" />
+      <adjacent value="Supermarket_0" />
       <adjacent value="Supermarket_1" />
-      <adjacent value="Supermarket_2" />
-      <adjacent value="Supermarket_5" />
+      <adjacent value="Supermarket_4" />
+      <adjacent value="Road_25" />
     </Adjacents>
   </Territory>
   <Territory value="Supermarket">
@@ -2379,8 +2386,8 @@
     </Points>
     <Adjacents count="4">
       <adjacent value="Road_26" />
-      <adjacent value="Supermarket_4" />
       <adjacent value="Supermarket_2" />
+      <adjacent value="Supermarket_1" />
       <adjacent value="Supermarket_3" />
     </Adjacents>
   </Territory>
@@ -2395,8 +2402,8 @@
       <regionPoint X="0040.17" Y="0262.01" />
     </Points>
     <Adjacents count="2">
+      <adjacent value="School_1" />
       <adjacent value="School_2" />
-      <adjacent value="School_3" />
     </Adjacents>
   </Territory>
   <Territory value="School">
@@ -2412,9 +2419,9 @@
     </Points>
     <Adjacents count="4">
       <adjacent value="Road_18" />
-      <adjacent value="School_4" />
       <adjacent value="School_3" />
-      <adjacent value="School_1" />
+      <adjacent value="School_2" />
+      <adjacent value="School_0" />
     </Adjacents>
   </Territory>
   <Territory value="School">
@@ -2430,10 +2437,10 @@
       <regionPoint X="0038.83" Y="0302.01" />
     </Points>
     <Adjacents count="4">
-      <adjacent value="School_1" />
-      <adjacent value="School_2" />
-      <adjacent value="School_4" />
       <adjacent value="Grass_30" />
+      <adjacent value="School_0" />
+      <adjacent value="School_1" />
+      <adjacent value="School_3" />
     </Adjacents>
   </Territory>
   <Territory value="School">
@@ -2447,9 +2454,9 @@
       <regionPoint X="0089.17" Y="0302.35" />
     </Points>
     <Adjacents count="3">
-      <adjacent value="Road_45" />
       <adjacent value="School_2" />
-      <adjacent value="School_3" />
+      <adjacent value="School_1" />
+      <adjacent value="Road_45" />
     </Adjacents>
   </Territory>
   <Territory value="Bank">
@@ -2466,7 +2473,7 @@
     <Adjacents count="3">
       <adjacent value="Road_23" />
       <adjacent value="Bank_2" />
-      <adjacent value="Bank_3" />
+      <adjacent value="Bank_1" />
     </Adjacents>
   </Territory>
   <Territory value="Bank">
@@ -2480,10 +2487,10 @@
       <regionPoint X="0361.60" Y="0333.20" />
     </Points>
     <Adjacents count="4">
-      <adjacent value="Road_56" />
-      <adjacent value="Bank_4" />
       <adjacent value="Bank_3" />
-      <adjacent value="Bank_1" />
+      <adjacent value="Bank_2" />
+      <adjacent value="Bank_0" />
+      <adjacent value="Road_56" />
     </Adjacents>
   </Territory>
   <Territory value="Bank">
@@ -2497,9 +2504,9 @@
       <regionPoint X="0416.94" Y="0308.87" />
     </Points>
     <Adjacents count="3">
+      <adjacent value="Bank_0" />
       <adjacent value="Bank_1" />
-      <adjacent value="Bank_2" />
-      <adjacent value="Bank_4" />
+      <adjacent value="Bank_3" />
     </Adjacents>
   </Territory>
   <Territory value="Bank">
@@ -2513,8 +2520,8 @@
       <regionPoint X="0404.94" Y="0349.87" />
     </Points>
     <Adjacents count="2">
+      <adjacent value="Bank_1" />
       <adjacent value="Bank_2" />
-      <adjacent value="Bank_3" />
     </Adjacents>
   </Territory>
   <Territory value="DocOffice">
@@ -2529,8 +2536,8 @@
       <regionPoint X="0563.65" Y="0245.01" />
     </Points>
     <Adjacents count="2">
-      <adjacent value="DocOffice_2" />
       <adjacent value="Road_25" />
+      <adjacent value="DocOffice_1" />
     </Adjacents>
   </Territory>
   <Territory value="DocOffice">
@@ -2544,7 +2551,7 @@
       <regionPoint X="0549.48" Y="0306.87" />
     </Points>
     <Adjacents count="2">
-      <adjacent value="DocOffice_1" />
+      <adjacent value="DocOffice_0" />
       <adjacent value="Grass_35" />
     </Adjacents>
   </Territory>
@@ -2559,8 +2566,8 @@
       <regionPoint X="0197.42" Y="0393.68" />
     </Points>
     <Adjacents count="2">
-      <adjacent value="Road_58" />
       <adjacent value="Road_47" />
+      <adjacent value="Road_58" />
     </Adjacents>
   </Territory>
   <Territory value="SheriffFireDept">
@@ -2575,8 +2582,8 @@
     </Points>
     <Adjacents count="3">
       <adjacent value="Road_49" />
-      <adjacent value="SheriffFireDept_3" />
       <adjacent value="SheriffFireDept_2" />
+      <adjacent value="SheriffFireDept_1" />
     </Adjacents>
   </Territory>
   <Territory value="SheriffFireDept">
@@ -2590,10 +2597,10 @@
       <regionPoint X="0216.83" Y="0524.68" />
     </Points>
     <Adjacents count="4">
+      <adjacent value="SheriffFireDept_2" />
+      <adjacent value="SheriffFireDept_0" />
       <adjacent value="Road_59" />
-      <adjacent value="SheriffFireDept_1" />
       <adjacent value="SheriffFireDept_3" />
-      <adjacent value="SheriffFireDept_4" />
     </Adjacents>
   </Territory>
   <Territory value="SheriffFireDept">
@@ -2608,10 +2615,10 @@
       <regionPoint X="0156.50" Y="0526.35" />
     </Points>
     <Adjacents count="4">
-      <adjacent value="SheriffFireDept_1" />
       <adjacent value="Road_51" />
-      <adjacent value="SheriffFireDept_4" />
-      <adjacent value="SheriffFireDept_2" />
+      <adjacent value="SheriffFireDept_1" />
+      <adjacent value="SheriffFireDept_3" />
+      <adjacent value="SheriffFireDept_0" />
     </Adjacents>
   </Territory>
   <Territory value="SheriffFireDept">
@@ -2627,8 +2634,8 @@
       <regionPoint X="0210.85" Y="0580.35" />
     </Points>
     <Adjacents count="2">
-      <adjacent value="SheriffFireDept_3" />
       <adjacent value="SheriffFireDept_2" />
+      <adjacent value="SheriffFireDept_1" />
     </Adjacents>
   </Territory>
   <Territory value="ClothingStore">
@@ -2643,7 +2650,7 @@
     </Points>
     <Adjacents count="2">
       <adjacent value="Grass_41" />
-      <adjacent value="ClothingStore_2" />
+      <adjacent value="ClothingStore_1" />
     </Adjacents>
   </Territory>
   <Territory value="ClothingStore">
@@ -2658,7 +2665,7 @@
     </Points>
     <Adjacents count="2">
       <adjacent value="Road_57" />
-      <adjacent value="ClothingStore_1" />
+      <adjacent value="ClothingStore_0" />
     </Adjacents>
   </Territory>
   <Territory value="HotelAndRestaurant">
@@ -2671,10 +2678,11 @@
       <regionPoint X="0598.17" Y="0582.20" />
       <regionPoint X="0485.50" Y="0570.20" />
     </Points>
-    <Adjacents count="3">
+    <Adjacents count="4">
       <adjacent value="Road_62" />
+      <adjacent value="HotelAndRestaurant_1" />
       <adjacent value="HotelAndRestaurant_2" />
-      <adjacent value="HotelAndRestaurant_3" />
+      <adjacent value="Road_63" />
     </Adjacents>
   </Territory>
   <Territory value="HotelAndRestaurant">
@@ -2688,10 +2696,10 @@
       <regionPoint X="0471.84" Y="0623.20" />
     </Points>
     <Adjacents count="4">
-      <adjacent value="HotelAndRestaurant_3" />
-      <adjacent value="HotelAndRestaurant_1" />
-      <adjacent value="HotelAndRestaurant_5" />
+      <adjacent value="HotelAndRestaurant_0" />
+      <adjacent value="HotelAndRestaurant_2" />
       <adjacent value="HotelAndRestaurant_4" />
+      <adjacent value="HotelAndRestaurant_3" />
     </Adjacents>
   </Territory>
   <Territory value="HotelAndRestaurant">
@@ -2705,9 +2713,9 @@
       <regionPoint X="0528.50" Y="0620.54" />
     </Points>
     <Adjacents count="3">
+      <adjacent value="HotelAndRestaurant_0" />
       <adjacent value="HotelAndRestaurant_1" />
-      <adjacent value="HotelAndRestaurant_2" />
-      <adjacent value="HotelAndRestaurant_5" />
+      <adjacent value="HotelAndRestaurant_4" />
     </Adjacents>
   </Territory>
   <Territory value="HotelAndRestaurant">
@@ -2721,8 +2729,8 @@
       <regionPoint X="0458.50" Y="0678.20" />
     </Points>
     <Adjacents count="2">
-      <adjacent value="HotelAndRestaurant_5" />
-      <adjacent value="HotelAndRestaurant_2" />
+      <adjacent value="HotelAndRestaurant_4" />
+      <adjacent value="HotelAndRestaurant_1" />
     </Adjacents>
   </Territory>
   <Territory value="HotelAndRestaurant">
@@ -2737,8 +2745,8 @@
     </Points>
     <Adjacents count="4">
       <adjacent value="HotelAndRestaurant_3" />
+      <adjacent value="HotelAndRestaurant_1" />
       <adjacent value="HotelAndRestaurant_2" />
-      <adjacent value="HotelAndRestaurant_4" />
       <adjacent value="Grass_77" />
     </Adjacents>
   </Territory>
@@ -2753,9 +2761,9 @@
       <regionPoint X="0675.83" Y="0616.54" />
     </Points>
     <Adjacents count="3">
-      <adjacent value="Church_2" />
-      <adjacent value="Church_4" />
+      <adjacent value="Church_1" />
       <adjacent value="Church_3" />
+      <adjacent value="Church_2" />
     </Adjacents>
   </Territory>
   <Territory value="Church">
@@ -2769,10 +2777,10 @@
       <regionPoint X="0735.17" Y="0616.20" />
     </Points>
     <Adjacents count="4">
-      <adjacent value="Road_64" />
-      <adjacent value="Church_1" />
-      <adjacent value="Church_5" />
+      <adjacent value="Church_0" />
+      <adjacent value="Church_3" />
       <adjacent value="Church_4" />
+      <adjacent value="Road_64" />
     </Adjacents>
   </Territory>
   <Territory value="Church">
@@ -2786,9 +2794,9 @@
       <regionPoint X="0675.83" Y="0663.20" />
     </Points>
     <Adjacents count="3">
-      <adjacent value="Graveyard_1" />
-      <adjacent value="Church_4" />
-      <adjacent value="Church_1" />
+      <adjacent value="Graveyard_0" />
+      <adjacent value="Church_3" />
+      <adjacent value="Church_0" />
     </Adjacents>
   </Territory>
   <Territory value="Church">
@@ -2802,10 +2810,10 @@
       <regionPoint X="0714.50" Y="0663.20" />
     </Points>
     <Adjacents count="4">
-      <adjacent value="Church_3" />
-      <adjacent value="Church_1" />
+      <adjacent value="Church_4" />
       <adjacent value="Church_2" />
-      <adjacent value="Church_5" />
+      <adjacent value="Church_0" />
+      <adjacent value="Church_1" />
     </Adjacents>
   </Territory>
   <Territory value="Church">
@@ -2819,8 +2827,8 @@
       <regionPoint X="0751.17" Y="0616.20" />
     </Points>
     <Adjacents count="2">
-      <adjacent value="Church_4" />
-      <adjacent value="Church_2" />
+      <adjacent value="Church_3" />
+      <adjacent value="Church_1" />
     </Adjacents>
   </Territory>
   <Territory value="Graveyard">
@@ -2835,11 +2843,11 @@
       <regionPoint X="0675.17" Y="0681.54" />
     </Points>
     <Adjacents count="6">
-      <adjacent value="Church_3" />
-      <adjacent value="Grass_73" />
-      <adjacent value="Grass_81" />
-      <adjacent value="Grass_80" />
       <adjacent value="Grass_79" />
+      <adjacent value="Grass_80" />
+      <adjacent value="Grass_81" />
+      <adjacent value="Grass_73" />
+      <adjacent value="Church_2" />
       <adjacent value="Road_38" />
     </Adjacents>
   </Territory>
@@ -2854,9 +2862,9 @@
       <regionPoint X="0039.17" Y="0625.35" />
     </Points>
     <Adjacents count="3">
-      <adjacent value="Grass_60" />
       <adjacent value="Grass_64" />
-      <adjacent value="MachineShop_2" />
+      <adjacent value="Grass_60" />
+      <adjacent value="MachineShop_1" />
     </Adjacents>
   </Territory>
   <Territory value="MachineShop">
@@ -2871,9 +2879,9 @@
       <regionPoint X="0038.83" Y="0644.35" />
     </Points>
     <Adjacents count="3">
+      <adjacent value="MachineShop_0" />
+      <adjacent value="MachineShop_2" />
       <adjacent value="MachineShop_3" />
-      <adjacent value="MachineShop_4" />
-      <adjacent value="MachineShop_1" />
     </Adjacents>
   </Territory>
   <Territory value="MachineShop">
@@ -2887,8 +2895,8 @@
       <regionPoint X="0037.17" Y="0703.01" />
     </Points>
     <Adjacents count="2">
-      <adjacent value="MachineShop_2" />
-      <adjacent value="MachineShop_4" />
+      <adjacent value="MachineShop_1" />
+      <adjacent value="MachineShop_3" />
     </Adjacents>
   </Territory>
   <Territory value="MachineShop">
@@ -2902,9 +2910,9 @@
       <regionPoint X="0094.83" Y="0679.01" />
     </Points>
     <Adjacents count="3">
-      <adjacent value="Grass_70" />
+      <adjacent value="MachineShop_1" />
       <adjacent value="MachineShop_2" />
-      <adjacent value="MachineShop_3" />
+      <adjacent value="Grass_70" />
     </Adjacents>
   </Territory>
   <Territory value="TownHall">
@@ -2919,8 +2927,8 @@
     </Points>
     <Adjacents count="3">
       <adjacent value="Road_61" />
-      <adjacent value="TownHall_3" />
       <adjacent value="TownHall_2" />
+      <adjacent value="TownHall_1" />
     </Adjacents>
   </Territory>
   <Territory value="TownHall">
@@ -2935,8 +2943,8 @@
     </Points>
     <Adjacents count="3">
       <adjacent value="Grass_66" />
-      <adjacent value="TownHall_1" />
-      <adjacent value="TownHall_3" />
+      <adjacent value="TownHall_0" />
+      <adjacent value="TownHall_2" />
     </Adjacents>
   </Territory>
   <Territory value="TownHall">
@@ -2950,9 +2958,9 @@
       <regionPoint X="0320.47" Y="0641.35" />
     </Points>
     <Adjacents count="3">
+      <adjacent value="TownHall_0" />
       <adjacent value="Road_61" />
       <adjacent value="TownHall_1" />
-      <adjacent value="TownHall_2" />
     </Adjacents>
   </Territory>
   <Territory value="BarAndGrill">
@@ -2966,8 +2974,8 @@
       <regionPoint X="0180.68" Y="0754.35" />
     </Points>
     <Adjacents count="2">
+      <adjacent value="BarAndGrill_1" />
       <adjacent value="Road_12" />
-      <adjacent value="BarAndGrill_2" />
     </Adjacents>
   </Territory>
   <Territory value="BarAndGrill">
@@ -2981,8 +2989,8 @@
       <regionPoint X="0170.68" Y="0796.01" />
     </Points>
     <Adjacents count="2">
-      <adjacent value="BarAndGrill_1" />
       <adjacent value="Grass_93" />
+      <adjacent value="BarAndGrill_0" />
     </Adjacents>
   </Territory>
   <Territory value="StockPen">
@@ -2998,15 +3006,15 @@
       <regionPoint X="0401.80" Y="0833.01" />
     </Points>
     <Adjacents count="9">
-      <adjacent value="RR_12" />
-      <adjacent value="RR_13" />
-      <adjacent value="RR_14" />
-      <adjacent value="Grass_97" />
-      <adjacent value="Grass_87" />
-      <adjacent value="Grass_86" />
       <adjacent value="Grass_85" />
-      <adjacent value="Grass_75" />
+      <adjacent value="Grass_86" />
+      <adjacent value="Grass_87" />
+      <adjacent value="Grass_97" />
+      <adjacent value="RR_14" />
+      <adjacent value="RR_13" />
+      <adjacent value="RR_12" />
       <adjacent value="Grass_96" />
+      <adjacent value="Grass_75" />
     </Adjacents>
   </Territory>
   <Territory value="TrainStation">
@@ -3020,9 +3028,9 @@
       <regionPoint X="0600.83" Y="0906.16" />
     </Points>
     <Adjacents count="3">
-      <adjacent value="TrainStation_2" />
-      <adjacent value="RR_18" />
       <adjacent value="Grass_111" />
+      <adjacent value="TrainStation_1" />
+      <adjacent value="RR_18" />
     </Adjacents>
   </Territory>
   <Territory value="TrainStation">
@@ -3036,8 +3044,8 @@
       <regionPoint X="0643.83" Y="0900.49" />
     </Points>
     <Adjacents count="2">
-      <adjacent value="TrainStation_1" />
       <adjacent value="Grass_107" />
+      <adjacent value="TrainStation_0" />
     </Adjacents>
   </Territory>
   <Territory value="LawyersOffice">
@@ -3264,10 +3272,10 @@
     </Points>
     <Adjacents count="5">
       <adjacent value="Grass_96" />
-      <adjacent value="StockPen_1" />
-      <adjacent value="RR_11" />
-      <adjacent value="Grass_104" />
+      <adjacent value="StockPen_0" />
       <adjacent value="RR_13" />
+      <adjacent value="Grass_104" />
+      <adjacent value="RR_11" />
     </Adjacents>
   </Territory>
   <Territory value="RR">
@@ -3281,11 +3289,11 @@
       <regionPoint X="0436.30" Y="0859.68" />
     </Points>
     <Adjacents count="5">
-      <adjacent value="StockPen_1" />
       <adjacent value="RR_12" />
       <adjacent value="Grass_104" />
       <adjacent value="Grass_105" />
       <adjacent value="RR_14" />
+      <adjacent value="StockPen_0" />
     </Adjacents>
   </Territory>
   <Territory value="RR">
@@ -3298,12 +3306,11 @@
       <regionPoint X="0506.74" Y="0849.01" />
       <regionPoint X="0471.30" Y="0854.35" />
     </Points>
-    <Adjacents count="5">
-      <adjacent value="StockPen_1" />
+    <Adjacents count="4">
       <adjacent value="RR_13" />
       <adjacent value="Grass_105" />
       <adjacent value="RR_15" />
-      <adjacent value="Grass_97" />
+      <adjacent value="StockPen_0" />
     </Adjacents>
   </Territory>
   <Territory value="RR">
@@ -3373,9 +3380,9 @@
     </Points>
     <Adjacents count="4">
       <adjacent value="RR_17" />
-      <adjacent value="TrainStation_1" />
-      <adjacent value="RR_19" />
       <adjacent value="Grass_88" />
+      <adjacent value="RR_19" />
+      <adjacent value="TrainStation_0" />
     </Adjacents>
   </Territory>
   <Territory value="RR">
@@ -3440,12 +3447,13 @@
       <regionPoint X="0792.50" Y="0805.01" />
       <regionPoint X="0756.50" Y="0811.01" />
     </Points>
-    <Adjacents count="5">
-      <adjacent value="Grass_81" />
+    <Adjacents count="6">
       <adjacent value="Grass_80" />
       <adjacent value="RR_21" />
       <adjacent value="Grass_107" />
       <adjacent value="Grass_108" />
+      <adjacent value="RR_23" />
+      <adjacent value="Grass_81" />
     </Adjacents>
   </Territory>
   <Territory value="RR">
@@ -3459,9 +3467,9 @@
       <regionPoint X="0793.17" Y="0805.01" />
     </Points>
     <Adjacents count="3">
-      <adjacent value="Grass_108" />
       <adjacent value="RR_22" />
       <adjacent value="Grass_81" />
+      <adjacent value="Grass_108" />
     </Adjacents>
   </Territory>
   <Territory value="Road">
@@ -3476,7 +3484,7 @@
     </Points>
     <Adjacents count="4">
       <adjacent value="Grass_9" />
-      <adjacent value="GasPumps_1" />
+      <adjacent value="GasPumps_0" />
       <adjacent value="Grass_10" />
       <adjacent value="Road_2" />
     </Adjacents>
@@ -3680,12 +3688,12 @@
       <regionPoint X="0186.50" Y="0643.01" />
     </Points>
     <Adjacents count="6">
-      <adjacent value="Road_52" />
-      <adjacent value="Grass_70" />
       <adjacent value="Road_13" />
-      <adjacent value="BarAndGrill_1" />
-      <adjacent value="Road_11" />
+      <adjacent value="Grass_70" />
+      <adjacent value="Road_52" />
       <adjacent value="Grass_66" />
+      <adjacent value="Road_11" />
+      <adjacent value="BarAndGrill_0" />
     </Adjacents>
   </Territory>
   <Territory value="Road">
@@ -3790,10 +3798,10 @@
       <regionPoint X="0107.17" Y="0205.68" />
     </Points>
     <Adjacents count="4">
-      <adjacent value="School_2" />
       <adjacent value="Grass_20" />
-      <adjacent value="Road_19" />
       <adjacent value="Road_17" />
+      <adjacent value="School_1" />
+      <adjacent value="Road_19" />
     </Adjacents>
   </Territory>
   <Territory value="Road">
@@ -3831,8 +3839,8 @@
       <regionPoint X="0206.58" Y="0204.68" />
     </Points>
     <Adjacents count="3">
+      <adjacent value="Tavern_2" />
       <adjacent value="Road_19" />
-      <adjacent value="Tavern_3" />
       <adjacent value="Road_21" />
     </Adjacents>
   </Territory>
@@ -3865,11 +3873,11 @@
     </Points>
     <Adjacents count="6">
       <adjacent value="Road_21" />
-      <adjacent value="VetOffice_2" />
-      <adjacent value="Grass_26" />
       <adjacent value="Grass_25" />
+      <adjacent value="Grass_26" />
       <adjacent value="Road_23" />
       <adjacent value="Grass_22" />
+      <adjacent value="VetOffice_1" />
     </Adjacents>
   </Territory>
   <Territory value="Road">
@@ -3883,10 +3891,10 @@
       <regionPoint X="0401.62" Y="0205.35" />
     </Points>
     <Adjacents count="5">
-      <adjacent value="GeneralStore_3" />
-      <adjacent value="Grass_22" />
+      <adjacent value="GeneralStore_2" />
+      <adjacent value="Bank_0" />
       <adjacent value="Road_22" />
-      <adjacent value="Bank_1" />
+      <adjacent value="Grass_22" />
       <adjacent value="Road_24" />
     </Adjacents>
   </Territory>
@@ -3901,7 +3909,7 @@
       <regionPoint X="0449.80" Y="0205.35" />
     </Points>
     <Adjacents count="3">
-      <adjacent value="GeneralStore_4" />
+      <adjacent value="GeneralStore_3" />
       <adjacent value="Road_23" />
       <adjacent value="Road_3" />
     </Adjacents>
@@ -3916,10 +3924,11 @@
       <regionPoint X="0655.92" Y="0203.68" />
       <regionPoint X="0583.47" Y="0203.01" />
     </Points>
-    <Adjacents count="4">
-      <adjacent value="Supermarket_4" />
+    <Adjacents count="5">
+      <adjacent value="Supermarket_3" />
       <adjacent value="Road_26" />
-      <adjacent value="DocOffice_1" />
+      <adjacent value="Grass_27" />
+      <adjacent value="DocOffice_0" />
       <adjacent value="Road_3" />
     </Adjacents>
   </Territory>
@@ -3935,10 +3944,10 @@
       <regionPoint X="0640.26" Y="0166.01" />
     </Points>
     <Adjacents count="4">
-      <adjacent value="Road_25" />
-      <adjacent value="Supermarket_5" />
+      <adjacent value="Supermarket_4" />
       <adjacent value="Road_27" />
       <adjacent value="Grass_27" />
+      <adjacent value="Road_25" />
     </Adjacents>
   </Territory>
   <Territory value="Road">
@@ -3972,8 +3981,8 @@
       <adjacent value="Road_29" />
       <adjacent value="Grass_39" />
       <adjacent value="Grass_28" />
-      <adjacent value="Road_27" />
       <adjacent value="Grass_23" />
+      <adjacent value="Road_27" />
     </Adjacents>
   </Territory>
   <Territory value="Road">
@@ -3986,11 +3995,12 @@
       <regionPoint X="0784.32" Y="0281.68" />
       <regionPoint X="0745.98" Y="0296.01" />
     </Points>
-    <Adjacents count="4">
+    <Adjacents count="5">
+      <adjacent value="Road_28" />
       <adjacent value="Grass_39" />
-      <adjacent value="Grass_38" />
-      <adjacent value="Road_30" />
       <adjacent value="Grass_44" />
+      <adjacent value="Road_30" />
+      <adjacent value="Grass_38" />
     </Adjacents>
   </Territory>
   <Territory value="Road">
@@ -4040,7 +4050,7 @@
       <regionPoint X="0685.65" Y="0381.01" />
     </Points>
     <Adjacents count="3">
-      <adjacent value="LawyersOffice_1" />
+      <adjacent value="LawyersOffice_0" />
       <adjacent value="Road_31" />
       <adjacent value="Road_33" />
     </Adjacents>
@@ -4101,12 +4111,13 @@
       <regionPoint X="0620.50" Y="0484.87" />
       <regionPoint X="0636.17" Y="0485.20" />
     </Points>
-    <Adjacents count="5">
-      <adjacent value="Road_34" />
-      <adjacent value="Road_63" />
+    <Adjacents count="6">
+      <adjacent value="Grass_62" />
       <adjacent value="Road_36" />
       <adjacent value="Road_64" />
       <adjacent value="Grass_57" />
+      <adjacent value="Road_34" />
+      <adjacent value="Road_63" />
     </Adjacents>
   </Territory>
   <Territory value="Road">
@@ -4156,12 +4167,12 @@
       <regionPoint X="0636.10" Y="0678.20" />
     </Points>
     <Adjacents count="6">
-      <adjacent value="Road_37" />
       <adjacent value="Grass_72" />
       <adjacent value="Grass_78" />
       <adjacent value="Road_39" />
       <adjacent value="Grass_79" />
-      <adjacent value="Graveyard_1" />
+      <adjacent value="Graveyard_0" />
+      <adjacent value="Road_37" />
     </Adjacents>
   </Territory>
   <Territory value="Road">
@@ -4285,9 +4296,9 @@
       <regionPoint X="0160.17" Y="0275.01" />
     </Points>
     <Adjacents count="3">
-      <adjacent value="School_4" />
-      <adjacent value="Road_19" />
+      <adjacent value="School_3" />
       <adjacent value="Road_46" />
+      <adjacent value="Road_19" />
     </Adjacents>
   </Territory>
   <Territory value="Road">
@@ -4322,10 +4333,10 @@
       <regionPoint X="0159.50" Y="0374.68" />
     </Points>
     <Adjacents count="4">
-      <adjacent value="Road_46" />
-      <adjacent value="VFW_1" />
+      <adjacent value="VFW_0" />
       <adjacent value="Road_48" />
       <adjacent value="Grass_31" />
+      <adjacent value="Road_46" />
     </Adjacents>
   </Territory>
   <Territory value="Road">
@@ -4362,7 +4373,7 @@
       <regionPoint X="0133.17" Y="0486.35" />
     </Points>
     <Adjacents count="4">
-      <adjacent value="SheriffFireDept_1" />
+      <adjacent value="SheriffFireDept_0" />
       <adjacent value="Road_48" />
       <adjacent value="Grass_51" />
       <adjacent value="Road_50" />
@@ -4399,11 +4410,11 @@
       <regionPoint X="0129.83" Y="0557.35" />
     </Points>
     <Adjacents count="5">
-      <adjacent value="SheriffFireDept_3" />
-      <adjacent value="Road_52" />
-      <adjacent value="Grass_70" />
-      <adjacent value="Grass_65" />
+      <adjacent value="SheriffFireDept_2" />
       <adjacent value="Road_50" />
+      <adjacent value="Grass_65" />
+      <adjacent value="Grass_70" />
+      <adjacent value="Road_52" />
     </Adjacents>
   </Territory>
   <Territory value="Road">
@@ -4486,9 +4497,9 @@
       <regionPoint X="0341.98" Y="0367.20" />
     </Points>
     <Adjacents count="3">
-      <adjacent value="Bank_2" />
-      <adjacent value="Road_55" />
       <adjacent value="Road_57" />
+      <adjacent value="Road_55" />
+      <adjacent value="Bank_1" />
     </Adjacents>
   </Territory>
   <Territory value="Road">
@@ -4502,7 +4513,7 @@
       <regionPoint X="0402.65" Y="0389.87" />
     </Points>
     <Adjacents count="3">
-      <adjacent value="ClothingStore_2" />
+      <adjacent value="ClothingStore_1" />
       <adjacent value="Road_56" />
       <adjacent value="Road_6" />
     </Adjacents>
@@ -4518,9 +4529,10 @@
       <regionPoint X="0234.19" Y="0467.68" />
       <regionPoint X="0205.17" Y="0448.68" />
     </Points>
-    <Adjacents count="3">
-      <adjacent value="Road_59" />
+    <Adjacents count="4">
+      <adjacent value="VFW_0" />
       <adjacent value="Grass_52" />
+      <adjacent value="Road_59" />
       <adjacent value="Road_48" />
     </Adjacents>
   </Territory>
@@ -4534,12 +4546,13 @@
       <regionPoint X="0298.52" Y="0508.35" />
       <regionPoint X="0251.52" Y="0478.35" />
     </Points>
-    <Adjacents count="5">
-      <adjacent value="Grass_52" />
+    <Adjacents count="6">
+      <adjacent value="Grass_61" />
+      <adjacent value="SheriffFireDept_1" />
       <adjacent value="Road_58" />
+      <adjacent value="Grass_52" />
       <adjacent value="Grass_53" />
       <adjacent value="Road_60" />
-      <adjacent value="SheriffFireDept_2" />
     </Adjacents>
   </Territory>
   <Territory value="Road">
@@ -4570,11 +4583,11 @@
       <regionPoint X="0342.52" Y="0537.35" />
     </Points>
     <Adjacents count="5">
+      <adjacent value="TownHall_0" />
+      <adjacent value="TownHall_2" />
+      <adjacent value="Road_8" />
       <adjacent value="House_7" />
       <adjacent value="Road_60" />
-      <adjacent value="TownHall_1" />
-      <adjacent value="TownHall_3" />
-      <adjacent value="Road_8" />
     </Adjacents>
   </Territory>
   <Territory value="Road">
@@ -4588,10 +4601,10 @@
       <regionPoint X="0505.31" Y="0521.20" />
     </Points>
     <Adjacents count="4">
-      <adjacent value="Grass_54" />
       <adjacent value="Road_63" />
-      <adjacent value="HotelAndRestaurant_1" />
+      <adjacent value="HotelAndRestaurant_0" />
       <adjacent value="Road_7" />
+      <adjacent value="Grass_54" />
     </Adjacents>
   </Territory>
   <Territory value="Road">
@@ -4604,12 +4617,13 @@
       <regionPoint X="0617.50" Y="0521.54" />
       <regionPoint X="0554.17" Y="0521.87" />
     </Points>
-    <Adjacents count="5">
-      <adjacent value="House_5" />
+    <Adjacents count="6">
+      <adjacent value="Grass_54" />
       <adjacent value="Road_62" />
-      <adjacent value="HotelAndRestaurant_1" />
+      <adjacent value="HotelAndRestaurant_0" />
       <adjacent value="Grass_62" />
       <adjacent value="Road_35" />
+      <adjacent value="House_5" />
     </Adjacents>
   </Territory>
   <Territory value="Road">
@@ -4623,11 +4637,11 @@
       <regionPoint X="0717.50" Y="0520.87" />
     </Points>
     <Adjacents count="5">
+      <adjacent value="Church_1" />
+      <adjacent value="Road_65" />
       <adjacent value="Grass_58" />
       <adjacent value="Grass_57" />
-      <adjacent value="Church_2" />
       <adjacent value="Road_35" />
-      <adjacent value="Road_65" />
     </Adjacents>
   </Territory>
   <Territory value="Road">

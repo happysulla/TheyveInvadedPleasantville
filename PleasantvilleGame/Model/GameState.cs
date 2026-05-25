@@ -557,9 +557,6 @@ namespace PleasantvilleGame
                gi.GamePhase = GamePhase.RandomMovement;
                gi.EventActive = gi.EventDisplayed = "e005";
                break;
-            case GameAction.RandomMovementStart:
-               gi.GamePhase = GamePhase.RandomMovement;
-               break;
             default:
                returnStatus = "reached default action=" + action.ToString();
                Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
@@ -1442,6 +1439,8 @@ namespace PleasantvilleGame
                   returnStatus = "Scatter_Stack() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                }
+               break;
+            case GameAction.RandomMovementStart:
                break;
             case GameAction.AlienDisplaysRandomMovement:
                gi.IsAlienDisplayedRandomMovement = true;

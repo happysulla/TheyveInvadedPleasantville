@@ -51,7 +51,8 @@ namespace PleasantvilleGame
             myDieRoll = Utilities.NO_RESULT;
          }
       };
-      private GridRow[] myGridRows = new GridRow[5];
+      private GridRow[] myGridRows = new GridRow[4];
+      private int myMaxRowCount = 0;
       //---------------------------------------------------
       private IGameEngine? myGameEngine;
       private IGameInstance? myGameInstance;
@@ -160,6 +161,17 @@ namespace PleasantvilleGame
             return false;
          }
          myScrollViewer.Content = myGrid;
+         //--------------------------------------------------
+         if ( false == CreateMovements())
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): Create_Movements() return false");
+            return false;
+         }
+         if( false == UpdateGridRows())
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): Update_GridRows() return false");
+            return false;
+         }
          return true;
       }
       private bool UpdateGrid()
@@ -207,7 +219,7 @@ namespace PleasantvilleGame
       }
       private bool UpdateUserInstructions()
       {
-         myTextBlockInstructions.Inlines.Clear();
+         //myTextBlockInstructions.Inlines.Clear();
          return true;
       }
       private bool UpdateAssignablePanel()
@@ -217,6 +229,27 @@ namespace PleasantvilleGame
       }
       private bool UpdateGridRows()
       {
+         //------------------------------------------------------------
+         // Clear out existing Grid Row data
+         List<UIElement> results = new List<UIElement>();
+         foreach (UIElement ui in myGrid.Children)
+         {
+            int rowNum = Grid.GetRow(ui);
+            if (STARTING_ASSIGNED_ROW <= rowNum)
+               results.Add(ui);
+         }
+         foreach (UIElement ui1 in results)
+            myGrid.Children.Remove(ui1);
+         //------------------------------------------------------------
+         for (int i = 0; i < myMaxRowCount; ++i)
+         {
+            int rowNum = i + STARTING_ASSIGNED_ROW;
+            IMapItem mi = myGridRows[i].myMapItem;
+            Button b1 = CreateButton(mi);
+            myGrid.Children.Add(b1);
+            Grid.SetRow(b1, rowNum);
+            Grid.SetColumn(b1, 0);
+         }
          return true;
       }
       //------------------------------------------------------------------------------------
@@ -228,8 +261,14 @@ namespace PleasantvilleGame
          mi.Location.Y = newT.CenterPoint.Y - offset;
          return true;
       }
-      public bool CreateMovements(IGameInstance gi, int numPeopleToMove)
+      public bool CreateMovements()
       {
+         if( null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Movements(): myGameInstance=null");
+            return false;
+         }
+         const int numPeopleToMove = 4;
          int numPeopleSkipped = 0;
          int numPeopleMoved = 0;
          int loopCount = 200;
@@ -243,7 +282,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Create_Movements(): TableMgr.GetTownspersonName() returned null");
                return false;
             }
-            IMapItem? miMoving = gi.Townspeople.Find(name);
+            IMapItem? miMoving = myGameInstance.Townspeople.Find(name);
             if (null == miMoving)
             {
                Logger.Log(LogEnum.LE_ERROR, "Create_Movements(): unable to find name=" + name);
@@ -251,7 +290,7 @@ namespace PleasantvilleGame
             }
             //------------------------------------------------------------
             // If the counter is moved or tied up or known to be alien controlled, do not move.
-            if ((true == miMoving.IsMoved) || (true == miMoving.IsStunned) || (true == miMoving.IsTiedUp) || (false == miMoving.IsUnconscious) || (false == miMoving.IsKilled))
+            if ((true == miMoving.IsMoved) || (true == miMoving.IsStunned) || (true == miMoving.IsTiedUp) || (true == miMoving.IsUnconscious) || (true == miMoving.IsKilled))
             {
                ++numPeopleSkipped;
                StringBuilder sb = new StringBuilder("Create_Movements(): skipped=");
@@ -281,25 +320,33 @@ namespace PleasantvilleGame
             die1 = Utilities.RandomGenerator.Next(5);
             die2 = Utilities.RandomGenerator.Next(6);
             string buildingName = TableMgr.GetTargetBuildingName(die1, die2); // Find the target building location.
-            ITerritory? newTerritory = Territories.theTerritories.Find(buildingName);
+            if( "ERROR" == buildingName )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Movements(): GetTargetBuildingName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
+               return false;
+            }
+            string bName = Utilities.RemoveSpaces(buildingName);
+            ITerritory? newTerritory = Territories.theTerritories.Find(bName);
             if (null == newTerritory)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_Movement(): newTerritory is null for buildingName=" + buildingName);
+               Logger.Log(LogEnum.LE_ERROR, "Create_Movements(): newTerritory is null for bName=" + bName + " Territories=" + Territories.theTerritories.ToString());
                return false;
             }
             //------------------------------------------------------------
-            Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Perform_Movement(): mi=" + miMoving.Name + " entering t=" + newTerritory.Name);
-            if (false == CreateMapItemMove(gi, miMoving, newTerritory))
+            Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Create_Movements(): mi=" + miMoving.Name + " entering t=" + newTerritory.ToString());
+            if (false == CreateMapItemMove(myGameInstance, miMoving, newTerritory))
             {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_Movement(): Create_MapItemMove() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "Create_Movements(): Create_MapItemMove() returned false");
                return false;
             }
             miMoving.IsMoved = true;
             //------------------------------------------------------------
+            myGridRows[numPeopleMoved] = new GridRow(miMoving);
             ++numPeopleMoved;  // Keep track of number of people moved
             Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_Movements(): moved miMoving=" + miMoving.Name + " numPeopleMoved=" + numPeopleMoved.ToString());
          }  // end while()
-         if (0 < loopCount)
+         myMaxRowCount = numPeopleMoved;
+         if (loopCount < 0 )
          {
             Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_Movements(): invalid state loopCount=" + loopCount.ToString());
             return false;
@@ -332,6 +379,19 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Create_MapItemMove(): mi=" + mi.Name + " moving to t=" + newT.Name);
          gi.MapItemMoves.Insert(0, mim); // add at front
          return true;
+      }
+      private Button CreateButton(IMapItem mi)
+      {
+         System.Windows.Controls.Button b = new Button { };
+         b.Name = Utilities.RemoveSpaces(mi.Name);
+         b.Width = 1.2 * Utilities.ZOOM * Utilities.theMapItemSize;
+         b.Height = 1.2 * Utilities.ZOOM * Utilities.theMapItemSize;
+         b.Background = new SolidColorBrush(Colors.Transparent);
+         b.Foreground = new SolidColorBrush(Colors.Transparent);
+         b.BorderThickness = new Thickness(1);
+         b.Margin = new Thickness(2);
+         MapItem.SetButtonContent(b, mi); // This sets the image as the button's content
+         return b;
       }
       //------------------------------------------------------------------------------------
       public void ShowDieResults(int dieRoll)

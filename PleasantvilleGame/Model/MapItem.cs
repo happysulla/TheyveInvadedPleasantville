@@ -428,7 +428,7 @@ namespace PleasantvilleGame
          foreach (Object o in myList)
          {
             IMapItem mi = (IMapItem)o;
-            if (miName == mi.Name)
+            if (true == mi.Name.Contains(miName))
                return mi;
             ++i;
          }
@@ -439,7 +439,7 @@ namespace PleasantvilleGame
          foreach (Object o in myList)
          {
             IMapItem mi = (IMapItem)o;
-            if (miName == mi.Name)
+            if (true == mi.Name.Contains(miName))
             {
                myList.Remove(mi);
                return mi;

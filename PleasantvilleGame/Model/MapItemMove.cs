@@ -43,7 +43,7 @@ namespace PleasantvilleGame
             CtorError = true;
             return;
          }
-         BestPath = Territory.GetBestPath(territories, OldTerritory, newTerritory, 100);
+         BestPath = Territory.GetBestPath(territories, OldTerritory, newTerritory, 2*movingMapItem.Movement);
          if (null == BestPath)
          {
             string msg = "MapItemMove():BestPath=null for";

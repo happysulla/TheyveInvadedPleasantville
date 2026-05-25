@@ -51,8 +51,14 @@ e005	"<Bold>e005 Random Movement</Bold> <InlineUIContainer><Button Content='r6.3
 <LineBreak/><LineBreak/>
 Four townspeople (if not under Town player control) move randomly in any given turn. The <InlineUIContainer><Button Content='Townspeople' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table determines who moves. 
 <LineBreak/><LineBreak/>
+Tied Up, Unconscious, Killed players do not move. Only move a townsperson once. Stunned counters still move. 
+<LineBreak/><LineBreak/>
+If a controlled townsperson (either Town or Alien) is moved, the owner has the option to not move. However, if the alien player, this exposes the unknown alien. Click image to continue.
+<LineBreak/><LineBreak/>
 The destination is per the 
-<InlineUIContainer><Button Content='Target Building' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table."
+<InlineUIContainer><Button Content='Target Building' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table.
+<LineBreak/><LineBreak/>
+                                  <InlineUIContainer><Image Name='Continue005' Height='100' Width='100'></Image></InlineUIContainer>"
 e501	"<Bold>e501 Game Won!!!</Bold>
 <LineBreak/><LineBreak/>"
 e502	"<Bold>e502 Game Lost</Bold>

@@ -93,19 +93,19 @@ namespace PleasantvilleGame
          }
          catch (DirectoryNotFoundException dirException)
          {
-            Console.WriteLine("SetInitial(): create file\n" + dirException.ToString());
+            System.Diagnostics.Debug.WriteLine("SetInitial(): create file\n" + dirException.ToString());
          }
          catch (FileNotFoundException fileException)
          {
-            Console.WriteLine("SetInitial(): create file\n" + fileException.ToString());
+            System.Diagnostics.Debug.WriteLine("SetInitial(): create file\n" + fileException.ToString());
          }
          catch (IOException ioException)
          {
-            Console.WriteLine("SetInitial(): create file\n" + ioException.ToString());
+            System.Diagnostics.Debug.WriteLine("SetInitial(): create file\n" + ioException.ToString());
          }
          catch (Exception ex)
          {
-            Console.WriteLine("SetInitial(): create file\n" + ex.ToString());
+            System.Diagnostics.Debug.WriteLine("SetInitial(): create file\n" + ex.ToString());
          }
          SetOn(LogEnum.LE_ERROR);
          SetOn(LogEnum.LE_GAME_INIT);

@@ -207,7 +207,7 @@ namespace PleasantvilleGame
             myCanvasMain.MouseLeftButtonDown += this.MouseLeftButtonDownDeleteTerritory;
             if (false == CreateEllipsesForDisplay())
             {
-               Logger.Log(LogEnum.LE_ERROR, "NextTest(): CreateEllipsesForDisplay() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "Next_Test(): Create_EllipsesForDisplay() returned false");
                return false;
             }
          }
@@ -374,7 +374,7 @@ namespace PleasantvilleGame
       {
          if (null == myCanvasMain)
          {
-            Logger.Log(LogEnum.LE_ERROR, "CreateEllipsesForDisplay(): myCanvasMain=null");
+            Logger.Log(LogEnum.LE_ERROR, "Create_EllipsesForDisplay(): myCanvasMain=null");
             return false;
          }
          myEllipses.Clear();
@@ -461,7 +461,7 @@ namespace PleasantvilleGame
       {
          if (null == myCanvasMain)
          {
-            Logger.Log(LogEnum.LE_ERROR, "ShowAdjacents(): myCanvasMain=null");
+            Logger.Log(LogEnum.LE_ERROR, "Show_Adjacents(): myCanvasMain=null");
             return false;
          }
          myAnchorTerritory = null;
@@ -472,28 +472,31 @@ namespace PleasantvilleGame
          SolidColorBrush aSolidColorBrush4 = new SolidColorBrush { Color = Colors.Yellow };
          foreach (Territory anchorTerritory in territories)
          {
+            StringBuilder sb1 = new StringBuilder("Ellipses=[");
             Ellipse? anchorEllipse = null; // Find the corresponding ellipse for this anchor territory
             foreach (UIElement ui in myCanvasMain.Children)
             {
                if (ui is Ellipse)
                {
                   Ellipse ellipse = (Ellipse)ui;
-                  if (anchorTerritory.ToString() == ellipse.ToString())
+                  sb1.Append(",");
+                  sb1.Append(ellipse.Name);
+                  if (anchorTerritory.ToString() == ellipse.Name)
                   {
                      anchorEllipse = ellipse;
                      break;
                   }
                }
             }
+            sb1.Append("]");
             if (null == anchorEllipse)
             {
-               Logger.Log(LogEnum.LE_ERROR, "ShowAdjacents(): anchorEllipse=null for " + anchorTerritory.Name);
+               Logger.Log(LogEnum.LE_ERROR, "Show_Adjacents(): anchorEllipse=null for " + anchorTerritory.ToString() + " " + sb1.ToString() );
                return false;
             }
             if (0 < anchorTerritory.Adjacents.Count)
                anchorEllipse.Fill = aSolidColorBrush4;
-            // At this point, the anchorEllipse and the anchorTerritory are found.
-            foreach (string s in anchorTerritory.Adjacents)
+            foreach (string s in anchorTerritory.Adjacents)  // At this point, the anchorEllipse and the anchorTerritory are found.
             {
                ITerritory? adjacentTerritory = null;
                foreach (ITerritory t in territories) // Find the River Territory corresponding to this name
@@ -506,13 +509,13 @@ namespace PleasantvilleGame
                }
                if (null == adjacentTerritory)
                {
-                  MessageBox.Show("ShowAdjacents(): Not Found s=" + s);
+                  MessageBox.Show("Show_Adjacents(): Not Found s=" + s);
                   return false;
                }
                string? adjacentName = adjacentTerritory.ToString();
                if( null == adjacentName)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "ShowAdjacents(): adjacentName=null for " + anchorTerritory.Name);
+                  Logger.Log(LogEnum.LE_ERROR, "Show_Adjacents(): adjacentName=null for " + anchorTerritory.Name);
                   return false;
                }
                Ellipse? adjacentEllipse = null; // Find the corresponding ellipse for this territory
@@ -545,13 +548,13 @@ namespace PleasantvilleGame
                      break;
                   }
                }
-               // Anchor Property not found in the adjacent property territory.  This is an error condition.
-               if (false == isReturnFound)
+               //-------------------------------------------------
+               if (false == isReturnFound) // Anchor Property not found in the adjacent property territory.  This is an error condition.
                {
                   anchorEllipse.Fill = aSolidColorBrush3; // change color of two ellipses to signify error
                   adjacentEllipse.Fill = aSolidColorBrush2;
                   StringBuilder sb = new StringBuilder("anchor=");
-                  sb.Append(anchorTerritory.Name);
+                  sb.Append(anchorTerritory.ToString());
                   sb.Append(" NOT in list for adjacent=");
                   sb.Append(adjacentName);
                   MessageBox.Show(sb.ToString());
