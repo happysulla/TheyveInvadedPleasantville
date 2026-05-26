@@ -23,6 +23,8 @@ using Image = System.Windows.Controls.Image;
 using Button = System.Windows.Controls.Button;
 using Orientation = System.Windows.Controls.Orientation;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
+using CheckBox = System.Windows.Controls.CheckBox;
+using System.Diagnostics.SymbolStore;
 
 namespace PleasantvilleGame
 {
@@ -43,12 +45,13 @@ namespace PleasantvilleGame
       public struct GridRow
       {
          public IMapItem myMapItem;
-         public int myDieRoll;
-         public string myReasonForNotMoving;
-         public GridRow(IMapItem mi)
+         public int myDieRoll = Utilities.NO_RESULT;
+         public string myBuildingName;
+         public bool myIsBlockedFromMove = false;
+         public GridRow(IMapItem mi, string bName)
          {
             myMapItem = mi;
-            myDieRoll = Utilities.NO_RESULT;
+            myBuildingName = bName;
          }
       };
       private GridRow[] myGridRows = new GridRow[4];
@@ -249,6 +252,54 @@ namespace PleasantvilleGame
             myGrid.Children.Add(b1);
             Grid.SetRow(b1, rowNum);
             Grid.SetColumn(b1, 0);
+            //-----------------------------
+            CheckBox cb = new CheckBox() { FontSize = 12, IsEnabled = false, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = System.Windows.VerticalAlignment.Center };
+            if ( (true == mi.IsTiedUp) || (true == mi.IsUnconscious) || (true == mi.IsKilled))
+               cb.IsChecked = true;
+            else
+               cb.IsChecked = false;
+            myGrid.Children.Add(cb);
+            Grid.SetRow(cb, rowNum);
+            Grid.SetColumn(cb, 1);
+            //-----------------------------
+            string dest = myGridRows[i].myBuildingName;
+            if ((true == mi.IsTiedUp) || (true == mi.IsUnconscious) || (true == mi.IsKilled))
+               dest = "NA";
+            Label labelforBuildingName = new Label() { FontFamily = myFontFam, FontSize = 16, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = dest };
+            myGrid.Children.Add(labelforBuildingName);
+            Grid.SetRow(labelforBuildingName, rowNum);
+            Grid.SetColumn(labelforBuildingName, 2);
+            //-----------------------------
+            CheckBox cb1 = new CheckBox() { FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = System.Windows.VerticalAlignment.Center };
+            if ((true == mi.IsTiedUp) || (true == mi.IsUnconscious) || (true == mi.IsKilled))
+            {
+               Label labelForBlock = new Label() { FontFamily = myFontFam, FontSize = 16, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = "NA" };
+               myGrid.Children.Add(labelForBlock);
+               Grid.SetRow(labelForBlock, rowNum);
+               Grid.SetColumn(labelForBlock, 3);
+            }
+            else if ((true == GameEngine.theIsAlien) && (true == mi.IsControlled))
+            {
+               cb1.IsEnabled = true;
+               cb1.IsChecked = myGridRows[i].myIsBlockedFromMove;
+               cb1.Checked += CheckBox_Checked;
+               cb1.Unchecked += CheckBox_Unchecked;
+            }
+            else if ((false == GameEngine.theIsAlien) && ((true == mi.IsAlienKnown) || (true == mi.IsAlienUnknown)))
+            {
+               cb1.IsEnabled = true;
+               cb1.IsChecked = myGridRows[i].myIsBlockedFromMove;
+               cb1.Checked += CheckBox_Checked;
+               cb1.Unchecked += CheckBox_Unchecked;
+            }
+            else
+            {
+               cb1.IsEnabled = false;
+               cb1.IsChecked = false;
+            }
+            myGrid.Children.Add(cb1);
+            Grid.SetRow(cb1, rowNum);
+            Grid.SetColumn(cb1, 3);
          }
          return true;
       }
@@ -290,7 +341,7 @@ namespace PleasantvilleGame
             }
             //------------------------------------------------------------
             // If the counter is moved or tied up or known to be alien controlled, do not move.
-            if ((true == miMoving.IsMoved) || (true == miMoving.IsStunned) || (true == miMoving.IsTiedUp) || (true == miMoving.IsUnconscious) || (true == miMoving.IsKilled))
+            if ((true == miMoving.IsMoved) || (true == miMoving.IsTiedUp) || (true == miMoving.IsUnconscious) || (true == miMoving.IsKilled))
             {
                ++numPeopleSkipped;
                StringBuilder sb = new StringBuilder("Create_Movements(): skipped=");
@@ -341,7 +392,7 @@ namespace PleasantvilleGame
             }
             miMoving.IsMoved = true;
             //------------------------------------------------------------
-            myGridRows[numPeopleMoved] = new GridRow(miMoving);
+            myGridRows[numPeopleMoved] = new GridRow(miMoving, buildingName);
             ++numPeopleMoved;  // Keep track of number of people moved
             Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_Movements(): moved miMoving=" + miMoving.Name + " numPeopleMoved=" + numPeopleMoved.ToString());
          }  // end while()
@@ -504,6 +555,32 @@ namespace PleasantvilleGame
                }
             }
          }
+      }
+      private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+      {
+         CheckBox cb = (CheckBox)sender;
+         e.Handled = true;
+         int row = Grid.GetRow(cb);
+         if (row < STARTING_ASSIGNED_ROW)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CheckBox_Unchecked(): invalid row=" + row.ToString());
+            return;
+         }
+         int i = row - STARTING_ASSIGNED_ROW;
+         myGridRows[i].myIsBlockedFromMove = false;
+      }
+      private void CheckBox_Checked(object sender, RoutedEventArgs e)
+      {
+         CheckBox cb = (CheckBox)sender;
+         e.Handled = true;
+         int row = Grid.GetRow(cb);
+         if (row < STARTING_ASSIGNED_ROW)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CheckBox_Checked(): invalid row=" + row.ToString());
+            return;
+         }
+         int i = row - STARTING_ASSIGNED_ROW;
+         myGridRows[i].myIsBlockedFromMove = true;
       }
    }
 }

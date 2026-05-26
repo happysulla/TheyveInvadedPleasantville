@@ -66,12 +66,12 @@ namespace PleasantvilleGame
 				bool isEndTerritoryReached = false; // For each IMapPath object, determine the next Territory that  moves the object closer to the end goal.
             for (int i = 1; i < moveFactor; ++i)
 				{
-					System.Diagnostics.Debug.WriteLine("---------------->>MF="+ i.ToString() + "<<-------------------------");
+					//System.Diagnostics.Debug.WriteLine("---------------->>MF="+ i.ToString() + "<<-------------------------");
 					if (true == isEndTerritoryReached) // Perform no more movement if end territory is reached by one of the paths.
                   break;
 					foreach (IMapPath path in paths) // Iterate through the IMapPath objects trying to find the lowest metric score for each adjacent territory.
                {
-						System.Diagnostics.Debug.WriteLine("==> Adding to " + path.ToString() );
+						//System.Diagnostics.Debug.WriteLine("==> Adding to " + path.ToString() );
 						if (path.Metric == double.MaxValue)
 							continue;
 						//------------------------------------------------------
@@ -80,7 +80,7 @@ namespace PleasantvilleGame
 						ITerritory adj1T = path.Territories[path.Territories.Count - 1]; // A Territory is better if the distance between the center point of the territory and all other alternatives is the smallest.
                   foreach (string alternativeName in adj1T.Adjacents)
 						{
-							System.Diagnostics.Debug.WriteLine("     ==> Trying " + alternativeName);
+							//System.Diagnostics.Debug.WriteLine("     ==> Trying " + alternativeName);
 							ITerritory? adj2T = territories.Find(alternativeName);
 							if (adj2T == null)
 							{
@@ -89,7 +89,7 @@ namespace PleasantvilleGame
 							}
 							if (adj2T.ToString() == endT.ToString()) // If the end territory is reached, no need to continue looking at alternates.
                      {
-								System.Diagnostics.Debug.WriteLine("     ==> ==>Reached End Territory " + adj2T.ToString() + " for PATH=" + path.ToString());
+								//System.Diagnostics.Debug.WriteLine("     ==> ==>Reached End Territory " + adj2T.ToString() + " for PATH=" + path.ToString());
 								double altDistanceMetric = GetDistance(adj2T, endT); // Calculate the metric between this adjacent territory and the end territory.  If it results in a lower path metric, set it at the low water mark.
                         altDistanceMetric += path.Metric;
 								if (altDistanceMetric <= lowestMetricScore)
@@ -102,7 +102,7 @@ namespace PleasantvilleGame
 							}
 							if (adj2T.ToString() == startT.ToString()) // Exclude alternative paths that fold back to start territory
                      {
-								System.Diagnostics.Debug.WriteLine("     ==> ==>" + adj2T.ToString() +" is start territory");
+								//System.Diagnostics.Debug.WriteLine("     ==> ==>" + adj2T.ToString() +" is start territory");
 								continue;
 							}
 							bool isMatchFound = false; // Exclude alternative paths that fold back to other adjacent territories
@@ -116,13 +116,13 @@ namespace PleasantvilleGame
 							}
 							if (true == isMatchFound)
 							{
-								System.Diagnostics.Debug.WriteLine("     ==> ==> "+ adj2T.ToString()+" is already adjacent "+ path.ToString());
+								//System.Diagnostics.Debug.WriteLine("     ==> ==> "+ adj2T.ToString()+" is already adjacent "+ path.ToString());
 								continue;
 							}
 							IEnumerable<ITerritory> results1 = from territory in path.Territories where territory.ToString() == adj2T.ToString() select territory; // Exclude alternative paths that fold back on themselves, i.e. do not choose a Territory that is already on this MapPath.
                      if (0 < results1.Count())
 							{
-								System.Diagnostics.Debug.WriteLine("     ==> ==> " + adj2T.ToString()+" is already in "+ path.ToString());
+								//System.Diagnostics.Debug.WriteLine("     ==> ==> " + adj2T.ToString()+" is already in "+ path.ToString());
 								continue;
 							}
 							//----------------------------------------
@@ -148,7 +148,7 @@ namespace PleasantvilleGame
 								path.Territories.Add(lowestTerritory);
 								path.Metric = lowestMetricScore;
 							}
-							System.Diagnostics.Debug.WriteLine("     ==> Appending to " + path.ToString());
+							//System.Diagnostics.Debug.WriteLine("     ==> Appending to " + path.ToString());
 						}
 					} 
 				} 
@@ -169,7 +169,7 @@ namespace PleasantvilleGame
 			}
 			foreach (IMapPath path in paths)
 			{
-				System.Diagnostics.Debug.WriteLine("{0}.) {1}", i1.ToString(), path.ToString());
+				//System.Diagnostics.Debug.WriteLine("{0}.) {1}", i1.ToString(), path.ToString());
 				if (path.Metric < bestPath.Metric)
 					bestPath = path;
 				++i1;

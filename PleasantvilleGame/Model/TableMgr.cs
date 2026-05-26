@@ -25,7 +25,7 @@ namespace PleasantvilleGame
          {"School","Bank","Doc Office","VFW","Bar And Grill","Machine Shop"},
          {"Sheriff Fire Dept","Town Hall","Hotel And Restaurant","Church","Graveyard","Stock Pen"},
          {"Train Station","House_A","House_1","House_2","House_3","House_4"},
-         {"House_5","House_6","House_7","House_8","Lawyer Office","House_K"},
+         {"House_5","House_6","House_7","House_8","Lawyers Office","House_K"},
       };
       //---------------------------------------------------------------------
       public readonly static string[] theTownPlayerStartingTable = new string[6]
@@ -60,7 +60,7 @@ namespace PleasantvilleGame
          {"Stock Pen","1"},
          {"Train Station","2"},
          {"House","10"},
-         {"Lawyer Office","1"}
+         {"Lawyers Office","1"}
       };
       //=====================================================================
       public TableMgr()
