@@ -370,17 +370,16 @@ namespace PleasantvilleGame
             //------------------------------------------------------------
             die1 = Utilities.RandomGenerator.Next(5);
             die2 = Utilities.RandomGenerator.Next(6);
-            string buildingName = TableMgr.GetTargetBuildingName(die1, die2); // Find the target building location.
-            if( "ERROR" == buildingName )
+            string fullBuildingName = TableMgr.GetTargetBuildingName(die1, die2); // Find the target building location.
+            if( "ERROR" == fullBuildingName)
             {
                Logger.Log(LogEnum.LE_ERROR, "Create_Movements(): GetTargetBuildingName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
                return false;
             }
-            string bName = Utilities.RemoveSpaces(buildingName);
-            ITerritory? newTerritory = Territories.theTerritories.Find(bName);
+            ITerritory? newTerritory = Territories.theTerritories.Find(fullBuildingName);
             if (null == newTerritory)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Create_Movements(): newTerritory is null for bName=" + bName + " Territories=" + Territories.theTerritories.ToString());
+               Logger.Log(LogEnum.LE_ERROR, "Create_Movements(): newTerritory is null for bName=" + fullBuildingName + " Territories=" + Territories.theTerritories.ToString());
                return false;
             }
             //------------------------------------------------------------
@@ -392,6 +391,7 @@ namespace PleasantvilleGame
             }
             miMoving.IsMoved = true;
             //------------------------------------------------------------
+            string buildingName = TableMgr.theTargetBuildingTable[die1, die2];
             myGridRows[numPeopleMoved] = new GridRow(miMoving, buildingName);
             ++numPeopleMoved;  // Keep track of number of people moved
             Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_Movements(): moved miMoving=" + miMoving.Name + " numPeopleMoved=" + numPeopleMoved.ToString());

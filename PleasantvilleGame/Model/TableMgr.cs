@@ -24,8 +24,8 @@ namespace PleasantvilleGame
          {"Tavern","Vet Office","Clothing Store","General Store","Gas Pumps","Supermarket"},
          {"School","Bank","Doc Office","VFW","Bar And Grill","Machine Shop"},
          {"Sheriff Fire Dept","Town Hall","Hotel And Restaurant","Church","Graveyard","Stock Pen"},
-         {"Train Station","House_A","House_1","House_2","House_3","House_4"},
-         {"House_5","House_6","House_7","House_8","Lawyers Office","House_K"},
+         {"Train Station","House A","House 1","House 2","House 3","House 4"},
+         {"House 5","House 6","House 7","House 8","Lawyers Office","House K"},
       };
       //---------------------------------------------------------------------
       public readonly static string[] theTownPlayerStartingTable = new string[6]
@@ -156,10 +156,12 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "TableMgr.GetTargetBuildingName(): die2 out of range: " + die2);
             return "ERROR";
          }
-         string buildingName = Utilities.RemoveSpaces(theTargetBuildingTable[die1, die2]);
-         if (true ==  buildingName.Contains("House") )
+         string buildingName = theTargetBuildingTable[die1, die2];   
+         string buildingNameWithoutSpaces = Utilities.RemoveSpaces(buildingName);
+         if (true ==  buildingNameWithoutSpaces.Contains("House") )
          {
-            return buildingName;
+            string modified = buildingName.Replace(' ', '_');
+            return modified;
          }
          else
          {
@@ -167,11 +169,11 @@ namespace PleasantvilleGame
             for (int i = 0; i < arraySize; i++)
             {
                string matchingName = Utilities.RemoveSpaces(theBuildingSizes[i, 0]);
-               if (matchingName == buildingName)
+               if (matchingName == buildingNameWithoutSpaces)
                {
                   int maxNum = Convert.ToInt32(theBuildingSizes[i, 1]);
                   int randNum = Utilities.RandomGenerator.Next(maxNum);
-                  string bName = buildingName + "_" + randNum.ToString();
+                  string bName = buildingNameWithoutSpaces + "_" + randNum.ToString();
                   return bName;
                }
             }
