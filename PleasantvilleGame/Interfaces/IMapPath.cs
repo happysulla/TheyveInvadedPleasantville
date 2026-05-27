@@ -2,17 +2,6 @@
 
 namespace PleasantvilleGame
 {
-   struct MapPathCount // used in counterattack when retreating
-   {
-      public int myCount;
-      public ITerritory myTerritory;
-      public MapPathCount(int count, ITerritory territory)
-      {
-         myCount = count;
-         myTerritory = territory;   
-      }
-   }
-   //---------------------------------------
    public interface IMapPath
    {
       string Name { get; set; }

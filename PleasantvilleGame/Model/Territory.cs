@@ -8,6 +8,7 @@ namespace PleasantvilleGame
 	[Serializable]
 	public class Territory : ITerritory
 	{
+		public static int MAX_PATH_COUNT = 30;
 		public string Name { get; set; } = "Offboard";
 		public string CanvasName { get; set; } = "Main";
 		public string Subname { get; set; } = "ERROR";
@@ -177,7 +178,54 @@ namespace PleasantvilleGame
 			Logger.Log(LogEnum.LE_SHOW_MIM_BEST_PATH, "Get_BestPath(): moving from " + startT.Name + " to " + endT.Name + " using " + bestPath.ToString());
 			return bestPath;
 		}
-		static private double GetDistance(ITerritory startT, ITerritory endT)
+      private static IMapPath? GetBestPathRandom(IGameInstance gi, ITerritory startT, ITerritory endT)
+      {
+         int minCount = 1000;
+         List<IMapPath> mapPaths = new List<IMapPath>();
+         foreach (string tName in startT.Adjacents)
+         {
+            ITerritory? adjacent = Territories.theTerritories.Find(tName);
+            if (null == adjacent)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Get_BestPathRandom(): adjacent=null for tName=" + tName);
+               return null;
+            }
+            IMapPath? mapPath = Territory.GetBestPath(Territories.theTerritories, adjacent, endT, MAX_PATH_COUNT);
+            if (null == mapPath)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Get_BestPathRandom(): GetBestPath() returned null for startT=" + adjacent.ToString() + " to endt=" + endT.ToString());
+               return null;
+            }
+            if (0 == mapPath.Territories.Count)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Get_BestPathRandom(): mapPath.Territories.Count=0 for startT=" + adjacent.ToString() + " to endt=" + endT.ToString());
+               return null;
+            }
+            if (mapPath.Territories.Count <= minCount)
+				{
+               mapPaths.Add(mapPath);
+               minCount = mapPath.Territories.Count;
+            }
+         }
+			//---------------------------------------------
+			IMapPaths removals = new MapPaths();
+         foreach (IMapPath mp in mapPaths) // remove all paths that are not minimum
+         {
+            if (minCount < mp.Territories.Count)
+               removals.Add(mp);
+         }
+			foreach (IMapPath mp in removals)
+				mapPaths.Remove(mp);
+			if(0 == mapPaths.Count)
+			{
+            Logger.Log(LogEnum.LE_ERROR, "Get_BestPathRandom(): no path found for startT=" + startT.ToString() + " to endt=" + endT.ToString());
+            return null;
+         }
+			//---------------------------------------------
+			int randomNum = Utilities.RandomGenerator.Next(mapPaths.Count);
+         return mapPaths[randomNum];
+      }
+      static private double GetDistance(ITerritory startT, ITerritory endT)
 		{
 			Point startPoint = new Point(startT.CenterPoint.X, startT.CenterPoint.Y);
 			Point endPoint = new Point(endT.CenterPoint.X, endT.CenterPoint.Y);
