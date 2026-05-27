@@ -32,14 +32,14 @@ namespace PleasantvilleGame
    {
       public delegate bool EndPerformRandomMovement();
       private const int STARTING_ASSIGNED_ROW = 6;
-      public enum E162Enum
+      public enum E063Enum
       {
          PREPARE,
          END
       };
       public bool CtorError { get; } = false;
       private EndPerformRandomMovement? myCallback = null;
-      private E162Enum myState = E162Enum.PREPARE;
+      private E063Enum myState = E063Enum.PREPARE;
       private bool myIsRollInProgress = false;
       //---------------------------------------------------
       public struct GridRow
@@ -161,6 +161,7 @@ namespace PleasantvilleGame
             return false;
          }
          //--------------------------------------------------
+         myGridRows = new GridRow[4];
          int numPeopleMoved = 0;
          foreach (KeyValuePair<string, string> kvp in myGameInstance.RandomMoves)
          {
@@ -180,6 +181,9 @@ namespace PleasantvilleGame
             numPeopleMoved++;
          }
          myMaxRowCount = numPeopleMoved;
+         myCallback = callback;
+         myState = E063Enum.PREPARE;
+         myIsRollInProgress = false;
          //--------------------------------------------------
          if (false == UpdateGrid())
          {
@@ -196,7 +200,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "UpdateGrid(): UpdateEndState() returned false");
             return false;
          }
-         if (E162Enum.END == myState)
+         if (E063Enum.END == myState)
             return true;
          if (false == UpdateUserInstructions())
          {
@@ -217,7 +221,7 @@ namespace PleasantvilleGame
       }
       private bool UpdateEndState()
       {
-         if (E162Enum.END == myState)
+         if (E063Enum.END == myState)
          {
             if (null == myCallback)
             {
@@ -240,6 +244,8 @@ namespace PleasantvilleGame
       private bool UpdateAssignablePanel()
       {
          myStackPanelAssignable.Children.Clear(); // clear out assignable panel 
+         System.Windows.Controls.Image img23 = new System.Windows.Controls.Image { Name = "Continue", Source = MapItem.theMapImages.GetBitmapImage("Continue"), Width = Utilities.ZOOM * Utilities.theMapItemSize, Height = Utilities.ZOOM * Utilities.theMapItemSize };
+         myStackPanelAssignable.Children.Add(img23);
          return true;
       }
       private bool UpdateGridRows()
@@ -435,7 +441,11 @@ namespace PleasantvilleGame
                   {
                      if (result.VisualHit == img)
                      {
-                        if ("DieRoll" == img.Name)
+                        if ("Continue" == img.Name)
+                        {
+                           myState = E063Enum.END;
+                        }
+                        else if ("DieRoll" == img.Name)
                         {
                            if (false == myIsRollInProgress)
                            {
@@ -453,7 +463,7 @@ namespace PleasantvilleGame
                   }
                }
             }
-            if (ui is Image img1) // next check all images within the Grid Rows
+            else if (ui is Image img1) // next check all images within the Grid Rows
             {
                if (result.VisualHit == img1)
                {

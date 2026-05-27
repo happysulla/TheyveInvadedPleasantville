@@ -37,12 +37,13 @@
         Rolled four times on the Townspeople and Target Building tables to deteremine which four townspeople move and their destinations. 
       </TextBlock>
       <StackPanel Grid.Row="3" Grid.ColumnSpan="4" Name="myStackPanelAssignable" DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Left" Margin="5,0,0,0">
-      </StackPanel>
+            <Rectangle  Height="42" Width="42" Stroke="Black" />
+        </StackPanel>
       <Rectangle Grid.Row="4" Grid.ColumnSpan="4" Margin="5" Height="1" Fill="Black"/>
       <!--Table Header Row-->
       <TextBlock Grid.Row="5" Grid.Column="0" FontFamily='Georgia' FontSize="12" VerticalAlignment="Center"  HorizontalAlignment="Center" Margin="0,5,0,10" Name="myTextBlock0">Townperson</TextBlock>
       <TextBlock Grid.Row="5" Grid.Column="1" FontFamily='Georgia' FontSize="12" VerticalAlignment="Center"  HorizontalAlignment="Center" Margin="0,5,0,10" Name="myTextBlock1">Tied Up/Unc/KIA?</TextBlock>
       <TextBlock Grid.Row="5" Grid.Column="2" FontFamily='Georgia' FontSize="12" VerticalAlignment="Center"  HorizontalAlignment="Center" Margin="0,5,0,10" Name="myTextBlock2">Destination</TextBlock>
-      <TextBlock Grid.Row="5" Grid.Column="3" FontFamily='Georgia' FontSize="12" VerticalAlignment="Center"  HorizontalAlignment="Center" Margin="0,5,0,0" Name="myTextBlock3">Block</TextBlock>
+      <TextBlock Grid.Row="5" Grid.Column="3" FontFamily='Georgia' FontSize="12" VerticalAlignment="Center"  HorizontalAlignment="Center" Margin="0,5,0,0" Name="myTextBlock3">Block Move</TextBlock>
    </Grid>
 </UserControl>
