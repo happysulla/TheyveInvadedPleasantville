@@ -25,7 +25,7 @@ The headquarters (HQ) must be a specified building, such as <Bold>House 4</Bold>
 <LineBreak/><LineBreak/>
 If the building chosen as the Alien HQ has more than one space, the Alien player must choose which area of the building is the Alien HQ. This information is secret to the Alien Player.
 <LineBreak/><LineBreak/>
-                            <InlineUIContainer><Image Name='ZebulonBlack'  Height='150' Width='150'></Image></InlineUIContainer>"
+                                       <InlineUIContainer><Image Name='ZebulonBlack'  Height='150' Width='150'></Image></InlineUIContainer>"
 e002	"<Bold>e002 Select Towns Player Counter</Bold><LineBreak/><LineBreak/>
 Town player rolls a die to determine which townsperson counter begins the game under his or her control according to 
 <InlineUIContainer><Button Content='Town Player Starting' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table.
@@ -38,27 +38,25 @@ e003a	"<Bold>e003a Roll for Alien Controlled Counter</Bold><LineBreak/><LineBrea
 The computer secretly rolls the dice twice on the <InlineUIContainer><Button Content='Townspeople' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table 
 to determine which two townspersons begin the game under Alien control. This information is hidden from Towns player. Click image to continue.
 <LineBreak/><LineBreak/>
-                                  <InlineUIContainer><Image Name='Continue003a' Height='100' Width='100'></Image></InlineUIContainer>"
+                                       <InlineUIContainer><Image Name='Continue003a' Height='100' Width='100'></Image></InlineUIContainer>"
 e004	"<Bold>e004 Setting Up Map</Bold><LineBreak/><LineBreak/>
 The starting locations for each piece is printed in the upper-left of the corner of the counter per <InlineUIContainer><Button Content='r2.2.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. Every counter is placed on the map.
 <LineBreak/><LineBreak/>
 If a building has more than one space in it, the counter is placed randomly in one of the spaces. However, only one counter may be placed in each space. 
 <LineBreak/><LineBreak/>
-The starting townplayer is shown in green. The alien is only one to see starting aliens until they become known. They are showed in gold. Click image to continue.
+The starting Town's controlled townsperson is shown in green. The Alien player is only one to see starting aliens until they become known. They are showed in gold. Click image to continue.
 <LineBreak/><LineBreak/>
-                                  <InlineUIContainer><Image Name='Continue004' Height='100' Width='100'></Image></InlineUIContainer>"
+                                       <InlineUIContainer><Image Name='Continue004' Height='100' Width='100'></Image></InlineUIContainer>"
 e005	"<Bold>e005 Random Movement</Bold> <InlineUIContainer><Button Content='r6.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
-Four townspeople (if not under Town player control) move randomly in any given turn. The <InlineUIContainer><Button Content='Townspeople' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table determines who moves. 
+Four townspeople move randomly in any given turn. The <InlineUIContainer><Button Content='Townspeople' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table determines who moves. The destination is per the 
+<InlineUIContainer><Button Content='Target Building' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table. 
 <LineBreak/><LineBreak/>
-Tied Up, Unconscious, Killed players do not move. Only move a townsperson once. Stunned counters still move. 
+Tied-up, Unconscious, or Killed people do not move. Stunned still move.
 <LineBreak/><LineBreak/>
-If a controlled townsperson (either Town or Alien) is moved, the owner has the option to not move. However, if the alien player, this exposes the unknown alien. Click image to continue.
+If a controlled townsperson (either Town or Alien) is moved, the owner has the option to not move. However, the Alien player exposes that it is an alien controlled person if not known. Click image to continue.
 <LineBreak/><LineBreak/>
-The destination is per the 
-<InlineUIContainer><Button Content='Target Building' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table.
-<LineBreak/><LineBreak/>
-                                  <InlineUIContainer><Image Name='Continue005' Height='100' Width='100'></Image></InlineUIContainer>"
+                                        <InlineUIContainer><Image Name='Continue005' Height='100' Width='100'></Image></InlineUIContainer>"
 e501	"<Bold>e501 Game Won!!!</Bold>
 <LineBreak/><LineBreak/>"
 e502	"<Bold>e502 Game Lost</Bold>

@@ -67,6 +67,7 @@ namespace PleasantvilleGame
       public bool IsControlledInitiatedCombat { set; get; } = false;
       public bool IsAlienCombatCompleted { set; get; } = false;
       public bool IsControlledCombatCompleted { set; get; } = false;
+      public Dictionary<string, string> RandomMoves { set; get; } = new Dictionary<string, string>();
       //---------------------------------------------------------------
       [NonSerialized] private List<IUnitTest> myUnitTests = new List<IUnitTest>();
       public List<IUnitTest> UnitTests { get => myUnitTests; }

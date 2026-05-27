@@ -10,6 +10,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
+using static PleasantvilleGame.EventViewerRandomMovement;
 using Application = System.Windows.Application;
 using Color = System.Windows.Media.Color;
 using MessageBox = System.Windows.MessageBox;
@@ -189,6 +190,72 @@ namespace PleasantvilleGame
          return true;
       }
       //------------
+      public bool CreateRandomMoves(IGameInstance gi)
+      {
+         gi.RandomMoves.Clear(); 
+         const int numPeopleToMove = 4;
+         int numPeopleMoved = 0;
+         int loopCount = 200;
+         while ((numPeopleMoved < numPeopleToMove) && (0 < loopCount--))
+         {
+            int die1 = Utilities.RandomGenerator.Next(5);
+            int die2 = Utilities.RandomGenerator.Next(6);
+            string name = TableMgr.GetTownspersonName(die1, die2);
+            if (true == String.IsNullOrEmpty(name))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_RandomMoves(): TableMgr.GetTownspersonName() returned null");
+               return false;
+            }
+            //------------------------------------------------------------
+            // If the counter is moved or tied up or known to be alien controlled, do not move.
+            //if ((true == miMoving.IsMoved) || (true == miMoving.IsTiedUp) || (true == miMoving.IsUnconscious) || (true == miMoving.IsKilled))
+            //{
+            //   ++numPeopleSkipped;
+            //   StringBuilder sb = new StringBuilder("Create_RandomMoves(): skipped=");
+            //   sb.Append(numPeopleSkipped.ToString());
+            //   sb.Append(" mi=");
+            //   sb.Append(miMoving.Name);
+            //   sb.Append(" m?=");
+            //   sb.Append(miMoving.IsMoved.ToString());
+            //   sb.Append(" c?=");
+            //   sb.Append(miMoving.IsControlled.ToString());
+            //   sb.Append(" k?=");
+            //   sb.Append(miMoving.IsAlienKnown.ToString());
+            //   sb.Append(" stun?=");
+            //   sb.Append(miMoving.IsStunned.ToString());
+            //   sb.Append(" surr?=");
+            //   sb.Append(miMoving.IsSurrendered.ToString());
+            //   sb.Append(" tu?=");
+            //   sb.Append(miMoving.IsTiedUp.ToString());
+            //   sb.Append(" w?=");
+            //   sb.Append(miMoving.IsWary.ToString());
+            //   sb.Append(" con?=");
+            //   sb.Append(miMoving.IsUnconscious.ToString());
+            //   Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, sb.ToString());
+            //   continue;
+            //}
+            //------------------------------------------------------------
+            die1 = Utilities.RandomGenerator.Next(5);
+            die2 = Utilities.RandomGenerator.Next(6);
+            string fullBuildingName = TableMgr.GetTargetBuildingName(die1, die2); // Find the target building location.
+            if ("ERROR" == fullBuildingName)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_RandomMoves(): GetTargetBuildingName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
+               return false;
+            }
+            //------------------------------------------------------------
+            gi.RandomMoves[name] = fullBuildingName;
+            numPeopleMoved++;
+            //------------------------------------------------------------
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_RandomMoves(): moved name=" + name + " numPeopleMoved=" + numPeopleMoved.ToString());
+         }  
+         if (loopCount < 0)
+         {
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_RandomMoves(): invalid state loopCount=" + loopCount.ToString());
+            return false;
+         }
+         return true;
+      }
       public bool PerformMovements(IGameInstance gi, int numPeopleToMove)
       {
          int numPeopleSkipped = 0;
@@ -556,6 +623,7 @@ namespace PleasantvilleGame
             case GameAction.GameSetupRandomMovementSetup:
                gi.GamePhase = GamePhase.RandomMovement;
                gi.EventActive = gi.EventDisplayed = "e005";
+
                break;
             default:
                returnStatus = "reached default action=" + action.ToString();
@@ -1441,6 +1509,11 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.RandomMovementStart:
+               if( false == CreateRandomMoves(gi))
+               {
+                  returnStatus = "Create_RandomMoves() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
+               }
                break;
             case GameAction.AlienDisplaysRandomMovement:
                gi.IsAlienDisplayedRandomMovement = true;

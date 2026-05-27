@@ -60,6 +60,7 @@ namespace PleasantvilleGame
       bool IsControlledInitiatedCombat { set; get; }
       bool IsAlienCombatCompleted { set; get; }
       bool IsControlledCombatCompleted { set; get; }
+      Dictionary<string, string> RandomMoves { set; get; }
       //----------------------------------------------
       List<IUnitTest> UnitTests { get; }
       //=========================================================

@@ -618,7 +618,7 @@ namespace PleasantvilleGame
                   myTextBlock.Inlines.Add(new Run(sb.ToString()));
                   myTextBlock.Inlines.Add(new LineBreak());
                   myTextBlock.Inlines.Add(new LineBreak());
-                  myTextBlock.Inlines.Add(new Run("                                  "));
+                  myTextBlock.Inlines.Add(new Run("                                       "));
                   Image imge002= new Image { Name = "Continue002", Width = 100, Height = 100, Source = MapItem.theMapImages.GetBitmapImage("Continue") };
                   myTextBlock.Inlines.Add(new InlineUIContainer(imge002));
                   myTextBlock.Inlines.Add(new LineBreak());
@@ -643,7 +643,7 @@ namespace PleasantvilleGame
                   myTextBlock.Inlines.Add(new Run("6 - Reroll required"));
                   myTextBlock.Inlines.Add(new LineBreak());
                   myTextBlock.Inlines.Add(new LineBreak());
-                  myTextBlock.Inlines.Add(new Run("                                  "));
+                  myTextBlock.Inlines.Add(new Run("                                       "));
                   Image imge003 = new Image { Name = "Continue003", Width = 100, Height = 100, Source = MapItem.theMapImages.GetBitmapImage("Continue") };
                   myTextBlock.Inlines.Add(new InlineUIContainer(imge003));
                   myTextBlock.Inlines.Add(new LineBreak());
@@ -673,7 +673,7 @@ namespace PleasantvilleGame
                   myTextBlock.Inlines.Add(new Run(gi.DieResults[key][1].ToString()));
                   myTextBlock.Inlines.Add(new LineBreak());
                   myTextBlock.Inlines.Add(new LineBreak());
-                  myTextBlock.Inlines.Add(new Run("                                  "));
+                  myTextBlock.Inlines.Add(new Run("                                       "));
                   Image imge003 = new Image { Name = "Continue003", Width = 100, Height = 100, Source = MapItem.theMapImages.GetBitmapImage("Continue") };
                   myTextBlock.Inlines.Add(new InlineUIContainer(imge003));
                   myTextBlock.Inlines.Add(new LineBreak());

@@ -201,7 +201,7 @@ r6.3	"<Bold>r6.3 Random Movement</Bold><LineBreak/><LineBreak/>
 Random movement is checked four times at the beginning of each turn. Therefore, a maximum of four pieces move randomly in any given turn. 
 <LineBreak/><LineBreak/>
 Non-Digital Version: For each check, the Alien player rolls a die twice to determine which townsperson will move using the <InlineUIContainer><Button Content='Townspeople' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table. The town player rolls a die twice and consults the 
-<InlineUIContainer><Button Content='Target Building' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table to determine the building that the townsperson will move toward. In the digital version, random movement is handled automatically.
+<InlineUIContainer><Button Content='Target Building' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table to determine the building that the townsperson will move toward.
 <LineBreak/><LineBreak/>
 Digital Version: Random Movement is automatically performed without die rolls.
 <LineBreak/><LineBreak/>
