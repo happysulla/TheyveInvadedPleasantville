@@ -278,14 +278,14 @@ namespace PleasantvilleGame
                Grid.SetRow(labelForBlock, rowNum);
                Grid.SetColumn(labelForBlock, 3);
             }
-            else if ((true == GameEngine.theIsAlien) && (true == mi.IsControlled))
+            else if ((false == GameEngine.theIsAlien) && (true == mi.IsControlled))
             {
                cb1.IsEnabled = true;
                cb1.IsChecked = myGridRows[i].myIsBlockedFromMove;
                cb1.Checked += CheckBox_Checked;
                cb1.Unchecked += CheckBox_Unchecked;
             }
-            else if ((false == GameEngine.theIsAlien) && ((true == mi.IsAlienKnown) || (true == mi.IsAlienUnknown)))
+            else if ((true == GameEngine.theIsAlien) && ((true == mi.IsAlienKnown) || (true == mi.IsAlienUnknown)))
             {
                cb1.IsEnabled = true;
                cb1.IsChecked = myGridRows[i].myIsBlockedFromMove;
