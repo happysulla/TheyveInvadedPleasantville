@@ -511,7 +511,7 @@ namespace PleasantvilleGame
             return false;
          }
          gi.IsAlienDisplayedRandomMovement = false;
-         gi.IsControlledDisplayedRandomMovement = false;
+         gi.IsTownDisplayedRandomMovement = false;
          gi.IsAlienAckedRandomMovement = false;
          gi.IsControlledAckedRandomMovement = false;
          gi.Takeover = null;

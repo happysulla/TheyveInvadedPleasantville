@@ -1017,6 +1017,10 @@ namespace PleasantvilleGame
             return false;
          }
          GameAction outAction = GameAction.Error;
+         if( true == GameEngine.theIsAlien )
+            outAction = GameAction.RandomMovementShowAlienResult;
+         else
+            outAction = GameAction.RandomMovementShowTownResult;
          StringBuilder sb11 = new StringBuilder("     ######ShowRandomMoveResults() :");
          sb11.Append(" p="); sb11.Append(myGameInstance.GamePhase.ToString());
          sb11.Append(" ae="); sb11.Append(myGameInstance.EventActive);

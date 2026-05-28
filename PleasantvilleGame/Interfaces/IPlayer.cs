@@ -9,6 +9,7 @@ namespace PleasantvilleGame
    public interface IPlayer
    {
       String[] StartingTownspeople { get; set; }
+      List<string> BlockedRandomMoves { set; get; } // a townsperson name who is blocked by owner from moving in random movement
       bool IsComputer { set; get; }
       bool GetNextState(IGameInstance gi);
    }

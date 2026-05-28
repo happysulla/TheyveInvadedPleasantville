@@ -378,7 +378,7 @@ namespace PleasantvilleGame
          //myRectangleSelection.Visibility = Visibility.Hidden;
          //myCanvasMain.Children.Add(myRectangleSelection);
          //Canvas.SetZIndex(myRectangleSelection, 1000);
-         //ClearActionPanel();
+         //UpdateActionPanelClear();
          //----------------------------------------------------------
          ge.RegisterForUpdates(civ); // Implement the Model View Controller (MVC) pattern by registering views with  the game engine such that when the model data is changed, the views are updated.
          ge.RegisterForUpdates(myMainMenuViewer);
@@ -529,7 +529,7 @@ namespace PleasantvilleGame
       }
       private string? SerializeOptions(Options options)
       {
-         //--------------------------------                                                                                              //--------------------------------                                                                                  //--------------------------------
+         //--------------------------------                                                                            //--------------------------------
          XmlDocument aXmlDocument = new XmlDocument();
          aXmlDocument.LoadXml("<Options></Options>");
          if (null == aXmlDocument.DocumentElement)
@@ -1027,6 +1027,7 @@ namespace PleasantvilleGame
       {
          if ((GameAction.UpdateLoadingGame == action) || (GameAction.UpdateNewGame == action) || (GameAction.RemoveSplashScreen == action))
          {
+            UpdateActionPanelClear();
             if (false == UpdateViewForNewGame(ref gi, action)) // This calls PerformAction() to get to proper event
                Logger.Log(LogEnum.LE_ERROR, "Update_View(): UpdateViewForNewGame() returned false");
             return;
@@ -1058,16 +1059,20 @@ namespace PleasantvilleGame
             case GameAction.GameSetupPlayTownsperson:
                UpdateWindowTitle();
                break;
-            case GameAction.AlienStart:
-               break;
-            case GameAction.TownspersonStart:
+            case GameAction.RandomMovementStart:
+               myStoryboard = null;
+               myMovingMapItems.Clear();
+               myMovingButton = null;
+               myIsFlagSetForAlienMoveCountExceeded = false;
+               myMovingRectangle = null;
+               UpdateActionPanelClear();
                break;
             //   case GameAction.AlienDisplaysRandomMovement:
             //      if (true == GameEngine.theIsAlien)
             //      {
             //         myStoryboard = null;
             //         UpdateViewMovement(gi);
-            //         ClearActionPanel();
+            //         UpdateActionPanelClear();
             //      }
             //      break;
             //   case GameAction.TownspersonDisplaysRandomMovement:
@@ -1075,7 +1080,7 @@ namespace PleasantvilleGame
             //      {
             //         myStoryboard = null;
             //         UpdateViewMovement(gi);
-            //         ClearActionPanel();
+            //         UpdateActionPanelClear();
             //      }
             //      break;
             //   case GameAction.AlienAcksRandomMovement:
@@ -1136,7 +1141,7 @@ namespace PleasantvilleGame
             //      break;
             //   case GameAction.AlienMovement:
             //      UpdateViewMovement(gi);
-            //      ClearActionPanel();
+            //      UpdateActionPanelClear();
             //      break;
             //   case GameAction.AlienCompletesMovement:
             //      if (true == GameEngine.theIsAlien)
@@ -1471,7 +1476,7 @@ namespace PleasantvilleGame
             //      myIsTakeOverPromptNeededToFoolOpponent = false;
             //      break;
             //   case GameAction.ShowEndGame:
-            //      ClearActionPanel();
+            //      UpdateActionPanelClear();
             //      foreach (IStack stack in gi.Stacks)         // Show all the stacks
             //      {
             //         foreach (IMapItem mi in stack.MapItems)
@@ -1808,55 +1813,8 @@ namespace PleasantvilleGame
          //foreach (Rectangle r in myRectangles)
          //   r.Visibility = Visibility.Hidden;
       }
-      public void ClearActionPanel()
-      {
-         const int button1Left = 30;
-         const int button2Left = 97;
 
-         Canvas.SetLeft(myButton1, button1Left);
-         Canvas.SetLeft(myRectangle1, button1Left);
-         Canvas.SetLeft(myLabelButton1, button1Left);
-         Canvas.SetLeft(myButton2, button2Left);
-         Canvas.SetLeft(myRectangle2, button2Left);
-         Canvas.SetLeft(myLabelButton2, button2Left);
-
-         myLabelHeading.Visibility = Visibility.Hidden;
-         myLabelLeftTop.Visibility = Visibility.Hidden;
-         myLabelRightTop.Visibility = Visibility.Hidden;
-         myLabelArrow.Visibility = Visibility.Hidden;
-         myLabelButton1.Visibility = Visibility.Hidden;
-         myLabelButton2.Visibility = Visibility.Hidden;
-         myLabelButton3.Visibility = Visibility.Hidden;
-         myLabelButton4.Visibility = Visibility.Hidden;
-         myLabelButton5.Visibility = Visibility.Hidden;
-         myLabelButton6.Visibility = Visibility.Hidden;
-
-         Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL_CLEAR, "ClearActionPanel() myTextBoxResults.Clear()");
-         myTextBoxResults.Clear();
-         myTextBoxResults.Visibility = Visibility.Hidden;
-
-         myButton1.Visibility = Visibility.Hidden;
-         myButton2.Visibility = Visibility.Hidden;
-         myButton3.Visibility = Visibility.Hidden;
-         myButton4.Visibility = Visibility.Hidden;
-         myButton5.Visibility = Visibility.Hidden;
-         myButton6.Visibility = Visibility.Hidden;
-         myButtonOk.Visibility = Visibility.Hidden;
-         myButtonIgnore.Visibility = Visibility.Hidden;
-
-         myRectangle1.Visibility = Visibility.Hidden;
-         myRectangle2.Visibility = Visibility.Hidden;
-         myRectangle3.Visibility = Visibility.Hidden;
-         myRectangle4.Visibility = Visibility.Hidden;
-         myRectangle5.Visibility = Visibility.Hidden;
-         myRectangle6.Visibility = Visibility.Hidden;
-
-         myLeftMapItemsInActionPanel.Clear();
-         myRightMapItemsInActionPanel.Clear();
-         myLeftMapItemsInActionPanelSelected.Clear();
-         myRightMapItemsInActionPanelSelected.Clear();
-      }
-      public void UpdateActionPanel(IGameInstance gi, bool isOkButtonDisplayed)
+      private void UpdateActionPanel(IGameInstance gi, bool isOkButtonDisplayed)
       {
          const int button1Left = 169;
          const int button2Left = 97;
@@ -1967,7 +1925,55 @@ namespace PleasantvilleGame
 
          UpdateActionPanelButtons(gi);
       }
-      public void UpdateActionPanelButtons(IGameInstance gi)
+      private void UpdateActionPanelClear()
+      {
+         const int button1Left = 30;
+         const int button2Left = 97;
+
+         Canvas.SetLeft(myButton1, button1Left);
+         Canvas.SetLeft(myRectangle1, button1Left);
+         Canvas.SetLeft(myLabelButton1, button1Left);
+         Canvas.SetLeft(myButton2, button2Left);
+         Canvas.SetLeft(myRectangle2, button2Left);
+         Canvas.SetLeft(myLabelButton2, button2Left);
+
+         myLabelHeading.Visibility = Visibility.Hidden;
+         myLabelLeftTop.Visibility = Visibility.Hidden;
+         myLabelRightTop.Visibility = Visibility.Hidden;
+         myLabelArrow.Visibility = Visibility.Hidden;
+         myLabelButton1.Visibility = Visibility.Hidden;
+         myLabelButton2.Visibility = Visibility.Hidden;
+         myLabelButton3.Visibility = Visibility.Hidden;
+         myLabelButton4.Visibility = Visibility.Hidden;
+         myLabelButton5.Visibility = Visibility.Hidden;
+         myLabelButton6.Visibility = Visibility.Hidden;
+
+         Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL_CLEAR, "UpdateActionPanelClear() myTextBoxResults.Clear()");
+         myTextBoxResults.Clear();
+         myTextBoxResults.Visibility = Visibility.Hidden;
+
+         myButton1.Visibility = Visibility.Hidden;
+         myButton2.Visibility = Visibility.Hidden;
+         myButton3.Visibility = Visibility.Hidden;
+         myButton4.Visibility = Visibility.Hidden;
+         myButton5.Visibility = Visibility.Hidden;
+         myButton6.Visibility = Visibility.Hidden;
+         myButtonOk.Visibility = Visibility.Hidden;
+         myButtonIgnore.Visibility = Visibility.Hidden;
+
+         myRectangle1.Visibility = Visibility.Hidden;
+         myRectangle2.Visibility = Visibility.Hidden;
+         myRectangle3.Visibility = Visibility.Hidden;
+         myRectangle4.Visibility = Visibility.Hidden;
+         myRectangle5.Visibility = Visibility.Hidden;
+         myRectangle6.Visibility = Visibility.Hidden;
+
+         myLeftMapItemsInActionPanel.Clear();
+         myRightMapItemsInActionPanel.Clear();
+         myLeftMapItemsInActionPanelSelected.Clear();
+         myRightMapItemsInActionPanelSelected.Clear();
+      }
+      private void UpdateActionPanelButtons(IGameInstance gi)
       {
          if (Visibility.Visible == myButton1.Visibility)
          {
@@ -2484,7 +2490,7 @@ namespace PleasantvilleGame
       }
       private void DisplayConversation(IGameInstance gi, ITerritory selectedTerritory)
       {
-         //ClearActionPanel();
+         //UpdateActionPanelClear();
          ////----------------------------------------------------------------------
          //// If passed-in territory is not null, user has selected this region.
          //// Show a dialog of the conversation results.
@@ -2630,7 +2636,7 @@ namespace PleasantvilleGame
          GameAction outAction = GameAction.TownspersonPerformsConversation;
          myGameEngine.PerformAction(ref gi, ref outAction);
          if (true == isIgnoreResults)
-            ClearActionPanel();
+            UpdateActionPanelClear();
          else
             UpdateActionPanelButtons(gi);
          return true;
@@ -2713,7 +2719,7 @@ namespace PleasantvilleGame
       }
       private bool DisplayInfluence(IGameInstance gi, ITerritory selectedTerritory)
       {
-         ClearActionPanel();
+         UpdateActionPanelClear();
          if (null == selectedTerritory)
          {
             Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() selectedTerritory=null");
@@ -2971,7 +2977,7 @@ namespace PleasantvilleGame
          GameAction outAction = GameAction.TownspersonPerformsInfluencing;
          myGameEngine.PerformAction(ref gi, ref outAction);
          if (true == isIgnoreResults)
-            ClearActionPanel();
+            UpdateActionPanelClear();
          else
             UpdateActionPanelButtons(gi);
          return true;
@@ -3114,7 +3120,7 @@ namespace PleasantvilleGame
       }
       private void DisplayCombat(IGameInstance gi, ITerritory selectedTerritory)
       {
-         ClearActionPanel();
+         UpdateActionPanelClear();
          if (null == selectedTerritory)  // If passed-in territory is not null, user has selected this region. Show a dialog of the conversation results.
          {
             Logger.Log(LogEnum.LE_ERROR, "DisplayTakover() selectedTerritory=null");
@@ -3215,7 +3221,7 @@ namespace PleasantvilleGame
          }
          if (true == isIgnoreResults)
          {
-            ClearActionPanel();
+            UpdateActionPanelClear();
             return true;
          }
          if ((0 == myLeftMapItemsInActionPanel.Count) || (0 == myRightMapItemsInActionPanel.Count))
@@ -3266,7 +3272,7 @@ namespace PleasantvilleGame
       }
       private void DisplayCombatResults(IGameInstance gi)
       {
-         ClearActionPanel();
+         UpdateActionPanelClear();
          if (null == gi.MapItemCombat)
          {
             Logger.Log(LogEnum.LE_ERROR, "DisplayCombatResults() gi.MapItemCombat=null");
@@ -3364,7 +3370,7 @@ namespace PleasantvilleGame
          sb1.Append("myIsCombatInitiatedForTownsperson=false");
          Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, sb1.ToString());
          if (true == isIgnoreResults)
-            ClearActionPanel();
+            UpdateActionPanelClear();
       }
       private bool DisplayIterogations(IGameInstance gi, out bool isInterrogations)
       {
@@ -3527,7 +3533,7 @@ namespace PleasantvilleGame
       }
       private void DisplayImplantRemoval(IGameInstance gi, ITerritory selectedTerritory)
       {
-         ClearActionPanel();
+         UpdateActionPanelClear();
          if (null == selectedTerritory)  // Show a dialog of the conversation results.
          {
             Logger.Log(LogEnum.LE_ERROR, "DisplayImplantRemoval() selectedTerritory=null");
@@ -3651,7 +3657,7 @@ namespace PleasantvilleGame
          }
          //-----------------------------------------------------------------------------
          if (true == isIgnoreResults)
-            ClearActionPanel();
+            UpdateActionPanelClear();
          else
             UpdateActionPanelButtons(gi);
          return true;
@@ -3772,7 +3778,7 @@ namespace PleasantvilleGame
       }
       private void DisplayTakover(IGameInstance gi, ITerritory selectedTerritory)
       {
-         ClearActionPanel();
+         UpdateActionPanelClear();
          if (null == selectedTerritory) // If passed-in territory is not null, user has selected this region. Show a dialog of the conversation results.
          {
             Logger.Log(LogEnum.LE_ERROR, "DisplayTakover() selectedTerritory=null");
@@ -3866,7 +3872,7 @@ namespace PleasantvilleGame
          if (false == isIgnoreResults)
             gi.Takeover = new MapItemTakeover(alien, victum);
          if (true == isIgnoreResults)
-            ClearActionPanel();
+            UpdateActionPanelClear();
          //-----------------------------------------------------------------------------
          GameAction outAction = GameAction.AlienTakeover;
          myGameEngine.PerformAction(ref gi, ref outAction);
@@ -3874,7 +3880,7 @@ namespace PleasantvilleGame
       }
       private bool PerformTakeoverObserved(IGameInstance gi)
       {
-         ClearActionPanel();
+         UpdateActionPanelClear();
          if( null == gi.Takeover)
          {
             Logger.Log(LogEnum.LE_ERROR, "PerformTakeoverObserved() gi.Takeover=null");

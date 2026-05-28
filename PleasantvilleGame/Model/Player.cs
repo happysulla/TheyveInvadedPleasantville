@@ -9,6 +9,7 @@ namespace PleasantvilleGame
    public abstract class PlayerBase : IPlayer
    {
       public String[] StartingTownspeople { get; set; } = new String[2];
+      public List<string> BlockedRandomMoves { set; get; } = new List<string>(); // a townsperson name who is blocked by owner from moving in random movement
       public bool IsComputer { set; get; } = false;
       public PlayerBase(bool isComputer)
       {

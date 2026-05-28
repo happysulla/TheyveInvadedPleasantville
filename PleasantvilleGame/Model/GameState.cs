@@ -1509,16 +1509,28 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.RandomMovementStart:
-               if( false == CreateRandomMoves(gi))
+               gi.PersonsStunned.Clear();
+               gi.PersonsKnockedOut.Clear();
+               foreach (Stack stack in gi.Stacks) // At the end of the turn, all stunned units become unstunned. All knocked out people become stunned.
+               {
+                  foreach (MapItem mi in stack.MapItems)
+                  {
+                     if (true == mi.IsStunned)
+                        gi.PersonsStunned.Add(mi); // Keep a list of which MapItems are Stunned.
+                     if (false == mi.IsUnconscious)
+                        gi.PersonsKnockedOut.Add(mi); // Keep a list of which MapItems start the turn knocked out.
+                  }
+               }
+               //------------------------------------
+               if ( false == CreateRandomMoves(gi))
                {
                   returnStatus = "Create_RandomMoves() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
                }
                break;
-            case GameAction.AlienDisplaysRandomMovement:
+            case GameAction.RandomMovementShowAlienResult:
                gi.IsAlienDisplayedRandomMovement = true;
-               RecordIncapacitatedPeople(gi);
-               if (false == gi.IsControlledDisplayedRandomMovement)
+               if (false == gi.IsTownDisplayedRandomMovement)
                {
                   PerformMovements(gi, 4);
                   gi.NextAction = "Awaiting Townsperson Display Random Movement";
@@ -1531,8 +1543,8 @@ namespace PleasantvilleGame
                      gi.NextAction = "Ack Random Movement";
                }
                break;
-            case GameAction.TownspersonDisplaysRandomMovement:
-               gi.IsControlledDisplayedRandomMovement = true;
+            case GameAction.RandomMovementShowTownResult:
+               gi.IsTownDisplayedRandomMovement = true;
                if (false == gi.IsAlienDisplayedRandomMovement)
                {
                   PerformMovements(gi, 4);
@@ -1551,7 +1563,7 @@ namespace PleasantvilleGame
                if (true == gi.IsControlledAckedRandomMovement)
                {
                   gi.IsAlienDisplayedRandomMovement = false;
-                  gi.IsControlledDisplayedRandomMovement = false;
+                  gi.IsTownDisplayedRandomMovement = false;
                   gi.IsAlienAckedRandomMovement = false;
                   gi.IsControlledAckedRandomMovement = false;
 
@@ -1588,7 +1600,7 @@ namespace PleasantvilleGame
                }
                else
                {
-                  if (false == gi.IsControlledDisplayedRandomMovement)
+                  if (false == gi.IsTownDisplayedRandomMovement)
                      gi.NextAction = "Awaiting Townsperson Display Random Movement";
                   else
                      gi.NextAction = "Awaiting Townsperson Ack Random Movement";
@@ -1600,7 +1612,7 @@ namespace PleasantvilleGame
                {
 
                   gi.IsAlienDisplayedRandomMovement = false;
-                  gi.IsControlledDisplayedRandomMovement = false;
+                  gi.IsTownDisplayedRandomMovement = false;
                   gi.IsAlienAckedRandomMovement = false;
                   gi.IsControlledAckedRandomMovement = false;
                   gi.Takeover = null;
@@ -1672,6 +1684,8 @@ namespace PleasantvilleGame
       }
       public void RecordIncapacitatedPeople(IGameInstance gi)
       {
+         gi.PersonsStunned.Clear();
+         gi.PersonsKnockedOut.Clear();
          foreach (Stack stack in gi.Stacks) // At the end of the turn, all stunned units become unstunned. All knocked out people become stunned.
          {
             foreach (MapItem mi in stack.MapItems)

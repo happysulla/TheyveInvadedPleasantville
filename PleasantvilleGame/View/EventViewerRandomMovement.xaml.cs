@@ -223,14 +223,34 @@ namespace PleasantvilleGame
       {
          if (E063Enum.END == myState)
          {
+            if( null == myGameInstance )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Update_EndState(): myGameInstance=null");
+               return false;
+            }
+            foreach (GridRow gr in myGridRows)
+            {
+               if (null == gr.myMapItem)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Update_EndState(): null map item in grid row");
+                  return false;
+               }
+               if (true == gr.myIsBlockedFromMove )
+               {
+                  if( true == GameEngine.theIsAlien )
+                     myGameInstance.PlayerAlien.BlockedRandomMoves.Add(gr.myMapItem.Name);
+                  else
+                     myGameInstance.PlayerTown.BlockedRandomMoves.Add(gr.myMapItem.Name);
+               }
+            }
             if (null == myCallback)
             {
-               Logger.Log(LogEnum.LE_ERROR, "UpdateEndState(): myCallback=null");
+               Logger.Log(LogEnum.LE_ERROR, "Update_EndState(): myCallback=null");
                return false;
             }
             if (false == myCallback())
             {
-               Logger.Log(LogEnum.LE_ERROR, "UpdateEndState(): myCallback() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "Update_EndState(): myCallback() returned false");
                return false;
             }
          }

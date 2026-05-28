@@ -60,7 +60,7 @@ namespace PleasantvilleGame
       public bool IsAlienStarted { set; get; } = false;
       public bool IsControlledStarted { set; get; } = false;
       public bool IsAlienDisplayedRandomMovement { set; get; } = false;
-      public bool IsControlledDisplayedRandomMovement { set; get; } = false;
+      public bool IsTownDisplayedRandomMovement { set; get; } = false;
       public bool IsAlienAckedRandomMovement { set; get; } = false;
       public bool IsControlledAckedRandomMovement { set; get; } = false;
       public bool IsAlienInitiatedCombat { set; get; } = false;
