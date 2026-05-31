@@ -35,6 +35,7 @@ namespace PleasantvilleGame
    public partial class GameViewerWindow : Window, IView
    {
       //--------------------------------------------------------------
+      private const int MAX_RECTANGLES = 6;
       private const int ANIMATE_SPEED = 3;
       public bool CtorError { set; get; } = false;
       private static Mutex theSaveSettingsMutex = new Mutex();
@@ -74,7 +75,7 @@ namespace PleasantvilleGame
       private SolidColorBrush mySolidColorBrushClear = new SolidColorBrush();
       private SolidColorBrush mySolidColorBrushBlack = new SolidColorBrush();
       private SolidColorBrush mySolidColorBrushGray = new SolidColorBrush();          // Conversations
-      private SolidColorBrush mySolidColorBrushGreen = new SolidColorBrush();         // INfluences
+      private SolidColorBrush mySolidColorBrushGreen = new SolidColorBrush();         // Influences
       private SolidColorBrush mySolidColorBrushRed = new SolidColorBrush();           // Combat
       private SolidColorBrush mySolidColorBrushPurple = new SolidColorBrush();        // Interogations
       private SolidColorBrush mySolidColorBrushRosyBrown = new SolidColorBrush();     // Implant Removal
@@ -231,9 +232,9 @@ namespace PleasantvilleGame
          myBrushes.Add(Brushes.Green);  // Create a container of brushes for painting paths.
          myBrushes.Add(Brushes.Blue);
          myBrushes.Add(Brushes.Purple);
-         myBrushes.Add(Brushes.Yellow);
+         myBrushes.Add(Brushes.Violet);
          myBrushes.Add(Brushes.Red);
-         myBrushes.Add(Brushes.Orange);
+         myBrushes.Add(Brushes.DeepPink);
          myDashArray.Add(4);  // used for dotted lines
          myDashArray.Add(2);
          //---------------------------------------------------------------
@@ -359,26 +360,22 @@ namespace PleasantvilleGame
          //   }
          //}
          ////------------------------------------------------
-         //for (int i = 0; i < 6; ++i) // Create a Bounding Rectangles to indicate when a MapItem is moved
-         //{
-         //   Rectangle r = new Rectangle();
-         //   r.Stroke = myBrushes[i];
-         //   r.StrokeThickness = 2.0;
-         //   r.StrokeDashArray = myDashArray;
-         //   r.Width = 50;
-         //   r.Height = 50;
-         //   r.Visibility = Visibility.Hidden;
-         //   myRectangles.Add(r);
-         //   myCanvasMain.Children.Add(r);
-         //}
-         //myRectangleSelection.Stroke = Brushes.Red; // Create a Bounding Rectangle to indicate when a MapItem is selected to be moved by mouse pointer
-         //myRectangleSelection.StrokeThickness = 3.0;
-         //myRectangleSelection.Width = 50;
-         //myRectangleSelection.Height = 50;
-         //myRectangleSelection.Visibility = Visibility.Hidden;
-         //myCanvasMain.Children.Add(myRectangleSelection);
-         //Canvas.SetZIndex(myRectangleSelection, 1000);
-         //UpdateActionPanelClear();
+         for (int i = 0; i < MAX_RECTANGLES; ++i) // Create a Bounding Rectangles to indicate when a MapItem is moved
+         {
+            Rectangle r = new Rectangle();
+            r.Stroke = myBrushes[i];
+            r.StrokeThickness = 3.0;
+            r.StrokeDashArray = myDashArray;
+            myRectangles.Add(r);
+         }
+         myRectangleSelection.Stroke = Brushes.Red; // Create a Bounding Rectangle to indicate when a MapItem is selected to be moved by mouse pointer
+         myRectangleSelection.StrokeThickness = 3.0;
+         myRectangleSelection.Width = 50;
+         myRectangleSelection.Height = 50;
+         myRectangleSelection.Visibility = Visibility.Hidden;
+         myCanvasMain.Children.Add(myRectangleSelection);
+         Canvas.SetZIndex(myRectangleSelection, 1000);
+         UpdateActionPanelClear();
          //----------------------------------------------------------
          ge.RegisterForUpdates(civ); // Implement the Model View Controller (MVC) pattern by registering views with  the game engine such that when the model data is changed, the views are updated.
          ge.RegisterForUpdates(myMainMenuViewer);
@@ -1066,6 +1063,31 @@ namespace PleasantvilleGame
                myIsFlagSetForAlienMoveCountExceeded = false;
                myMovingRectangle = null;
                UpdateActionPanelClear();
+               if (false == UpdateCanvasMain(gi, action))
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
+               foreach (KeyValuePair<string, string> kvp in myGameInstance.RandomMoves)
+               {
+                  foreach(Button b in myButtons)
+                  {
+                     if( true == b.Name.Contains(kvp.Key))
+                     {
+                        Rectangle r = myRectangles[myBrushIndex];
+                        r.Width = b.Width+2;
+                        r.Height = b.Height+2;
+                        r.Visibility = Visibility.Visible;
+                        myCanvasMain.Children.Add(r);
+                        double left = Canvas.GetLeft(b) - 1.0;
+                        double top = Canvas.GetTop(b) - 1.0;
+                        Canvas.SetLeft(r, left);
+                        Canvas.SetTop(r, top);
+                        Canvas.SetZIndex(r,9999);
+                        myBrushIndex++;
+                        if (MAX_RECTANGLES <= myBrushIndex)
+                           myBrushIndex = 0;
+                        break;
+                     }
+                  }
+               }
                break;
             //   case GameAction.AlienDisplaysRandomMovement:
             //      if (true == GameEngine.theIsAlien)
@@ -1785,6 +1807,8 @@ namespace PleasantvilleGame
                   continue;
                elements.Add(ui);
             }
+            else if (ui is Rectangle rectangle)
+               elements.Add(ui);
             else if (ui is Polygon polygon)
                elements.Add(ui);
             else if (ui is Label label)  // A Game Feat Label
@@ -1813,7 +1837,6 @@ namespace PleasantvilleGame
          //foreach (Rectangle r in myRectangles)
          //   r.Visibility = Visibility.Hidden;
       }
-
       private void UpdateActionPanel(IGameInstance gi, bool isOkButtonDisplayed)
       {
          const int button1Left = 169;
@@ -2100,10 +2123,10 @@ namespace PleasantvilleGame
                IMapItem? alreadyMovedMapItem = myMovingMapItems.Find(mi.Name);
                if (null == alreadyMovedMapItem)
                {
-                  ++myBrushIndex;
-                  if (myBrushes.Count <= myBrushIndex)
-                     myBrushIndex = 0;
-                  myMovingMapItems.Add(mi);
+                  ++myBrushIndex;                       // Update_ViewMovement()
+                  if (MAX_RECTANGLES <= myBrushIndex)  // Update_ViewMovement()
+                     myBrushIndex = 0;                  // Update_ViewMovement()
+                  myMovingMapItems.Add(mi);           
                   myIsFlagSetForAlienMoveCountExceeded = false;
                   myIsFlagSetForMoveReset = false;
                   myIsFlagSetForOverstack = false;
@@ -2140,6 +2163,7 @@ namespace PleasantvilleGame
          GameAction outAction = GameAction.Error;
          switch (gi.GamePhase)
          {
+
             case GamePhase.Conversations:
                if (false == DisplayConversations(gi))
                {
