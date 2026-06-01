@@ -2300,38 +2300,52 @@ namespace PleasantvilleGame
          //return dlg.IsMoveStopped;
          return false;
       }
-      private void MovePathDisplay(IMapItemMove mim)
+      private bool MovePathDisplay(IMapItemMove mim)
       {
-         //if (null == mim.NewTerritory)
-         //   return;
-         //PointCollection aPointCollection = new PointCollection();
-         //double offset = myMovingMapItems.Count % 6;
-         //if (0 == myMovingMapItems.Count % 2)
-         //   offset = -offset;
-         //double xPostion = mim.OldTerritory.CenterPoint.X + offset;
-         //double yPostion = mim.OldTerritory.CenterPoint.Y + offset;
-         //Point newPoint = new Point(xPostion, yPostion);
-         //aPointCollection.Add(newPoint);
-         //foreach (ITerritory t in mim.BestPath.Territories)
-         //{
-         //   xPostion = t.CenterPoint.X + offset;
-         //   yPostion = t.CenterPoint.Y + offset;
-         //   newPoint = new Point(xPostion, yPostion);
-         //   aPointCollection.Add(newPoint);
-         //}
+         if (null == mim.OldTerritory)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow.Move_PathDisplay() mim.OldTerritory is null");
+            return false;
+         }
+         if (null == mim.NewTerritory)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow.Move_PathDisplay() mim.NewTerritory is null");
+            return false;
+         }
+         if ( null == mim.BestPath)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow.Move_PathDisplay() mim.BestPath is null");
+            return false;
+         }
+         PointCollection aPointCollection = new PointCollection();
+         double offset = myMovingMapItems.Count % 6;
+         if (0 == myMovingMapItems.Count % 2)
+            offset = -offset;
+         double xPostion = mim.OldTerritory.CenterPoint.X + offset;
+         double yPostion = mim.OldTerritory.CenterPoint.Y + offset;
+         Point newPoint = new Point(xPostion, yPostion);
+         aPointCollection.Add(newPoint);
+         foreach (ITerritory t in mim.BestPath.Territories)
+         {
+            xPostion = t.CenterPoint.X + offset;
+            yPostion = t.CenterPoint.Y + offset;
+            newPoint = new Point(xPostion, yPostion);
+            aPointCollection.Add(newPoint);
+         }
 
-         //Polyline aPolyline = new Polyline();
-         //aPolyline.Stroke = myBrushes[myBrushIndex];
-         //aPolyline.StrokeThickness = 2;
-         //aPolyline.StrokeEndLineCap = PenLineCap.Triangle;
-         //aPolyline.Points = aPointCollection;
-         //aPolyline.StrokeDashArray = myDashArray;
-         //myCanvasMain.Children.Add(aPolyline);
+         Polyline aPolyline = new Polyline();
+         aPolyline.Stroke = myBrushes[myBrushIndex];
+         aPolyline.StrokeThickness = 2;
+         aPolyline.StrokeEndLineCap = PenLineCap.Triangle;
+         aPolyline.Points = aPointCollection;
+         aPolyline.StrokeDashArray = myDashArray;
+         myCanvasMain.Children.Add(aPolyline);
 
          //myMovingRectangle = myRectangles[myBrushIndex];
          //Canvas.SetLeft(myMovingRectangle, mim.MapItem.Location.X);
          //Canvas.SetTop(myMovingRectangle, mim.MapItem.Location.Y);
          //myMovingRectangle.Visibility = Visibility.Visible;
+         return true;
       }
       private void MovePathAnimate(IMapItemMove mim, IMapItems persons)
       {

@@ -190,150 +190,6 @@ namespace PleasantvilleGame
          return true;
       }
       //------------
-      public bool CreateRandomMoves(IGameInstance gi)
-      {
-         gi.RandomMoves.Clear(); 
-         const int numPeopleToMove = 4;
-         int numPeopleMoved = 0;
-         int loopCount = 200;
-         while ((numPeopleMoved < numPeopleToMove) && (0 < loopCount--))
-         {
-            int die1 = Utilities.RandomGenerator.Next(5);
-            int die2 = Utilities.RandomGenerator.Next(6);
-            string name = TableMgr.GetTownspersonName(die1, die2);
-            if (true == String.IsNullOrEmpty(name))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_RandomMoves(): TableMgr.GetTownspersonName() returned null");
-               return false;
-            }
-            //------------------------------------------------------------
-            // If the counter is moved or tied up or known to be alien controlled, do not move.
-            //if ((true == miMoving.IsMoved) || (true == miMoving.IsTiedUp) || (true == miMoving.IsUnconscious) || (true == miMoving.IsKilled))
-            //{
-            //   ++numPeopleSkipped;
-            //   StringBuilder sb = new StringBuilder("Create_RandomMoves(): skipped=");
-            //   sb.Append(numPeopleSkipped.ToString());
-            //   sb.Append(" mi=");
-            //   sb.Append(miMoving.Name);
-            //   sb.Append(" m?=");
-            //   sb.Append(miMoving.IsMoved.ToString());
-            //   sb.Append(" c?=");
-            //   sb.Append(miMoving.IsControlled.ToString());
-            //   sb.Append(" k?=");
-            //   sb.Append(miMoving.IsAlienKnown.ToString());
-            //   sb.Append(" stun?=");
-            //   sb.Append(miMoving.IsStunned.ToString());
-            //   sb.Append(" surr?=");
-            //   sb.Append(miMoving.IsSurrendered.ToString());
-            //   sb.Append(" tu?=");
-            //   sb.Append(miMoving.IsTiedUp.ToString());
-            //   sb.Append(" w?=");
-            //   sb.Append(miMoving.IsWary.ToString());
-            //   sb.Append(" con?=");
-            //   sb.Append(miMoving.IsUnconscious.ToString());
-            //   Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, sb.ToString());
-            //   continue;
-            //}
-            //------------------------------------------------------------
-            die1 = Utilities.RandomGenerator.Next(5);
-            die2 = Utilities.RandomGenerator.Next(6);
-            string fullBuildingName = TableMgr.GetTargetBuildingName(die1, die2); // Find the target building location.
-            if ("ERROR" == fullBuildingName)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_RandomMoves(): GetTargetBuildingName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
-               return false;
-            }
-            //------------------------------------------------------------
-            gi.RandomMoves[name] = fullBuildingName;
-            numPeopleMoved++;
-            //------------------------------------------------------------
-            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_RandomMoves(): moved name=" + name + " numPeopleMoved=" + numPeopleMoved.ToString());
-         }  
-         if (loopCount < 0)
-         {
-            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_RandomMoves(): invalid state loopCount=" + loopCount.ToString());
-            return false;
-         }
-         return true;
-      }
-      public bool PerformMovements(IGameInstance gi, int numPeopleToMove)
-      {
-         int numPeopleSkipped = 0;
-         int numPeopleMoved = 0;
-         int loopCount = 200;
-         while ((numPeopleMoved < numPeopleToMove) && (0 < loopCount--))
-         {
-            int die1 = Utilities.RandomGenerator.Next(5);
-            int die2 = Utilities.RandomGenerator.Next(6);
-            string name = TableMgr.GetTownspersonName(die1, die2);
-            if( true == String.IsNullOrEmpty(name))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_Movements(): TableMgr.GetTownspersonName() returned null");
-               return false;
-            }
-            IMapItem? miMoving = gi.Townspeople.Find(name);
-            if (null == miMoving)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_Movements(): unable to find name=" + name);
-               return false;
-            }
-            //------------------------------------------------------------
-            // If the counter is moved or tied up or known to be alien controlled, do not move.
-            if ((true == miMoving.IsMoved) || (true == miMoving.IsControlled) || (true == miMoving.IsAlienKnown) || (true == miMoving.IsStunned) || (true == miMoving.IsSurrendered) || (true == miMoving.IsTiedUp) || (true == miMoving.IsWary) || (false == miMoving.IsUnconscious))
-            {
-               ++numPeopleSkipped;
-               StringBuilder sb = new StringBuilder("Perform_Movements(): skipped=");
-               sb.Append(numPeopleSkipped.ToString());
-               sb.Append(" mi=");
-               sb.Append(miMoving.Name);
-               sb.Append(" m?=");
-               sb.Append(miMoving.IsMoved.ToString());
-               sb.Append(" c?=");
-               sb.Append(miMoving.IsControlled.ToString());
-               sb.Append(" k?=");
-               sb.Append(miMoving.IsAlienKnown.ToString());
-               sb.Append(" stun?=");
-               sb.Append(miMoving.IsStunned.ToString());
-               sb.Append(" surr?=");
-               sb.Append(miMoving.IsSurrendered.ToString());
-               sb.Append(" tu?=");
-               sb.Append(miMoving.IsTiedUp.ToString());
-               sb.Append(" w?=");
-               sb.Append(miMoving.IsWary.ToString());
-               sb.Append(" con?=");
-               sb.Append(miMoving.IsUnconscious.ToString());
-               Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, sb.ToString());
-               continue;
-            }
-            //------------------------------------------------------------
-            die1 = Utilities.RandomGenerator.Next(5);
-            die2 = Utilities.RandomGenerator.Next(6);
-            string buildingName = TableMgr.GetTargetBuildingName(die1, die2); // Find the target building location.
-            ITerritory? newTerritory = Territories.theTerritories.Find(buildingName);
-            if (null == newTerritory)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_Movement(): newTerritory is null for buildingName=" + buildingName);
-               return false;
-            }
-            //------------------------------------------------------------
-            Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Perform_Movement(): mi=" + miMoving.Name + " entering t=" + newTerritory.Name);
-            if (false == CreateMapItemMove(gi, miMoving, newTerritory))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_Movement(): Create_MapItemMove() returned false");
-               return false;
-            }
-            miMoving.IsMoved = true;
-            //------------------------------------------------------------
-            ++numPeopleMoved;  // Keep track of number of people moved
-            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Perform_Movements(): moved miMoving=" + miMoving.Name + " numPeopleMoved=" + numPeopleMoved.ToString());
-         }  // end while()
-         if( 0 < loopCount )
-         {
-            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Perform_Movements(): invalid state loopCount=" + loopCount.ToString());
-            return false;
-         }
-         return true;
-      }
       public bool PerformMovement(IGameInstance gi, IMapItem mi)
       {
          int die1 = Utilities.RandomGenerator.Next(5);
@@ -347,7 +203,7 @@ namespace PleasantvilleGame
          }
          //-----------------------------------------
          Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Perform_Movement(): mi=" + mi.Name + " entering t=" + newTerritory.Name);
-         if (false == CreateMapItemMove(gi, mi, newTerritory))
+         if (false == CreateMapItemMove(gi, mi, newTerritory, true))
          {
             Logger.Log(LogEnum.LE_ERROR, "Perform_Movement(): Create_MapItemMove() returned false");
             return false;
@@ -355,9 +211,9 @@ namespace PleasantvilleGame
          mi.IsMoved = true;
          return true;
       }
-      protected bool CreateMapItemMove(IGameInstance gi, IMapItem mi, ITerritory newT)
+      protected bool CreateMapItemMove(IGameInstance gi, IMapItem mi, ITerritory newT, bool useRandomShortestPath = false)
       {
-         MapItemMove mim = new MapItemMove(Territories.theTerritories, mi, newT);
+         MapItemMove mim = new MapItemMove(Territories.theTerritories, mi, newT, useRandomShortestPath);
          if (true == mim.CtorError)
          {
             Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): mim.CtorError=true for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
@@ -378,7 +234,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): Invalid State Territories.Count=" + mim.BestPath.Territories.Count.ToString() + " for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
             return false;
          }
-         Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Create_MapItemMove(): mi=" + mi.Name + " moving to t=" + newT.Name);
+         Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Create_MapItemMove(): mi=" + mi.Name + " moving to t=" + newT.ToString());
          gi.MapItemMoves.Insert(0, mim); // add at front
          return true;
       }
@@ -1532,7 +1388,6 @@ namespace PleasantvilleGame
                gi.IsAlienDisplayedRandomMovement = true;
                if (false == gi.IsTownDisplayedRandomMovement)
                {
-                  PerformMovements(gi, 4);
                   gi.NextAction = "Awaiting Townsperson Display Random Movement";
                }
                else
@@ -1545,18 +1400,25 @@ namespace PleasantvilleGame
                break;
             case GameAction.RandomMovementShowTownResult:
                gi.IsTownDisplayedRandomMovement = true;
-               if (false == gi.IsAlienDisplayedRandomMovement)
-               {
-                  PerformMovements(gi, 4);
-                  gi.NextAction = "Awaiting Alien Display Random Movement";
-               }
-               else
-               {
-                  if (true == gi.IsAlienAckedRandomMovement)
-                     gi.NextAction = "Awaiting Townsperson Ack Random Movement";
+               //if (false == gi.IsAlienDisplayedRandomMovement)
+               //{
+                  if( false == PerformMRandomMoves(gi))
+                  {
+                     returnStatus = "Perform_RandomMoves() returned false";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
+                  }
                   else
-                     gi.NextAction = "Ack Random Movement";
-               }
+                  {
+                     gi.NextAction = "Awaiting Alien Display Random Movement";
+                  }
+               //}
+               //else
+               //{
+               //   if (true == gi.IsAlienAckedRandomMovement)
+               //      gi.NextAction = "Awaiting Townsperson Ack Random Movement";
+               //   else
+               //      gi.NextAction = "Ack Random Movement";
+               //}
                break;
             case GameAction.AlienAcksRandomMovement:
                gi.IsAlienAckedRandomMovement = true;
@@ -1696,6 +1558,77 @@ namespace PleasantvilleGame
                   gi.PersonsKnockedOut.Add(mi); // Keep a list of which MapItems start the turn knocked out.
             }
          }
+      }
+      public bool CreateRandomMoves(IGameInstance gi)
+      {
+         gi.RandomMoves.Clear();
+         const int numPeopleToMove = 4;
+         int numPeopleMoved = 0;
+         int loopCount = 200;
+         while ((numPeopleMoved < numPeopleToMove) && (0 < loopCount--))
+         {
+            int die1 = Utilities.RandomGenerator.Next(5);
+            int die2 = Utilities.RandomGenerator.Next(6);
+            string name = TableMgr.GetTownspersonName(die1, die2);
+            if (true == String.IsNullOrEmpty(name))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_RandomMoves(): TableMgr.GetTownspersonName() returned null");
+               return false;
+            }
+            //------------------------------------------------------------
+            die1 = Utilities.RandomGenerator.Next(5);
+            die2 = Utilities.RandomGenerator.Next(6);
+            string fullBuildingName = TableMgr.GetTargetBuildingName(die1, die2); // Find the target building location.
+            if ("ERROR" == fullBuildingName)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_RandomMoves(): GetTargetBuildingName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
+               return false;
+            }
+            //------------------------------------------------------------
+            if (true == gi.RandomMoves.ContainsKey(name))
+            {
+               Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_RandomMoves(): already moved name=" + name + " to building=" + gi.RandomMoves[name]);
+               continue;
+            }
+            gi.RandomMoves[name] = fullBuildingName;
+            numPeopleMoved++;
+            //------------------------------------------------------------
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_RandomMoves(): moved name=" + name + " numPeopleMoved=" + numPeopleMoved.ToString());
+         }
+         if (loopCount < 0)
+         {
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_RandomMoves(): invalid state loopCount=" + loopCount.ToString());
+            return false;
+         }
+         return true;
+      }
+      public bool PerformMRandomMoves(IGameInstance gi)
+      {
+         foreach (KeyValuePair<string, string> kvp in gi.RandomMoves)
+         {
+            string name = kvp.Key;
+            string buildingName = kvp.Value;
+            IMapItem? mi = gi.Townspeople.Find(name);
+            if (null == mi)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMoves(): unable to find name=" + name);
+               return false;
+            }
+            ITerritory? newTerritory = Territories.theTerritories.Find(buildingName);
+            if (null == newTerritory)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMoves(): unable to find buildingName=" + buildingName);
+               return false;
+            }
+            //-----------------------------------------
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Perform_RandomMoves(): mi=" + mi.Name + " entering t=" + newTerritory.Name);
+            if (false == CreateMapItemMove(gi, mi, newTerritory, true))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMoves(): Create_MapItemMove() returned false");
+               return false;
+            }
+         }
+         return true;
       }
    }
    //----------------------------------------------------------------

@@ -178,62 +178,44 @@ namespace PleasantvilleGame
 			Logger.Log(LogEnum.LE_SHOW_MIM_BEST_PATH, "Get_BestPath(): moving from " + startT.Name + " to " + endT.Name + " using " + bestPath.ToString());
 			return bestPath;
 		}
-      private static IMapPath? GetBestPathRandom(IGameInstance gi, ITerritory startT, ITerritory endT)
+      public static IMapPath? GetShortestRandomPath(ITerritories territories, ITerritory startT, ITerritory endT)
       {
-         int minCount = 1000;
-         List<IMapPath> mapPaths = new List<IMapPath>();
-         foreach (string tName in startT.Adjacents)
+         return GetShortestRandomPath(territories, startT, endT, MAX_PATH_COUNT);
+      }
+      public static IMapPath? GetShortestRandomPath(ITerritories territories, ITerritory startT, ITerritory endT, int moveFactor)
+      {
+         string? endPathName = endT.ToString();
+         if (null == endPathName)
          {
-            ITerritory? adjacent = Territories.theTerritories.Find(tName);
-            if (null == adjacent)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Get_BestPathRandom(): adjacent=null for tName=" + tName);
-               return null;
-            }
-            IMapPath? mapPath = Territory.GetBestPath(Territories.theTerritories, adjacent, endT, MAX_PATH_COUNT);
-            if (null == mapPath)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Get_BestPathRandom(): GetBestPath() returned null for startT=" + adjacent.ToString() + " to endt=" + endT.ToString());
-               return null;
-            }
-            if (0 == mapPath.Territories.Count)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Get_BestPathRandom(): mapPath.Territories.Count=0 for startT=" + adjacent.ToString() + " to endt=" + endT.ToString());
-               return null;
-            }
-            if (mapPath.Territories.Count <= minCount)
-				{
-               mapPaths.Add(mapPath);
-               minCount = mapPath.Territories.Count;
-            }
-         }
-			//---------------------------------------------
-			IMapPaths removals = new MapPaths();
-         foreach (IMapPath mp in mapPaths) // remove all paths that are not minimum
-         {
-            if (minCount < mp.Territories.Count)
-               removals.Add(mp);
-         }
-			foreach (IMapPath mp in removals)
-				mapPaths.Remove(mp);
-			if(0 == mapPaths.Count)
-			{
-            Logger.Log(LogEnum.LE_ERROR, "Get_BestPathRandom(): no path found for startT=" + startT.ToString() + " to endt=" + endT.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "Get_ShortestRandomPath(): endPathName=null");
             return null;
          }
-			//---------------------------------------------
-			int randomNum = Utilities.RandomGenerator.Next(mapPaths.Count);
-         return mapPaths[randomNum];
+         if (moveFactor < 1)
+            return new MapPath(endPathName);
+         if (startT.ToString() == endPathName)
+         {
+            IMapPath path = new MapPath(endPathName);
+            path.Territories.Add(endT);
+            return path;
+         }
+         if (false == TryGetRandomShortestPathTerritories(territories, startT, endT, out List<ITerritory>? shortestPathTerritories))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Get_ShortestRandomPath(): unable to find path from " + startT.Name + " to " + endT.Name);
+            return null;
+         }
+         if (null == shortestPathTerritories)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Get_ShortestRandomPath(): shortestPathTerritories=null for startT=" + startT.Name + " endT=" + endT.Name);
+            return null;
+         }
+         IMapPath bestPath = new MapPath(endPathName);
+         bestPath.Metric = shortestPathTerritories.Count;
+         int territoriesToAdd = Math.Min(moveFactor, shortestPathTerritories.Count);
+         for (int i = 0; i < territoriesToAdd; ++i)
+            bestPath.Territories.Add(shortestPathTerritories[i]);
+         Logger.Log(LogEnum.LE_SHOW_MIM_BEST_PATH, "Get_ShortestRandomPath(): moving from " + startT.Name + " to " + endT.Name + " using " + bestPath.ToString());
+         return bestPath;
       }
-      static private double GetDistance(ITerritory startT, ITerritory endT)
-		{
-			Point startPoint = new Point(startT.CenterPoint.X, startT.CenterPoint.Y);
-			Point endPoint = new Point(endT.CenterPoint.X, endT.CenterPoint.Y);
-			double xDelta = endPoint.X - startPoint.X;
-			double yDelta = endPoint.Y - startPoint.Y;
-			double distance = Math.Sqrt(xDelta * xDelta + yDelta * yDelta);
-			return distance;
-		}
 		public static IMapPoint GetRandomPoint(ITerritory t, double offset) // return the top left location of a MapItem, not the center point
 		{
 			if (0 == t.Points.Count)
@@ -315,11 +297,11 @@ namespace PleasantvilleGame
 			Logger.Log(LogEnum.LE_ERROR, "GetRandomPoint(): Cannot find a random point in t.Name=" + t.Name + " rect=" + rect.ToString());
 			return new MapPoint(t.CenterPoint.X - offset, t.CenterPoint.Y - offset);
 		}
-		public static IMapPoint GetClosestPointInTerritory(ITerritory t, Point pCenter, double offset)
+      public static IMapPoint GetClosestPointInTerritoryRegion(ITerritory t, Point pCenter, double offset)
 		{
 			if (0 == t.Points.Count)
 			{
-				Logger.Log(LogEnum.LE_ERROR, "GetRandomPoint(): t.Points.Count=0 for t.Name=" + t.Name);
+				Logger.Log(LogEnum.LE_ERROR, "Get_ClosestPointInTerritoryRegion(): t.Points.Count=0 for t.Name=" + t.Name);
 				return t.CenterPoint;
 			}
 			//---------------------------------
@@ -375,16 +357,43 @@ namespace PleasantvilleGame
 						return new MapPoint(p5.X, p5.Y);
 				}
 			}
-			Logger.Log(LogEnum.LE_ERROR, "GetRandomPoint(): Cannot find a random point in t.Name=" + t.Name);
+			Logger.Log(LogEnum.LE_ERROR, "Get_ClosestPointInTerritoryRegion(): Cannot find a random point in t.Name=" + t.Name);
 			return new MapPoint(t.CenterPoint.X - offset, t.CenterPoint.Y - offset);
-
 		}
-		public static bool IsPointInPolygon(ITerritory t, Point point)
+      public static IMapPoint GetClosestPointFromTerritoryPoints(ITerritory t, Point p, double offset)
+      {
+         if (0 == t.Points.Count)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Get_ClosestPointFromTerritoryPoints(): t.Points.Count=0 for t.Name=" + t.Name);
+            return new MapPoint(t.CenterPoint.X - offset, t.CenterPoint.Y - offset);
+         }
+         //-----------------------------------
+         PointCollection points = new PointCollection();
+         foreach (IMapPoint mp1 in t.Points)
+            points.Add(new System.Windows.Point(mp1.X, mp1.Y));
+         //-----------------------------------
+         double minDistance = double.MaxValue;
+         Point minClosestPoint = new Point(0, 0);
+         for (int i = 0; i < t.Points.Count; i++)
+         {
+            Point start = points[i];
+            Point end = points[(i + 1) % points.Count];           // Loop back to the first point
+            Point closestPoint;
+            double distance = DistanceToSegment(p, start, end, out closestPoint);   // Calculate distance to the edge
+            if (distance < minDistance)
+            {
+               minDistance = distance;
+               minClosestPoint = closestPoint;
+            }
+         }
+         return new MapPoint(minClosestPoint.X - offset, minClosestPoint.Y - offset);
+      }
+      public static bool IsPointInPolygon(ITerritory t, Point point)
 		{
 			if (0 == t.Points.Count)
 			{
-				//Logger.Log(LogEnum.LE_ERROR, "GetClosestPoint(): t.Points.Count=0 for t.Name=" + t.Name);
-				return false;
+            //Logger.Log(LogEnum.LE_ERROR, "Is_PointInPolygon(): t.Points.Count=0 for t.Name=" + t.Name);
+            return false;
 			}
 			int intersections = 0;
 			int count = t.Points.Count;
@@ -402,34 +411,6 @@ namespace PleasantvilleGame
 			}
 			return (intersections % 2) != 0; // Odd number of intersections means the point is inside
 		}
-		public static IMapPoint GetClosestPoint(ITerritory t, Point p, double offset)
-		{
-			if (0 == t.Points.Count)
-			{
-				Logger.Log(LogEnum.LE_ERROR, "GetClosestPoint(): t.Points.Count=0 for t.Name=" + t.Name);
-				return new MapPoint(t.CenterPoint.X - offset, t.CenterPoint.Y - offset);
-			}
-			//-----------------------------------
-			PointCollection points = new PointCollection();
-			foreach (IMapPoint mp1 in t.Points)
-				points.Add(new System.Windows.Point(mp1.X, mp1.Y));
-			//-----------------------------------
-			double minDistance = double.MaxValue;
-			Point minClosestPoint = new Point(0, 0);
-			for (int i = 0; i < t.Points.Count; i++)
-			{
-				Point start = points[i];
-				Point end = points[(i + 1) % points.Count];           // Loop back to the first point
-				Point closestPoint;
-				double distance = DistanceToSegment(p, start, end, out closestPoint);   // Calculate distance to the edge
-				if (distance < minDistance)
-				{
-					minDistance = distance;
-					minClosestPoint = closestPoint;
-				}
-			}
-			return new MapPoint(minClosestPoint.X - offset, minClosestPoint.Y - offset);
-		}
 		private static double DistanceToSegment(Point p, Point a, Point b, out Point closestPoint)
 		{
 			double dx = b.X - a.X;
@@ -441,8 +422,128 @@ namespace PleasantvilleGame
 			Point closest = new Point(a.X + t * dx, a.Y + t * dy); // Find the closest point on the segment                                 
 			return Math.Sqrt(Math.Pow(p.X - closest.X, 2) + Math.Pow(p.Y - closest.Y, 2)); // Return the distance from p to the closest point
 		}
-		//---------------------------------------------------------------
-		public Territory()
+      private static IMapPath? GetBestPathRandom(IGameInstance gi, ITerritory startT, ITerritory endT)
+      {
+         return GetShortestRandomPath(Territories.theTerritories, startT, endT, MAX_PATH_COUNT);
+      }
+      private static bool TryGetRandomShortestPathTerritories(ITerritories territories, ITerritory startT, ITerritory endT, out List<ITerritory>? shortestPathTerritories)
+      {
+         shortestPathTerritories = null;
+         string? startName = startT.ToString();
+         string? endName = endT.ToString();
+         if ((null == startName) || (null == endName))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "TryGet_RandomShortestPathTerritories(): invalid start or end territory name");
+            return false;
+         }
+         Dictionary<string, int> shortestDistanceByTerritory = new Dictionary<string, int>();
+         Dictionary<string, List<ITerritory>> predecessorsByTerritory = new Dictionary<string, List<ITerritory>>();
+         Queue<ITerritory> frontier = new Queue<ITerritory>();
+         frontier.Enqueue(startT);
+         shortestDistanceByTerritory[startName] = 0;
+         int? shortestDistanceToEnd = null;
+         while (0 < frontier.Count)
+         {
+            ITerritory currentTerritory = frontier.Dequeue();
+            string? currentName = currentTerritory.ToString();
+            if (null == currentName)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TryGet_RandomShortestPathTerritories(): currentName=null");
+               return false;
+            }
+            int currentDistance = shortestDistanceByTerritory[currentName];
+            if ((true == shortestDistanceToEnd.HasValue) && (currentDistance >= shortestDistanceToEnd.Value))
+               continue;
+            foreach (string adjacentName in currentTerritory.Adjacents)
+            {
+               ITerritory? adjacentTerritory = territories.Find(adjacentName);
+               if (null == adjacentTerritory)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "TryGet_RandomShortestPathTerritories(): adjacentTerritory=null for adjacentName=" + adjacentName);
+                  return false;
+               }
+               string? adjacentPathName = adjacentTerritory.ToString();
+               if (null == adjacentPathName)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "TryGet_RandomShortestPathTerritories(): adjacentPathName=null for adjacentName=" + adjacentName);
+                  return false;
+               }
+               int nextDistance = currentDistance + 1;
+               if (false == shortestDistanceByTerritory.TryGetValue(adjacentPathName, out int bestKnownDistance))
+               {
+                  shortestDistanceByTerritory[adjacentPathName] = nextDistance;
+                  predecessorsByTerritory[adjacentPathName] = new List<ITerritory>() { currentTerritory };
+                  if ((false == shortestDistanceToEnd.HasValue) || (nextDistance < shortestDistanceToEnd.Value))
+                     frontier.Enqueue(adjacentTerritory);
+               }
+               else if (nextDistance == bestKnownDistance)
+               {
+                  List<ITerritory> predecessors = predecessorsByTerritory[adjacentPathName];
+                  bool isDuplicatePredecessor = false;
+                  foreach (ITerritory predecessor in predecessors)
+                  {
+                     if (predecessor.ToString() == currentName)
+                     {
+                        isDuplicatePredecessor = true;
+                        break;
+                     }
+                  }
+                  if (false == isDuplicatePredecessor)
+                     predecessors.Add(currentTerritory);
+               }
+               if (adjacentPathName == endName)
+               {
+                  if ((false == shortestDistanceToEnd.HasValue) || (nextDistance < shortestDistanceToEnd.Value))
+                     shortestDistanceToEnd = nextDistance;
+               }
+            }
+         }
+         if (false == shortestDistanceByTerritory.ContainsKey(endName))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "TryGet_RandomShortestPathTerritories(): no path found from " + startName + " to " + endName);
+            return false;
+         }
+         List<ITerritory> reversePath = new List<ITerritory>();
+         ITerritory currentPathTerritory = endT;
+         string currentPathName = endName;
+         while (currentPathName != startName)
+         {
+            reversePath.Add(currentPathTerritory);
+            if (false == predecessorsByTerritory.TryGetValue(currentPathName, out List<ITerritory>? predecessors))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TryGet_RandomShortestPathTerritories(): predecessors missing for territory=" + currentPathName);
+               return false;
+            }
+            if (0 == predecessors.Count)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TryGet_RandomShortestPathTerritories(): predecessors.Count=0 for territory=" + currentPathName);
+               return false;
+            }
+            int randomPredecessorIndex = Utilities.RandomGenerator.Next(predecessors.Count);
+            currentPathTerritory = predecessors[randomPredecessorIndex];
+            string? predecessorName = currentPathTerritory.ToString();
+            if (null == predecessorName)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TryGet_RandomShortestPathTerritories(): predecessorName=null");
+               return false;
+            }
+            currentPathName = predecessorName;
+         }
+         reversePath.Reverse();
+         shortestPathTerritories = reversePath;
+         return true;
+      }
+      private static double GetDistance(ITerritory startT, ITerritory endT)
+      {
+         Point startPoint = new Point(startT.CenterPoint.X, startT.CenterPoint.Y);
+         Point endPoint = new Point(endT.CenterPoint.X, endT.CenterPoint.Y);
+         double xDelta = endPoint.X - startPoint.X;
+         double yDelta = endPoint.Y - startPoint.Y;
+         double distance = Math.Sqrt(xDelta * xDelta + yDelta * yDelta);
+         return distance;
+      }
+      //---------------------------------------------------------------
+      public Territory()
 		{
 		}
 		public override string ToString()
