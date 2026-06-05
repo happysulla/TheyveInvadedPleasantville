@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace PleasantvilleGame
 {
-   public class PlayerAlienHuman : PlayerBase, IPlayerAlien
+   public class PlayerAlienHumanServer : PlayerBase, IPlayerAlien
    {
       public ITerritory ZebulonLocation{ set; get; } = new Territory();
       //---------------------------------------------------------------
-      public PlayerAlienHuman() : base(false)
+      public PlayerAlienHumanServer() : base(false)
       {
 
       }
@@ -33,6 +33,19 @@ namespace PleasantvilleGame
          return true;
       }
       public bool GetStartingAlien(IGameInstance gi)
+      {
+         return true;
+      }
+      //---------------------------------------------------------------
+      public override bool CreateRandomMoves(IGameInstance gi)
+      {
+         return true;
+      }
+      public override bool PerformRandomMoves(IGameInstance gi)
+      {
+         return true;
+      }
+      public override bool CreateMapItemMove(IGameInstance gi, IMapItem mi, ITerritory newT, bool useRandomShortestPath = false)
       {
          return true;
       }

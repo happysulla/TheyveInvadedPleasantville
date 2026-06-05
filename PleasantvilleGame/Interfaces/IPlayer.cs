@@ -11,16 +11,22 @@ namespace PleasantvilleGame
       String[] StartingTownspeople { get; set; }
       List<string> BlockedRandomMoves { set; get; } // a townsperson name who is blocked by owner from moving in random movement
       bool IsComputer { set; get; }
+      //------------------------------------------
       bool GetNextState(IGameInstance gi);
+      bool CreateRandomMoves(IGameInstance gi);
+      bool PerformRandomMoves(IGameInstance gi);
+      bool CreateMapItemMove(IGameInstance gi, IMapItem mi, ITerritory newT, bool useRandomShortestPath = false);
    }
    public interface IPlayerTown : IPlayer
    {
       bool GetStartingTownsperson(IGameInstance gi, int die1);
+      bool AlienConfirmedRandomMoves(IGameInstance gi);
    }
    public interface IPlayerAlien : IPlayer
    {
       ITerritory ZebulonLocation{ set; get; }
       bool ChooseStartingHqArea();
       bool GetStartingAlien(IGameInstance gi);
+      bool TownConfirmedRandomMoves(IGameInstance gi);
    }
 }

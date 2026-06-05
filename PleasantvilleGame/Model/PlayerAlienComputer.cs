@@ -41,6 +41,19 @@ namespace PleasantvilleGame
          }
          return true;
       }
+      public override bool CreateRandomMoves(IGameInstance gi)
+      {
+         return true;
+      }
+      public override bool PerformRandomMoves(IGameInstance gi)
+      {
+         return true;
+      }
+      public override bool CreateMapItemMove(IGameInstance gi, IMapItem mi, ITerritory newT, bool useRandomShortestPath = false)
+      {
+         return true;
+      }
+      //---------------------------------------------------------------
       public bool ChooseStartingHqArea()
       {
          return true;
@@ -86,5 +99,21 @@ namespace PleasantvilleGame
             gi.PlayerAlien.StartingTownspeople[1] = startingAlien;
          return true;
       }
+      public bool TownConfirmedRandomMoves(IGameInstance gi)
+      {
+         // Determine if alien wants to block any movement.
+         // If blocking, remove from Random Moves.
+         // If not blocking, make movements one at a time for five counters
+         //  -- need logic to determine which five counters to move.
+         //  -- Do we need to move both aliens
+         //  -- Is townsplayer long ways away
+         //  -- do we need to protect Zebulon
+         // Set next state.
+
+         gi.EventDisplayed = gi.EventActive = "e006";
+
+         return true;
+      }
+
    }
 }

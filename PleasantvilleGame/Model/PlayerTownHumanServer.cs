@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace PleasantvilleGame
 {
-   public class PlayerTownComputer : PlayerBase, IPlayerTown
+   public class PlayerTownHumanServer : PlayerBase, IPlayerTown
    {
-      public PlayerTownComputer() : base(true)
+      public PlayerTownHumanServer() : base(false)
       {
 
       }
@@ -20,12 +20,28 @@ namespace PleasantvilleGame
          {
             case "e003":
                break;
+            case "e005":
+
+               break;
             default:
-               Logger.Log(LogEnum.LE_ERROR, "PlayerTownComputer.GetNextState(): unhandled key=" + key);
+               Logger.Log(LogEnum.LE_ERROR, "PlayerTownHuman.GetNextState(): unhandled key=" + key);
                return false;
          }
          return true;
-      }  
+      }
+      public override bool CreateRandomMoves(IGameInstance gi)
+      {
+         return true;
+      }
+      public override bool PerformRandomMoves(IGameInstance gi)
+      {
+         return true;
+      }
+      public override bool CreateMapItemMove(IGameInstance gi, IMapItem mi, ITerritory newT, bool useRandomShortestPath = false)
+      {
+         return true;
+      }
+      //---------------------------------------------------------------
       public bool GetStartingTownsperson(IGameInstance gi, int die1)
       {
          switch (die1)
@@ -43,16 +59,7 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_SHOW_TOWNS_ADD, "Get_StartingTownsperson(): Added name=" + StartingTownspeople[0]);
          return true;
       }
-      //---------------------------------------------------------------
-      public override bool CreateRandomMoves(IGameInstance gi)
-      {
-         return true;
-      }
-      public override bool PerformRandomMoves(IGameInstance gi)
-      {
-         return true;
-      }
-      public override bool CreateMapItemMove(IGameInstance gi, IMapItem mi, ITerritory newT, bool useRandomShortestPath = false)
+      public bool AlienConfirmedRandomMoves(IGameInstance gi)
       {
          return true;
       }

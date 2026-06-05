@@ -1018,9 +1018,9 @@ namespace PleasantvilleGame
          }
          GameAction outAction = GameAction.Error;
          if( true == GameEngine.theIsAlien )
-            outAction = GameAction.RandomMovementShowAlienResult;
+            outAction = GameAction.RandomMovementAlienConfirmed;
          else
-            outAction = GameAction.RandomMovementShowTownResult;
+            outAction = GameAction.RandomMovementTownConfirmed;
          StringBuilder sb11 = new StringBuilder("     ######ShowRandomMoveResults() :");
          sb11.Append(" p="); sb11.Append(myGameInstance.GamePhase.ToString());
          sb11.Append(" ae="); sb11.Append(myGameInstance.EventActive);

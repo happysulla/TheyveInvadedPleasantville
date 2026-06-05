@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace PleasantvilleGame
 {
-   public class PlayerTownComputer : PlayerBase, IPlayerTown
+   public class PlayerTownHumanClient : PlayerBase, IPlayerTown
    {
-      public PlayerTownComputer() : base(true)
+      public PlayerTownHumanClient() : base(false)
       {
 
       }
@@ -20,12 +20,15 @@ namespace PleasantvilleGame
          {
             case "e003":
                break;
+            case "e005":
+
+               break;
             default:
-               Logger.Log(LogEnum.LE_ERROR, "PlayerTownComputer.GetNextState(): unhandled key=" + key);
+               Logger.Log(LogEnum.LE_ERROR, "PlayerTownHuman.GetNextState(): unhandled key=" + key);
                return false;
          }
          return true;
-      }  
+      }
       public bool GetStartingTownsperson(IGameInstance gi, int die1)
       {
          switch (die1)

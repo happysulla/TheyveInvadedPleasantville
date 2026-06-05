@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PleasantvilleGame
 {
-   public class PlayerTownHuman : PlayerBase, IPlayerTown
+   public class PlayerTownHuman: PlayerBase, IPlayerTown
    {
       public PlayerTownHuman() : base(false)
       {
@@ -20,12 +20,33 @@ namespace PleasantvilleGame
          {
             case "e003":
                break;
+            case "e005":
+
+               break;
             default:
                Logger.Log(LogEnum.LE_ERROR, "PlayerTownHuman.GetNextState(): unhandled key=" + key);
                return false;
          }
          return true;
       }
+      public override bool CreateRandomMoves(IGameInstance gi)
+      {
+         if (false == gi.CreateRandomMoves())
+         {
+            Logger.Log(LogEnum.LE_ERROR, "PlayerTownHuman.CreateRandomMoves(): failed to create random moves");
+            return false;
+         }
+         return true;
+      }
+      public override bool PerformRandomMoves(IGameInstance gi)
+      {
+         return true;
+      }
+      public override bool CreateMapItemMove(IGameInstance gi, IMapItem mi, ITerritory newT, bool useRandomShortestPath = false)
+      {
+         return true;
+      }
+      //---------------------------------------------------------------
       public bool GetStartingTownsperson(IGameInstance gi, int die1)
       {
          switch (die1)
@@ -41,6 +62,10 @@ namespace PleasantvilleGame
                return false;
          }
          Logger.Log(LogEnum.LE_SHOW_TOWNS_ADD, "Get_StartingTownsperson(): Added name=" + StartingTownspeople[0]);
+         return true;
+      }
+      public bool AlienConfirmedRandomMoves(IGameInstance gi)
+      {
          return true;
       }
    }

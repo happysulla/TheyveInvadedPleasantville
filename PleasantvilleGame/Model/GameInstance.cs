@@ -14,8 +14,8 @@ namespace PleasantvilleGame
       private Dictionary<string, int[]> myDieResults = new Dictionary<string, int[]>();
       public Dictionary<string, int[]> DieResults { get => myDieResults; }
       //----------------------------------------------
-      public IPlayerTown PlayerTown { set; get; } = new PlayerTownHuman();
-      public IPlayerAlien PlayerAlien { set; get; } = new PlayerAlienHuman();
+      public IPlayerTown PlayerTown { set; get; } = new PlayerTownHumanServer();
+      public IPlayerAlien PlayerAlien { set; get; } = new PlayerAlienComputer();
       //------------------------------------------------
       public IGameCommands GameCommands { set; get; } = new GameCommands();
       public Options Options { get; set; } = new Options();
@@ -255,6 +255,49 @@ namespace PleasantvilleGame
          if (false == GameStateChecker.IsInfluenceCheck(this))
          {
             Logger.Log(LogEnum.LE_ERROR, "AddTownperson() ERROR - Influence failure for " + mi.Name);
+            return false;
+         }
+         return true;
+      }
+      public bool CreateRandomMoves()
+      {
+         this.RandomMoves.Clear();
+         const int numPeopleToMove = 4;
+         int numPeopleMoved = 0;
+         int loopCount = 200;
+         while ((numPeopleMoved < numPeopleToMove) && (0 < loopCount--))
+         {
+            int die1 = Utilities.RandomGenerator.Next(5);
+            int die2 = Utilities.RandomGenerator.Next(6);
+            string name = TableMgr.GetTownspersonName(die1, die2);
+            if (true == String.IsNullOrEmpty(name))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_RandomMoves(): TableMgr.GetTownspersonName() returned null");
+               return false;
+            }
+            //------------------------------------------------------------
+            die1 = Utilities.RandomGenerator.Next(5);
+            die2 = Utilities.RandomGenerator.Next(6);
+            string fullBuildingName = TableMgr.GetTargetBuildingName(die1, die2); // Find the target building location.
+            if ("ERROR" == fullBuildingName)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_RandomMoves(): GetTargetBuildingName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
+               return false;
+            }
+            //------------------------------------------------------------
+            if (true == this.RandomMoves.ContainsKey(name))
+            {
+               Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_RandomMoves(): already moved name=" + name + " to building=" + this.RandomMoves[name]);
+               continue;
+            }
+            this.RandomMoves[name] = fullBuildingName;
+            numPeopleMoved++;
+            //------------------------------------------------------------
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_RandomMoves(): moved name=" + name + " numPeopleMoved=" + numPeopleMoved.ToString());
+         }
+         if (loopCount < 0)
+         {
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_RandomMoves(): invalid state loopCount=" + loopCount.ToString());
             return false;
          }
          return true;
