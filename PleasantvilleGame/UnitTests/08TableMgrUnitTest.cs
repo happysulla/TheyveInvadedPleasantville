@@ -233,7 +233,7 @@ namespace PleasantvilleGame
          }
          CleanCanvas(gi, myCanvasMain);
          //--------------------------------------------------
-         System.Windows.Application.Current.Shutdown();
+         ++gi.GameTurn;
          return true;
       }
       //--------------------------------------------------------------------
