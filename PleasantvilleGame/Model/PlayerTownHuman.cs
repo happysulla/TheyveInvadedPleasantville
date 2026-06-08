@@ -40,11 +40,13 @@ namespace PleasantvilleGame
       }
       public override bool PerformRandomMoves(IGameInstance gi)
       {
-         return true;
+         Logger.Log(LogEnum.LE_ERROR, "PlayerTownComputer.PerformRandomMoves(): not implemented");
+         return false;
       }
       public override bool CreateMapItemMove(IGameInstance gi, IMapItem mi, ITerritory newT, bool useRandomShortestPath = false)
       {
-         return true;
+         Logger.Log(LogEnum.LE_ERROR, "PlayerTownComputer.CreateMapItemMove(): not implemented");
+         return false;
       }
       //---------------------------------------------------------------
       public bool GetStartingTownsperson(IGameInstance gi, int die1)
@@ -66,7 +68,8 @@ namespace PleasantvilleGame
       }
       public bool AlienConfirmedRandomMoves(IGameInstance gi)
       {
-         return true;
+         Logger.Log(LogEnum.LE_ERROR, "PlayerTownComputer.AlienConfirmedRandomMoves(): not implemented");
+         return false;
       }
    }
 }

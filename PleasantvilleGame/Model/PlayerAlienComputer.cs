@@ -7,13 +7,30 @@ using System.Xml.Linq;
 
 namespace PleasantvilleGame
 {
+   internal enum AlienStrategyEnum
+   {
+      DEFEND_ZEBULON,
+      SURROUND_ZEBULON,
+      FIENT_ZEBULON,
+      KEEP_HIDDEN,
+      ATTACK_TOWNSPEOPLE,
+      MAX_TAKEOVER
+   }
+   internal class Behavior
+   {
+      public AlienStrategyEnum StrategyPrimary { set; get; } = AlienStrategyEnum.KEEP_HIDDEN;
+      public AlienStrategyEnum StrategySecondary { set; get; } = AlienStrategyEnum.MAX_TAKEOVER;
+      public int Risky { set; get; }
+      public int Stealthy { set; get; }
+   }
    public class PlayerAlienComputer : PlayerBase, IPlayerAlien
    {
       public ITerritory ZebulonLocation{ set; get; } = new Territory();
+      private Behavior myBehavior = new Behavior();
       //---------------------------------------------------------------
       public PlayerAlienComputer() : base(true)
       {
-
+         myBehavior.StrategyPrimary = AlienStrategyEnum.KEEP_HIDDEN;
       }
       //===============================================================
       public override bool GetNextState(IGameInstance gi)
@@ -43,20 +60,23 @@ namespace PleasantvilleGame
       }
       public override bool CreateRandomMoves(IGameInstance gi)
       {
-         return true;
+         return true; // Nothing to do for computer except return
       }
       public override bool PerformRandomMoves(IGameInstance gi)
       {
-         return true;
+         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.CreateMapItemMove(): not implemented");
+         return false;
       }
       public override bool CreateMapItemMove(IGameInstance gi, IMapItem mi, ITerritory newT, bool useRandomShortestPath = false)
       {
-         return true;
+         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.CreateMapItemMove(): not implemented");
+         return false;
       }
-      //---------------------------------------------------------------
+      //===============================================================
       public bool ChooseStartingHqArea()
       {
-         return true;
+         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.ChooseStartingHqArea(): not implemented");
+         return false;
       }
       public bool GetStartingAlien(IGameInstance gi)
       {
@@ -102,16 +122,13 @@ namespace PleasantvilleGame
       public bool TownConfirmedRandomMoves(IGameInstance gi)
       {
          // Determine if alien wants to block any movement.
+         // If early in game, do not want to block and expose
+         // If strategy is PROTECT_ZEBULON and exposed, then block
+         // If strategy is to DEFEND_ZEUBLON, block no matter what
+         // If late in game, and winning on influence, maybe block to keep winning position.
+
          // If blocking, remove from Random Moves.
-         // If not blocking, make movements one at a time for five counters
-         //  -- need logic to determine which five counters to move.
-         //  -- Do we need to move both aliens
-         //  -- Is townsplayer long ways away
-         //  -- do we need to protect Zebulon
-         // Set next state.
-
-         gi.EventDisplayed = gi.EventActive = "e006";
-
+         gi.EventDisplayed = gi.EventActive = "e006t";          // Set next state.
          return true;
       }
 

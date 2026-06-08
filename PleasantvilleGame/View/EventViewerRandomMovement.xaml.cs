@@ -56,6 +56,7 @@ namespace PleasantvilleGame
       };
       private GridRow[] myGridRows = new GridRow[4];
       private int myMaxRowCount = 0;
+      private bool myIsPossibleBlock = false;
       //---------------------------------------------------
       private IGameEngine? myGameEngine;
       private IGameInstance? myGameInstance;
@@ -161,6 +162,7 @@ namespace PleasantvilleGame
             return false;
          }
          //--------------------------------------------------
+         myIsPossibleBlock = false;
          myGridRows = new GridRow[4];
          int numPeopleMoved = 0;
          foreach (KeyValuePair<string, string> kvp in myGameInstance.RandomMoves)
@@ -179,6 +181,10 @@ namespace PleasantvilleGame
             }
             myGridRows[numPeopleMoved] = new GridRow(mi, buildingName);
             numPeopleMoved++;
+            if ((false == GameEngine.theIsAlien) && (true == mi.IsControlled))
+               myIsPossibleBlock = true;
+            else if ((true == GameEngine.theIsAlien) && ((true == mi.IsAlienKnown) || (true == mi.IsAlienUnknown)))
+               myIsPossibleBlock = true;
          }
          myMaxRowCount = numPeopleMoved;
          myCallback = callback;
@@ -258,7 +264,11 @@ namespace PleasantvilleGame
       }
       private bool UpdateUserInstructions()
       {
-         //myTextBlockInstructions.Inlines.Clear();
+         myTextBlockInstructions.Inlines.Clear();
+         if( true == myIsPossibleBlock )
+            myTextBlockInstructions.Inlines.Add(new Run("Check the box to block a controlled person from moving. Click the image to continue."));
+         else
+            myTextBlockInstructions.Inlines.Add(new Run("No blocks possible. Click the image to continue."));
          return true;
       }
       private bool UpdateAssignablePanel()

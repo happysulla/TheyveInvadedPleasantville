@@ -12,7 +12,6 @@ namespace PleasantvilleGame
       //---------------------------------------------------------------
       public PlayerAlienHumanServer() : base(false)
       {
-
       }
       //===============================================================
       public override bool GetNextState(IGameInstance gi)
@@ -23,31 +22,41 @@ namespace PleasantvilleGame
             case "e003":
                break;
             default:
-               Logger.Log(LogEnum.LE_ERROR, "PlayerAlienHuman.GetNextState(): unhandled key=" + key);
+               Logger.Log(LogEnum.LE_ERROR, "PlayerAlienHumanServer.GetNextState(): unhandled key=" + key);
                return false;
          }
          return true;
       }
-      public bool ChooseStartingHqArea()
-      {
-         return true;
-      }
-      public bool GetStartingAlien(IGameInstance gi)
-      {
-         return true;
-      }
-      //---------------------------------------------------------------
       public override bool CreateRandomMoves(IGameInstance gi)
       {
-         return true;
+         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienHumanServer.CreateRandomMoves(): not implemented");
+         return false;
       }
       public override bool PerformRandomMoves(IGameInstance gi)
       {
-         return true;
+         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienHumanServer.PerformRandomMoves(): not implemented");
+         return false;
       }
       public override bool CreateMapItemMove(IGameInstance gi, IMapItem mi, ITerritory newT, bool useRandomShortestPath = false)
       {
-         return true;
+         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienHumanServer.CreateMapItemMove(): not implemented");
+         return false;
+      }
+      //===============================================================
+      public bool ChooseStartingHqArea()
+      {
+         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienHumanServer.ChooseStartingHqArea(): not implemented");
+         return false;
+      }
+      public bool GetStartingAlien(IGameInstance gi)
+      {
+         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienHumanServer.GetStartingAlien(): not implemented");
+         return false;
+      }
+      public bool TownConfirmedRandomMoves(IGameInstance gi)
+      {
+         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienHumanServer.TownConfirmedRandomMoves(): not implemented");
+         return false;
       }
    }
 }

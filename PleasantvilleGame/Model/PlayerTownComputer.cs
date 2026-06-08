@@ -25,7 +25,23 @@ namespace PleasantvilleGame
                return false;
          }
          return true;
-      }  
+      }
+      public override bool CreateRandomMoves(IGameInstance gi)
+      {
+         Logger.Log(LogEnum.LE_ERROR, "PlayerTownComputer.CreateRandomMoves(): not implemented");
+         return false;
+      }
+      public override bool PerformRandomMoves(IGameInstance gi)
+      {
+         Logger.Log(LogEnum.LE_ERROR, "PlayerTownComputer.PerformRandomMoves(): not implemented");
+         return false;
+      }
+      public override bool CreateMapItemMove(IGameInstance gi, IMapItem mi, ITerritory newT, bool useRandomShortestPath = false)
+      {
+         Logger.Log(LogEnum.LE_ERROR, "PlayerTownComputer.CreateMapItemMove(): not implemented");
+         return false;
+      }
+      //===============================================================
       public bool GetStartingTownsperson(IGameInstance gi, int die1)
       {
          switch (die1)
@@ -43,18 +59,10 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_SHOW_TOWNS_ADD, "Get_StartingTownsperson(): Added name=" + StartingTownspeople[0]);
          return true;
       }
-      //---------------------------------------------------------------
-      public override bool CreateRandomMoves(IGameInstance gi)
+      public bool AlienConfirmedRandomMoves(IGameInstance gi)
       {
-         return true;
-      }
-      public override bool PerformRandomMoves(IGameInstance gi)
-      {
-         return true;
-      }
-      public override bool CreateMapItemMove(IGameInstance gi, IMapItem mi, ITerritory newT, bool useRandomShortestPath = false)
-      {
-         return true;
+         Logger.Log(LogEnum.LE_ERROR, "PlayerTownComputer.AlienConfirmedRandomMoves(): not implemented"); 
+         return false;
       }
    }
 }

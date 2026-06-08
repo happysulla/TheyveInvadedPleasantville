@@ -23,31 +23,42 @@ namespace PleasantvilleGame
             case "e003":
                break;
             default:
-               Logger.Log(LogEnum.LE_ERROR, "PlayerAlienHuman.GetNextState(): unhandled key=" + key);
+               Logger.Log(LogEnum.LE_ERROR, "PlayerAlienHumanClient.GetNextState(): unhandled key=" + key);
                return false;
          }
-         return true;
-      }
-      public bool ChooseStartingHqArea()
-      {
-         return true;
-      }
-      public bool GetStartingAlien(IGameInstance gi)
-      {
          return true;
       }
       //---------------------------------------------------------------
       public override bool CreateRandomMoves(IGameInstance gi)
       {
-         return true;
+         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienHumanClient.CreateRandomMoves(): not implemented");
+         return false;
       }
       public override bool PerformRandomMoves(IGameInstance gi)
       {
-         return true;
+         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienHumanClient.PerformRandomMoves(): not implemented");
+         return false;
       }
       public override bool CreateMapItemMove(IGameInstance gi, IMapItem mi, ITerritory newT, bool useRandomShortestPath = false)
       {
-         return true;
+         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienHumanClient.CreateMapItemMove(): not implemented");
+         return false;
+      }
+      //===============================================================
+      public bool ChooseStartingHqArea()
+      {
+         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienHumanClient.ChooseStartingHqArea(): not implemented");
+         return false;
+      }
+      public bool GetStartingAlien(IGameInstance gi)
+      {
+         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienHumanClient.GetStartingAlien(): not implemented");
+         return false;
+      }
+      public bool TownConfirmedRandomMoves(IGameInstance gi)
+      {
+         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienHumanClient.TownConfirmedRandomMoves(): not implemented");
+         return false;
       }
    }
 }

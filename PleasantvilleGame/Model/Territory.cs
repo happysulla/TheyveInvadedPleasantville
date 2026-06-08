@@ -54,7 +54,7 @@ namespace PleasantvilleGame
 						return null;
 					}
 					path.Territories.Add(adjT);
-					path.Metric = GetDistance(adjT, endT);
+					path.Metric = GetPixelDistance(adjT, endT);
 					paths.Add(path);
 					adjPaths.Add(path);
 					if (adjTerritoryName == endT.ToString())  // If the adjacent territory is the end territory, no need to continue.  It is the best path.
@@ -91,7 +91,7 @@ namespace PleasantvilleGame
 							if (adj2T.ToString() == endT.ToString()) // If the end territory is reached, no need to continue looking at alternates.
                      {
 								//System.Diagnostics.Debug.WriteLine("     ==> ==>Reached End Territory " + adj2T.ToString() + " for PATH=" + path.ToString());
-								double altDistanceMetric = GetDistance(adj2T, endT); // Calculate the metric between this adjacent territory and the end territory.  If it results in a lower path metric, set it at the low water mark.
+								double altDistanceMetric = GetPixelDistance(adj2T, endT); // Calculate the metric between this adjacent territory and the end territory.  If it results in a lower path metric, set it at the low water mark.
                         altDistanceMetric += path.Metric;
 								if (altDistanceMetric <= lowestMetricScore)
 								{
@@ -127,7 +127,7 @@ namespace PleasantvilleGame
 								continue;
 							}
 							//----------------------------------------
-							double altDistanceMetric2 = GetDistance(adj2T, endT); // Calculate the metric between this adjacent territory and the end territory.  If it results in a lower path metric, set it at the low water mark.
+							double altDistanceMetric2 = GetPixelDistance(adj2T, endT); // Calculate the metric between this adjacent territory and the end territory.  If it results in a lower path metric, set it at the low water mark.
                      altDistanceMetric2 += path.Metric;
 							if (altDistanceMetric2 <= lowestMetricScore)
 							{
@@ -411,7 +411,51 @@ namespace PleasantvilleGame
 			}
 			return (intersections % 2) != 0; // Odd number of intersections means the point is inside
 		}
-		private static double DistanceToSegment(Point p, Point a, Point b, out Point closestPoint)
+      public static List<String>? GetTerritoriesWithinRange(IGameInstance gi, string tName, int range)
+      {
+         List<string> masterList = new List<string>();
+         Queue<string> tQueue = new Queue<string>();
+         Queue<int> depthQueue = new Queue<int>();
+         Dictionary<string, bool> visited = new Dictionary<string, bool>();
+         tQueue.Enqueue(tName);
+         depthQueue.Enqueue(0);
+         visited[tName] = false;
+         masterList.Add(tName);
+         while (0 < tQueue.Count)
+         {
+            String name = tQueue.Dequeue();
+            int depth = depthQueue.Dequeue();
+            if (true == visited[name])
+               continue;
+            if (range <= depth)
+               continue;
+            visited[name] = true;
+            ITerritory? t = Territories.theTerritories.Find(name);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "GetTerritoriesWithinRange(): t=null for " + name);
+               return null;
+            }
+            foreach (string adj in t.Adjacents)
+            {
+               ITerritory? adjT = Territories.theTerritories.Find(adj);
+               if (null == adjT)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GetTerritoriesWithinRange(): adjT=null for " + adj);
+                  return null;
+               }
+               tQueue.Enqueue(adj);
+               depthQueue.Enqueue(depth + 1);
+               if (false == masterList.Contains(adj))
+               {
+                  masterList.Add(adj);
+                  visited[adj] = false;
+               }
+            }
+         }
+         return masterList;
+      }
+      private static double DistanceToSegment(Point p, Point a, Point b, out Point closestPoint)
 		{
 			double dx = b.X - a.X;
 			double dy = b.Y - a.Y;
@@ -533,7 +577,7 @@ namespace PleasantvilleGame
          shortestPathTerritories = reversePath;
          return true;
       }
-      private static double GetDistance(ITerritory startT, ITerritory endT)
+      private static double GetPixelDistance(ITerritory startT, ITerritory endT)
       {
          Point startPoint = new Point(startT.CenterPoint.X, startT.CenterPoint.Y);
          Point endPoint = new Point(endT.CenterPoint.X, endT.CenterPoint.Y);
