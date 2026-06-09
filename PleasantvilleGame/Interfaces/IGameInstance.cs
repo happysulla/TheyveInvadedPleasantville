@@ -11,6 +11,9 @@ namespace PleasantvilleGame
       IPlayerTown PlayerTown { set; get; }
       IPlayerAlien PlayerAlien { set; get; }
       //----------------------------------------------
+      String[] StartingTownspeople { get; set; }
+      List<string> BlockedRandomMoves { set; get; }
+      //----------------------------------------------
       IGameCommands GameCommands { set; get; }
       Options Options { get; set; }
       GameStatistics Statistics { get; set; }
@@ -51,15 +54,15 @@ namespace PleasantvilleGame
       int InfluenceCountAlienKnown { set; get; }
       int NumIterogationsThisTurn { set; get; }
       bool IsAlienStarted { set; get; }
-      bool IsControlledStarted { set; get; }
+      bool IsTownsStarted { set; get; }
       bool IsAlienDisplayedRandomMovement { set; get; }
       bool IsTownDisplayedRandomMovement { set; get; }
       bool IsAlienAckedRandomMovement { set; get; }
-      bool IsControlledAckedRandomMovement { set; get; }
+      bool IsTownsAckedRandomMovement { set; get; }
       bool IsAlienInitiatedCombat { set; get; }
-      bool IsControlledInitiatedCombat { set; get; }
+      bool IsTownsInitiatedCombat { set; get; }
       bool IsAlienCombatCompleted { set; get; }
-      bool IsControlledCombatCompleted { set; get; }
+      bool IsTownsCombatCompleted { set; get; }
       Dictionary<string, string> RandomMoves { set; get; }
       //----------------------------------------------
       List<IUnitTest> UnitTests { get; }

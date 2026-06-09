@@ -98,6 +98,8 @@ namespace PleasantvilleGame
          //-----------------------------------------------------
          if (CommandName == myCommandNames[0])
          {
+            gi.PlayerAlien = new PlayerAlienComputer();
+            gi.PlayerTown = new PlayerTownHuman();
          }
          return true;
       }

@@ -13,7 +13,7 @@ namespace PleasantvilleGame
 
       }
       //===============================================================
-      public override bool GetNextState(IGameInstance gi)
+      public override bool GetNextState(IGameInstance gi, ref GameAction action)
       {
          string key = gi.EventActive;
          switch (key)
@@ -30,27 +30,27 @@ namespace PleasantvilleGame
          return true;
       }
       //---------------------------------------------------------------
-      public bool GetStartingTownsperson(IGameInstance gi, int die1)
+      public bool GetStartingTownCounter(IGameInstance gi, int die1)
       {
          switch (die1)
          {
-            case 1: StartingTownspeople[0] = "BankPresident"; break;
-            case 2: StartingTownspeople[0] = "Doctor"; break;
-            case 3: StartingTownspeople[0] = "Mayor"; break;
-            case 4: StartingTownspeople[0] = "Minister"; break;
-            case 5: StartingTownspeople[0] = "Teacher"; break;
-            case 6: StartingTownspeople[0] = "Sheriff"; break;
+            case 1: gi.StartingTownspeople[0] = "BankPresident"; break;
+            case 2: gi.StartingTownspeople[0] = "Doctor"; break;
+            case 3: gi.StartingTownspeople[0] = "Mayor"; break;
+            case 4: gi.StartingTownspeople[0] = "Minister"; break;
+            case 5: gi.StartingTownspeople[0] = "Teacher"; break;
+            case 6: gi.StartingTownspeople[0] = "Sheriff"; break;
             default:
                Logger.Log(LogEnum.LE_ERROR, "Get_StartingTownsperson(): reached default dieRoll=" + die1.ToString());
                return false;
          }
-         Logger.Log(LogEnum.LE_SHOW_TOWNS_ADD, "Get_StartingTownsperson(): Added name=" + StartingTownspeople[0]);
+         Logger.Log(LogEnum.LE_SHOW_TOWNS_ADD, "Get_StartingTownsperson(): Added name=" + gi.StartingTownspeople[0]);
          return true;
       }
-      public bool AlienConfirmedRandomMoves(IGameInstance gi)
+      public bool BlockRandomMoves(IGameInstance gi)
       {
-         Logger.Log(LogEnum.LE_ERROR, "PlayerTownComputer.AlienConfirmedRandomMoves(): not implemented");
-         return false;
+         gi.IsTownsAckedRandomMovement = true;
+         return true;
       }
    }
 }

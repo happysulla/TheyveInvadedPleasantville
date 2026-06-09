@@ -8,22 +8,22 @@ namespace PleasantvilleGame
 {
    public interface IPlayer
    {
-      String[] StartingTownspeople { get; set; }
-      List<string> BlockedRandomMoves { set; get; } // a townsperson name who is blocked by owner from moving in random movement
       bool IsComputer { set; get; }
       //------------------------------------------
-      bool GetNextState(IGameInstance gi);
+      bool GetNextState(IGameInstance gi, ref GameAction action);
+
    }
    public interface IPlayerTown : IPlayer
    {
-      bool GetStartingTownsperson(IGameInstance gi, int die1);
-      bool AlienConfirmedRandomMoves(IGameInstance gi);
+      bool GetStartingTownCounter(IGameInstance gi, int die1);
+      bool BlockRandomMoves(IGameInstance gi);
    }
    public interface IPlayerAlien : IPlayer
    {
       ITerritory ZebulonLocation{ set; get; }
       abstract bool ChooseStartingHqArea();
+      bool GetStartingAlienCounters(IGameInstance gi);   
+      bool BlockRandomMoves(IGameInstance gi);
 
-      bool TownConfirmedRandomMoves(IGameInstance gi);
    }
 }

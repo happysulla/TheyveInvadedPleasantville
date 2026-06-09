@@ -158,7 +158,7 @@ namespace PleasantvilleGame
          }
          if( 4 != myGameInstance.RandomMoves.Count )
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): invalid state MapItemMovesRandom.Count=" + myGameInstance.RandomMoves.Count.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): invalid state myGameInstance.RandomMoves.Count=" + myGameInstance.RandomMoves.Count.ToString());
             return false;
          }
          //--------------------------------------------------
@@ -244,9 +244,9 @@ namespace PleasantvilleGame
                if (true == gr.myIsBlockedFromMove )
                {
                   if( true == GameEngine.theIsAlien )
-                     myGameInstance.PlayerAlien.BlockedRandomMoves.Add(gr.myMapItem.Name);
+                     myGameInstance.BlockedRandomMoves.Add(gr.myMapItem.Name);
                   else
-                     myGameInstance.PlayerTown.BlockedRandomMoves.Add(gr.myMapItem.Name);
+                     myGameInstance.BlockedRandomMoves.Add(gr.myMapItem.Name);
                }
             }
             if (null == myCallback)

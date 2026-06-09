@@ -288,7 +288,7 @@ namespace PleasantvilleGame
             //   {
             //   }
             //   break;
-            case GameAction.RandomMovementStart:
+            case GameAction.RandomMovementStartTowns:
                EventViewerRandomMovement evRandomMovementMgr = new EventViewerRandomMovement(myGameEngine, myGameInstance, myCanvasMain, myScrollViewerTextBlock, myRulesMgr, myDieRoller);
                if (true == evRandomMovementMgr.CtorError)
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): evRandomMovementMgr.CtorError=true");
@@ -1018,9 +1018,9 @@ namespace PleasantvilleGame
          }
          GameAction outAction = GameAction.Error;
          if( true == GameEngine.theIsAlien )
-            outAction = GameAction.RandomMovementAlienConfirmed;
+            outAction = GameAction.RandomMovementConfirmAlien;
          else
-            outAction = GameAction.RandomMovementTownConfirmed;
+            outAction = GameAction.RandomMovementConfirmTowns;
          StringBuilder sb11 = new StringBuilder("     ######ShowRandomMoveResults() :");
          sb11.Append(" p="); sb11.Append(myGameInstance.GamePhase.ToString());
          sb11.Append(" ae="); sb11.Append(myGameInstance.EventActive);
@@ -1110,7 +1110,7 @@ namespace PleasantvilleGame
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
                         case "Continue005":
-                           action = GameAction.RandomMovementStart;
+                           action = GameAction.RandomMovementStartTowns;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
                         case "ExitGame":

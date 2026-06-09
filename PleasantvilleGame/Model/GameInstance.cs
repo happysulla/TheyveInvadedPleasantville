@@ -14,8 +14,11 @@ namespace PleasantvilleGame
       private Dictionary<string, int[]> myDieResults = new Dictionary<string, int[]>();
       public Dictionary<string, int[]> DieResults { get => myDieResults; }
       //----------------------------------------------
-      public IPlayerTown PlayerTown { set; get; } = new PlayerTownHumanServer();
+      public IPlayerTown PlayerTown { set; get; } = new PlayerTownHuman();
       public IPlayerAlien PlayerAlien { set; get; } = new PlayerAlienComputer();
+      //------------------------------------------------
+      public String[] StartingTownspeople { get; set; } = new String[2];
+      public List<string> BlockedRandomMoves { set; get; } = new List<string>(); // a townsperson name who is blocked by owner from moving in random movement
       //------------------------------------------------
       public IGameCommands GameCommands { set; get; } = new GameCommands();
       public Options Options { get; set; } = new Options();
@@ -58,15 +61,15 @@ namespace PleasantvilleGame
       public int InfluenceCountAlienKnown { set; get; } = 0;
       public int NumIterogationsThisTurn { set; get; } = 0;
       public bool IsAlienStarted { set; get; } = false;
-      public bool IsControlledStarted { set; get; } = false;
+      public bool IsTownsStarted { set; get; } = false;
       public bool IsAlienDisplayedRandomMovement { set; get; } = false;
       public bool IsTownDisplayedRandomMovement { set; get; } = false;
       public bool IsAlienAckedRandomMovement { set; get; } = false;
-      public bool IsControlledAckedRandomMovement { set; get; } = false;
+      public bool IsTownsAckedRandomMovement { set; get; } = false;
       public bool IsAlienInitiatedCombat { set; get; } = false;
-      public bool IsControlledInitiatedCombat { set; get; } = false;
+      public bool IsTownsInitiatedCombat { set; get; } = false;
       public bool IsAlienCombatCompleted { set; get; } = false;
-      public bool IsControlledCombatCompleted { set; get; } = false;
+      public bool IsTownsCombatCompleted { set; get; } = false;
       public Dictionary<string, string> RandomMoves { set; get; } = new Dictionary<string, string>();
       //---------------------------------------------------------------
       [NonSerialized] private List<IUnitTest> myUnitTests = new List<IUnitTest>();

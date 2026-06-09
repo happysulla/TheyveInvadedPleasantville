@@ -513,7 +513,7 @@ namespace PleasantvilleGame
          gi.IsAlienDisplayedRandomMovement = false;
          gi.IsTownDisplayedRandomMovement = false;
          gi.IsAlienAckedRandomMovement = false;
-         gi.IsControlledAckedRandomMovement = false;
+         gi.IsTownsAckedRandomMovement = false;
          gi.Takeover = null;
          //-----------------------------------------------------------
          gi.MapItemCombat.IsAnyRetreat = false;

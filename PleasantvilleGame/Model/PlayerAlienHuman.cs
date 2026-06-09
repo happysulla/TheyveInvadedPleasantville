@@ -15,7 +15,7 @@ namespace PleasantvilleGame
       {
       }
       //===============================================================
-      public override bool GetNextState(IGameInstance gi)
+      public override bool GetNextState(IGameInstance gi, ref GameAction action)
       {
          string key = gi.EventActive;
          switch (key)
@@ -36,9 +36,19 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.ChooseStartingHqArea(): not implemented");
          return false;
       }
-      public bool TownConfirmedRandomMoves(IGameInstance gi)
+      public bool GetStartingAlien(IGameInstance gi)
       {
-         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.TownConfirmedRandomMoves(): not implemented");
+         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.GetStartingAlien(): not implemented");
+         return false;
+      }
+      public bool GetStartingAlienCounters(IGameInstance gi)
+      {
+         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.GetStartingAlienCounters(): not implemented");
+         return false;
+      }
+      public bool BlockRandomMoves(IGameInstance gi)
+      {
+         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.GetStartingAlienCounters(): not implemented");
          return false;
       }
    }
