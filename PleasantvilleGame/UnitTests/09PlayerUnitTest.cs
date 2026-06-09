@@ -112,6 +112,14 @@ namespace PleasantvilleGame
          {
             ++myIndexName;
          }
+         else
+         {
+            if (false == Cleanup(ref gi))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "NextTest(): Cleanup() return falsed");
+               return false;
+            }
+         }
          return true;
       }
       public bool Cleanup(ref IGameInstance gi) // Remove an elipses from the canvas and save off Territories.xml file

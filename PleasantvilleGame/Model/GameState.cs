@@ -190,6 +190,33 @@ namespace PleasantvilleGame
          return true;
       }
       //------------
+      public bool CreateMapItemMove(IGameInstance gi, IMapItem mi, ITerritory newT, bool useRandomShortestPath = false)
+      {
+         MapItemMove mim = new MapItemMove(Territories.theTerritories, mi, newT, useRandomShortestPath);
+         if (true == mim.CtorError)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): mim.CtorError=true for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
+            return false;
+         }
+         if (null == mim.NewTerritory)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): Invalid Parameter mim.NewTerritory=null" + " for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
+            return false;
+         }
+         if (null == mim.BestPath)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): Invalid Parameter mim.BestPath=null" + " for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
+            return false;
+         }
+         if (0 == mim.BestPath.Territories.Count)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): Invalid State Territories.Count=" + mim.BestPath.Territories.Count.ToString() + " for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
+            return false;
+         }
+         Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Create_MapItemMove(): mi=" + mi.Name + " moving to t=" + newT.ToString());
+         gi.MapItemMoves.Insert(0, mim); // add at front
+         return true;
+      }
    }
    //----------------------------------------------------------------
    class GameStateSetup : GameState
@@ -267,9 +294,8 @@ namespace PleasantvilleGame
                      }
                      else
                      {
-                        GameEngine.theIsAlien = true;
-                        GameEngine.theIsComputerOpponent = false;
-                        GameEngine.theIsServer = true;
+                        GameEngine.theIsAlien = false;
+                        GameEngine.theIsHost = true;
                         HostSessionResultDataTranferObject hostResult = GameEngine.theMultiplayerSessionManager.StartHosting(gi, hostDialog.SessionName, hostDialog.Port);
                         if (false == hostResult.IsSuccess || null == hostResult.Session)
                         {
@@ -326,8 +352,7 @@ namespace PleasantvilleGame
                         else
                         {
                            GameEngine.theIsAlien = false;
-                           GameEngine.theIsComputerOpponent = false;
-                           GameEngine.theIsServer = false;
+                           GameEngine.theIsHost = false;
                            if (false == MultiplayerStateApplier.ApplyVisibleState(gi, joinResult.State, MultiplayerRole.Town))
                            {
                               returnStatus = "Failed to apply the visible host state";
@@ -353,7 +378,7 @@ namespace PleasantvilleGame
                break;
             case GameAction.GameSetupPlayAlien:
                GameEngine.theIsAlien = true;
-               gi.PlayerAlien = new PlayerAlienHumanClient();
+               gi.PlayerAlien = new PlayerAlienHuman();
                gi.PlayerTown = new PlayerTownComputer();
                gi.EventActive = gi.EventDisplayed = "e002";
                gi.DieRollAction = GameAction.GameSetupStartingTownsplayerSetRoll;
@@ -401,7 +426,7 @@ namespace PleasantvilleGame
                }
                else
                {
-                  if( false == gi.PlayerAlien.GetStartingAlien(gi))
+                  if( false == GetStartingAlien(gi))
                   {
                      returnStatus = "Get_StartingAlien() returned false";
                      Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(GameSetupStartingAlienSetRoll): " + returnStatus);
@@ -1262,6 +1287,47 @@ namespace PleasantvilleGame
          startingAlien.IsAlienUnknown = true;
          return true;
       }
+      public bool GetStartingAlien(IGameInstance gi)
+      {
+         string startingTownplayer = gi.PlayerTown.StartingTownspeople[0];
+         if (true == String.IsNullOrEmpty(startingTownplayer))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Get_StartingAliens():  gi.PlayerTown.StartingTownspeople[0] is empty");
+            return false;
+         }
+         //---------------------------------
+         string startingAlien = "";
+         int count = 1000;
+         while (0 < count--)
+         {
+            int die1 = Utilities.RandomGenerator.Next(0, 5);
+            int die2 = Utilities.RandomGenerator.Next(0, 6);
+            startingAlien = TableMgr.GetTownspersonName(die1, die2);
+            if ("ERROR" == startingAlien)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Get_StartingAlien(): first TableMgr.GetTownspersonName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
+               return false;
+            }
+            if (startingTownplayer == startingAlien)
+               continue;
+
+            if (gi.PlayerAlien.StartingTownspeople[0] == startingAlien)
+               continue;
+            break;
+         }
+         if (count < 0)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Get_StartingAlien(): never found aliens");
+            return false;
+         }
+         //---------------------------------
+         Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Get_StartingAlien(): Added name=" + startingAlien);
+         if (true == String.IsNullOrEmpty(gi.PlayerAlien.StartingTownspeople[0]))
+            gi.PlayerAlien.StartingTownspeople[0] = startingAlien;
+         else
+            gi.PlayerAlien.StartingTownspeople[1] = startingAlien;
+         return true;
+      }
    }
    //----------------------------------------------------------------
    class GameStateRandomMovement : GameState
@@ -1316,29 +1382,25 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.RandomMovementStart:
-               gi.PersonsStunned.Clear();
-               gi.PersonsKnockedOut.Clear();
-               foreach (Stack stack in gi.Stacks) // At the end of the turn, all stunned units become unstunned. All knocked out people become stunned.
+               if (true == GameEngine.theIsHost)
                {
-                  foreach (MapItem mi in stack.MapItems)
+                  gi.PersonsKnockedOut.Clear();
+                  foreach (Stack stack in gi.Stacks) // At the end of the turn, all stunned units become unstunned. All knocked out people become stunned.
                   {
-                     if (true == mi.IsStunned)
-                        gi.PersonsStunned.Add(mi); // Keep a list of which MapItems are Stunned.
-                     if (false == mi.IsUnconscious)
-                        gi.PersonsKnockedOut.Add(mi); // Keep a list of which MapItems start the turn knocked out.
+                     foreach (MapItem mi in stack.MapItems)
+                     {
+                        if (true == mi.IsStunned)
+                           gi.PersonsStunned.Add(mi); // Keep a list of which MapItems are Stunned.
+                        if (false == mi.IsUnconscious)
+                           gi.PersonsKnockedOut.Add(mi); // Keep a list of which MapItems start the turn knocked out.
+                     }
+                  }
+                  if (false == CreateRandomMoves(gi))
+                  {
+                     returnStatus = "Create_RandomMoves() returned false";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
                   }
                }
-               if (false == gi.PlayerTown.CreateRandomMoves(gi))
-               {
-                  returnStatus = "Create_RandomMoves() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
-               }
-               if (false == gi.PlayerAlien.CreateRandomMoves(gi))
-               {
-                  returnStatus = "Create_RandomMoves() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
-               }
-               //------------------------------------
                break;
             case GameAction.RandomMovementAlienConfirmed:
                break;
@@ -1473,6 +1535,77 @@ namespace PleasantvilleGame
          else
             Logger.Log(LogEnum.LE_ERROR, sb12.ToString());
          return returnStatus;
+      }
+      public bool CreateRandomMoves(IGameInstance gi)
+      {
+         gi.RandomMoves.Clear();
+         const int numPeopleToMove = 4;
+         int numPeopleMoved = 0;
+         int loopCount = 200;
+         while ((numPeopleMoved < numPeopleToMove) && (0 < loopCount--))
+         {
+            int die1 = Utilities.RandomGenerator.Next(5);
+            int die2 = Utilities.RandomGenerator.Next(6);
+            string name = TableMgr.GetTownspersonName(die1, die2);
+            if (true == String.IsNullOrEmpty(name))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_RandomMoves(): TableMgr.GetTownspersonName() returned null");
+               return false;
+            }
+            //------------------------------------------------------------
+            die1 = Utilities.RandomGenerator.Next(5);
+            die2 = Utilities.RandomGenerator.Next(6);
+            string fullBuildingName = TableMgr.GetTargetBuildingName(die1, die2); // Find the target building location.
+            if ("ERROR" == fullBuildingName)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_RandomMoves(): GetTargetBuildingName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
+               return false;
+            }
+            //------------------------------------------------------------
+            if (true == gi.RandomMoves.ContainsKey(name))
+            {
+               Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_RandomMoves(): already moved name=" + name + " to building=" + gi.RandomMoves[name]);
+               continue;
+            }
+            gi.RandomMoves[name] = fullBuildingName;
+            numPeopleMoved++;
+            //------------------------------------------------------------
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_RandomMoves(): moved name=" + name + " numPeopleMoved=" + numPeopleMoved.ToString());
+         }
+         if (loopCount < 0)
+         {
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_RandomMoves(): invalid state loopCount=" + loopCount.ToString());
+            return false;
+         }
+         return true;
+      }
+      public bool PerformRandomMoves(IGameInstance gi)
+      {
+         foreach (KeyValuePair<string, string> kvp in gi.RandomMoves)
+         {
+            string name = kvp.Key;
+            string buildingName = kvp.Value;
+            IMapItem? mi = gi.Townspeople.Find(name);
+            if (null == mi)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMoves(): unable to find name=" + name);
+               return false;
+            }
+            ITerritory? newTerritory = Territories.theTerritories.Find(buildingName);
+            if (null == newTerritory)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMoves(): unable to find buildingName=" + buildingName);
+               return false;
+            }
+            //-----------------------------------------
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Perform_RandomMoves(): mi=" + mi.Name + " entering t=" + newTerritory.Name);
+            if (false == this.CreateMapItemMove(gi, mi, newTerritory, true))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMoves(): Create_MapItemMove() returned false");
+               return false;
+            }
+         }
+         return true;
       }
       public void RecordIncapacitatedPeople(IGameInstance gi)
       {

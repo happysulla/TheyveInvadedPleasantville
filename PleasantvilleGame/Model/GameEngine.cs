@@ -9,8 +9,7 @@ namespace PleasantvilleGame
    {
       public const int MAX_GAME_TYPE = 3;
       static public bool theIsAlien = false;
-      static public bool theIsComputerOpponent = false;
-      static public bool theIsServer = false;
+      static public bool theIsHost = false;
       static public MultiplayerSessionManager? theMultiplayerSessionManager = null;
       static public GameFeats theInGameFeats = new GameFeats();          // feats that change from starting as this session runs
       static public GameFeats theStartingFeats = new GameFeats();  // starting feats read in at app initialization

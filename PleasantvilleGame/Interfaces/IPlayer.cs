@@ -13,9 +13,6 @@ namespace PleasantvilleGame
       bool IsComputer { set; get; }
       //------------------------------------------
       bool GetNextState(IGameInstance gi);
-      bool CreateRandomMoves(IGameInstance gi);
-      bool PerformRandomMoves(IGameInstance gi);
-      bool CreateMapItemMove(IGameInstance gi, IMapItem mi, ITerritory newT, bool useRandomShortestPath = false);
    }
    public interface IPlayerTown : IPlayer
    {
@@ -25,8 +22,8 @@ namespace PleasantvilleGame
    public interface IPlayerAlien : IPlayer
    {
       ITerritory ZebulonLocation{ set; get; }
-      bool ChooseStartingHqArea();
-      bool GetStartingAlien(IGameInstance gi);
+      abstract bool ChooseStartingHqArea();
+
       bool TownConfirmedRandomMoves(IGameInstance gi);
    }
 }

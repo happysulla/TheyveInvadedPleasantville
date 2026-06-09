@@ -29,25 +29,6 @@ namespace PleasantvilleGame
          }
          return true;
       }
-      public override bool CreateRandomMoves(IGameInstance gi)
-      {
-         if (false == gi.CreateRandomMoves())
-         {
-            Logger.Log(LogEnum.LE_ERROR, "PlayerTownHuman.CreateRandomMoves(): failed to create random moves");
-            return false;
-         }
-         return true;
-      }
-      public override bool PerformRandomMoves(IGameInstance gi)
-      {
-         Logger.Log(LogEnum.LE_ERROR, "PlayerTownComputer.PerformRandomMoves(): not implemented");
-         return false;
-      }
-      public override bool CreateMapItemMove(IGameInstance gi, IMapItem mi, ITerritory newT, bool useRandomShortestPath = false)
-      {
-         Logger.Log(LogEnum.LE_ERROR, "PlayerTownComputer.CreateMapItemMove(): not implemented");
-         return false;
-      }
       //---------------------------------------------------------------
       public bool GetStartingTownsperson(IGameInstance gi, int die1)
       {

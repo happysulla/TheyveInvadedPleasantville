@@ -1009,7 +1009,7 @@ namespace PleasantvilleGame
       private void UpdateWindowTitle()
       {
          StringBuilder sb55 = new StringBuilder();
-         if (true == GameEngine.theIsServer)
+         if (true == GameEngine.theIsHost)
             sb55.Append("SERVER: ");
          else
             sb55.Append("CLIENT: ");
