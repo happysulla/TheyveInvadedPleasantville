@@ -1352,7 +1352,7 @@ namespace PleasantvilleGame
                         gi.PersonsKnockedOut.Add(mi); // Keep a list of which MapItems start the turn knocked out.
                   }
                }
-               if (false == CreateRandomMoves(gi))
+               if (false == ChooseRandomMovePeopleAndDest(gi))
                {
                   returnStatus = "Create_RandomMoves() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
@@ -1496,7 +1496,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, sb12.ToString());
          return returnStatus;
       }
-      public bool CreateRandomMoves(IGameInstance gi)
+      public bool ChooseRandomMovePeopleAndDest(IGameInstance gi)
       {
          gi.RandomMoves.Clear();
          const int numPeopleToMove = 4;
@@ -1509,7 +1509,7 @@ namespace PleasantvilleGame
             string name = TableMgr.GetTownspersonName(die1, die2);
             if (true == String.IsNullOrEmpty(name))
             {
-               Logger.Log(LogEnum.LE_ERROR, "Create_RandomMoves(): TableMgr.GetTownspersonName() returned null");
+               Logger.Log(LogEnum.LE_ERROR, "Choose_RandomMovePeopleAndDest(): TableMgr.GetTownspersonName() returned null");
                return false;
             }
             //------------------------------------------------------------
@@ -1518,23 +1518,23 @@ namespace PleasantvilleGame
             string fullBuildingName = TableMgr.GetTargetBuildingName(die1, die2); // Find the target building location.
             if ("ERROR" == fullBuildingName)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Create_RandomMoves(): GetTargetBuildingName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
+               Logger.Log(LogEnum.LE_ERROR, "Choose_RandomMovePeopleAndDest(): GetTargetBuildingName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
                return false;
             }
             //------------------------------------------------------------
             if (true == gi.RandomMoves.ContainsKey(name))
             {
-               Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_RandomMoves(): already moved name=" + name + " to building=" + gi.RandomMoves[name]);
+               Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): already moved name=" + name + " to building=" + gi.RandomMoves[name]);
                continue;
             }
             gi.RandomMoves[name] = fullBuildingName;
             numPeopleMoved++;
             //------------------------------------------------------------
-            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_RandomMoves(): prep moving " + name + " to " + gi.RandomMoves[name] );
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): prep moving " + name + " to " + gi.RandomMoves[name] );
          }
          if (loopCount < 0)
          {
-            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_RandomMoves(): invalid state loopCount=" + loopCount.ToString());
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): invalid state loopCount=" + loopCount.ToString());
             return false;
          }
          return true;

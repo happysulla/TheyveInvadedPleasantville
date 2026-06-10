@@ -67,7 +67,7 @@ namespace PleasantvilleGame
       private bool myIsFlagSetForMoveReset = false;               // Players cannot reset counter when selected
       private bool myIsFlagSetForOverstack = false;               // MapItem cannot move into hex due to overstack
       private bool myIsFlagSetForMaxMove = false;                 // MapItem cannot move into hex due to overstack
-      private bool myIsAlienAbleToStopMove = false;             // The Alien player is allowed to stop Townspeople from moving if in the same hex
+      private bool myIsAlienAbleToStopMove = false;               // The Alien player is allowed to stop Townspeople from moving if in the same hex
       //--------------------------------------------------------------
       private List<Brush> myBrushes = new List<Brush>();
       private int myBrushIndex = 0;
@@ -1064,7 +1064,10 @@ namespace PleasantvilleGame
                myMovingRectangle = null;
                UpdateActionPanelClear();
                if (false == UpdateCanvasMain(gi, action))
+               {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
+                  return;
+               }
                foreach (KeyValuePair<string, string> kvp in myGameInstance.RandomMoves)
                {
                   foreach(Button b in myButtons)
@@ -1090,6 +1093,11 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.RandomMovementConfirmTowns:
+               if( false == UpdateCanvasMovement(gi, action, gi.Stacks, myButtons))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMovement() returned error ");
+                  return;
+               }
                break;
             //   case GameAction.AlienDisplaysRandomMovement:
             //      if (true == GameEngine.theIsAlien)
