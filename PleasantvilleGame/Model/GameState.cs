@@ -1522,15 +1522,19 @@ namespace PleasantvilleGame
                return false;
             }
             //------------------------------------------------------------
-            if (true == gi.RandomMoves.ContainsKey(name))
+            RandomMoveData randomMove = new RandomMoveData(name, fullBuildingName);
+            foreach (RandomMoveData rmd in gi.RandomMoves)
             {
-               Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): already moved name=" + name + " to building=" + gi.RandomMoves[name]);
-               continue;
+               if(rmd.myMapItemName == name) 
+               {
+                  Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): skipping name=" + name + " to building=" + fullBuildingName + " because it is in the RandomMovesData list");
+                  continue;
+               }
             }
-            gi.RandomMoves[name] = fullBuildingName;
+            gi.RandomMoves.Add(randomMove);
             numPeopleMoved++;
             //------------------------------------------------------------
-            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): prep moving " + name + " to " + gi.RandomMoves[name] );
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): prep moving " + name + " to " + fullBuildingName);
          }
          if (loopCount < 0)
          {
@@ -1541,10 +1545,10 @@ namespace PleasantvilleGame
       }
       public bool PerformRandomMoves(IGameInstance gi)
       {
-         foreach (KeyValuePair<string, string> kvp in gi.RandomMoves)
+         foreach (RandomMoveData rmd in gi.RandomMoves)
          {
-            string name = kvp.Key;
-            string buildingName = kvp.Value;
+            string name = rmd.myMapItemName;
+            string buildingName = rmd.myBuildingName;
             IMapItem? mi = gi.Townspeople.Find(name);
             if (null == mi)
             {

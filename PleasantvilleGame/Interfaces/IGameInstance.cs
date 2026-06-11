@@ -3,6 +3,17 @@ using System.Collections.Generic;
 
 namespace PleasantvilleGame
 {
+   public struct RandomMoveData
+   {
+      public string myMapItemName;
+      public string myBuildingName;
+      public int myRectangleIndex;
+      public RandomMoveData(string mapItemName, string buildingName)
+      {
+         myMapItemName = mapItemName;
+         myBuildingName = buildingName;
+      }
+   }
    public interface IGameInstance
    {
       bool CtorError { get; }
@@ -12,7 +23,7 @@ namespace PleasantvilleGame
       IPlayerAlien PlayerAlien { set; get; }
       //----------------------------------------------
       String[] StartingTownspeople { get; set; }
-      List<string> BlockedRandomMoves { set; get; }
+      List<RandomMoveData> RandomMoves { get; set; }
       //----------------------------------------------
       IGameCommands GameCommands { set; get; }
       Options Options { get; set; }
@@ -63,7 +74,6 @@ namespace PleasantvilleGame
       bool IsTownsInitiatedCombat { set; get; }
       bool IsAlienCombatCompleted { set; get; }
       bool IsTownsCombatCompleted { set; get; }
-      Dictionary<string, string> RandomMoves { set; get; }
       //----------------------------------------------
       List<IUnitTest> UnitTests { get; }
       //=========================================================

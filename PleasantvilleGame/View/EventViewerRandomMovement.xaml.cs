@@ -165,18 +165,18 @@ namespace PleasantvilleGame
          myIsPossibleBlock = false;
          myGridRows = new GridRow[4];
          int numPeopleMoved = 0;
-         foreach (KeyValuePair<string, string> kvp in myGameInstance.RandomMoves)
+         foreach (RandomMoveData rmd in myGameInstance.RandomMoves)
          {
-            IMapItem? mi = myGameInstance.Townspeople.Find(kvp.Key);
+            IMapItem? mi = myGameInstance.Townspeople.Find(rmd.myMapItemName);
             if( null == mi)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): unable to find map item for name=" + kvp.Key);
+               Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): unable to find map item for name=" + rmd.myMapItemName);
                return false;
             }
-            string buildingName = GetBuildingName(kvp.Value);
+            string buildingName = GetBuildingName(rmd.myBuildingName);
             if( "ERROR" == buildingName)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): GetBuildingName() returned ERROR for kvp.Value=" + kvp.Value);
+               Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): GetBuildingName() returned ERROR for kvp.Value=" + rmd.myBuildingName);
                return false;
             }
             myGridRows[numPeopleMoved] = new GridRow(mi, buildingName);
@@ -243,10 +243,7 @@ namespace PleasantvilleGame
                }
                if (true == gr.myIsBlockedFromMove )
                {
-                  if( true == GameEngine.theIsAlien )
-                     myGameInstance.BlockedRandomMoves.Add(gr.myMapItem.Name);
-                  else
-                     myGameInstance.BlockedRandomMoves.Add(gr.myMapItem.Name);
+
                }
             }
             if (null == myCallback)

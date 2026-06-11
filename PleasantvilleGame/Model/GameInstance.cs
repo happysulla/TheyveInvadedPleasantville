@@ -18,7 +18,7 @@ namespace PleasantvilleGame
       public IPlayerAlien PlayerAlien { set; get; } = new PlayerAlienComputer();
       //------------------------------------------------
       public String[] StartingTownspeople { get; set; } = new String[2];
-      public List<string> BlockedRandomMoves { set; get; } = new List<string>(); // a townsperson name who is blocked by owner from moving in random movement
+      public List<RandomMoveData> RandomMoves { get; set; } = new List<RandomMoveData>();
       //------------------------------------------------
       public IGameCommands GameCommands { set; get; } = new GameCommands();
       public Options Options { get; set; } = new Options();
@@ -70,7 +70,6 @@ namespace PleasantvilleGame
       public bool IsTownsInitiatedCombat { set; get; } = false;
       public bool IsAlienCombatCompleted { set; get; } = false;
       public bool IsTownsCombatCompleted { set; get; } = false;
-      public Dictionary<string, string> RandomMoves { set; get; } = new Dictionary<string, string>();
       //---------------------------------------------------------------
       [NonSerialized] private List<IUnitTest> myUnitTests = new List<IUnitTest>();
       public List<IUnitTest> UnitTests { get => myUnitTests; }

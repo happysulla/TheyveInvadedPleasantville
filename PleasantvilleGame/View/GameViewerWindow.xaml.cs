@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,6 +37,7 @@ namespace PleasantvilleGame
    {
       //--------------------------------------------------------------
       private const int MAX_RECTANGLES = 6;
+      private const int ANIMATE_TIME_SEC = 10; // For moving mapitems
       private const int ANIMATE_SPEED = 3;
       public bool CtorError { set; get; } = false;
       private static Mutex theSaveSettingsMutex = new Mutex();
@@ -51,8 +53,8 @@ namespace PleasantvilleGame
       private const Double MARQUEE_SCROLL_ANMINATION_TIME = 30.0;
       private const Double ELLIPSE_DIAMETER = 40.0;
       private const Double ELLIPSE_RADIUS = ELLIPSE_DIAMETER / 2.0;
-      private Double theOldXAfterAnimation = 0.0;
-      private Double theOldYAfterAnimation = 0.0;
+      private Double myOldXAfterAnimation = 0.0;
+      private Double myOldYAfterAnimation = 0.0;
       //--------------------------------------------------------------
       private IGameEngine myGameEngine;
       private IGameInstance myGameInstance;
@@ -1068,13 +1070,15 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
-               foreach (KeyValuePair<string, string> kvp in myGameInstance.RandomMoves)
+               int index = 0;
+               foreach (Button b in myButtons)
                {
-                  foreach(Button b in myButtons)
+                  foreach (RandomMoveData rmd in myGameInstance.RandomMoves)
                   {
-                     if( true == b.Name.Contains(kvp.Key))
+                     if( true == b.Name.Contains(rmd.myMapItemName))
                      {
-                        Rectangle r = myRectangles[myBrushIndex];
+                        Rectangle r = myRectangles[index];
+                        index++;
                         r.Width = b.Width+2;
                         r.Height = b.Height+2;
                         r.Visibility = Visibility.Visible;
@@ -1084,9 +1088,6 @@ namespace PleasantvilleGame
                         Canvas.SetLeft(r, left);
                         Canvas.SetTop(r, top);
                         Canvas.SetZIndex(r,9999);
-                        myBrushIndex++;
-                        if (MAX_RECTANGLES <= myBrushIndex)
-                           myBrushIndex = 0;
                         break;
                      }
                   }
@@ -2151,7 +2152,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_SHOW_MIM_MOVING_COUNT, sb1.ToString());
                }
                MovePathDisplay(mim2, count);
-               MovePathAnimate(gi, mim2, myButtons);
+               MovePathAnimate(gi, mim2, myButtons, count);
                mi.TerritoryCurrent = mim2.NewTerritory; // Reset to its final position
                mi.Location = new MapPoint(mi.TerritoryCurrent.CenterPoint.X - Utilities.theMapItemOffset + (counterCount2 * 3), mi.TerritoryCurrent.CenterPoint.Y - Utilities.theMapItemOffset + (counterCount2 * 3));
                if (mi.Movement <= mi.MovementUsed)
@@ -2278,6 +2279,7 @@ namespace PleasantvilleGame
       {
          try
          {
+            int count = 0;
             foreach (IMapItemMove mim in gi.MapItemMoves)
             {
                if (null == mim)
@@ -2291,7 +2293,13 @@ namespace PleasantvilleGame
                   return false;
                }
                IMapItem mi = mim.MapItem;
-               if (false == MovePathAnimate(gi, mim, buttons))
+               if (false == MovePathDisplay(mim, count))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMovement(): MovePathAnimate() returned false t=" + mim.OldTerritory.ToString());
+                  gi.MapItemMoves.Clear();
+                  return false;
+               }
+               if (false == MovePathAnimate(gi, mim, buttons, count))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMovement(): MovePathAnimate() returned false t=" + mim.OldTerritory.ToString());
                   gi.MapItemMoves.Clear();
@@ -2312,6 +2320,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_SHOW_MIM, "UpdateCanvasMovement(): a=" + action.ToString() + " mi=" + mi.Name + " t=" + mi.TerritoryCurrent.Name + "==>" + mim.NewTerritory.Name + " X=" + mi.Location.X.ToString() + " Y=" + mi.Location.Y.ToString() + " " + stacks.ToString());
                mi.TerritoryCurrent = mi.TerritoryStarting = mim.NewTerritory;
                stacks.Add(mi); // add to new stack
+               count++;
             }
          }
          catch (Exception e)
@@ -2320,100 +2329,6 @@ namespace PleasantvilleGame
             return false;
          }
          return true;
-      }
-      private bool MovePathAnimate(IGameInstance gi, IMapItemMove mim, List<Button> buttons)
-      {
-         const int ANIMATE_TIME_SEC = 4;
-         if (null == myGameInstance)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "MovePathAnimate(): myGameInstance=null for n=" + mim.MapItem.Name);
-            return false;
-         }
-         if (null == mim.NewTerritory)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "MovePathAnimate(): mim.NewTerritory=null n=" + mim.MapItem.Name);
-            return false;
-         }
-         Button? b = buttons.Find(mim.MapItem.Name);
-         if (null == b)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "MovePathAnimate(): b=null for mi=" + mim.MapItem.Name + " mim=" + mim.ToString());
-            return false;
-         }
-         try
-         {
-            Canvas.SetZIndex(b, 10000); // Move the button to the top of the Canvas
-            double diffXOld = theOldXAfterAnimation - mim.MapItem.Location.X;
-            double diffYOld = theOldYAfterAnimation - mim.MapItem.Location.Y;
-            double xStart = mim.MapItem.Location.X; // get top left point of MapItem
-            double yStart = mim.MapItem.Location.Y;
-            PathFigure aPathFigure = new PathFigure() { StartPoint = new System.Windows.Point(xStart, yStart) };
-            if (null == mim.BestPath)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "MovePathAnimate(): mim.BestPath=null for mi=" + mim.MapItem.Name);
-               return false;
-            }
-            int lastItemIndex = mim.BestPath.Territories.Count - 1;
-            for (int i = 0; i < lastItemIndex; i++) // add intermediate movement points - not really used in Barbarian Prince as only move one hex at a time
-            {
-               ITerritory t = mim.BestPath.Territories[i];
-               double x = t.CenterPoint.X - Utilities.theMapItemOffset;
-               double y = t.CenterPoint.Y - Utilities.theMapItemOffset;
-               System.Windows.Point newPoint = new System.Windows.Point(x, y);
-               LineSegment lineSegment = new LineSegment(newPoint, false);
-               aPathFigure.Segments.Add(lineSegment);
-            }
-            // Add the last line segment
-            IMapPoint mp = Territory.GetRandomPoint(mim.NewTerritory, mim.MapItem.Zoom * Utilities.theMapItemOffset);
-            if ((Math.Abs(mp.X - xStart) < 2) && (Math.Abs(mp.Y - yStart) < 2)) // if already at final location, skip animation or get runtime exception
-               return true;
-            theOldXAfterAnimation = mp.X;
-            theOldYAfterAnimation = mp.Y;
-            //----------------------------------------------------
-            System.Windows.Point newPoint2 = new System.Windows.Point(mp.X, mp.Y);
-            LineSegment lineSegment2 = new LineSegment(newPoint2, false);
-            aPathFigure.Segments.Add(lineSegment2);
-            // Animiate the map item along the line segment
-            PathGeometry aPathGeo = new PathGeometry();
-            aPathGeo.Figures.Add(aPathFigure);
-            aPathGeo.Freeze();
-            DoubleAnimationUsingPath xAnimiation = new DoubleAnimationUsingPath();
-            xAnimiation.PathGeometry = aPathGeo;
-            xAnimiation.Duration = TimeSpan.FromSeconds(ANIMATE_TIME_SEC);
-            xAnimiation.Source = PathAnimationSource.X;
-            DoubleAnimationUsingPath yAnimiation = new DoubleAnimationUsingPath();
-            yAnimiation.PathGeometry = aPathGeo;
-            yAnimiation.Duration = TimeSpan.FromSeconds(ANIMATE_TIME_SEC);
-            yAnimiation.Source = PathAnimationSource.Y;
-            b.RenderTransform = new TranslateTransform();
-            b.RenderTransformOrigin = new Point(0.5, 0.5);
-            RotateTransform rotateTransform = new RotateTransform();
-            //----------------------------------------------------
-            b.BeginAnimation(Canvas.LeftProperty, xAnimiation);
-            b.BeginAnimation(Canvas.TopProperty, yAnimiation);
-            mim.MapItem.Location.X = mp.X;
-            mim.MapItem.Location.Y = mp.Y;
-            if (true == mim.MapItem.Name.Contains("TaskForce"))
-            {
-               double offset = mim.MapItem.Zoom * Utilities.theMapItemOffset;
-               IMapPoint mpTaskForce = new MapPoint(mim.MapItem.Location.X + offset, mim.MapItem.Location.Y + offset);
-               EnteredHex newHex = new EnteredHex(gi, mim.NewTerritory, ColorActionEnum.CAE_ENTER, mpTaskForce);
-               if (true == newHex.CtorError)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "MovePathAnimate(): newHex.Ctor=true");
-                  return false;
-               }
-               gi.EnteredHexes.Add(newHex);  // Move_PathAnimate()
-            }
-            return true;
-         }
-         catch (Exception e)
-         {
-            b.BeginAnimation(Canvas.LeftProperty, null); // end animation offset
-            b.BeginAnimation(Canvas.TopProperty, null);  // end animation offset
-            Logger.Log(LogEnum.LE_ERROR, "MovePathAnimate():  EXCEPTION THROWN e=\n" + e.ToString());
-            return false;
-         }
       }
       private bool MovePathDisplay(IMapItemMove mim, int mapItemCount)
       {
@@ -2471,6 +2386,85 @@ namespace PleasantvilleGame
          Canvas.SetZIndex(myMovingRectangle, 1000);
          myMovingRectangle.Visibility = Visibility.Visible;
          return true;
+      }
+      private bool MovePathAnimate(IGameInstance gi, IMapItemMove mim, List<Button> buttons, int mapItemCount)
+      {
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MovePathAnimate(): myGameInstance=null for n=" + mim.MapItem.Name);
+            return false;
+         }
+         if (null == mim.NewTerritory)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MovePathAnimate(): mim.NewTerritory=null n=" + mim.MapItem.Name);
+            return false;
+         }
+         Button? b = buttons.Find(mim.MapItem.Name);
+         if (null == b)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MovePathAnimate(): b=null for mi=" + mim.MapItem.Name + " mim=" + mim.ToString());
+            return false;
+         }
+         try
+         {
+            Canvas.SetZIndex(b, 10000); // Move the button to the top of the Canvas
+            double diffXOld = myOldXAfterAnimation - mim.MapItem.Location.X;
+            double diffYOld = myOldYAfterAnimation - mim.MapItem.Location.Y;
+            double xStart = mim.MapItem.Location.X; // get top left point of MapItem
+            double yStart = mim.MapItem.Location.Y;
+            PathFigure aPathFigure = new PathFigure() { StartPoint = new System.Windows.Point(xStart, yStart) };
+            if (null == mim.BestPath)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "MovePathAnimate(): mim.BestPath=null for mi=" + mim.MapItem.Name);
+               return false;
+            }
+            int lastItemIndex = mim.BestPath.Territories.Count - 1;
+            for (int i = 0; i < lastItemIndex; i++) // add intermediate movement points - not really used in Barbarian Prince as only move one hex at a time
+            {
+               ITerritory t = mim.BestPath.Territories[i];
+               double x = t.CenterPoint.X - Utilities.theMapItemOffset;
+               double y = t.CenterPoint.Y - Utilities.theMapItemOffset;
+               System.Windows.Point newPoint = new System.Windows.Point(x, y);
+               LineSegment lineSegment = new LineSegment(newPoint, false);
+               aPathFigure.Segments.Add(lineSegment);
+            }
+            // Add the last line segment
+            IMapPoint mp = Territory.GetRandomPoint(mim.NewTerritory, mim.MapItem.Zoom * Utilities.theMapItemOffset);
+            if ((Math.Abs(mp.X - xStart) < 2) && (Math.Abs(mp.Y - yStart) < 2)) // if already at final location, skip animation or get runtime exception
+               return true;
+            myOldXAfterAnimation = mp.X;
+            myOldYAfterAnimation = mp.Y;
+            //----------------------------------------------------
+            System.Windows.Point newPoint2 = new System.Windows.Point(mp.X, mp.Y);
+            LineSegment lineSegment2 = new LineSegment(newPoint2, false);
+            aPathFigure.Segments.Add(lineSegment2);
+            PathGeometry aPathGeo = new PathGeometry(); // Animiate the map item along the line segment
+            aPathGeo.Figures.Add(aPathFigure);
+            aPathGeo.Freeze();
+            DoubleAnimationUsingPath xAnimiation = new DoubleAnimationUsingPath();
+            xAnimiation.PathGeometry = aPathGeo;
+            xAnimiation.Duration = TimeSpan.FromSeconds(ANIMATE_TIME_SEC);
+            xAnimiation.Source = PathAnimationSource.X;
+            DoubleAnimationUsingPath yAnimiation = new DoubleAnimationUsingPath();
+            yAnimiation.PathGeometry = aPathGeo;
+            yAnimiation.Duration = TimeSpan.FromSeconds(ANIMATE_TIME_SEC);
+            yAnimiation.Source = PathAnimationSource.Y;
+            //----------------------------------------------------
+            b.BeginAnimation(Canvas.LeftProperty, xAnimiation);
+            b.BeginAnimation(Canvas.TopProperty, yAnimiation);
+            myRectangles[mapItemCount].BeginAnimation(Canvas.LeftProperty, xAnimiation);
+            myRectangles[mapItemCount].BeginAnimation(Canvas.TopProperty, yAnimiation);
+            mim.MapItem.Location.X = mp.X;
+            mim.MapItem.Location.Y = mp.Y;
+            return true;
+         }
+         catch (Exception e)
+         {
+            b.BeginAnimation(Canvas.LeftProperty, null); // end animation offset
+            b.BeginAnimation(Canvas.TopProperty, null);  // end animation offset
+            Logger.Log(LogEnum.LE_ERROR, "MovePathAnimate():  EXCEPTION THROWN e=\n" + e.ToString());
+            return false;
+         }
       }
       //-------------HELPER FUNCTIONS---------------------------------
       private bool IsMoveStoppedByAlienBeforeStarted(IGameInstance gi)
