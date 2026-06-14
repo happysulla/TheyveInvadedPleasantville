@@ -103,6 +103,7 @@ namespace PleasantvilleGame
       }
       public bool BlockRandomMoves(IGameInstance gi)
       {
+         gi.IsAlienAckedRandomMovement = true; // computer does not need to see random moves
          // Determine if alien wants to block any movement.
          // If early in game, do not want to block and expose
          // If strategy is PROTECT_ZEBULON and exposed, then block
@@ -110,6 +111,17 @@ namespace PleasantvilleGame
          // If late in game, and winning on influence, maybe block to keep winning position.
          // If blocking, remove from Random Moves.
          gi.EventDisplayed = gi.EventActive = "e006t";          // Set next state.
+         return true;
+      }
+      public bool PerformMovement(IGameInstance gi)
+      {
+         // Choose 5 counters to be random.
+         // Need to get the aliens to comingle with other uncontrolled townspeople
+         // If strategy is FIENT_ZEBULON, move away from ZEBULON
+         // If strategy is MAX_TAKEOVER, get aliens to other uncontrolled locations at all costs
+         // Move aliens to locations that are away from observations
+         // Move aliesn to locations away from controlled townspeople
+         // Move aliens furthest away from other controlled townspeople.
          return true;
       }
    }

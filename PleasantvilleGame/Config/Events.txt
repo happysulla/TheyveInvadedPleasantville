@@ -60,9 +60,11 @@ If a controlled townsperson (either Town or Alien) is selected, the owner has th
 e005a	"<Bold>e005a Awaiting Alien Confirmation of Random Move</Bold> <InlineUIContainer><Button Content='r6.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
 Alien player needs to confirm random moves before continuing."
-e005t	"<Bold>e005t Awaiting Town Confirmation of Random Move</Bold> <InlineUIContainer><Button Content='r6.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+e005t	"<Bold>e005t Confirm Random Move</Bold> <InlineUIContainer><Button Content='r6.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
-Town player needs to confirm random moves before continuing."
+Confirm random moves by clicking image.
+<LineBreak/><LineBreak/>
+                                        <InlineUIContainer><Image Name='Continue005t' Height='100' Width='100'></Image></InlineUIContainer>"
 e006a	"<Bold>e006 Alien Player Movement</Bold> <InlineUIContainer><Button Content='r6.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
 During his or her movement phase, the Alien player may move up to five townsperson counters. However, these townspeople may not be:
@@ -82,7 +84,7 @@ Click image below to continue when done moving all counters.
                                         <InlineUIContainer><Image Name='Continue005' Height='100' Width='100'></Image></InlineUIContainer>"
 e006t	"<Bold>e006t Alien Player Movement</Bold> <InlineUIContainer><Button Content='r6.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
-During his or her movement phase, the Alien player may move up to five townsperson counters. However, these townspeople may not be:
+The Alien player moves up to five townsperson counters. These townspeople may not be:
 <LineBreak/><LineBreak/>
 -- Controlled by Town player per <InlineUIContainer><Button Content='r5.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
 -- Wary per <InlineUIContainer><Button Content='r5.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
@@ -90,10 +92,11 @@ During his or her movement phase, the Alien player may move up to five townspers
 -- Unconscious per <InlineUIContainer><Button Content='Alien Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> or <InlineUIContainer><Button Content='Town Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Tables<LineBreak/>
 -- Stunned per <InlineUIContainer><Button Content='Town Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Tables
 <LineBreak/><LineBreak/>
-In effect, the Alien player is limited to moving up to five counters that are either Alien controlled, skeptical per 
-<InlineUIContainer><Button Content='r7.2.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> 
-or totally uncontrolled. Since you are the Townsplayer, you are waiting for that to happen.
-<LineBreak/><LineBreak/>"
+Can move Alien controlled, skeptical per 
+<InlineUIContainer><Button Content='r7.2.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>, 
+or totally uncontrolled. Click image to continue.
+<LineBreak/><LineBreak/>
+                                        <InlineUIContainer><Image Name='Continue006t' Height='100' Width='100'></Image></InlineUIContainer>"
 e501	"<Bold>e501 Game Won!!!</Bold>
 <LineBreak/><LineBreak/>"
 e502	"<Bold>e502 Game Lost</Bold>

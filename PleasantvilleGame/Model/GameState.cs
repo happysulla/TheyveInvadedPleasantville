@@ -1358,7 +1358,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
                }
                break;
-            case GameAction.RandomMovementConfirmTowns:
+            case GameAction.RandomMovementTownsBlock:
                if( false == gi.PlayerAlien.BlockRandomMoves(gi))
                {
                   returnStatus = "Create_RandomMoves() returned false";
@@ -1430,34 +1430,12 @@ namespace PleasantvilleGame
                   gi.IsAlienAckedRandomMovement = false;
                   gi.IsTownsAckedRandomMovement = false;
                   gi.Takeover = null;
-                  if (null == gi.MapItemCombat)
+                  gi.EventActive = gi.EventDisplayed = "e006t";
+                  gi.DieRollAction = GameAction.DieRollActionNone;
+                  if (false == gi.PlayerAlien.PerformMovement(gi))
                   {
-                     returnStatus = "gi.MapItemCombat is null";
+                     returnStatus = "Perform_Movement() returned false";
                      Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
-                  }
-                  else
-                  {
-                     gi.MapItemCombat.IsAnyRetreat = false;
-                     foreach (IMapItemMove mim in gi.MapItemMoves)
-                     {
-                        IMapItem mi = mim.MapItem;
-                        if (null == mim.NewTerritory)
-                        {
-                           returnStatus = "mim.NewTerritory is null for mi=" + mi.Name;
-                           Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
-                           break;
-                        }
-                        mi.TerritoryCurrent = mim.NewTerritory;
-                        mi.TerritoryStarting = mim.NewTerritory;
-                        mi.IsMoved = false;
-                        mi.MovementUsed = 0;
-                     }
-                     if ("OK" == returnStatus)
-                     {
-                        gi.MapItemMoves.Clear();
-                        gi.NextAction = "Alien Performs Movement";
-                        gi.GamePhase = GamePhase.AlienMovement;
-                     }
                   }
                }
                else
@@ -1522,19 +1500,23 @@ namespace PleasantvilleGame
                return false;
             }
             //------------------------------------------------------------
+            bool isDuplicate = false;
             RandomMoveData randomMove = new RandomMoveData(name, fullBuildingName);
             foreach (RandomMoveData rmd in gi.RandomMoves)
             {
                if(rmd.myMapItemName == name) 
                {
                   Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): skipping name=" + name + " to building=" + fullBuildingName + " because it is in the RandomMovesData list");
-                  continue;
+                  isDuplicate = true;
+                  break;
                }
             }
-            gi.RandomMoves.Add(randomMove);
-            numPeopleMoved++;
-            //------------------------------------------------------------
-            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): prep moving " + name + " to " + fullBuildingName);
+            if( false == isDuplicate)
+            {
+               gi.RandomMoves.Add(randomMove);
+               numPeopleMoved++;
+               Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): prep moving " + name + " to " + fullBuildingName);
+            }
          }
          if (loopCount < 0)
          {

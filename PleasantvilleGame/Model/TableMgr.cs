@@ -24,7 +24,7 @@ namespace PleasantvilleGame
       public const string SHOP = "Machine Shop";
       public const string STATION = "Sheriff Fire Dept";
       public const string HALL = "Town Hall";
-      public const string HOTEL = "Hotel";
+      public const string HOTEL = "Hotel And Restaurant";
       public const string CHURCH = "Church";
       public const string GRAVES = "Graveyard";
       public const string PEN = "Stock Pen";
@@ -39,7 +39,7 @@ namespace PleasantvilleGame
       public const string HOUSE7 = "House 7";
       public const string HOUSE8 = "House 8";
       public const string HOUSEK = "House K";
-      public const string LAWYER = "Lawyer Office";
+      public const string LAWYER = "Lawyers Office";
       //------------------------------------------------
       public const string BANKPRESIDENT = "Bank President";
       public const string DOCTOR = "Doctor";

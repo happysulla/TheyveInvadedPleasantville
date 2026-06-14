@@ -1092,7 +1092,7 @@ namespace PleasantvilleGame
                   }
                }
                break;
-            case GameAction.RandomMovementConfirmTowns:
+            case GameAction.RandomMovementTownsBlock:
                if( false == UpdateCanvasMovement(gi, action, gi.Stacks, myButtons))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMovement() returned error ");
