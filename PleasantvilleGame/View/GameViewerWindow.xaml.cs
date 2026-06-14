@@ -36,6 +36,7 @@ namespace PleasantvilleGame
    public partial class GameViewerWindow : Window, IView
    {
       //--------------------------------------------------------------
+      private const double RO = 1.5;  // rangtanble offset
       private const int MAX_RECTANGLES = 6;
       private const int ANIMATE_TIME_SEC = 10; // For moving mapitems
       private const int ANIMATE_SPEED = 3;
@@ -53,8 +54,6 @@ namespace PleasantvilleGame
       private const Double MARQUEE_SCROLL_ANMINATION_TIME = 30.0;
       private const Double ELLIPSE_DIAMETER = 40.0;
       private const Double ELLIPSE_RADIUS = ELLIPSE_DIAMETER / 2.0;
-      private Double myOldXAfterAnimation = 0.0;
-      private Double myOldYAfterAnimation = 0.0;
       //--------------------------------------------------------------
       private IGameEngine myGameEngine;
       private IGameInstance myGameInstance;
@@ -1083,8 +1082,8 @@ namespace PleasantvilleGame
                         r.Height = b.Height+2;
                         r.Visibility = Visibility.Visible;
                         myCanvasMain.Children.Add(r);
-                        double left = Canvas.GetLeft(b) - 1.0;
-                        double top = Canvas.GetTop(b) - 1.0;
+                        double left = Canvas.GetLeft(b) - RO;
+                        double top = Canvas.GetTop(b) - RO;
                         Canvas.SetLeft(r, left);
                         Canvas.SetTop(r, top);
                         Canvas.SetZIndex(r,9999);
@@ -2089,86 +2088,6 @@ namespace PleasantvilleGame
             }
          }
       }
-      private bool UpdateViewMovement(IGameInstance gi)
-      {
-         try
-         {
-            foreach (IMapItemMove mim in gi.MapItemMoves)  // First return the counter and button back to its original position
-            {
-               IMapItem mi = mim.MapItem;
-               int counterCount1 = 0;
-               foreach (IMapItem mi1 in gi.Townspeople)
-               {
-                  if ((mi1.TerritoryCurrent.Name == mi.TerritoryStarting.Name) && (mi1.TerritoryCurrent.Subname == mi.TerritoryStarting.Subname))
-                     ++counterCount1;
-               }
-               mi.TerritoryCurrent = mi.TerritoryStarting;
-               mi.Location = new MapPoint(mi.TerritoryCurrent.CenterPoint.X - Utilities.theMapItemOffset + (counterCount1 * 3), mi.TerritoryCurrent.CenterPoint.Y - Utilities.theMapItemOffset + (counterCount1 * 3));
-               Button? b = myButtons.Find(mi.Name);
-               if (null != b)
-               {
-                  MapItem.SetButtonContent(b, mi, GameEngine.theIsAlien);
-                  b.BeginAnimation(Canvas.LeftProperty, null); // end animation offset
-                  b.BeginAnimation(Canvas.TopProperty, null);  // end animation offset
-                  Canvas.SetLeft(b, mi.Location.X);
-                  Canvas.SetTop(b, mi.Location.Y);
-                  Canvas.SetZIndex(b, counterCount1);
-               }
-            }
-            //-----------------------------------------------
-            int count = 0;
-            foreach (IMapItemMove mim2 in gi.MapItemMoves) // Move it 
-            {
-               if (null == mim2.NewTerritory)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateViewMovement() mim2.NewTerritory is null");
-                  return false;
-               }
-               IMapItem mi = mim2.MapItem;
-               int counterCount2 = 0;
-               foreach (IMapItem mi2 in gi.Townspeople)
-               {
-                  if ((mi2.TerritoryCurrent.Name == mim2.NewTerritory.Name) && (mi2.TerritoryCurrent.Subname == mim2.NewTerritory.Subname))
-                     ++counterCount2;
-               }
-               //-----------------------------------------------
-               IMapItem? alreadyMovedMapItem = myMovingMapItems.Find(mi.Name);
-               if (null == alreadyMovedMapItem)
-               {
-                  ++myBrushIndex;                       // Update_ViewMovement()
-                  if (MAX_RECTANGLES <= myBrushIndex)  // Update_ViewMovement()
-                     myBrushIndex = 0;                  // Update_ViewMovement()
-                  myMovingMapItems.Add(mi);           
-                  myIsFlagSetForAlienMoveCountExceeded = false;
-                  myIsFlagSetForMoveReset = false;
-                  myIsFlagSetForOverstack = false;
-                  myIsFlagSetForMaxMove = false;
-                  StringBuilder sb1 = new StringBuilder("UpdateViewMovement():");
-                  if (true == GameEngine.theIsAlien)
-                     sb1.Append(" ALIEN sees moving ");
-                  else
-                     sb1.Append("  TP sees moving ");
-                  sb1.Append(mi.Name);
-                  Logger.Log(LogEnum.LE_SHOW_MIM_MOVING_COUNT, sb1.ToString());
-               }
-               MovePathDisplay(mim2, count);
-               MovePathAnimate(gi, mim2, myButtons, count);
-               mi.TerritoryCurrent = mim2.NewTerritory; // Reset to its final position
-               mi.Location = new MapPoint(mi.TerritoryCurrent.CenterPoint.X - Utilities.theMapItemOffset + (counterCount2 * 3), mi.TerritoryCurrent.CenterPoint.Y - Utilities.theMapItemOffset + (counterCount2 * 3));
-               if (mi.Movement <= mi.MovementUsed)
-               {
-                  myMovingButton = null;
-                  myRectangleSelection.Visibility = Visibility.Hidden;
-               }
-            }
-         }
-         catch (Exception e)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "UpdateViewMovement:  EXCEPTION THROWN e=\n{0}" + e.ToString());
-            return false;
-         }
-         return true;
-      }
       private void UpdateViewState(IGameInstance gi)
       {
          myStoryboard = null;  // turn off flashing
@@ -2292,34 +2211,35 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMovement(): mim.OldTerritory=null");
                   return false;
                }
-               IMapItem mi = mim.MapItem;
-               if (false == MovePathDisplay(mim, count))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMovement(): MovePathAnimate() returned false t=" + mim.OldTerritory.ToString());
-                  gi.MapItemMoves.Clear();
-                  return false;
-               }
-               if (false == MovePathAnimate(gi, mim, buttons, count))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMovement(): MovePathAnimate() returned false t=" + mim.OldTerritory.ToString());
-                  gi.MapItemMoves.Clear();
-                  return false;
-               }
-               if (null == mim)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMovement(): mim2=null");
-                  return false;
-               }
                if (null == mim.NewTerritory)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMovement(): mim2.NewTerritory=null");
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMovement(): mim.NewTerritory=null");
+                  return false;
+               }
+               IMapPoint endPoint = Territory.GetRandomPoint(mim.NewTerritory, mim.MapItem.Zoom * Utilities.theMapItemOffset);
+               if (false == MovePathDisplay(mim, count, endPoint))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMovement(): MovePathAnimate() returned false t=" + mim.OldTerritory.ToString());
+                  gi.MapItemMoves.Clear();
+                  return false;
+               }
+               if (false == MovePathAnimate(gi, mim, buttons, count, endPoint))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMovement(): MovePathAnimate() returned false t=" + mim.OldTerritory.ToString());
+                  gi.MapItemMoves.Clear();
                   return false;
                }
                //------------------------------------------
-               stacks.Remove(mi); // remove from existing stack
-               Logger.Log(LogEnum.LE_SHOW_MIM, "UpdateCanvasMovement(): a=" + action.ToString() + " mi=" + mi.Name + " t=" + mi.TerritoryCurrent.Name + "==>" + mim.NewTerritory.Name + " X=" + mi.Location.X.ToString() + " Y=" + mi.Location.Y.ToString() + " " + stacks.ToString());
-               mi.TerritoryCurrent = mi.TerritoryStarting = mim.NewTerritory;
-               stacks.Add(mi); // add to new stack
+               myMovingRectangle = myRectangles[myBrushIndex];
+               if (myRectangles.Count <= ++myBrushIndex)
+                  myBrushIndex = 0;
+               //------------------------------------------
+               stacks.Remove(mim.MapItem); // remove from existing stack
+               Logger.Log(LogEnum.LE_SHOW_MIM, "UpdateCanvasMovement(): a=" + action.ToString() + " mi=" + mim.MapItem.Name + " t=" + mim.MapItem.TerritoryCurrent.Name + "==>" + mim.NewTerritory.Name + " X=" + mim.MapItem.Location.X.ToString() + " Y=" + mim.MapItem.Location.Y.ToString() + " " + stacks.ToString());
+               mim.MapItem.TerritoryCurrent = mim.MapItem.TerritoryStarting = mim.NewTerritory;
+               mim.MapItem.Location.X = endPoint.X;
+               mim.MapItem.Location.Y = endPoint.Y;
+               stacks.Add(mim.MapItem); // add to new stack
                count++;
             }
          }
@@ -2330,7 +2250,7 @@ namespace PleasantvilleGame
          }
          return true;
       }
-      private bool MovePathDisplay(IMapItemMove mim, int mapItemCount)
+      private bool MovePathDisplay(IMapItemMove mim, int mapItemCount, IMapPoint endPoint)
       {
          if (null == mim.OldTerritory)
          {
@@ -2362,13 +2282,19 @@ namespace PleasantvilleGame
          double yPostion = mim.OldTerritory.CenterPoint.Y + offset;
          System.Windows.Point newPoint = new System.Windows.Point(xPostion, yPostion);
          aPointCollection.Add(newPoint);
-         foreach (ITerritory t in mim.BestPath.Territories)
+         int lastItemIndex = mim.BestPath.Territories.Count - 1;
+         for (int i = 0; i < lastItemIndex; i++)
          {
+            ITerritory t = mim.BestPath.Territories[i];
             xPostion = t.CenterPoint.X + offset;
             yPostion = t.CenterPoint.Y + offset;
             newPoint = new System.Windows.Point(xPostion, yPostion);
             aPointCollection.Add(newPoint);
          }
+         //-----------------------------------------
+         double centerPointOfMapItem = offset - 1.0 + mim.MapItem.Zoom * Utilities.theMapItemOffset;
+         System.Windows.Point lastPointMapItem = new System.Windows.Point(endPoint.X + centerPointOfMapItem, endPoint.Y + centerPointOfMapItem);
+         aPointCollection.Add(lastPointMapItem);
          //-----------------------------------------
          Polyline aPolyline = new Polyline();
          aPolyline.Stroke = myBrushes[myBrushIndex];
@@ -2377,17 +2303,9 @@ namespace PleasantvilleGame
          aPolyline.Points = aPointCollection;
          aPolyline.StrokeDashArray = myDashArray;
          myCanvasMain.Children.Add(aPolyline);
-         //-----------------------------------------
-         myMovingRectangle = myRectangles[myBrushIndex];
-         if (myRectangles.Count <= ++myBrushIndex)
-            myBrushIndex = 0;
-         Canvas.SetLeft(myMovingRectangle, mim.MapItem.Location.X);
-         Canvas.SetTop(myMovingRectangle, mim.MapItem.Location.Y);
-         Canvas.SetZIndex(myMovingRectangle, 1000);
-         myMovingRectangle.Visibility = Visibility.Visible;
          return true;
       }
-      private bool MovePathAnimate(IGameInstance gi, IMapItemMove mim, List<Button> buttons, int mapItemCount)
+      private bool MovePathAnimate(IGameInstance gi, IMapItemMove mim, List<Button> buttons, int mapItemCount, IMapPoint endPoint)
       {
          if (null == myGameInstance)
          {
@@ -2399,6 +2317,11 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "MovePathAnimate(): mim.NewTerritory=null n=" + mim.MapItem.Name);
             return false;
          }
+         if (null == mim.BestPath)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MovePathAnimate(): mim.BestPath=null for mi=" + mim.MapItem.Name);
+            return false;
+         }
          Button? b = buttons.Find(mim.MapItem.Name);
          if (null == b)
          {
@@ -2407,39 +2330,41 @@ namespace PleasantvilleGame
          }
          try
          {
+
             Canvas.SetZIndex(b, 10000); // Move the button to the top of the Canvas
-            double diffXOld = myOldXAfterAnimation - mim.MapItem.Location.X;
-            double diffYOld = myOldYAfterAnimation - mim.MapItem.Location.Y;
+            Canvas.SetZIndex(myRectangles[mapItemCount], 10001); // Move the rectangle one higher
             double xStart = mim.MapItem.Location.X; // get top left point of MapItem
             double yStart = mim.MapItem.Location.Y;
-            PathFigure aPathFigure = new PathFigure() { StartPoint = new System.Windows.Point(xStart, yStart) };
-            if (null == mim.BestPath)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "MovePathAnimate(): mim.BestPath=null for mi=" + mim.MapItem.Name);
-               return false;
-            }
             int lastItemIndex = mim.BestPath.Territories.Count - 1;
+            PathFigure aPathFigureMapItem = new PathFigure() { StartPoint = new System.Windows.Point(xStart, yStart) };
+            PathFigure aPathFigureRectangle = new PathFigure() { StartPoint = new System.Windows.Point(xStart - RO, yStart - RO) };
             for (int i = 0; i < lastItemIndex; i++) // add intermediate movement points - not really used in Barbarian Prince as only move one hex at a time
             {
                ITerritory t = mim.BestPath.Territories[i];
                double x = t.CenterPoint.X - Utilities.theMapItemOffset;
                double y = t.CenterPoint.Y - Utilities.theMapItemOffset;
-               System.Windows.Point newPoint = new System.Windows.Point(x, y);
-               LineSegment lineSegment = new LineSegment(newPoint, false);
-               aPathFigure.Segments.Add(lineSegment);
+               System.Windows.Point newPointMapItem = new System.Windows.Point(x, y);
+               LineSegment lineSegmentMapItem = new LineSegment(newPointMapItem, false);
+               aPathFigureMapItem.Segments.Add(lineSegmentMapItem);
+               //--------------------------------------
+               System.Windows.Point newPointRectnagle = new System.Windows.Point(x - RO, y - RO);
+               LineSegment lineSegmentRectangle = new LineSegment(newPointRectnagle, false);
+               aPathFigureRectangle.Segments.Add(lineSegmentRectangle);
             }
             // Add the last line segment
-            IMapPoint mp = Territory.GetRandomPoint(mim.NewTerritory, mim.MapItem.Zoom * Utilities.theMapItemOffset);
-            if ((Math.Abs(mp.X - xStart) < 2) && (Math.Abs(mp.Y - yStart) < 2)) // if already at final location, skip animation or get runtime exception
+            if ((Math.Abs(endPoint.X - xStart) < 2) && (Math.Abs(endPoint.Y - yStart) < 2)) // if already at final location, skip animation or get runtime exception
                return true;
-            myOldXAfterAnimation = mp.X;
-            myOldYAfterAnimation = mp.Y;
             //----------------------------------------------------
-            System.Windows.Point newPoint2 = new System.Windows.Point(mp.X, mp.Y);
-            LineSegment lineSegment2 = new LineSegment(newPoint2, false);
-            aPathFigure.Segments.Add(lineSegment2);
+            System.Windows.Point lastPointMapItem = new System.Windows.Point(endPoint.X, endPoint.Y);
+            LineSegment lastLineSegmentMapItem = new LineSegment(lastPointMapItem, false);
+            aPathFigureMapItem.Segments.Add(lastLineSegmentMapItem);
+            //----------------------------------------------------
+            System.Windows.Point lastPointRectangle = new System.Windows.Point(endPoint.X-1.5, endPoint.Y-1.5);
+            LineSegment lastLineSegmenRectangle = new LineSegment(lastPointMapItem, false);
+            aPathFigureRectangle.Segments.Add(lastLineSegmenRectangle);
+            //----------------------------------------------------
             PathGeometry aPathGeo = new PathGeometry(); // Animiate the map item along the line segment
-            aPathGeo.Figures.Add(aPathFigure);
+            aPathGeo.Figures.Add(aPathFigureMapItem);
             aPathGeo.Freeze();
             DoubleAnimationUsingPath xAnimiation = new DoubleAnimationUsingPath();
             xAnimiation.PathGeometry = aPathGeo;
@@ -2449,13 +2374,23 @@ namespace PleasantvilleGame
             yAnimiation.PathGeometry = aPathGeo;
             yAnimiation.Duration = TimeSpan.FromSeconds(ANIMATE_TIME_SEC);
             yAnimiation.Source = PathAnimationSource.Y;
-            //----------------------------------------------------
             b.BeginAnimation(Canvas.LeftProperty, xAnimiation);
             b.BeginAnimation(Canvas.TopProperty, yAnimiation);
-            myRectangles[mapItemCount].BeginAnimation(Canvas.LeftProperty, xAnimiation);
-            myRectangles[mapItemCount].BeginAnimation(Canvas.TopProperty, yAnimiation);
-            mim.MapItem.Location.X = mp.X;
-            mim.MapItem.Location.Y = mp.Y;
+            //----------------------------------------------------
+            PathGeometry aPathGeoRectangle = new PathGeometry(); // Animiate the map item along the line segment
+            aPathGeoRectangle.Figures.Add(aPathFigureRectangle);
+            aPathGeoRectangle.Freeze();
+            DoubleAnimationUsingPath xAnimiationR = new DoubleAnimationUsingPath();
+            xAnimiationR.PathGeometry = aPathGeoRectangle;
+            xAnimiationR.Duration = TimeSpan.FromSeconds(ANIMATE_TIME_SEC);
+            xAnimiationR.Source = PathAnimationSource.X;
+            DoubleAnimationUsingPath yAnimiationR = new DoubleAnimationUsingPath();
+            yAnimiationR.PathGeometry = aPathGeoRectangle;
+            yAnimiationR.Duration = TimeSpan.FromSeconds(ANIMATE_TIME_SEC);
+            yAnimiationR.Source = PathAnimationSource.Y;
+            myRectangles[mapItemCount].BeginAnimation(Canvas.LeftProperty, xAnimiationR);
+            myRectangles[mapItemCount].BeginAnimation(Canvas.TopProperty, yAnimiationR);
+            //----------------------------------------------------
             return true;
          }
          catch (Exception e)
@@ -3447,8 +3382,8 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "PerformCombatRetreat() gi.MapItemCombat=null");
             return;
          }
-         if (null != gi.MapItemCombat.Territory)
-            UpdateViewMovement(gi); // Show retreats
+         //if (null != gi.MapItemCombat.Territory)
+         //   UpdateViewMovement(gi); // Show retreats
          UpdateViewState(gi);
          myIsCombatInitiatedForTownsperson = false;
          StringBuilder sb1 = new StringBuilder("UpdateView():TownspersonPerformCombat: "); 
