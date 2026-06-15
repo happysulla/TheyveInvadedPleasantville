@@ -70,7 +70,7 @@
 					<Run Text='Inside Building'></Run>
 				</Paragraph>
 			</TableCell>
-			<TableCell BorderBrush='Black' BorderThickness='1'>
+			<TableCell BorderBrush='Black' BorderThickness='1' Background='BurlyWood'>
 				<Paragraph>
 					<Run Text='Same Space'></Run>
 				</Paragraph>

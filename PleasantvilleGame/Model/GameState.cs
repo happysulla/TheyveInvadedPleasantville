@@ -1424,7 +1424,6 @@ namespace PleasantvilleGame
                gi.IsTownsAckedRandomMovement = true;
                if (true == gi.IsAlienAckedRandomMovement)
                {
-
                   gi.IsAlienDisplayedRandomMovement = false;
                   gi.IsTownDisplayedRandomMovement = false;
                   gi.IsAlienAckedRandomMovement = false;
@@ -1432,9 +1431,10 @@ namespace PleasantvilleGame
                   gi.Takeover = null;
                   gi.EventActive = gi.EventDisplayed = "e006t";
                   gi.DieRollAction = GameAction.DieRollActionNone;
-                  if (false == gi.PlayerAlien.PerformMovement(gi))
+                  gi.GamePhase = GamePhase.AlienMovement;
+                  if (false == gi.PlayerAlien.PerformAlienMoves(gi))
                   {
-                     returnStatus = "Perform_Movement() returned false";
+                     returnStatus = "Perform_AlienMoves() returned false";
                      Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
                   }
                }

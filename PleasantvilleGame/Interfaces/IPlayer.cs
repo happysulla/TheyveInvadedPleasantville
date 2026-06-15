@@ -24,7 +24,6 @@ namespace PleasantvilleGame
       abstract bool ChooseStartingHqArea();
       bool GetStartingAlienCounters(IGameInstance gi);   
       bool BlockRandomMoves(IGameInstance gi);
-      bool PerformMovement(IGameInstance gi);   
-
+      bool PerformAlienMoves(IGameInstance gi);
    }
 }

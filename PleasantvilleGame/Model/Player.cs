@@ -21,34 +21,47 @@ namespace PleasantvilleGame
          return false;
       }
       //--------------------------------------------------------------
+      public virtual IMapItems? GetMapItemsWithinRange(IGameInstance gi, string tName, int range)
+      {
+         List<string>? tNames = Territory.GetTerritoriesWithinRange(gi, tName, range);
+         if (null == tNames)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): tNames=null for anchorT=" + tName);
+            return null;
+         }
+         IMapItems mapItems = new MapItems();
+         foreach (string territoryName in tNames)
+         {
+            IStack? stack = gi.Stacks.Find(territoryName);
+            if (null == stack)
+               continue;
+            foreach (IMapItem mapItem in stack.MapItems)
+               mapItems.Add(mapItem);
+         }
+         return mapItems;
+      }
       public virtual IMapItems? GetUncontrolledWithinRange(IGameInstance gi, string anchorName, int range, bool isUnknownAlso)
       {
          IMapItems mapItems = new MapItems();
-         List<String>? tNames = Territory.GetTerritoriesWithinRange(gi, anchorName, range);
-         if (null == tNames)
+         IMapItems? mapItemsInRange = GetMapItemsWithinRange(gi, anchorName, range);
+         if (null == mapItemsInRange)
          {
-            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): strings=null for anchorT=" + anchorName);
+            Logger.Log(LogEnum.LE_ERROR, "GetUncontrolledWithinRange(): mapItemsInRange=null for anchorT=" + anchorName);
             return null;
          }
-         foreach (string tName in tNames)
+         foreach (IMapItem mapItem in mapItemsInRange)
          {
-            IStack? stack = gi.Stacks.Find(tName);
-            if (null == stack) // If there is no stack in this territory, skip it
-               continue;
-            foreach (IMapItem mapItem in stack.MapItems)
+            if ((false == mapItem.IsControlled) && (false == mapItem.IsKilled && false == mapItem.IsStunned))
             {
-               if ((false == mapItem.IsControlled) && (false == mapItem.IsKilled && false == mapItem.IsStunned))
+               if (true == isUnknownAlso)
                {
-                  if (true == isUnknownAlso)
-                  {
-                     if (true == mapItem.IsAlienKnown || true == mapItem.IsAlienUnknown)
-                        mapItems.Add(mapItem);
-                  }
-                  else
-                  {
-                     if (true == mapItem.IsAlienKnown)
-                        mapItems.Add(mapItem);
-                  }
+                  if (true == mapItem.IsAlienKnown || true == mapItem.IsAlienUnknown)
+                     mapItems.Add(mapItem);
+               }
+               else
+               {
+                  if (true == mapItem.IsAlienKnown)
+                     mapItems.Add(mapItem);
                }
             }
          }
@@ -57,53 +70,41 @@ namespace PleasantvilleGame
       public virtual IMapItems? GetTownsWithinRange(IGameInstance gi, string anchorName, int range)
       {
          IMapItems mapItems = new MapItems();
-         List<String>? tNames = Territory.GetTerritoriesWithinRange(gi, anchorName, range);
-         if (null == tNames)
+         IMapItems? mapItemsInRange = GetMapItemsWithinRange(gi, anchorName, range);
+         if (null == mapItemsInRange)
          {
-            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): strings=null for anchorT=" + anchorName);
+            Logger.Log(LogEnum.LE_ERROR, "GetTownsWithinRange(): mapItemsInRange=null for anchorT=" + anchorName);
             return null;
          }
-         foreach (string tName in tNames)
+         foreach (IMapItem mapItem in mapItemsInRange)
          {
-            IStack? stack = gi.Stacks.Find(tName);
-            if (null == stack) // If there is no stack in this territory, skip it
-               continue;
-            foreach (IMapItem mapItem in stack.MapItems)
-            {
-               if ((true == mapItem.IsControlled) && (false == mapItem.IsKilled && false == mapItem.IsStunned))
-                  mapItems.Add(mapItem);
-            }
+            if ((true == mapItem.IsControlled) && (false == mapItem.IsKilled && false == mapItem.IsStunned))
+               mapItems.Add(mapItem);
          }
          return mapItems;
       }
       public virtual IMapItems? GetAliensWithinRange(IGameInstance gi, string anchorName, int range, bool isUnknownAlso)
       {
          IMapItems mapItems = new MapItems();
-         List<String>? tNames = Territory.GetTerritoriesWithinRange(gi, anchorName, range);
-         if (null == tNames)
+         IMapItems? mapItemsInRange = GetMapItemsWithinRange(gi, anchorName, range);
+         if (null == mapItemsInRange)
          {
-            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): strings=null for anchorT=" + anchorName);
+            Logger.Log(LogEnum.LE_ERROR, "GetAliensWithinRange(): mapItemsInRange=null for anchorT=" + anchorName);
             return null;
          }
-         foreach (string tName in tNames)
+         foreach (IMapItem mapItem in mapItemsInRange)
          {
-            IStack? stack = gi.Stacks.Find(tName);
-            if (null == stack) // If there is no stack in this territory, skip it
-               continue;
-            foreach (IMapItem mapItem in stack.MapItems)
+            if ((false == mapItem.IsControlled) && (false == mapItem.IsKilled && false == mapItem.IsStunned))
             {
-               if ((false == mapItem.IsControlled) && (false == mapItem.IsKilled && false == mapItem.IsStunned))
+               if (true == isUnknownAlso)
                {
-                  if (true == isUnknownAlso)
-                  {
-                     if (true == mapItem.IsAlienKnown || true == mapItem.IsAlienUnknown)
-                        mapItems.Add(mapItem);
-                  }
-                  else
-                  {
-                     if (true == mapItem.IsAlienKnown)
-                        mapItems.Add(mapItem);
-                  }
+                  if (true == mapItem.IsAlienKnown || true == mapItem.IsAlienUnknown)
+                     mapItems.Add(mapItem);
+               }
+               else
+               {
+                  if (true == mapItem.IsAlienKnown)
+                     mapItems.Add(mapItem);
                }
             }
          }

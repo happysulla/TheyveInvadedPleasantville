@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,25 @@ namespace PleasantvilleGame
       public AlienStrategyEnum StrategySecondary { set; get; } = AlienStrategyEnum.MAX_TAKEOVER;
       public int Risky { set; get; }
       public int Stealthy { set; get; }
+   }
+   internal class ObservationMetric
+   {
+      public IMapItem myMapItem;
+      public int myRange;
+      public int myMetric;
+      public ObservationMetric(IMapItem mi, int r)
+      {
+         myMapItem = mi;
+         myRange = r;
+      }
+   }
+   internal class TakeoverMetric
+   {
+      public IMapItems myKnownAliens = new MapItems();
+      public IMapItems myUnknownAliens = new MapItems();
+      public IMapItems myUncontrolleds = new MapItems();
+      public IMapItems myControlledInRanges = new MapItems();
+      public List<ObservationMetric> myObsMetrics = new List<ObservationMetric>();
    }
    //===============================================================
    public class PlayerAlienComputer : PlayerBase, IPlayerAlien
@@ -113,16 +133,49 @@ namespace PleasantvilleGame
          gi.EventDisplayed = gi.EventActive = "e006t";          // Set next state.
          return true;
       }
-      public bool PerformMovement(IGameInstance gi)
+      public bool PerformAlienMoves(IGameInstance gi)
       {
-         // Choose 5 counters to be random.
+         // Choose 5 counters to be moved.
          // Need to get the aliens to comingle with other uncontrolled townspeople
          // If strategy is FIENT_ZEBULON, move away from ZEBULON
-         // If strategy is MAX_TAKEOVER, get aliens to other uncontrolled locations at all costs
-         // Move aliens to locations that are away from observations
-         // Move aliesn to locations away from controlled townspeople
-         // Move aliens furthest away from other controlled townspeople.
+         // If strategy is MAX_TAKEOVER, get aliens to other uncontrolled locations 
+         // Create a metric for each Uncontrolled Townsperson:
+         //    --- Isolated from Observations
+         //    --- Away from Controlled Townspeople
+         //    --- Closer to Zebulon
+         ITerritory? zebulonT = gi.FindZebulon();
+         if( null == zebulonT)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "PerformAlienMoves(): could not find Zebulon");
+            return false;
+         }
          return true;
+      }
+      private List<TakeoverMetric> GetTakeoverMetrics(IGameInstance gi)
+      {
+         List<TakeoverMetric> metrics = new List<TakeoverMetric>();
+         foreach (IStack stack in gi.Stacks)
+         {
+            if (0 == stack.MapItems.Count)
+               continue;
+            TakeoverMetric metric = new TakeoverMetric();
+            foreach (IMapItem mi in stack.MapItems)
+            {
+               if (true == mi.IsAlienKnown)
+                  metric.myKnownAliens.Add(mi);
+               else if (true == mi.IsAlienUnknown)
+                  metric.myKnownAliens.Add(mi);
+               else if( (false == mi.IsAlienKnown) && (false == mi.IsAlienUnknown) && (false == mi.IsControlled) )
+                  metric.myUncontrolleds.Add(mi);
+            }
+               metrics.Add(metric); // possible takeover
+         }
+         //--------------------------------------------
+         foreach(TakeoverMetric metric in metrics)
+         {
+
+         }
+         return metrics;
       }
    }
 }

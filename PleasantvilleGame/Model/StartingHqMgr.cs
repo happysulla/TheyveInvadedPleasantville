@@ -41,7 +41,7 @@ namespace PleasantvilleGame
       }
       public static string GetStartingHqTerritory()
       {
-         int randomNum = Utilities.RandomGenerator.Next(114470);
+         int randomNum = Utilities.RandomGenerator.Next(100000);
          //int randomNum = Utilities.RandomGenerator.Next(8000); // for testing - make sure all territories are being returned
          string retValue = theStartHqTerritories[0];
          for (int i = 0; i < theProbabilities.Count; ++i) // step through probablities - find when the random number is less than probablility for that number. In that event, return that name.

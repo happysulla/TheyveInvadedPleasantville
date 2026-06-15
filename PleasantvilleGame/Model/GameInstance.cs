@@ -261,6 +261,26 @@ namespace PleasantvilleGame
          }
          return true;
       }
+      public ITerritory? FindZebulon()
+      {
+         ITerritory? zebulonT = null;
+         foreach (IStack stack in this.Stacks)
+         {
+            if (0 == stack.MapItems.Count)
+               continue;
+            foreach (IMapItem mi in stack.MapItems)
+            {
+               if (true == mi.Name.Contains("Zebulon"))
+               {
+                  zebulonT = stack.Territory;
+                  break;
+               }
+            }
+         }
+         if (null == zebulonT)
+            Logger.Log(LogEnum.LE_ERROR, "FindZebulon(): could not find Zebulon");
+         return zebulonT;
+      }
    }
 }
 

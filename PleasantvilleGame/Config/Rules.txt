@@ -247,6 +247,7 @@ Such counters may be moved in the Alien Movement Phase even if they were moved r
 . This rule allows the Alien player to keep the Town player guessing which counters are Alien controlled and which are not. Of course, the Alien player is not required to move any pieces at all if so desired. Any counters including Town player controlled pieces have no effect on Alien movement."
 r6.5	"<Bold>r6.5 Town Player Movement Movement</Bold><LineBreak/><LineBreak/>
 During his or her movement phase, the Town player may move any townsperson that is controlled by the Town player. The Town player may not move uncontrolled townspeople, Alien-controlled townspeople, or townspeople that are:
+<LineBreak/><LineBreak/>
 -- Tied Up per <InlineUIContainer><Button Content='r6.3.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
 -- Unconscious per 
 <InlineUIContainer><Button Content='Alien Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
@@ -325,9 +326,11 @@ All combat is resolved in this phase including combat with the Alien controlled 
 <LineBreak/><LineBreak/>
 <InlineUIContainer><Button Content='r8.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> General Rules<LineBreak/>
 <InlineUIContainer><Button Content='r8.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Attacking Uncontrolled Counters<LineBreak/>
-<InlineUIContainer><Button Content='r8.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Procedure<LineBreak/>
-<InlineUIContainer><Button Content='r8.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Results<LineBreak/>
-<InlineUIContainer><Button Content='r8.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Post Combat Activity (Town player only)<LineBreak/>"
+<InlineUIContainer><Button Content='r8.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Procedures<LineBreak/>
+<InlineUIContainer><Button Content='r8.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Example<LineBreak/>
+<InlineUIContainer><Button Content='r8.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Stacking<LineBreak/>
+<InlineUIContainer><Button Content='r8.6' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Results<LineBreak/>
+<InlineUIContainer><Button Content='r8.7' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Post Combat Activity (Town player only)<LineBreak/>"
 r8.1	"<Bold>r8.1 Combat - General Rules</Bold><LineBreak/><LineBreak/>
 Combat takes place only between counters sharing the same space. It is not permitted to attack a counter in an adjacent space.
 <LineBreak/><LineBreak/>
@@ -384,7 +387,7 @@ The Town player after winning a combat may choose to do one of the following act
 <LineBreak/><LineBreak/>
 Depending on the actual result inflicted upon a defeated Alien controlled counter, some actions may not always be possible (e.g., interrogating a dead or knocked-out piece). The  <InlineUIContainer><Button Content='Alien Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table specifies which actions may be taken in each given circumstances.
 <LineBreak/><LineBreak/>
-Post Combat Activities are the following:
+Post Combat Activities are the following:<LineBreak/>
 <InlineUIContainer><Button Content='r8.7.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Tie Up<LineBreak/>
 <InlineUIContainer><Button Content='r8.7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Interrogation<LineBreak/>
 <InlineUIContainer><Button Content='r8.7.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Implant Removal<LineBreak/>"
