@@ -3,6 +3,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
+using System.Xml.Linq;
 using MessageBox=System.Windows.MessageBox;
 
 namespace PleasantvilleGame
@@ -45,6 +46,7 @@ namespace PleasantvilleGame
       public string EndGameReason { set; get; } = "";
       //----------------------------------------------
       public ITerritories ZebulonTerritories { set; get; } = new Territories();
+      public IMapItem Zebulon { set; get; } = new MapItem("Zebulon", 0.8, "ZebulonBlack", new Territory(), 0, 0, 10);
       public IMapItems Townspeople { set; get; } = new MapItems();
       public IMapItems PersonsStunned { set; get; } = new MapItems();
       public IMapItems PersonsKnockedOut { set; get; } = new MapItems();
@@ -260,26 +262,6 @@ namespace PleasantvilleGame
             return false;
          }
          return true;
-      }
-      public ITerritory? FindZebulon()
-      {
-         ITerritory? zebulonT = null;
-         foreach (IStack stack in this.Stacks)
-         {
-            if (0 == stack.MapItems.Count)
-               continue;
-            foreach (IMapItem mi in stack.MapItems)
-            {
-               if (true == mi.Name.Contains("Zebulon"))
-               {
-                  zebulonT = stack.Territory;
-                  break;
-               }
-            }
-         }
-         if (null == zebulonT)
-            Logger.Log(LogEnum.LE_ERROR, "FindZebulon(): could not find Zebulon");
-         return zebulonT;
       }
    }
 }

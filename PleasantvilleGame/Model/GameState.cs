@@ -391,6 +391,17 @@ namespace PleasantvilleGame
                gi.PlayerTown = new PlayerTownHuman();
                gi.EventActive = gi.EventDisplayed = "e002";
                gi.DieRollAction = GameAction.GameSetupStartingTownsplayerSetRoll;
+               string startingHq = StartingHqMgr.GetStartingHqTerritory();
+               ITerritory? tZebutonStart = Territories.theTerritories.Find(startingHq);
+               if( null  == tZebutonStart)
+               {
+                  returnStatus = "zTerritory=null for " + startingHq;
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(GameSetupPlayTownsperson): " + returnStatus);
+               }
+               else
+               {
+                  gi.Zebulon.TerritoryCurrent = gi.Zebulon.TerritoryStarting = tZebutonStart;
+               }
                break;
             case GameAction.GameSetupStartingTownsplayerSetRoll:
                if( Utilities.NO_RESULT == gi.DieResults[key][0])
@@ -452,6 +463,7 @@ namespace PleasantvilleGame
                   returnStatus = "Assign_StartingAlien() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                }
+
                break;
             case GameAction.GameSetupRandomMovementSetup:
                gi.GamePhase = GamePhase.RandomMovement;
@@ -1237,6 +1249,8 @@ namespace PleasantvilleGame
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
+         gi.Townspeople.Add(gi.Zebulon);
+         gi.Stacks.Add(gi.Zebulon);
          return true;
       }
       private bool AssignStartingTownsplayer(IGameInstance gi)
@@ -1270,7 +1284,8 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien(): startingAlien=null for name=" + name);
             return false;
          }
-         startingAlien.IsAlienUnknown = true;
+         startingAlien.IsAlienUnknown = false;  // <cgs> TEST - show alien
+         startingAlien.IsAlienKnown = true; // <cgs> TEST - show alien
          //------------------------------------
          name = gi.StartingTownspeople[1];
          if (true == String.IsNullOrEmpty(name))
@@ -1284,7 +1299,8 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien(): startingAlien=null for name=" + name);
             return false;
          }
-         startingAlien.IsAlienUnknown = true;
+         startingAlien.IsAlienUnknown = false;  // <cgs> TEST - show alien
+         startingAlien.IsAlienKnown = true; // <cgs> TEST - show alien
          return true;
       }
    }

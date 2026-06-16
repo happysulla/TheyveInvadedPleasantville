@@ -53,6 +53,7 @@ namespace PleasantvilleGame
       IMapItems PersonsStunned { set; get; }
       IMapItems PersonsKnockedOut { set; get; }
       IMapItem? SelectedMapItem { set; get; }
+      IMapItem Zebulon { set; get; }
       IMapItemCombat? MapItemCombat { set; get; }
       IMapItemTakeover? Takeover { set; get; }
       IMapItemMove? PreviousMapItemMove { set; get; }
@@ -80,6 +81,5 @@ namespace PleasantvilleGame
       bool AddUnknownAlien(IMapItem newAlien);
       bool AddKnownAlien(IMapItem newAlien);
       bool AddTownperson(IMapItem newPerson);
-      public ITerritory? FindZebulon();
    }
 }

@@ -143,12 +143,6 @@ namespace PleasantvilleGame
          //    --- Isolated from Observations
          //    --- Away from Controlled Townspeople
          //    --- Closer to Zebulon
-         ITerritory? zebulonT = gi.FindZebulon();
-         if( null == zebulonT)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "PerformAlienMoves(): could not find Zebulon");
-            return false;
-         }
          return true;
       }
       private List<TakeoverMetric> GetTakeoverMetrics(IGameInstance gi)
