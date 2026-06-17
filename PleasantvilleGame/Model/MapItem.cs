@@ -310,21 +310,23 @@ namespace PleasantvilleGame
             g.Children.Add(c);
             if (true == mi.IsAlienKnown) // Add an alien head if the Controlled person knowns.
             {
-               Image imgAlien = new Image() { Source = theImgAlien };
+               double width = 0.4 * zoom * Utilities.theMapItemOffset;
+               double height = 1.3*width;
+               Image imgAlien = new Image() { Height = height, Width = width, Source = theImgAlien };
                c.Children.Add(imgAlien);
-               Canvas.SetLeft(imgAlien, 0);
+               Canvas.SetLeft(imgAlien, zoom * Utilities.theMapItemOffset - (0.5 * width));
                Canvas.SetTop(imgAlien, 0);
             }
             if (true == mi.IsTiedUp) // Add an tied up icon if tied up
             {
-               Image imgTiedUp = new Image() { Source = theImgTieUp };
+               Image imgTiedUp = new Image() { Source = theImgTieUp, Stretch = Stretch.Fill };
                c.Children.Add(imgTiedUp);
                Canvas.SetLeft(imgTiedUp, 0);
                Canvas.SetTop(imgTiedUp, 0);
             }
             if (true == mi.IsImplantHeld)
             {
-               Image imgImplant = new Image() { Source = theImgImplant };
+               Image imgImplant = new Image() { Source = theImgImplant, Stretch = Stretch.Fill };
                c.Children.Add(imgImplant);
                Canvas.SetLeft(imgImplant, 0);
                Canvas.SetTop(imgImplant, 0);

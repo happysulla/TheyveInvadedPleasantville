@@ -1272,7 +1272,7 @@ namespace PleasantvilleGame
       }
       private bool AssignStartingAlien(IGameInstance gi)
       {
-         string name = gi.StartingTownspeople[0];
+         string name = gi.StartingTownspeople[1];
          if (true == String.IsNullOrEmpty(name))
          {
             Logger.Log(LogEnum.LE_ERROR, "Assign_StartingTownsplayer():  gi.PlayerAlien.StartingTownspeople[0] is empty");
@@ -1287,7 +1287,7 @@ namespace PleasantvilleGame
          startingAlien.IsAlienUnknown = false;  // <cgs> TEST - show alien
          startingAlien.IsAlienKnown = true; // <cgs> TEST - show alien
          //------------------------------------
-         name = gi.StartingTownspeople[1];
+         name = gi.StartingTownspeople[2];
          if (true == String.IsNullOrEmpty(name))
          {
             Logger.Log(LogEnum.LE_ERROR, "Assign_StartingTownsplayer():  gi.PlayerAlien.StartingTownspeople[1] is empty");

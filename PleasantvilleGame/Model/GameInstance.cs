@@ -18,7 +18,7 @@ namespace PleasantvilleGame
       public IPlayerTown PlayerTown { set; get; } = new PlayerTownHuman();
       public IPlayerAlien PlayerAlien { set; get; } = new PlayerAlienComputer();
       //------------------------------------------------
-      public String[] StartingTownspeople { get; set; } = new String[2];
+      public String[] StartingTownspeople { get; set; } = new String[3];
       public List<RandomMoveData> RandomMoves { get; set; } = new List<RandomMoveData>();
       //------------------------------------------------
       public IGameCommands GameCommands { set; get; } = new GameCommands();

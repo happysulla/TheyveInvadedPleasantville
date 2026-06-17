@@ -89,36 +89,38 @@ namespace PleasantvilleGame
             return false;
          }
          //---------------------------------
-         string startingAlien = "";
-         int count = 1000;
-         while (0 < count--)
+         for(int i=0; i<2; i++)
          {
-            int die1 = Utilities.RandomGenerator.Next(0, 5);
-            int die2 = Utilities.RandomGenerator.Next(0, 6);
-            startingAlien = TableMgr.GetTownspersonName(die1, die2);
-            if ("ERROR" == startingAlien)
+            string startingAlien = "";
+            int count = 1000;
+            while (0 < count--)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Get_StartingAlien(): first TableMgr.GetTownspersonName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
+               int die1 = Utilities.RandomGenerator.Next(0, 5);
+               int die2 = Utilities.RandomGenerator.Next(0, 6);
+               startingAlien = TableMgr.GetTownspersonName(die1, die2);
+               if ("ERROR" == startingAlien)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Get_StartingAlien(): first TableMgr.GetTownspersonName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
+                  return false;
+               }
+               if (true == startingTownplayer.Contains(startingAlien))
+                  continue;
+               if (gi.StartingTownspeople[1] == startingAlien)
+                  continue;
+               break;
+            }
+            if (count < 0)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Get_StartingAlien(): never found aliens");
                return false;
             }
-            if (startingTownplayer == startingAlien)
-               continue;
-
-            if (gi.StartingTownspeople[0] == startingAlien)
-               continue;
-            break;
+            //---------------------------------
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Get_StartingAlien(): Added name=" + startingAlien);
+            if (true == String.IsNullOrEmpty(gi.StartingTownspeople[1]))
+               gi.StartingTownspeople[1] = startingAlien;
+            else
+               gi.StartingTownspeople[2] = startingAlien;
          }
-         if (count < 0)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Get_StartingAlien(): never found aliens");
-            return false;
-         }
-         //---------------------------------
-         Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Get_StartingAlien(): Added name=" + startingAlien);
-         if (true == String.IsNullOrEmpty(gi.StartingTownspeople[0]))
-            gi.StartingTownspeople[0] = startingAlien;
-         else
-            gi.StartingTownspeople[1] = startingAlien;
          return true;
       }
       public bool BlockRandomMoves(IGameInstance gi)

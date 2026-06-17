@@ -9,9 +9,7 @@ namespace PleasantvilleGame
    public interface IPlayer
    {
       bool IsComputer { set; get; }
-      //------------------------------------------
       bool GetNextState(IGameInstance gi, ref GameAction action);
-
    }
    public interface IPlayerTown : IPlayer
    {
