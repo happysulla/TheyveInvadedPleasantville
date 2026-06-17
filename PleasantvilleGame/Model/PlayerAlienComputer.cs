@@ -145,6 +145,13 @@ namespace PleasantvilleGame
          //    --- Isolated from Observations
          //    --- Away from Controlled Townspeople
          //    --- Closer to Zebulon
+         //    --- Closer to Alien Center
+         //    --- Greater Influence
+         //    --- Greater Combat
+         foreach(IStack stack in gi.Stacks)
+         {
+            
+         }
          return true;
       }
       private List<TakeoverMetric> GetTakeoverMetrics(IGameInstance gi)
