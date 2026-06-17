@@ -381,8 +381,8 @@ namespace PleasantvilleGame
       {
          System.Windows.Controls.Button b = new Button { };
          b.Name = Utilities.RemoveSpaces(mi.Name);
-         b.Width = 1.2 * mi.Zoom * Utilities.theMapItemSize;
-         b.Height = 1.2 * mi.Zoom * Utilities.theMapItemSize;
+         b.Width = 2.0 * mi.Zoom * Utilities.theMapItemSize;
+         b.Height = 2.0 * mi.Zoom * Utilities.theMapItemSize;
          b.Background = new SolidColorBrush(Colors.Transparent);
          b.Foreground = new SolidColorBrush(Colors.Transparent);
          b.BorderThickness = new Thickness(1);

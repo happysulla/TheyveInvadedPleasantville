@@ -294,7 +294,7 @@ namespace PleasantvilleGame
             mapItems = newOrder;
          }
       }
-      public static void SetButtonContent(Button b, IMapItem mi, bool isMapItemZoom = false, bool isDecoration = true, bool isBloodSpotsShown = true)
+      public static void SetButtonContent(Button b, IMapItem mi, bool isMapItemZoom = false, bool isDecoration = true)
       {
          double zoom = Utilities.ZOOM;
          if (true == isMapItemZoom)
@@ -314,7 +314,7 @@ namespace PleasantvilleGame
                double height = 1.3*width;
                Image imgAlien = new Image() { Height = height, Width = width, Source = theImgAlien };
                c.Children.Add(imgAlien);
-               Canvas.SetLeft(imgAlien, zoom * Utilities.theMapItemOffset - (0.5 * width));
+               Canvas.SetLeft(imgAlien, zoom * Utilities.theMapItemOffset - (0.7 * width));
                Canvas.SetTop(imgAlien, 0);
             }
             if (true == mi.IsTiedUp) // Add an tied up icon if tied up
