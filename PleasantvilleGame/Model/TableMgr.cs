@@ -187,5 +187,33 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_ERROR, "TableMgr.GetTargetBuildingName(): reached default with name=" + buildingName);
          return "ERROR";
       }
+      static public double GetObservationChance(int range, bool isBuilding)
+      {
+         if( true == isBuilding )
+         {
+            switch(range)
+            {
+               case 0: return 0.666667;
+               case 1: return 0.5;
+               case 2: return 0.333333;
+               default:
+                  Logger.Log(LogEnum.LE_ERROR, "GetObservationChance(): reached default isBuilding=true range=" + range.ToString());
+                  return (double)FN_ERROR;
+            }
+         }
+         else
+         {
+            switch (range)
+            {
+               case 0: return 0.666667;
+               case 1: return 0.5;
+               case 2: return 0.333333;
+               case 3: return 0.166667;
+               default:
+                  Logger.Log(LogEnum.LE_ERROR, "GetObservationChance(): reached default isBuilding=false range=" + range.ToString());
+                  return (double)FN_ERROR;
+            }
+         }
+      }
    }
 }

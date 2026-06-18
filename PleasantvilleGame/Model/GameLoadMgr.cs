@@ -434,6 +434,54 @@ namespace PleasantvilleGame
                if (0 < count3)
                   reader.Read(); // get past </Adjacents> tag
                //--------------------------------------
+               reader.Read();
+               if (false == reader.IsStartElement())
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Territories(): IsStartElement(Adjacents)=false");
+                  return false;
+               }
+               if (reader.Name != "Observations")
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Territories(): Adjacents != (node=" + reader.Name + ")");
+                  return false;
+               }
+               string? sCount4 = reader.GetAttribute("count");
+               if (null == sCount4)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "ReadXml_Territories(): GetAttribute(sCount4)=null");
+                  return false;
+               }
+               int count4 = int.Parse(sCount4);
+               for (int i4 = 0; i4 < count4; ++i4)
+               {
+                  reader.Read();
+                  if (false == reader.IsStartElement())
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "ReadXml_Territories(): IsStartElement(adjacent)=false");
+                     return false;
+                  }
+                  if (reader.Name != "observation")
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "ReadXml_Territories(): observation != (node=" + reader.Name + ")");
+                     return false;
+                  }
+                  string? skey = reader.GetAttribute("key");
+                  if (null == skey)
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "ReadXml_Territories(): GetAttribute(skey)=null");
+                     return false;
+                  }
+                  string? sValue = reader.GetAttribute("value");
+                  if (null == sValue)
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "ReadXml_Territories(): GetAttribute(sValue)=null");
+                     return false;
+                  }
+                  territory.Observations[skey] = Double.Parse(sValue);
+               }
+               if (0 < count4)
+                  reader.Read(); // get past </Observations> tag
+               //--------------------------------------
                territories.Add(territory);
                reader.Read(); // get past </Territory> tag
             }
@@ -586,6 +634,38 @@ namespace PleasantvilleGame
                   if (null == node)
                   {
                      Logger.Log(LogEnum.LE_ERROR, "CreateXml_Territories(): AppendChild(nodeAdjacents) returned null");
+                     return false;
+                  }
+               }
+               //-----------------------------------------------------------
+               XmlElement? elemObservations = aXmlDocument.CreateElement("Observations");
+               if (null == elemObservations)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "CreateXml_Territories(): CreateElement(elemObservations) returned null");
+                  return false;
+               }
+               elemObservations.SetAttribute("count", t.Observations.Count.ToString());
+               XmlNode? nodeObservations= territoryNode.AppendChild(elemObservations);
+               if (null == nodeObservations)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "CreateXml_Territories(): AppendChild(nodeObservations) returned null");
+                  return false;
+               }
+               //---------------------------------
+               foreach( var kvp in t.Observations )
+               {
+                  elem = aXmlDocument.CreateElement("observation");
+                  if (null == elem)
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "CreateXml_Territories(): CreateElement(observation) returned null");
+                     return false;
+                  }
+                  elem.SetAttribute("key", kvp.Key);
+                  elem.SetAttribute("value", kvp.Value.ToString("0.0000"));
+                  node = nodeObservations.AppendChild(elem);
+                  if (null == node)
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "CreateXml_Territories(): AppendChild(nodeObservations) returned null");
                      return false;
                   }
                }

@@ -24,17 +24,7 @@ namespace PleasantvilleGame
       public int Risky { set; get; }
       public int Stealthy { set; get; }
    }
-   internal class ObservationMetric
-   {
-      public IMapItem myMapItem;
-      public int myRange;
-      public int myMetric;
-      public ObservationMetric(IMapItem mi, int r)
-      {
-         myMapItem = mi;
-         myRange = r;
-      }
-   }
+
    internal class TakeoverMetric
    {
       public IMapItems myKnownAliens = new MapItems();

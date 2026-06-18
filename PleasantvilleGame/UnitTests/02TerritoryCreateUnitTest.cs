@@ -53,8 +53,7 @@ namespace PleasantvilleGame
          myHeaderNames.Add("02-Set CenterPoints");
          myHeaderNames.Add("02-Verify Territories");
          myHeaderNames.Add("02-Set Adjacents");
-         myHeaderNames.Add("02-Set Paved Roads");
-         myHeaderNames.Add("02-Set Unpaved Roads");
+         myHeaderNames.Add("02-Set Observations");
          myHeaderNames.Add("02-Final");
          //------------------------------------
          myCommandNames.Add("00-Delete File");
@@ -63,7 +62,8 @@ namespace PleasantvilleGame
          myCommandNames.Add("03-Click Elispse to Move");
          myCommandNames.Add("04-Click Ellispe to Verify");
          myCommandNames.Add("05-Verify Adjacents");
-         myCommandNames.Add("06-Cleanup");
+         myCommandNames.Add("06-Verify Observations");
+         myCommandNames.Add("07-Cleanup");
          //------------------------------------
          myDockPanelTop = dp;
          //------------------------------------
@@ -178,6 +178,14 @@ namespace PleasantvilleGame
                return false;
             }
          }
+         else if (CommandName == myCommandNames[6]) // set observations
+         {
+            if (false == ShowObservations(Territories.theTerritories))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): ShowObservations() returned false");
+               return false;
+            }
+         }
          else 
          {
             if (false == Cleanup(ref gi))
@@ -239,17 +247,24 @@ namespace PleasantvilleGame
             myCanvasMain.MouseLeftButtonDown -= this.MouseDownEllipseVerify;
             myCanvasMain.MouseLeftButtonDown += this.MouseLeftButtonDownSetAdjacents;
          }
-         else if (HeaderName == myHeaderNames[5]) // Click Ellispe to Set Adjacents
+         else if (HeaderName == myHeaderNames[5]) // Click Ellispe to Set Observations
          {
             myAnchorTerritory = null;
             ++myIndexName;
             myCanvasMain.MouseLeftButtonDown -= this.MouseLeftButtonDownSetAdjacents;
+            myCanvasMain.MouseLeftButtonDown += this.MouseLeftButtonDownSetObservations;
+         }
+         else if (HeaderName == myHeaderNames[6]) // start cleanup
+         {
+            myAnchorTerritory = null;
+            ++myIndexName;
+            myCanvasMain.MouseLeftButtonDown -= this.MouseLeftButtonDownSetObservations;
          }
          else  
          {
             if (false == Cleanup(ref gi))
             {
-               Console.WriteLine("TerritoryCreateUnitTest.Command(): Cleanup() returned false");
+               System.Diagnostics.Debug.WriteLine("TerritoryCreateUnitTest.Command(): Cleanup() returned false");
                return false;
             }
          }
@@ -564,6 +579,113 @@ namespace PleasantvilleGame
          }
          return true;
       }
+      private bool ShowObservations(ITerritories territories)
+      {
+         if (null == myCanvasMain)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Show_Observations(): myCanvasMain=null");
+            return false;
+         }
+         myAnchorTerritory = null;
+         SolidColorBrush aSolidColorBrush0 = new SolidColorBrush { Color = Color.FromArgb(100, 100, 100, 0) }; // completely clear
+         SolidColorBrush aSolidColorBrush1 = new SolidColorBrush { Color = Color.FromArgb(010, 255, 100, 0) }; // almost clear
+         SolidColorBrush aSolidColorBrush2 = new SolidColorBrush { Color = Color.FromArgb(255, 0, 0, 0) };     // black
+         SolidColorBrush aSolidColorBrush3 = new SolidColorBrush { Color = Colors.Red };
+         SolidColorBrush aSolidColorBrush4 = new SolidColorBrush { Color = Colors.Yellow };
+         foreach (Territory anchorTerritory in territories)
+         {
+            StringBuilder sb1 = new StringBuilder("Ellipses=[");
+            Ellipse? anchorEllipse = null; // Find the corresponding ellipse for this anchor territory
+            foreach (UIElement ui in myCanvasMain.Children)
+            {
+               if (ui is Ellipse)
+               {
+                  Ellipse ellipse = (Ellipse)ui;
+                  sb1.Append(",");
+                  sb1.Append(ellipse.Name);
+                  if (anchorTerritory.ToString() == ellipse.Name)
+                  {
+                     anchorEllipse = ellipse;
+                     break;
+                  }
+               }
+            }
+            sb1.Append("]");
+            if (null == anchorEllipse)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Show_Observations(): anchorEllipse=null for " + anchorTerritory.ToString() + " " + sb1.ToString());
+               return false;
+            }
+            if (0 < anchorTerritory.Adjacents.Count)
+               anchorEllipse.Fill = aSolidColorBrush4;
+            foreach (string s in anchorTerritory.Adjacents)  // At this point, the anchorEllipse and the anchorTerritory are found.
+            {
+               ITerritory? obsTerritory = null;
+               foreach (ITerritory t in territories) 
+               {
+                  if (t.ToString() == s)
+                  {
+                     obsTerritory = t;
+                     break;
+                  }
+               }
+               if (null == obsTerritory)
+               {
+                  MessageBox.Show("Show_Observations(): Not Found s=" + s);
+                  return false;
+               }
+               string? obsName = obsTerritory.ToString();
+               if (null == obsName)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Show_Observations(): obsName=null for " + anchorTerritory.Name);
+                  return false;
+               }
+               Ellipse? adjacentEllipse = null; // Find the corresponding ellipse for this territory
+               foreach (UIElement ui in myCanvasMain.Children)
+               {
+                  if (ui is Ellipse)
+                  {
+                     Ellipse ellipse = (Ellipse)ui;
+                     if (obsName == ellipse.Name)
+                     {
+                        adjacentEllipse = ellipse;
+                        break;
+                     }
+                  }
+               }
+               if (null == adjacentEllipse)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, obsName);
+                  MessageBox.Show(anchorTerritory.ToString());
+                  return false;
+               }
+               //-------------------------------------------------
+               bool isReturnFound = false;
+               //foreach (String s1 in obsTerritory.Observations) // Search the Adjacent Territory  List to make sure the anchor territory is in that list. It should be bi directional.
+               //{
+               //   string returnName = s1;
+               //   if (returnName == anchorTerritory.ToString())
+               //   {
+               //      isReturnFound = true; 
+               //      break;
+               //   }
+               //}
+               //-------------------------------------------------
+               if (false == isReturnFound) // Anchor Property not found in the observation property territory.  This is an error condition.
+               {
+                  anchorEllipse.Fill = aSolidColorBrush3; // change color of two ellipses to signify error
+                  adjacentEllipse.Fill = aSolidColorBrush2;
+                  StringBuilder sb = new StringBuilder("anchor=");
+                  sb.Append(anchorTerritory.ToString());
+                  sb.Append(" NOT in list for observations=");
+                  sb.Append(obsName);
+                  MessageBox.Show(sb.ToString());
+                  return false;
+               }
+            }
+         }
+         return true;
+      }
       //--------------------------------------------------------------------
       void MouseLeftButtonDownDeleteTerritory(object sender, MouseButtonEventArgs e)
       {
@@ -645,7 +767,7 @@ namespace PleasantvilleGame
             return;
          }
          System.Windows.Point p = e.GetPosition(myCanvasMain);
-         Console.WriteLine("TerritoryUnitTest.MouseDown(): {0}", p.ToString());
+         System.Diagnostics.Debug.WriteLine("TerritoryUnitTest.MouseDown(): p=" + p.ToString());
          foreach (UIElement ui in myCanvasMain.Children)
          {
             if (ui is Ellipse)
@@ -792,7 +914,7 @@ namespace PleasantvilleGame
                      StringBuilder sb = new StringBuilder("Anchoring: ");
                      sb.Append(selectedEllipse.Name);
                      sb.Append(" ");
-                     Console.WriteLine("Anchoring {0} ", selectedTerritory.ToString());
+                     System.Diagnostics.Debug.WriteLine("Anchoring selectedTerritory=" + selectedTerritory.ToString());
                      MessageBox.Show(sb.ToString());
                      myAnchorTerritory = selectedTerritory;
                      myAnchorTerritory.Adjacents.Clear();
@@ -804,7 +926,7 @@ namespace PleasantvilleGame
                      StringBuilder sb = new StringBuilder("Saving");
                      sb.Append(myAnchorTerritory.ToString());
                      sb.Append(" ");
-                     Console.WriteLine("Saving {0} ", selectedTerritory.ToString());
+                     System.Diagnostics.Debug.WriteLine("Saving selectedTerritory=" + selectedTerritory.ToString());
                      MessageBox.Show(sb.ToString());
                      myAnchorTerritory = null;
                      isEndMatch = true;
@@ -828,8 +950,138 @@ namespace PleasantvilleGame
                      }
                      if (false == isMatch)
                      {
-                        Console.WriteLine("Adding {0} ", selectedTerritory.Name);
+                        System.Diagnostics.Debug.WriteLine("Adding selectedTerritory=" + selectedTerritory.ToString());
                         myAnchorTerritory.Adjacents.Add(tName);
+                     }
+                  }
+               } // if (true == ui.IsMouseOver)
+            } // if (ui is Ellipse)
+         }  // foreach (UIElement ui in myCanvasMain.Children)
+         //----------------------------------------------------------
+         // If this is the matching territory is the anchor territory, the user is requesting that it they are done adding 
+         // to the adjacents ellipse. Clear the data so another one can be selected.
+         if (true == isEndMatch)
+         {
+            foreach (UIElement ui1 in myCanvasMain.Children)
+            {
+               if (ui1 is Ellipse)
+               {
+                  Ellipse ellipse1 = (Ellipse)ui1;
+                  ITerritory? t = Territories.theTerritories.Find(ellipse1.Name);
+                  if (null == t)
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "MouseDownEllipseVerify(): t=null for name=" + ellipse1.Name);
+                     return;
+                  }
+                  if (0 == t.Adjacents.Count)
+                     ellipse1.Fill = mySolidColorBrushWaterBlue;
+                  else
+                     ellipse1.Fill = aSolidColorBrush1;
+               }
+            }
+         }
+      }
+      void MouseLeftButtonDownSetObservations(object sender, MouseButtonEventArgs e)
+      {
+         if (null == myCanvasMain)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownSetAdjacents(): myCanvasMain=null");
+            return;
+         }
+         SolidColorBrush aSolidColorBrush0 = new SolidColorBrush { Color = Color.FromArgb(100, 100, 100, 0) };
+         SolidColorBrush aSolidColorBrush1 = new SolidColorBrush { Color = Color.FromArgb(010, 255, 100, 0) };
+         SolidColorBrush aSolidColorBrush2 = new SolidColorBrush { Color = Color.FromArgb(255, 0, 0, 0) };
+         SolidColorBrush aSolidColorBrush3 = new SolidColorBrush { Color = Colors.Red };
+         System.Windows.Point p = e.GetPosition(myCanvasMain);
+         bool isEndMatch = false;
+         foreach (UIElement ui in myCanvasMain.Children)
+         {
+            if (ui is Ellipse)
+            {
+               Ellipse selectedEllipse = (Ellipse)ui;
+               if (true == ui.IsMouseOver)
+               {
+                  ITerritory? selectedTerritory = Territories.theTerritories.Find(selectedEllipse.Name);  // Find the corresponding Territory that user selected
+                  if (selectedTerritory == null) // Check for error
+                  {
+                     MessageBox.Show("Unable to find " + selectedEllipse.Name);
+                     return;
+                  }
+                  if (null == myAnchorTerritory)  // If there is no anchor territory. Set it.
+                  {
+                     StringBuilder sb = new StringBuilder("Anchoring: ");
+                     sb.Append(selectedEllipse.Name);
+                     sb.Append(" ");
+                     System.Diagnostics.Debug.WriteLine("Anchoring selectedTerritory=" + selectedTerritory.ToString());
+                     MessageBox.Show(sb.ToString());
+                     myAnchorTerritory = selectedTerritory;
+                     selectedEllipse.Fill = aSolidColorBrush3;
+                     myAnchorTerritory.Observations.Clear();
+                     return;
+                  }
+                  if (selectedTerritory.ToString() == myAnchorTerritory.ToString())
+                  {
+                     bool isBuilding = selectedTerritory.IsBuilding();
+                     double prob = TableMgr.GetObservationChance(0, isBuilding);
+                     if (TableMgr.FN_ERROR == prob)
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownSetObservations(): TableMgr.GetObservationChance() returned error for selectedTerritory=" + selectedTerritory);
+                        return;
+                     }
+                     string? tName = myAnchorTerritory.ToString();
+                     if( null == tName )
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownSetObservations(): TableMgr.GetObservationChance() tName=null myAnchorTerritory=" + selectedTerritory);
+                        return;
+                     }
+                     myAnchorTerritory.Observations[tName] = prob; // The anchor territory has entry for itself in observations
+                     System.Diagnostics.Debug.WriteLine("Adding observation tName=" + tName + " prob=" + prob.ToString());
+                     StringBuilder sb = new StringBuilder("Saving");
+                     sb.Append(myAnchorTerritory.ToString());
+                     sb.Append(" ");
+                     System.Diagnostics.Debug.WriteLine("Saving selectedTerritory=" + selectedTerritory.ToString());
+                     MessageBox.Show(sb.ToString());
+                     myAnchorTerritory = null;
+                     isEndMatch = true;
+                  } 
+                  else
+                  {
+                     selectedEllipse.Fill = aSolidColorBrush2; // If the matching territory is not the anchor territory, change its color.
+                     string? tName = selectedTerritory.ToString();
+                     if (null == tName)
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownSetObservations(): tName=null for selectedTerritory=" + selectedTerritory);
+                        return;
+                     }
+                     bool isMatch = false;
+                     foreach (var kvp in myAnchorTerritory.Observations)
+                     {
+                        if (kvp.Key == tName)
+                        {
+                           isMatch = true; 
+                           break;
+                        }
+                     }
+                     if (false == isMatch)
+                     {
+                        System.Diagnostics.Debug.WriteLine("Trying tName=" + tName);
+                        IMapPath? mapPath = Territory.GetShortestRandomPath(Territories.theTerritories, myAnchorTerritory, selectedTerritory, 3);
+                        if( null == mapPath )
+                        {
+                           Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownSetObservations(): mapPath=null from myAnchorTerritory=" + myAnchorTerritory.ToString() + " to tName=" + tName);
+                           return;
+                        }
+                        bool isBuilding = selectedTerritory.IsBuilding();
+                        int range = mapPath.Territories.Count;
+                        double prob = TableMgr.GetObservationChance(range, isBuilding);
+                        if( TableMgr.FN_ERROR == prob )
+                        {
+                           Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownSetObservations(): TableMgr.GetObservationChance() returned error for tName=" + tName);
+                           return;
+                        }
+                        myAnchorTerritory.Observations[tName] = prob;
+                        System.Diagnostics.Debug.WriteLine("Adding observation tName=" + tName + " prob=" + prob.ToString());
+                        break;
                      }
                   }
                } // if (true == ui.IsMouseOver)

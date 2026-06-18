@@ -7,6 +7,18 @@ using System.Threading.Tasks;
 
 namespace PleasantvilleGame
 {
+   public class ObservationMetric
+   {
+      public IMapItem myMapItem;
+      public int myRange;
+      public int myMetric;
+      public ObservationMetric(IMapItem mi, int r)
+      {
+         myMapItem = mi;
+         myRange = r;
+      }
+   }
+   //===============================================================
    public class MetricAlienMove : IMetricAlienMove
    {
       public ITerritory Territory { get; set; }

@@ -10,8 +10,7 @@ namespace PleasantvilleGame
       IMapPoint CenterPoint { get; set; }
       List<IMapPoint> Points { set; get; }
       List<String> Adjacents { get; }
-      List<String> PavedRoads { get; }
-      List<String> Observations { get; }
+      Dictionary<String, double> Observations { set;  get; } // observation from this terriotry occurs with this probability
       bool IsBuilding();
    }
    //--------------------------------------------------------

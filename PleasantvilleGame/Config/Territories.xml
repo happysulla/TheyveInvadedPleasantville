@@ -16,6 +16,16 @@
       <adjacent value="Grass_14" />
       <adjacent value="Grass_2" />
     </Adjacents>
+    <Observations count="8">
+      <observation key="Grass_2" value="0.5000" />
+      <observation key="Grass_3" value="0.3333" />
+      <observation key="Grass_4" value="0.1667" />
+      <observation key="Grass_14" value="0.5000" />
+      <observation key="Grass_13" value="0.5000" />
+      <observation key="Grass_19" value="0.3333" />
+      <observation key="Road_16" value="0.1667" />
+      <observation key="Grass_1" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -31,6 +41,14 @@
       <adjacent value="Grass_1" />
       <adjacent value="Grass_3" />
     </Adjacents>
+    <Observations count="6">
+      <observation key="Grass_1" value="0.5000" />
+      <observation key="Grass_13" value="0.3333" />
+      <observation key="Grass_3" value="0.5000" />
+      <observation key="Grass_4" value="0.3333" />
+      <observation key="Grass_5" value="0.1667" />
+      <observation key="Grass_2" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -51,6 +69,17 @@
       <adjacent value="Road_43" />
       <adjacent value="Grass_4" />
     </Adjacents>
+    <Observations count="9">
+      <observation key="Grass_2" value="0.5000" />
+      <observation key="Grass_1" value="0.3333" />
+      <observation key="Grass_4" value="0.5000" />
+      <observation key="Grass_5" value="0.3333" />
+      <observation key="Grass_6" value="0.1667" />
+      <observation key="Road_43" value="0.5000" />
+      <observation key="Road_44" value="0.3333" />
+      <observation key="Road_19" value="0.1667" />
+      <observation key="Grass_3" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -67,6 +96,7 @@
       <adjacent value="Tavern_0" />
       <adjacent value="Grass_5" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -87,6 +117,7 @@
       <adjacent value="Grass_16" />
       <adjacent value="Grass_6" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -103,6 +134,7 @@
       <adjacent value="VetOffice_0" />
       <adjacent value="Grass_7" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -123,6 +155,7 @@
       <adjacent value="Grass_17" />
       <adjacent value="Grass_8" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -141,6 +174,7 @@
       <adjacent value="GasPumps_0" />
       <adjacent value="Grass_9" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -157,6 +191,7 @@
       <adjacent value="GasPumps_0" />
       <adjacent value="Road_1" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -172,6 +207,7 @@
       <adjacent value="Grass_11" />
       <adjacent value="Road_1" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -187,6 +223,7 @@
       <adjacent value="Grass_10" />
       <adjacent value="Grass_12" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -204,6 +241,7 @@
       <adjacent value="Grass_11" />
       <adjacent value="Grass_18" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -220,6 +258,7 @@
       <adjacent value="Grass_14" />
       <adjacent value="Grass_19" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -241,6 +280,7 @@
       <adjacent value="Grass_15" />
       <adjacent value="House_A" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -259,6 +299,7 @@
       <adjacent value="Road_44" />
       <adjacent value="Road_43" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -274,6 +315,7 @@
       <adjacent value="Grass_5" />
       <adjacent value="Grass_21" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -289,6 +331,7 @@
       <adjacent value="Grass_22" />
       <adjacent value="Grass_7" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -305,6 +348,7 @@
       <adjacent value="Grass_23" />
       <adjacent value="Grass_12" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -324,6 +368,7 @@
       <adjacent value="Road_16" />
       <adjacent value="Road_17" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -342,6 +387,7 @@
       <adjacent value="Road_19" />
       <adjacent value="Road_18" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -357,6 +403,7 @@
       <adjacent value="Road_21" />
       <adjacent value="Grass_16" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -373,6 +420,7 @@
       <adjacent value="Road_22" />
       <adjacent value="Road_23" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -393,6 +441,7 @@
       <adjacent value="Road_28" />
       <adjacent value="Grass_28" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -408,6 +457,7 @@
       <adjacent value="Road_16" />
       <adjacent value="Grass_29" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -426,6 +476,7 @@
       <adjacent value="Grass_26" />
       <adjacent value="Grass_32" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -443,6 +494,7 @@
       <adjacent value="Grass_33" />
       <adjacent value="Road_22" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -460,6 +512,7 @@
       <adjacent value="Grass_37" />
       <adjacent value="Grass_38" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -476,6 +529,7 @@
       <adjacent value="Grass_39" />
       <adjacent value="Grass_23" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -495,6 +549,7 @@
       <adjacent value="Grass_40" />
       <adjacent value="Grass_29" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -513,6 +568,7 @@
       <adjacent value="Road_55" />
       <adjacent value="Road_54" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -529,6 +585,7 @@
       <adjacent value="Grass_26" />
       <adjacent value="Road_55" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -548,6 +605,7 @@
       <adjacent value="Road_5" />
       <adjacent value="Road_4" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -567,6 +625,7 @@
       <adjacent value="Grass_36" />
       <adjacent value="Road_33" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -585,6 +644,7 @@
       <adjacent value="Grass_35" />
       <adjacent value="Road_33" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -603,6 +663,7 @@
       <adjacent value="Grass_38" />
       <adjacent value="Grass_36" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -622,6 +683,7 @@
       <adjacent value="Grass_37" />
       <adjacent value="Grass_27" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -639,6 +701,7 @@
       <adjacent value="Grass_28" />
       <adjacent value="Grass_44" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -657,6 +720,7 @@
       <adjacent value="House_K" />
       <adjacent value="Grass_50" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -674,6 +738,7 @@
       <adjacent value="Road_54" />
       <adjacent value="Grass_52" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -694,6 +759,7 @@
       <adjacent value="Road_6" />
       <adjacent value="Grass_54" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -714,6 +780,7 @@
       <adjacent value="Grass_34" />
       <adjacent value="Grass_42" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -731,6 +798,7 @@
       <adjacent value="Road_30" />
       <adjacent value="Grass_45" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -748,6 +816,7 @@
       <adjacent value="Road_31" />
       <adjacent value="Grass_55" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -768,6 +837,7 @@
       <adjacent value="Grass_51" />
       <adjacent value="Grass_40" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -785,6 +855,7 @@
       <adjacent value="Road_49" />
       <adjacent value="Road_48" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -803,6 +874,7 @@
       <adjacent value="Grass_53" />
       <adjacent value="Grass_41" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -820,6 +892,7 @@
       <adjacent value="House_7" />
       <adjacent value="Road_60" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -838,6 +911,7 @@
       <adjacent value="Road_62" />
       <adjacent value="Road_63" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -856,6 +930,7 @@
       <adjacent value="Grass_45" />
       <adjacent value="Grass_58" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -871,6 +946,7 @@
       <adjacent value="Grass_59" />
       <adjacent value="Grass_50" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -888,6 +964,7 @@
       <adjacent value="Road_35" />
       <adjacent value="Road_34" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -908,6 +985,7 @@
       <adjacent value="Road_64" />
       <adjacent value="Road_65" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -927,6 +1005,7 @@
       <adjacent value="Grass_64" />
       <adjacent value="Grass_56" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -947,6 +1026,7 @@
       <adjacent value="Road_50" />
       <adjacent value="Grass_59" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -963,6 +1043,7 @@
       <adjacent value="Road_60" />
       <adjacent value="Grass_66" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -980,6 +1061,7 @@
       <adjacent value="Road_36" />
       <adjacent value="Grass_67" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -995,6 +1077,7 @@
       <adjacent value="Road_65" />
       <adjacent value="Grass_68" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1011,6 +1094,7 @@
       <adjacent value="MachineShop_0" />
       <adjacent value="Grass_69" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1028,6 +1112,7 @@
       <adjacent value="Road_51" />
       <adjacent value="Grass_70" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1046,6 +1131,7 @@
       <adjacent value="Road_12" />
       <adjacent value="Road_52" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1064,6 +1150,7 @@
       <adjacent value="Grass_62" />
       <adjacent value="Grass_72" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1079,6 +1166,7 @@
       <adjacent value="Grass_63" />
       <adjacent value="Grass_73" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1094,6 +1182,7 @@
       <adjacent value="Grass_64" />
       <adjacent value="Grass_71" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1113,6 +1202,7 @@
       <adjacent value="Grass_65" />
       <adjacent value="Road_51" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1128,6 +1218,7 @@
       <adjacent value="Road_15" />
       <adjacent value="Grass_69" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1146,6 +1237,7 @@
       <adjacent value="Grass_67" />
       <adjacent value="Grass_78" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1164,6 +1256,7 @@
       <adjacent value="Graveyard_0" />
       <adjacent value="Grass_81" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1182,6 +1275,7 @@
       <adjacent value="Grass_84" />
       <adjacent value="Grass_83" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1203,6 +1297,7 @@
       <adjacent value="Road_11" />
       <adjacent value="Road_10" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1221,6 +1316,7 @@
       <adjacent value="Road_10" />
       <adjacent value="Road_9" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1239,6 +1335,7 @@
       <adjacent value="Grass_87" />
       <adjacent value="Grass_86" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1259,6 +1356,7 @@
       <adjacent value="Grass_87" />
       <adjacent value="Grass_77" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1279,6 +1377,7 @@
       <adjacent value="Grass_88" />
       <adjacent value="Road_39" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1298,6 +1397,7 @@
       <adjacent value="Graveyard_0" />
       <adjacent value="Grass_81" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1316,6 +1416,7 @@
       <adjacent value="RR_23" />
       <adjacent value="RR_22" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1334,6 +1435,7 @@
       <adjacent value="Grass_91" />
       <adjacent value="Grass_90" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1353,6 +1455,7 @@
       <adjacent value="Grass_74" />
       <adjacent value="Road_14" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1371,6 +1474,7 @@
       <adjacent value="Grass_93" />
       <adjacent value="Grass_91" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1392,6 +1496,7 @@
       <adjacent value="Road_10" />
       <adjacent value="Grass_75" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1411,6 +1516,7 @@
       <adjacent value="Grass_77" />
       <adjacent value="Grass_87" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1434,6 +1540,7 @@
       <adjacent value="Grass_78" />
       <adjacent value="Grass_77" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1454,6 +1561,7 @@
       <adjacent value="Grass_79" />
       <adjacent value="Grass_89" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1473,6 +1581,7 @@
       <adjacent value="RR_21" />
       <adjacent value="RR_19" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1493,6 +1602,7 @@
       <adjacent value="RR_2" />
       <adjacent value="RR_1" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1515,6 +1625,7 @@
       <adjacent value="Grass_82" />
       <adjacent value="Grass_90" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1533,6 +1644,7 @@
       <adjacent value="RR_4" />
       <adjacent value="RR_5" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1553,6 +1665,7 @@
       <adjacent value="RR_6" />
       <adjacent value="Grass_92" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1574,6 +1687,7 @@
       <adjacent value="RR_8" />
       <adjacent value="Grass_95" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1596,6 +1710,7 @@
       <adjacent value="Grass_96" />
       <adjacent value="Grass_75" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1615,6 +1730,7 @@
       <adjacent value="RR_10" />
       <adjacent value="Grass_95" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1633,6 +1749,7 @@
       <adjacent value="Grass_87" />
       <adjacent value="StockPen_0" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1650,6 +1767,7 @@
       <adjacent value="RR_2" />
       <adjacent value="Grass_99" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1668,6 +1786,7 @@
       <adjacent value="RR_4" />
       <adjacent value="Grass_100" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1686,6 +1805,7 @@
       <adjacent value="Grass_99" />
       <adjacent value="Grass_101" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1704,6 +1824,7 @@
       <adjacent value="Grass_102" />
       <adjacent value="Grass_100" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1723,6 +1844,7 @@
       <adjacent value="Grass_109" />
       <adjacent value="Grass_101" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1742,6 +1864,7 @@
       <adjacent value="RR_10" />
       <adjacent value="RR_9" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1763,6 +1886,7 @@
       <adjacent value="Grass_110" />
       <adjacent value="Grass_105" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1784,6 +1908,7 @@
       <adjacent value="Road_41" />
       <adjacent value="Grass_104" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1802,6 +1927,7 @@
       <adjacent value="Road_41" />
       <adjacent value="Grass_111" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1822,6 +1948,7 @@
       <adjacent value="Grass_114" />
       <adjacent value="Grass_113" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1839,6 +1966,7 @@
       <adjacent value="Grass_114" />
       <adjacent value="Grass_107" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1857,6 +1985,7 @@
       <adjacent value="Grass_103" />
       <adjacent value="Grass_102" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1874,6 +2003,7 @@
       <adjacent value="Grass_104" />
       <adjacent value="Grass_109" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1893,6 +2023,7 @@
       <adjacent value="Road_42" />
       <adjacent value="Road_41" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1908,6 +2039,7 @@
       <adjacent value="Grass_113" />
       <adjacent value="Grass_111" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1927,6 +2059,7 @@
       <adjacent value="Grass_112" />
       <adjacent value="Grass_107" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1945,6 +2078,7 @@
       <adjacent value="Grass_115" />
       <adjacent value="Grass_113" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1960,6 +2094,7 @@
       <adjacent value="Grass_113" />
       <adjacent value="Grass_114" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1976,6 +2111,7 @@
       <adjacent value="Grass_30" />
       <adjacent value="Road_46" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1995,6 +2131,7 @@
       <adjacent value="Grass_40" />
       <adjacent value="Grass_24" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="House">
     <CanvasName value="Main" />
@@ -2011,6 +2148,7 @@
       <adjacent value="Grass_14" />
       <adjacent value="Road_43" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="House">
     <CanvasName value="Main" />
@@ -2027,6 +2165,7 @@
       <adjacent value="Grass_20" />
       <adjacent value="Road_17" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="House">
     <CanvasName value="Main" />
@@ -2044,6 +2183,7 @@
       <adjacent value="Road_48" />
       <adjacent value="Grass_40" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="House">
     <CanvasName value="Main" />
@@ -2059,6 +2199,7 @@
       <adjacent value="Grass_25" />
       <adjacent value="Road_53" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="House">
     <CanvasName value="Main" />
@@ -2074,6 +2215,7 @@
       <adjacent value="Road_27" />
       <adjacent value="Grass_38" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="House">
     <CanvasName value="Main" />
@@ -2089,6 +2231,7 @@
       <adjacent value="Grass_58" />
       <adjacent value="Road_34" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="House">
     <CanvasName value="Main" />
@@ -2104,6 +2247,7 @@
       <adjacent value="Grass_43" />
       <adjacent value="Road_63" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="House">
     <CanvasName value="Main" />
@@ -2119,6 +2263,7 @@
       <adjacent value="Grass_53" />
       <adjacent value="Road_61" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="House">
     <CanvasName value="Main" />
@@ -2134,6 +2279,7 @@
       <adjacent value="Grass_50" />
       <adjacent value="Road_50" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="House">
     <CanvasName value="Main" />
@@ -2149,6 +2295,7 @@
       <adjacent value="Grass_94" />
       <adjacent value="Grass_75" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Tavern">
     <CanvasName value="Main" />
@@ -2165,6 +2312,7 @@
       <adjacent value="Tavern_1" />
       <adjacent value="Grass_4" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Tavern">
     <CanvasName value="Main" />
@@ -2180,6 +2328,7 @@
       <adjacent value="Tavern_0" />
       <adjacent value="Tavern_2" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Tavern">
     <CanvasName value="Main" />
@@ -2196,6 +2345,7 @@
       <adjacent value="Tavern_0" />
       <adjacent value="Road_20" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="VetOffice">
     <CanvasName value="Main" />
@@ -2211,6 +2361,7 @@
       <adjacent value="VetOffice_1" />
       <adjacent value="Grass_6" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="VetOffice">
     <CanvasName value="Main" />
@@ -2226,6 +2377,7 @@
       <adjacent value="VetOffice_0" />
       <adjacent value="Road_22" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="GasPumps">
     <CanvasName value="Main" />
@@ -2242,6 +2394,7 @@
       <adjacent value="Grass_9" />
       <adjacent value="Road_1" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="GeneralStore">
     <CanvasName value="Main" />
@@ -2259,6 +2412,7 @@
       <adjacent value="GeneralStore_3" />
       <adjacent value="GeneralStore_2" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="GeneralStore">
     <CanvasName value="Main" />
@@ -2274,6 +2428,7 @@
       <adjacent value="GeneralStore_0" />
       <adjacent value="GeneralStore_3" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="GeneralStore">
     <CanvasName value="Main" />
@@ -2290,6 +2445,7 @@
       <adjacent value="GeneralStore_0" />
       <adjacent value="GeneralStore_3" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="GeneralStore">
     <CanvasName value="Main" />
@@ -2307,6 +2463,7 @@
       <adjacent value="GeneralStore_1" />
       <adjacent value="Road_24" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Supermarket">
     <CanvasName value="Main" />
@@ -2322,6 +2479,7 @@
       <adjacent value="Supermarket_3" />
       <adjacent value="Supermarket_1" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Supermarket">
     <CanvasName value="Main" />
@@ -2339,6 +2497,7 @@
       <adjacent value="Supermarket_4" />
       <adjacent value="Supermarket_3" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Supermarket">
     <CanvasName value="Main" />
@@ -2355,6 +2514,7 @@
       <adjacent value="Supermarket_4" />
       <adjacent value="Supermarket_1" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Supermarket">
     <CanvasName value="Main" />
@@ -2373,6 +2533,7 @@
       <adjacent value="Supermarket_4" />
       <adjacent value="Road_25" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Supermarket">
     <CanvasName value="Main" />
@@ -2390,6 +2551,7 @@
       <adjacent value="Supermarket_1" />
       <adjacent value="Supermarket_3" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="School">
     <CanvasName value="Main" />
@@ -2405,6 +2567,7 @@
       <adjacent value="School_1" />
       <adjacent value="School_2" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="School">
     <CanvasName value="Main" />
@@ -2423,6 +2586,7 @@
       <adjacent value="School_2" />
       <adjacent value="School_0" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="School">
     <CanvasName value="Main" />
@@ -2442,6 +2606,7 @@
       <adjacent value="School_1" />
       <adjacent value="School_3" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="School">
     <CanvasName value="Main" />
@@ -2458,6 +2623,7 @@
       <adjacent value="School_1" />
       <adjacent value="Road_45" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Bank">
     <CanvasName value="Main" />
@@ -2475,6 +2641,7 @@
       <adjacent value="Bank_2" />
       <adjacent value="Bank_1" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Bank">
     <CanvasName value="Main" />
@@ -2492,6 +2659,7 @@
       <adjacent value="Bank_0" />
       <adjacent value="Road_56" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Bank">
     <CanvasName value="Main" />
@@ -2508,6 +2676,7 @@
       <adjacent value="Bank_1" />
       <adjacent value="Bank_3" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Bank">
     <CanvasName value="Main" />
@@ -2523,6 +2692,7 @@
       <adjacent value="Bank_1" />
       <adjacent value="Bank_2" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="DocOffice">
     <CanvasName value="Main" />
@@ -2539,6 +2709,7 @@
       <adjacent value="Road_25" />
       <adjacent value="DocOffice_1" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="DocOffice">
     <CanvasName value="Main" />
@@ -2554,6 +2725,7 @@
       <adjacent value="DocOffice_0" />
       <adjacent value="Grass_35" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="VFW">
     <CanvasName value="Main" />
@@ -2569,6 +2741,7 @@
       <adjacent value="Road_47" />
       <adjacent value="Road_58" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="SheriffFireDept">
     <CanvasName value="Main" />
@@ -2585,6 +2758,7 @@
       <adjacent value="SheriffFireDept_2" />
       <adjacent value="SheriffFireDept_1" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="SheriffFireDept">
     <CanvasName value="Main" />
@@ -2602,6 +2776,7 @@
       <adjacent value="Road_59" />
       <adjacent value="SheriffFireDept_3" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="SheriffFireDept">
     <CanvasName value="Main" />
@@ -2620,6 +2795,7 @@
       <adjacent value="SheriffFireDept_3" />
       <adjacent value="SheriffFireDept_0" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="SheriffFireDept">
     <CanvasName value="Main" />
@@ -2637,6 +2813,7 @@
       <adjacent value="SheriffFireDept_2" />
       <adjacent value="SheriffFireDept_1" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="ClothingStore">
     <CanvasName value="Main" />
@@ -2652,6 +2829,7 @@
       <adjacent value="Grass_41" />
       <adjacent value="ClothingStore_1" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="ClothingStore">
     <CanvasName value="Main" />
@@ -2667,6 +2845,7 @@
       <adjacent value="Road_57" />
       <adjacent value="ClothingStore_0" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="HotelAndRestaurant">
     <CanvasName value="Main" />
@@ -2684,6 +2863,7 @@
       <adjacent value="HotelAndRestaurant_2" />
       <adjacent value="Road_63" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="HotelAndRestaurant">
     <CanvasName value="Main" />
@@ -2701,6 +2881,7 @@
       <adjacent value="HotelAndRestaurant_4" />
       <adjacent value="HotelAndRestaurant_3" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="HotelAndRestaurant">
     <CanvasName value="Main" />
@@ -2717,6 +2898,7 @@
       <adjacent value="HotelAndRestaurant_1" />
       <adjacent value="HotelAndRestaurant_4" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="HotelAndRestaurant">
     <CanvasName value="Main" />
@@ -2732,6 +2914,7 @@
       <adjacent value="HotelAndRestaurant_4" />
       <adjacent value="HotelAndRestaurant_1" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="HotelAndRestaurant">
     <CanvasName value="Main" />
@@ -2749,6 +2932,7 @@
       <adjacent value="HotelAndRestaurant_2" />
       <adjacent value="Grass_77" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Church">
     <CanvasName value="Main" />
@@ -2765,6 +2949,7 @@
       <adjacent value="Church_3" />
       <adjacent value="Church_2" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Church">
     <CanvasName value="Main" />
@@ -2782,6 +2967,7 @@
       <adjacent value="Church_4" />
       <adjacent value="Road_64" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Church">
     <CanvasName value="Main" />
@@ -2798,6 +2984,7 @@
       <adjacent value="Church_3" />
       <adjacent value="Church_0" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Church">
     <CanvasName value="Main" />
@@ -2815,6 +3002,7 @@
       <adjacent value="Church_0" />
       <adjacent value="Church_1" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Church">
     <CanvasName value="Main" />
@@ -2830,6 +3018,7 @@
       <adjacent value="Church_3" />
       <adjacent value="Church_1" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Graveyard">
     <CanvasName value="Main" />
@@ -2850,6 +3039,7 @@
       <adjacent value="Church_2" />
       <adjacent value="Road_38" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="MachineShop">
     <CanvasName value="Main" />
@@ -2866,6 +3056,7 @@
       <adjacent value="Grass_60" />
       <adjacent value="MachineShop_1" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="MachineShop">
     <CanvasName value="Main" />
@@ -2883,6 +3074,7 @@
       <adjacent value="MachineShop_2" />
       <adjacent value="MachineShop_3" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="MachineShop">
     <CanvasName value="Main" />
@@ -2898,6 +3090,7 @@
       <adjacent value="MachineShop_1" />
       <adjacent value="MachineShop_3" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="MachineShop">
     <CanvasName value="Main" />
@@ -2914,6 +3107,7 @@
       <adjacent value="MachineShop_2" />
       <adjacent value="Grass_70" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="TownHall">
     <CanvasName value="Main" />
@@ -2930,6 +3124,7 @@
       <adjacent value="TownHall_2" />
       <adjacent value="TownHall_1" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="TownHall">
     <CanvasName value="Main" />
@@ -2946,6 +3141,7 @@
       <adjacent value="TownHall_0" />
       <adjacent value="TownHall_2" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="TownHall">
     <CanvasName value="Main" />
@@ -2962,6 +3158,7 @@
       <adjacent value="Road_61" />
       <adjacent value="TownHall_1" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="BarAndGrill">
     <CanvasName value="Main" />
@@ -2977,6 +3174,7 @@
       <adjacent value="BarAndGrill_1" />
       <adjacent value="Road_12" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="BarAndGrill">
     <CanvasName value="Main" />
@@ -2992,6 +3190,7 @@
       <adjacent value="Grass_93" />
       <adjacent value="BarAndGrill_0" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="StockPen">
     <CanvasName value="Main" />
@@ -3016,6 +3215,7 @@
       <adjacent value="Grass_96" />
       <adjacent value="Grass_75" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="TrainStation">
     <CanvasName value="Main" />
@@ -3032,6 +3232,7 @@
       <adjacent value="TrainStation_1" />
       <adjacent value="RR_18" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="TrainStation">
     <CanvasName value="Main" />
@@ -3047,6 +3248,7 @@
       <adjacent value="Grass_107" />
       <adjacent value="TrainStation_0" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="LawyersOffice">
     <CanvasName value="Main" />
@@ -3061,6 +3263,7 @@
     <Adjacents count="1">
       <adjacent value="Road_32" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3077,6 +3280,7 @@
       <adjacent value="RR_2" />
       <adjacent value="Grass_90" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3095,6 +3299,7 @@
       <adjacent value="Grass_98" />
       <adjacent value="Grass_99" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3113,6 +3318,7 @@
       <adjacent value="Grass_99" />
       <adjacent value="RR_2" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3132,6 +3338,7 @@
       <adjacent value="RR_5" />
       <adjacent value="Grass_92" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3150,6 +3357,7 @@
       <adjacent value="Grass_100" />
       <adjacent value="RR_6" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3169,6 +3377,7 @@
       <adjacent value="Grass_101" />
       <adjacent value="Grass_100" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3186,6 +3395,7 @@
       <adjacent value="Grass_101" />
       <adjacent value="RR_6" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3205,6 +3415,7 @@
       <adjacent value="Grass_102" />
       <adjacent value="Grass_101" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3223,6 +3434,7 @@
       <adjacent value="Grass_102" />
       <adjacent value="RR_8" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3241,6 +3453,7 @@
       <adjacent value="RR_11" />
       <adjacent value="Grass_96" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3259,6 +3472,7 @@
       <adjacent value="Grass_103" />
       <adjacent value="Grass_104" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3277,6 +3491,7 @@
       <adjacent value="Grass_104" />
       <adjacent value="RR_11" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3295,6 +3510,7 @@
       <adjacent value="RR_14" />
       <adjacent value="StockPen_0" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3312,6 +3528,7 @@
       <adjacent value="RR_15" />
       <adjacent value="StockPen_0" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3330,6 +3547,7 @@
       <adjacent value="Road_41" />
       <adjacent value="Grass_105" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3349,6 +3567,7 @@
       <adjacent value="RR_17" />
       <adjacent value="Road_40" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3367,6 +3586,7 @@
       <adjacent value="Road_40" />
       <adjacent value="Grass_88" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3384,6 +3604,7 @@
       <adjacent value="RR_19" />
       <adjacent value="TrainStation_0" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3401,6 +3622,7 @@
       <adjacent value="Grass_89" />
       <adjacent value="RR_20" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3418,6 +3640,7 @@
       <adjacent value="RR_21" />
       <adjacent value="Grass_107" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3436,6 +3659,7 @@
       <adjacent value="RR_22" />
       <adjacent value="Grass_80" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3455,6 +3679,7 @@
       <adjacent value="RR_23" />
       <adjacent value="Grass_81" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3471,6 +3696,7 @@
       <adjacent value="Grass_81" />
       <adjacent value="Grass_108" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3488,6 +3714,7 @@
       <adjacent value="Grass_10" />
       <adjacent value="Road_2" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3503,6 +3730,7 @@
       <adjacent value="Road_1" />
       <adjacent value="Road_3" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3527,6 +3755,7 @@
       <adjacent value="Road_24" />
       <adjacent value="Road_4" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3543,6 +3772,7 @@
       <adjacent value="Road_5" />
       <adjacent value="Grass_34" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3560,6 +3790,7 @@
       <adjacent value="Grass_42" />
       <adjacent value="Road_6" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3582,6 +3813,7 @@
       <adjacent value="Grass_54" />
       <adjacent value="Grass_42" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3602,6 +3834,7 @@
       <adjacent value="Road_62" />
       <adjacent value="Road_8" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3622,6 +3855,7 @@
       <adjacent value="Road_61" />
       <adjacent value="Road_9" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3638,6 +3872,7 @@
       <adjacent value="Road_10" />
       <adjacent value="Grass_76" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3657,6 +3892,7 @@
       <adjacent value="Grass_85" />
       <adjacent value="Grass_75" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3673,6 +3909,7 @@
       <adjacent value="Road_10" />
       <adjacent value="Grass_75" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3695,6 +3932,7 @@
       <adjacent value="Road_11" />
       <adjacent value="BarAndGrill_0" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3714,6 +3952,7 @@
       <adjacent value="Road_12" />
       <adjacent value="Grass_70" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3731,6 +3970,7 @@
       <adjacent value="Grass_83" />
       <adjacent value="Road_13" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3750,6 +3990,7 @@
       <adjacent value="Grass_83" />
       <adjacent value="Grass_82" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3766,6 +4007,7 @@
       <adjacent value="Grass_24" />
       <adjacent value="Road_17" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3786,6 +4028,7 @@
       <adjacent value="Road_18" />
       <adjacent value="Grass_19" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3803,6 +4046,7 @@
       <adjacent value="School_1" />
       <adjacent value="Road_19" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3827,6 +4071,7 @@
       <adjacent value="Road_45" />
       <adjacent value="Road_20" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3843,6 +4088,7 @@
       <adjacent value="Road_19" />
       <adjacent value="Road_21" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3860,6 +4106,7 @@
       <adjacent value="Grass_25" />
       <adjacent value="Road_22" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3879,6 +4126,7 @@
       <adjacent value="Grass_22" />
       <adjacent value="VetOffice_1" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3897,6 +4145,7 @@
       <adjacent value="Grass_22" />
       <adjacent value="Road_24" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3913,6 +4162,7 @@
       <adjacent value="Road_23" />
       <adjacent value="Road_3" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3931,6 +4181,7 @@
       <adjacent value="DocOffice_0" />
       <adjacent value="Road_3" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3949,6 +4200,7 @@
       <adjacent value="Grass_27" />
       <adjacent value="Road_25" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3966,6 +4218,7 @@
       <adjacent value="Road_28" />
       <adjacent value="Grass_23" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -3984,6 +4237,7 @@
       <adjacent value="Grass_23" />
       <adjacent value="Road_27" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4002,6 +4256,7 @@
       <adjacent value="Road_30" />
       <adjacent value="Grass_38" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4019,6 +4274,7 @@
       <adjacent value="Grass_45" />
       <adjacent value="Road_31" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4038,6 +4294,7 @@
       <adjacent value="Grass_55" />
       <adjacent value="Road_32" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4054,6 +4311,7 @@
       <adjacent value="Road_31" />
       <adjacent value="Road_33" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4074,6 +4332,7 @@
       <adjacent value="Road_34" />
       <adjacent value="Road_32" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4092,6 +4351,7 @@
       <adjacent value="Grass_57" />
       <adjacent value="Road_35" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4119,6 +4379,7 @@
       <adjacent value="Road_34" />
       <adjacent value="Road_63" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4136,6 +4397,7 @@
       <adjacent value="Road_37" />
       <adjacent value="Grass_67" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4153,6 +4415,7 @@
       <adjacent value="Grass_72" />
       <adjacent value="Road_38" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4174,6 +4437,7 @@
       <adjacent value="Graveyard_0" />
       <adjacent value="Road_37" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4193,6 +4457,7 @@
       <adjacent value="Road_40" />
       <adjacent value="Grass_87" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4212,6 +4477,7 @@
       <adjacent value="RR_17" />
       <adjacent value="Grass_88" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4233,6 +4499,7 @@
       <adjacent value="Road_42" />
       <adjacent value="Grass_105" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4250,6 +4517,7 @@
       <adjacent value="Road_41" />
       <adjacent value="Grass_111" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4267,6 +4535,7 @@
       <adjacent value="Road_44" />
       <adjacent value="Grass_15" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4284,6 +4553,7 @@
       <adjacent value="Road_43" />
       <adjacent value="Grass_15" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4300,6 +4570,7 @@
       <adjacent value="Road_46" />
       <adjacent value="Road_19" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4321,6 +4592,7 @@
       <adjacent value="Road_47" />
       <adjacent value="Road_53" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4338,6 +4610,7 @@
       <adjacent value="Grass_31" />
       <adjacent value="Road_46" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4360,6 +4633,7 @@
       <adjacent value="Road_49" />
       <adjacent value="Grass_51" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4378,6 +4652,7 @@
       <adjacent value="Grass_51" />
       <adjacent value="Road_50" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4397,6 +4672,7 @@
       <adjacent value="Grass_60" />
       <adjacent value="Road_49" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4416,6 +4692,7 @@
       <adjacent value="Grass_70" />
       <adjacent value="Road_52" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4434,6 +4711,7 @@
       <adjacent value="Grass_66" />
       <adjacent value="Road_51" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4450,6 +4728,7 @@
       <adjacent value="Road_46" />
       <adjacent value="Road_54" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4467,6 +4746,7 @@
       <adjacent value="Road_55" />
       <adjacent value="Grass_41" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4485,6 +4765,7 @@
       <adjacent value="Grass_41" />
       <adjacent value="Road_56" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4501,6 +4782,7 @@
       <adjacent value="Road_55" />
       <adjacent value="Bank_1" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4517,6 +4799,7 @@
       <adjacent value="Road_56" />
       <adjacent value="Road_6" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4535,6 +4818,7 @@
       <adjacent value="Road_59" />
       <adjacent value="Road_48" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4554,6 +4838,7 @@
       <adjacent value="Grass_53" />
       <adjacent value="Road_60" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4571,6 +4856,7 @@
       <adjacent value="Grass_53" />
       <adjacent value="Road_61" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4589,6 +4875,7 @@
       <adjacent value="House_7" />
       <adjacent value="Road_60" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4606,6 +4893,7 @@
       <adjacent value="Road_7" />
       <adjacent value="Grass_54" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4625,6 +4913,7 @@
       <adjacent value="Road_35" />
       <adjacent value="House_5" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4643,6 +4932,7 @@
       <adjacent value="Grass_57" />
       <adjacent value="Road_35" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4660,5 +4950,6 @@
       <adjacent value="Road_64" />
       <adjacent value="Grass_63" />
     </Adjacents>
+    <Observations count="0" />
   </Territory>
 </Territories>

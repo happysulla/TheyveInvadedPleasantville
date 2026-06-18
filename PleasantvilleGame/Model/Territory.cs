@@ -5,7 +5,7 @@ using Point = System.Windows.Point;
 
 namespace PleasantvilleGame
 {
-	[Serializable]
+   [Serializable]
 	public class Territory : ITerritory
 	{
 		public static int MAX_PATH_COUNT = 30;
@@ -14,11 +14,17 @@ namespace PleasantvilleGame
 		public string Subname { get; set; } = "ERROR";
 		public IMapPoint CenterPoint { get; set; } = new MapPoint();
 		public List<IMapPoint> Points { get; set; } = new List<IMapPoint>();
-		public List<string> Adjacents { get; set; } = new List<string>();
-		public List<string> PavedRoads { get; set; } = new List<string>();
-		public List<string> Observations { get; set; } = new List<string>();
+		public List<String> Adjacents { get; set; } = new List<String>();
+		public Dictionary<String, double> Observations { get; set; } = new Dictionary<String, double>();
 		public bool IsBuilding()
 		{
+         int arraySize = TableMgr.theBuildingSizes.GetLength(0);
+			for (int i = 0; i < arraySize; i++)
+			{
+            string matchingName = Utilities.RemoveSpaces(TableMgr.theBuildingSizes[i, 0]);
+				if (true == Name.Contains(matchingName))
+					return true;
+         }
 			return false;
 		}
 		//---------------------------------------------------------------
@@ -200,12 +206,12 @@ namespace PleasantvilleGame
          }
          if (false == TryGetRandomShortestPathTerritories(territories, startT, endT, out List<ITerritory>? shortestPathTerritories))
          {
-            Logger.Log(LogEnum.LE_ERROR, "Get_ShortestRandomPath(): unable to find path from " + startT.Name + " to " + endT.Name);
+            Logger.Log(LogEnum.LE_ERROR, "Get_ShortestRandomPath(): unable to find path from " + startT.ToString() + " to " + endT.ToString());
             return null;
          }
          if (null == shortestPathTerritories)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Get_ShortestRandomPath(): shortestPathTerritories=null for startT=" + startT.Name + " endT=" + endT.Name);
+            Logger.Log(LogEnum.LE_ERROR, "Get_ShortestRandomPath(): shortestPathTerritories=null for startT=" + startT.ToString() + " endT=" + endT.ToString());
             return null;
          }
          IMapPath bestPath = new MapPath(endPathName);
@@ -213,14 +219,14 @@ namespace PleasantvilleGame
          int territoriesToAdd = Math.Min(moveFactor, shortestPathTerritories.Count);
          for (int i = 0; i < territoriesToAdd; ++i)
             bestPath.Territories.Add(shortestPathTerritories[i]);
-         Logger.Log(LogEnum.LE_SHOW_MIM_BEST_PATH, "Get_ShortestRandomPath(): moving from " + startT.Name + " to " + endT.Name + " using " + bestPath.ToString());
+         Logger.Log(LogEnum.LE_SHOW_MIM_BEST_PATH, "Get_ShortestRandomPath(): moving from " + startT.ToString() + " to " + endT.ToString() + " using " + bestPath.ToString());
          return bestPath;
       }
 		public static IMapPoint GetRandomPoint(ITerritory t, double offset) // return the top left location of a MapItem, not the center point
 		{
 			if (0 == t.Points.Count)
 			{
-				Logger.Log(LogEnum.LE_ERROR, "GetRandomPoint(): t.Points.Count=0 for t.Name=" + t.Name);
+				Logger.Log(LogEnum.LE_ERROR, "GetRandomPoint(): t.Points.Count=0 for t.Name=" + t.ToString());
 				return t.CenterPoint;
 			}
 			//----------------------------------------------------
