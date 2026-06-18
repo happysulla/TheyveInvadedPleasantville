@@ -616,14 +616,14 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Show_Observations(): anchorEllipse=null for " + anchorTerritory.ToString() + " " + sb1.ToString());
                return false;
             }
-            if (0 < anchorTerritory.Adjacents.Count)
+            if (0 < anchorTerritory.Observations.Count)
                anchorEllipse.Fill = aSolidColorBrush4;
-            foreach (string s in anchorTerritory.Adjacents)  // At this point, the anchorEllipse and the anchorTerritory are found.
+            foreach (var kvp in anchorTerritory.Observations)  // At this point, the anchorEllipse and the anchorTerritory are found.
             {
                ITerritory? obsTerritory = null;
                foreach (ITerritory t in territories) 
                {
-                  if (t.ToString() == s)
+                  if (t.ToString() == kvp.Key)
                   {
                      obsTerritory = t;
                      break;
@@ -631,13 +631,13 @@ namespace PleasantvilleGame
                }
                if (null == obsTerritory)
                {
-                  MessageBox.Show("Show_Observations(): Not Found s=" + s);
+                  MessageBox.Show("Show_Observations(): Not Found kvp.Key=" + kvp.Key);
                   return false;
                }
                string? obsName = obsTerritory.ToString();
                if (null == obsName)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "Show_Observations(): obsName=null for " + anchorTerritory.Name);
+                  Logger.Log(LogEnum.LE_ERROR, "Show_Observations(): obsName=null for " + anchorTerritory.ToString());
                   return false;
                }
                Ellipse? adjacentEllipse = null; // Find the corresponding ellipse for this territory
@@ -661,15 +661,14 @@ namespace PleasantvilleGame
                }
                //-------------------------------------------------
                bool isReturnFound = false;
-               //foreach (String s1 in obsTerritory.Observations) // Search the Adjacent Territory  List to make sure the anchor territory is in that list. It should be bi directional.
-               //{
-               //   string returnName = s1;
-               //   if (returnName == anchorTerritory.ToString())
-               //   {
-               //      isReturnFound = true; 
-               //      break;
-               //   }
-               //}
+               foreach (var kvp1 in obsTerritory.Observations) // Search the Adjacent Territory  List to make sure the anchor territory is in that list. It should be bi directional.
+               {
+                  if (kvp1.Key == anchorTerritory.ToString())
+                  {
+                     isReturnFound = true;
+                     break;
+                  }
+               }
                //-------------------------------------------------
                if (false == isReturnFound) // Anchor Property not found in the observation property territory.  This is an error condition.
                {
