@@ -59,6 +59,7 @@ namespace PleasantvilleGame
       LE_VIEW_CONTROL_NAME,
       //-------------
       LE_SHOW_OBSERVATIONS,
+      LE_SHOW_OBSERVATIONS_METRIC,
       LE_SHOW_COMBAT_STATE,
       LE_SHOW_COMBAT_THREAD,
       LE_SHOW_CONVERSATIONS,
@@ -139,16 +140,18 @@ namespace PleasantvilleGame
          //SetOn(LogEnum.LE_VIEW_SHOW_STATS);
          //SetOn(LogEnum.LE_VIEW_SHOW_GAMESAVES);
          //SetOn(LogEnum.LE_VIEW_SHOW_STATS_MIN);
-         ////-------------
+         //-------------
          //SetOn(LogEnum.LE_VIEW_SHOW_SETTINGS);
          //SetOn(LogEnum.LE_SHOW_UPLOAD_GAME);
          //SetOn(LogEnum.LE_SHOW_VP_TOTAL);
-         ////-------------
+         //-------------
          SetOn(LogEnum.LE_SHOW_MIM);
          SetOn(LogEnum.LE_SHOW_MIM_ADD);
          SetOn(LogEnum.LE_SHOW_MIM_CLEAR);
          //SetOn(LogEnum.LE_SHOW_MIM_BEST_PATH);
-         ////-------------
+         //-------------
+         SetOn(LogEnum.LE_SHOW_OBSERVATIONS_METRIC);
+         //-------------
          //SetOn(LogEnum.LE_VIEW_UPDATE_MENU);
          //SetOn(LogEnum.LE_VIEW_UPDATE_STATUS_BAR);
          //SetOn(LogEnum.LE_VIEW_UPDATE_EVENTVIEWER);

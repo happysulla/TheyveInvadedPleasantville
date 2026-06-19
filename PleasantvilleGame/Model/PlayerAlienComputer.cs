@@ -31,7 +31,6 @@ namespace PleasantvilleGame
       public IMapItems myUnknownAliens = new MapItems();
       public IMapItems myUncontrolleds = new MapItems();
       public IMapItems myControlledInRanges = new MapItems();
-      public List<ObservationMetric> myObsMetrics = new List<ObservationMetric>();
    }
    //===============================================================
    public class PlayerAlienComputer : PlayerBase, IPlayerAlien
@@ -138,10 +137,21 @@ namespace PleasantvilleGame
          //    --- Closer to Alien Center
          //    --- Greater Influence
          //    --- Greater Combat
+         IMetricAlienMoves originalMetrics = new MetricAlienMoves();
          foreach(IStack stack in gi.Stacks)
          {
-            
+            IMetricAlienMove metric = new MetricAlienMove(stack.Territory);
+            metric.Value = metric.GetObservationMetric(gi);
+            originalMetrics.Add(metric);
          }
+         IMetricAlienMoves sortedMetrics = originalMetrics.Sort();
+         Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "PerformAlienMoves(): sortedMetrics=" + sortedMetrics.ToString());
+         // Identify who Aliens move to or what uncontrolled move to Aliens
+         // Should move away observing units?
+         // Pick remaining uncontrolled townspeople to move.
+         //    --- Move away from Town controlled units
+         //    --- Add deception on what is being taken over
+
          return true;
       }
       private List<TakeoverMetric> GetTakeoverMetrics(IGameInstance gi)

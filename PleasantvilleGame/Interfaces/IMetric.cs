@@ -9,6 +9,8 @@ namespace PleasantvilleGame
    public interface IMetricAlienMove
    {
       ITerritory Territory { get; set; }
+      int Value { get; set; }
+      int GetObservationMetric(IGameInstance gi);
    }
    public interface IMetricAlienMoves : System.Collections.IEnumerable
    {
@@ -23,5 +25,6 @@ namespace PleasantvilleGame
       IMetricAlienMove? RemoveAt(int index);
       IMetricAlienMove? this[int index] { get; set; }
       IMetricAlienMoves Shuffle();
+      public IMetricAlienMoves Sort();
    }
 }

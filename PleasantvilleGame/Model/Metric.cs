@@ -7,24 +7,33 @@ using System.Threading.Tasks;
 
 namespace PleasantvilleGame
 {
-   public class ObservationMetric
-   {
-      public IMapItem myMapItem;
-      public int myRange;
-      public int myMetric;
-      public ObservationMetric(IMapItem mi, int r)
-      {
-         myMapItem = mi;
-         myRange = r;
-      }
-   }
    //===============================================================
    public class MetricAlienMove : IMetricAlienMove
    {
       public ITerritory Territory { get; set; }
+      public int Value { get; set; }
       public MetricAlienMove(ITerritory t)
       {
          Territory = t;
+      }
+      public int GetObservationMetric(IGameInstance gi)
+      {
+         double pTotal = 1.0; // probability of observation = 1 - (1-p0)(1-p1)(1-p3).... where p is the probability of observation from that hex
+         foreach(var kvp in Territory.Observations)
+         {
+            IStack? stack = gi.Stacks.Find(kvp.Key); // might not be a stack in this Territory
+            if( null == stack )
+               continue;
+            for (int i=0; i<stack.MapItems.Count; ++i)
+            {
+               if ( (this.Territory.ToString() == stack.Territory.ToString()) && (0==i) ) // do not count the first mapitem in the Observation Hex
+                  continue;
+               pTotal *= (1 - kvp.Value);
+            }
+         }
+         int probability = (int) ((100.0)*(pTotal));  // probability of not being observed
+         Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "GetObservationMetric(): prob=" + probability.ToString());
+         return probability;
       }
    }
    public class MetricAlienMoves : IMetricAlienMoves
@@ -73,6 +82,43 @@ namespace PleasantvilleGame
             list.RemoveAt(index);
          }
          return shuffled;
+      }
+      public IMetricAlienMoves Sort()
+      {
+         IMetricAlienMoves sortedMetrics = new MetricAlienMoves();
+         foreach (Object o in myList)
+         {
+            IMetricAlienMove metric1 = (IMetricAlienMove)o;
+            bool isInserted = false;
+            int index = 0;
+            foreach (IMetricAlienMove metric2 in sortedMetrics)
+            {
+               if (metric2.Value < metric1.Value)
+               {
+                  sortedMetrics.Insert(index, metric1);
+                  isInserted = true;
+                  break;
+               }
+               ++index;
+            }
+            if (false == isInserted) // If not inserted, add to end
+               sortedMetrics.Add(metric1);
+         }
+         return sortedMetrics;
+      }
+      public override string ToString()
+      {
+         StringBuilder sb = new StringBuilder();
+         foreach (Object o in myList)
+         {
+            IMetricAlienMove m = (IMetricAlienMove)o;
+            sb.Append("<");
+            sb.Append(m.Territory.ToString());
+            sb.Append(",");
+            sb.Append(m.Value.ToString());
+            sb.Append(">");
+         }
+         return sb.ToString();
       }
    }
    //===============================================================
