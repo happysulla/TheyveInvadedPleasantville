@@ -467,13 +467,12 @@
       <adjacent value="Grass_23" />
       <adjacent value="Grass_12" />
     </Adjacents>
-    <Observations count="8">
+    <Observations count="7">
       <observation key="Grass_12" value="0.5000" />
       <observation key="Grass_23" value="0.5000" />
       <observation key="Grass_28" value="0.3333" />
       <observation key="Grass_39" value="0.1667" />
       <observation key="Road_28" value="0.3333" />
-      <observation key="Road_27" value="0.3333" />
       <observation key="Road_29" value="0.1667" />
       <observation key="Grass_18" value="0.6667" />
     </Observations>
@@ -658,19 +657,18 @@
       <adjacent value="Grass_26" />
       <adjacent value="Grass_32" />
     </Adjacents>
-    <Observations count="13">
+    <Observations count="12">
       <observation key="Road_21" value="0.5000" />
       <observation key="Grass_21" value="0.3333" />
       <observation key="Grass_16" value="0.1667" />
       <observation key="Road_22" value="0.5000" />
+      <observation key="Road_23" value="0.3333" />
       <observation key="Grass_26" value="0.5000" />
       <observation key="Grass_33" value="0.3333" />
-      <observation key="Road_56" value="0.1667" />
-      <observation key="Road_55" value="0.3333" />
-      <observation key="Road_54" value="0.3333" />
       <observation key="Grass_32" value="0.5000" />
+      <observation key="Road_54" value="0.3333" />
+      <observation key="Road_55" value="0.3333" />
       <observation key="Grass_41" value="0.1667" />
-      <observation key="Road_23" value="0.3333" />
       <observation key="Grass_25" value="0.6667" />
     </Observations>
   </Territory>
@@ -721,7 +719,14 @@
       <adjacent value="Grass_37" />
       <adjacent value="Grass_38" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="6">
+      <observation key="Grass_37" value="0.5000" />
+      <observation key="Grass_36" value="0.3333" />
+      <observation key="Road_33" value="0.1667" />
+      <observation key="Grass_35" value="0.1667" />
+      <observation key="Road_26" value="0.5000" />
+      <observation key="Grass_27" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -771,7 +776,17 @@
       <adjacent value="Grass_40" />
       <adjacent value="Grass_29" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="9">
+      <observation key="Grass_31" value="0.5000" />
+      <observation key="Road_47" value="0.3333" />
+      <observation key="Road_46" value="0.3333" />
+      <observation key="Road_53" value="0.1667" />
+      <observation key="Grass_29" value="0.5000" />
+      <observation key="Grass_40" value="0.5000" />
+      <observation key="Grass_50" value="0.3333" />
+      <observation key="Grass_56" value="0.1667" />
+      <observation key="Grass_30" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -790,7 +805,7 @@
       <adjacent value="Road_55" />
       <adjacent value="Road_54" />
     </Adjacents>
-    <Observations count="14">
+    <Observations count="13">
       <observation key="Grass_25" value="0.5000" />
       <observation key="Road_21" value="0.3333" />
       <observation key="Grass_21" value="0.1667" />
@@ -801,7 +816,6 @@
       <observation key="Road_56" value="0.3333" />
       <observation key="Road_55" value="0.5000" />
       <observation key="Road_54" value="0.5000" />
-      <observation key="Road_57" value="0.1667" />
       <observation key="Grass_41" value="0.3333" />
       <observation key="Grass_52" value="0.1667" />
       <observation key="Grass_32" value="0.6667" />
@@ -855,7 +869,23 @@
       <adjacent value="Road_5" />
       <adjacent value="Road_4" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="15">
+      <observation key="Grass_35" value="0.5000" />
+      <observation key="Grass_36" value="0.3333" />
+      <observation key="Grass_43" value="0.5000" />
+      <observation key="Road_34" value="0.3333" />
+      <observation key="Road_33" value="0.3333" />
+      <observation key="Road_32" value="0.1667" />
+      <observation key="Road_5" value="0.5000" />
+      <observation key="Road_4" value="0.5000" />
+      <observation key="Road_6" value="0.3333" />
+      <observation key="Road_57" value="0.1667" />
+      <observation key="Grass_42" value="0.5000" />
+      <observation key="Grass_54" value="0.3333" />
+      <observation key="Road_62" value="0.1667" />
+      <observation key="Road_7" value="0.1667" />
+      <observation key="Grass_34" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -875,7 +905,22 @@
       <adjacent value="Grass_36" />
       <adjacent value="Road_33" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="14">
+      <observation key="Road_33" value="0.5000" />
+      <observation key="Road_32" value="0.3333" />
+      <observation key="Road_31" value="0.1667" />
+      <observation key="Grass_36" value="0.5000" />
+      <observation key="Grass_37" value="0.3333" />
+      <observation key="Grass_27" value="0.1667" />
+      <observation key="Grass_34" value="0.5000" />
+      <observation key="Road_5" value="0.3333" />
+      <observation key="Grass_42" value="0.3333" />
+      <observation key="Road_6" value="0.1667" />
+      <observation key="Grass_43" value="0.5000" />
+      <observation key="Grass_54" value="0.1667" />
+      <observation key="Road_34" value="0.3333" />
+      <observation key="Grass_35" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -894,7 +939,20 @@
       <adjacent value="Grass_35" />
       <adjacent value="Road_33" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="12">
+      <observation key="Grass_37" value="0.5000" />
+      <observation key="Grass_27" value="0.3333" />
+      <observation key="Road_26" value="0.1667" />
+      <observation key="Road_33" value="0.5000" />
+      <observation key="Road_34" value="0.3333" />
+      <observation key="Road_35" value="0.1667" />
+      <observation key="Grass_43" value="0.3333" />
+      <observation key="Grass_35" value="0.5000" />
+      <observation key="Grass_34" value="0.3333" />
+      <observation key="Road_5" value="0.1667" />
+      <observation key="Grass_42" value="0.1667" />
+      <observation key="Grass_36" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -913,7 +971,20 @@
       <adjacent value="Grass_38" />
       <adjacent value="Grass_36" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="12">
+      <observation key="Grass_27" value="0.5000" />
+      <observation key="Road_26" value="0.3333" />
+      <observation key="Grass_38" value="0.5000" />
+      <observation key="Road_29" value="0.3333" />
+      <observation key="Grass_39" value="0.1667" />
+      <observation key="Grass_44" value="0.1667" />
+      <observation key="Grass_36" value="0.5000" />
+      <observation key="Road_33" value="0.3333" />
+      <observation key="Road_34" value="0.1667" />
+      <observation key="Grass_35" value="0.3333" />
+      <observation key="Grass_43" value="0.1667" />
+      <observation key="Grass_37" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -933,7 +1004,13 @@
       <adjacent value="Grass_37" />
       <adjacent value="Grass_27" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="5">
+      <observation key="Grass_37" value="0.5000" />
+      <observation key="Road_29" value="0.5000" />
+      <observation key="Grass_39" value="0.3333" />
+      <observation key="Grass_44" value="0.3333" />
+      <observation key="Grass_38" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -988,12 +1065,12 @@
     <Observations count="9">
       <observation key="Grass_29" value="0.5000" />
       <observation key="Grass_24" value="0.3333" />
-      <observation key="Road_16" value="0.1667" />
-      <observation key="Grass_30" value="0.5000" />
-      <observation key="Grass_31" value="0.3333" />
       <observation key="Grass_50" value="0.5000" />
       <observation key="Grass_56" value="0.3333" />
       <observation key="Grass_59" value="0.1667" />
+      <observation key="Grass_30" value="0.5000" />
+      <observation key="Road_46" value="0.1667" />
+      <observation key="Road_16" value="0.1667" />
       <observation key="Grass_40" value="0.6667" />
     </Observations>
   </Territory>
@@ -1045,7 +1122,24 @@
       <adjacent value="Road_6" />
       <adjacent value="Grass_54" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="16">
+      <observation key="Grass_34" value="0.5000" />
+      <observation key="Grass_35" value="0.3333" />
+      <observation key="Grass_43" value="0.5000" />
+      <observation key="Grass_36" value="0.1667" />
+      <observation key="Road_33" value="0.3333" />
+      <observation key="Road_32" value="0.1667" />
+      <observation key="Road_5" value="0.5000" />
+      <observation key="Road_4" value="0.3333" />
+      <observation key="Road_6" value="0.5000" />
+      <observation key="Road_57" value="0.3333" />
+      <observation key="Road_56" value="0.1667" />
+      <observation key="Road_7" value="0.3333" />
+      <observation key="Grass_54" value="0.5000" />
+      <observation key="Road_62" value="0.3333" />
+      <observation key="Road_8" value="0.1667" />
+      <observation key="Grass_42" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1066,7 +1160,22 @@
       <adjacent value="Grass_34" />
       <adjacent value="Grass_42" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="14">
+      <observation key="Grass_35" value="0.5000" />
+      <observation key="Grass_36" value="0.3333" />
+      <observation key="Grass_37" value="0.1667" />
+      <observation key="Road_33" value="0.5000" />
+      <observation key="Road_32" value="0.3333" />
+      <observation key="Road_31" value="0.1667" />
+      <observation key="Road_34" value="0.5000" />
+      <observation key="Grass_42" value="0.5000" />
+      <observation key="Road_6" value="0.3333" />
+      <observation key="Road_57" value="0.1667" />
+      <observation key="Grass_34" value="0.5000" />
+      <observation key="Road_4" value="0.3333" />
+      <observation key="Road_5" value="0.3333" />
+      <observation key="Grass_43" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1084,19 +1193,20 @@
       <adjacent value="Road_30" />
       <adjacent value="Grass_45" />
     </Adjacents>
-    <Observations count="13">
+    <Observations count="14">
       <observation key="Grass_39" value="0.5000" />
       <observation key="Grass_28" value="0.3333" />
       <observation key="Grass_23" value="0.1667" />
       <observation key="Road_29" value="0.5000" />
       <observation key="Road_28" value="0.3333" />
       <observation key="Road_27" value="0.1667" />
+      <observation key="Grass_38" value="0.3333" />
+      <observation key="Grass_37" value="0.1667" />
       <observation key="Road_30" value="0.5000" />
       <observation key="Road_31" value="0.3333" />
       <observation key="Grass_45" value="0.5000" />
       <observation key="Grass_55" value="0.3333" />
       <observation key="Grass_58" value="0.1667" />
-      <observation key="Road_32" value="0.1667" />
       <observation key="Grass_44" value="0.6667" />
     </Observations>
   </Territory>
@@ -1181,7 +1291,13 @@
       <adjacent value="Road_49" />
       <adjacent value="Road_48" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="5">
+      <observation key="Road_48" value="0.5000" />
+      <observation key="Road_49" value="0.5000" />
+      <observation key="Grass_50" value="0.5000" />
+      <observation key="Grass_56" value="0.3333" />
+      <observation key="Grass_51" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1200,7 +1316,20 @@
       <adjacent value="Grass_53" />
       <adjacent value="Grass_41" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="12">
+      <observation key="Grass_41" value="0.5000" />
+      <observation key="Road_54" value="0.3333" />
+      <observation key="Grass_32" value="0.1667" />
+      <observation key="Road_55" value="0.3333" />
+      <observation key="Grass_33" value="0.1667" />
+      <observation key="Grass_53" value="0.5000" />
+      <observation key="Road_60" value="0.3333" />
+      <observation key="Road_61" value="0.1667" />
+      <observation key="Road_59" value="0.5000" />
+      <observation key="Road_58" value="0.5000" />
+      <observation key="Grass_61" value="0.3333" />
+      <observation key="Grass_52" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1218,7 +1347,16 @@
       <adjacent value="House_7" />
       <adjacent value="Road_60" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="8">
+      <observation key="Grass_52" value="0.5000" />
+      <observation key="Road_58" value="0.3333" />
+      <observation key="Road_59" value="0.5000" />
+      <observation key="Grass_61" value="0.3333" />
+      <observation key="Grass_66" value="0.1667" />
+      <observation key="Road_60" value="0.5000" />
+      <observation key="Road_48" value="0.1667" />
+      <observation key="Grass_53" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1237,7 +1375,22 @@
       <adjacent value="Road_62" />
       <adjacent value="Road_63" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="14">
+      <observation key="Grass_42" value="0.5000" />
+      <observation key="Grass_34" value="0.3333" />
+      <observation key="Grass_35" value="0.1667" />
+      <observation key="Road_4" value="0.1667" />
+      <observation key="Road_5" value="0.3333" />
+      <observation key="Road_6" value="0.5000" />
+      <observation key="Road_57" value="0.3333" />
+      <observation key="Road_56" value="0.1667" />
+      <observation key="Road_7" value="0.5000" />
+      <observation key="Road_8" value="0.3333" />
+      <observation key="Road_62" value="0.5000" />
+      <observation key="Road_63" value="0.5000" />
+      <observation key="Road_36" value="0.1667" />
+      <observation key="Grass_54" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1256,7 +1409,20 @@
       <adjacent value="Grass_45" />
       <adjacent value="Grass_58" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="12">
+      <observation key="Grass_45" value="0.5000" />
+      <observation key="Grass_44" value="0.3333" />
+      <observation key="Grass_39" value="0.1667" />
+      <observation key="Road_31" value="0.5000" />
+      <observation key="Road_30" value="0.3333" />
+      <observation key="Road_29" value="0.1667" />
+      <observation key="Road_32" value="0.3333" />
+      <observation key="Grass_58" value="0.5000" />
+      <observation key="Road_65" value="0.3333" />
+      <observation key="Grass_63" value="0.1667" />
+      <observation key="Road_64" value="0.3333" />
+      <observation key="Grass_55" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1272,7 +1438,19 @@
       <adjacent value="Grass_59" />
       <adjacent value="Grass_50" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="11">
+      <observation key="Grass_50" value="0.5000" />
+      <observation key="Grass_40" value="0.3333" />
+      <observation key="Grass_30" value="0.1667" />
+      <observation key="Grass_29" value="0.1667" />
+      <observation key="Grass_51" value="0.3333" />
+      <observation key="Road_48" value="0.1667" />
+      <observation key="Road_49" value="0.1667" />
+      <observation key="Grass_59" value="0.5000" />
+      <observation key="Grass_64" value="0.3333" />
+      <observation key="Grass_69" value="0.1667" />
+      <observation key="Grass_56" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1290,7 +1468,17 @@
       <adjacent value="Road_35" />
       <adjacent value="Road_34" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="9">
+      <observation key="Grass_63" value="0.1667" />
+      <observation key="Road_65" value="0.3333" />
+      <observation key="Grass_58" value="0.5000" />
+      <observation key="Road_64" value="0.5000" />
+      <observation key="Road_35" value="0.5000" />
+      <observation key="Road_63" value="0.3333" />
+      <observation key="Grass_62" value="0.3333" />
+      <observation key="Grass_67" value="0.1667" />
+      <observation key="Grass_57" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1311,7 +1499,21 @@
       <adjacent value="Road_64" />
       <adjacent value="Road_65" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="13">
+      <observation key="Grass_55" value="0.5000" />
+      <observation key="Road_31" value="0.3333" />
+      <observation key="Road_30" value="0.1667" />
+      <observation key="Grass_44" value="0.1667" />
+      <observation key="Grass_45" value="0.3333" />
+      <observation key="Road_65" value="0.5000" />
+      <observation key="Grass_63" value="0.3333" />
+      <observation key="Grass_68" value="0.1667" />
+      <observation key="Road_64" value="0.5000" />
+      <observation key="Grass_57" value="0.5000" />
+      <observation key="Road_35" value="0.3333" />
+      <observation key="Road_63" value="0.1667" />
+      <observation key="Grass_58" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1331,7 +1533,19 @@
       <adjacent value="Grass_64" />
       <adjacent value="Grass_56" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="11">
+      <observation key="Grass_56" value="0.5000" />
+      <observation key="Grass_50" value="0.3333" />
+      <observation key="Grass_40" value="0.1667" />
+      <observation key="Grass_60" value="0.5000" />
+      <observation key="Road_50" value="0.3333" />
+      <observation key="Road_51" value="0.1667" />
+      <observation key="Grass_65" value="0.3333" />
+      <observation key="Grass_64" value="0.5000" />
+      <observation key="Grass_69" value="0.3333" />
+      <observation key="Grass_71" value="0.1667" />
+      <observation key="Grass_59" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1352,7 +1566,16 @@
       <adjacent value="Road_50" />
       <adjacent value="Grass_59" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="8">
+      <observation key="Road_50" value="0.5000" />
+      <observation key="Road_51" value="0.3333" />
+      <observation key="Road_52" value="0.1667" />
+      <observation key="Road_12" value="0.1667" />
+      <observation key="Grass_70" value="0.3333" />
+      <observation key="Grass_65" value="0.5000" />
+      <observation key="Grass_59" value="0.5000" />
+      <observation key="Grass_60" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1369,7 +1592,16 @@
       <adjacent value="Road_60" />
       <adjacent value="Grass_66" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="8">
+      <observation key="Road_59" value="0.5000" />
+      <observation key="Grass_52" value="0.3333" />
+      <observation key="Grass_41" value="0.1667" />
+      <observation key="Road_60" value="0.5000" />
+      <observation key="Grass_53" value="0.3333" />
+      <observation key="Grass_66" value="0.5000" />
+      <observation key="Road_12" value="0.3333" />
+      <observation key="Grass_61" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1387,7 +1619,19 @@
       <adjacent value="Road_36" />
       <adjacent value="Grass_67" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="11">
+      <observation key="Road_35" value="0.5000" />
+      <observation key="Road_34" value="0.3333" />
+      <observation key="Road_36" value="0.5000" />
+      <observation key="Road_37" value="0.3333" />
+      <observation key="Road_38" value="0.1667" />
+      <observation key="Grass_72" value="0.3333" />
+      <observation key="Grass_78" value="0.1667" />
+      <observation key="Grass_67" value="0.5000" />
+      <observation key="Road_63" value="0.5000" />
+      <observation key="Grass_57" value="0.3333" />
+      <observation key="Grass_62" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1403,7 +1647,16 @@
       <adjacent value="Road_65" />
       <adjacent value="Grass_68" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="8">
+      <observation key="Road_65" value="0.5000" />
+      <observation key="Grass_58" value="0.3333" />
+      <observation key="Grass_55" value="0.1667" />
+      <observation key="Grass_57" value="0.1667" />
+      <observation key="Grass_68" value="0.5000" />
+      <observation key="Grass_73" value="0.3333" />
+      <observation key="Grass_81" value="0.1667" />
+      <observation key="Grass_63" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1420,7 +1673,15 @@
       <adjacent value="MachineShop_0" />
       <adjacent value="Grass_69" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="7">
+      <observation key="Grass_59" value="0.5000" />
+      <observation key="Grass_56" value="0.3333" />
+      <observation key="Grass_50" value="0.1667" />
+      <observation key="Grass_69" value="0.5000" />
+      <observation key="Grass_71" value="0.3333" />
+      <observation key="Road_15" value="0.1667" />
+      <observation key="Grass_64" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1438,7 +1699,19 @@
       <adjacent value="Road_51" />
       <adjacent value="Grass_70" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="11">
+      <observation key="Grass_60" value="0.5000" />
+      <observation key="Grass_59" value="0.3333" />
+      <observation key="Road_50" value="0.5000" />
+      <observation key="Road_49" value="0.3333" />
+      <observation key="Road_48" value="0.1667" />
+      <observation key="Road_51" value="0.5000" />
+      <observation key="Road_52" value="0.3333" />
+      <observation key="Road_12" value="0.3333" />
+      <observation key="Grass_70" value="0.5000" />
+      <observation key="Road_11" value="0.1667" />
+      <observation key="Grass_65" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1457,7 +1730,16 @@
       <adjacent value="Road_12" />
       <adjacent value="Road_52" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="8">
+      <observation key="Grass_61" value="0.5000" />
+      <observation key="Road_60" value="0.3333" />
+      <observation key="Grass_53" value="0.1667" />
+      <observation key="Road_12" value="0.5000" />
+      <observation key="Road_13" value="0.3333" />
+      <observation key="Grass_74" value="0.1667" />
+      <observation key="Road_14" value="0.1667" />
+      <observation key="Grass_66" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1476,7 +1758,20 @@
       <adjacent value="Grass_62" />
       <adjacent value="Grass_72" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="12">
+      <observation key="Grass_57" value="0.1667" />
+      <observation key="Road_35" value="0.3333" />
+      <observation key="Road_34" value="0.1667" />
+      <observation key="Grass_62" value="0.5000" />
+      <observation key="Road_36" value="0.5000" />
+      <observation key="Road_37" value="0.5000" />
+      <observation key="Road_38" value="0.3333" />
+      <observation key="Road_39" value="0.1667" />
+      <observation key="Grass_78" value="0.3333" />
+      <observation key="Grass_72" value="0.5000" />
+      <observation key="Grass_87" value="0.1667" />
+      <observation key="Grass_67" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1492,7 +1787,16 @@
       <adjacent value="Grass_63" />
       <adjacent value="Grass_73" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="8">
+      <observation key="Grass_63" value="0.5000" />
+      <observation key="Road_65" value="0.3333" />
+      <observation key="Grass_58" value="0.1667" />
+      <observation key="Grass_73" value="0.5000" />
+      <observation key="Grass_81" value="0.3333" />
+      <observation key="RR_23" value="0.1667" />
+      <observation key="RR_22" value="0.1667" />
+      <observation key="Grass_68" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1508,7 +1812,15 @@
       <adjacent value="Grass_64" />
       <adjacent value="Grass_71" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="7">
+      <observation key="Grass_64" value="0.5000" />
+      <observation key="Grass_59" value="0.3333" />
+      <observation key="Grass_56" value="0.1667" />
+      <observation key="Grass_71" value="0.5000" />
+      <observation key="Road_15" value="0.3333" />
+      <observation key="Grass_82" value="0.1667" />
+      <observation key="Grass_69" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1528,7 +1840,18 @@
       <adjacent value="Grass_65" />
       <adjacent value="Road_51" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="10">
+      <observation key="Grass_65" value="0.5000" />
+      <observation key="Grass_60" value="0.3333" />
+      <observation key="Road_50" value="0.3333" />
+      <observation key="Road_51" value="0.5000" />
+      <observation key="Road_52" value="0.5000" />
+      <observation key="Road_12" value="0.5000" />
+      <observation key="Road_11" value="0.3333" />
+      <observation key="Road_10" value="0.1667" />
+      <observation key="Road_13" value="0.5000" />
+      <observation key="Grass_70" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1544,7 +1867,17 @@
       <adjacent value="Road_15" />
       <adjacent value="Grass_69" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="9">
+      <observation key="Grass_69" value="0.5000" />
+      <observation key="Grass_64" value="0.3333" />
+      <observation key="Grass_59" value="0.1667" />
+      <observation key="Road_15" value="0.5000" />
+      <observation key="Grass_82" value="0.3333" />
+      <observation key="Grass_90" value="0.1667" />
+      <observation key="Grass_83" value="0.3333" />
+      <observation key="Grass_91" value="0.1667" />
+      <observation key="Grass_71" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1563,7 +1896,25 @@
       <adjacent value="Grass_67" />
       <adjacent value="Grass_78" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="17">
+      <observation key="Grass_67" value="0.5000" />
+      <observation key="Grass_62" value="0.3333" />
+      <observation key="Road_35" value="0.1667" />
+      <observation key="Road_36" value="0.3333" />
+      <observation key="Road_37" value="0.5000" />
+      <observation key="Road_38" value="0.5000" />
+      <observation key="Grass_79" value="0.3333" />
+      <observation key="Grass_89" value="0.1667" />
+      <observation key="Grass_88" value="0.1667" />
+      <observation key="Grass_78" value="0.5000" />
+      <observation key="Grass_87" value="0.3333" />
+      <observation key="Grass_97" value="0.1667" />
+      <observation key="Road_39" value="0.3333" />
+      <observation key="Road_40" value="0.1667" />
+      <observation key="Grass_77" value="0.3333" />
+      <observation key="Grass_86" value="0.1667" />
+      <observation key="Grass_72" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1582,7 +1933,19 @@
       <adjacent value="Graveyard_0" />
       <adjacent value="Grass_81" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="11">
+      <observation key="Grass_68" value="0.5000" />
+      <observation key="Grass_63" value="0.3333" />
+      <observation key="Road_65" value="0.1667" />
+      <observation key="Grass_81" value="0.5000" />
+      <observation key="RR_23" value="0.3333" />
+      <observation key="Grass_108" value="0.1667" />
+      <observation key="RR_22" value="0.3333" />
+      <observation key="Grass_107" value="0.1667" />
+      <observation key="RR_21" value="0.1667" />
+      <observation key="Grass_80" value="0.3333" />
+      <observation key="Grass_73" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1601,7 +1964,26 @@
       <adjacent value="Grass_84" />
       <adjacent value="Grass_83" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="18">
+      <observation key="Road_14" value="0.5000" />
+      <observation key="Road_13" value="0.5000" />
+      <observation key="Road_15" value="0.3333" />
+      <observation key="Grass_82" value="0.3333" />
+      <observation key="Grass_83" value="0.5000" />
+      <observation key="Grass_84" value="0.5000" />
+      <observation key="Grass_92" value="0.3333" />
+      <observation key="Grass_93" value="0.3333" />
+      <observation key="RR_6" value="0.1667" />
+      <observation key="RR_5" value="0.1667" />
+      <observation key="RR_4" value="0.1667" />
+      <observation key="RR_3" value="0.1667" />
+      <observation key="Grass_90" value="0.1667" />
+      <observation key="Grass_91" value="0.3333" />
+      <observation key="Road_12" value="0.3333" />
+      <observation key="Grass_66" value="0.1667" />
+      <observation key="Road_52" value="0.1667" />
+      <observation key="Grass_74" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1623,7 +2005,31 @@
       <adjacent value="Road_11" />
       <adjacent value="Road_10" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="23">
+      <observation key="Road_10" value="0.5000" />
+      <observation key="Road_9" value="0.3333" />
+      <observation key="Road_8" value="0.1667" />
+      <observation key="Grass_85" value="0.5000" />
+      <observation key="Grass_86" value="0.3333" />
+      <observation key="Grass_87" value="0.3333" />
+      <observation key="Grass_77" value="0.1667" />
+      <observation key="Grass_76" value="0.3333" />
+      <observation key="Road_11" value="0.5000" />
+      <observation key="Grass_96" value="0.5000" />
+      <observation key="RR_11" value="0.3333" />
+      <observation key="Grass_103" value="0.1667" />
+      <observation key="Grass_95" value="0.5000" />
+      <observation key="Grass_94" value="0.3333" />
+      <observation key="RR_9" value="0.3333" />
+      <observation key="RR_10" value="0.3333" />
+      <observation key="RR_8" value="0.3333" />
+      <observation key="RR_7" value="0.1667" />
+      <observation key="RR_6" value="0.1667" />
+      <observation key="Grass_101" value="0.1667" />
+      <observation key="Grass_102" value="0.1667" />
+      <observation key="Grass_104" value="0.1667" />
+      <observation key="Grass_75" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1642,7 +2048,23 @@
       <adjacent value="Road_10" />
       <adjacent value="Road_9" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="15">
+      <observation key="Grass_85" value="0.5000" />
+      <observation key="Grass_75" value="0.3333" />
+      <observation key="Grass_95" value="0.1667" />
+      <observation key="Grass_77" value="0.5000" />
+      <observation key="Grass_78" value="0.3333" />
+      <observation key="Road_38" value="0.1667" />
+      <observation key="Road_39" value="0.1667" />
+      <observation key="Grass_87" value="0.3333" />
+      <observation key="Road_40" value="0.1667" />
+      <observation key="Grass_86" value="0.5000" />
+      <observation key="Grass_97" value="0.1667" />
+      <observation key="Road_10" value="0.5000" />
+      <observation key="Road_11" value="0.3333" />
+      <observation key="Road_12" value="0.1667" />
+      <observation key="Grass_76" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1661,7 +2083,28 @@
       <adjacent value="Grass_87" />
       <adjacent value="Grass_86" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="20">
+      <observation key="Grass_72" value="0.3333" />
+      <observation key="Road_37" value="0.1667" />
+      <observation key="Road_38" value="0.3333" />
+      <observation key="Grass_79" value="0.1667" />
+      <observation key="Grass_88" value="0.1667" />
+      <observation key="Road_39" value="0.3333" />
+      <observation key="Grass_78" value="0.5000" />
+      <observation key="Road_40" value="0.3333" />
+      <observation key="Grass_87" value="0.5000" />
+      <observation key="Grass_97" value="0.3333" />
+      <observation key="Grass_86" value="0.5000" />
+      <observation key="Grass_76" value="0.5000" />
+      <observation key="Grass_85" value="0.3333" />
+      <observation key="Grass_75" value="0.1667" />
+      <observation key="Road_10" value="0.3333" />
+      <observation key="Road_11" value="0.1667" />
+      <observation key="RR_15" value="0.1667" />
+      <observation key="RR_16" value="0.1667" />
+      <observation key="RR_17" value="0.1667" />
+      <observation key="Grass_77" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1682,7 +2125,34 @@
       <adjacent value="Grass_87" />
       <adjacent value="Grass_77" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="26">
+      <observation key="Grass_72" value="0.5000" />
+      <observation key="Grass_67" value="0.3333" />
+      <observation key="Grass_62" value="0.1667" />
+      <observation key="Road_36" value="0.1667" />
+      <observation key="Road_37" value="0.3333" />
+      <observation key="Road_38" value="0.5000" />
+      <observation key="Grass_79" value="0.3333" />
+      <observation key="Grass_80" value="0.1667" />
+      <observation key="Grass_89" value="0.1667" />
+      <observation key="Grass_88" value="0.3333" />
+      <observation key="Road_39" value="0.5000" />
+      <observation key="Road_40" value="0.3333" />
+      <observation key="Grass_97" value="0.3333" />
+      <observation key="Grass_87" value="0.5000" />
+      <observation key="Grass_86" value="0.3333" />
+      <observation key="Grass_77" value="0.5000" />
+      <observation key="Grass_76" value="0.3333" />
+      <observation key="Road_10" value="0.1667" />
+      <observation key="Grass_85" value="0.1667" />
+      <observation key="RR_15" value="0.1667" />
+      <observation key="RR_14" value="0.1667" />
+      <observation key="RR_16" value="0.1667" />
+      <observation key="RR_17" value="0.1667" />
+      <observation key="RR_18" value="0.1667" />
+      <observation key="RR_19" value="0.1667" />
+      <observation key="Grass_78" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1703,7 +2173,32 @@
       <adjacent value="Grass_88" />
       <adjacent value="Road_39" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="24">
+      <observation key="Grass_72" value="0.3333" />
+      <observation key="Grass_78" value="0.3333" />
+      <observation key="Road_39" value="0.5000" />
+      <observation key="Grass_77" value="0.1667" />
+      <observation key="Grass_87" value="0.3333" />
+      <observation key="Grass_86" value="0.1667" />
+      <observation key="Grass_97" value="0.1667" />
+      <observation key="Road_40" value="0.3333" />
+      <observation key="RR_16" value="0.1667" />
+      <observation key="RR_17" value="0.3333" />
+      <observation key="RR_18" value="0.3333" />
+      <observation key="RR_19" value="0.3333" />
+      <observation key="RR_20" value="0.3333" />
+      <observation key="RR_21" value="0.3333" />
+      <observation key="Grass_80" value="0.5000" />
+      <observation key="Grass_81" value="0.3333" />
+      <observation key="RR_23" value="0.1667" />
+      <observation key="RR_22" value="0.3333" />
+      <observation key="Grass_89" value="0.5000" />
+      <observation key="Grass_88" value="0.5000" />
+      <observation key="Grass_108" value="0.1667" />
+      <observation key="Grass_107" value="0.1667" />
+      <observation key="Grass_106" value="0.1667" />
+      <observation key="Grass_79" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1723,7 +2218,28 @@
       <adjacent value="Graveyard_0" />
       <adjacent value="Grass_81" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="20">
+      <observation key="Grass_79" value="0.5000" />
+      <observation key="Road_39" value="0.3333" />
+      <observation key="Grass_78" value="0.1667" />
+      <observation key="Grass_89" value="0.5000" />
+      <observation key="Grass_88" value="0.3333" />
+      <observation key="Road_40" value="0.1667" />
+      <observation key="RR_17" value="0.1667" />
+      <observation key="RR_18" value="0.1667" />
+      <observation key="RR_19" value="0.3333" />
+      <observation key="RR_20" value="0.3333" />
+      <observation key="RR_21" value="0.5000" />
+      <observation key="RR_22" value="0.5000" />
+      <observation key="RR_23" value="0.3333" />
+      <observation key="Grass_81" value="0.5000" />
+      <observation key="Grass_73" value="0.3333" />
+      <observation key="Grass_108" value="0.3333" />
+      <observation key="Grass_114" value="0.1667" />
+      <observation key="Grass_107" value="0.3333" />
+      <observation key="Grass_113" value="0.1667" />
+      <observation key="Grass_80" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1742,7 +2258,26 @@
       <adjacent value="RR_23" />
       <adjacent value="RR_22" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="18">
+      <observation key="Grass_73" value="0.5000" />
+      <observation key="Grass_68" value="0.3333" />
+      <observation key="Grass_63" value="0.1667" />
+      <observation key="RR_23" value="0.5000" />
+      <observation key="Grass_108" value="0.3333" />
+      <observation key="Grass_114" value="0.1667" />
+      <observation key="RR_22" value="0.5000" />
+      <observation key="Grass_107" value="0.3333" />
+      <observation key="Grass_113" value="0.1667" />
+      <observation key="RR_21" value="0.3333" />
+      <observation key="Grass_80" value="0.5000" />
+      <observation key="Grass_79" value="0.3333" />
+      <observation key="Road_39" value="0.1667" />
+      <observation key="Grass_88" value="0.1667" />
+      <observation key="Grass_89" value="0.3333" />
+      <observation key="RR_19" value="0.1667" />
+      <observation key="RR_20" value="0.1667" />
+      <observation key="Grass_81" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1761,7 +2296,29 @@
       <adjacent value="Grass_91" />
       <adjacent value="Grass_90" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="21">
+      <observation key="Road_15" value="0.5000" />
+      <observation key="Grass_71" value="0.3333" />
+      <observation key="Grass_69" value="0.1667" />
+      <observation key="Road_14" value="0.3333" />
+      <observation key="Road_13" value="0.1667" />
+      <observation key="Grass_74" value="0.3333" />
+      <observation key="Grass_84" value="0.3333" />
+      <observation key="Grass_83" value="0.5000" />
+      <observation key="Grass_93" value="0.1667" />
+      <observation key="Grass_92" value="0.3333" />
+      <observation key="Grass_91" value="0.5000" />
+      <observation key="Grass_90" value="0.5000" />
+      <observation key="RR_1" value="0.3333" />
+      <observation key="RR_2" value="0.3333" />
+      <observation key="RR_3" value="0.3333" />
+      <observation key="RR_4" value="0.3333" />
+      <observation key="RR_5" value="0.1667" />
+      <observation key="Grass_100" value="0.1667" />
+      <observation key="Grass_99" value="0.1667" />
+      <observation key="Grass_98" value="0.1667" />
+      <observation key="Grass_82" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1781,7 +2338,30 @@
       <adjacent value="Grass_74" />
       <adjacent value="Road_14" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="22">
+      <observation key="Road_15" value="0.5000" />
+      <observation key="Grass_71" value="0.3333" />
+      <observation key="Road_14" value="0.5000" />
+      <observation key="Road_13" value="0.3333" />
+      <observation key="Road_12" value="0.1667" />
+      <observation key="Grass_74" value="0.5000" />
+      <observation key="Grass_84" value="0.5000" />
+      <observation key="Grass_93" value="0.3333" />
+      <observation key="Grass_94" value="0.1667" />
+      <observation key="RR_6" value="0.1667" />
+      <observation key="RR_5" value="0.1667" />
+      <observation key="RR_4" value="0.3333" />
+      <observation key="RR_3" value="0.3333" />
+      <observation key="RR_2" value="0.1667" />
+      <observation key="RR_1" value="0.1667" />
+      <observation key="Grass_82" value="0.5000" />
+      <observation key="Grass_90" value="0.3333" />
+      <observation key="Grass_91" value="0.5000" />
+      <observation key="Grass_92" value="0.3333" />
+      <observation key="Grass_99" value="0.1667" />
+      <observation key="Grass_100" value="0.1667" />
+      <observation key="Grass_83" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1800,7 +2380,32 @@
       <adjacent value="Grass_93" />
       <adjacent value="Grass_91" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="24">
+      <observation key="Road_15" value="0.3333" />
+      <observation key="Road_14" value="0.3333" />
+      <observation key="Road_13" value="0.3333" />
+      <observation key="Grass_74" value="0.5000" />
+      <observation key="Grass_83" value="0.5000" />
+      <observation key="Grass_82" value="0.3333" />
+      <observation key="Grass_90" value="0.3333" />
+      <observation key="Grass_91" value="0.5000" />
+      <observation key="Grass_92" value="0.5000" />
+      <observation key="Grass_93" value="0.5000" />
+      <observation key="Grass_94" value="0.3333" />
+      <observation key="Grass_95" value="0.1667" />
+      <observation key="RR_8" value="0.1667" />
+      <observation key="RR_7" value="0.1667" />
+      <observation key="RR_6" value="0.3333" />
+      <observation key="RR_5" value="0.3333" />
+      <observation key="RR_4" value="0.3333" />
+      <observation key="RR_3" value="0.3333" />
+      <observation key="RR_2" value="0.1667" />
+      <observation key="Grass_99" value="0.1667" />
+      <observation key="RR_1" value="0.1667" />
+      <observation key="Grass_100" value="0.1667" />
+      <observation key="Grass_101" value="0.1667" />
+      <observation key="Grass_84" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1822,7 +2427,26 @@
       <adjacent value="Road_10" />
       <adjacent value="Grass_75" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="18">
+      <observation key="Road_10" value="0.5000" />
+      <observation key="Road_9" value="0.3333" />
+      <observation key="Road_8" value="0.1667" />
+      <observation key="Road_11" value="0.3333" />
+      <observation key="Road_12" value="0.1667" />
+      <observation key="Grass_76" value="0.5000" />
+      <observation key="Grass_77" value="0.3333" />
+      <observation key="Grass_78" value="0.1667" />
+      <observation key="Grass_86" value="0.5000" />
+      <observation key="Grass_87" value="0.3333" />
+      <observation key="Road_39" value="0.1667" />
+      <observation key="Road_40" value="0.1667" />
+      <observation key="Grass_75" value="0.5000" />
+      <observation key="Grass_95" value="0.3333" />
+      <observation key="Grass_94" value="0.1667" />
+      <observation key="RR_9" value="0.1667" />
+      <observation key="RR_8" value="0.1667" />
+      <observation key="Grass_85" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1842,7 +2466,28 @@
       <adjacent value="Grass_77" />
       <adjacent value="Grass_87" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="20">
+      <observation key="Grass_76" value="0.5000" />
+      <observation key="Grass_77" value="0.5000" />
+      <observation key="Grass_78" value="0.3333" />
+      <observation key="Grass_72" value="0.1667" />
+      <observation key="Grass_87" value="0.5000" />
+      <observation key="Road_39" value="0.3333" />
+      <observation key="Grass_79" value="0.1667" />
+      <observation key="Grass_88" value="0.1667" />
+      <observation key="Road_40" value="0.3333" />
+      <observation key="RR_17" value="0.1667" />
+      <observation key="RR_16" value="0.1667" />
+      <observation key="Grass_97" value="0.3333" />
+      <observation key="Grass_85" value="0.5000" />
+      <observation key="Grass_75" value="0.3333" />
+      <observation key="Road_10" value="0.3333" />
+      <observation key="Road_11" value="0.1667" />
+      <observation key="Road_12" value="0.1667" />
+      <observation key="Road_9" value="0.3333" />
+      <observation key="Road_38" value="0.1667" />
+      <observation key="Grass_86" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1866,7 +2511,35 @@
       <adjacent value="Grass_78" />
       <adjacent value="Grass_77" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="27">
+      <observation key="Grass_78" value="0.5000" />
+      <observation key="Grass_72" value="0.3333" />
+      <observation key="Grass_67" value="0.1667" />
+      <observation key="Road_38" value="0.3333" />
+      <observation key="Road_37" value="0.1667" />
+      <observation key="Road_39" value="0.5000" />
+      <observation key="Road_40" value="0.5000" />
+      <observation key="Grass_97" value="0.5000" />
+      <observation key="Grass_77" value="0.5000" />
+      <observation key="Grass_76" value="0.3333" />
+      <observation key="Road_10" value="0.1667" />
+      <observation key="Grass_86" value="0.5000" />
+      <observation key="Grass_85" value="0.3333" />
+      <observation key="Grass_75" value="0.3333" />
+      <observation key="RR_14" value="0.3333" />
+      <observation key="Grass_105" value="0.1667" />
+      <observation key="RR_15" value="0.3333" />
+      <observation key="RR_16" value="0.3333" />
+      <observation key="RR_17" value="0.3333" />
+      <observation key="RR_18" value="0.1667" />
+      <observation key="RR_19" value="0.1667" />
+      <observation key="Grass_88" value="0.3333" />
+      <observation key="Grass_89" value="0.1667" />
+      <observation key="Grass_79" value="0.3333" />
+      <observation key="Grass_106" value="0.1667" />
+      <observation key="Road_41" value="0.1667" />
+      <observation key="Grass_87" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1887,7 +2560,35 @@
       <adjacent value="Grass_79" />
       <adjacent value="Grass_89" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="27">
+      <observation key="Road_40" value="0.5000" />
+      <observation key="Grass_87" value="0.3333" />
+      <observation key="Grass_86" value="0.1667" />
+      <observation key="Grass_97" value="0.3333" />
+      <observation key="RR_14" value="0.1667" />
+      <observation key="RR_15" value="0.1667" />
+      <observation key="RR_16" value="0.3333" />
+      <observation key="RR_17" value="0.5000" />
+      <observation key="RR_18" value="0.5000" />
+      <observation key="RR_19" value="0.5000" />
+      <observation key="RR_20" value="0.3333" />
+      <observation key="Grass_107" value="0.1667" />
+      <observation key="Grass_89" value="0.5000" />
+      <observation key="Grass_80" value="0.3333" />
+      <observation key="Grass_81" value="0.1667" />
+      <observation key="RR_22" value="0.1667" />
+      <observation key="RR_21" value="0.3333" />
+      <observation key="Grass_79" value="0.5000" />
+      <observation key="Road_39" value="0.5000" />
+      <observation key="Road_38" value="0.3333" />
+      <observation key="Road_37" value="0.1667" />
+      <observation key="Grass_78" value="0.3333" />
+      <observation key="Grass_72" value="0.1667" />
+      <observation key="Grass_77" value="0.1667" />
+      <observation key="Road_41" value="0.1667" />
+      <observation key="Grass_106" value="0.3333" />
+      <observation key="Grass_88" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1907,7 +2608,31 @@
       <adjacent value="RR_21" />
       <adjacent value="RR_19" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="23">
+      <observation key="Grass_80" value="0.5000" />
+      <observation key="Grass_81" value="0.3333" />
+      <observation key="Grass_79" value="0.5000" />
+      <observation key="Grass_72" value="0.1667" />
+      <observation key="Road_39" value="0.3333" />
+      <observation key="Grass_88" value="0.5000" />
+      <observation key="Road_40" value="0.3333" />
+      <observation key="Grass_97" value="0.1667" />
+      <observation key="Grass_78" value="0.1667" />
+      <observation key="Grass_87" value="0.1667" />
+      <observation key="RR_16" value="0.1667" />
+      <observation key="RR_17" value="0.3333" />
+      <observation key="RR_18" value="0.3333" />
+      <observation key="RR_19" value="0.5000" />
+      <observation key="RR_20" value="0.5000" />
+      <observation key="RR_21" value="0.5000" />
+      <observation key="RR_22" value="0.3333" />
+      <observation key="RR_23" value="0.1667" />
+      <observation key="Grass_107" value="0.3333" />
+      <observation key="Grass_108" value="0.1667" />
+      <observation key="Grass_114" value="0.1667" />
+      <observation key="Grass_113" value="0.1667" />
+      <observation key="Grass_89" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1928,7 +2653,27 @@
       <adjacent value="RR_2" />
       <adjacent value="RR_1" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="19">
+      <observation key="Grass_82" value="0.5000" />
+      <observation key="Road_15" value="0.3333" />
+      <observation key="Grass_71" value="0.1667" />
+      <observation key="Road_14" value="0.1667" />
+      <observation key="Grass_91" value="0.5000" />
+      <observation key="Grass_83" value="0.3333" />
+      <observation key="Grass_74" value="0.1667" />
+      <observation key="Grass_92" value="0.3333" />
+      <observation key="Grass_93" value="0.1667" />
+      <observation key="Grass_84" value="0.3333" />
+      <observation key="RR_5" value="0.1667" />
+      <observation key="RR_4" value="0.3333" />
+      <observation key="RR_3" value="0.5000" />
+      <observation key="RR_2" value="0.5000" />
+      <observation key="RR_1" value="0.5000" />
+      <observation key="Grass_98" value="0.3333" />
+      <observation key="Grass_99" value="0.3333" />
+      <observation key="Grass_100" value="0.1667" />
+      <observation key="Grass_90" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1951,7 +2696,31 @@
       <adjacent value="Grass_82" />
       <adjacent value="Grass_90" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="23">
+      <observation key="Grass_83" value="0.5000" />
+      <observation key="Road_14" value="0.3333" />
+      <observation key="Road_15" value="0.3333" />
+      <observation key="Grass_71" value="0.1667" />
+      <observation key="Grass_82" value="0.5000" />
+      <observation key="Grass_90" value="0.5000" />
+      <observation key="Grass_92" value="0.5000" />
+      <observation key="Grass_93" value="0.3333" />
+      <observation key="Grass_94" value="0.1667" />
+      <observation key="Grass_84" value="0.5000" />
+      <observation key="Grass_74" value="0.3333" />
+      <observation key="Road_13" value="0.1667" />
+      <observation key="RR_1" value="0.3333" />
+      <observation key="RR_2" value="0.3333" />
+      <observation key="Grass_98" value="0.1667" />
+      <observation key="RR_3" value="0.5000" />
+      <observation key="RR_4" value="0.5000" />
+      <observation key="RR_5" value="0.3333" />
+      <observation key="RR_6" value="0.1667" />
+      <observation key="Grass_99" value="0.3333" />
+      <observation key="Grass_100" value="0.3333" />
+      <observation key="Grass_101" value="0.1667" />
+      <observation key="Grass_91" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1970,7 +2739,32 @@
       <adjacent value="RR_4" />
       <adjacent value="RR_5" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="24">
+      <observation key="Grass_84" value="0.5000" />
+      <observation key="Grass_74" value="0.3333" />
+      <observation key="Road_13" value="0.1667" />
+      <observation key="Road_14" value="0.1667" />
+      <observation key="Grass_91" value="0.5000" />
+      <observation key="Grass_83" value="0.3333" />
+      <observation key="Grass_82" value="0.3333" />
+      <observation key="Grass_90" value="0.3333" />
+      <observation key="Road_15" value="0.1667" />
+      <observation key="Grass_93" value="0.5000" />
+      <observation key="Grass_94" value="0.3333" />
+      <observation key="Grass_95" value="0.1667" />
+      <observation key="RR_5" value="0.5000" />
+      <observation key="Grass_100" value="0.3333" />
+      <observation key="RR_4" value="0.5000" />
+      <observation key="Grass_99" value="0.3333" />
+      <observation key="RR_3" value="0.3333" />
+      <observation key="RR_2" value="0.1667" />
+      <observation key="RR_1" value="0.1667" />
+      <observation key="RR_8" value="0.1667" />
+      <observation key="RR_7" value="0.1667" />
+      <observation key="RR_6" value="0.3333" />
+      <observation key="Grass_101" value="0.1667" />
+      <observation key="Grass_92" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -1991,7 +2785,33 @@
       <adjacent value="RR_6" />
       <adjacent value="Grass_92" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="25">
+      <observation key="Grass_74" value="0.3333" />
+      <observation key="Grass_84" value="0.5000" />
+      <observation key="Road_14" value="0.1667" />
+      <observation key="Grass_83" value="0.3333" />
+      <observation key="Road_15" value="0.1667" />
+      <observation key="Grass_92" value="0.5000" />
+      <observation key="Grass_91" value="0.3333" />
+      <observation key="Grass_90" value="0.1667" />
+      <observation key="Grass_82" value="0.1667" />
+      <observation key="RR_3" value="0.1667" />
+      <observation key="RR_4" value="0.3333" />
+      <observation key="RR_5" value="0.5000" />
+      <observation key="RR_6" value="0.5000" />
+      <observation key="Grass_94" value="0.5000" />
+      <observation key="Grass_95" value="0.3333" />
+      <observation key="Grass_96" value="0.1667" />
+      <observation key="RR_10" value="0.1667" />
+      <observation key="RR_9" value="0.1667" />
+      <observation key="RR_8" value="0.3333" />
+      <observation key="RR_7" value="0.3333" />
+      <observation key="Grass_101" value="0.3333" />
+      <observation key="Grass_102" value="0.1667" />
+      <observation key="Grass_99" value="0.1667" />
+      <observation key="Grass_100" value="0.3333" />
+      <observation key="Grass_93" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2013,7 +2833,33 @@
       <adjacent value="RR_8" />
       <adjacent value="Grass_95" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="25">
+      <observation key="Grass_75" value="0.3333" />
+      <observation key="Grass_95" value="0.5000" />
+      <observation key="Grass_96" value="0.3333" />
+      <observation key="Grass_85" value="0.1667" />
+      <observation key="RR_12" value="0.1667" />
+      <observation key="RR_11" value="0.1667" />
+      <observation key="RR_10" value="0.3333" />
+      <observation key="RR_9" value="0.3333" />
+      <observation key="RR_8" value="0.5000" />
+      <observation key="RR_7" value="0.5000" />
+      <observation key="RR_6" value="0.5000" />
+      <observation key="RR_5" value="0.3333" />
+      <observation key="RR_4" value="0.1667" />
+      <observation key="Grass_93" value="0.5000" />
+      <observation key="Grass_92" value="0.3333" />
+      <observation key="Grass_84" value="0.3333" />
+      <observation key="Grass_83" value="0.1667" />
+      <observation key="Grass_91" value="0.1667" />
+      <observation key="Grass_99" value="0.1667" />
+      <observation key="Grass_100" value="0.3333" />
+      <observation key="Grass_101" value="0.3333" />
+      <observation key="Grass_102" value="0.3333" />
+      <observation key="Grass_103" value="0.1667" />
+      <observation key="Grass_109" value="0.1667" />
+      <observation key="Grass_94" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2036,7 +2882,34 @@
       <adjacent value="Grass_96" />
       <adjacent value="Grass_75" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="26">
+      <observation key="Grass_75" value="0.5000" />
+      <observation key="Road_10" value="0.3333" />
+      <observation key="Road_9" value="0.1667" />
+      <observation key="Grass_85" value="0.3333" />
+      <observation key="Grass_76" value="0.1667" />
+      <observation key="Grass_96" value="0.5000" />
+      <observation key="RR_12" value="0.3333" />
+      <observation key="RR_13" value="0.1667" />
+      <observation key="RR_11" value="0.3333" />
+      <observation key="RR_10" value="0.5000" />
+      <observation key="RR_9" value="0.5000" />
+      <observation key="RR_8" value="0.5000" />
+      <observation key="RR_7" value="0.3333" />
+      <observation key="RR_6" value="0.3333" />
+      <observation key="Grass_94" value="0.5000" />
+      <observation key="Grass_93" value="0.3333" />
+      <observation key="RR_5" value="0.1667" />
+      <observation key="Grass_92" value="0.1667" />
+      <observation key="Grass_84" value="0.1667" />
+      <observation key="Grass_101" value="0.3333" />
+      <observation key="Grass_100" value="0.1667" />
+      <observation key="Grass_102" value="0.3333" />
+      <observation key="Grass_103" value="0.3333" />
+      <observation key="Grass_109" value="0.1667" />
+      <observation key="Grass_104" value="0.1667" />
+      <observation key="Grass_95" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2056,7 +2929,30 @@
       <adjacent value="RR_10" />
       <adjacent value="Grass_95" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="22">
+      <observation key="Grass_75" value="0.5000" />
+      <observation key="Road_10" value="0.3333" />
+      <observation key="Road_9" value="0.1667" />
+      <observation key="Road_11" value="0.3333" />
+      <observation key="Grass_95" value="0.5000" />
+      <observation key="Grass_94" value="0.3333" />
+      <observation key="Grass_93" value="0.1667" />
+      <observation key="RR_6" value="0.1667" />
+      <observation key="RR_7" value="0.1667" />
+      <observation key="RR_8" value="0.3333" />
+      <observation key="RR_9" value="0.3333" />
+      <observation key="RR_10" value="0.5000" />
+      <observation key="RR_11" value="0.5000" />
+      <observation key="RR_12" value="0.5000" />
+      <observation key="Grass_104" value="0.3333" />
+      <observation key="Grass_110" value="0.1667" />
+      <observation key="Grass_109" value="0.1667" />
+      <observation key="Grass_103" value="0.3333" />
+      <observation key="Grass_102" value="0.1667" />
+      <observation key="Grass_101" value="0.1667" />
+      <observation key="Grass_105" value="0.1667" />
+      <observation key="Grass_96" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2075,7 +2971,35 @@
       <adjacent value="Grass_87" />
       <adjacent value="StockPen_0" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="27">
+      <observation key="RR_16" value="0.5000" />
+      <observation key="RR_15" value="0.5000" />
+      <observation key="RR_14" value="0.3333" />
+      <observation key="Grass_87" value="0.5000" />
+      <observation key="Grass_78" value="0.3333" />
+      <observation key="Grass_77" value="0.3333" />
+      <observation key="Grass_86" value="0.3333" />
+      <observation key="Grass_76" value="0.1667" />
+      <observation key="RR_13" value="0.3333" />
+      <observation key="Grass_105" value="0.3333" />
+      <observation key="Grass_110" value="0.1667" />
+      <observation key="Grass_104" value="0.1667" />
+      <observation key="Road_40" value="0.5000" />
+      <observation key="Grass_88" value="0.3333" />
+      <observation key="Grass_89" value="0.1667" />
+      <observation key="Grass_79" value="0.1667" />
+      <observation key="Road_39" value="0.3333" />
+      <observation key="Road_38" value="0.1667" />
+      <observation key="Grass_72" value="0.1667" />
+      <observation key="RR_17" value="0.3333" />
+      <observation key="RR_18" value="0.1667" />
+      <observation key="RR_19" value="0.1667" />
+      <observation key="Grass_106" value="0.3333" />
+      <observation key="Road_41" value="0.3333" />
+      <observation key="Road_42" value="0.1667" />
+      <observation key="Grass_111" value="0.1667" />
+      <observation key="Grass_97" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2093,7 +3017,21 @@
       <adjacent value="RR_2" />
       <adjacent value="Grass_99" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="13">
+      <observation key="Grass_99" value="0.5000" />
+      <observation key="Grass_100" value="0.3333" />
+      <observation key="Grass_101" value="0.1667" />
+      <observation key="RR_6" value="0.1667" />
+      <observation key="RR_5" value="0.1667" />
+      <observation key="RR_4" value="0.3333" />
+      <observation key="RR_3" value="0.3333" />
+      <observation key="RR_2" value="0.5000" />
+      <observation key="RR_1" value="0.5000" />
+      <observation key="Grass_90" value="0.3333" />
+      <observation key="Grass_82" value="0.1667" />
+      <observation key="Grass_91" value="0.1667" />
+      <observation key="Grass_98" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2112,7 +3050,29 @@
       <adjacent value="RR_4" />
       <adjacent value="Grass_100" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="21">
+      <observation key="Grass_98" value="0.5000" />
+      <observation key="RR_1" value="0.3333" />
+      <observation key="Grass_90" value="0.3333" />
+      <observation key="RR_2" value="0.5000" />
+      <observation key="Grass_82" value="0.1667" />
+      <observation key="RR_3" value="0.5000" />
+      <observation key="Grass_91" value="0.3333" />
+      <observation key="Grass_83" value="0.1667" />
+      <observation key="RR_4" value="0.5000" />
+      <observation key="Grass_92" value="0.3333" />
+      <observation key="Grass_84" value="0.1667" />
+      <observation key="Grass_93" value="0.1667" />
+      <observation key="RR_5" value="0.3333" />
+      <observation key="RR_6" value="0.3333" />
+      <observation key="Grass_100" value="0.5000" />
+      <observation key="Grass_101" value="0.3333" />
+      <observation key="Grass_102" value="0.1667" />
+      <observation key="RR_7" value="0.1667" />
+      <observation key="RR_8" value="0.1667" />
+      <observation key="Grass_94" value="0.1667" />
+      <observation key="Grass_99" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2131,7 +3091,33 @@
       <adjacent value="Grass_99" />
       <adjacent value="Grass_101" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="25">
+      <observation key="Grass_99" value="0.5000" />
+      <observation key="Grass_98" value="0.3333" />
+      <observation key="Grass_101" value="0.5000" />
+      <observation key="Grass_102" value="0.3333" />
+      <observation key="Grass_103" value="0.1667" />
+      <observation key="Grass_109" value="0.1667" />
+      <observation key="RR_9" value="0.1667" />
+      <observation key="RR_8" value="0.3333" />
+      <observation key="RR_7" value="0.3333" />
+      <observation key="RR_6" value="0.5000" />
+      <observation key="RR_5" value="0.5000" />
+      <observation key="RR_4" value="0.5000" />
+      <observation key="RR_3" value="0.3333" />
+      <observation key="RR_2" value="0.3333" />
+      <observation key="RR_1" value="0.1667" />
+      <observation key="Grass_92" value="0.3333" />
+      <observation key="Grass_84" value="0.1667" />
+      <observation key="Grass_93" value="0.3333" />
+      <observation key="Grass_94" value="0.3333" />
+      <observation key="Grass_95" value="0.1667" />
+      <observation key="Grass_91" value="0.3333" />
+      <observation key="Grass_90" value="0.1667" />
+      <observation key="Grass_82" value="0.1667" />
+      <observation key="Grass_83" value="0.1667" />
+      <observation key="Grass_100" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2150,7 +3136,35 @@
       <adjacent value="Grass_102" />
       <adjacent value="Grass_100" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="27">
+      <observation key="Grass_100" value="0.5000" />
+      <observation key="RR_4" value="0.3333" />
+      <observation key="Grass_91" value="0.1667" />
+      <observation key="Grass_99" value="0.3333" />
+      <observation key="Grass_98" value="0.1667" />
+      <observation key="RR_3" value="0.1667" />
+      <observation key="RR_2" value="0.1667" />
+      <observation key="RR_6" value="0.5000" />
+      <observation key="Grass_93" value="0.3333" />
+      <observation key="Grass_84" value="0.1667" />
+      <observation key="Grass_92" value="0.1667" />
+      <observation key="RR_5" value="0.3333" />
+      <observation key="RR_7" value="0.5000" />
+      <observation key="Grass_94" value="0.3333" />
+      <observation key="RR_8" value="0.5000" />
+      <observation key="Grass_95" value="0.3333" />
+      <observation key="Grass_75" value="0.1667" />
+      <observation key="Grass_96" value="0.1667" />
+      <observation key="RR_10" value="0.1667" />
+      <observation key="RR_9" value="0.3333" />
+      <observation key="Grass_102" value="0.5000" />
+      <observation key="Grass_103" value="0.3333" />
+      <observation key="RR_11" value="0.1667" />
+      <observation key="Grass_104" value="0.1667" />
+      <observation key="Grass_109" value="0.3333" />
+      <observation key="Grass_110" value="0.1667" />
+      <observation key="Grass_101" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2170,7 +3184,33 @@
       <adjacent value="Grass_109" />
       <adjacent value="Grass_101" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="25">
+      <observation key="RR_9" value="0.5000" />
+      <observation key="Grass_95" value="0.3333" />
+      <observation key="Grass_75" value="0.1667" />
+      <observation key="Grass_96" value="0.1667" />
+      <observation key="RR_10" value="0.3333" />
+      <observation key="Grass_103" value="0.5000" />
+      <observation key="Grass_104" value="0.3333" />
+      <observation key="Grass_105" value="0.1667" />
+      <observation key="Grass_109" value="0.5000" />
+      <observation key="Grass_110" value="0.3333" />
+      <observation key="Road_42" value="0.1667" />
+      <observation key="RR_13" value="0.1667" />
+      <observation key="RR_12" value="0.1667" />
+      <observation key="RR_11" value="0.3333" />
+      <observation key="RR_8" value="0.5000" />
+      <observation key="RR_7" value="0.3333" />
+      <observation key="RR_6" value="0.3333" />
+      <observation key="Grass_101" value="0.5000" />
+      <observation key="Grass_100" value="0.3333" />
+      <observation key="RR_4" value="0.1667" />
+      <observation key="RR_5" value="0.1667" />
+      <observation key="Grass_99" value="0.1667" />
+      <observation key="Grass_94" value="0.3333" />
+      <observation key="Grass_93" value="0.1667" />
+      <observation key="Grass_102" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2190,7 +3230,32 @@
       <adjacent value="RR_10" />
       <adjacent value="RR_9" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="24">
+      <observation key="RR_10" value="0.5000" />
+      <observation key="Grass_96" value="0.3333" />
+      <observation key="Grass_75" value="0.1667" />
+      <observation key="Grass_95" value="0.3333" />
+      <observation key="RR_11" value="0.5000" />
+      <observation key="RR_12" value="0.3333" />
+      <observation key="RR_13" value="0.3333" />
+      <observation key="Grass_104" value="0.5000" />
+      <observation key="Grass_105" value="0.3333" />
+      <observation key="Road_41" value="0.1667" />
+      <observation key="Grass_109" value="0.5000" />
+      <observation key="Grass_110" value="0.3333" />
+      <observation key="Road_42" value="0.1667" />
+      <observation key="RR_14" value="0.1667" />
+      <observation key="RR_15" value="0.1667" />
+      <observation key="RR_9" value="0.5000" />
+      <observation key="RR_8" value="0.3333" />
+      <observation key="Grass_102" value="0.5000" />
+      <observation key="Grass_101" value="0.3333" />
+      <observation key="Grass_100" value="0.1667" />
+      <observation key="RR_7" value="0.1667" />
+      <observation key="RR_6" value="0.1667" />
+      <observation key="Grass_94" value="0.1667" />
+      <observation key="Grass_103" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2212,7 +3277,32 @@
       <adjacent value="Grass_110" />
       <adjacent value="Grass_105" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="24">
+      <observation key="RR_12" value="0.5000" />
+      <observation key="Grass_103" value="0.5000" />
+      <observation key="Grass_102" value="0.3333" />
+      <observation key="Grass_101" value="0.1667" />
+      <observation key="Grass_105" value="0.5000" />
+      <observation key="Road_41" value="0.3333" />
+      <observation key="Grass_106" value="0.1667" />
+      <observation key="Grass_110" value="0.5000" />
+      <observation key="Road_42" value="0.3333" />
+      <observation key="Grass_111" value="0.1667" />
+      <observation key="RR_16" value="0.1667" />
+      <observation key="RR_15" value="0.3333" />
+      <observation key="RR_14" value="0.3333" />
+      <observation key="RR_13" value="0.5000" />
+      <observation key="Grass_97" value="0.1667" />
+      <observation key="RR_11" value="0.5000" />
+      <observation key="Grass_96" value="0.3333" />
+      <observation key="Grass_75" value="0.1667" />
+      <observation key="Grass_95" value="0.1667" />
+      <observation key="RR_8" value="0.1667" />
+      <observation key="RR_9" value="0.3333" />
+      <observation key="RR_10" value="0.3333" />
+      <observation key="Grass_109" value="0.5000" />
+      <observation key="Grass_104" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2234,7 +3324,32 @@
       <adjacent value="Road_41" />
       <adjacent value="Grass_104" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="24">
+      <observation key="Grass_110" value="0.5000" />
+      <observation key="Road_42" value="0.5000" />
+      <observation key="Road_41" value="0.5000" />
+      <observation key="Grass_106" value="0.3333" />
+      <observation key="Grass_111" value="0.3333" />
+      <observation key="Grass_112" value="0.1667" />
+      <observation key="Grass_104" value="0.5000" />
+      <observation key="Grass_103" value="0.3333" />
+      <observation key="Grass_102" value="0.1667" />
+      <observation key="Grass_109" value="0.3333" />
+      <observation key="RR_9" value="0.1667" />
+      <observation key="RR_10" value="0.1667" />
+      <observation key="RR_11" value="0.3333" />
+      <observation key="RR_12" value="0.3333" />
+      <observation key="RR_13" value="0.5000" />
+      <observation key="RR_14" value="0.5000" />
+      <observation key="Grass_97" value="0.3333" />
+      <observation key="RR_15" value="0.5000" />
+      <observation key="RR_16" value="0.3333" />
+      <observation key="RR_17" value="0.1667" />
+      <observation key="Road_40" value="0.1667" />
+      <observation key="Grass_87" value="0.1667" />
+      <observation key="Grass_96" value="0.1667" />
+      <observation key="Grass_105" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2253,7 +3368,26 @@
       <adjacent value="Road_41" />
       <adjacent value="Grass_111" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="18">
+      <observation key="RR_17" value="0.5000" />
+      <observation key="Grass_88" value="0.3333" />
+      <observation key="Grass_79" value="0.1667" />
+      <observation key="RR_16" value="0.5000" />
+      <observation key="Road_40" value="0.3333" />
+      <observation key="Road_39" value="0.1667" />
+      <observation key="Grass_87" value="0.1667" />
+      <observation key="Grass_97" value="0.3333" />
+      <observation key="Road_41" value="0.5000" />
+      <observation key="Grass_105" value="0.3333" />
+      <observation key="Grass_104" value="0.1667" />
+      <observation key="RR_13" value="0.1667" />
+      <observation key="RR_14" value="0.1667" />
+      <observation key="RR_15" value="0.3333" />
+      <observation key="Grass_110" value="0.1667" />
+      <observation key="Road_42" value="0.3333" />
+      <observation key="Grass_111" value="0.5000" />
+      <observation key="Grass_106" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2274,7 +3408,23 @@
       <adjacent value="Grass_114" />
       <adjacent value="Grass_113" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="15">
+      <observation key="Grass_113" value="0.5000" />
+      <observation key="Grass_115" value="0.3333" />
+      <observation key="Grass_114" value="0.5000" />
+      <observation key="Grass_108" value="0.5000" />
+      <observation key="RR_23" value="0.3333" />
+      <observation key="RR_22" value="0.5000" />
+      <observation key="RR_21" value="0.5000" />
+      <observation key="RR_20" value="0.5000" />
+      <observation key="Grass_89" value="0.3333" />
+      <observation key="Grass_80" value="0.3333" />
+      <observation key="Grass_81" value="0.3333" />
+      <observation key="Grass_73" value="0.1667" />
+      <observation key="Grass_79" value="0.1667" />
+      <observation key="Grass_88" value="0.1667" />
+      <observation key="Grass_107" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2292,7 +3442,23 @@
       <adjacent value="Grass_114" />
       <adjacent value="Grass_107" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="15">
+      <observation key="Grass_114" value="0.5000" />
+      <observation key="Grass_115" value="0.3333" />
+      <observation key="Grass_113" value="0.3333" />
+      <observation key="Grass_107" value="0.5000" />
+      <observation key="RR_20" value="0.3333" />
+      <observation key="RR_19" value="0.1667" />
+      <observation key="RR_21" value="0.3333" />
+      <observation key="RR_22" value="0.5000" />
+      <observation key="RR_23" value="0.5000" />
+      <observation key="Grass_81" value="0.3333" />
+      <observation key="Grass_73" value="0.1667" />
+      <observation key="Grass_80" value="0.3333" />
+      <observation key="Grass_89" value="0.1667" />
+      <observation key="Grass_79" value="0.1667" />
+      <observation key="Grass_108" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2311,7 +3477,32 @@
       <adjacent value="Grass_103" />
       <adjacent value="Grass_102" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="24">
+      <observation key="Grass_102" value="0.5000" />
+      <observation key="Grass_101" value="0.3333" />
+      <observation key="Grass_100" value="0.1667" />
+      <observation key="RR_6" value="0.1667" />
+      <observation key="RR_7" value="0.1667" />
+      <observation key="RR_8" value="0.3333" />
+      <observation key="RR_9" value="0.3333" />
+      <observation key="RR_10" value="0.3333" />
+      <observation key="Grass_103" value="0.5000" />
+      <observation key="Grass_94" value="0.1667" />
+      <observation key="Grass_95" value="0.1667" />
+      <observation key="Grass_96" value="0.1667" />
+      <observation key="RR_11" value="0.3333" />
+      <observation key="RR_12" value="0.3333" />
+      <observation key="Grass_104" value="0.5000" />
+      <observation key="Grass_105" value="0.3333" />
+      <observation key="Road_41" value="0.1667" />
+      <observation key="RR_15" value="0.1667" />
+      <observation key="RR_14" value="0.1667" />
+      <observation key="RR_13" value="0.3333" />
+      <observation key="Grass_110" value="0.5000" />
+      <observation key="Road_42" value="0.3333" />
+      <observation key="Grass_111" value="0.1667" />
+      <observation key="Grass_109" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2329,7 +3520,31 @@
       <adjacent value="Grass_104" />
       <adjacent value="Grass_109" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="23">
+      <observation key="Grass_109" value="0.5000" />
+      <observation key="Grass_102" value="0.3333" />
+      <observation key="Grass_101" value="0.1667" />
+      <observation key="RR_8" value="0.1667" />
+      <observation key="RR_9" value="0.1667" />
+      <observation key="RR_10" value="0.1667" />
+      <observation key="RR_11" value="0.3333" />
+      <observation key="RR_12" value="0.3333" />
+      <observation key="RR_13" value="0.3333" />
+      <observation key="RR_14" value="0.3333" />
+      <observation key="RR_15" value="0.3333" />
+      <observation key="RR_16" value="0.1667" />
+      <observation key="Road_42" value="0.5000" />
+      <observation key="Grass_111" value="0.3333" />
+      <observation key="Grass_112" value="0.1667" />
+      <observation key="Grass_106" value="0.1667" />
+      <observation key="Road_41" value="0.3333" />
+      <observation key="Grass_105" value="0.5000" />
+      <observation key="Grass_97" value="0.1667" />
+      <observation key="Grass_104" value="0.5000" />
+      <observation key="Grass_103" value="0.3333" />
+      <observation key="Grass_96" value="0.1667" />
+      <observation key="Grass_110" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2349,7 +3564,26 @@
       <adjacent value="Road_42" />
       <adjacent value="Road_41" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="18">
+      <observation key="Grass_106" value="0.5000" />
+      <observation key="RR_17" value="0.3333" />
+      <observation key="Road_40" value="0.1667" />
+      <observation key="RR_16" value="0.3333" />
+      <observation key="Grass_97" value="0.1667" />
+      <observation key="Road_41" value="0.5000" />
+      <observation key="RR_15" value="0.3333" />
+      <observation key="RR_14" value="0.1667" />
+      <observation key="Road_42" value="0.5000" />
+      <observation key="Grass_110" value="0.3333" />
+      <observation key="Grass_109" value="0.1667" />
+      <observation key="Grass_105" value="0.3333" />
+      <observation key="Grass_104" value="0.1667" />
+      <observation key="RR_13" value="0.1667" />
+      <observation key="Grass_112" value="0.5000" />
+      <observation key="Grass_113" value="0.3333" />
+      <observation key="Grass_115" value="0.1667" />
+      <observation key="Grass_111" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2365,7 +3599,18 @@
       <adjacent value="Grass_113" />
       <adjacent value="Grass_111" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="10">
+      <observation key="Grass_113" value="0.5000" />
+      <observation key="Grass_115" value="0.3333" />
+      <observation key="Grass_114" value="0.3333" />
+      <observation key="Grass_111" value="0.5000" />
+      <observation key="Road_42" value="0.3333" />
+      <observation key="Grass_110" value="0.1667" />
+      <observation key="Grass_105" value="0.1667" />
+      <observation key="Road_41" value="0.3333" />
+      <observation key="RR_15" value="0.1667" />
+      <observation key="Grass_112" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2385,7 +3630,23 @@
       <adjacent value="Grass_112" />
       <adjacent value="Grass_107" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="15">
+      <observation key="Grass_115" value="0.5000" />
+      <observation key="Grass_114" value="0.5000" />
+      <observation key="Grass_108" value="0.3333" />
+      <observation key="Grass_107" value="0.5000" />
+      <observation key="RR_22" value="0.3333" />
+      <observation key="Grass_81" value="0.1667" />
+      <observation key="RR_23" value="0.1667" />
+      <observation key="RR_21" value="0.3333" />
+      <observation key="Grass_80" value="0.1667" />
+      <observation key="RR_20" value="0.3333" />
+      <observation key="Grass_89" value="0.1667" />
+      <observation key="Grass_112" value="0.5000" />
+      <observation key="Grass_111" value="0.3333" />
+      <observation key="Road_42" value="0.1667" />
+      <observation key="Grass_113" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2404,7 +3665,21 @@
       <adjacent value="Grass_115" />
       <adjacent value="Grass_113" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="13">
+      <observation key="Grass_108" value="0.5000" />
+      <observation key="RR_23" value="0.3333" />
+      <observation key="Grass_81" value="0.1667" />
+      <observation key="RR_22" value="0.3333" />
+      <observation key="Grass_80" value="0.1667" />
+      <observation key="Grass_107" value="0.5000" />
+      <observation key="RR_20" value="0.3333" />
+      <observation key="RR_21" value="0.3333" />
+      <observation key="Grass_89" value="0.1667" />
+      <observation key="Grass_115" value="0.5000" />
+      <observation key="Grass_113" value="0.5000" />
+      <observation key="Grass_112" value="0.3333" />
+      <observation key="Grass_114" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2420,7 +3695,19 @@
       <adjacent value="Grass_113" />
       <adjacent value="Grass_114" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="11">
+      <observation key="Grass_114" value="0.5000" />
+      <observation key="Grass_108" value="0.3333" />
+      <observation key="RR_23" value="0.1667" />
+      <observation key="RR_22" value="0.1667" />
+      <observation key="Grass_113" value="0.5000" />
+      <observation key="Grass_112" value="0.3333" />
+      <observation key="Grass_111" value="0.1667" />
+      <observation key="Grass_107" value="0.3333" />
+      <observation key="RR_21" value="0.1667" />
+      <observation key="RR_20" value="0.1667" />
+      <observation key="Grass_115" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2437,7 +3724,14 @@
       <adjacent value="Grass_30" />
       <adjacent value="Road_46" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="6">
+      <observation key="Grass_30" value="0.5000" />
+      <observation key="Grass_29" value="0.3333" />
+      <observation key="Road_46" value="0.5000" />
+      <observation key="Road_47" value="0.5000" />
+      <observation key="Road_53" value="0.3333" />
+      <observation key="Grass_31" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Grass">
     <CanvasName value="Main" />
@@ -2710,7 +4004,11 @@
       <adjacent value="Tavern_0" />
       <adjacent value="Road_20" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="3">
+      <observation key="Tavern_0" value="0.5000" />
+      <observation key="Tavern_1" value="0.5000" />
+      <observation key="Tavern_2" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="VetOffice">
     <CanvasName value="Main" />
@@ -3887,7 +5185,22 @@
       <adjacent value="RR_2" />
       <adjacent value="Grass_90" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="14">
+      <observation key="Grass_98" value="0.5000" />
+      <observation key="Grass_99" value="0.3333" />
+      <observation key="Grass_100" value="0.1667" />
+      <observation key="RR_2" value="0.5000" />
+      <observation key="RR_3" value="0.3333" />
+      <observation key="RR_4" value="0.1667" />
+      <observation key="Grass_90" value="0.5000" />
+      <observation key="Grass_91" value="0.3333" />
+      <observation key="Grass_92" value="0.1667" />
+      <observation key="Grass_82" value="0.3333" />
+      <observation key="Road_15" value="0.1667" />
+      <observation key="Grass_83" value="0.1667" />
+      <observation key="Grass_84" value="0.1667" />
+      <observation key="RR_1" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3906,7 +5219,24 @@
       <adjacent value="Grass_98" />
       <adjacent value="Grass_99" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="16">
+      <observation key="Grass_98" value="0.5000" />
+      <observation key="Grass_99" value="0.5000" />
+      <observation key="Grass_100" value="0.3333" />
+      <observation key="Grass_101" value="0.1667" />
+      <observation key="RR_3" value="0.5000" />
+      <observation key="RR_4" value="0.3333" />
+      <observation key="RR_5" value="0.1667" />
+      <observation key="RR_1" value="0.5000" />
+      <observation key="Grass_90" value="0.5000" />
+      <observation key="Grass_82" value="0.3333" />
+      <observation key="Road_15" value="0.1667" />
+      <observation key="Grass_91" value="0.3333" />
+      <observation key="Grass_83" value="0.1667" />
+      <observation key="Grass_92" value="0.1667" />
+      <observation key="Grass_84" value="0.1667" />
+      <observation key="RR_2" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3925,7 +5255,28 @@
       <adjacent value="Grass_99" />
       <adjacent value="RR_2" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="20">
+      <observation key="Grass_91" value="0.5000" />
+      <observation key="Grass_84" value="0.3333" />
+      <observation key="Grass_74" value="0.1667" />
+      <observation key="Grass_83" value="0.3333" />
+      <observation key="Road_14" value="0.1667" />
+      <observation key="Road_15" value="0.1667" />
+      <observation key="Grass_82" value="0.3333" />
+      <observation key="Grass_90" value="0.5000" />
+      <observation key="RR_2" value="0.5000" />
+      <observation key="RR_1" value="0.3333" />
+      <observation key="Grass_98" value="0.3333" />
+      <observation key="Grass_99" value="0.5000" />
+      <observation key="Grass_100" value="0.3333" />
+      <observation key="RR_4" value="0.5000" />
+      <observation key="RR_5" value="0.3333" />
+      <observation key="RR_6" value="0.1667" />
+      <observation key="Grass_101" value="0.1667" />
+      <observation key="Grass_92" value="0.3333" />
+      <observation key="Grass_93" value="0.1667" />
+      <observation key="RR_3" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3945,7 +5296,32 @@
       <adjacent value="RR_5" />
       <adjacent value="Grass_92" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="24">
+      <observation key="Grass_100" value="0.5000" />
+      <observation key="Grass_101" value="0.3333" />
+      <observation key="Grass_102" value="0.1667" />
+      <observation key="RR_8" value="0.1667" />
+      <observation key="RR_7" value="0.1667" />
+      <observation key="RR_6" value="0.3333" />
+      <observation key="RR_5" value="0.5000" />
+      <observation key="Grass_92" value="0.5000" />
+      <observation key="Grass_93" value="0.3333" />
+      <observation key="Grass_94" value="0.1667" />
+      <observation key="Grass_84" value="0.3333" />
+      <observation key="Grass_74" value="0.1667" />
+      <observation key="Grass_91" value="0.5000" />
+      <observation key="Grass_83" value="0.3333" />
+      <observation key="Road_15" value="0.1667" />
+      <observation key="Road_14" value="0.1667" />
+      <observation key="Grass_82" value="0.3333" />
+      <observation key="Grass_90" value="0.3333" />
+      <observation key="RR_1" value="0.1667" />
+      <observation key="RR_2" value="0.3333" />
+      <observation key="RR_3" value="0.5000" />
+      <observation key="Grass_99" value="0.5000" />
+      <observation key="Grass_98" value="0.3333" />
+      <observation key="RR_4" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3964,7 +5340,30 @@
       <adjacent value="Grass_100" />
       <adjacent value="RR_6" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="22">
+      <observation key="Grass_92" value="0.5000" />
+      <observation key="Grass_91" value="0.3333" />
+      <observation key="Grass_82" value="0.1667" />
+      <observation key="Grass_84" value="0.3333" />
+      <observation key="Grass_74" value="0.1667" />
+      <observation key="Grass_83" value="0.1667" />
+      <observation key="Grass_93" value="0.5000" />
+      <observation key="Grass_94" value="0.3333" />
+      <observation key="Grass_95" value="0.1667" />
+      <observation key="RR_8" value="0.1667" />
+      <observation key="RR_7" value="0.3333" />
+      <observation key="RR_6" value="0.5000" />
+      <observation key="RR_4" value="0.5000" />
+      <observation key="RR_3" value="0.3333" />
+      <observation key="RR_2" value="0.1667" />
+      <observation key="Grass_90" value="0.1667" />
+      <observation key="Grass_100" value="0.5000" />
+      <observation key="Grass_99" value="0.3333" />
+      <observation key="Grass_98" value="0.1667" />
+      <observation key="Grass_101" value="0.3333" />
+      <observation key="Grass_102" value="0.1667" />
+      <observation key="RR_5" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -3984,7 +5383,33 @@
       <adjacent value="Grass_101" />
       <adjacent value="Grass_100" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="25">
+      <observation key="Grass_94" value="0.5000" />
+      <observation key="Grass_95" value="0.3333" />
+      <observation key="Grass_75" value="0.1667" />
+      <observation key="Grass_96" value="0.1667" />
+      <observation key="Grass_100" value="0.5000" />
+      <observation key="Grass_99" value="0.3333" />
+      <observation key="Grass_98" value="0.1667" />
+      <observation key="Grass_101" value="0.5000" />
+      <observation key="Grass_102" value="0.3333" />
+      <observation key="Grass_103" value="0.1667" />
+      <observation key="Grass_109" value="0.1667" />
+      <observation key="RR_7" value="0.5000" />
+      <observation key="RR_8" value="0.3333" />
+      <observation key="RR_9" value="0.1667" />
+      <observation key="RR_10" value="0.1667" />
+      <observation key="Grass_93" value="0.5000" />
+      <observation key="Grass_84" value="0.3333" />
+      <observation key="Grass_83" value="0.1667" />
+      <observation key="Grass_92" value="0.3333" />
+      <observation key="Grass_91" value="0.1667" />
+      <observation key="RR_4" value="0.3333" />
+      <observation key="RR_5" value="0.5000" />
+      <observation key="RR_3" value="0.1667" />
+      <observation key="Grass_74" value="0.1667" />
+      <observation key="RR_6" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -4002,7 +5427,28 @@
       <adjacent value="Grass_101" />
       <adjacent value="RR_6" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="20">
+      <observation key="RR_6" value="0.5000" />
+      <observation key="RR_5" value="0.3333" />
+      <observation key="RR_4" value="0.1667" />
+      <observation key="Grass_93" value="0.3333" />
+      <observation key="Grass_92" value="0.1667" />
+      <observation key="Grass_94" value="0.5000" />
+      <observation key="Grass_84" value="0.1667" />
+      <observation key="Grass_95" value="0.3333" />
+      <observation key="Grass_75" value="0.1667" />
+      <observation key="Grass_96" value="0.1667" />
+      <observation key="RR_10" value="0.1667" />
+      <observation key="RR_9" value="0.3333" />
+      <observation key="RR_8" value="0.5000" />
+      <observation key="Grass_101" value="0.5000" />
+      <observation key="Grass_100" value="0.3333" />
+      <observation key="Grass_99" value="0.1667" />
+      <observation key="Grass_102" value="0.3333" />
+      <observation key="Grass_109" value="0.1667" />
+      <observation key="Grass_103" value="0.1667" />
+      <observation key="RR_7" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -4022,7 +5468,34 @@
       <adjacent value="Grass_102" />
       <adjacent value="Grass_101" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="26">
+      <observation key="Grass_101" value="0.5000" />
+      <observation key="Grass_100" value="0.3333" />
+      <observation key="Grass_99" value="0.1667" />
+      <observation key="RR_4" value="0.1667" />
+      <observation key="RR_5" value="0.1667" />
+      <observation key="RR_6" value="0.3333" />
+      <observation key="RR_7" value="0.5000" />
+      <observation key="Grass_94" value="0.5000" />
+      <observation key="Grass_93" value="0.3333" />
+      <observation key="Grass_84" value="0.1667" />
+      <observation key="Grass_92" value="0.1667" />
+      <observation key="Grass_95" value="0.5000" />
+      <observation key="Grass_75" value="0.3333" />
+      <observation key="Road_10" value="0.1667" />
+      <observation key="Grass_85" value="0.1667" />
+      <observation key="Grass_96" value="0.3333" />
+      <observation key="Grass_102" value="0.5000" />
+      <observation key="Grass_103" value="0.3333" />
+      <observation key="Grass_104" value="0.1667" />
+      <observation key="Grass_109" value="0.3333" />
+      <observation key="Grass_110" value="0.1667" />
+      <observation key="RR_9" value="0.5000" />
+      <observation key="RR_10" value="0.3333" />
+      <observation key="RR_11" value="0.1667" />
+      <observation key="RR_12" value="0.1667" />
+      <observation key="RR_8" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -4041,7 +5514,31 @@
       <adjacent value="Grass_102" />
       <adjacent value="RR_8" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="23">
+      <observation key="Grass_95" value="0.5000" />
+      <observation key="Grass_75" value="0.3333" />
+      <observation key="Road_10" value="0.1667" />
+      <observation key="Grass_85" value="0.1667" />
+      <observation key="Grass_96" value="0.3333" />
+      <observation key="RR_10" value="0.5000" />
+      <observation key="RR_11" value="0.3333" />
+      <observation key="RR_12" value="0.1667" />
+      <observation key="Grass_103" value="0.5000" />
+      <observation key="Grass_104" value="0.3333" />
+      <observation key="RR_13" value="0.1667" />
+      <observation key="Grass_109" value="0.3333" />
+      <observation key="Grass_110" value="0.1667" />
+      <observation key="Grass_105" value="0.1667" />
+      <observation key="Grass_102" value="0.5000" />
+      <observation key="Grass_101" value="0.3333" />
+      <observation key="Grass_100" value="0.1667" />
+      <observation key="RR_6" value="0.1667" />
+      <observation key="RR_7" value="0.3333" />
+      <observation key="RR_8" value="0.5000" />
+      <observation key="Grass_94" value="0.3333" />
+      <observation key="Grass_93" value="0.1667" />
+      <observation key="RR_9" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -4060,7 +5557,29 @@
       <adjacent value="RR_11" />
       <adjacent value="Grass_96" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="21">
+      <observation key="Grass_96" value="0.5000" />
+      <observation key="Grass_75" value="0.3333" />
+      <observation key="Road_10" value="0.1667" />
+      <observation key="Grass_95" value="0.5000" />
+      <observation key="Grass_94" value="0.3333" />
+      <observation key="Grass_93" value="0.1667" />
+      <observation key="RR_6" value="0.1667" />
+      <observation key="RR_7" value="0.1667" />
+      <observation key="RR_8" value="0.3333" />
+      <observation key="RR_9" value="0.5000" />
+      <observation key="Grass_103" value="0.5000" />
+      <observation key="Grass_104" value="0.3333" />
+      <observation key="RR_13" value="0.1667" />
+      <observation key="RR_12" value="0.3333" />
+      <observation key="RR_11" value="0.5000" />
+      <observation key="Grass_109" value="0.3333" />
+      <observation key="Grass_110" value="0.1667" />
+      <observation key="Grass_105" value="0.1667" />
+      <observation key="Grass_102" value="0.3333" />
+      <observation key="Grass_101" value="0.1667" />
+      <observation key="RR_10" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -4079,7 +5598,31 @@
       <adjacent value="Grass_103" />
       <adjacent value="Grass_104" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="23">
+      <observation key="RR_12" value="0.5000" />
+      <observation key="RR_13" value="0.3333" />
+      <observation key="RR_14" value="0.1667" />
+      <observation key="Grass_104" value="0.5000" />
+      <observation key="Grass_105" value="0.3333" />
+      <observation key="RR_15" value="0.1667" />
+      <observation key="RR_10" value="0.5000" />
+      <observation key="RR_9" value="0.3333" />
+      <observation key="RR_8" value="0.1667" />
+      <observation key="Grass_103" value="0.5000" />
+      <observation key="Grass_109" value="0.3333" />
+      <observation key="Grass_110" value="0.3333" />
+      <observation key="Road_42" value="0.1667" />
+      <observation key="Road_41" value="0.1667" />
+      <observation key="Grass_102" value="0.3333" />
+      <observation key="Grass_101" value="0.1667" />
+      <observation key="Grass_96" value="0.5000" />
+      <observation key="Grass_75" value="0.3333" />
+      <observation key="Road_10" value="0.1667" />
+      <observation key="Grass_95" value="0.3333" />
+      <observation key="Road_11" value="0.1667" />
+      <observation key="Grass_94" value="0.1667" />
+      <observation key="RR_11" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -4098,7 +5641,27 @@
       <adjacent value="Grass_104" />
       <adjacent value="RR_11" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="19">
+      <observation key="Grass_104" value="0.5000" />
+      <observation key="Grass_110" value="0.3333" />
+      <observation key="Road_42" value="0.1667" />
+      <observation key="Grass_105" value="0.3333" />
+      <observation key="Road_41" value="0.1667" />
+      <observation key="RR_13" value="0.5000" />
+      <observation key="RR_14" value="0.3333" />
+      <observation key="RR_15" value="0.1667" />
+      <observation key="Grass_109" value="0.3333" />
+      <observation key="Grass_103" value="0.3333" />
+      <observation key="Grass_102" value="0.1667" />
+      <observation key="RR_11" value="0.5000" />
+      <observation key="RR_10" value="0.3333" />
+      <observation key="RR_9" value="0.1667" />
+      <observation key="Grass_96" value="0.5000" />
+      <observation key="Grass_95" value="0.3333" />
+      <observation key="Grass_94" value="0.1667" />
+      <observation key="RR_8" value="0.1667" />
+      <observation key="RR_12" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -4117,7 +5680,29 @@
       <adjacent value="RR_14" />
       <adjacent value="StockPen_0" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="21">
+      <observation key="RR_12" value="0.5000" />
+      <observation key="RR_11" value="0.3333" />
+      <observation key="RR_10" value="0.1667" />
+      <observation key="Grass_95" value="0.1667" />
+      <observation key="Grass_104" value="0.5000" />
+      <observation key="Grass_103" value="0.3333" />
+      <observation key="RR_9" value="0.1667" />
+      <observation key="Grass_102" value="0.1667" />
+      <observation key="Grass_109" value="0.3333" />
+      <observation key="Grass_110" value="0.3333" />
+      <observation key="Grass_105" value="0.5000" />
+      <observation key="Road_41" value="0.3333" />
+      <observation key="Road_42" value="0.3333" />
+      <observation key="Grass_111" value="0.1667" />
+      <observation key="Grass_106" value="0.1667" />
+      <observation key="RR_14" value="0.5000" />
+      <observation key="RR_15" value="0.3333" />
+      <observation key="RR_16" value="0.1667" />
+      <observation key="Grass_97" value="0.3333" />
+      <observation key="Road_40" value="0.1667" />
+      <observation key="RR_13" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -4135,7 +5720,30 @@
       <adjacent value="RR_15" />
       <adjacent value="StockPen_0" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="22">
+      <observation key="Grass_97" value="0.3333" />
+      <observation key="Grass_87" value="0.3333" />
+      <observation key="Grass_78" value="0.1667" />
+      <observation key="RR_15" value="0.5000" />
+      <observation key="RR_16" value="0.3333" />
+      <observation key="RR_17" value="0.1667" />
+      <observation key="Road_40" value="0.1667" />
+      <observation key="Grass_88" value="0.1667" />
+      <observation key="Road_39" value="0.1667" />
+      <observation key="Road_41" value="0.3333" />
+      <observation key="Grass_106" value="0.1667" />
+      <observation key="Grass_111" value="0.1667" />
+      <observation key="Road_42" value="0.3333" />
+      <observation key="Grass_105" value="0.5000" />
+      <observation key="Grass_110" value="0.3333" />
+      <observation key="Grass_104" value="0.3333" />
+      <observation key="Grass_109" value="0.1667" />
+      <observation key="Grass_103" value="0.1667" />
+      <observation key="RR_11" value="0.1667" />
+      <observation key="RR_12" value="0.3333" />
+      <observation key="RR_13" value="0.5000" />
+      <observation key="RR_14" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -4154,7 +5762,33 @@
       <adjacent value="Road_41" />
       <adjacent value="Grass_105" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="25">
+      <observation key="Grass_97" value="0.5000" />
+      <observation key="Grass_87" value="0.3333" />
+      <observation key="Grass_77" value="0.1667" />
+      <observation key="Grass_78" value="0.1667" />
+      <observation key="Road_39" value="0.1667" />
+      <observation key="Road_40" value="0.3333" />
+      <observation key="Grass_88" value="0.1667" />
+      <observation key="RR_16" value="0.5000" />
+      <observation key="RR_17" value="0.3333" />
+      <observation key="RR_18" value="0.1667" />
+      <observation key="Grass_106" value="0.3333" />
+      <observation key="Grass_111" value="0.3333" />
+      <observation key="Road_41" value="0.5000" />
+      <observation key="Road_42" value="0.3333" />
+      <observation key="Grass_110" value="0.3333" />
+      <observation key="Grass_105" value="0.5000" />
+      <observation key="Grass_109" value="0.1667" />
+      <observation key="Grass_104" value="0.3333" />
+      <observation key="Grass_103" value="0.1667" />
+      <observation key="RR_11" value="0.1667" />
+      <observation key="RR_12" value="0.1667" />
+      <observation key="RR_13" value="0.3333" />
+      <observation key="RR_14" value="0.5000" />
+      <observation key="Grass_112" value="0.1667" />
+      <observation key="RR_15" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -4174,7 +5808,33 @@
       <adjacent value="RR_17" />
       <adjacent value="Road_40" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="25">
+      <observation key="RR_17" value="0.5000" />
+      <observation key="RR_18" value="0.3333" />
+      <observation key="RR_19" value="0.1667" />
+      <observation key="Road_40" value="0.5000" />
+      <observation key="Road_39" value="0.3333" />
+      <observation key="Road_38" value="0.1667" />
+      <observation key="Grass_79" value="0.1667" />
+      <observation key="Grass_88" value="0.3333" />
+      <observation key="Grass_89" value="0.1667" />
+      <observation key="Grass_78" value="0.1667" />
+      <observation key="Grass_87" value="0.3333" />
+      <observation key="Grass_77" value="0.1667" />
+      <observation key="Grass_97" value="0.5000" />
+      <observation key="Grass_86" value="0.1667" />
+      <observation key="RR_15" value="0.5000" />
+      <observation key="RR_14" value="0.3333" />
+      <observation key="RR_13" value="0.1667" />
+      <observation key="Grass_106" value="0.5000" />
+      <observation key="Grass_111" value="0.3333" />
+      <observation key="Road_41" value="0.5000" />
+      <observation key="Road_42" value="0.3333" />
+      <observation key="Grass_110" value="0.1667" />
+      <observation key="Grass_105" value="0.3333" />
+      <observation key="Grass_104" value="0.1667" />
+      <observation key="RR_16" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -4193,7 +5853,33 @@
       <adjacent value="Road_40" />
       <adjacent value="Grass_88" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="25">
+      <observation key="RR_18" value="0.5000" />
+      <observation key="RR_19" value="0.3333" />
+      <observation key="RR_20" value="0.1667" />
+      <observation key="Grass_88" value="0.5000" />
+      <observation key="Grass_89" value="0.3333" />
+      <observation key="RR_21" value="0.1667" />
+      <observation key="Grass_79" value="0.3333" />
+      <observation key="Grass_80" value="0.1667" />
+      <observation key="Road_40" value="0.5000" />
+      <observation key="Road_39" value="0.3333" />
+      <observation key="Road_38" value="0.1667" />
+      <observation key="Grass_78" value="0.1667" />
+      <observation key="Grass_87" value="0.3333" />
+      <observation key="Grass_77" value="0.1667" />
+      <observation key="Grass_86" value="0.1667" />
+      <observation key="Grass_97" value="0.3333" />
+      <observation key="RR_16" value="0.5000" />
+      <observation key="RR_15" value="0.3333" />
+      <observation key="RR_14" value="0.1667" />
+      <observation key="Grass_106" value="0.5000" />
+      <observation key="Grass_111" value="0.3333" />
+      <observation key="Road_42" value="0.1667" />
+      <observation key="Road_41" value="0.3333" />
+      <observation key="Grass_105" value="0.1667" />
+      <observation key="RR_17" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -4211,7 +5897,26 @@
       <adjacent value="RR_19" />
       <adjacent value="TrainStation_0" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="18">
+      <observation key="RR_17" value="0.5000" />
+      <observation key="RR_16" value="0.3333" />
+      <observation key="RR_15" value="0.1667" />
+      <observation key="RR_19" value="0.5000" />
+      <observation key="RR_20" value="0.3333" />
+      <observation key="RR_21" value="0.1667" />
+      <observation key="Road_41" value="0.1667" />
+      <observation key="Grass_88" value="0.5000" />
+      <observation key="Grass_79" value="0.3333" />
+      <observation key="Grass_89" value="0.3333" />
+      <observation key="Grass_80" value="0.1667" />
+      <observation key="Road_39" value="0.3333" />
+      <observation key="Grass_78" value="0.1667" />
+      <observation key="Road_40" value="0.3333" />
+      <observation key="Grass_97" value="0.1667" />
+      <observation key="Grass_87" value="0.1667" />
+      <observation key="Road_38" value="0.1667" />
+      <observation key="RR_18" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -4229,7 +5934,27 @@
       <adjacent value="Grass_89" />
       <adjacent value="RR_20" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="19">
+      <observation key="RR_20" value="0.5000" />
+      <observation key="RR_21" value="0.3333" />
+      <observation key="RR_22" value="0.1667" />
+      <observation key="Grass_89" value="0.5000" />
+      <observation key="Grass_80" value="0.3333" />
+      <observation key="Grass_81" value="0.1667" />
+      <observation key="Grass_79" value="0.3333" />
+      <observation key="Grass_88" value="0.5000" />
+      <observation key="RR_18" value="0.5000" />
+      <observation key="RR_17" value="0.3333" />
+      <observation key="RR_16" value="0.1667" />
+      <observation key="Road_40" value="0.3333" />
+      <observation key="Grass_97" value="0.1667" />
+      <observation key="Road_39" value="0.3333" />
+      <observation key="Road_38" value="0.1667" />
+      <observation key="Grass_78" value="0.1667" />
+      <observation key="Grass_87" value="0.1667" />
+      <observation key="Grass_108" value="0.1667" />
+      <observation key="RR_19" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -4247,7 +5972,28 @@
       <adjacent value="RR_21" />
       <adjacent value="Grass_107" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="20">
+      <observation key="RR_21" value="0.5000" />
+      <observation key="RR_22" value="0.3333" />
+      <observation key="RR_23" value="0.1667" />
+      <observation key="Grass_107" value="0.5000" />
+      <observation key="Grass_108" value="0.3333" />
+      <observation key="Grass_114" value="0.3333" />
+      <observation key="Grass_115" value="0.1667" />
+      <observation key="Grass_113" value="0.3333" />
+      <observation key="Grass_89" value="0.5000" />
+      <observation key="Grass_80" value="0.3333" />
+      <observation key="Grass_81" value="0.1667" />
+      <observation key="Grass_79" value="0.3333" />
+      <observation key="Grass_88" value="0.3333" />
+      <observation key="RR_19" value="0.5000" />
+      <observation key="RR_18" value="0.3333" />
+      <observation key="RR_17" value="0.1667" />
+      <observation key="Road_40" value="0.1667" />
+      <observation key="Road_39" value="0.1667" />
+      <observation key="Road_38" value="0.1667" />
+      <observation key="RR_20" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -4266,7 +6012,28 @@
       <adjacent value="RR_22" />
       <adjacent value="Grass_80" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="20">
+      <observation key="RR_20" value="0.5000" />
+      <observation key="RR_19" value="0.3333" />
+      <observation key="RR_18" value="0.1667" />
+      <observation key="Grass_107" value="0.5000" />
+      <observation key="Grass_113" value="0.3333" />
+      <observation key="Grass_115" value="0.1667" />
+      <observation key="Grass_114" value="0.3333" />
+      <observation key="Grass_108" value="0.3333" />
+      <observation key="RR_23" value="0.3333" />
+      <observation key="RR_22" value="0.5000" />
+      <observation key="Grass_81" value="0.3333" />
+      <observation key="Grass_80" value="0.5000" />
+      <observation key="Grass_89" value="0.5000" />
+      <observation key="Grass_79" value="0.3333" />
+      <observation key="Grass_88" value="0.3333" />
+      <observation key="RR_17" value="0.1667" />
+      <observation key="Grass_73" value="0.1667" />
+      <observation key="Road_39" value="0.1667" />
+      <observation key="Road_40" value="0.1667" />
+      <observation key="RR_21" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -4286,7 +6053,25 @@
       <adjacent value="RR_23" />
       <adjacent value="Grass_81" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="17">
+      <observation key="Grass_81" value="0.5000" />
+      <observation key="Grass_73" value="0.3333" />
+      <observation key="Grass_68" value="0.1667" />
+      <observation key="RR_23" value="0.5000" />
+      <observation key="Grass_108" value="0.5000" />
+      <observation key="Grass_114" value="0.3333" />
+      <observation key="Grass_115" value="0.1667" />
+      <observation key="Grass_113" value="0.3333" />
+      <observation key="Grass_107" value="0.5000" />
+      <observation key="RR_21" value="0.5000" />
+      <observation key="RR_20" value="0.3333" />
+      <observation key="RR_19" value="0.1667" />
+      <observation key="Grass_80" value="0.5000" />
+      <observation key="Grass_79" value="0.3333" />
+      <observation key="Grass_89" value="0.3333" />
+      <observation key="Grass_88" value="0.1667" />
+      <observation key="RR_22" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="RR">
     <CanvasName value="Main" />
@@ -4303,7 +6088,23 @@
       <adjacent value="Grass_81" />
       <adjacent value="Grass_108" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="15">
+      <observation key="Grass_81" value="0.5000" />
+      <observation key="Grass_73" value="0.3333" />
+      <observation key="Grass_68" value="0.1667" />
+      <observation key="Grass_80" value="0.3333" />
+      <observation key="Grass_79" value="0.1667" />
+      <observation key="Grass_89" value="0.1667" />
+      <observation key="RR_22" value="0.5000" />
+      <observation key="RR_21" value="0.3333" />
+      <observation key="RR_20" value="0.1667" />
+      <observation key="Grass_108" value="0.5000" />
+      <observation key="Grass_114" value="0.3333" />
+      <observation key="Grass_115" value="0.1667" />
+      <observation key="Grass_107" value="0.3333" />
+      <observation key="Grass_113" value="0.1667" />
+      <observation key="RR_23" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4348,7 +6149,13 @@
       <adjacent value="Road_1" />
       <adjacent value="Road_3" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="5">
+      <observation key="Road_1" value="0.5000" />
+      <observation key="Road_3" value="0.5000" />
+      <observation key="Road_4" value="0.3333" />
+      <observation key="Road_5" value="0.1667" />
+      <observation key="Road_2" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4403,7 +6210,19 @@
       <adjacent value="Road_5" />
       <adjacent value="Grass_34" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="11">
+      <observation key="Grass_34" value="0.5000" />
+      <observation key="Grass_43" value="0.3333" />
+      <observation key="Grass_42" value="0.3333" />
+      <observation key="Road_5" value="0.5000" />
+      <observation key="Road_6" value="0.3333" />
+      <observation key="Grass_54" value="0.1667" />
+      <observation key="Road_3" value="0.5000" />
+      <observation key="Road_2" value="0.3333" />
+      <observation key="Road_1" value="0.1667" />
+      <observation key="Road_7" value="0.1667" />
+      <observation key="Road_4" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4421,7 +6240,23 @@
       <adjacent value="Grass_42" />
       <adjacent value="Road_6" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="15">
+      <observation key="Grass_34" value="0.5000" />
+      <observation key="Grass_35" value="0.3333" />
+      <observation key="Grass_36" value="0.1667" />
+      <observation key="Road_33" value="0.1667" />
+      <observation key="Grass_43" value="0.3333" />
+      <observation key="Grass_42" value="0.5000" />
+      <observation key="Grass_54" value="0.3333" />
+      <observation key="Road_62" value="0.1667" />
+      <observation key="Road_6" value="0.5000" />
+      <observation key="Road_7" value="0.3333" />
+      <observation key="Road_8" value="0.1667" />
+      <observation key="Road_4" value="0.5000" />
+      <observation key="Road_3" value="0.3333" />
+      <observation key="Road_2" value="0.1667" />
+      <observation key="Road_5" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4444,7 +6279,25 @@
       <adjacent value="Grass_54" />
       <adjacent value="Grass_42" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="17">
+      <observation key="Grass_42" value="0.5000" />
+      <observation key="Grass_43" value="0.3333" />
+      <observation key="Road_33" value="0.1667" />
+      <observation key="Grass_34" value="0.3333" />
+      <observation key="Grass_35" value="0.1667" />
+      <observation key="Road_5" value="0.5000" />
+      <observation key="Road_4" value="0.3333" />
+      <observation key="Road_3" value="0.1667" />
+      <observation key="Road_57" value="0.5000" />
+      <observation key="Road_56" value="0.3333" />
+      <observation key="Road_55" value="0.1667" />
+      <observation key="Road_7" value="0.5000" />
+      <observation key="Road_8" value="0.3333" />
+      <observation key="Road_9" value="0.1667" />
+      <observation key="Grass_54" value="0.5000" />
+      <observation key="Road_62" value="0.3333" />
+      <observation key="Road_6" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4465,7 +6318,21 @@
       <adjacent value="Road_62" />
       <adjacent value="Road_8" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="13">
+      <observation key="Road_6" value="0.5000" />
+      <observation key="Road_5" value="0.3333" />
+      <observation key="Road_4" value="0.1667" />
+      <observation key="Grass_34" value="0.1667" />
+      <observation key="Grass_42" value="0.3333" />
+      <observation key="Grass_54" value="0.5000" />
+      <observation key="Road_62" value="0.5000" />
+      <observation key="Road_63" value="0.3333" />
+      <observation key="Road_35" value="0.1667" />
+      <observation key="Road_8" value="0.5000" />
+      <observation key="Road_9" value="0.3333" />
+      <observation key="Road_10" value="0.1667" />
+      <observation key="Road_7" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4486,7 +6353,21 @@
       <adjacent value="Road_61" />
       <adjacent value="Road_9" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="13">
+      <observation key="Road_61" value="0.5000" />
+      <observation key="Road_60" value="0.3333" />
+      <observation key="Road_59" value="0.1667" />
+      <observation key="Road_9" value="0.5000" />
+      <observation key="Road_10" value="0.3333" />
+      <observation key="Grass_85" value="0.1667" />
+      <observation key="Grass_75" value="0.1667" />
+      <observation key="Road_7" value="0.5000" />
+      <observation key="Road_6" value="0.3333" />
+      <observation key="Road_5" value="0.1667" />
+      <observation key="Grass_42" value="0.1667" />
+      <observation key="Grass_54" value="0.3333" />
+      <observation key="Road_8" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4503,7 +6384,19 @@
       <adjacent value="Road_10" />
       <adjacent value="Grass_76" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="11">
+      <observation key="Road_10" value="0.5000" />
+      <observation key="Grass_75" value="0.3333" />
+      <observation key="Grass_95" value="0.1667" />
+      <observation key="Road_8" value="0.5000" />
+      <observation key="Road_7" value="0.3333" />
+      <observation key="Road_6" value="0.1667" />
+      <observation key="Grass_85" value="0.3333" />
+      <observation key="Road_11" value="0.3333" />
+      <observation key="Grass_86" value="0.3333" />
+      <observation key="Grass_96" value="0.1667" />
+      <observation key="Road_9" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4523,7 +6416,29 @@
       <adjacent value="Grass_85" />
       <adjacent value="Grass_75" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="21">
+      <observation key="Road_11" value="0.5000" />
+      <observation key="Road_12" value="0.3333" />
+      <observation key="Grass_70" value="0.1667" />
+      <observation key="Road_13" value="0.1667" />
+      <observation key="Grass_76" value="0.5000" />
+      <observation key="Grass_77" value="0.3333" />
+      <observation key="Grass_78" value="0.1667" />
+      <observation key="Grass_87" value="0.1667" />
+      <observation key="Grass_86" value="0.3333" />
+      <observation key="Grass_85" value="0.5000" />
+      <observation key="Grass_75" value="0.5000" />
+      <observation key="Grass_96" value="0.3333" />
+      <observation key="Grass_95" value="0.3333" />
+      <observation key="RR_11" value="0.1667" />
+      <observation key="RR_10" value="0.1667" />
+      <observation key="RR_9" value="0.1667" />
+      <observation key="RR_8" value="0.1667" />
+      <observation key="Road_9" value="0.5000" />
+      <observation key="Road_8" value="0.3333" />
+      <observation key="Road_7" value="0.1667" />
+      <observation key="Road_10" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4540,7 +6455,25 @@
       <adjacent value="Road_10" />
       <adjacent value="Grass_75" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="17">
+      <observation key="Road_12" value="0.5000" />
+      <observation key="Road_52" value="0.3333" />
+      <observation key="Road_51" value="0.1667" />
+      <observation key="Road_13" value="0.3333" />
+      <observation key="Road_14" value="0.1667" />
+      <observation key="Grass_70" value="0.3333" />
+      <observation key="Road_10" value="0.5000" />
+      <observation key="Grass_76" value="0.3333" />
+      <observation key="Grass_77" value="0.1667" />
+      <observation key="Grass_75" value="0.5000" />
+      <observation key="Grass_96" value="0.3333" />
+      <observation key="RR_11" value="0.1667" />
+      <observation key="Road_9" value="0.3333" />
+      <observation key="Grass_65" value="0.1667" />
+      <observation key="Grass_86" value="0.1667" />
+      <observation key="Grass_85" value="0.3333" />
+      <observation key="Road_11" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4563,7 +6496,28 @@
       <adjacent value="Road_11" />
       <adjacent value="BarAndGrill_0" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="20">
+      <observation key="Road_11" value="0.5000" />
+      <observation key="Road_10" value="0.3333" />
+      <observation key="Grass_86" value="0.1667" />
+      <observation key="Grass_76" value="0.1667" />
+      <observation key="Grass_85" value="0.1667" />
+      <observation key="Grass_66" value="0.5000" />
+      <observation key="Grass_61" value="0.3333" />
+      <observation key="Road_60" value="0.1667" />
+      <observation key="Road_52" value="0.5000" />
+      <observation key="Road_51" value="0.3333" />
+      <observation key="Road_50" value="0.1667" />
+      <observation key="Grass_70" value="0.5000" />
+      <observation key="Grass_65" value="0.3333" />
+      <observation key="Grass_60" value="0.1667" />
+      <observation key="Road_13" value="0.5000" />
+      <observation key="Road_14" value="0.3333" />
+      <observation key="Road_15" value="0.1667" />
+      <observation key="Grass_74" value="0.3333" />
+      <observation key="Grass_83" value="0.1667" />
+      <observation key="Road_12" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4583,7 +6537,24 @@
       <adjacent value="Road_12" />
       <adjacent value="Grass_70" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="16">
+      <observation key="Grass_70" value="0.5000" />
+      <observation key="Road_52" value="0.3333" />
+      <observation key="Road_51" value="0.3333" />
+      <observation key="Grass_66" value="0.3333" />
+      <observation key="Road_12" value="0.5000" />
+      <observation key="Road_11" value="0.3333" />
+      <observation key="Road_10" value="0.1667" />
+      <observation key="Grass_74" value="0.5000" />
+      <observation key="Grass_84" value="0.3333" />
+      <observation key="Grass_92" value="0.1667" />
+      <observation key="Grass_83" value="0.3333" />
+      <observation key="Grass_91" value="0.1667" />
+      <observation key="Road_14" value="0.5000" />
+      <observation key="Road_15" value="0.3333" />
+      <observation key="Grass_82" value="0.1667" />
+      <observation key="Road_13" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4601,7 +6572,25 @@
       <adjacent value="Grass_83" />
       <adjacent value="Road_13" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="17">
+      <observation key="Road_13" value="0.5000" />
+      <observation key="Road_12" value="0.3333" />
+      <observation key="Road_52" value="0.1667" />
+      <observation key="Grass_66" value="0.1667" />
+      <observation key="Road_11" value="0.1667" />
+      <observation key="Grass_74" value="0.5000" />
+      <observation key="Grass_84" value="0.3333" />
+      <observation key="Grass_93" value="0.1667" />
+      <observation key="Grass_92" value="0.1667" />
+      <observation key="Grass_91" value="0.3333" />
+      <observation key="RR_3" value="0.1667" />
+      <observation key="RR_4" value="0.1667" />
+      <observation key="Grass_83" value="0.5000" />
+      <observation key="Grass_90" value="0.1667" />
+      <observation key="Grass_82" value="0.3333" />
+      <observation key="Road_15" value="0.5000" />
+      <observation key="Road_14" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4621,7 +6610,27 @@
       <adjacent value="Grass_83" />
       <adjacent value="Grass_82" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="19">
+      <observation key="Road_14" value="0.5000" />
+      <observation key="Road_13" value="0.3333" />
+      <observation key="Road_12" value="0.1667" />
+      <observation key="Grass_74" value="0.3333" />
+      <observation key="Grass_84" value="0.3333" />
+      <observation key="Grass_83" value="0.5000" />
+      <observation key="Grass_93" value="0.1667" />
+      <observation key="Grass_92" value="0.1667" />
+      <observation key="Grass_91" value="0.3333" />
+      <observation key="Grass_82" value="0.5000" />
+      <observation key="Grass_90" value="0.3333" />
+      <observation key="RR_1" value="0.1667" />
+      <observation key="RR_2" value="0.1667" />
+      <observation key="RR_3" value="0.1667" />
+      <observation key="RR_4" value="0.1667" />
+      <observation key="Grass_71" value="0.5000" />
+      <observation key="Grass_69" value="0.3333" />
+      <observation key="Grass_64" value="0.1667" />
+      <observation key="Road_15" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -4638,11 +6647,10 @@
       <adjacent value="Grass_24" />
       <adjacent value="Road_17" />
     </Adjacents>
-    <Observations count="11">
+    <Observations count="10">
       <observation key="Grass_19" value="0.5000" />
       <observation key="Grass_13" value="0.3333" />
       <observation key="Grass_1" value="0.1667" />
-      <observation key="Grass_14" value="0.3333" />
       <observation key="Road_17" value="0.5000" />
       <observation key="Road_18" value="0.3333" />
       <observation key="Road_19" value="0.1667" />
@@ -4671,12 +6679,11 @@
       <adjacent value="Road_18" />
       <adjacent value="Grass_19" />
     </Adjacents>
-    <Observations count="6">
-      <observation key="Grass_20" value="0.3333" />
+    <Observations count="5">
+      <observation key="Road_16" value="0.5000" />
       <observation key="Road_18" value="0.5000" />
       <observation key="Road_19" value="0.3333" />
       <observation key="Road_20" value="0.1667" />
-      <observation key="Road_16" value="0.5000" />
       <observation key="Road_17" value="0.6667" />
     </Observations>
   </Territory>
@@ -4919,10 +6926,9 @@
       <adjacent value="DocOffice_0" />
       <adjacent value="Road_3" />
     </Adjacents>
-    <Observations count="7">
+    <Observations count="6">
       <observation key="Road_26" value="0.5000" />
       <observation key="Road_27" value="0.3333" />
-      <observation key="Road_28" value="0.1667" />
       <observation key="Road_3" value="0.5000" />
       <observation key="Road_24" value="0.3333" />
       <observation key="Road_23" value="0.1667" />
@@ -4946,16 +6952,15 @@
       <adjacent value="Grass_27" />
       <adjacent value="Road_25" />
     </Adjacents>
-    <Observations count="10">
-      <observation key="Road_25" value="0.5000" />
-      <observation key="Road_3" value="0.3333" />
-      <observation key="Road_24" value="0.1667" />
+    <Observations count="9">
       <observation key="Road_27" value="0.5000" />
-      <observation key="Road_28" value="0.3333" />
       <observation key="Grass_28" value="0.1667" />
       <observation key="Grass_27" value="0.5000" />
       <observation key="Grass_37" value="0.3333" />
       <observation key="Grass_36" value="0.1667" />
+      <observation key="Road_25" value="0.5000" />
+      <observation key="Road_3" value="0.3333" />
+      <observation key="Road_24" value="0.1667" />
       <observation key="Road_26" value="0.6667" />
     </Observations>
   </Territory>
@@ -4975,16 +6980,14 @@
       <adjacent value="Road_28" />
       <adjacent value="Grass_23" />
     </Adjacents>
-    <Observations count="11">
+    <Observations count="9">
+      <observation key="Road_28" value="0.5000" />
+      <observation key="Grass_28" value="0.3333" />
+      <observation key="Grass_23" value="0.5000" />
       <observation key="Road_26" value="0.5000" />
       <observation key="Road_25" value="0.3333" />
       <observation key="Road_3" value="0.1667" />
-      <observation key="Road_28" value="0.5000" />
-      <observation key="Grass_23" value="0.5000" />
-      <observation key="Grass_18" value="0.3333" />
-      <observation key="Grass_28" value="0.3333" />
       <observation key="Grass_39" value="0.3333" />
-      <observation key="Road_29" value="0.3333" />
       <observation key="Grass_44" value="0.1667" />
       <observation key="Road_27" value="0.6667" />
     </Observations>
@@ -5101,7 +7104,22 @@
       <adjacent value="Grass_55" />
       <adjacent value="Road_32" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="14">
+      <observation key="Road_30" value="0.5000" />
+      <observation key="Road_29" value="0.3333" />
+      <observation key="Road_28" value="0.1667" />
+      <observation key="Grass_44" value="0.3333" />
+      <observation key="Grass_39" value="0.1667" />
+      <observation key="Grass_45" value="0.5000" />
+      <observation key="Grass_55" value="0.5000" />
+      <observation key="Grass_58" value="0.3333" />
+      <observation key="Road_65" value="0.1667" />
+      <observation key="Road_32" value="0.5000" />
+      <observation key="Road_33" value="0.3333" />
+      <observation key="Grass_43" value="0.1667" />
+      <observation key="Grass_35" value="0.1667" />
+      <observation key="Road_31" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5118,7 +7136,17 @@
       <adjacent value="Road_31" />
       <adjacent value="Road_33" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="9">
+      <observation key="Road_31" value="0.5000" />
+      <observation key="Grass_45" value="0.3333" />
+      <observation key="Grass_55" value="0.3333" />
+      <observation key="Road_33" value="0.5000" />
+      <observation key="Grass_35" value="0.3333" />
+      <observation key="Grass_34" value="0.1667" />
+      <observation key="Grass_43" value="0.3333" />
+      <observation key="Grass_42" value="0.1667" />
+      <observation key="Road_32" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5139,7 +7167,24 @@
       <adjacent value="Road_34" />
       <adjacent value="Road_32" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="16">
+      <observation key="Road_32" value="0.5000" />
+      <observation key="Road_31" value="0.3333" />
+      <observation key="Grass_45" value="0.1667" />
+      <observation key="Road_34" value="0.5000" />
+      <observation key="Road_35" value="0.3333" />
+      <observation key="Road_36" value="0.1667" />
+      <observation key="Grass_43" value="0.5000" />
+      <observation key="Grass_42" value="0.3333" />
+      <observation key="Road_6" value="0.1667" />
+      <observation key="Road_5" value="0.1667" />
+      <observation key="Grass_34" value="0.3333" />
+      <observation key="Grass_35" value="0.5000" />
+      <observation key="Grass_36" value="0.5000" />
+      <observation key="Grass_37" value="0.3333" />
+      <observation key="Grass_27" value="0.1667" />
+      <observation key="Road_33" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5158,7 +7203,20 @@
       <adjacent value="Grass_57" />
       <adjacent value="Road_35" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="12">
+      <observation key="Road_33" value="0.5000" />
+      <observation key="Grass_36" value="0.3333" />
+      <observation key="Grass_37" value="0.1667" />
+      <observation key="Grass_35" value="0.3333" />
+      <observation key="Grass_43" value="0.5000" />
+      <observation key="Grass_34" value="0.3333" />
+      <observation key="Road_35" value="0.5000" />
+      <observation key="Road_36" value="0.3333" />
+      <observation key="Road_37" value="0.1667" />
+      <observation key="Grass_67" value="0.1667" />
+      <observation key="Grass_62" value="0.3333" />
+      <observation key="Road_34" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5186,7 +7244,25 @@
       <adjacent value="Road_34" />
       <adjacent value="Road_63" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="17">
+      <observation key="Road_64" value="0.5000" />
+      <observation key="Road_65" value="0.3333" />
+      <observation key="Grass_58" value="0.3333" />
+      <observation key="Grass_57" value="0.5000" />
+      <observation key="Road_62" value="0.3333" />
+      <observation key="Road_7" value="0.1667" />
+      <observation key="Road_36" value="0.5000" />
+      <observation key="Road_37" value="0.3333" />
+      <observation key="Road_38" value="0.1667" />
+      <observation key="Grass_62" value="0.5000" />
+      <observation key="Grass_67" value="0.3333" />
+      <observation key="Grass_72" value="0.1667" />
+      <observation key="Road_34" value="0.5000" />
+      <observation key="Road_33" value="0.3333" />
+      <observation key="Grass_36" value="0.1667" />
+      <observation key="Road_63" value="0.5000" />
+      <observation key="Road_35" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5204,7 +7280,21 @@
       <adjacent value="Road_37" />
       <adjacent value="Grass_67" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="13">
+      <observation key="Grass_62" value="0.5000" />
+      <observation key="Road_63" value="0.3333" />
+      <observation key="Grass_54" value="0.1667" />
+      <observation key="Road_35" value="0.5000" />
+      <observation key="Road_34" value="0.3333" />
+      <observation key="Road_33" value="0.1667" />
+      <observation key="Road_37" value="0.5000" />
+      <observation key="Road_38" value="0.3333" />
+      <observation key="Road_39" value="0.1667" />
+      <observation key="Grass_78" value="0.1667" />
+      <observation key="Grass_72" value="0.3333" />
+      <observation key="Grass_67" value="0.5000" />
+      <observation key="Road_36" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5222,7 +7312,23 @@
       <adjacent value="Grass_72" />
       <adjacent value="Road_38" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="15">
+      <observation key="Road_36" value="0.5000" />
+      <observation key="Road_35" value="0.3333" />
+      <observation key="Road_34" value="0.1667" />
+      <observation key="Road_63" value="0.1667" />
+      <observation key="Grass_62" value="0.3333" />
+      <observation key="Grass_67" value="0.5000" />
+      <observation key="Grass_72" value="0.5000" />
+      <observation key="Road_38" value="0.5000" />
+      <observation key="Road_39" value="0.3333" />
+      <observation key="Road_40" value="0.1667" />
+      <observation key="Grass_88" value="0.1667" />
+      <observation key="Grass_78" value="0.3333" />
+      <observation key="Grass_77" value="0.1667" />
+      <observation key="Grass_87" value="0.1667" />
+      <observation key="Road_37" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5244,7 +7350,29 @@
       <adjacent value="Graveyard_0" />
       <adjacent value="Road_37" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="21">
+      <observation key="RR_20" value="0.1667" />
+      <observation key="RR_19" value="0.1667" />
+      <observation key="RR_18" value="0.1667" />
+      <observation key="RR_17" value="0.1667" />
+      <observation key="Grass_88" value="0.3333" />
+      <observation key="Road_39" value="0.5000" />
+      <observation key="Road_40" value="0.3333" />
+      <observation key="RR_16" value="0.1667" />
+      <observation key="Grass_78" value="0.5000" />
+      <observation key="Grass_87" value="0.3333" />
+      <observation key="Grass_97" value="0.1667" />
+      <observation key="Road_37" value="0.5000" />
+      <observation key="Road_36" value="0.3333" />
+      <observation key="Road_35" value="0.1667" />
+      <observation key="Grass_62" value="0.1667" />
+      <observation key="Grass_67" value="0.3333" />
+      <observation key="Grass_72" value="0.5000" />
+      <observation key="Grass_77" value="0.3333" />
+      <observation key="Grass_76" value="0.1667" />
+      <observation key="Grass_86" value="0.1667" />
+      <observation key="Road_38" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5264,7 +7392,37 @@
       <adjacent value="Road_40" />
       <adjacent value="Grass_87" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="29">
+      <observation key="Road_38" value="0.5000" />
+      <observation key="Road_37" value="0.3333" />
+      <observation key="Road_36" value="0.1667" />
+      <observation key="Grass_67" value="0.1667" />
+      <observation key="Grass_72" value="0.3333" />
+      <observation key="Grass_78" value="0.5000" />
+      <observation key="Grass_77" value="0.3333" />
+      <observation key="Grass_76" value="0.1667" />
+      <observation key="Grass_86" value="0.3333" />
+      <observation key="Grass_87" value="0.5000" />
+      <observation key="Grass_85" value="0.1667" />
+      <observation key="Grass_97" value="0.3333" />
+      <observation key="Road_40" value="0.5000" />
+      <observation key="RR_14" value="0.1667" />
+      <observation key="RR_15" value="0.1667" />
+      <observation key="RR_16" value="0.3333" />
+      <observation key="RR_17" value="0.3333" />
+      <observation key="RR_18" value="0.3333" />
+      <observation key="RR_19" value="0.3333" />
+      <observation key="RR_20" value="0.1667" />
+      <observation key="Grass_79" value="0.5000" />
+      <observation key="Grass_80" value="0.3333" />
+      <observation key="Grass_81" value="0.1667" />
+      <observation key="Grass_89" value="0.3333" />
+      <observation key="Grass_88" value="0.5000" />
+      <observation key="RR_21" value="0.1667" />
+      <observation key="Grass_106" value="0.1667" />
+      <observation key="Road_41" value="0.1667" />
+      <observation key="Road_39" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5284,7 +7442,38 @@
       <adjacent value="RR_17" />
       <adjacent value="Grass_88" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="30">
+      <observation key="Road_39" value="0.5000" />
+      <observation key="Road_38" value="0.3333" />
+      <observation key="Road_37" value="0.1667" />
+      <observation key="Grass_72" value="0.1667" />
+      <observation key="Grass_78" value="0.3333" />
+      <observation key="Grass_77" value="0.3333" />
+      <observation key="Grass_87" value="0.5000" />
+      <observation key="Grass_86" value="0.3333" />
+      <observation key="Grass_85" value="0.1667" />
+      <observation key="Grass_76" value="0.1667" />
+      <observation key="Grass_97" value="0.5000" />
+      <observation key="RR_14" value="0.1667" />
+      <observation key="RR_13" value="0.1667" />
+      <observation key="RR_16" value="0.5000" />
+      <observation key="RR_15" value="0.3333" />
+      <observation key="RR_17" value="0.5000" />
+      <observation key="RR_18" value="0.3333" />
+      <observation key="RR_19" value="0.3333" />
+      <observation key="Grass_88" value="0.5000" />
+      <observation key="Grass_89" value="0.3333" />
+      <observation key="Grass_80" value="0.1667" />
+      <observation key="RR_20" value="0.1667" />
+      <observation key="RR_21" value="0.1667" />
+      <observation key="Grass_79" value="0.3333" />
+      <observation key="Grass_106" value="0.3333" />
+      <observation key="Grass_111" value="0.1667" />
+      <observation key="Road_42" value="0.1667" />
+      <observation key="Road_41" value="0.3333" />
+      <observation key="Grass_105" value="0.1667" />
+      <observation key="Road_40" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5306,7 +7495,31 @@
       <adjacent value="Road_42" />
       <adjacent value="Grass_105" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="23">
+      <observation key="Grass_106" value="0.5000" />
+      <observation key="Grass_111" value="0.5000" />
+      <observation key="Grass_112" value="0.3333" />
+      <observation key="Road_42" value="0.5000" />
+      <observation key="Grass_110" value="0.3333" />
+      <observation key="Grass_105" value="0.5000" />
+      <observation key="Grass_104" value="0.3333" />
+      <observation key="Grass_103" value="0.1667" />
+      <observation key="Grass_109" value="0.1667" />
+      <observation key="RR_11" value="0.1667" />
+      <observation key="RR_12" value="0.1667" />
+      <observation key="RR_13" value="0.3333" />
+      <observation key="RR_14" value="0.3333" />
+      <observation key="RR_15" value="0.5000" />
+      <observation key="RR_16" value="0.5000" />
+      <observation key="RR_17" value="0.3333" />
+      <observation key="Grass_97" value="0.3333" />
+      <observation key="Grass_87" value="0.1667" />
+      <observation key="Road_40" value="0.3333" />
+      <observation key="Road_39" value="0.1667" />
+      <observation key="Grass_88" value="0.1667" />
+      <observation key="RR_18" value="0.1667" />
+      <observation key="Road_41" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5324,7 +7537,29 @@
       <adjacent value="Road_41" />
       <adjacent value="Grass_111" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="21">
+      <observation key="Grass_111" value="0.5000" />
+      <observation key="Grass_112" value="0.3333" />
+      <observation key="Grass_113" value="0.1667" />
+      <observation key="Road_41" value="0.5000" />
+      <observation key="RR_15" value="0.3333" />
+      <observation key="Grass_97" value="0.1667" />
+      <observation key="RR_16" value="0.3333" />
+      <observation key="Road_40" value="0.1667" />
+      <observation key="Grass_106" value="0.3333" />
+      <observation key="RR_17" value="0.1667" />
+      <observation key="Grass_105" value="0.5000" />
+      <observation key="RR_13" value="0.3333" />
+      <observation key="RR_12" value="0.1667" />
+      <observation key="RR_14" value="0.3333" />
+      <observation key="Grass_110" value="0.5000" />
+      <observation key="Grass_109" value="0.3333" />
+      <observation key="Grass_102" value="0.1667" />
+      <observation key="Grass_104" value="0.3333" />
+      <observation key="RR_11" value="0.1667" />
+      <observation key="Grass_103" value="0.1667" />
+      <observation key="Road_42" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5342,15 +7577,14 @@
       <adjacent value="Road_44" />
       <adjacent value="Grass_15" />
     </Adjacents>
-    <Observations count="9">
-      <observation key="Grass_4" value="0.3333" />
+    <Observations count="8">
       <observation key="Grass_3" value="0.5000" />
+      <observation key="Road_44" value="0.5000" />
+      <observation key="Road_19" value="0.3333" />
+      <observation key="Road_45" value="0.1667" />
       <observation key="Grass_15" value="0.5000" />
       <observation key="Grass_20" value="0.3333" />
       <observation key="Road_18" value="0.1667" />
-      <observation key="Road_19" value="0.3333" />
-      <observation key="Road_44" value="0.5000" />
-      <observation key="Road_45" value="0.1667" />
       <observation key="Road_43" value="0.6667" />
     </Observations>
   </Territory>
@@ -5370,18 +7604,17 @@
       <adjacent value="Road_43" />
       <adjacent value="Grass_15" />
     </Adjacents>
-    <Observations count="12">
+    <Observations count="11">
       <observation key="Grass_15" value="0.5000" />
       <observation key="Grass_14" value="0.3333" />
       <observation key="Grass_13" value="0.1667" />
-      <observation key="Grass_20" value="0.5000" />
-      <observation key="Road_17" value="0.1667" />
-      <observation key="Road_18" value="0.3333" />
+      <observation key="Road_43" value="0.5000" />
+      <observation key="Grass_3" value="0.3333" />
       <observation key="Road_19" value="0.5000" />
       <observation key="Road_45" value="0.3333" />
       <observation key="Road_46" value="0.1667" />
-      <observation key="Road_43" value="0.5000" />
-      <observation key="Grass_3" value="0.3333" />
+      <observation key="Grass_20" value="0.5000" />
+      <observation key="Road_18" value="0.3333" />
       <observation key="Road_44" value="0.6667" />
     </Observations>
   </Territory>
@@ -5432,7 +7665,21 @@
       <adjacent value="Road_47" />
       <adjacent value="Road_53" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="13">
+      <observation key="Road_53" value="0.5000" />
+      <observation key="Road_54" value="0.3333" />
+      <observation key="Road_55" value="0.1667" />
+      <observation key="Road_47" value="0.5000" />
+      <observation key="Road_48" value="0.3333" />
+      <observation key="Road_49" value="0.1667" />
+      <observation key="Road_45" value="0.5000" />
+      <observation key="Road_19" value="0.3333" />
+      <observation key="Road_44" value="0.1667" />
+      <observation key="Grass_31" value="0.5000" />
+      <observation key="Grass_30" value="0.3333" />
+      <observation key="Grass_40" value="0.1667" />
+      <observation key="Road_46" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5450,7 +7697,18 @@
       <adjacent value="Grass_31" />
       <adjacent value="Road_46" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="10">
+      <observation key="Road_46" value="0.5000" />
+      <observation key="Road_45" value="0.3333" />
+      <observation key="Road_19" value="0.1667" />
+      <observation key="Grass_31" value="0.5000" />
+      <observation key="Grass_30" value="0.3333" />
+      <observation key="Grass_29" value="0.1667" />
+      <observation key="Road_48" value="0.5000" />
+      <observation key="Road_49" value="0.3333" />
+      <observation key="Road_50" value="0.1667" />
+      <observation key="Road_47" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5473,7 +7731,21 @@
       <adjacent value="Road_49" />
       <adjacent value="Grass_51" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="13">
+      <observation key="Road_58" value="0.5000" />
+      <observation key="Grass_53" value="0.1667" />
+      <observation key="Road_60" value="0.1667" />
+      <observation key="Road_59" value="0.3333" />
+      <observation key="Road_49" value="0.5000" />
+      <observation key="Road_50" value="0.3333" />
+      <observation key="Grass_65" value="0.1667" />
+      <observation key="Grass_51" value="0.5000" />
+      <observation key="Road_47" value="0.5000" />
+      <observation key="Road_46" value="0.3333" />
+      <observation key="Road_45" value="0.1667" />
+      <observation key="Grass_56" value="0.1667" />
+      <observation key="Road_48" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5492,7 +7764,17 @@
       <adjacent value="Grass_51" />
       <adjacent value="Road_50" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="9">
+      <observation key="Road_48" value="0.5000" />
+      <observation key="Road_47" value="0.3333" />
+      <observation key="Road_46" value="0.1667" />
+      <observation key="Road_50" value="0.5000" />
+      <observation key="Grass_65" value="0.3333" />
+      <observation key="Grass_51" value="0.5000" />
+      <observation key="Grass_50" value="0.3333" />
+      <observation key="Grass_56" value="0.1667" />
+      <observation key="Road_49" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5512,7 +7794,19 @@
       <adjacent value="Grass_60" />
       <adjacent value="Road_49" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="11">
+      <observation key="Grass_59" value="0.3333" />
+      <observation key="Grass_60" value="0.5000" />
+      <observation key="Grass_65" value="0.5000" />
+      <observation key="Road_51" value="0.5000" />
+      <observation key="Road_52" value="0.3333" />
+      <observation key="Road_12" value="0.1667" />
+      <observation key="Grass_70" value="0.3333" />
+      <observation key="Road_49" value="0.5000" />
+      <observation key="Road_48" value="0.3333" />
+      <observation key="Road_47" value="0.1667" />
+      <observation key="Road_50" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5532,7 +7826,18 @@
       <adjacent value="Grass_70" />
       <adjacent value="Road_52" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="10">
+      <observation key="Road_50" value="0.5000" />
+      <observation key="Grass_60" value="0.3333" />
+      <observation key="Grass_59" value="0.1667" />
+      <observation key="Grass_65" value="0.5000" />
+      <observation key="Grass_70" value="0.5000" />
+      <observation key="Road_52" value="0.5000" />
+      <observation key="Road_12" value="0.3333" />
+      <observation key="Road_11" value="0.1667" />
+      <observation key="Road_13" value="0.3333" />
+      <observation key="Road_51" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5551,7 +7856,19 @@
       <adjacent value="Grass_66" />
       <adjacent value="Road_51" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="11">
+      <observation key="Grass_70" value="0.5000" />
+      <observation key="Road_13" value="0.3333" />
+      <observation key="Grass_74" value="0.1667" />
+      <observation key="Road_12" value="0.5000" />
+      <observation key="Road_14" value="0.1667" />
+      <observation key="Road_11" value="0.3333" />
+      <observation key="Road_51" value="0.5000" />
+      <observation key="Road_50" value="0.3333" />
+      <observation key="Grass_60" value="0.1667" />
+      <observation key="Grass_65" value="0.3333" />
+      <observation key="Road_52" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5568,7 +7885,16 @@
       <adjacent value="Road_46" />
       <adjacent value="Road_54" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="8">
+      <observation key="Road_46" value="0.5000" />
+      <observation key="Grass_30" value="0.1667" />
+      <observation key="Grass_31" value="0.3333" />
+      <observation key="Road_54" value="0.5000" />
+      <observation key="Road_55" value="0.3333" />
+      <observation key="Road_56" value="0.1667" />
+      <observation key="Grass_33" value="0.1667" />
+      <observation key="Road_53" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5586,20 +7912,21 @@
       <adjacent value="Road_55" />
       <adjacent value="Grass_41" />
     </Adjacents>
-    <Observations count="14">
+    <Observations count="15">
+      <observation key="Road_55" value="0.5000" />
+      <observation key="Road_56" value="0.3333" />
+      <observation key="Road_57" value="0.1667" />
       <observation key="Grass_32" value="0.5000" />
       <observation key="Grass_25" value="0.3333" />
       <observation key="Road_21" value="0.1667" />
       <observation key="Road_22" value="0.1667" />
-      <observation key="Grass_26" value="0.3333" />
       <observation key="Grass_33" value="0.3333" />
-      <observation key="Road_55" value="0.5000" />
-      <observation key="Road_56" value="0.3333" />
-      <observation key="Road_57" value="0.1667" />
-      <observation key="Grass_41" value="0.5000" />
-      <observation key="Grass_52" value="0.3333" />
+      <observation key="Grass_26" value="0.3333" />
       <observation key="Road_53" value="0.5000" />
       <observation key="Road_46" value="0.3333" />
+      <observation key="Grass_41" value="0.5000" />
+      <observation key="Grass_52" value="0.3333" />
+      <observation key="Road_59" value="0.1667" />
       <observation key="Road_54" value="0.6667" />
     </Observations>
   </Territory>
@@ -5621,20 +7948,20 @@
       <adjacent value="Road_56" />
     </Adjacents>
     <Observations count="16">
-      <observation key="Grass_32" value="0.5000" />
-      <observation key="Grass_25" value="0.3333" />
-      <observation key="Road_21" value="0.1667" />
       <observation key="Grass_33" value="0.5000" />
       <observation key="Grass_26" value="0.3333" />
       <observation key="Road_22" value="0.1667" />
-      <observation key="Road_56" value="0.5000" />
-      <observation key="Road_57" value="0.3333" />
-      <observation key="Road_6" value="0.1667" />
+      <observation key="Road_21" value="0.1667" />
+      <observation key="Grass_25" value="0.3333" />
+      <observation key="Grass_32" value="0.5000" />
       <observation key="Road_54" value="0.5000" />
       <observation key="Road_53" value="0.3333" />
       <observation key="Road_46" value="0.1667" />
       <observation key="Grass_41" value="0.5000" />
       <observation key="Grass_52" value="0.3333" />
+      <observation key="Road_56" value="0.5000" />
+      <observation key="Road_57" value="0.3333" />
+      <observation key="Road_6" value="0.1667" />
       <observation key="Road_59" value="0.1667" />
       <observation key="Road_55" value="0.6667" />
     </Observations>
@@ -5654,12 +7981,11 @@
       <adjacent value="Road_55" />
       <adjacent value="Bank_1" />
     </Adjacents>
-    <Observations count="10">
+    <Observations count="9">
       <observation key="Road_55" value="0.5000" />
       <observation key="Road_54" value="0.3333" />
       <observation key="Road_53" value="0.1667" />
       <observation key="Grass_32" value="0.3333" />
-      <observation key="Grass_25" value="0.1667" />
       <observation key="Road_57" value="0.5000" />
       <observation key="Road_6" value="0.3333" />
       <observation key="Grass_42" value="0.1667" />
@@ -5682,7 +8008,18 @@
       <adjacent value="Road_56" />
       <adjacent value="Road_6" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="10">
+      <observation key="Road_56" value="0.5000" />
+      <observation key="Road_55" value="0.3333" />
+      <observation key="Road_54" value="0.1667" />
+      <observation key="Road_6" value="0.5000" />
+      <observation key="Grass_54" value="0.3333" />
+      <observation key="Road_63" value="0.1667" />
+      <observation key="Grass_42" value="0.3333" />
+      <observation key="Grass_34" value="0.1667" />
+      <observation key="Grass_43" value="0.1667" />
+      <observation key="Road_57" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5701,7 +8038,15 @@
       <adjacent value="Road_59" />
       <adjacent value="Road_48" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="7">
+      <observation key="Grass_52" value="0.5000" />
+      <observation key="Road_59" value="0.5000" />
+      <observation key="Road_60" value="0.3333" />
+      <observation key="Road_61" value="0.1667" />
+      <observation key="Grass_53" value="0.3333" />
+      <observation key="Road_48" value="0.5000" />
+      <observation key="Road_58" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5721,7 +8066,20 @@
       <adjacent value="Grass_53" />
       <adjacent value="Road_60" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="12">
+      <observation key="Grass_61" value="0.5000" />
+      <observation key="Road_60" value="0.5000" />
+      <observation key="Road_61" value="0.3333" />
+      <observation key="Road_8" value="0.1667" />
+      <observation key="Road_58" value="0.5000" />
+      <observation key="Road_48" value="0.3333" />
+      <observation key="Grass_52" value="0.5000" />
+      <observation key="Grass_41" value="0.3333" />
+      <observation key="Road_54" value="0.1667" />
+      <observation key="Road_55" value="0.1667" />
+      <observation key="Grass_53" value="0.5000" />
+      <observation key="Road_59" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5739,7 +8097,19 @@
       <adjacent value="Grass_53" />
       <adjacent value="Road_61" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="11">
+      <observation key="Road_61" value="0.5000" />
+      <observation key="Road_8" value="0.3333" />
+      <observation key="Grass_61" value="0.5000" />
+      <observation key="Grass_66" value="0.3333" />
+      <observation key="Road_12" value="0.1667" />
+      <observation key="Road_59" value="0.5000" />
+      <observation key="Road_58" value="0.3333" />
+      <observation key="Road_48" value="0.1667" />
+      <observation key="Grass_53" value="0.5000" />
+      <observation key="Grass_52" value="0.3333" />
+      <observation key="Road_60" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5758,7 +8128,14 @@
       <adjacent value="House_7" />
       <adjacent value="Road_60" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="6">
+      <observation key="Road_60" value="0.5000" />
+      <observation key="Road_59" value="0.3333" />
+      <observation key="Road_58" value="0.1667" />
+      <observation key="Grass_52" value="0.1667" />
+      <observation key="Road_8" value="0.5000" />
+      <observation key="Road_61" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5776,7 +8153,18 @@
       <adjacent value="Road_7" />
       <adjacent value="Grass_54" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="10">
+      <observation key="Grass_54" value="0.5000" />
+      <observation key="Grass_42" value="0.3333" />
+      <observation key="Grass_34" value="0.1667" />
+      <observation key="Road_63" value="0.5000" />
+      <observation key="Road_35" value="0.3333" />
+      <observation key="Road_64" value="0.1667" />
+      <observation key="Road_7" value="0.5000" />
+      <observation key="Road_6" value="0.3333" />
+      <observation key="Road_5" value="0.1667" />
+      <observation key="Road_62" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5796,7 +8184,21 @@
       <adjacent value="Road_35" />
       <adjacent value="House_5" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="13">
+      <observation key="Grass_54" value="0.5000" />
+      <observation key="Road_57" value="0.1667" />
+      <observation key="Road_7" value="0.3333" />
+      <observation key="Road_62" value="0.5000" />
+      <observation key="Grass_62" value="0.5000" />
+      <observation key="Road_36" value="0.3333" />
+      <observation key="Road_35" value="0.5000" />
+      <observation key="Road_37" value="0.1667" />
+      <observation key="Road_64" value="0.3333" />
+      <observation key="Road_65" value="0.1667" />
+      <observation key="Grass_58" value="0.1667" />
+      <observation key="Grass_57" value="0.3333" />
+      <observation key="Road_63" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5815,7 +8217,17 @@
       <adjacent value="Grass_57" />
       <adjacent value="Road_35" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="9">
+      <observation key="Road_65" value="0.5000" />
+      <observation key="Grass_58" value="0.5000" />
+      <observation key="Grass_57" value="0.5000" />
+      <observation key="Road_35" value="0.5000" />
+      <observation key="Road_63" value="0.3333" />
+      <observation key="Road_62" value="0.1667" />
+      <observation key="Grass_55" value="0.3333" />
+      <observation key="Grass_45" value="0.1667" />
+      <observation key="Road_64" value="0.6667" />
+    </Observations>
   </Territory>
   <Territory value="Road">
     <CanvasName value="Main" />
@@ -5833,6 +8245,19 @@
       <adjacent value="Road_64" />
       <adjacent value="Grass_63" />
     </Adjacents>
-    <Observations count="0" />
+    <Observations count="12">
+      <observation key="Grass_58" value="0.5000" />
+      <observation key="Grass_55" value="0.3333" />
+      <observation key="Grass_45" value="0.1667" />
+      <observation key="Road_31" value="0.1667" />
+      <observation key="Road_64" value="0.5000" />
+      <observation key="Road_35" value="0.3333" />
+      <observation key="Road_63" value="0.1667" />
+      <observation key="Grass_63" value="0.5000" />
+      <observation key="Grass_68" value="0.3333" />
+      <observation key="Grass_73" value="0.1667" />
+      <observation key="Grass_57" value="0.3333" />
+      <observation key="Road_65" value="0.6667" />
+    </Observations>
   </Territory>
 </Territories>
