@@ -127,6 +127,7 @@ namespace PleasantvilleGame
       public bool PerformAlienMoves(IGameInstance gi)
       {
          // Choose 5 counters to be moved.
+         IMapItemMoves alienMoves = new MapItemMoves();
          // Need to get the aliens to comingle with other uncontrolled townspeople
          // If strategy is FIENT_ZEBULON, move away from ZEBULON
          // If strategy is MAX_TAKEOVER, get aliens to other uncontrolled locations 
@@ -137,21 +138,68 @@ namespace PleasantvilleGame
          //    --- Closer to Alien Center
          //    --- Greater Influence
          //    --- Greater Combat
-         IMetricAlienMoves originalMetrics = new MetricAlienMoves();
-         foreach(IStack stack in gi.Stacks)
-         {
-            IMetricAlienMove metric = new MetricAlienMove(stack.Territory);
-            metric.Value = metric.GetObservationMetric(gi);
-            originalMetrics.Add(metric);
-         }
-         IMetricAlienMoves sortedMetrics = originalMetrics.Sort();
-         Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "PerformAlienMoves(): sortedMetrics=" + sortedMetrics.ToString());
+         //----------------------------------------------------------------
          // Identify who Aliens move to or what uncontrolled move to Aliens
          // Should move away observing units?
          // Pick remaining uncontrolled townspeople to move.
          //    --- Move away from Town controlled units
          //    --- Add deception on what is being taken over
-
+         IMapItems knownAliens = new MapItems();
+         IMapItems unknownAliens = new MapItems();
+         IMapItems towns = new MapItems();
+         foreach (IStack stack in gi.Stacks)
+         {
+            foreach(IMapItem mi in stack.MapItems)
+            {
+               if (true == mi.IsAlienKnown) knownAliens.Add(mi);
+               if (true == mi.IsAlienUnknown) unknownAliens.Add(mi);
+               if (true == mi.IsControlled) towns.Add(mi);
+            }
+         }
+         //----------------------------------------------------------------
+         foreach(IMapItem unknownAlien in unknownAliens)
+         {
+            IMapItems? closeMapItems = GetMapItemsWithinRange(gi, unknownAlien.TerritoryCurrent, unknownAlien.Movement);
+            if( null == closeMapItems )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): GetMapItemsWithinRange() returned error");
+               return false;
+            }
+            //-----------------------------------------
+            IMetricObservations metrics = new MetricObservations();
+            foreach (IMapItem mi in closeMapItems)
+            {
+               if ((true == mi.IsControlled) || (true == mi.IsAlienUnknown) || (true == mi.IsAlienKnown) ) // do not include controlled MapItems in this area
+                  continue;
+               IMetricObservation metric = new MetricObservation(mi.TerritoryCurrent);
+               metric.Value = metric.GetObservationMetric(gi);
+               metrics.Add(metric);
+            }
+            IMetricObservations sortedMetrics = metrics.Sort();
+            Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "Perform_AlienMoves(): for unknownAlien=" + unknownAlien.Name + " sortedMetrics=" + sortedMetrics.ToString());
+            if (0 == metrics.Count) // nobody to move to
+               continue;
+            //-----------------------------------------
+            IMetricObservation? victimMetric = sortedMetrics[0];
+            if( null == victimMetric)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): victimMetric=null");
+               return false;
+            }
+            //-----------------------------------------
+            IMapItemMove? mim=null;
+            IMetricObservation metricAlien = new MetricObservation(unknownAlien.TerritoryCurrent); // Is it better to move unknown to victum or victum to unknown
+            if (metricAlien.Value < victimMetric.Value)
+               mim = CreateMapItemMove(unknownAlien, victimMetric.Territory, true);
+            else
+               mim = CreateMapItemMove(unknownAlien, victimMetric.Territory, true);
+            if( null == mim )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): CreateMapItemMove() returned null");
+               return false;
+            }
+            alienMoves.Add(mim);
+         }
          return true;
       }
       private List<TakeoverMetric> GetTakeoverMetrics(IGameInstance gi)

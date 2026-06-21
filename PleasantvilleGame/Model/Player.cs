@@ -21,12 +21,18 @@ namespace PleasantvilleGame
          return false;
       }
       //--------------------------------------------------------------
-      public virtual IMapItems? GetMapItemsWithinRange(IGameInstance gi, string tName, int range)
+      public virtual IMapItems? GetMapItemsWithinRange(IGameInstance gi, ITerritory t, int range)
       {
+         string? tName = t.ToString();
+         if( null == tName )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): tName=null");
+            return null;
+         }
          List<string>? tNames = Territory.GetTerritoriesWithinRange(gi, tName, range);
          if (null == tNames)
          {
-            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): tNames=null for anchorT=" + tName);
+            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): tNames=null for anchorT=" + t.ToString());
             return null;
          }
          IMapItems mapItems = new MapItems();
@@ -37,76 +43,6 @@ namespace PleasantvilleGame
                continue;
             foreach (IMapItem mapItem in stack.MapItems)
                mapItems.Add(mapItem);
-         }
-         return mapItems;
-      }
-      public virtual IMapItems? GetUncontrolledWithinRange(IGameInstance gi, string anchorName, int range, bool isUnknownAlso)
-      {
-         IMapItems mapItems = new MapItems();
-         IMapItems? mapItemsInRange = GetMapItemsWithinRange(gi, anchorName, range);
-         if (null == mapItemsInRange)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GetUncontrolledWithinRange(): mapItemsInRange=null for anchorT=" + anchorName);
-            return null;
-         }
-         foreach (IMapItem mapItem in mapItemsInRange)
-         {
-            if ((false == mapItem.IsControlled) && (false == mapItem.IsKilled && false == mapItem.IsStunned))
-            {
-               if (true == isUnknownAlso)
-               {
-                  if (true == mapItem.IsAlienKnown || true == mapItem.IsAlienUnknown)
-                     mapItems.Add(mapItem);
-               }
-               else
-               {
-                  if (true == mapItem.IsAlienKnown)
-                     mapItems.Add(mapItem);
-               }
-            }
-         }
-         return mapItems;
-      }
-      public virtual IMapItems? GetTownsWithinRange(IGameInstance gi, string anchorName, int range)
-      {
-         IMapItems mapItems = new MapItems();
-         IMapItems? mapItemsInRange = GetMapItemsWithinRange(gi, anchorName, range);
-         if (null == mapItemsInRange)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GetTownsWithinRange(): mapItemsInRange=null for anchorT=" + anchorName);
-            return null;
-         }
-         foreach (IMapItem mapItem in mapItemsInRange)
-         {
-            if ((true == mapItem.IsControlled) && (false == mapItem.IsKilled && false == mapItem.IsStunned))
-               mapItems.Add(mapItem);
-         }
-         return mapItems;
-      }
-      public virtual IMapItems? GetAliensWithinRange(IGameInstance gi, string anchorName, int range, bool isUnknownAlso)
-      {
-         IMapItems mapItems = new MapItems();
-         IMapItems? mapItemsInRange = GetMapItemsWithinRange(gi, anchorName, range);
-         if (null == mapItemsInRange)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GetAliensWithinRange(): mapItemsInRange=null for anchorT=" + anchorName);
-            return null;
-         }
-         foreach (IMapItem mapItem in mapItemsInRange)
-         {
-            if ((false == mapItem.IsControlled) && (false == mapItem.IsKilled && false == mapItem.IsStunned))
-            {
-               if (true == isUnknownAlso)
-               {
-                  if (true == mapItem.IsAlienKnown || true == mapItem.IsAlienUnknown)
-                     mapItems.Add(mapItem);
-               }
-               else
-               {
-                  if (true == mapItem.IsAlienKnown)
-                     mapItems.Add(mapItem);
-               }
-            }
          }
          return mapItems;
       }
@@ -147,6 +83,32 @@ namespace PleasantvilleGame
             }
          }
          return count;
+      }
+      public virtual IMapItemMove? CreateMapItemMove(IMapItem mi, ITerritory newT, bool useRandomShortestPath = false)
+      {
+         MapItemMove mim = new MapItemMove(Territories.theTerritories, mi, newT, useRandomShortestPath);
+         if (true == mim.CtorError)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): mim.CtorError=true for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
+            return null;
+         }
+         if (null == mim.NewTerritory)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): Invalid Parameter mim.NewTerritory=null" + " for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
+            return null;
+         }
+         if (null == mim.BestPath)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): Invalid Parameter mim.BestPath=null" + " for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
+            return null;
+         }
+         if (0 == mim.BestPath.Territories.Count)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): Invalid State Territories.Count=" + mim.BestPath.Territories.Count.ToString() + " for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
+            return null;
+         }
+         Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Create_MapItemMove(): mi=" + mi.Name + " moving to t=" + newT.ToString());
+         return mim;
       }
       //--------------------------------------------------------------
       public virtual int GetKnownAlienCount(IGameInstance gi)

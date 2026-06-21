@@ -376,7 +376,8 @@ namespace PleasantvilleGame
          b.Content = g;
          if ("Zebulon" == mi.Name)
             b.Background = Brushes.Black;
-         else if ( (true == mi.IsAlienKnown) || ((true == mi.IsAlienUnknown) && (true == GameEngine.theIsAlien)) )
+        // else if ( (true == mi.IsAlienKnown) || ((true == mi.IsAlienUnknown) && (true == GameEngine.theIsAlien)) ) 
+         else if ((true == mi.IsAlienKnown) || (true == mi.IsAlienUnknown)) // <cgs> TEST
             b.Background = Constants.theAlienControlledBrush;
          else if (true == mi.IsControlled)
             b.Background = Constants.theTownControlledBrush;
@@ -568,8 +569,8 @@ namespace PleasantvilleGame
             IMapItem mi = (IMapItem)o;
             sb.Append("Name=<");
             sb.Append(mi.Name);
-            sb.Append("> Location=");
-            sb.Append(mi.Location.ToString());
+            sb.Append("> t=");
+            sb.Append(mi.TerritoryCurrent.ToString());
             sb.Append(">\n");
          }
          return sb.ToString();

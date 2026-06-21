@@ -190,33 +190,7 @@ namespace PleasantvilleGame
          return true;
       }
       //------------
-      public bool CreateMapItemMove(IGameInstance gi, IMapItem mi, ITerritory newT, bool useRandomShortestPath = false)
-      {
-         MapItemMove mim = new MapItemMove(Territories.theTerritories, mi, newT, useRandomShortestPath);
-         if (true == mim.CtorError)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): mim.CtorError=true for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
-            return false;
-         }
-         if (null == mim.NewTerritory)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): Invalid Parameter mim.NewTerritory=null" + " for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
-            return false;
-         }
-         if (null == mim.BestPath)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): Invalid Parameter mim.BestPath=null" + " for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
-            return false;
-         }
-         if (0 == mim.BestPath.Territories.Count)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): Invalid State Territories.Count=" + mim.BestPath.Territories.Count.ToString() + " for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
-            return false;
-         }
-         Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Create_MapItemMove(): mi=" + mi.Name + " moving to t=" + newT.ToString());
-         gi.MapItemMoves.Insert(0, mim); // add at front
-         return true;
-      }
+
    }
    //----------------------------------------------------------------
    class GameStateSetup : GameState
@@ -544,6 +518,11 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): tNum=" + tNum.ToString() + " tName=" + tName + " stacks=" + gi.Stacks.ToString());
                continue;
             }
+         }
+         if( null == t )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+            return false;
          }
          string name = "BankGuard";
          string miName = name + Utilities.MapItemNum.ToString();
@@ -1284,8 +1263,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien(): startingAlien=null for name=" + name);
             return false;
          }
-         startingAlien.IsAlienUnknown = false;  // <cgs> TEST - show alien
-         startingAlien.IsAlienKnown = true; // <cgs> TEST - show alien
+         startingAlien.IsAlienUnknown = true; 
          //------------------------------------
          name = gi.StartingTownspeople[2];
          if (true == String.IsNullOrEmpty(name))
@@ -1299,8 +1277,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien(): startingAlien=null for name=" + name);
             return false;
          }
-         startingAlien.IsAlienUnknown = false;  // <cgs> TEST - show alien
-         startingAlien.IsAlienKnown = true; // <cgs> TEST - show alien
+         startingAlien.IsAlienUnknown = true;  
          return true;
       }
    }
@@ -1561,7 +1538,7 @@ namespace PleasantvilleGame
             }
             //-----------------------------------------
             Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Perform_RandomMoves(): mi=" + mi.Name + " entering t=" + newTerritory.Name);
-            if (false == this.CreateMapItemMove(gi, mi, newTerritory, true))
+            if (false == gi.CreateMapItemMove(mi, newTerritory, true))
             {
                Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMoves(): Create_MapItemMove() returned false");
                return false;

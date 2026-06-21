@@ -6,11 +6,32 @@ using System.Threading.Tasks;
 
 namespace PleasantvilleGame
 {
-   public interface IMetricAlienMove
+   public interface IMetricObservation
    {
       ITerritory Territory { get; set; }
       int Value { get; set; }
       int GetObservationMetric(IGameInstance gi);
+   }
+   public interface IMetricObservations : System.Collections.IEnumerable
+   {
+      int Count { get; }
+      void Add(IMetricObservation metric);
+      void Insert(int index, IMetricObservation metric);
+      void Clear();
+      bool Contains(IMetricObservation metric);
+      int IndexOf(IMetricObservation metric);
+      void Remove(IMetricObservation metric);
+      IMetricObservation? Find(ITerritory t);
+      IMetricObservation? RemoveAt(int index);
+      IMetricObservation? this[int index] { get; set; }
+      IMetricObservations Shuffle();
+      public IMetricObservations Sort();
+   }
+   //=================================================================
+   public interface IMetricAlienMove
+   {
+      ITerritory Territory { get; set; }
+      int Value { get; set; }
    }
    public interface IMetricAlienMoves : System.Collections.IEnumerable
    {
