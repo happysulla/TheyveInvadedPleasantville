@@ -39,7 +39,6 @@ namespace PleasantvilleGame
             }
          }
          int probability = (int)((100.0) * (pTotal));  // probability of not being observed
-         Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "GetObservationMetric(): prob=" + probability.ToString());
          return probability;
       }
    }

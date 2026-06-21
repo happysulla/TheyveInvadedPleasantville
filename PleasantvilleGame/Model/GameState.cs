@@ -1228,8 +1228,6 @@ namespace PleasantvilleGame
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
-         gi.Townspeople.Add(gi.Zebulon);
-         gi.Stacks.Add(gi.Zebulon);
          return true;
       }
       private bool AssignStartingTownsplayer(IGameInstance gi)
