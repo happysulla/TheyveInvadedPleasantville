@@ -27,10 +27,36 @@ namespace PleasantvilleGame
          }
 			return false;
 		}
-		//---------------------------------------------------------------
-		public static IMapPath? GetBestPath(ITerritories territories, ITerritory startT, ITerritory endT, int moveFactor)
+      //---------------------------------------------------------------
+      public static IMapItems? GetMapItemsWithinRange(IGameInstance gi, ITerritory t, int range)
+      {
+         string? tName = t.ToString();
+         if (null == tName)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): tName=null");
+            return null;
+         }
+         List<string>? tNames = Territory.GetTerritoriesWithinRange(gi, tName, range);
+         if (null == tNames)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): tNames=null for anchorT=" + t.ToString());
+            return null;
+         }
+         IMapItems mapItems = new MapItems();
+         foreach (string territoryName in tNames)
+         {
+            IStack? stack = gi.Stacks.Find(territoryName);
+            if (null == stack)
+               continue;
+            foreach (IMapItem mapItem in stack.MapItems)
+               mapItems.Add(mapItem);
+         }
+         return mapItems;
+      }
+      public static IMapPath? GetBestPath(ITerritories territories, ITerritory startT, ITerritory endT, int moveFactor)
 		{
-			IMapPaths paths = new MapPaths();
+         // <cgs> This function created by me to get shorted path. However, the Get_ShortestRandomPath() was created by OpenAi so using that method. Keeping this for contingency.
+         IMapPaths paths = new MapPaths();
 			if (moveFactor < 1)
 				return new MapPath(endT.Name);
 			IMapPaths adjPaths = new MapPaths();
@@ -184,10 +210,6 @@ namespace PleasantvilleGame
 			Logger.Log(LogEnum.LE_SHOW_MIM_BEST_PATH, "Get_BestPath(): moving from " + startT.Name + " to " + endT.Name + " using " + bestPath.ToString());
 			return bestPath;
 		}
-      public static IMapPath? GetShortestRandomPath(ITerritories territories, ITerritory startT, ITerritory endT)
-      {
-         return GetShortestRandomPath(territories, startT, endT, MAX_PATH_COUNT);
-      }
       public static IMapPath? GetShortestRandomPath(ITerritories territories, ITerritory startT, ITerritory endT, int moveFactor)
       {
          string? endPathName = endT.ToString();
@@ -461,6 +483,7 @@ namespace PleasantvilleGame
          }
          return masterList;
       }
+      //---------------------------------------------------------------
       private static double DistanceToSegment(Point p, Point a, Point b, out Point closestPoint)
 		{
 			double dx = b.X - a.X;

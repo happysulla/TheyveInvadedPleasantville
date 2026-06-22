@@ -8,7 +8,7 @@ namespace PleasantvilleGame
 {
    public interface IMetricObservation
    {
-      ITerritory Territory { get; set; }
+      IMapItem Target { get; set; }
       int Value { get; set; }
       int GetObservationMetric(IGameInstance gi);
    }

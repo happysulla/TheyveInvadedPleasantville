@@ -904,7 +904,7 @@ namespace PleasantvilleGame
          else if( null == myTargetTerritory )
          {
             myTargetTerritory = matchingTerritory; // If there is no anchor territory. Set it.
-            IMapPath? bestPath = Territory.GetShortestRandomPath(Territories.theTerritories, myAnchorTerritory, myTargetTerritory);
+            IMapPath? bestPath = Territory.GetShortestRandomPath(Territories.theTerritories, myAnchorTerritory, myTargetTerritory, Territory.MAX_PATH_COUNT);
             if( null == bestPath )
             {
                Logger.Log(LogEnum.LE_ERROR, "MouseDownPolygon3(): GetBestPath() returned null");

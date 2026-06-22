@@ -27,7 +27,7 @@ namespace PleasantvilleGame
          NewTerritory = mim.NewTerritory;
          BestPath = mim.BestPath;
       }
-      public MapItemMove(ITerritories territories, IMapItem movingMapItem, ITerritory newTerritory, bool useRandomShortestPath = false) 
+      public MapItemMove(ITerritories territories, IMapItem movingMapItem, ITerritory newTerritory) 
       {
          MapItem = movingMapItem;
          OldTerritory = movingMapItem.TerritoryCurrent;
@@ -43,10 +43,7 @@ namespace PleasantvilleGame
             CtorError = true;
             return;
          }
-         if (true == useRandomShortestPath)
-            BestPath = Territory.GetShortestRandomPath(territories, OldTerritory, newTerritory, 2 * movingMapItem.Movement);
-         else
-            BestPath = Territory.GetBestPath(territories, OldTerritory, newTerritory, 2 * movingMapItem.Movement);
+         BestPath = Territory.GetShortestRandomPath(territories, OldTerritory, newTerritory, movingMapItem.Movement);
          if (null == BestPath)
          {
             string msg = "MapItemMove():BestPath=null for";

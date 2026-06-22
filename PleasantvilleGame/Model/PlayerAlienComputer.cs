@@ -149,118 +149,38 @@ namespace PleasantvilleGame
          //    --- Move units away from controlled townsperson
          IMapItems knownAliens = new MapItems();
          IMapItems unknownAliens = new MapItems();
-         IMapItems towns = new MapItems();
+         IMapItems townControlledPeoples = new MapItems();
          IMapItems uncontrolledPeoples = new MapItems();
          foreach (IStack stack in gi.Stacks)
          {
             foreach(IMapItem mi in stack.MapItems)
             {
+               mi.IsMovingThisTurn = false;
                if (true == mi.IsAlienKnown) knownAliens.Add(mi);
                else if (true == mi.IsAlienUnknown) unknownAliens.Add(mi);
-               else if (true == mi.IsControlled) towns.Add(mi);
-               else uncontrolledPeoples.Add(mi);
+               else if (true == mi.IsControlled) townControlledPeoples.Add(mi);
+               else if( (false == mi.IsWary) && (false == mi.IsUnconscious) && (false == mi.IsKilled) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
+                  uncontrolledPeoples.Add(mi);
             }
          }
          //----------------------------------------------------------------
-         foreach(IMapItem unknownAlien in unknownAliens)
+         PlayerAlienComputerMoveMgr moveMgr = new PlayerAlienComputerMoveMgr();
+         if( false == moveMgr.MoveUnknownAliens(gi, unknownAliens, ref alienMoves))
          {
-            if (4 < alienMoves.Count) // only move five units
-               break;
-            IMapItems? closeMapItems = GetMapItemsWithinRange(gi, unknownAlien.TerritoryCurrent, unknownAlien.Movement);
-            if( null == closeMapItems )
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): GetMapItemsWithinRange() returned error");
-               return false;
-            }
-            //-----------------------------------------
-            IMetricObservations metrics = new MetricObservations();
-            foreach (IMapItem mi in closeMapItems)
-            {
-               if ((true == mi.IsControlled) || (true == mi.IsAlienUnknown) || (true == mi.IsAlienKnown) ) // do not include controlled MapItems in this area
-                  continue;
-               IMetricObservation metric = new MetricObservation(mi.TerritoryCurrent);
-               metric.Value = metric.GetObservationMetric(gi);
-               metrics.Add(metric);
-            }
-            IMetricObservations sortedMetrics = metrics.Sort();
-            Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "Perform_AlienMoves(): for unknownAlien=" + unknownAlien.Name + " sortedMetrics=" + sortedMetrics.ToString());
-            if (0 == metrics.Count) // nobody to move to
-               continue;
-            //-----------------------------------------
-            IMetricObservation? victimMetric = sortedMetrics[0];
-            if( null == victimMetric)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): victimMetric=null");
-               return false;
-            }
-            //-----------------------------------------
-            IMapItemMove? mim=null;
-            IMetricObservation metricAlien = new MetricObservation(unknownAlien.TerritoryCurrent); // Is it better to move unknown to victum or victum to unknown
-            if (metricAlien.Value < victimMetric.Value)
-               mim = CreateMapItemMove(unknownAlien, victimMetric.Territory, true);
-            else
-               mim = CreateMapItemMove(unknownAlien, victimMetric.Territory, true);
-            if( null == mim )
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): CreateMapItemMove() returned null");
-               return false;
-            }
-            alienMoves.Add(mim);
+            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): MoveUnknownAliens() returned error");
+            return false;
+         }
+         if (false == moveMgr.IntersectAlienUncontrolled(gi, unknownAliens, uncontrolledPeoples, ref alienMoves))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): IntersectAlienUncontrolled() returned error");
+            return false;
+         }
+         if (false == moveMgr.MoveUncontrolled(gi, uncontrolledPeoples, ref alienMoves))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): MoveUncontrolled() returned error");
+            return false;
          }
          //----------------------------------------------------------------
-         IMetricObservations uncontrolledMetrics = new MetricObservations();
-         foreach (IMapItem uncontrolled in uncontrolledPeoples)
-         {
-            foreach (IMapItem mi in uncontrolledPeoples)
-            {
-               if ((true == mi.IsControlled) || (true == mi.IsAlienUnknown) || (true == mi.IsAlienKnown)) // do not include controlled MapItems in this area
-                  continue;
-               IMetricObservation metric = new MetricObservation(mi.TerritoryCurrent);
-               metric.Value = metric.GetObservationMetric(gi);
-               uncontrolledMetrics.Add(metric);
-            }
-         }
-         IMetricObservations sortedUncontrolledMetrics = uncontrolledMetrics.Sort();
-         //----------------------------------------------------------------
-         foreach (IMetricObservation metric in sortedUncontrolledMetrics)
-         {
-            if (4 < alienMoves.Count) // only move five units
-               break;
-            IStack? stack = gi.Stacks.Find(metric.Territory);
-            if( null == stack )
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): stack=null for t=" + metric.Territory.ToString());
-               return false;
-            }
-            IMapItem? anchor = stack.MapItems[0];
-            if (null == anchor)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): stack=null for t=" + metric.Territory.ToString());
-               return false;
-            }
-            IMapItems? closeMapItems = GetMapItemsWithinRange(gi, anchor.TerritoryCurrent, anchor.Movement);
-            if (null == closeMapItems)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): GetMapItemsWithinRange() returned error");
-               return false;
-            }
-            int randomNum = Utilities.RandomGenerator.Next(closeMapItems.Count);
-            IMapItem? movingMi = closeMapItems[randomNum];
-            if(null == movingMi)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): movingMi=null for randUm=" + randomNum.ToString() + " in closeMapItems=" + closeMapItems.ToString());
-               return false;
-            }
-            //-----------------------------------------
-            IMapItemMove? mim = CreateMapItemMove(movingMi, anchor.TerritoryCurrent, true);
-            if (null == mim)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): CreateMapItemMove() returned null");
-               return false;
-            }
-            alienMoves.Add(mim);
-         }
-         //------------------------------------------
          alienMoves.Shuffle();
          return true;
       }

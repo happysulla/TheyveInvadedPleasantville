@@ -263,32 +263,31 @@ namespace PleasantvilleGame
          }
          return true;
       }
-      public bool CreateMapItemMove(IMapItem mi, ITerritory newT, bool useRandomShortestPath = false)
+      public IMapItemMove? CreateMapItemMove(IMapItem mi, ITerritory newT)
       {
-         MapItemMove mim = new MapItemMove(Territories.theTerritories, mi, newT, useRandomShortestPath);
+         MapItemMove mim = new MapItemMove(Territories.theTerritories, mi, newT);
          if (true == mim.CtorError)
          {
             Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): mim.CtorError=true for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
-            return false;
+            return null;
          }
          if (null == mim.NewTerritory)
          {
             Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): Invalid Parameter mim.NewTerritory=null" + " for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
-            return false;
+            return null;
          }
          if (null == mim.BestPath)
          {
             Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): Invalid Parameter mim.BestPath=null" + " for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
-            return false;
+            return null;
          }
          if (0 == mim.BestPath.Territories.Count)
          {
             Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): Invalid State Territories.Count=" + mim.BestPath.Territories.Count.ToString() + " for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
-            return false;
+            return null;
          }
          Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Create_MapItemMove(): mi=" + mi.Name + " moving to t=" + newT.ToString());
-         this.MapItemMoves.Insert(0, mim); // add at front
-         return true;
+         return mim;
       }
    }
 }

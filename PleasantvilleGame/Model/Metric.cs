@@ -9,23 +9,23 @@ namespace PleasantvilleGame
 {
    public class MetricObservation : IMetricObservation
    {
-      public ITerritory Territory { get; set; }
+      public IMapItem Target { get; set; }
       public int Value { get; set; }
-      public MetricObservation(ITerritory t)
+      public MetricObservation(IMapItem mi)
       {
-         Territory = t;
+         Target = mi;
       }
       public int GetObservationMetric(IGameInstance gi)
       {
          double pTotal = 1.0; // probability of observation = 1 - (1-p0)(1-p1)(1-p3).... where p is the probability of observation from that hex
-         foreach (var kvp in Territory.Observations)
+         foreach (var kvp in Target.TerritoryCurrent.Observations)
          {
             IStack? stack = gi.Stacks.Find(kvp.Key); 
             if (null == stack) // might not be a stack in this Territory
                continue;
             for (int i = 0; i < stack.MapItems.Count; ++i)
             {
-               if ((this.Territory.ToString() == stack.Territory.ToString()) && (0 == i)) // do not count the first mapitem in the Observation Hex
+               if ((this.Target.TerritoryCurrent.ToString() == stack.Territory.ToString()) && (0 == i)) // do not count the first mapitem in the Observation Hex
                   continue;
                IMapItem? mi = stack.MapItems[i];
                if (null == mi)
@@ -58,7 +58,7 @@ namespace PleasantvilleGame
       {
          foreach (IMetricObservation metric in myList)
          {
-            if (metric.Territory.ToString() == t.ToString())
+            if (metric.Target.ToString() == t.ToString())
                return metric;
          }
          return null;
@@ -122,7 +122,7 @@ namespace PleasantvilleGame
          {
             IMetricObservation m = (IMetricObservation)o;
             sb.Append("<");
-            sb.Append(m.Territory.ToString());
+            sb.Append(m.Target.ToString());
             sb.Append(",");
             sb.Append(m.Value.ToString());
             sb.Append(">");
@@ -218,8 +218,6 @@ namespace PleasantvilleGame
             IMetricAlienMove m = (IMetricAlienMove)o;
             sb.Append("<");
             sb.Append(m.Territory.ToString());
-            sb.Append(",");
-            sb.Append(m.Value.ToString());
             sb.Append(">");
          }
          return sb.ToString();

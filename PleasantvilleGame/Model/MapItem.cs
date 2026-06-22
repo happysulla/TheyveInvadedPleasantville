@@ -97,6 +97,7 @@ namespace PleasantvilleGame
       public bool IsSurrendered { get; set; } = false;
       public bool IsTiedUp { get; set; } = false;
       public bool IsWary { get; set; } = false;
+      public bool IsMovingThisTurn { get; set; } = false;
       public bool IsMoveStoppedThisTurn { get; set; } = false;
       public bool IsMoveAllowedToResetThisTurn { get; set; } = false;
       public bool IsConversedThisTurn { get; set; } = false;
@@ -274,8 +275,15 @@ namespace PleasantvilleGame
             myWoundSpots.Add(spot);
          }
       }
+      public bool IsUncontrolled()
+      {
+         if ((true == this.IsControlled) || (true == this.IsAlienUnknown) || (true == this.IsAlienKnown))
+            return false;
+         return true;
+      }
       //----------------------------------------------------------------------------
-      static public void Shuffle(ref List<IMapItem> mapItems)
+
+      public static void Shuffle(ref List<IMapItem> mapItems)
       {
          for (int j = 0; j < 10; ++j)
          {
@@ -391,10 +399,9 @@ namespace PleasantvilleGame
       public override string ToString()
       {
          StringBuilder sb = new StringBuilder();
-         sb.Append("Name=<");
          sb.Append(Name);
-         sb.Append(">T=<");
-         sb.Append(TerritoryCurrent.Name);
+         sb.Append("->");
+         sb.Append(TerritoryCurrent.ToString());
          return sb.ToString();
       }
    }
@@ -567,11 +574,11 @@ namespace PleasantvilleGame
          foreach (Object o in myList)
          {
             IMapItem mi = (IMapItem)o;
-            sb.Append("Name=<");
+            sb.Append("<");
             sb.Append(mi.Name);
-            sb.Append("> t=");
+            sb.Append(",");
             sb.Append(mi.TerritoryCurrent.ToString());
-            sb.Append(">\n");
+            sb.Append(">");
          }
          return sb.ToString();
       }

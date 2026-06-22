@@ -21,31 +21,6 @@ namespace PleasantvilleGame
          return false;
       }
       //--------------------------------------------------------------
-      public virtual IMapItems? GetMapItemsWithinRange(IGameInstance gi, ITerritory t, int range)
-      {
-         string? tName = t.ToString();
-         if( null == tName )
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): tName=null");
-            return null;
-         }
-         List<string>? tNames = Territory.GetTerritoriesWithinRange(gi, tName, range);
-         if (null == tNames)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): tNames=null for anchorT=" + t.ToString());
-            return null;
-         }
-         IMapItems mapItems = new MapItems();
-         foreach (string territoryName in tNames)
-         {
-            IStack? stack = gi.Stacks.Find(territoryName);
-            if (null == stack)
-               continue;
-            foreach (IMapItem mapItem in stack.MapItems)
-               mapItems.Add(mapItem);
-         }
-         return mapItems;
-      }
       public virtual int GetUncontrolledCount(IGameInstance gi, IMapItems mapItems, bool isUnknownAlso)
       {
          int count = 0;
@@ -83,32 +58,6 @@ namespace PleasantvilleGame
             }
          }
          return count;
-      }
-      public virtual IMapItemMove? CreateMapItemMove(IMapItem mi, ITerritory newT, bool useRandomShortestPath = false)
-      {
-         MapItemMove mim = new MapItemMove(Territories.theTerritories, mi, newT, useRandomShortestPath);
-         if (true == mim.CtorError)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): mim.CtorError=true for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
-            return null;
-         }
-         if (null == mim.NewTerritory)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): Invalid Parameter mim.NewTerritory=null" + " for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
-            return null;
-         }
-         if (null == mim.BestPath)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): Invalid Parameter mim.BestPath=null" + " for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
-            return null;
-         }
-         if (0 == mim.BestPath.Territories.Count)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): Invalid State Territories.Count=" + mim.BestPath.Territories.Count.ToString() + " for start=" + mi.TerritoryStarting.ToString() + " for newT=" + newT.Name);
-            return null;
-         }
-         Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Create_MapItemMove(): mi=" + mi.Name + " moving to t=" + newT.ToString());
-         return mim;
       }
       //--------------------------------------------------------------
       public virtual int GetKnownAlienCount(IGameInstance gi)
@@ -164,6 +113,5 @@ namespace PleasantvilleGame
          }
          return influence;
       }
-
    }
 }

@@ -1528,6 +1528,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMoves(): unable to find name=" + name);
                return false;
             }
+            mi.Movement *= 2; // Movement is doubled during Random Movement
             ITerritory? newTerritory = Territories.theTerritories.Find(buildingName);
             if (null == newTerritory)
             {
@@ -1536,11 +1537,13 @@ namespace PleasantvilleGame
             }
             //-----------------------------------------
             Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Perform_RandomMoves(): mi=" + mi.Name + " entering t=" + newTerritory.Name);
-            if (false == gi.CreateMapItemMove(mi, newTerritory, true))
+            IMapItemMove? mim = gi.CreateMapItemMove(mi, newTerritory);
+            if (null == mim)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMoves(): Create_MapItemMove() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMoves(): Create_MapItemMove() returned null");
                return false;
             }
+            gi.MapItemMoves.Insert(0, mim);
          }
          return true;
       }

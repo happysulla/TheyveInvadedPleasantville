@@ -57,6 +57,7 @@ namespace PleasantvilleGame
       bool IsSurrendered { get; set; }
       bool IsTiedUp { get; set; }
       bool IsWary { get; set; }
+      bool IsMovingThisTurn { get; set; }
       bool IsMoveStoppedThisTurn { get; set; }
       bool IsMoveAllowedToResetThisTurn { get; set; }
       bool IsConversedThisTurn { get; set; }
@@ -69,6 +70,7 @@ namespace PleasantvilleGame
       void Copy(IMapItem mi);
       void Sync(IMapItem mi); // synchronize most of the data but not all
       void SetBloodSpots(int percent);
+      bool IsUncontrolled();
    }
    //==========================================
    public interface IMapItems : System.Collections.IEnumerable
