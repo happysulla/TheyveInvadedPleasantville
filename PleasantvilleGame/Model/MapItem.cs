@@ -281,8 +281,15 @@ namespace PleasantvilleGame
             return false;
          return true;
       }
+      public override string ToString()
+      {
+         StringBuilder sb = new StringBuilder();
+         sb.Append(Name);
+         sb.Append("->");
+         sb.Append(TerritoryCurrent.ToString());
+         return sb.ToString();
+      }
       //----------------------------------------------------------------------------
-
       public static void Shuffle(ref List<IMapItem> mapItems)
       {
          for (int j = 0; j < 10; ++j)
@@ -396,14 +403,6 @@ namespace PleasantvilleGame
          else
             b.Background = Brushes.White;
       }
-      public override string ToString()
-      {
-         StringBuilder sb = new StringBuilder();
-         sb.Append(Name);
-         sb.Append("->");
-         sb.Append(TerritoryCurrent.ToString());
-         return sb.ToString();
-      }
    }
    //===========================================
    public class MapItems : IEnumerable, IMapItems
@@ -476,7 +475,7 @@ namespace PleasantvilleGame
       {
          IMapItems newOrder = new MapItems();
          int count = myList.Count;
-         for (int i = 0; i < count; i++) // Random select card in myCards list and remove it.  Then add it to new list. 
+         for (int i = 0; i < count; i++) 
          {
             int index = Utilities.RandomGenerator.Next(myList.Count);
             if (index < myList.Count)
@@ -521,7 +520,6 @@ namespace PleasantvilleGame
             if (false == isMapItemInserted) // If not inserted, add to end
                sortedMapItems.Add(mi1);
          }
-
          return sortedMapItems;
       }
       public IMapItems SortOnCombat()

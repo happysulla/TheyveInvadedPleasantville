@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace PleasantvilleGame
 {
@@ -11,11 +12,12 @@ namespace PleasantvilleGame
    {
       public IMapItem Target { get; set; }
       public int Value { get; set; }
-      public MetricObservation(IMapItem mi)
+      public MetricObservation(IGameInstance gi, IMapItem mi)
       {
          Target = mi;
+         Value = GetObservationMetric(gi);
       }
-      public int GetObservationMetric(IGameInstance gi)
+      private int GetObservationMetric(IGameInstance gi)
       {
          double pTotal = 1.0; // probability of observation = 1 - (1-p0)(1-p1)(1-p3).... where p is the probability of observation from that hex
          foreach (var kvp in Target.TerritoryCurrent.Observations)
@@ -40,6 +42,16 @@ namespace PleasantvilleGame
          }
          int probability = (int)((100.0) * (pTotal));  // probability of not being observed
          return probability;
+      }
+      public override String ToString()
+      {
+         StringBuilder sb = new StringBuilder();
+         sb.Append("<");
+         sb.Append(this.Target.Name);
+         sb.Append(",");
+         sb.Append(this.Value.ToString());
+         sb.Append(">");
+         return sb.ToString();
       }
    }
    public class MetricObservations : IMetricObservations
@@ -121,11 +133,9 @@ namespace PleasantvilleGame
          foreach (Object o in myList)
          {
             IMetricObservation m = (IMetricObservation)o;
-            sb.Append("<");
-            sb.Append(m.Target.ToString());
-            sb.Append(",");
-            sb.Append(m.Value.ToString());
-            sb.Append(">");
+            sb.Append("[");
+            sb.Append(m.ToString());
+            sb.Append("]");
          }
          return sb.ToString();
       }

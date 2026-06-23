@@ -190,7 +190,6 @@ namespace PleasantvilleGame
          return true;
       }
       //------------
-
    }
    //----------------------------------------------------------------
    class GameStateSetup : GameState

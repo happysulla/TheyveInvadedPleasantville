@@ -10,7 +10,6 @@ namespace PleasantvilleGame
    {
       IMapItem Target { get; set; }
       int Value { get; set; }
-      int GetObservationMetric(IGameInstance gi);
    }
    public interface IMetricObservations : System.Collections.IEnumerable
    {

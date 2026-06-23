@@ -1,4 +1,5 @@
-﻿using System.CodeDom;
+﻿using System;
+using System.CodeDom;
 using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -91,7 +92,7 @@ namespace PleasantvilleGame
       private readonly SplashDialog mySplashScreen;
       //--------------------------------------------------------------
       private readonly FontFamily myFontFam = new FontFamily("Tahofma");
-      private Storyboard? myStoryboard = null;
+      private Storyboard? myStoryboardFlashing = null;
 #pragma warning disable CA1416 // Validate platform compatibility
       private System.Windows.Forms.Timer myTimer = new System.Windows.Forms.Timer();
 #pragma warning restore CA1416 // Validate platform compatibility
@@ -1058,10 +1059,9 @@ namespace PleasantvilleGame
                UpdateWindowTitle();
                break;
             case GameAction.RandomMovementStartTowns:
-               myStoryboard = null;
+               myStoryboardFlashing = null;
                myMovingMapItems.Clear();
                myMovingButton = null;
-               myIsFlagSetForAlienMoveCountExceeded = false;
                myMovingRectangle = null;
                UpdateActionPanelClear();
                if (false == UpdateCanvasMain(gi, action))
@@ -1099,10 +1099,23 @@ namespace PleasantvilleGame
                   return;
                }
                break;
+            case GameAction.TownspersonAcksRandomMovement:
+               myMovingMapItems.Clear();
+               myMovingButton = null;
+               myMovingRectangle = null;
+               UpdateCanvasMainClear(myButtons, gi.Stacks, action, false);
+               if (false == UpdateCanvasMovement(gi, action, gi.Stacks, myButtons))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMovement() returned error ");
+                  return;
+               }
+               break;
+            case GameAction.TownspersonAcksAlienMovement:
+               break;
             //   case GameAction.AlienDisplaysRandomMovement:
             //      if (true == GameEngine.theIsAlien)
             //      {
-            //         myStoryboard = null;
+            //         myStoryboardFlashing = null;
             //         UpdateViewMovement(gi);
             //         UpdateActionPanelClear();
             //      }
@@ -1110,7 +1123,7 @@ namespace PleasantvilleGame
             //   case GameAction.TownspersonDisplaysRandomMovement:
             //      if (false == GameEngine.theIsAlien)
             //      {
-            //         myStoryboard = null;
+            //         myStoryboardFlashing = null;
             //         UpdateViewMovement(gi);
             //         UpdateActionPanelClear();
             //      }
@@ -2090,7 +2103,7 @@ namespace PleasantvilleGame
       }
       private void UpdateViewState(IGameInstance gi)
       {
-         myStoryboard = null;  // turn off flashing
+         myStoryboardFlashing = null;  // turn off flashing
          GameAction outAction = GameAction.Error;
          switch (gi.GamePhase)
          {
@@ -2330,7 +2343,6 @@ namespace PleasantvilleGame
          }
          try
          {
-
             Canvas.SetZIndex(b, 10000); // Move the button to the top of the Canvas
             Canvas.SetZIndex(myRectangles[mapItemCount], 10001); // Move the rectangle one higher
             double xStart = mim.MapItem.Location.X; // get top left point of MapItem
@@ -2441,7 +2453,7 @@ namespace PleasantvilleGame
       private bool DisplayConversations(IGameInstance gi)
       {
          //// Clear any previous flashing regions
-         //myStoryboard = new Storyboard();
+         //myStoryboardFlashing = new Storyboard();
          //foreach (UIElement ui in myCanvasMain.Children)
          //{
          //   if (ui is Polygon)
@@ -2500,13 +2512,13 @@ namespace PleasantvilleGame
          //   anim.Duration = new Duration(TimeSpan.FromSeconds(0.6));
          //   anim.AutoReverse = true;
          //   anim.RepeatBehavior = RepeatBehavior.Forever;
-         //   myStoryboard.Children.Add(anim);
+         //   myStoryboardFlashing.Children.Add(anim);
          //   Storyboard.SetTargetProperty(anim, new PropertyPath(OpacityProperty));
          //   Storyboard.SetTargetName(anim, targetName); // Start flashing the region where the user can select
          //} // end foreach (Stack stack in stacks)
-         //if (0 == myStoryboard.Children.Count)
+         //if (0 == myStoryboardFlashing.Children.Count)
          //   return false;
-         //myStoryboard.Begin(this);
+         //myStoryboardFlashing.Begin(this);
          return true;
       }
       private void DisplayConversation(IGameInstance gi, ITerritory selectedTerritory)
@@ -2664,7 +2676,7 @@ namespace PleasantvilleGame
       }
       private bool DisplayInfluences(IGameInstance gi)
       {
-         myStoryboard = new Storyboard(); // Clear any previous flashing regions
+         myStoryboardFlashing = new Storyboard(); // Clear any previous flashing regions
          foreach (UIElement ui in myCanvasMain.Children)
          {
             if (ui is Polygon)
@@ -2728,14 +2740,14 @@ namespace PleasantvilleGame
             anim.AutoReverse = true;
             anim.RepeatBehavior = RepeatBehavior.Forever;
             //---------------------------------------------------
-            myStoryboard.Children.Add(anim);
+            myStoryboardFlashing.Children.Add(anim);
             Storyboard.SetTargetProperty(anim, new PropertyPath(OpacityProperty));
             Storyboard.SetTargetName(anim, targetName); // Start flashing the region where the user can select
 
          } // end foreach (Stack stack in stacks)
-         if (0 == myStoryboard.Children.Count)
+         if (0 == myStoryboardFlashing.Children.Count)
             return false;
-         myStoryboard.Begin(this);
+         myStoryboardFlashing.Begin(this);
          return true;
       }
       private bool DisplayInfluence(IGameInstance gi, ITerritory selectedTerritory)
@@ -3013,7 +3025,7 @@ namespace PleasantvilleGame
          // or retreats from previous combats.
          //----------------------------------------------------------------------
          isRetreatNeedAck = false;
-         myStoryboard = new Storyboard();
+         myStoryboardFlashing = new Storyboard();
          foreach (UIElement ui in myCanvasMain.Children) // Clear any previous flashing regions
          {
             if (ui is Polygon)
@@ -3120,12 +3132,12 @@ namespace PleasantvilleGame
             anim.Duration = new Duration(TimeSpan.FromSeconds(0.6));
             anim.AutoReverse = true;
             anim.RepeatBehavior = RepeatBehavior.Forever;
-            myStoryboard.Children.Add(anim);
+            myStoryboardFlashing.Children.Add(anim);
             Storyboard.SetTargetProperty(anim, new PropertyPath(OpacityProperty));
             Storyboard.SetTargetName(anim, targetName); // Start flashing the region where the user can select
          }
          //------------------------------------------------------------------------------
-         if (0 == myStoryboard.Children.Count)
+         if (0 == myStoryboardFlashing.Children.Count)
          {
             if (null == gi.MapItemCombat)
             {
@@ -3136,7 +3148,7 @@ namespace PleasantvilleGame
                isRetreatNeedAck = true;
             return true;
          }
-         myStoryboard.Begin(this);
+         myStoryboardFlashing.Begin(this);
          return true;
       }
       private void DisplayCombat(IGameInstance gi, ITerritory selectedTerritory)
@@ -3396,7 +3408,7 @@ namespace PleasantvilleGame
       private bool DisplayIterogations(IGameInstance gi, out bool isInterrogations)
       {
          isInterrogations = false;
-         myStoryboard = new Storyboard();
+         myStoryboardFlashing = new Storyboard();
          foreach (UIElement ui in myCanvasMain.Children) // Clear any previous flashing regions
          {
             if (ui is Polygon)
@@ -3474,20 +3486,20 @@ namespace PleasantvilleGame
             anim.Duration = new Duration(TimeSpan.FromSeconds(0.6));
             anim.AutoReverse = true;
             anim.RepeatBehavior = RepeatBehavior.Forever;
-            myStoryboard.Children.Add(anim);
+            myStoryboardFlashing.Children.Add(anim);
             Storyboard.SetTargetProperty(anim, new PropertyPath(OpacityProperty));
             Storyboard.SetTargetName(anim, targetName); // Start flashing the region where the user can select
          } // end foreach (Stack stack in stacks)
            //--------------------------------------------------------------
-         if (0 < myStoryboard.Children.Count)
-            myStoryboard.Begin(this);
+         if (0 < myStoryboardFlashing.Children.Count)
+            myStoryboardFlashing.Begin(this);
          if (0 < gi.NumIterogationsThisTurn)
             return true;
          return false;
       }
       private bool DisplayImplantRemovals(IGameInstance gi)
       {
-         myStoryboard = new Storyboard();
+         myStoryboardFlashing = new Storyboard();
          foreach (UIElement ui in myCanvasMain.Children) // Clear any previous flashing regions
          {
             if (ui is Polygon)
@@ -3542,14 +3554,14 @@ namespace PleasantvilleGame
             anim.Duration = new Duration(TimeSpan.FromSeconds(0.6));
             anim.AutoReverse = true;
             anim.RepeatBehavior = RepeatBehavior.Forever;
-            myStoryboard.Children.Add(anim);
+            myStoryboardFlashing.Children.Add(anim);
             Storyboard.SetTargetProperty(anim, new PropertyPath(OpacityProperty));
             Storyboard.SetTargetName(anim, targetName); // Start flashing the region where the user can select
          }
          //-------------------------------------------------------------- 
-         if (0 == myStoryboard.Children.Count)
+         if (0 == myStoryboardFlashing.Children.Count)
             return false;
-         myStoryboard.Begin(this);
+         myStoryboardFlashing.Begin(this);
          return true;
       }
       private void DisplayImplantRemoval(IGameInstance gi, ITerritory selectedTerritory)
@@ -3687,11 +3699,11 @@ namespace PleasantvilleGame
       {
          if (false == GameEngine.theIsAlien)
          {
-            myStoryboard = null; // turn off any flashing spaces
+            myStoryboardFlashing = null; // turn off any flashing spaces
             return false;
          }
          //----------------------------------------------------------------------
-         myStoryboard = new Storyboard(); // Clear any previous flashing regions
+         myStoryboardFlashing = new Storyboard(); // Clear any previous flashing regions
          foreach (UIElement ui in myCanvasMain.Children)
          {
             if (ui is Polygon)
@@ -3781,20 +3793,20 @@ namespace PleasantvilleGame
             anim.Duration = new Duration(TimeSpan.FromSeconds(0.6));
             anim.AutoReverse = true;
             anim.RepeatBehavior = RepeatBehavior.Forever;
-            myStoryboard.Children.Add(anim);
+            myStoryboardFlashing.Children.Add(anim);
             Storyboard.SetTargetProperty(anim, new PropertyPath(OpacityProperty));
             Storyboard.SetTargetName(anim, targetName); // Start flashing the region where the user can select
 
          } // end foreach (Stack stack in stacks)
            //-------------------------------------------------------------------------------------------------
-         if (0 == myStoryboard.Children.Count)
+         if (0 == myStoryboardFlashing.Children.Count)
          {
             if ((true == myIsTakeOverPromptNeededToFoolOpponent) && (false == myIsTakeOverInOneRegion))
                return true;
             else
                return false;
          }
-         myStoryboard.Begin(this);
+         myStoryboardFlashing.Begin(this);
          return true;
       }
       private void DisplayTakover(IGameInstance gi, ITerritory selectedTerritory)
@@ -4845,7 +4857,7 @@ namespace PleasantvilleGame
       private void MapItemCommonAction(ITerritory selectedTerritory)
       {
          //----------------------------------------
-         myStoryboard = null;
+         myStoryboardFlashing = null;
          switch (myGameInstance.GamePhase)
          {
             case GamePhase.Conversations:
