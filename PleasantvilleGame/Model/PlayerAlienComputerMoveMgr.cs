@@ -94,14 +94,17 @@ namespace PleasantvilleGame
             uncontrolledMetrics.Add(metric);
          }
          IMetricObservations sortedUncontrolledMetrics = uncontrolledMetrics.Sort(); // sort the metrics for all uncontrolled people
-         Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "Perform_AlienMoves(): for sortedUncontrolledMetrics=" + sortedUncontrolledMetrics.ToString());
+         Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "Move_Uncontrolled(): for sortedUncontrolledMetrics=" + sortedUncontrolledMetrics.ToString());
          //----------------------------------------------------------------
          foreach (IMetricObservation metric in sortedUncontrolledMetrics)
          {
             if (5 < alienMoves.Count) // only move five units
                break;
             if (true == metric.Target.IsMovingThisTurn) // already targeted or moving... skip this mapitem
+            {
+               Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "Move_Uncontrolled(): target alreadying moving =" + metric.Target.ToString());
                continue;
+            }
             //-----------------------------------------
             bool isAlienMovingHereAlready = false;
             foreach(IMapItemMove mim1 in alienMoves)
@@ -112,7 +115,10 @@ namespace PleasantvilleGame
                   return false;
                }
                if (mim1.NewTerritory.ToString() == metric.Target.ToString())
+               {
                   isAlienMovingHereAlready = true;
+                  Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "Move_Uncontrolled(): alien=" + mim1.MapItem.ToString() + " already there");
+               }
             }
             if (true == isAlienMovingHereAlready)
                continue;
@@ -123,7 +129,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): GetMapItemsWithinRange() returned error");
                return false;
             }
-            Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "Perform_AlienMoves(): for anchor=" + metric.Target.ToString() + " has closeMapItems=" + closeMapItems.ToString());
+            Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "Perform_AlienMoves(): for target=" + metric.Target.ToString() + " has closeMapItems=" + closeMapItems.ToString());
             if (closeMapItems.Count < 1)
                continue;
             //-----------------------------------------
