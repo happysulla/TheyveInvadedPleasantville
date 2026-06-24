@@ -2248,7 +2248,7 @@ namespace PleasantvilleGame
                   myBrushIndex = 0;
                //------------------------------------------
                stacks.Remove(mim.MapItem); // remove from existing stack
-               Logger.Log(LogEnum.LE_SHOW_MIM, "UpdateCanvasMovement(): a=" + action.ToString() + " mi=" + mim.MapItem.Name + " t=" + mim.MapItem.TerritoryCurrent.Name + "==>" + mim.NewTerritory.Name + " X=" + mim.MapItem.Location.X.ToString() + " Y=" + mim.MapItem.Location.Y.ToString() + " " + stacks.ToString());
+               Logger.Log(LogEnum.LE_SHOW_MIM, "UpdateCanvasMovement(): a=" + action.ToString() + " mi=" + mim.MapItem.Name + " t=" + mim.MapItem.TerritoryCurrent.ToString() + "==>" + mim.NewTerritory.ToString());
                mim.MapItem.TerritoryCurrent = mim.MapItem.TerritoryStarting = mim.NewTerritory;
                mim.MapItem.Location.X = endPoint.X;
                mim.MapItem.Location.Y = endPoint.Y;

@@ -168,6 +168,7 @@ namespace PleasantvilleGame
                   uncontrolledPeoples.Add(mi);
             }
          }
+         Logger.Log(LogEnum.LE_SHOW_UNCONTROLLED, "Perform_AlienMoves(): MoveUnknownAliens() uncontrolledPeoples=" + uncontrolledPeoples.ToString());
          //----------------------------------------------------------------
          PlayerAlienComputerMoveMgr moveMgr = new PlayerAlienComputerMoveMgr();
          if( false == moveMgr.MoveUnknownAliens(gi, unknownAliens, alienMoves))

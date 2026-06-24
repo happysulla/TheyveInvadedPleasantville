@@ -88,43 +88,47 @@ namespace PleasantvilleGame
       public bool MoveUncontrolled(IGameInstance gi, IMapItems uncontrolledPeoples, IMapItemMoves alienMoves)
       {
          IMetricObservations uncontrolledMetrics = new MetricObservations();
-         foreach (IMapItem uncontrolled in uncontrolledPeoples)
+         foreach (IMapItem uncontrolled in uncontrolledPeoples) // need to find the best territory to move units to that will not be observed
          {
-            IMetricObservation metric = new MetricObservation(gi, uncontrolled);
+            IMetricObservation metric = new MetricObservation(gi, uncontrolled); // the metric provides the probability that this uncontrolled person will be observed in a takeover in this territory
             uncontrolledMetrics.Add(metric);
          }
-         IMetricObservations sortedUncontrolledMetrics = uncontrolledMetrics.Sort();
+         IMetricObservations sortedUncontrolledMetrics = uncontrolledMetrics.Sort(); // sort the metrics for all uncontrolled people
          Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "Perform_AlienMoves(): for sortedUncontrolledMetrics=" + sortedUncontrolledMetrics.ToString());
          //----------------------------------------------------------------
          foreach (IMetricObservation metric in sortedUncontrolledMetrics)
          {
             if (5 < alienMoves.Count) // only move five units
                break;
-            IStack? stack = gi.Stacks.Find(metric.Target.TerritoryCurrent);
-            if (null == stack)
+            if (true == metric.Target.IsMovingThisTurn) // already targeted or moving... skip this mapitem
+               continue;
+            //-----------------------------------------
+            bool isAlienMovingHereAlready = false;
+            foreach(IMapItemMove mim1 in alienMoves)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): stack=null for t=" + metric.Target.TerritoryCurrent.ToString());
-               return false;
+               if( null == mim1.NewTerritory )
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): mim1.NewTerritory=null");
+                  return false;
+               }
+               if (mim1.NewTerritory.ToString() == metric.Target.ToString())
+                  isAlienMovingHereAlready = true;
             }
-            IMapItem? anchor = stack.MapItems[0];
-            if (null == anchor)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): stack=null for t=" + metric.Target.TerritoryCurrent.ToString());
-               return false;
-            }
-
-            IMapItems? closeMapItems = Territory.GetMapItemsWithinRange(gi, anchor.TerritoryCurrent, anchor.Movement);
+            if (true == isAlienMovingHereAlready)
+               continue;
+            //-----------------------------------------
+            IMapItems? closeMapItems = Territory.GetMapItemsWithinRange(gi, metric.Target.TerritoryCurrent, metric.Target.Movement); // Find mapitems that can be moved to the targets location
             if (null == closeMapItems)
             {
                Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): GetMapItemsWithinRange() returned error");
                return false;
             }
-            Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "Perform_AlienMoves(): for anchor=" + anchor.ToString() + " has closeMapItems=" + closeMapItems.ToString());
-            if (closeMapItems.Count < 2)
+            Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "Perform_AlienMoves(): for anchor=" + metric.Target.ToString() + " has closeMapItems=" + closeMapItems.ToString());
+            if (closeMapItems.Count < 1)
                continue;
             //-----------------------------------------
             IMapItem? movingMi = null;
-            int count = 100;
+            int count = 9;
             while ( 0 < count-- )
             {
                int randomNum = Utilities.RandomGenerator.Next(closeMapItems.Count);
@@ -134,11 +138,13 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): movingMi=null for randUm=" + randomNum.ToString() + " in closeMapItems=" + closeMapItems.ToString());
                   return false;
                }
+               if ((true == movingMi.IsWary) || (true == movingMi.IsUnconscious) || (true == movingMi.IsKilled) || (true == movingMi.IsTiedUp) || (true == movingMi.IsStunned) || (true == movingMi.IsControlled))
+                  continue;
                if (true == movingMi.IsMovingThisTurn) // already moving or targeted so skip moving
                   continue;
-               if (movingMi.TerritoryCurrent.ToString() == anchor.TerritoryCurrent.ToString()) // If in same territory, do not move
+               if (movingMi.TerritoryCurrent.ToString() == metric.Target.TerritoryCurrent.ToString()) // If in same territory, do not move
                   continue;
-               if (movingMi.Name != anchor.Name) // only use if different than anchor
+               if (movingMi.Name != metric.Target.Name) // only use if different than target
                   break;
             }
             if (count < 0)
@@ -148,10 +154,10 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): movingMi=null");
                return false;
             }
-            anchor.IsMovingThisTurn = true;         // do not allow alien to move other than to the victim
-            movingMi.IsMovingThisTurn = true; // do not allow victim to move
+            metric.Target.IsMovingThisTurn = true;         // do not allow target to move 
+            movingMi.IsMovingThisTurn = true;              // do not allow victim to move
             //-----------------------------------------
-            IMapItemMove? mim = gi.CreateMapItemMove(movingMi, anchor.TerritoryCurrent);
+            IMapItemMove? mim = gi.CreateMapItemMove(movingMi, metric.Target.TerritoryCurrent);
             if (null == mim)
             {
                Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): CreateMapItemMove() returned null");
@@ -160,6 +166,15 @@ namespace PleasantvilleGame
             alienMoves.Add(mim);
          }
          return true;
+      }
+      private bool IsAlienInGroup(IMapItems mapItems)
+      {
+         foreach (IMapItem mi in mapItems)
+         {
+            if (true == mi.IsAlienKnown || true == mi.IsAlienUnknown)
+               return true;
+         }
+         return false;
       }
    }
 }

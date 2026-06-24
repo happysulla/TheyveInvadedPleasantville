@@ -43,6 +43,8 @@ namespace PleasantvilleGame
       LE_SHOW_MIM_BEST_PATH,
       LE_MIM_RETURN_TO_START,
       //-------------
+      LE_SHOW_UNCONTROLLED,
+      //-------------
       LE_VIEW_SHOW_OPTIONS,
       LE_VIEW_SHOW_FEATS,
       LE_VIEW_SHOW_STATS,
@@ -134,6 +136,8 @@ namespace PleasantvilleGame
          //SetOn(LogEnum.LE_SHOW_ROLL_STATE);
          //SetOn(LogEnum.LE_RESET_ROLL_STATE);
          //SetOn(LogEnum.LE_SHOW_DICE_MOVING);
+         //-------------
+         SetOn(LogEnum.LE_SHOW_UNCONTROLLED);
          //-------------
          //SetOn(LogEnum.LE_VIEW_SHOW_OPTIONS);
          //SetOn(LogEnum.LE_VIEW_SHOW_FEATS);
