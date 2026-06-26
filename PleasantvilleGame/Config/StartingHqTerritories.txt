@@ -5,7 +5,7 @@ GeneralStore_1,8951
 School_0,11841
 MachineShop_2,14685
 Tavern_1,17483
-Bank_4,20233
+Bank_3,20233
 SheriffFireDept_3,22937
 Church_3,25594
 HotelAndRestaurant_1,28205

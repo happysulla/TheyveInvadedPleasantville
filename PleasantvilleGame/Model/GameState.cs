@@ -4,6 +4,7 @@ using System;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics.Arm;
 using System.Runtime.Versioning;
 using System.Security.Policy;
 using System.Text;
@@ -1304,8 +1305,6 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
-            case GameAction.ShowAlien:
-               break;
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show
                break;
@@ -1348,7 +1347,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
                }
                break;
-            case GameAction.RandomMovementTownsBlock:
+            case GameAction.RandomMovementTownsShow:
                if( false == gi.PlayerAlien.BlockRandomMoves(gi))
                {
                   returnStatus = "Create_RandomMoves() returned false";
@@ -1410,7 +1409,7 @@ namespace PleasantvilleGame
                      gi.NextAction = "Awaiting Townsperson Ack Random Movement";
                }
                break;
-            case GameAction.TownspersonAcksRandomMovement:
+            case GameAction.RandomMovementTownAck:
                gi.IsTownsAckedRandomMovement = true;
                if (true == gi.IsAlienAckedRandomMovement)
                {
@@ -1475,9 +1474,9 @@ namespace PleasantvilleGame
             int die1 = Utilities.RandomGenerator.Next(5);
             int die2 = Utilities.RandomGenerator.Next(6);
             string name = TableMgr.GetTownspersonName(die1, die2);
-            if (true == String.IsNullOrEmpty(name))
+            if ("ERROR" == name)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Choose_RandomMovePeopleAndDest(): TableMgr.GetTownspersonName() returned null");
+               Logger.Log(LogEnum.LE_ERROR, "Choose_RandomMovePeopleAndDest(): TableMgr.GetTownspersonName() returned ERROR");
                return false;
             }
             //------------------------------------------------------------
@@ -1494,7 +1493,7 @@ namespace PleasantvilleGame
             RandomMoveData randomMove = new RandomMoveData(name, fullBuildingName);
             foreach (RandomMoveData rmd in gi.RandomMoves)
             {
-               if(rmd.myMapItemName == name) 
+               if(rmd.myName == name) 
                {
                   Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): skipping name=" + name + " to building=" + fullBuildingName + " because it is in the RandomMovesData list");
                   isDuplicate = true;
@@ -1519,14 +1518,13 @@ namespace PleasantvilleGame
       {
          foreach (RandomMoveData rmd in gi.RandomMoves)
          {
-            string name = rmd.myMapItemName;
-            string buildingName = rmd.myBuildingName;
-            IMapItem? mi = gi.Townspeople.Find(name);
-            if (null == mi)
+            IMapItem? mi = gi.Stacks.FindMapItem(rmd.myName);
+            if (mi == null)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMoves(): unable to find name=" + name);
+               Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): mi=null for " + rmd.myName);
                return false;
             }
+            string buildingName = rmd.myBuildingName;
             mi.Movement *= 2; // Movement is doubled during Random Movement
             ITerritory? newTerritory = Territories.theTerritories.Find(buildingName);
             if (null == newTerritory)
@@ -1582,8 +1580,6 @@ namespace PleasantvilleGame
                   mi.IsMoved = false;
                   mi.MovementUsed = 0;
                }
-               Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "GameStateAlienPlayerMovement.PerformAction(TownspersonAcksAlienMovement): gi.MapItemMoves.Clear()");
-               gi.MapItemMoves.Clear();
                gi.GamePhase = GamePhase.TownspersonMovement;
                gi.EventDisplayed = gi.EventActive = "e007t";
                break;
@@ -1630,7 +1626,33 @@ namespace PleasantvilleGame
          bool isZebulonDiscovered = false; // out parameter to IsZebulonDiscovered()...need to initialize to compile
          switch (action)
          {
-            case GameAction.ShowAlien:
+            case GameAction.ShowGameFeatsDialog:
+            case GameAction.ShowRuleListingDialog:
+            case GameAction.ShowEventListingDialog:
+            case GameAction.ShowTableListing:
+            case GameAction.ShowReportErrorDialog:
+            case GameAction.ShowCharacterDescription:
+            case GameAction.ShowAboutDialog:
+            case GameAction.EndGameShowFeats:
+            case GameAction.UpdateStatusBar:
+            case GameAction.UpdateGameOptions:
+            case GameAction.UpdateShowRegion:
+            case GameAction.UpdateEventViewerDisplay: // Only change active event
+            case GameAction.UpdateNewGameEnd:
+               break;
+            case GameAction.UpdateRotateStack:
+               if (false == RotateStack(gi))
+               {
+                  returnStatus = "Rotate_Stack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateScatterStack:
+               if (false == ScatterStack(gi))
+               {
+                  returnStatus = "Scatter_Stack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
                break;
             case GameAction.ResetMovement:
                gi.PreviousMapItemMove = null;
@@ -2069,8 +2091,6 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            case GameAction.ShowAlien:
-               break;
             case GameAction.TownspersonPerformsConversation:
                break;
             case GameAction.TownspersonCompletesConversations:
@@ -2189,8 +2209,6 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            case GameAction.ShowAlien:
-               break;
             case GameAction.TownspersonPerformsInfluencing:
                break;
             case GameAction.TownspersonCompletesInfluencing:
@@ -2296,8 +2314,6 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            case GameAction.ShowAlien:
-               break;
             case GameAction.AlienInitiateCombat:
                if (true == gi.IsAlienInitiatedCombat)
                   action = GameAction.TownspersonNackCombatSelection;
@@ -3040,8 +3056,6 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            case GameAction.ShowAlien:
-               break;
             case GameAction.TownspersonIterrogates:
                if (0 == gi.NumIterogationsThisTurn)
                {
@@ -3132,8 +3146,6 @@ namespace PleasantvilleGame
          {
             case GameAction.TownspersonCompletesInfluencing:
                break;
-            case GameAction.ShowAlien:
-               break;
             case GameAction.TownspersonCompletesRemoval:
                bool isAnyMovement;
                if (false == GameStateChecker.CheckForRandomMoves(gi, out isAnyMovement))
@@ -3207,8 +3219,6 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            case GameAction.ShowAlien:
-               break;
             case GameAction.AlienTakeover:
                returnStatus = PerformTakeover(ref gi);
                break;
@@ -3425,8 +3435,6 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            case GameAction.ShowAlien:
-               break;
             case GameAction.ShowEndGame:
                break;
             case GameAction.ExitGame:

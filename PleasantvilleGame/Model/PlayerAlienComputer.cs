@@ -80,7 +80,7 @@ namespace PleasantvilleGame
          //---------------------------------
          for(int i=0; i<2; i++)
          {
-            string startingAlien = "";
+            string startingAlien = "ERROR";
             int count = 1000;
             while (0 < count--)
             {
@@ -89,7 +89,7 @@ namespace PleasantvilleGame
                startingAlien = TableMgr.GetTownspersonName(die1, die2);
                if ("ERROR" == startingAlien)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "Get_StartingAlien(): first TableMgr.GetTownspersonName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
+                  Logger.Log(LogEnum.LE_ERROR, "Get_StartingAlien(): first TableMgr.Get_TownspersonName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
                   return false;
                }
                if (true == startingTownplayer.Contains(startingAlien))
@@ -176,16 +176,19 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): MoveUnknownAliens() returned error");
             return false;
          }
+         Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMoves(): mims=" + alienMoves.ToString());
          if (false == moveMgr.IntersectAlienUncontrolled(gi, unknownAliens, uncontrolledPeoples, alienMoves))
          {
             Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): IntersectAlienUncontrolled() returned error");
             return false;
          }
+         Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMoves(): mims=" + alienMoves.ToString());
          if (false == moveMgr.MoveUncontrolled(gi, uncontrolledPeoples, alienMoves))
          {
             Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): MoveUncontrolled() returned error");
             return false;
          }
+         Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMoves(): mims=" + alienMoves.ToString());
          //----------------------------------------------------------------
          gi.MapItemMoves = alienMoves.Shuffle();
          return true;

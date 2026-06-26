@@ -167,16 +167,16 @@ namespace PleasantvilleGame
          int numPeopleMoved = 0;
          foreach (RandomMoveData rmd in myGameInstance.RandomMoves)
          {
-            IMapItem? mi = myGameInstance.Townspeople.Find(rmd.myMapItemName);
-            if( null == mi)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): unable to find map item for name=" + rmd.myMapItemName);
-               return false;
-            }
             string buildingName = GetBuildingName(rmd.myBuildingName);
             if( "ERROR" == buildingName)
             {
                Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): GetBuildingName() returned ERROR for kvp.Value=" + rmd.myBuildingName);
+               return false;
+            }
+            IMapItem? mi = myGameInstance.Stacks.FindMapItem(rmd.myName);
+            if (mi == null)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): mi=null for " + rmd.myName);
                return false;
             }
             myGridRows[numPeopleMoved] = new GridRow(mi, buildingName);

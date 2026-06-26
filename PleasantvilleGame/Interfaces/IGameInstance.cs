@@ -5,12 +5,12 @@ namespace PleasantvilleGame
 {
    public struct RandomMoveData
    {
-      public string myMapItemName;
+      public string myName;
       public string myBuildingName;
-      public int myRectangleIndex;
-      public RandomMoveData(string mapItemName, string buildingName)
+      public int myBrushIndex;
+      public RandomMoveData(string name, string buildingName)
       {
-         myMapItemName = mapItemName;
+         myName = name;
          myBuildingName = buildingName;
       }
    }

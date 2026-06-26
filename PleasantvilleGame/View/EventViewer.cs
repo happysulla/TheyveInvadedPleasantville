@@ -1020,7 +1020,7 @@ namespace PleasantvilleGame
          if( true == GameEngine.theIsAlien )
             outAction = GameAction.RandomMovementConfirmAlien;
          else
-            outAction = GameAction.RandomMovementTownsBlock;
+            outAction = GameAction.RandomMovementTownsShow;
          StringBuilder sb11 = new StringBuilder("     ######ShowRandomMoveResults() :");
          sb11.Append(" p="); sb11.Append(myGameInstance.GamePhase.ToString());
          sb11.Append(" ae="); sb11.Append(myGameInstance.EventActive);
@@ -1114,7 +1114,7 @@ namespace PleasantvilleGame
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
                         case "Continue005t":
-                           action = GameAction.TownspersonAcksRandomMovement;
+                           action = GameAction.RandomMovementTownAck;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
                         case "Continue006t":

@@ -8,9 +8,9 @@ namespace PleasantvilleGame
    [Serializable]
    public struct BloodSpot
    {
-      public int mySize;      // diameter  of blood spot
-      public double myLeft;   // left of where blood spot exists on canvas
-      public double myTop;    // top of where blood spot exists on canvas
+      public int mySize;                 // diameter  of blood spot
+      public double myLeft;              // left of where blood spot exists on canvas
+      public double myTop;               // top of where blood spot exists on canvas
       public BloodSpot(int range, Random r)
       {
          mySize = r.Next(5) + 3;
@@ -30,6 +30,7 @@ namespace PleasantvilleGame
       string TopImageName { get; set; }
       string BottomImageName { get; set; }
       string OverlayImageName { get; set; }
+      int BrushIndex { get; set; } // index of rectangle associated with moving this MapItem
       List<BloodSpot> WoundSpots { get; }
       double Zoom { get; set; }
       bool IsAnimated { get; set; }

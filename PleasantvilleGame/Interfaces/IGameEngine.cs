@@ -62,16 +62,19 @@ namespace PleasantvilleGame
       GameSetupRandomMovementSetup,
 
       RandomMovementStartTowns,           // Initiate EventViewerRandomMovement.Perform_Movement()
-      RandomMovementTownsBlock,
+      RandomMovementTownsShow,
       RandomMovementStartAlien,           // Initiate EventViewerRandomMovement.Perform_Movement()
       RandomMovementConfirmAlien,
+      RandomMovementTownAck,
+
+      AlienMovementTownShow,
 
       AlienStart,
       TownspersonStart,
       AlienDisplaysRandomMovement,
       TownspersonDisplaysRandomMovement,
       AlienAcksRandomMovement,
-      TownspersonAcksRandomMovement,
+
       ResetMovement,
       AlienMovement,
       AlienCompletesMovement,
