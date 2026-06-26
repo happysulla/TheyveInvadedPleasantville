@@ -245,12 +245,11 @@ or totally uncontrolled.
 Such counters may be moved in the Alien Movement Phase even if they were moved randomly in the Random Movement Phase per 
 <InlineUIContainer><Button Content='r6.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> 
 . This rule allows the Alien player to keep the Town player guessing which counters are Alien controlled and which are not. Of course, the Alien player is not required to move any pieces at all if so desired. Any counters including Town player controlled pieces have no effect on Alien movement."
-r6.5	"<Bold>r6.5 Town Player Movement Movement</Bold><LineBreak/><LineBreak/>
+r6.5	"<Bold>r6.5 Town Player Movement</Bold><LineBreak/><LineBreak/>
 During his or her movement phase, the Town player may move any townsperson that is controlled by the Town player. The Town player may not move uncontrolled townspeople, Alien-controlled townspeople, or townspeople that are:
 <LineBreak/><LineBreak/>
 -- Tied Up per <InlineUIContainer><Button Content='r6.3.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
--- Unconscious per 
-<InlineUIContainer><Button Content='Alien Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+-- Unconscious per <InlineUIContainer><Button Content='Alien Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
  or <InlineUIContainer><Button Content='Town Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Tables<LineBreak/>
 -- Stunned per Alien Loss or Town Loss Tables <LineBreak/><LineBreak/>
 An Alien controlled counter in a space may halt or prevent the movement of one Town controlled counter moving into that space. When there is more than one Town-controlled counter to choose from, the Alien player may choose which counters do not move. The decision whether or not to stop a Town controlled counter is made by the Alien player as needed."

@@ -33,25 +33,109 @@ namespace PleasantvilleGame
          string? tName = t.ToString();
          if (null == tName)
          {
-            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): tName=null");
+            Logger.Log(LogEnum.LE_ERROR, "Get_MapItemsWithinRange(): tName=null");
             return null;
          }
          List<string>? tNames = Territory.GetTerritoriesWithinRange(gi, tName, range);
          if (null == tNames)
          {
-            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): tNames=null for anchorT=" + t.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "Get_MapItemsWithinRange(): Get_TerritoriesWithinRange() returned null for anchorT=" + tName);
             return null;
          }
-         IMapItems mapItems = new MapItems();
+         IMapItems mapItemCandidates = new MapItems();
          foreach (string territoryName in tNames)
          {
             IStack? stack = gi.Stacks.Find(territoryName);
             if (null == stack)
                continue;
             foreach (IMapItem mapItem in stack.MapItems)
-               mapItems.Add(mapItem);
+               mapItemCandidates.Add(mapItem);
+         }
+         //--------------------------------------
+         IMapItems mapItems = new MapItems();
+         foreach (IMapItem mi in mapItemCandidates) // Verify that mapitem can get to the target territory
+			{
+				string? tName1 = mi.TerritoryCurrent.ToString();
+				if( null == tName1 )
+				{
+               Logger.Log(LogEnum.LE_ERROR, "Get_MapItemsWithinRange(): tName1=null");
+               return null;
+            }
+            List<string>? tNames1 = Territory.GetTerritoriesWithinRange(gi, tName1, mi.Movement);
+            if (null == tNames1)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Get_MapItemsWithinRange(): tNames=null for anchorT=" + t.ToString());
+               return null;
+            }
+				if (true == tNames1.Contains(tName))
+					mapItems.Add(mi);
          }
          return mapItems;
+      }
+      public static IMapItems? GetMapItemsWithinRange(IGameInstance gi, IMapItem mi)
+      {
+         string? tName = mi.TerritoryCurrent.ToString();
+         if (null == tName)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Get_MapItemsWithinRange(): tName=null");
+            return null;
+         }
+         List<string>? tNames = Territory.GetTerritoriesWithinRange(gi, tName, mi.Movement);
+         if (null == tNames)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Get_MapItemsWithinRange(): Get_TerritoriesWithinRange() returned null for anchorT=" + tName);
+            return null;
+         }
+         IMapItems mapItemCandidates = new MapItems();
+         foreach (string territoryName in tNames)
+         {
+            IStack? stack = gi.Stacks.Find(territoryName);
+            if (null == stack)
+               continue;
+            foreach (IMapItem mapItem in stack.MapItems)
+               mapItemCandidates.Add(mapItem);
+         }
+         return mapItemCandidates;
+      }
+      public static List<string>? GetOverlappingTerritories(IGameInstance gi, IMapItem mi1, IMapItem mi2)
+      {
+			List<string> returnList = new List<string>();
+         string? tName1 = mi1.TerritoryCurrent.ToString();
+         if (null == tName1)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): tName1=null");
+            return null;
+         }
+         List<string>? tNames1 = Territory.GetTerritoriesWithinRange(gi, tName1, mi1.Movement);
+         if (null == tNames1)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): tNames=null for tName1=" + tName1);
+            return null;
+         }
+         //--------------------------------------
+         string? tName2 = mi2.TerritoryCurrent.ToString();
+         if (null == tName2)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): tName2=null");
+            return null;
+         }
+         List<string>? tNames2 = Territory.GetTerritoriesWithinRange(gi, tName2, mi2.Movement);
+         if (null == tNames2)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): tNames=null for tNames2=" + tNames2);
+            return null;
+         }
+         //--------------------------------------
+         foreach (string tName in tNames2)
+			{
+            Logger.Log(LogEnum.LE_SHOW_UNIT_TEST, "TerritoryCreateUnitTest.Command(): tName=" + tName);
+            if (true == tNames1.Contains(tName))
+				{
+               Logger.Log(LogEnum.LE_SHOW_UNIT_TEST, "TerritoryCreateUnitTest.Command(): \t ==> COMMON tName=" + tName);
+               returnList.Add(tName);
+            }
+			}
+         return returnList;
       }
       public static IMapPath? GetBestPath(ITerritories territories, ITerritory startT, ITerritory endT, int moveFactor)
 		{

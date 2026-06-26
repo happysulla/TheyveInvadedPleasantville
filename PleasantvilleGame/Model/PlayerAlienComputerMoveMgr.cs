@@ -78,7 +78,7 @@ namespace PleasantvilleGame
       {
          foreach (IMapItem unknownAlien in unknownAliens)
          {
-            if (4 < alienMoves.Count) // only move five units
+            if (5 < alienMoves.Count) // only move five units
                break;
             if (true == unknownAlien.IsMovingThisTurn) // already selected to move
                continue;

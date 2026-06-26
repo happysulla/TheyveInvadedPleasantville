@@ -1575,37 +1575,6 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            case GameAction.ShowAlien:
-               break;
-            case GameAction.AlienMovement:
-               if (0 < gi.MapItemMoves.Count)
-               {
-                  IMapItemMove? mim1 = gi.MapItemMoves[0];
-                  if (null == mim1)
-                  {
-                     returnStatus = "mim1 is null in AlienMovement action";
-                     Logger.Log(LogEnum.LE_ERROR, "GameStateAlienPlayerMovement.PerformAction(): " + returnStatus);
-                  }
-                  else
-                  {
-                     if (null == mim1.BestPath)
-                     {
-                        returnStatus = "mim1.BestPath is null in AlienMovement action";
-                        Logger.Log(LogEnum.LE_ERROR, "GameStateAlienPlayerMovement.PerformAction(): " + returnStatus);
-                     }
-                     else
-                     {
-                        mim1.MapItem.MovementUsed += mim1.BestPath.Territories.Count;
-                        mim1.MapItem.IsMoved = true;
-                     }
-                  }
-               }
-               break;
-            case GameAction.ResetMovement:
-               break;
-            case GameAction.AlienCompletesMovement:
-               gi.NextAction = "Townsperson Acks Alien Movement";
-               break;
             case GameAction.TownspersonAcksAlienMovement:
                foreach (IMapItem mi in gi.Townspeople)
                {
@@ -1613,9 +1582,10 @@ namespace PleasantvilleGame
                   mi.IsMoved = false;
                   mi.MovementUsed = 0;
                }
+               Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "GameStateAlienPlayerMovement.PerformAction(TownspersonAcksAlienMovement): gi.MapItemMoves.Clear()");
                gi.MapItemMoves.Clear();
-               gi.NextAction = "Townsperson Selects Counter to Move";
                gi.GamePhase = GamePhase.TownspersonMovement;
+               gi.EventDisplayed = gi.EventActive = "e007t";
                break;
             default:
                returnStatus = "reached default action=" + action.ToString();

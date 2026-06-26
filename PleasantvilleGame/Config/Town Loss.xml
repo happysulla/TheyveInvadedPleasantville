@@ -72,7 +72,7 @@
 					<Bold>
 						<Run Text='Stunned'/>
 					</Bold>
-					<Run Text=' The counter must be treated one space in any direciton by the Town player. Until the end of the combat phase of the next turn, the counter may not be moved by either player, although it will move randomly if required. It may not be influenced by the Town player, but may be taken-over by the Alien player. After the combat phase of the next turn, the piece reverst to the full control of the Town player if it has not be taken over by the Alien player and if it was originally controlled by the Town player.'></Run>
+					<Run Text=' The counter must be treated one space in any direction by the Town player. Until the end of the combat phase of the next turn, the counter may not be moved by either player, although it will move randomly if required. It may not be influenced by the Town player, but may be taken-over by the Alien player. After the combat phase of the next turn, the piece reverts to the full control of the Town player if it has not be taken over by the Alien player and if it was originally controlled by the Town player.'></Run>
 				</Paragraph>
 			</TableCell>
 		</TableRow>

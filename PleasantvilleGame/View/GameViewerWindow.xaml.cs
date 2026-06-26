@@ -1111,6 +1111,11 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.TownspersonAcksAlienMovement:
+               if (false == UpdateCanvasMain(gi, action))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
+                  return;
+               }
                break;
             //   case GameAction.AlienDisplaysRandomMovement:
             //      if (true == GameEngine.theIsAlien)

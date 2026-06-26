@@ -59,7 +59,7 @@
 					<Bold>
 						<Run Text='Knocked out'/>
 					</Bold>
-					<Run Text=' Townsperson remains unconscious until the end of the combat phase in the next turn. The counter may not be interrogated until conscious. It ay be tied up. The Tow player may also try to remove the implant.'></Run>
+					<Run Text=' Townsperson remains unconscious until the end of the combat phase in the next turn. The counter may not be interrogated until conscious. It may be tied up. The Town player may also try to remove the implant.'></Run>
 				</Paragraph>
 			</TableCell>
 		</TableRow>
