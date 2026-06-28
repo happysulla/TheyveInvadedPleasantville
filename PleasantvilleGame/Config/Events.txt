@@ -111,7 +111,7 @@ The Town player moves any townsperson or group of townspeople in the same hex th
 <LineBreak/><LineBreak/>
 Click on a green color townperson. To move a group, click on multiple townspeople in same area. Click on target area to move. If you click more than one area away, it will take a shortest random path to that location. When all movement is done, click on image below to continue to the next phase.
 <LineBreak/><LineBreak/>
-The alien controlled counter may halt all movement of one town controlled counter when it attempts to enter its space once in this phase. 
+Once in this phase, each alien controlled counter may halt all movement of one town controlled counter when it attempts to enter its space. 
 <LineBreak/><LineBreak/>
                                         <InlineUIContainer><Image Name='Continue008t' Height='100' Width='100'></Image></InlineUIContainer>"
 e501	"<Bold>e501 Game Won!!!</Bold>

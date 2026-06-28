@@ -59,7 +59,7 @@
             </DockPanel>
             <ScrollViewer Name="myScrollViewerMain" Width="857" Height="967"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="0,0,0,0"  >
                 <Canvas Name="myCanvasMain" MinWidth="830" MaxWidth="830" MinHeight="950" MaxHeight="950" Background="#FF86DC0E"    >
-                    <TextBlock Name="myTextBlockComm" FontFamily="Georgia" FontSize="24" TextWrapping="WrapWithOverflow" IsHyphenationEnabled="true" LineStackingStrategy="BlockLineHeight" Background="#FFB8B90A" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0">
+                    <TextBlock Name="myTextBoxOpponent" FontFamily="Georgia" FontSize="24" TextWrapping="WrapWithOverflow" IsHyphenationEnabled="true" LineStackingStrategy="BlockLineHeight" Background="#FFB8B90A" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0">
                         Hello Where Am I
                     </TextBlock>
                 </Canvas>

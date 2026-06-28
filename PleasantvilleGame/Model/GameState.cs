@@ -137,19 +137,16 @@ namespace PleasantvilleGame
       {
          if (null == gi.SelectedStack)
          {
-            Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(UpdateRotateStack): gi.SelectedStack=null");
+            Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(Update_RotateStack): gi.SelectedStack=null");
             return false;
          }
          int count = gi.SelectedStack.MapItems.Count;
          if (count < 2)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(UpdateRotateStack): gi.SelectedStack.MapItem.Count=" + count.ToString());
-            return false;
-         }
+            return true;
          IMapItem? bottom = gi.SelectedStack.MapItems[0];
          if (null == bottom)
          {
-            Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(UpdateRotateStack): bottom = null");
+            Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(Update_RotateStack): bottom = null");
             return false;
          }
          for (int i = 1; i < count; i++)
@@ -168,7 +165,7 @@ namespace PleasantvilleGame
       {
          if (null == gi.SelectedStack)
          {
-            Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(UpdateRotateStack): gi.SelectedStack=null");
+            Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(Update_RotateStack): gi.SelectedStack=null");
             return false;
          }
          if (true == gi.SelectedStack.IsStacked)
@@ -190,7 +187,6 @@ namespace PleasantvilleGame
          }
          return true;
       }
-      //------------
    }
    //----------------------------------------------------------------
    class GameStateSetup : GameState

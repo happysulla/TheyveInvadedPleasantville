@@ -417,7 +417,7 @@ During this phase, the Alien player may 'take-over' uncontrolled townspeople, th
 <InlineUIContainer><Button Content='r9.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Take-Over<LineBreak/>
 <InlineUIContainer><Button Content='r9.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Observation<LineBreak/>"
 r9.1	"<Bold>r9.1 Take-Over</Bold><LineBreak/><LineBreak/>
-At the beginning of this phase, the Alien player may remove from the map any two group of two counters in the same space neither which is controlled by the Town player.
+At the beginning of this phase, the Alien player may remove from the map any group of two counters in the same space neither which is controlled by the Town player.
 <LineBreak/><LineBreak/>
 If one of the two counters is Alien controlled and the other is uncontrolled, the Alien player replaces the uncontrolled counter with the duplicate making it an Alien controlled counter. If neither of the removed counters is Alien controlled, the Alien player pretends to exchange them. The Alien player than returns the counters to their original space on the mapboard.
 <LineBreak/><LineBreak/>
