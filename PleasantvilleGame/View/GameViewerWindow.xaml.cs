@@ -1074,7 +1074,6 @@ namespace PleasantvilleGame
                            Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() mi=null for rmd.myName=" + rmd.myName);
                            return;
                         }
-                        mi.BrushIndex = index;
                         Rectangle r = new Rectangle() { Width=b.Width + 2, Height=b.Height + 2, Visibility=Visibility.Visible, Stroke = myBrushes[index], StrokeThickness=3.0, StrokeDashArray=myDashArray  };
                         myRectangles.Add(r);
                         index++;
@@ -1097,7 +1096,6 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.RandomMovementTownAck:
-               UpdateActionPanelClear();
                if (false == UpdateCanvasMain(gi, action))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
@@ -1126,13 +1124,14 @@ namespace PleasantvilleGame
                   }
                }
                break;
-            case GameAction.TownspersonAcksAlienMovement:
+            case GameAction.AlienMovementTownsShow:
                if (false == UpdateCanvasMovement(gi, action, gi.Stacks, myButtons))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMovement() returned error ");
                   return;
                }
                break;
+            case GameAction.AlienMovementTownsAck:
             default:
                if (false == UpdateCanvasMain(gi, action))
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");

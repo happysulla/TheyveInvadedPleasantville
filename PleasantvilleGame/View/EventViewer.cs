@@ -1118,7 +1118,11 @@ namespace PleasantvilleGame
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
                         case "Continue006t":
-                           action = GameAction.TownspersonAcksAlienMovement;
+                           action = GameAction.AlienMovementTownsShow;
+                           myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+                           return;
+                        case "Continue007t":
+                           action = GameAction.AlienMovementTownsAck;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
                         case "ExitGame":

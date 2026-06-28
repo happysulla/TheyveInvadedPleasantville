@@ -1516,8 +1516,9 @@ namespace PleasantvilleGame
       }
       public bool PerformRandomMoves(IGameInstance gi)
       {
-         foreach (RandomMoveData rmd in gi.RandomMoves)
+         for (int i = 0; i < gi.RandomMoves.Count; i++)
          {
+            RandomMoveData rmd = gi.RandomMoves[i];
             IMapItem? mi = gi.Stacks.FindMapItem(rmd.myName);
             if (mi == null)
             {
@@ -1540,7 +1541,8 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMoves(): Create_MapItemMove() returned null");
                return false;
             }
-            gi.MapItemMoves.Insert(0, mim);
+            mim.MapItem.BrushIndex = i;
+            gi.MapItemMoves.Add(mim);
          }
          return true;
       }
@@ -1573,15 +1575,12 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            case GameAction.TownspersonAcksAlienMovement:
-               foreach (IMapItem mi in gi.Townspeople)
-               {
-                  mi.TerritoryStarting = mi.TerritoryCurrent;
-                  mi.IsMoved = false;
-                  mi.MovementUsed = 0;
-               }
-               gi.GamePhase = GamePhase.TownspersonMovement;
+            case GameAction.AlienMovementTownsShow:
                gi.EventDisplayed = gi.EventActive = "e007t";
+               break;
+            case GameAction.AlienMovementTownsAck:
+               gi.GamePhase = GamePhase.TownspersonMovement;
+               gi.EventDisplayed = gi.EventActive = "e008t";
                break;
             default:
                returnStatus = "reached default action=" + action.ToString();

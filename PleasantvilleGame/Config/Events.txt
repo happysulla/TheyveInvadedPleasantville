@@ -97,16 +97,23 @@ Can move Alien controlled, skeptical per
 or totally uncontrolled. Click image to continue.
 <LineBreak/><LineBreak/>
                                         <InlineUIContainer><Image Name='Continue006t' Height='100' Width='100'></Image></InlineUIContainer>"
-e007t	"<Bold>e007t Town Player Movement</Bold>  <InlineUIContainer><Button Content='r6.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
+e007t	"<Bold>e007t Confirm Alien Movement</Bold> <InlineUIContainer><Button Content='r6.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+<LineBreak/><LineBreak/>
+Confirm alien moves by clicking image.
+<LineBreak/><LineBreak/>
+                                        <InlineUIContainer><Image Name='Continue007t' Height='100' Width='100'></Image></InlineUIContainer>"
+e008t	"<Bold>e008t Town Player Movement</Bold>  <InlineUIContainer><Button Content='r6.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
 <LineBreak/><LineBreak/>
 The Town player moves any townsperson or group of townspeople in the same hex that is controlled by the Town player that are not:
 <LineBreak/><LineBreak/>
 -- Tied Up per <InlineUIContainer><Button Content='r6.3.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
 -- Unconscious per <InlineUIContainer><Button Content='Alien Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> or <InlineUIContainer><Button Content='Town Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Tables
 <LineBreak/><LineBreak/>
-Click on a green color townperson. To move a group, click on multiple townspeople in same area. Click on target area to move. If you click more than one area away, it will take a shortest random path to that location.
+Click on a green color townperson. To move a group, click on multiple townspeople in same area. Click on target area to move. If you click more than one area away, it will take a shortest random path to that location. When all movement is done, click on image below to continue to the next phase.
 <LineBreak/><LineBreak/>
-The alien ctonrolled counter may halt one town controlled counter from entering its space once in this phase."
+The alien controlled counter may halt all movement of one town controlled counter when it attempts to enter its space once in this phase. 
+<LineBreak/><LineBreak/>
+                                        <InlineUIContainer><Image Name='Continue008t' Height='100' Width='100'></Image></InlineUIContainer>"
 e501	"<Bold>e501 Game Won!!!</Bold>
 <LineBreak/><LineBreak/>"
 e502	"<Bold>e502 Game Lost</Bold>

@@ -8,18 +8,20 @@
         Topmost="True" 
         Name="myOtherGamesDialog"
         Title="Other Games" MinHeight="300" MinWidth="400" MaxHeight="800" MaxWidth="800" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" ResizeMode="NoResize" >
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"></ColumnDefinition>
-            <ColumnDefinition Width="500"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <TextBlock  x:Name="myTextBlockIntro" Grid.Row="0" Grid.ColumnSpan="2" Width="Auto" Margin="10,10,10,10">
+   <Grid>
+      <Grid.RowDefinitions>
+         <RowDefinition Height="Auto"></RowDefinition>
+         <RowDefinition Height="Auto"></RowDefinition>
+         <RowDefinition Height="Auto"></RowDefinition>
+         <RowDefinition Height="Auto"></RowDefinition>
+         <RowDefinition Height="Auto"></RowDefinition>
+         <RowDefinition Height="Auto"></RowDefinition>
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+         <ColumnDefinition Width="250"></ColumnDefinition>
+         <ColumnDefinition Width="500"></ColumnDefinition>
+      </Grid.ColumnDefinitions>
+      <TextBlock  x:Name="myTextBlockIntro" Grid.Row="0" Grid.ColumnSpan="2" Width="Auto" Margin="10,10,10,10">
          <Bold>Listing of developed games as of March 2026. Check out these games if you are interested. </Bold><LineBreak/>
          TO INSTALL: <LineBreak/>
          1.) If you have already installed, you may need to first uninstall the application using the Windows Control Panel. <LineBreak/>
@@ -29,27 +31,38 @@
          5.) Unzip to any directory. Double click the setup.exe file. <LineBreak/>
          6.) If you get Microsoft Defender blue dialog, select 'More Info' and 'Run Anyways' button. <LineBreak/>
          7.) You can delete the XXXWindowsSetup directory when you are done.
-        </TextBlock>
-        <TextBlock Name="myTextBoxPrinceRelease" Grid.Row="1"  Grid.Column ="0" Width="Auto" Margin="10,10,10,10" TextWrapping="Wrap" >
+      </TextBlock>
+      <TextBlock Name="myTextBoxPrinceRelease" Grid.Row="1"  Grid.Column ="0" Width="Auto" Margin="10,10,10,10" TextWrapping="Wrap" >
             <Run>Latest Release Date: July 20, 2025</Run>
             <LineBreak/>
             <Hyperlink NavigateUri="https://github.com/happysulla/BarbarianPrince" RequestNavigate="Hyperlink_RequestNavigate">Barbarian Prince</Hyperlink>
-        </TextBlock>
-        <TextBlock Name="myTextBoxPrinceIntro" Grid.Row="1"  Grid.Column ="1" VerticalAlignment="Center"  HorizontalAlignment="Left" Margin="10,10,10,10" TextWrapping="Wrap" >
+      </TextBlock>
+      <TextBlock Name="myTextBoxPrinceIntro" Grid.Row="1"  Grid.Column ="1" VerticalAlignment="Center"  HorizontalAlignment="Left" Margin="10,10,10,10" TextWrapping="Wrap" >
             <Italic>1981 Charles S. Roberts Best Fantasy Board Game Winner:</Italic> Barbarian Prince is a solitaire game of heroic adventure in a forgotten age of barbarism and sorcery. The turns takes you through a sequence of encounters
              which is different each time you play the game. For each encounter, you as the Barbarian Prince Cal Arath must make the decisions which will make your quest successful - or may cost you your life.
-        </TextBlock>
-        <TextBlock Name="myTextBoxPatton"  Grid.Row="2"  Grid.Column ="0" Width="Auto"  Margin="10,10,10,10">
+      </TextBlock>
+      <TextBlock Name="myTextBoxPatton"  Grid.Row="2"  Grid.Column ="0" Width="Auto"  Margin="10,10,10,10">
                 <Run>Lastest Released Date: March 1, 2026</Run>
                 <LineBreak/>
-                <Hyperlink NavigateUri="https://github.com/happysulla/PleasantvilleGame" RequestNavigate="Hyperlink_RequestNavigate">Patton's Best</Hyperlink>
-        </TextBlock>
-        <TextBlock Name="myTextBoxPattonIntro" Grid.Row="2"  Grid.Column ="1" VerticalAlignment="Center"  HorizontalAlignment="Left" Margin="10,10,10,10" TextWrapping="Wrap" >
+                <Hyperlink NavigateUri="https://github.com/happysulla/PattonsBest" RequestNavigate="Hyperlink_RequestNavigate">Patton's Best</Hyperlink>
+      </TextBlock>
+      <TextBlock Name="myTextBoxPattonIntro" Grid.Row="2"  Grid.Column ="1" VerticalAlignment="Center"  HorizontalAlignment="Left" Margin="10,10,10,10" TextWrapping="Wrap" >
              This is a solitaire game involving tank command -- you control a Sherman tank (17 variations) and command a crew assigned to the 4th Armored Division as you move out of the 
-             Cobra Breakout following the Normandy invasion. You and your tank move into a new territory and deal with German defenses situated in northern France and across the Rhine and into Germany. 
-        </TextBlock>
-        <StackPanel Name="myStackPanelButtons" Grid.Row="3" Grid.ColumnSpan="2"  Orientation="Horizontal" VerticalAlignment="Center"  HorizontalAlignment="Center" Margin="5,5,5,5" >
-            <Button x:Name="myButtonOK" HorizontalAlignment="Center" Width="70" Height="30" VerticalAlignment="Top" Margin="0,10,0,0" FontSize="14" Click="ButtonOk_Click" IsDefault="True">OK</Button>
-        </StackPanel>
-    </Grid>
+             Cobra Breakout following the Normandy invasion. You and your tank move into a new territory and deal with German defenses situated in northern France and across the Rhine and into Germany.
+      </TextBlock>
+      <TextBlock Name="myTextBoxPleasantville"  Grid.Row="3"  Grid.Column ="0" Width="Auto"  Margin="10,10,10,10">
+                <Run>Lastest Released Date: TBD</Run>
+                <LineBreak/>
+                <Hyperlink NavigateUri="https://github.com/happysulla/TheyveInvadedPleasantville" RequestNavigate="Hyperlink_RequestNavigate">They've Invaded Pleasantville</Hyperlink>
+      </TextBlock>
+      <TextBlock Name="myTextBoxPleasantvilleIntro" Grid.Row="3"  Grid.Column ="1" VerticalAlignment="Center"  HorizontalAlignment="Left" Margin="10,10,10,10" TextWrapping="Wrap" >
+          A a two player game (or play against computer) of secret invasion by space invaders. The Alien player moves the Alien-controlled and uncontrolled 
+          pieces, and the Town player, moves the Town-controlled pieces. There are 12 game turns in this game. In each turn, playing pieces representing various 
+          townspeople are moved across the gamemap, i.e., the town of Pleasantville. The Alien player secretly takes over uncontrolled townspeople. The Town player attempts to convince others that an
+          invasion is occurring to muster forces to combat the alien commander: Zebu-lan.
+      </TextBlock>
+      <StackPanel Name="myStackPanelButtons" Grid.Row="4" Grid.ColumnSpan="2"  Orientation="Horizontal" VerticalAlignment="Center"  HorizontalAlignment="Center" Margin="5,5,5,5" >
+         <Button x:Name="myButtonOK" HorizontalAlignment="Center" Width="70" Height="30" VerticalAlignment="Top" Margin="0,10,0,0" FontSize="14" Click="ButtonOk_Click" IsDefault="True">OK</Button>
+      </StackPanel>
+   </Grid>
 </Window>

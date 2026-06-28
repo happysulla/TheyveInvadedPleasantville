@@ -151,9 +151,9 @@ namespace PleasantvilleGame
          //SetOn(LogEnum.LE_SHOW_UPLOAD_GAME);
          //SetOn(LogEnum.LE_SHOW_VP_TOTAL);
          //-------------
-         SetOn(LogEnum.LE_SHOW_MIM);
-         SetOn(LogEnum.LE_SHOW_MIM_ADD);
-         SetOn(LogEnum.LE_SHOW_MIM_CLEAR);
+         //SetOn(LogEnum.LE_SHOW_MIM);
+         //SetOn(LogEnum.LE_SHOW_MIM_ADD);
+         //SetOn(LogEnum.LE_SHOW_MIM_CLEAR);
          //SetOn(LogEnum.LE_SHOW_MIM_BEST_PATH);
          //-------------
          //SetOn(LogEnum.LE_SHOW_OBSERVATIONS_METRIC);

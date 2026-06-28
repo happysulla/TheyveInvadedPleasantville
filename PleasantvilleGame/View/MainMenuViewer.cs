@@ -344,7 +344,7 @@ namespace PleasantvilleGame
             //      myMenuItemNextAction.IsEnabled = true;
             //   }
             //   break;
-            //case GameAction.TownspersonAcksAlienMovement:
+            //case GameAction.AlienMovementTownsShow:
             //   if (false == GameEngine.theIsAlien)
             //   {
             //      myMenuItemNextAction.Header = "_Complete Townspeople Movement";
@@ -1177,7 +1177,7 @@ namespace PleasantvilleGame
          //      action = GameAction.AlienCompletesMovement;
          //      break;
          //   case "_Acknowledge Alien Movement":
-         //      action = GameAction.TownspersonAcksAlienMovement;
+         //      action = GameAction.AlienMovementTownsShow;
          //      break;
          //   case "_Complete Townspeople Movement":
          //      action = GameAction.TownpersonCompletesMovement;
