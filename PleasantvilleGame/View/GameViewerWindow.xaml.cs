@@ -1004,14 +1004,15 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMovement() returned error ");
                   return;
                }
+               myRectangleMaps.Clear();
                break;
             case GameAction.RandomMovementTownAck:
+
                if (false == UpdateCanvasMain(gi, action))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
-               myRectangleMaps.Clear();
                int index1 = 0;
                foreach (Button b in myButtons)
                {
@@ -1041,6 +1042,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.AlienMovementTownsAck:
+               myRectangleMaps.Clear();
                if (false == UpdateCanvasMain(gi, action))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
@@ -1260,6 +1262,8 @@ namespace PleasantvilleGame
                if (true == myRectangleMaps.ContainsKey(mi))
                {
                   Rectangle r = myRectangleMaps[mi];
+                  if (false == myCanvasMain.Children.Contains(r))
+                     myCanvasMain.Children.Add(r);
                   Canvas.SetLeft(r, mi.Location.X);
                   Canvas.SetTop(r, mi.Location.Y);
                   Canvas.SetZIndex(r, myZIndexLastUsed++);
@@ -1316,18 +1320,16 @@ namespace PleasantvilleGame
                   continue;
                elementRemovals.Add(ui);
             }
-            else if (ui is Rectangle rectangle)
+            else if (ui is Rectangle rectangle) 
                elementRemovals.Add(ui);
-            //else if (ui is Polygon polygon)
-            //   elements.Add(ui);
             else if (ui is Label label)  // A Game Feat Label
-               elementRemovals.Add(ui);
-            else if (ui is Rectangle rect)
                elementRemovals.Add(ui);
             else if (ui is TextBlock tb)
                elementRemovals.Add(ui);
             else if (ui is Polyline polyline)
-               elementRemovals.Add(ui);        
+               elementRemovals.Add(ui);
+            //else if (ui is Polygon polygon)
+            //   elements.Add(ui);
          }
          foreach (UIElement ui1 in elementRemovals)
             myCanvasMain.Children.Remove(ui1);
@@ -1691,6 +1693,11 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMovement(): mim=null");
                   return false;
                }
+               if (null == mim.BestPath)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMovement(): mim.BestPath=null");
+                  return false;
+               }
                if (null == mim.OldTerritory)
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMovement(): mim.OldTerritory=null");
@@ -1701,7 +1708,8 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMovement(): mim.NewTerritory=null");
                   return false;
                }
-               IMapPoint endPoint = Territory.GetRandomPoint(mim.NewTerritory, mim.MapItem.Zoom * Utilities.theMapItemOffset);
+               IMapItem mi = mim.MapItem;
+               IMapPoint endPoint = Territory.GetRandomPoint(mim.NewTerritory, mi.Zoom * Utilities.theMapItemOffset);
                if (false == MovePathDisplay(mim, count, endPoint))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMovement(): Move_PathDisplay() returned false t=" + mim.OldTerritory.ToString());
@@ -1715,12 +1723,18 @@ namespace PleasantvilleGame
                   return false;
                }
                //------------------------------------------
-               stacks.Remove(mim.MapItem); // remove from existing stack
+               stacks.Remove(mi); // remove from existing stack
                Logger.Log(LogEnum.LE_SHOW_MIM, "UpdateCanvasMovement(): a=" + action.ToString() + " mi=" + mim.MapItem.Name + " t=" + mim.MapItem.TerritoryCurrent.ToString() + "==>" + mim.NewTerritory.ToString());
-               mim.MapItem.TerritoryCurrent = mim.MapItem.TerritoryStarting = mim.NewTerritory;
-               mim.MapItem.Location.X = endPoint.X;
-               mim.MapItem.Location.Y = endPoint.Y;
-               stacks.Add(mim.MapItem); // add to new stack
+               mi.TerritoryCurrent = mi.TerritoryStarting = mim.NewTerritory;
+               mi.Location.X = endPoint.X;
+               mi.Location.Y = endPoint.Y;
+               mi.MovementUsed += mim.BestPath.Territories.Count;
+               if ( (GamePhase.TownspersonMovement == gi.GamePhase) && (mi.Movement <= mi.MovementUsed))
+               {
+                  Rectangle r = myRectangleMaps[mi];
+                  r.Stroke = Constants.theTownControlledBrush;
+               }
+               stacks.Add(mi); // add to new stack
                count++;
             }
          }
@@ -1917,7 +1931,7 @@ namespace PleasantvilleGame
             {
                foreach (IMapItem mi in stack.MapItems)
                {
-                  if (true == mi.IsControlled && false == mi.IsTiedUp && false == mi.IsUnconscious && false == mi.IsStunned)
+                  if ( (true == mi.IsControlled) && (false == mi.IsTiedUp) && (false == mi.IsUnconscious) && (false == mi.IsStunned) && (mi.MovementUsed < mi.Movement))
                   {
                      foreach (Button b in myButtons)
                      {

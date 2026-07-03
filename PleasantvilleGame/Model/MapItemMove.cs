@@ -43,7 +43,8 @@ namespace PleasantvilleGame
             CtorError = true;
             return;
          }
-         BestPath = Territory.GetShortestRandomPath(territories, OldTerritory, newTerritory, movingMapItem.Movement);
+         int moveLeft = movingMapItem.Movement - movingMapItem.MovementUsed;
+         BestPath = Territory.GetShortestRandomPath(territories, OldTerritory, newTerritory, moveLeft);
          if (null == BestPath)
          {
             string msg = "MapItemMove():BestPath=null for";
@@ -55,7 +56,13 @@ namespace PleasantvilleGame
             return;
          }
          int countOfTerritories = BestPath.Territories.Count;
-         NewTerritory = BestPath.Territories[countOfTerritories - 1];          // Remove last territory if exceeds stacking limit.
+         if (0 == countOfTerritories)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MapItemMove(): countOfTerritories=0");
+            CtorError = true;
+            return;
+         }
+         NewTerritory = BestPath.Territories[countOfTerritories - 1];         
       }
       public override string ToString()
       {

@@ -117,6 +117,32 @@ namespace PleasantvilleGame
          }
          return true;
       }
+      protected bool SetPhase(IGameInstance gi, GamePhase phase)
+      {
+         gi.GamePhase = phase;
+         gi.IsAlienDisplayedRandomMovement = false;
+         gi.IsTownDisplayedRandomMovement = false;
+         gi.IsAlienAckedRandomMovement = false;
+         gi.IsTownsAckedRandomMovement = false;
+         gi.Takeover = null;
+         if (false == ResetDieResults(gi))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Set_Phase(): Reset_DieResults() returned false");
+            return false;
+         }
+         Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "Set_Phase()");
+         gi.MapItemMoves.Clear();
+         foreach (IStack stack in gi.Stacks)
+         {
+            foreach(IMapItem mi in stack.MapItems)
+            {
+               mi.MovementUsed = 0;
+               mi.IsMoved = false;
+               mi.IsMovingThisTurn = false;
+            }
+         }
+         return true;
+      }
       protected bool LoadGame(ref IGameInstance gi)
       {
          //--------------------------------------------
@@ -433,10 +459,13 @@ namespace PleasantvilleGame
                   returnStatus = "Assign_StartingAlien() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                }
-
                break;
             case GameAction.GameSetupRandomMovementSetup:
-               gi.GamePhase = GamePhase.RandomMovement;
+               if (false == SetPhase(gi, GamePhase.RandomMovement))
+               {
+                  returnStatus = "Set_Phase() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
                gi.EventActive = gi.EventDisplayed = "e005";
                break;
             default:
@@ -1357,78 +1386,22 @@ namespace PleasantvilleGame
                gi.EventActive = gi.EventDisplayed = "e005t";
                gi.DieRollAction = GameAction.DieRollActionNone;
                break;
-            case GameAction.AlienAcksRandomMovement:
-               gi.IsAlienAckedRandomMovement = true;
-               if (true == gi.IsTownsAckedRandomMovement)
-               {
-                  gi.IsAlienDisplayedRandomMovement = false;
-                  gi.IsTownDisplayedRandomMovement = false;
-                  gi.IsAlienAckedRandomMovement = false;
-                  gi.IsTownsAckedRandomMovement = false;
-
-                  gi.NextAction = "Alien Performs Movement";
-                  gi.GamePhase = GamePhase.AlienMovement;
-                  foreach (IMapItemMove mim in gi.MapItemMoves)
-                  {
-                     IMapItem mi = mim.MapItem;
-                     if (null == mim.NewTerritory)
-                     {
-                        returnStatus = "mim.NewTerritory is null for mi=" + mi.Name;
-                        Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
-                        break;
-                     }
-                     mi.TerritoryCurrent = mim.NewTerritory;
-                     mi.TerritoryStarting = mim.NewTerritory;
-                     mi.IsMoved = false;
-                     mi.MovementUsed = 0;
-                  }
-                  if ("OK" == returnStatus)
-                  {
-                     gi.MapItemMoves.Clear();
-                     if (null == gi.MapItemCombat)
-                     {
-                        returnStatus = "gi.MapItemCombat is null";
-                        Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
-                     }
-                     else
-                     {
-                        gi.MapItemCombat.IsAnyRetreat = false;
-                        gi.Takeover = null;
-                     }
-                  }
-               }
-               else
-               {
-                  if (false == gi.IsTownDisplayedRandomMovement)
-                     gi.NextAction = "Awaiting Townsperson Display Random Movement";
-                  else
-                     gi.NextAction = "Awaiting Townsperson Ack Random Movement";
-               }
-               break;
             case GameAction.RandomMovementTownAck:
                gi.IsTownsAckedRandomMovement = true;
                if (true == gi.IsAlienAckedRandomMovement)
                {
-                  gi.IsAlienDisplayedRandomMovement = false;
-                  gi.IsTownDisplayedRandomMovement = false;
-                  gi.IsAlienAckedRandomMovement = false;
-                  gi.IsTownsAckedRandomMovement = false;
-                  gi.Takeover = null;
+                  if( false == SetPhase(gi, GamePhase.AlienMovement))
+                  {
+                     returnStatus = "Set_Phase() returned false";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(RandomMovementConfirmed): " + returnStatus);
+                  }
                   gi.EventActive = gi.EventDisplayed = "e006t";
                   gi.DieRollAction = GameAction.DieRollActionNone;
-                  gi.GamePhase = GamePhase.AlienMovement;
                   if (false == gi.PlayerAlien.PerformAlienMoves(gi))
                   {
                      returnStatus = "Perform_AlienMoves() returned false";
                      Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
                   }
-               }
-               else
-               {
-                  if (false == gi.IsAlienDisplayedRandomMovement)
-                     gi.NextAction = "Awaiting Alien Display Random Movement";
-                  else
-                     gi.NextAction = "Awaiting Alien Ack Random Movement";
                }
                break;
             default:
@@ -1574,9 +1547,11 @@ namespace PleasantvilleGame
                gi.EventDisplayed = gi.EventActive = "e007t";
                break;
             case GameAction.AlienMovementTownsAck:
-               gi.GamePhase = GamePhase.TownspersonMovement;
-               Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "GameStateAlienPlayerMovement.PerformAction(AlienMovementTownsAck)");
-               gi.MapItemMoves.Clear();
+               if (false == SetPhase(gi, GamePhase.TownspersonMovement))
+               {
+                  returnStatus = "Set_Phase() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(RandomMovementConfirmed): " + returnStatus);
+               }
                gi.EventDisplayed = gi.EventActive = "e008t";
                break;
             default:
@@ -1660,160 +1635,6 @@ namespace PleasantvilleGame
                {
                   returnStatus = "Perform_TownMove() returned false for " + action.ToString();
                   Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(TownMovementTownPerforms): " + returnStatus);
-               }
-               break;
-            case GameAction.AlienTimeoutOnMovement:
-               if (null == gi.PreviousMapItemMove)
-               {
-                  returnStatus = "gi.PreviousMapItemMove is null in AlienTimeoutOnMovement action";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-               }
-               else
-               {
-                  gi.NextAction = "Townsperson Selects Counter to Move";
-                  if (false == IsZebulonDiscovered(gi, gi.PreviousMapItemMove, out isZebulonDiscovered))
-                  {
-                     returnStatus = "IsZebulonDiscovered() returned false for " + action.ToString();
-                     Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-                  }
-                  else
-                  {
-                     if (true == isZebulonDiscovered)
-                     {
-                        action = GameAction.AlienModifiesTownspersonMovement;
-                        gi.PreviousMapItemMove = null;
-                     }
-                     else
-                     {
-                        if (null != gi.PreviousMapItemMove)
-                        {
-                           if (null == gi.PreviousMapItemMove.BestPath)
-                           {
-                              returnStatus = "gi.PreviousMapItemMove.BestPath is null in AlienTimeoutOnMovement action";
-                              Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-                           }
-                           else
-                           {
-                              foreach (ITerritory t in gi.PreviousMapItemMove.BestPath.Territories)
-                                 gi.ZebulonTerritories.Remove(t);
-                           }
-                        }
-                        if (0 < gi.MapItemMoves.Count)
-                        {
-                           IMapItemMove? mim1 = gi.MapItemMoves[0];
-                           if (null == mim1)
-                           {
-                              returnStatus = "mim1 is null in AlienTimeoutOnMovement action";
-                              Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-                           }
-                           else
-                           {
-                              if (null == mim1.BestPath)
-                              {
-                                 returnStatus = "mim1.BestPath is null in AlienTimeoutOnMovement action";
-                                 Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-                              }
-                              else
-                              {
-                                 mim1.MapItem.IsMoved = true;
-                                 mim1.MapItem.MovementUsed += mim1.BestPath.Territories.Count;
-                                 gi.PreviousMapItemMove = mim1;
-                              }
-                           }
-                        }
-                     }
-                  }
-               }
-               break;
-            case GameAction.AlienModifiesTownspersonMovement:
-               gi.NextAction = "Townsperson Selects Counter to Move";
-               if (null == gi.PreviousMapItemMove)
-               {
-                  returnStatus = "gi.PreviousMapItemMove is null in AlienModifiesTownspersonMovement action";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-               }
-               else
-               {
-                  if (false == IsZebulonDiscovered(gi, gi.PreviousMapItemMove, out isZebulonDiscovered))
-                  {
-                     returnStatus = "IsZebulonDiscovered() returned false for " + action.ToString();
-                     Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-                  }
-                  else
-                  {
-                     if (true == isZebulonDiscovered)
-                     {
-                        action = GameAction.AlienModifiesTownspersonMovement;
-                        gi.PreviousMapItemMove = null;
-                     }
-                     else
-                     {
-                        if (0 < gi.MapItemMoves.Count)
-                        {
-                           IMapItemMove? mim2 = gi.MapItemMoves[0];
-                           if (null == mim2)
-                           {
-                              returnStatus = "mim2 is null in AlienModifiesTownspersonMovement action";
-                              Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-                           }
-                           else
-                           {
-                              if (null == mim2.BestPath)
-                              {
-                                 returnStatus = "mim2.BestPath is null in AlienModifiesTownspersonMovement action";
-                                 Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-                              }
-                              else
-                              {
-                                 foreach (ITerritory t in mim2.BestPath.Territories)
-                                    gi.ZebulonTerritories.Remove(t);
-                                 mim2.MapItem.IsMoved = true;
-                                 mim2.MapItem.MovementUsed += mim2.BestPath.Territories.Count;
-                                 gi.PreviousMapItemMove = mim2;
-                              }
-                           }
-                        }
-                     }
-                  }
-               }
-
-               break;
-            case GameAction.TownpersonCompletesMovement:
-               if (null == gi.PreviousMapItemMove)
-               {
-                  returnStatus = "gi.PreviousMapItemMove is null in AlienModifiesTownspersonMovement action";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-               }
-               else
-               {
-                  if (false == IsZebulonDiscovered(gi, gi.PreviousMapItemMove, out isZebulonDiscovered))
-                  {
-                     returnStatus = "IsZebulonDiscovered() returned false for " + action.ToString();
-                     Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-                  }
-                  else
-                  {
-                     if (true == isZebulonDiscovered)
-                     {
-                        gi.NextAction = "Townsperson Selects Counter to Move";
-                        action = GameAction.AlienModifiesTownspersonMovement;
-                     }
-                     else if (null != gi.PreviousMapItemMove)
-                     {
-                        if (null == gi.PreviousMapItemMove.BestPath)
-                        {
-                           returnStatus = "gi.PreviousMapItemMove.BestPath is null in TownpersonCompletesMovement action";
-                           Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-                        }
-                        else
-                        {
-                           gi.NextAction = "Alien Acks Townspeople Movement";
-                           foreach (ITerritory t in gi.PreviousMapItemMove.BestPath.Territories)
-                              gi.ZebulonTerritories.Remove(t);
-                        }
-                     }
-                     gi.PreviousMapItemMove = null;
-                  }
                }
                break;
             case GameAction.AlienAcksTownspersonMovement:
@@ -1925,154 +1746,6 @@ namespace PleasantvilleGame
          else
             Logger.Log(LogEnum.LE_ERROR, sb12.ToString());
          return returnStatus;
-      }
-      private bool ProposeTownMovementTownPerforms(IGameInstance gi, ref GameAction outAction, out bool isPossibleStopByAlien)
-      {
-         // Based on the path taken by the moving MapItem, there 
-         // may be no capability for the Alien to stop the movement.  In that event,
-         // need to respond right away.  In that event, the returned action
-         // is TownspersonMovement.
-         isPossibleStopByAlien = false;
-         if (null == gi.PreviousMapItemMove)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovementTownPerforms(): gi.PreviousMapItemMove=null");
-            return false;
-         }
-         if (null == gi.PreviousMapItemMove.BestPath)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovementTownPerforms(): gi.PreviousMapItemMove.BestPath=null");
-            return false;
-         }
-         if (0 == gi.MapItemMoves.Count)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovementTownPerforms(): gi.MapItemMoves.Count=0");
-            return false;
-         }
-         IMapItemMove? mim = gi.MapItemMoves[0];
-         if (null == mim)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovementTownPerforms(): mim=null");
-            return false;
-         }
-         if (null == mim.BestPath)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovementTownPerforms(): mim.BestPath=null");
-            return false;
-         }
-         if (null == mim.OldTerritory)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovementTownPerforms(): mim.OldTerritory=null");
-            return false;
-         }
-         //-------------------------------------------------
-         foreach (IMapItem person in gi.Townspeople)
-         {
-            if ((false == person.IsWary) && (false == person.IsControlled) && (false == person.IsMoveStoppedThisTurn) && ("Zebulon" != person.Name)
-                  && (false == person.IsStunned) && (false == person.IsTiedUp) && (false == person.IsSurrendered) && (false == person.IsKilled))
-            {
-               if ((person.TerritoryCurrent.Name == mim.OldTerritory.Name) && (person.TerritoryCurrent.Subname == mim.OldTerritory.Subname)) // Check if moving mapitem originates in territory controlled by alien
-               {
-                  Logger.Log(LogEnum.LE_TIMER_ELAPED, "Wait for Alien To Stop Move before started");
-                  gi.NextAction = "Alien May Elect to Stop Move if Possible";
-                  isPossibleStopByAlien = true;
-                  return true;
-               }
-               for (int i = 0; i < mim.BestPath.Territories.Count - 1; ++i) // Check if moving mapitem originates in territory controlled by alien -- Do not check the last territory moved into
-               {
-                  ITerritory t = mim.BestPath.Territories[i];
-                  if ((person.TerritoryCurrent.Name == t.Name) && (person.TerritoryCurrent.Subname == t.Subname))
-                  {
-                     Logger.Log(LogEnum.LE_TIMER_ELAPED, "Wait for Alien To Modify move");
-                     gi.NextAction = "Alien May Elect to Stop Move if Possible";
-                     return true;
-                  }
-               }
-            }
-            //-------------------------------------------------
-            if (null == gi.PreviousMapItemMove)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovementTownPerforms(): gi.PreviousMapItemMove=null");
-               return false;
-            }
-            else
-            {
-               bool isZebulonDiscovered;
-               if (false == IsZebulonDiscovered(gi, gi.PreviousMapItemMove, out isZebulonDiscovered))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovementTownPerforms(): Is_ZebulonDiscovered() return false");
-                  return false;
-               }
-               if (true == isZebulonDiscovered)
-               {
-                  outAction = GameAction.AlienModifiesTownspersonMovement;
-                  gi.PreviousMapItemMove = null;
-               }
-               else
-               {
-                  if (null == gi.PreviousMapItemMove.BestPath)
-                  {
-                     Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovementTownPerforms(): gi.PreviousMapItemMove.BestPath=null");
-                     return false;
-                  }
-                  else
-                  {
-                     foreach (ITerritory t in gi.PreviousMapItemMove.BestPath.Territories)
-                        gi.ZebulonTerritories.Remove(t);
-                     Logger.Log(LogEnum.LE_TIMER_ELAPED, "Continue Movement Without Waiting for Alien");
-                     gi.NextAction = "Townsperson Selects Counter to Move";
-                     outAction = GameAction.TownpersonMovement;
-                     mim.MapItem.MovementUsed += mim.BestPath.Territories.Count;
-                     mim.MapItem.IsMoved = true;
-                     gi.PreviousMapItemMove = mim;
-                  }
-               }
-            }
-         }
-         return true;
-      }
-      private bool IsZebulonDiscovered(IGameInstance gi, IMapItemMove mim, out bool isZebulanDiscovered)
-      {
-         isZebulanDiscovered = false;
-         IMapItem? movingMi = gi.Townspeople.Find(mim.MapItem.Name);
-         if (null == movingMi)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Is_ZebulonDiscovered(): movingMi=null for mim=" + mim.ToString());
-            return false;
-         }
-         IMapItem? zebulon = gi.Townspeople.Find("Zebulon"); // Determine if Zebulon is along the path of this move. If so, back out to this new territory.
-         if (null == zebulon)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Is_ZebulonDiscovered(): zebulon=null for mim=" + mim.ToString());
-            return false;
-         }
-         if (null == mim.BestPath)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Is_ZebulonDiscovered(): mim.BestPath=null for mim=" + mim.ToString());
-            return false;
-         }
-         foreach (ITerritory t in mim.BestPath.Territories)
-         {
-            if (false == zebulon.IsAlienKnown) // Determine if Zebulon is discovered
-            {
-               if ((t.Name == zebulon.TerritoryCurrent.Name) && (t.Subname == zebulon.TerritoryCurrent.Subname))
-               {
-                  isZebulanDiscovered = true;
-                  zebulon.IsAlienKnown = true;                     // Zebulon is now exposed
-                  movingMi.TerritoryCurrent = movingMi.TerritoryStarting; // Back out to the old Territory
-                  movingMi.IsMoveAllowedToResetThisTurn = false;
-                  movingMi.IsMoved = true;
-                  //-------------------------------------------
-                  Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Is_ZebulonDiscovered(): mi=" + movingMi.Name + " entering t=" + zebulon.TerritoryCurrent);
-                  //if (false == CreateMapItemMove(gi, movingMi, zebulon.TerritoryCurrent))
-                  //{
-                  //   Logger.Log(LogEnum.LE_ERROR, "Is_ZebulonDiscovered(): Create_MapItemMove() returned false");
-                  //   return false;
-                  //}
-                  break;
-               }
-            }
-         }
-         return true;
       }
    }
    //----------------------------------------------------------------
