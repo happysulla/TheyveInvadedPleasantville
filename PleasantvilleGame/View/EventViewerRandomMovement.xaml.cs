@@ -243,7 +243,14 @@ namespace PleasantvilleGame
                }
                if (true == gr.myIsBlockedFromMove )
                {
-
+                  foreach(RandomMoveData rmd in myGameInstance.RandomMoves)
+                  {
+                     if( true == gr.myMapItem.Name.Contains(rmd.myName) )
+                     {
+                        myGameInstance.RandomMoves.Remove(rmd);
+                        break;
+                     }
+                  }
                }
             }
             if (null == myCallback)

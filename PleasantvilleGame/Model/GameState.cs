@@ -1537,7 +1537,6 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMoves(): Create_MapItemMove() returned null");
                return false;
             }
-            mim.MapItem.BrushIndex = i;
             gi.MapItemMoves.Add(mim);
          }
          return true;
@@ -1576,6 +1575,8 @@ namespace PleasantvilleGame
                break;
             case GameAction.AlienMovementTownsAck:
                gi.GamePhase = GamePhase.TownspersonMovement;
+               Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "GameStateAlienPlayerMovement.PerformAction(AlienMovementTownsAck)");
+               gi.MapItemMoves.Clear();
                gi.EventDisplayed = gi.EventActive = "e008t";
                break;
             default:
@@ -1652,12 +1653,13 @@ namespace PleasantvilleGame
             case GameAction.ResetMovement:
                gi.PreviousMapItemMove = null;
                break;
-            case GameAction.TownpersonProposesMovement:
-               bool isPossibleStopByAlien;
-               if (false == ProposeTownMovement(gi, ref action, out isPossibleStopByAlien))
+            case GameAction.TownMovementTownPerforms:
+               Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "GameStateTownPlayerMovement.PerformAction(TownMovementTownPerforms)");
+               gi.MapItemMoves.Clear();
+               if (false == gi.PlayerTown.PerformTownMove(gi, ref action))
                {
-                  returnStatus = "Propose_TownMovement() returned false for " + action.ToString();
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+                  returnStatus = "Perform_TownMove() returned false for " + action.ToString();
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(TownMovementTownPerforms): " + returnStatus);
                }
                break;
             case GameAction.AlienTimeoutOnMovement:
@@ -1924,7 +1926,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, sb12.ToString());
          return returnStatus;
       }
-      private bool ProposeTownMovement(IGameInstance gi, ref GameAction outAction, out bool isPossibleStopByAlien)
+      private bool ProposeTownMovementTownPerforms(IGameInstance gi, ref GameAction outAction, out bool isPossibleStopByAlien)
       {
          // Based on the path taken by the moving MapItem, there 
          // may be no capability for the Alien to stop the movement.  In that event,
@@ -1933,33 +1935,33 @@ namespace PleasantvilleGame
          isPossibleStopByAlien = false;
          if (null == gi.PreviousMapItemMove)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovement(): gi.PreviousMapItemMove=null");
+            Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovementTownPerforms(): gi.PreviousMapItemMove=null");
             return false;
          }
          if (null == gi.PreviousMapItemMove.BestPath)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovement(): gi.PreviousMapItemMove.BestPath=null");
+            Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovementTownPerforms(): gi.PreviousMapItemMove.BestPath=null");
             return false;
          }
          if (0 == gi.MapItemMoves.Count)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovement(): gi.MapItemMoves.Count=0");
+            Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovementTownPerforms(): gi.MapItemMoves.Count=0");
             return false;
          }
          IMapItemMove? mim = gi.MapItemMoves[0];
          if (null == mim)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovement(): mim=null");
+            Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovementTownPerforms(): mim=null");
             return false;
          }
          if (null == mim.BestPath)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovement(): mim.BestPath=null");
+            Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovementTownPerforms(): mim.BestPath=null");
             return false;
          }
          if (null == mim.OldTerritory)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovement(): mim.OldTerritory=null");
+            Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovementTownPerforms(): mim.OldTerritory=null");
             return false;
          }
          //-------------------------------------------------
@@ -1989,7 +1991,7 @@ namespace PleasantvilleGame
             //-------------------------------------------------
             if (null == gi.PreviousMapItemMove)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovement(): gi.PreviousMapItemMove=null");
+               Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovementTownPerforms(): gi.PreviousMapItemMove=null");
                return false;
             }
             else
@@ -1997,7 +1999,7 @@ namespace PleasantvilleGame
                bool isZebulonDiscovered;
                if (false == IsZebulonDiscovered(gi, gi.PreviousMapItemMove, out isZebulonDiscovered))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovement(): Is_ZebulonDiscovered() return false");
+                  Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovementTownPerforms(): Is_ZebulonDiscovered() return false");
                   return false;
                }
                if (true == isZebulonDiscovered)
@@ -2009,7 +2011,7 @@ namespace PleasantvilleGame
                {
                   if (null == gi.PreviousMapItemMove.BestPath)
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovement(): gi.PreviousMapItemMove.BestPath=null");
+                     Logger.Log(LogEnum.LE_ERROR, "Propose_TownMovementTownPerforms(): gi.PreviousMapItemMove.BestPath=null");
                      return false;
                   }
                   else

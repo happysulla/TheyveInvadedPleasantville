@@ -70,6 +70,9 @@ namespace PleasantvilleGame
       AlienMovementTownsShow,
       AlienMovementTownsAck,
 
+      TownMovementTownPerforms,
+      TownMovementTownCompletes,
+
       AlienStart,
       TownspersonStart,
       AlienDisplaysRandomMovement,
@@ -80,7 +83,8 @@ namespace PleasantvilleGame
       AlienMovement,
       AlienCompletesMovement,
 
-      TownpersonProposesMovement,
+
+
       AlienTimeoutOnMovement,
       AlienModifiesTownspersonMovement,
       TownpersonMovement,

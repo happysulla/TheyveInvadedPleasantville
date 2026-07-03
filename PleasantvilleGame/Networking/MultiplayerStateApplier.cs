@@ -15,7 +15,6 @@ namespace PleasantvilleGame.Networking
          gameInstance.Stacks.Clear();
          gameInstance.PersonsKnockedOut.Clear();
          gameInstance.PersonsStunned.Clear();
-         gameInstance.SelectedMapItem = null;
          gameInstance.SelectedStack = null;
          gameInstance.MapItemCombat = null;
          gameInstance.Takeover = null;

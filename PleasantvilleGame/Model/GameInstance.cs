@@ -46,11 +46,12 @@ namespace PleasantvilleGame
       public string EndGameReason { set; get; } = "";
       //----------------------------------------------
       public ITerritories ZebulonTerritories { set; get; } = new Territories();
+      public ITerritory? SelectedTerritory { set; get; } = null;
       public IMapItem Zebulon { set; get; } = new MapItem("Zebulon", 0.8, "ZebulonBlack", new Territory(), 0, 0, 10);
+      public IMapItems SelectedMapItems { set; get; } = new MapItems();
       public IMapItems Townspeople { set; get; } = new MapItems();
       public IMapItems PersonsStunned { set; get; } = new MapItems();
       public IMapItems PersonsKnockedOut { set; get; } = new MapItems();
-      public IMapItem? SelectedMapItem { set; get; } = null;
       public IMapItemCombat? MapItemCombat { set; get; } = null;
       public IMapItemTakeover? Takeover { set; get; } = null;
       public IMapItemMove? PreviousMapItemMove { set; get; } = null;

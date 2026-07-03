@@ -46,7 +46,12 @@ namespace PleasantvilleGame
       }
       public bool BlockRandomMoves(IGameInstance gi)
       {
-         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.GetStartingAlienCounters(): not implemented");
+         Logger.Log(LogEnum.LE_ERROR, "Block_RandomMoves(): not implemented");
+         return false;
+      }
+      public bool PerformTownMove(IGameInstance gi, ref GameAction outAction)
+      {
+         Logger.Log(LogEnum.LE_ERROR, "Perform_TownMove(): not implemented");
          return false;
       }
    }

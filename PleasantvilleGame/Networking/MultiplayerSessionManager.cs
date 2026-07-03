@@ -22,7 +22,7 @@ namespace PleasantvilleGame.Networking
          GameAction.GameSetupShowMap,
          GameAction.UpdateEventViewerActive,
          GameAction.UpdateEventViewerDisplay,
-         GameAction.TownpersonProposesMovement,
+         GameAction.TownMovementTownPerforms,
          GameAction.TownpersonCompletesMovement,
          GameAction.TownspersonPerformsConversation,
          GameAction.TownspersonCompletesConversations,

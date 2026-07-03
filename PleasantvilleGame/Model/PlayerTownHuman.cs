@@ -52,5 +52,25 @@ namespace PleasantvilleGame
          gi.IsTownsAckedRandomMovement = true;
          return true;
       }
+      public bool PerformTownMove(IGameInstance gi, ref GameAction outAction)
+      {
+         if (null == gi.SelectedTerritory)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "PerformTownMove(): gi.SelectedTerritory=null");
+            return false;
+         }
+         foreach (IMapItem mi in gi.SelectedMapItems)
+         {
+            IMapItemMove? mim = gi.CreateMapItemMove(mi, gi.SelectedTerritory);
+            if (null == mim)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PerformTownMove(): mim=null for mi=" + mi.ToString() + " t=" + gi.SelectedTerritory.ToString());
+               return false;
+            }
+            Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "PerformTownMove(): mi=" + mi.ToString() + " t=" + gi.SelectedTerritory.ToString());
+            gi.MapItemMoves.Add(mim);
+         }
+         return true;
+      }
    }
 }

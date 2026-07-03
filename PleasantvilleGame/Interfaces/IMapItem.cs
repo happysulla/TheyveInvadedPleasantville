@@ -30,7 +30,6 @@ namespace PleasantvilleGame
       string TopImageName { get; set; }
       string BottomImageName { get; set; }
       string OverlayImageName { get; set; }
-      int BrushIndex { get; set; } // index of rectangle associated with moving this MapItem
       List<BloodSpot> WoundSpots { get; }
       double Zoom { get; set; }
       bool IsAnimated { get; set; }

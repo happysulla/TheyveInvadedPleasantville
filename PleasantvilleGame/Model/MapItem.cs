@@ -32,7 +32,6 @@ namespace PleasantvilleGame
       public string TopImageName { get; set; } = string.Empty;
       public string BottomImageName { get; set; } = string.Empty;
       public string OverlayImageName { get; set; } = string.Empty;
-      public int BrushIndex { get; set; } = 0;
       public List<BloodSpot> myWoundSpots = new List<BloodSpot>();
       public List<BloodSpot> WoundSpots { get => myWoundSpots; }
       public double Zoom { get; set; } = 1.0;

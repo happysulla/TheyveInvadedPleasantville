@@ -6,5 +6,5 @@
         xmlns:local="clr-namespace:PleasantvilleGame"
         mc:Ignorable="d"
         Name="myWindowMain" IsEnabled="False" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" ResizeMode="CanResizeWithGrip" WindowStyle="None"
-        MinWidth="352" MinHeight="597" MaxWidth="352" MaxHeight="597" Cursor="Wait" Visibility="Hidden">
+        MinWidth="352" MinHeight="400" MaxWidth="352" MaxHeight="597" Cursor="Wait" Visibility="Hidden">
 </Window>

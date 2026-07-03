@@ -15,6 +15,7 @@ namespace PleasantvilleGame
    {
       bool GetStartingTownCounter(IGameInstance gi, int die1);
       bool BlockRandomMoves(IGameInstance gi);
+      bool PerformTownMove(IGameInstance gi, ref GameAction outAction);
    }
    public interface IPlayerAlien : IPlayer
    {

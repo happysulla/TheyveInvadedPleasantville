@@ -352,7 +352,7 @@ namespace PleasantvilleGame
             //      myMenuItemNextAction.IsEnabled = true;
             //   }
             //   break;
-            //case GameAction.TownpersonProposesMovement:
+            //case GameAction.TownMovementTownPerforms:
             //   myMenuItemNextAction.IsEnabled = false;
             //   break;
             //case GameAction.AlienTimeoutOnMovement:
