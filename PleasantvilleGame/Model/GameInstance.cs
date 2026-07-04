@@ -62,7 +62,7 @@ namespace PleasantvilleGame
       public int InfluenceCountTownspeople { set; get; } = 0;
       public int InfluenceCountAlienUnknown { set; get; } = 0;
       public int InfluenceCountAlienKnown { set; get; } = 0;
-      public int NumIterogationsThisTurn { set; get; } = 0;
+      public int NumTownGuessesForZebulonLocation { set; get; } = 0;
       public bool IsAlienStarted { set; get; } = false;
       public bool IsTownsStarted { set; get; } = false;
       public bool IsAlienDisplayedRandomMovement { set; get; } = false;
@@ -135,11 +135,6 @@ namespace PleasantvilleGame
             mi.IsWary = false;
             mi.IsControlled = false;
          }
-         if (false == GameStateChecker.IsInfluenceCheck(this))
-         {
-            MessageBox.Show("AddUnknownAlien() ERROR - Influence failure for " + mi.Name);
-            return false;
-         }
          return true;
       }
       public bool AddKnownAlien(IMapItem newAlien)
@@ -197,11 +192,6 @@ namespace PleasantvilleGame
             mi.IsAlienUnknown = false;
             mi.IsAlienKnown = true;
          }
-         if (false == GameStateChecker.IsInfluenceCheck(this))
-         {
-            MessageBox.Show("AddKnownAlien() ERROR - Influence failure for " + mi.Name);
-            return false;
-         }
          return true;
       }
       public bool AddTownperson(IMapItem mi)
@@ -256,11 +246,6 @@ namespace PleasantvilleGame
             mi.IsWary = false;
             mi.IsSurrendered = false;
             mi.IsAlienUnknown = false;
-         }
-         if (false == GameStateChecker.IsInfluenceCheck(this))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "AddTownperson() ERROR - Influence failure for " + mi.Name);
-            return false;
          }
          return true;
       }

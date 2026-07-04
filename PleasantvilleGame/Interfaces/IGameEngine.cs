@@ -9,8 +9,6 @@ namespace PleasantvilleGame
    public enum GamePhase
    {
       GameSetup,
-      AlienStart,
-      TownspersonStart,
       RandomMovement,
       AlienMovement,
       TownspersonMovement,
@@ -72,6 +70,8 @@ namespace PleasantvilleGame
 
       TownMovementTownPerforms,
       TownMovementTownCompletes,
+
+      ConversationsStart,
 
       AlienStart,
       TownspersonStart,

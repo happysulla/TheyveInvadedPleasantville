@@ -192,7 +192,7 @@ namespace PleasantvilleGame
       }
       static public bool CheckForIterogations(IGameInstance gi)
       {
-         gi.NumIterogationsThisTurn = 0;
+         gi.NumTownGuessesForZebulonLocation = 0;
          IMapItem? zebulon = gi.Stacks.FindMapItem("Zebulon");
          if (null == zebulon)
          {
@@ -233,10 +233,10 @@ namespace PleasantvilleGame
             }
 
             if (((0 != controlled.Count) && (0 != surrenderedAliens.Count)))
-               gi.NumIterogationsThisTurn += surrenderedAliens.Count * 4;
+               gi.NumTownGuessesForZebulonLocation += surrenderedAliens.Count * 4;
          }
 
-         if (0 < gi.NumIterogationsThisTurn)
+         if (0 < gi.NumTownGuessesForZebulonLocation)
             return true;
          return false;
       }
@@ -314,7 +314,7 @@ namespace PleasantvilleGame
       static public bool CheckForEndOfGame(IGameInstance gi)
       {
          StringBuilder sb;
-         gi.NumIterogationsThisTurn = 0;
+         gi.NumTownGuessesForZebulonLocation = 0;
          foreach (IStack stack in gi.Stacks)
          {
             foreach (IMapItem mi in stack.MapItems)

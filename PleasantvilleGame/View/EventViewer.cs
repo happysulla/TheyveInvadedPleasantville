@@ -1125,6 +1125,10 @@ namespace PleasantvilleGame
                            action = GameAction.AlienMovementTownsAck;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
+                        case "Continue008t":
+                           action = GameAction.TownMovementTownCompletes;
+                           myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+                           return;
                         case "ExitGame":
                            action = GameAction.EndGameExit;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);

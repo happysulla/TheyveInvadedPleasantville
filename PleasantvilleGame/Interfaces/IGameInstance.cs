@@ -65,7 +65,7 @@ namespace PleasantvilleGame
       int InfluenceCountTownspeople { set; get; }
       int InfluenceCountAlienUnknown { set; get; }
       int InfluenceCountAlienKnown { set; get; }
-      int NumIterogationsThisTurn { set; get; }
+      int NumTownGuessesForZebulonLocation { set; get; }
       bool IsAlienStarted { set; get; }
       bool IsTownsStarted { set; get; }
       bool IsAlienDisplayedRandomMovement { set; get; }
