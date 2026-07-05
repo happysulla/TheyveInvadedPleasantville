@@ -2003,7 +2003,7 @@ namespace PleasantvilleGame
                   polygon.Fill = mySolidColorBrushGray;
                   Canvas.SetZIndex(polygon, myZIndexLastUsed++);
                   DoubleAnimation anim = new DoubleAnimation();  // Perform animiation on the region
-                  anim.From = 0.7;
+                  anim.From = 1.0;
                   anim.To = 0.3;
                   anim.Duration = new Duration(TimeSpan.FromSeconds(1.0));
                   anim.AutoReverse = true;

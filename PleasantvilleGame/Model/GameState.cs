@@ -243,7 +243,7 @@ namespace PleasantvilleGame
                   return false;
                }
                gi.SelectedTerritories.Add(stack.Territory);
-               gi.EventDisplayed = gi.EventActive = "e008t";
+               gi.EventDisplayed = gi.EventActive = "e009t";
                action = GameAction.ConversationsSelect;
             }
          }
