@@ -124,13 +124,13 @@ namespace PleasantvilleGame
          gi.IsTownsAckedRandomMovement = false;
          gi.NumTownGuessesForZebulonLocation = 0;
          gi.Takeover = null;
+         Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "Set_Phase()");
+         gi.MapItemMoves.Clear();
          if (false == ResetDieResults(gi))
          {
             Logger.Log(LogEnum.LE_ERROR, "Set_Phase(): Reset_DieResults() returned false");
             return false;
          }
-         Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "Set_Phase()");
-         gi.MapItemMoves.Clear();
          foreach (IStack stack in gi.Stacks)
          {
             foreach(IMapItem mi in stack.MapItems)
@@ -214,13 +214,16 @@ namespace PleasantvilleGame
       }
       protected bool CheckForConversations(IGameInstance gi, ref GameAction action)
       {
+         action = GameAction.Error;
+         IMapItems controlledPeps = new MapItems();
+         IMapItems uncontrolledPeps = new MapItems();
          foreach (Stack stack in gi.Stacks)
          {
-            IMapItems controlledPeps = new MapItems();
-            IMapItems uncontrolledPeps = new MapItems();
+            controlledPeps.Clear();
+            uncontrolledPeps.Clear();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsConversedThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsWary))
+               if ((true == mi.IsConversedThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsWary))
                   continue;
                if (true == mi.IsControlled)
                {
@@ -228,38 +231,43 @@ namespace PleasantvilleGame
                }
                else
                {
-                  if(false == mi.IsAlienKnown) uncontrolledPeps.Add(mi);
+                  if(false == mi.IsAlienKnown) 
+                     uncontrolledPeps.Add(mi);
                }
             }
             if ((0 < controlledPeps.Count) && (0 < uncontrolledPeps.Count))
             {
                if (false == SetPhase(gi, GamePhase.Conversations))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "CheckForConversations(): Set_Phase() returned error");
+                  Logger.Log(LogEnum.LE_ERROR, "CheckFor_Conversations(): Set_Phase() returned error");
                   return false;
                }
+               gi.SelectedTerritories.Add(stack.Territory);
                gi.EventDisplayed = gi.EventActive = "e008t";
-               action = GameAction.ConversationsStart;
-               return true;
+               action = GameAction.ConversationsSelect;
             }
          }
+         if (GameAction.ConversationsSelect == action)
+            return true;
          //--------------------------------------------------
          if( false == CheckForInfluence(gi, ref action))
          {
-            Logger.Log(LogEnum.LE_ERROR, "CheckForConversations(): Set_Phase() returned error");
+            Logger.Log(LogEnum.LE_ERROR, "CheckFor_Conversations(): CheckFor_Influence() returned error");
             return false;
          }
-         return true;
+         Logger.Log(LogEnum.LE_ERROR, "CheckFor_Conversations(): reach default");
+         return false;
       }
       protected bool CheckForInfluence(IGameInstance gi, ref GameAction action)
       {
+         action = GameAction.Error;
          foreach (Stack stack in gi.Stacks)
          {
             IMapItems controlledPeps = new MapItems();
             IMapItems uncontrolledPeps = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
+               if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
                   continue;
                if (true == mi.IsControlled)
                {
@@ -274,26 +282,30 @@ namespace PleasantvilleGame
             {
                if (false == SetPhase(gi, GamePhase.Influences))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "CheckForInfluence(): Set_Phase() returned error");
+                  Logger.Log(LogEnum.LE_ERROR, "CheckFor_Influence(): Set_Phase() returned error");
                   return false;
                }
+               gi.SelectedTerritories.Add(stack.Territory);
                gi.EventDisplayed = gi.EventActive = "e010t";
-               return true;
+               action = GameAction.InfluencesSelect;
             }
          }
+         if (GameAction.InfluencesSelect == action)
+            return true;
          //--------------------------------------------------
          if (false == CheckForPossibleCombats(gi, ref action))
          {
-            Logger.Log(LogEnum.LE_ERROR, "CheckForConversations(): Set_Phase() returned error");
+            Logger.Log(LogEnum.LE_ERROR, "CheckFor_Influence(): Set_Phase() returned error");
             return false;
          }
-         return true;
+         Logger.Log(LogEnum.LE_ERROR, "CheckFor_Influence(): reach default");
+         return false;
       }
       protected bool CheckForPossibleCombats(IGameInstance gi, ref GameAction action)
       {
          if (false == CheckForIterogations(gi, ref action))
          {
-            Logger.Log(LogEnum.LE_ERROR, "CheckForConversations(): Set_Phase() returned error");
+            Logger.Log(LogEnum.LE_ERROR, "CheckFor_PossibleCombats(): CheckFor_Iterogations() returned error");
             return false;
          }
          return true;

@@ -5,7 +5,7 @@
         WindowStyle="SingleBorderWindow" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Title="Stop Townsperson from Moving" Height="232" Width="464" WindowStartupLocation="CenterOwner">
     <DockPanel Name="myDockPanel" Height="193" Width="417" >
         <Grid DockPanel.Dock="Bottom" >
-            <Button Content="OK" Height="23" Name="myButtonOk" Width="75" IsDefault="True" HorizontalAlignment="Center" VerticalAlignment="Center" Click="myButtonOk_Click" />
+            <Button Content="OK" Height="23" Name="myButtonHelperOK" Width="75" IsDefault="True" HorizontalAlignment="Center" VerticalAlignment="Center" Click="myButtonOk_Click" />
         </Grid>
         <Canvas Name="myCanvas" Height="115" Width="388" >
             <Label Content="Choose Alien to Stop Movement" Height="32" Name="myLabelAlienSelected" Canvas.Left="165" Canvas.Top="6" Width="225" />

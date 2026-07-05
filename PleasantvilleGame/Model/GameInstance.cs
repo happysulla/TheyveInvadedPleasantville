@@ -46,6 +46,7 @@ namespace PleasantvilleGame
       public string EndGameReason { set; get; } = "";
       //----------------------------------------------
       public ITerritories ZebulonTerritories { set; get; } = new Territories();
+      public ITerritories SelectedTerritories { set; get; } = new Territories();
       public ITerritory? SelectedTerritory { set; get; } = null;
       public IMapItem Zebulon { set; get; } = new MapItem("Zebulon", 0.8, "ZebulonBlack", new Territory(), 0, 0, 10);
       public IMapItems SelectedMapItems { set; get; } = new MapItems();

@@ -71,10 +71,12 @@ namespace PleasantvilleGame
       TownMovementTownPerforms,
       TownMovementTownCompletes,
 
-      ConversationsStart,
+      ConversationsSelect,
+      ConversationsFinish,
 
-      AlienStart,
-      TownspersonStart,
+      InfluencesSelect,
+      InfluencesFinish,
+
       AlienDisplaysRandomMovement,
       TownspersonDisplaysRandomMovement,
       AlienAcksRandomMovement,
@@ -82,8 +84,6 @@ namespace PleasantvilleGame
       ResetMovement,
       AlienMovement,
       AlienCompletesMovement,
-
-
 
       AlienTimeoutOnMovement,
       AlienModifiesTownspersonMovement,

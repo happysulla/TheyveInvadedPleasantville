@@ -49,6 +49,7 @@ namespace PleasantvilleGame
       String EndGameReason { set; get; }
       //----------------------------------------------
       ITerritories ZebulonTerritories { set; get; }
+      ITerritories SelectedTerritories { set; get; }
       ITerritory? SelectedTerritory { set; get; }
       IMapItems SelectedMapItems { set; get; }
       IMapItems Townspeople { set; get; }

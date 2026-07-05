@@ -1716,7 +1716,7 @@ namespace PleasantvilleGame
                      return;
                   }
                   TerritoryVerifyDialog dialog = new TerritoryVerifyDialog(t);
-                  dialog.myButtonOk.Focus();
+                  dialog.myButtonHelperOK.Focus();
                   if (true == dialog.ShowDialog())
                   {
                      t.Name = dialog.myTextBoxName.Text;

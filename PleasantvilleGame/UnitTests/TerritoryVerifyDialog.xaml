@@ -31,7 +31,7 @@
          <RadioButton Name="myRadioButtonMain" GroupName="B" Padding="0,0,0,0" Width="87" Height="26" Content="Main" IsChecked="True" />
          <RadioButton Name="myRadioButtonHelper" GroupName="B" Padding="0,0,0,0" Width="81" Height="26" Content="Helper" />
       </StackPanel>
-      <Button Grid.Row="6" x:Name="myButtonOk" HorizontalAlignment="Center" Margin="0,13,0,0" Click="OkButton_Click" Width="70" Height="20" VerticalAlignment="Top">OK</Button>
+      <Button Grid.Row="6" x:Name="myButtonHelperOK" HorizontalAlignment="Center" Margin="0,13,0,0" Click="OkButton_Click" Width="70" Height="20" VerticalAlignment="Top">OK</Button>
       <Button Grid.Row="6" Grid.Column="1" HorizontalAlignment="Center" Margin="0,13,0,0" IsCancel="True" Width="70" Height="20" VerticalAlignment="Top">Cancel</Button>
    </Grid>
 </Window>
