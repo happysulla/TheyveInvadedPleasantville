@@ -72,8 +72,12 @@ namespace PleasantvilleGame
       TownMovementTownCompletes,
 
       ConversationsSelect,
+      ConversationsRoll,
+      ConversationsRollEnd,
       ConversationsFinish,
 
+      TownspersonPerformsInfluencing,
+      TownspersonCompletesInfluencing, 
       InfluencesSelect,
       InfluencesFinish,
 
@@ -91,10 +95,8 @@ namespace PleasantvilleGame
       TownpersonCompletesMovement,
       AlienAcksTownspersonMovement,
       AlienStopsTownspersonMovement,
-      TownspersonPerformsConversation,
-      TownspersonCompletesConversations,
-      TownspersonPerformsInfluencing,
-      TownspersonCompletesInfluencing,
+
+
       AlienInitiateCombat,
       TownspersonNackCombatSelection,
       AlienPerformCombat,

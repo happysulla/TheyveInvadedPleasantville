@@ -476,9 +476,9 @@ namespace PleasantvilleGame
             //      }
             //   }
             //   break;
-            //case GameAction.TownspersonPerformsConversation:
+            //case GameAction.ConversationsRoll:
             //   break;
-            //case GameAction.TownspersonCompletesConversations:
+            //case GameAction.ConversationsFinish:
             //   if (true == GameEngine.theIsAlien)
             //   {
             //      if (GamePhase.Influences == gi.GamePhase)
@@ -1186,7 +1186,7 @@ namespace PleasantvilleGame
          //      action = GameAction.AlienAcksTownspersonMovement;
          //      break;
          //   case "_Complete Conversations":
-         //      action = GameAction.TownspersonCompletesConversations;
+         //      action = GameAction.ConversationsFinish;
          //      break;
          //   case "_Complete Influencing":
          //      action = GameAction.TownspersonCompletesInfluencing;

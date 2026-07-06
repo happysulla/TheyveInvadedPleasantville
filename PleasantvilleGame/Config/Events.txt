@@ -102,7 +102,7 @@ e007t	"<Bold>e007t Confirm Alien Movement</Bold> <InlineUIContainer><Button Cont
 Confirm alien moves by clicking image.
 <LineBreak/><LineBreak/>
                                         <InlineUIContainer><Image Name='Continue007t' Height='100' Width='100'></Image></InlineUIContainer>"
-e008t	"<Bold>e008t Town Player Movement</Bold>  <InlineUIContainer><Button Content='r6.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
+e008t	"<Bold>e008t Town Player Movement</Bold>  <InlineUIContainer><Button Content='r6.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
 The Town player moves any townsperson or group of townspeople in the same hex that is controlled by the Town player that are not:
 <LineBreak/><LineBreak/>
@@ -114,11 +114,11 @@ Click on a green color townperson. To move a group, click on multiple townspeopl
 Once in this phase, each alien controlled counter may halt all movement of one town controlled counter when it attempts to enter its space. 
 <LineBreak/><LineBreak/>
                                         <InlineUIContainer><Image Name='Continue008t' Height='100' Width='100'></Image></InlineUIContainer>"
-e009t	"<Bold>e009t Town Player Conversations</Bold>  <InlineUIContainer><Button Content='r7.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
+e009t	"<Bold>e009t Town Player Conversations</Bold>  <InlineUIContainer><Button Content='r7.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
 Conversation is how the Town player discovers if a townsperson is Alien controlled.
 <LineBreak/><LineBreak/>
-In this phase, each Town controlled counter can talk to one townsperson to discover if the person is acting mechanically or unnaturally. Click a flashing space to start a conversation.<LineBreak/><LineBreak/>
+Click a flashing space to start a conversation.<LineBreak/><LineBreak/>
 On a roll of nine or better including modifiers from the <InlineUIContainer><Button Content='Conversation Modifiers' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table, the Town player deteremines if it is Alien controlled counter.
 <LineBreak/><LineBreak/>
 After completion of all possible conversations, the game automatically moves to the Influence phase. Alternatively, the Town player can advance sooner by clicking image below.
