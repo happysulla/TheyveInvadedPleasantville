@@ -26,8 +26,6 @@ namespace PleasantvilleGame.Networking
          GameAction.TownpersonCompletesMovement,
          GameAction.ConversationsRoll,
          GameAction.ConversationsFinish,
-         GameAction.TownspersonPerformsInfluencing,
-         GameAction.TownspersonCompletesInfluencing,
          GameAction.TownspersonInitiateCombat,
          GameAction.TownspersonPerformCombat,
          GameAction.TownspersonCompletesCombat,

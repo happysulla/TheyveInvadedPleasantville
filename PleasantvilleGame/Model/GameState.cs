@@ -251,15 +251,14 @@ namespace PleasantvilleGame
          if (GameAction.ConversationsSelect == action)
             return true;
          //--------------------------------------------------
-         if( false == CheckForInfluence(gi, ref action))
+         if( false == CheckForInfluences(gi, ref action))
          {
             Logger.Log(LogEnum.LE_ERROR, "CheckFor_Conversations(): CheckFor_Influence() returned error");
             return false;
          }
-         Logger.Log(LogEnum.LE_ERROR, "CheckFor_Conversations(): reach default");
-         return false;
+         return true;
       }
-      protected bool CheckForInfluence(IGameInstance gi, ref GameAction action)
+      protected bool CheckForInfluences(IGameInstance gi, ref GameAction action)
       {
          action = GameAction.Error;
          foreach (Stack stack in gi.Stacks)
@@ -283,7 +282,7 @@ namespace PleasantvilleGame
             {
                if (false == SetPhase(gi, GamePhase.Influences))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "CheckFor_Influence(): Set_Phase() returned error");
+                  Logger.Log(LogEnum.LE_ERROR, "CheckFor_Influences(): Set_Phase() returned error");
                   return false;
                }
                gi.SelectedTerritories.Add(stack.Territory);
@@ -296,11 +295,10 @@ namespace PleasantvilleGame
          //--------------------------------------------------
          if (false == CheckForPossibleCombats(gi, ref action))
          {
-            Logger.Log(LogEnum.LE_ERROR, "CheckFor_Influence(): Set_Phase() returned error");
+            Logger.Log(LogEnum.LE_ERROR, "CheckFor_Influences(): Set_Phase() returned error");
             return false;
          }
-         Logger.Log(LogEnum.LE_ERROR, "CheckFor_Influence(): reach default");
-         return false;
+         return true;
       }
       protected bool CheckForPossibleCombats(IGameInstance gi, ref GameAction action)
       {
@@ -1499,68 +1497,9 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            case GameAction.TownspersonPerformsInfluencing:
+            case GameAction.InfluencesRoll:
                break;
-            case GameAction.TownspersonCompletesInfluencing:
-               bool isAlienCombat;
-               if (false == GameStateChecker.CheckForAlienCombats(gi, out isAlienCombat))
-               {
-                  returnStatus = "GameStateChecker.CheckForAlienCombats() returned false in AlienAcksTownspersonMovement action";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-               }
-               bool isTownspersonCombat;
-               if (false == GameStateChecker.CheckForTownspersonCombats(gi, out isTownspersonCombat))
-               {
-                  returnStatus = "GameStateChecker.CheckForTownspersonCombats() returned false in AlienAcksTownspersonMovement action";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-               }
-               bool isAnyMovement;
-               if (false == GameStateChecker.CheckForRandomMoves(gi, out isAnyMovement))
-               {
-                  returnStatus = "GameStateChecker.CheckForTownspersonCombats() returned false in AlienAcksTownspersonMovement action";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-               }
-               //-----------------------------------------------------
-               if ("OK" == returnStatus)
-               {
-                  if ((true == isTownspersonCombat) || (true == isAlienCombat))
-                  {
-                     gi.NextAction = "Decides Where to Perform Combats";
-                     gi.GamePhase = GamePhase.Combat;
-                  }
-                  else if (true == GameStateChecker.CheckForIterogations(gi))
-                  {
-                     gi.NextAction = "Townsperson chooses Flashing Space for Interrogation";
-                     gi.GamePhase = GamePhase.Iterrogations;
-                  }
-                  else if (true == GameStateChecker.CheckForImplantRemoval(gi))
-                  {
-                     gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
-                     gi.GamePhase = GamePhase.ImplantRemoval;
-                  }
-                  else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
-                  {
-                     gi.GamePhase = GamePhase.AlienTakeover;
-                     gi.NextAction = "Alien Chooses Flashing Space for Takeover";
-                  }
-                  else if (true == GameStateChecker.CheckForEndOfGame(gi))
-                  {
-                     action = GameAction.ShowEndGame;
-                     gi.GamePhase = GamePhase.ShowEndGame;
-                     gi.NextAction = "End Game";
-                     gi.GameTurn = 13;
-                  }
-                  else if (true == isAnyMovement)
-                  {
-                     gi.NextAction = "Display Random Movement";
-                     gi.GamePhase = GamePhase.RandomMovement;
-                  }
-                  else
-                  {
-                     gi.NextAction = "Alien Performs Movement";
-                     gi.GamePhase = GamePhase.AlienMovement;
-                  }
-               }
+            case GameAction.InfluencesFinish:
                break;
             default:
                returnStatus = "reached default action=" + action.ToString();
@@ -2127,8 +2066,6 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            case GameAction.TownspersonCompletesInfluencing:
-               break;
             case GameAction.TownspersonCompletesRemoval:
                break;
             default:

@@ -20,7 +20,7 @@ namespace PleasantvilleGame
       public const string MARKET = "Supermarket";
       public const string SCHOOL = "School";
       public const string BANK = "Bank";
-      public const string DOC = "Doc Office";
+      public const string DOC_OFFICE = "Doc Office";
       public const string VFW = "VFW";
       public const string BAR = "Bar And Grill";
       public const string SHOP = "Machine Shop";
@@ -47,7 +47,7 @@ namespace PleasantvilleGame
       public const string BANK_PRESIDENT = "Bank President";
       public const string BAR_OWNER = "Bar and Grill Owner";
       public const string BAR_TENDER = "Bar Tender";
-      public const string CHECKOUTGIRL = "CheckoutGirl";
+      public const string CHECKOUTGIRL = "Checkout Girl";
       public const string DOCTOR = "Doctor";
       public const string DEPUTY = "Deputy";
       public const string FIRE_CHIEF = "Fire Chief";
@@ -85,7 +85,7 @@ namespace PleasantvilleGame
       public readonly static string[,] theTargetBuildingTable = new string[5, 6]
       {
          {TAVERN,VET_OFFICE,CLOTHING,GENERAL,PUMPS,MARKET},
-         {SCHOOL,BANK,DOC,VFW,BAR,SHOP},
+         {SCHOOL,BANK,DOC_OFFICE,VFW,BAR,SHOP},
          {STATION,HALL,HOTEL,CHURCH,GRAVES,PEN},
          {TRAIN,HOUSEA,HOUSE1,HOUSE2,HOUSE3,HOUSE4},
          {HOUSE5,HOUSE6,HOUSE7,HOUSE8,LAWYER_OFFICE,HOUSEK},
@@ -93,7 +93,7 @@ namespace PleasantvilleGame
       //---------------------------------------------------------------------
       public readonly static string[] theTownPlayerStartingTable = new string[6] { BANK_PRESIDENT, DOCTOR, MAYOR, MINSTER, TEACHER, SHERIFF };
       //---------------------------------------------------------------------
-      public readonly static string[,] theBuildingSizes = new string[21, 2] { { TAVERN, "3" }, { VET, "2" }, { CLOTHING, "2" }, { GENERAL, "4" }, { PUMPS, "1" }, { MARKET, "5" }, { SCHOOL, "4" }, { BANK, "4" }, { DOC, "2" }, { VFW, "1" }, { BAR, "2" }, { SHOP, "4" }, { STATION, "4" }, { HALL, "3" }, { HOTEL, "5" }, { CHURCH, "5" }, { GRAVES, "1" }, { PEN, "1" }, { TRAIN, "2" }, { "House", "10" }, { LAWYER, "1" } };
+      public readonly static string[,] theBuildingSizes = new string[21, 2] { { TAVERN, "3" }, { VET_OFFICE, "2" }, { CLOTHING, "2" }, { GENERAL, "4" }, { PUMPS, "1" }, { MARKET, "5" }, { SCHOOL, "4" }, { BANK, "4" }, { DOC_OFFICE, "2" }, { VFW, "1" }, { BAR, "2" }, { SHOP, "4" }, { STATION, "4" }, { HALL, "3" }, { HOTEL, "5" }, { CHURCH, "5" }, { GRAVES, "1" }, { PEN, "1" }, { TRAIN, "2" }, { "House", "10" }, { LAWYER_OFFICE, "1" } };
       //=====================================================================
       public TableMgr()
       {
@@ -940,7 +940,7 @@ namespace PleasantvilleGame
       {
          for (int i = 0; i < 5; ++i)
          {
-            for (int k = 0; i < 6; ++k)
+            for (int k = 0; k < 6; ++k)
             {
                string matchingName = Utilities.RemoveSpaces(theTownpersonsTable[i, k]);
                if (true == mi.Name.Contains(matchingName))

@@ -63,6 +63,7 @@ namespace PleasantvilleGame
       LE_VIEW_CONTROL_NAME,
       //-------------
       LE_SHOW_CONVERSATIONS,
+      LE_SHOW_INFLUENCES,
       LE_SHOW_ITEROGATIONS,
       LE_SHOW_COMBAT_STATE,
       LE_SHOW_COMBAT_THREAD,
@@ -160,6 +161,7 @@ namespace PleasantvilleGame
          //SetOn(LogEnum.LE_SHOW_MIM_BEST_PATH);
          //-------------
          SetOn(LogEnum.LE_SHOW_CONVERSATIONS);
+         SetOn(LogEnum.LE_SHOW_INFLUENCES);
          SetOn(LogEnum.LE_SHOW_ITEROGATIONS);
          SetOn(LogEnum.LE_SHOW_COMBAT_STATE);
          SetOn(LogEnum.LE_SHOW_COMBAT_THREAD);

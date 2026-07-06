@@ -81,7 +81,6 @@ namespace PleasantvilleGame
       private SolidColorBrush mySolidColorBrushClear = new SolidColorBrush();
       private SolidColorBrush mySolidColorBrushBlack = new SolidColorBrush();
       private SolidColorBrush mySolidColorBrushGray = new SolidColorBrush()      { Color=Colors.DarkGray };     // Conversations
-      private SolidColorBrush mySolidColorBrushGreen = new SolidColorBrush()     { Color = Colors.DarkGreen };  // Influences
       private SolidColorBrush mySolidColorBrushRed = new SolidColorBrush()       { Color = Colors.Red };        // Combat
       private SolidColorBrush mySolidColorBrushPurple = new SolidColorBrush()    { Color = Colors.Purple };     // Interogations
       private SolidColorBrush mySolidColorBrushRosyBrown = new SolidColorBrush() { Color = Colors.Orange };     // Implant Removal
@@ -1693,11 +1692,15 @@ namespace PleasantvilleGame
          {
             case GamePhase.Conversations:
                if (false == RollConversation())
-                  Logger.Log(LogEnum.LE_ERROR, "ClickButton_OkInHelperPanel(): Perform_Conversation() returned error");
+                  Logger.Log(LogEnum.LE_ERROR, "ClickButton_OkInHelperPanel(): Roll_Conversation() returned error");
+               break;
+            case GamePhase.Influences:
+               if (false == RollInfluence())
+                  Logger.Log(LogEnum.LE_ERROR, "ClickButton_OkInHelperPanel(): Roll_Influence() returned error");
                break;
             case GamePhase.ImplantRemoval: PerformImplantRemoval(myGameInstance, false); break;
             case GamePhase.AlienTakeover: PerformTakeover(myGameInstance, false); break;
-            case GamePhase.Influences: PerformInfluence(myGameInstance, false); break;
+
             case GamePhase.Combat:
                {
                   if ("" == myTextBoxResults.Text)
@@ -1870,96 +1873,6 @@ namespace PleasantvilleGame
       }
       private void UpdateViewState(IGameInstance gi)
       {
-         myStoryboardFlashing = null;  // turn off flashing
-         GameAction outAction = GameAction.Error;
-         switch (gi.GamePhase)
-         {
-
-            case GamePhase.Influences:
-               if (false == DisplayInfluences(gi))
-               {
-                  if ((true == GameEngine.theIsAlien) && (false == myInfluencesCompleted))
-                  {
-                     myInfluencesCompleted = true;
-                     outAction = GameAction.TownspersonCompletesInfluencing;
-                     myGameEngine.PerformAction(ref gi, ref outAction);
-                  }
-               }
-               break;
-            case GamePhase.Combat:
-               bool isRetreatNeedAck;
-               if (false == DisplayCombats(gi, out isRetreatNeedAck))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::UpdateViewState() DisplayCombats() returned falsel");
-                  return;
-               }
-               if (false == isRetreatNeedAck)
-               {
-                  if (true == GameEngine.theIsAlien)
-                  {
-                     if (false == myAlienCombatCompleted)
-                     {
-                        myAlienCombatCompleted = true;
-                        outAction = GameAction.AlienCompletesCombat;
-                        myGameEngine.PerformAction(ref gi, ref outAction);
-                     }
-                  }
-                  else if (false == myTownspeopleCombatCompleted)
-                  {
-                     if (false == myTownspeopleCombatCompleted)
-                     {
-                        myTownspeopleCombatCompleted = true;
-                        outAction = GameAction.TownspersonCompletesCombat;
-                        myGameEngine.PerformAction(ref gi, ref outAction);
-                     }
-                  }
-               }
-               break;
-            case GamePhase.Iterrogations:
-               bool isAckIterrogationsNeeded;
-               if (false == DisplayIterogations(gi, out isAckIterrogationsNeeded))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::UpdateViewState() DisplayIterogations() returned false");
-                  return;
-               }
-               if (false == isAckIterrogationsNeeded)
-               {
-                  if ((false == GameEngine.theIsAlien) && (false == myInterogationsCompleted))
-                  {
-                     myInterogationsCompleted = true;
-                     outAction = GameAction.TownspersonCompletesIterogations;
-                     myGameEngine.PerformAction(ref gi, ref outAction);
-                  }
-               }
-               break;
-            case GamePhase.ImplantRemoval:
-               if (false == DisplayImplantRemovals(gi))
-               {
-                  if ((false == GameEngine.theIsAlien) && (false == myImplateRemovalsCompleted))
-                  {
-                     myImplateRemovalsCompleted = true;
-                     outAction = GameAction.TownspersonCompletesRemoval;
-                     myGameEngine.PerformAction(ref gi, ref outAction);
-                  }
-               }
-               break;
-            case GamePhase.AlienTakeover:
-               if (true == GameEngine.theIsAlien)
-               {
-                  if (false == DisplayTakeovers(gi))
-                  {
-                     if (false == myTakeoversCompleted)
-                     {
-                        myTakeoversCompleted = true;
-                        outAction = GameAction.AlienCompletesTakeovers;
-                        myGameEngine.PerformAction(ref gi, ref outAction);
-                     }
-                  }
-               }
-               break;
-            default:
-               break;
-         }  // end switch
       }
       private bool UpdateCanvasMovement(IGameInstance gi, GameAction action, IStacks stacks, List<Button> buttons)
       {
@@ -2273,6 +2186,10 @@ namespace PleasantvilleGame
                   Storyboard.SetTargetProperty(anim, new PropertyPath(OpacityProperty));
                   Storyboard.SetTargetName(anim, polygon.Name); // Start flashing the region where the user can select
                }
+               else
+               {
+                  polygon.Fill = mySolidColorBrushClear;
+               }
             }
          }
          //-------------------------------------------
@@ -2286,16 +2203,13 @@ namespace PleasantvilleGame
       }
       private bool DisplayConversation(IGameInstance gi, ITerritory selectedTerritory)
       {
-         UpdateActionPanelClear(); // If passed-in territory is not null, user has selected this region. Show a dialog of the conversation results.
-         //----------------------------------------------------------------------
+         UpdateActionPanelClear(); 
          IStack? stack = gi.Stacks.Find(selectedTerritory);
          if( null == stack )
          {
             Logger.Log(LogEnum.LE_ERROR, "Display_Conversation(): stack=null for t=" + selectedTerritory.ToString());
             return false;
          }
-         myLeftMapItemsInActionPanel.Clear();
-         myRightMapItemsInActionPanel.Clear();
          foreach (IMapItem mi in stack.MapItems)
          {
             if ((true == mi.IsConversedThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsWary))
@@ -2383,6 +2297,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "ShowResult_Conversation(): leftMapItem or rightMapItem = null");
             return;
          }
+         string rightPersonName = TableMgr.GetTownspersonName(rightMapItem);
          int dieRollModifier = 0;
          if (15 < rightMapItem.Influence)
             dieRollModifier = 3;
@@ -2403,7 +2318,6 @@ namespace PleasantvilleGame
          if (8 < finalValue)
          {
             resultString.Append(" > 8\n");
-            string rightPersonName = TableMgr.GetTownspersonName(rightMapItem);
             if ("ERROR" == rightPersonName)
             {
                Logger.Log(LogEnum.LE_ERROR, "ShowResult_Conversation(): GetTownspersonName() returned ERROR");
@@ -2413,13 +2327,13 @@ namespace PleasantvilleGame
             if (true == rightMapItem.IsAlienUnknown)
                resultString.Append(" is an Alien!!!!!!");
             else
-               resultString.Append(" says \"No not me!\"");
+               resultString.Append(" says, \"No not me!\"");
          }
          else
          {
             resultString.Append(" < 9\n");
-            resultString.Append(rightMapItem.Name);
-            resultString.Append(" says \"Really?  Have you been drinking?\"");
+            resultString.Append(rightPersonName);
+            resultString.Append(" says, \"Really?  Have you been drinking?\"");
          }
          myTextBoxResults.Text = resultString.ToString();
          //------------------------------------------------
@@ -2430,351 +2344,326 @@ namespace PleasantvilleGame
       private bool DisplayInfluences(IGameInstance gi)
       {
          myStoryboardFlashing = new Storyboard(); // Clear any previous flashing regions
-         foreach (UIElement ui in myCanvasMain.Children)
+         foreach (ITerritory t in gi.SelectedTerritories) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
          {
-            if (ui is Polygon)
+            foreach (Polygon polygon in myPolygons)
             {
-               Polygon p1 = (Polygon)ui;
-               p1.Fill = mySolidColorBrushClear;
-            }
-         }
-         // Display flashing regions where conversations can happen.
-         // Iterate through the stacks looking for multiple counters per stack.
-         foreach (Stack stack in gi.Stacks)
-         {
-            if (stack.MapItems.Count < 2)
-               continue;
-            // In each stack, get the count in the stack of the number of aliens 
-            // and controlled townspeople
-            IMapItems townspeopleControlled = new MapItems();
-            IMapItems townspeopleUncontrolled = new MapItems();
-            foreach (MapItem mi in stack.MapItems)
-            {
-               if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
-                  continue;
-               if (true == mi.IsControlled)
+               if (polygon.Name == t.ToString())
                {
-                  townspeopleControlled.Add(mi);
+                  polygon.Fill = Constants.theAlienControlledBrush;
+                  Canvas.SetZIndex(polygon, myZIndexLastUsed++);
+                  DoubleAnimation anim = new DoubleAnimation();  // Perform animiation on the region
+                  anim.From = 1.0;
+                  anim.To = 0.1;
+                  anim.Duration = new Duration(TimeSpan.FromSeconds(0.8));
+                  anim.AutoReverse = true;
+                  anim.RepeatBehavior = RepeatBehavior.Forever;
+                  myStoryboardFlashing.Children.Add(anim);
+                  Storyboard.SetTargetProperty(anim, new PropertyPath(OpacityProperty));
+                  Storyboard.SetTargetName(anim, polygon.Name); // Start flashing the region where the user can select
                }
                else
                {
-                  if ((false == mi.IsAlienKnown) && ("Zebulon" != mi.Name))
-                     townspeopleUncontrolled.Add(mi);
+                  polygon.Fill = mySolidColorBrushClear;
                }
             }
-            if ((0 == townspeopleControlled.Count) || (0 == townspeopleUncontrolled.Count))
-               continue;
-            //---------------------------------------------------
-            IMapItem? controlled = townspeopleControlled[0];
-            if (null == controlled)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "DisplayInfluences() townspeopleControlled[0]=null");
-               continue;
-            }
-            String targetName = controlled.TerritoryCurrent.Name + controlled.TerritoryCurrent.Subname.ToString(); // Turn the region red
-            foreach (UIElement ui in myCanvasMain.Children)
-            {
-               if (ui is Polygon)
-               {
-                  Polygon p1 = (Polygon)ui;
-                  if (p1.Name == targetName)
-                  {
-                     p1.Fill = mySolidColorBrushGreen;
-                     Canvas.SetZIndex(p1, myZIndexLastUsed);
-                     break;
-                  }
-               }
-            }
-            //---------------------------------------------------
-            DoubleAnimation anim = new DoubleAnimation(); // Perform animiation on the region
-            anim.From = 0.7;
-            anim.To = 0.2;
-            anim.Duration = new Duration(TimeSpan.FromSeconds(0.6));
-            anim.AutoReverse = true;
-            anim.RepeatBehavior = RepeatBehavior.Forever;
-            //---------------------------------------------------
-            myStoryboardFlashing.Children.Add(anim);
-            Storyboard.SetTargetProperty(anim, new PropertyPath(OpacityProperty));
-            Storyboard.SetTargetName(anim, targetName); // Start flashing the region where the user can select
-
-         } // end foreach (Stack stack in stacks)
+         }
+         //-------------------------------------------
          if (0 == myStoryboardFlashing.Children.Count)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Display_Conversations(): myStoryboardFlashing.Children.Count=0");
             return false;
+         }
          myStoryboardFlashing.Begin(this);
          return true;
       }
       private bool DisplayInfluence(IGameInstance gi, ITerritory selectedTerritory)
       {
-         UpdateActionPanelClear();
-         if (null == selectedTerritory)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() selectedTerritory=null");
-            return false;
-         }
+         UpdateActionPanelClear(); 
          IStack? stack = gi.Stacks.Find(selectedTerritory);
          if (null == stack)
          {
-            Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() stack=null");
+            Logger.Log(LogEnum.LE_ERROR, "Display_Conversation(): stack=null for t=" + selectedTerritory.ToString());
             return false;
          }
-         if (null != stack.MapItems)
+         myLeftMapItemsInActionPanel.Clear();
+         myRightMapItemsInActionPanel.Clear();
+         foreach (IMapItem mi in stack.MapItems)
          {
-            myLeftMapItemsInActionPanel.Clear();
-            myRightMapItemsInActionPanel.Clear();
-            foreach (IMapItem mi in stack.MapItems)
+            if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsWary))
+               continue;
+            if (true == mi.IsControlled)
             {
-               if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
+               myLeftMapItemsInActionPanel.Add(mi);
+            }
+            else
+            {
+               if (false == mi.IsAlienKnown)
+                  myRightMapItemsInActionPanel.Add(mi);
+            }
+         }
+         if ((0 < myLeftMapItemsInActionPanel.Count) && (0 < myRightMapItemsInActionPanel.Count))
+         {
+            if (false == UpdateActionPanel(gi, !GameEngine.theIsAlien))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Display_Conversation(): Update_ActionPanel() returned error");
+               return false;
+            }
+            //----------------------------------------------------------------------
+            for (int i = 0; i < myLeftMapItemsInActionPanel.Count; ++i)
+            {
+               IMapItem? leftMi = myLeftMapItemsInActionPanel[i];
+               if (null == leftMi)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() myLeftMapItemsInActionPanel[" + i + "]=null");
                   continue;
-
-               if (true == mi.IsControlled)
-               {
-                  myLeftMapItemsInActionPanel.Add(mi);
                }
-               else
+               if (true == leftMi.IsImplantHeld)
                {
-                  if ((false == mi.IsAlienKnown) && ("Zebulon" != mi.Name))
-                     myRightMapItemsInActionPanel.Add(mi);
+                  switch (i)
+                  {
+                     case 0: myLabelButton1.Visibility = Visibility.Visible; myLabelButton1.Content = "Has Implant"; break;
+                     case 1: myLabelButton2.Visibility = Visibility.Visible; myLabelButton2.Content = "Has Implant"; break;
+                     case 2: myLabelButton3.Visibility = Visibility.Visible; myLabelButton3.Content = "Has Implant"; break;
+                     default: break;
+                  }
                }
             }
             //----------------------------------------------------------------------
-            if ((0 != myLeftMapItemsInActionPanel.Count) && (0 != myRightMapItemsInActionPanel.Count))
+            for (int i = 0; i < myRightMapItemsInActionPanel.Count; ++i)
             {
-               if (false == UpdateActionPanel(gi, !GameEngine.theIsAlien))
+               IMapItem? rightMi = myRightMapItemsInActionPanel[i];
+               if (null == rightMi)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "Display_Influence(): Update_ActionPanel() returned error");
+                  Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() myRightMapItemsInActionPanel[" + i + "]=null");
                   return false;
                }
-               //----------------------------------------------------------------------
-               for (int i = 0; i < myLeftMapItemsInActionPanel.Count; ++i)
+               if (true == rightMi.IsSkeptical)
                {
-                  IMapItem? leftMi = myLeftMapItemsInActionPanel[i];
-                  if (null == leftMi)
+                  switch (i)
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() myLeftMapItemsInActionPanel[" + i + "]=null");
-                     continue;
-                  }
-                  if (true == leftMi.IsImplantHeld)
-                  {
-                     switch (i)
-                     {
-                        case 0: myLabelButton1.Visibility = Visibility.Visible; myLabelButton1.Content = "Has Implant"; break;
-                        case 1: myLabelButton2.Visibility = Visibility.Visible; myLabelButton2.Content = "Has Implant"; break;
-                        case 2: myLabelButton3.Visibility = Visibility.Visible; myLabelButton3.Content = "Has Implant"; break;
-                        default: break;
-                     }
+                     case 0: myLabelButton4.Visibility = Visibility.Visible; myLabelButton4.Content = "Skeptical"; break;
+                     case 1: myLabelButton5.Visibility = Visibility.Visible; myLabelButton5.Content = "Skeptical"; break;
+                     case 2: myLabelButton6.Visibility = Visibility.Visible; myLabelButton6.Content = "Skeptical"; break;
+                     default:
+                        Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() reached default i=" + i.ToString());
+                        return false;
                   }
                }
-               //----------------------------------------------------------------------
-               for (int i = 0; i < myRightMapItemsInActionPanel.Count; ++i)
+               if (true == rightMi.IsWary)
                {
-                  IMapItem? rightMi = myRightMapItemsInActionPanel[i];
-                  if (null == rightMi)
+                  switch (i)
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() myRightMapItemsInActionPanel[" + i + "]=null");
-                     return false;
-                  }
-                  if (true == rightMi.IsSkeptical)
-                  {
-                     switch (i)
-                     {
-                        case 0: myLabelButton4.Visibility = Visibility.Visible; myLabelButton4.Content = "Skeptical"; break;
-                        case 1: myLabelButton5.Visibility = Visibility.Visible; myLabelButton5.Content = "Skeptical"; break;
-                        case 2: myLabelButton6.Visibility = Visibility.Visible; myLabelButton6.Content = "Skeptical"; break;
-                        default:
-                           Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() reached default i=" + i.ToString());
-                           return false;
-                     }
-                  }
-                  if (true == rightMi.IsWary)
-                  {
-                     switch (i)
-                     {
-                        case 0: myLabelButton4.Visibility = Visibility.Visible; myLabelButton4.Content = "Wary"; break;
-                        case 1: myLabelButton5.Visibility = Visibility.Visible; myLabelButton5.Content = "Wary"; break;
-                        case 2: myLabelButton6.Visibility = Visibility.Visible; myLabelButton6.Content = "Wary"; break;
-                        default:
-                           Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() reached default i=" + i.ToString());
-                           return false;
-                     }
+                     case 0: myLabelButton4.Visibility = Visibility.Visible; myLabelButton4.Content = "Wary"; break;
+                     case 1: myLabelButton5.Visibility = Visibility.Visible; myLabelButton5.Content = "Wary"; break;
+                     case 2: myLabelButton6.Visibility = Visibility.Visible; myLabelButton6.Content = "Wary"; break;
+                     default:
+                        Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() reached default i=" + i.ToString());
+                        return false;
                   }
                }
-               //----------------------------------------------------------------------
-               myLabelHeading.Visibility = Visibility.Visible;
-               myLabelArrow.Visibility = Visibility.Visible;
-               myTextBoxResults.Visibility = Visibility.Visible;
-               myLabelHeading.Content = "Influencing... \"Please help me fight the aliens.\"";
-               myLabelLeftTop.Content = "First, choose one or more persons:";
-               myLabelRightTop.Content = "Last, choose a person being influenced:";
             }
+            //----------------------------------------------------------------------
+            myLabelHeading.Visibility = Visibility.Visible;
+            myLabelArrow.Visibility = Visibility.Visible;
+            myTextBoxResults.Visibility = Visibility.Visible;
+            myLabelHeading.Content = "Influencing... \"Please help me fight the aliens.\"";
+            myLabelLeftTop.Content = "First, choose one or more persons:";
+            myLabelRightTop.Content = "Last, choose a person being influenced:";
          }
          return true;
       }
-      private bool PerformInfluence(IGameInstance gi, bool isIgnoreResults)
+      private bool RollInfluence()
       {
-         if ((0 == myLeftMapItemsInActionPanelSelected.Count) || (0 == myRightMapItemsInActionPanelSelected.Count))
+         if (null == myGameInstance)
          {
-            StringBuilder sb = new StringBuilder("Perform_Influence(): myLeft=");
-            sb.Append(myLeftMapItemsInActionPanel.Count.ToString());
-            sb.Append(" myRight=");
-            sb.Append(myRightMapItemsInActionPanel.Count.ToString());
-            sb.Append(" myLeftSelected=");
-            sb.Append(myLeftMapItemsInActionPanelSelected.Count.ToString());
-            sb.Append(" myRightSelected=");
-            sb.Append(myRightMapItemsInActionPanelSelected.Count.ToString());
-            Logger.Log(LogEnum.LE_ERROR, sb.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "Roll_Influence(): myGameInstance=null");
             return false;
+         }
+         if (null == myDieRoller)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Roll_Influence(): myDieRoller=null");
+            return false;
+         }
+
+         //-------------------------------------------------------------
+         IMapItem? selectedLeft = myLeftMapItemsInActionPanelSelected[0];
+         if (null == selectedLeft)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Roll_Influence(): myLeftMapItemsInActionPanelSelected[0]=null");
+            return false;
+         }
+         myGameInstance.SelectedMapItems.Add(selectedLeft);
+         IMapItem? selectedRight = myRightMapItemsInActionPanelSelected[0];
+         if (null == selectedRight)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Roll_Influence(): myLeftMapItemsInActionPanelSelected[0]=null");
+            return false;
+         }
+         StringBuilder sb = new StringBuilder("Roll_Influence(): left=");
+         sb.Append(selectedLeft.ToString());
+         sb.Append(" right=");
+         sb.Append(selectedRight.ToString());
+         Logger.Log(LogEnum.LE_SHOW_INFLUENCES, sb.ToString());
+         //-------------------------------------------------------------
+         myGameInstance.SelectedMapItems.Add(selectedRight);
+         myGameInstance.DieRollAction = GameAction.InfluencesRoll;
+         myDieRoller.RollMovingDice(myCanvasMain, ShowResultInfluence);
+         return true;
+      }
+      private void ShowResultInfluence(int dieRoll)
+      {
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ShowResult_Influence(): myGameInstance=null");
+            return;
+         }
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ShowResult_Influence(): myGameEngine=null");
+            return;
+         }
+         int indexInflenced = myGameInstance.SelectedMapItems.Count-1;
+         IMapItem? rightMapItem = myGameInstance.SelectedMapItems[indexInflenced];
+         if (null == rightMapItem)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_Influence(): rightMapItem=null");
+            return;
          }
          //-----------------------------------------------------------------------------
          double totalInfluence = 0;
          bool isImplantHeld = false;
-         foreach (IMapItem mi in myLeftMapItemsInActionPanelSelected)
+         for (int i= 0; i< indexInflenced; ++i)
          {
-            IMapItem? leftMi = myLeftMapItemsInActionPanelSelected[0];
-            if (null == leftMi)
+            IMapItem? influencer = myLeftMapItemsInActionPanelSelected[i];
+            if (null == influencer)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_Influence(): myLeftMapItemsInActionPanelSelected[0]=null");
-               return false;
+               Logger.Log(LogEnum.LE_ERROR, "Perform_Influence(): influencer=null");
+               return;
             }
-            leftMi.IsInfluencedThisTurn = true;
-            totalInfluence += (double)mi.Influence;
-            if (true == mi.IsImplantHeld)
+            totalInfluence += (double)influencer.Influence;
+            if (true == influencer.IsImplantHeld)
                isImplantHeld = true;
          }
+         double odds = totalInfluence / ((double)rightMapItem.Influence);
          //-----------------------------------------------------------------------------
-         IMapItem? rightMapItem = myRightMapItemsInActionPanelSelected[0];
-         if (null == rightMapItem)
+         StringBuilder displayResults = new StringBuilder("Odds: ");
+         int dieThreshold = -99;
+         if (3.999 < odds)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_Influence(): rightMapItem=null");
-            return false;
+            dieThreshold = 3;
+            displayResults.Append("4-1");
          }
-         rightMapItem.IsInfluencedThisTurn = true;
-         //-----------------------------------------------------------------------------
-         if (false == isIgnoreResults)
+         else if (2.999 < odds)
          {
-            StringBuilder displayResults = new StringBuilder("Odds: ");
-            double odds = totalInfluence / ((double)rightMapItem.Influence);
-
-            int dieThreshold = -99;
-            if (3.999 < odds)
-            {
-               dieThreshold = 3;
-               displayResults.Append("4-1");
-            }
-            else if (2.999 < odds)
-            {
-               dieThreshold = 4;
-               displayResults.Append("3-1");
-            }
-            else if (1.999 < odds)
-            {
-               dieThreshold = 5;
-               displayResults.Append("2-1");
-            }
-            else if (1.499 < odds)
-            {
-               dieThreshold = 6;
-               displayResults.Append("3-2");
-            }
-            else if (0.999 < odds)
-            {
-               dieThreshold = 7;
-               displayResults.Append("1-1");
-            }
-            else if (0.666 < odds)
-            {
-               dieThreshold = 8;
-               displayResults.Append("2-3");
-            }
-            else if (0.499 < odds)
-            {
-               dieThreshold = 9;
-               displayResults.Append("1-2");
-            }
-            else
-            {
-               dieThreshold = 10;
-               displayResults.Append("1-3");
-            }
-            //-----------------------------------------------------------------------------
-            // Perform die roll modifier.
-            // Subtact one if a controlled person holds evidence of an implant.
-            // Check if MapItem is skeptical.  If both skeptical and wary,
-            // cancel them out with no die roll modifier.
-            // If not skeptical, check if wary.  This adds to the die roll.
-            int dieRollModifier = 0;
-            if (true == isImplantHeld)
-               --dieRollModifier;
-            if (true == rightMapItem.IsSkeptical)
-               ++dieRollModifier;
-            if (true == rightMapItem.IsWary)
-               --dieRollModifier;
-            dieThreshold += dieRollModifier;
-            //-----------------------------------------------------------------------------
-            int die1 = Utilities.RandomGenerator.Next(6) + 1;
-            int die2 = Utilities.RandomGenerator.Next(6) + 1;
-            int sum = die1 + die2;
-            displayResults.Append("\nModifier: ");
-            if (0 <= dieRollModifier)
-               displayResults.Append("+");
-            displayResults.Append(dieRollModifier.ToString());
-            displayResults.Append("\nNeed: ");
-            displayResults.Append(dieThreshold.ToString());
-            displayResults.Append("+");
-            displayResults.Append("\nRoll: ");
-            displayResults.Append(die1.ToString());
-            displayResults.Append(" + ");
-            displayResults.Append(die2.ToString());
-            displayResults.Append(" = ");
-            displayResults.Append(sum.ToString());
-            displayResults.Append("\n");
-            displayResults.Append(rightMapItem.Name);
-            if (dieThreshold <= sum) // Check for alien.  If alien, let user know it is discovered. Else, make the townsperson controlled.
-            {
-               if (true == rightMapItem.IsAlienUnknown)
-               {
-                  if (false == gi.AddKnownAlien(rightMapItem))
-                  {
-                     Logger.Log(LogEnum.LE_ERROR, "Perform_Influence(): AddKnownAlien() returned error");
-                     return false;
-                  }
-                  displayResults.Append(" is an Alien!!!!!!");
-               }
-               else
-               {
-                  if (false == gi.AddTownperson(rightMapItem))
-                  {
-                     Logger.Log(LogEnum.LE_ERROR, "Perform_Influence(): AddTownperson() returned error");
-                     return false;
-                  }
-                  displayResults.Append(" says \"You are right.  Let's go get 'em!\"");
-               }
-            }
-            else
-            {
-               if (false == rightMapItem.IsWary)  // wary people cannot become skeptical
-               {
-                  rightMapItem.IsSkeptical = true;
-                  displayResults.Append(" says \"Are you crazy?  That is absurd!\"");
-               }
-               else
-               {
-                  displayResults.Append(" says \"Hmmmm.  It seems so unlikely.\"");
-               }
-            }
-            myTextBoxResults.Text = displayResults.ToString();
+            dieThreshold = 4;
+            displayResults.Append("3-1");
+         }
+         else if (1.999 < odds)
+         {
+            dieThreshold = 5;
+            displayResults.Append("2-1");
+         }
+         else if (1.499 < odds)
+         {
+            dieThreshold = 6;
+            displayResults.Append("3-2");
+         }
+         else if (0.999 < odds)
+         {
+            dieThreshold = 7;
+            displayResults.Append("1-1");
+         }
+         else if (0.666 < odds)
+         {
+            dieThreshold = 8;
+            displayResults.Append("2-3");
+         }
+         else if (0.499 < odds)
+         {
+            dieThreshold = 9;
+            displayResults.Append("1-2");
+         }
+         else
+         {
+            dieThreshold = 10;
+            displayResults.Append("1-3");
          }
          //-----------------------------------------------------------------------------
-         GameAction outAction = GameAction.TownspersonPerformsInfluencing;
-         myGameEngine.PerformAction(ref gi, ref outAction);
-         if (true == isIgnoreResults)
-            UpdateActionPanelClear();
-         else if (false == UpdateActionPanelButtons(gi))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_Influence(): Update_ActionPanelButtons() return false");
-            return false;
-         }
-         return true;
-
+         // Perform die roll modifier.
+         // Subtact one if a controlled person holds evidence of an implant.
+         // Check if MapItem is skeptical.  If both skeptical and wary,
+         // cancel them out with no die roll modifier.
+         // If not skeptical, check if wary.  This adds to the die roll.
+         int dieRollModifier = 0;
+         if (true == isImplantHeld)
+            --dieRollModifier;
+         if (true == rightMapItem.IsSkeptical)
+            ++dieRollModifier;
+         if (true == rightMapItem.IsWary)
+            --dieRollModifier;
+         dieThreshold += dieRollModifier;
+         //-----------------------------------------------------------------------------
+         //int die1 = Utilities.RandomGenerator.Next(6) + 1;
+         //int die2 = Utilities.RandomGenerator.Next(6) + 1;
+         //int sum = die1 + die2;
+         //displayResults.Append("\nModifier: ");
+         //if (0 <= dieRollModifier)
+         //   displayResults.Append("+");
+         //displayResults.Append(dieRollModifier.ToString());
+         //displayResults.Append("\nNeed: ");
+         //displayResults.Append(dieThreshold.ToString());
+         //displayResults.Append("+");
+         //displayResults.Append("\nRoll: ");
+         //displayResults.Append(die1.ToString());
+         //displayResults.Append(" + ");
+         //displayResults.Append(die2.ToString());
+         //displayResults.Append(" = ");
+         //displayResults.Append(sum.ToString());
+         //displayResults.Append("\n");
+         //displayResults.Append(rightMapItem.Name);
+         //if (dieThreshold <= sum) // Check for alien.  If alien, let user know it is discovered. Else, make the townsperson controlled.
+         //{
+         //   if (true == rightMapItem.IsAlienUnknown)
+         //   {
+         //      if (false == gi.AddKnownAlien(rightMapItem))
+         //      {
+         //         Logger.Log(LogEnum.LE_ERROR, "Perform_Influence(): AddKnownAlien() returned error");
+         //         return;
+         //      }
+         //      displayResults.Append(" is an Alien!!!!!!");
+         //   }
+         //   else
+         //   {
+         //      if (false == gi.AddTownperson(rightMapItem))
+         //      {
+         //         Logger.Log(LogEnum.LE_ERROR, "Perform_Influence(): AddTownperson() returned error");
+         //         return;
+         //      }
+         //      displayResults.Append(" says \"You are right.  Let's go get 'em!\"");
+         //   }
+         //}
+         //else
+         //{
+         //   if (false == rightMapItem.IsWary)  // wary people cannot become skeptical
+         //   {
+         //      rightMapItem.IsSkeptical = true;
+         //      displayResults.Append(" says \"Are you crazy?  That is absurd!\"");
+         //   }
+         //   else
+         //   {
+         //      displayResults.Append(" says \"Hmmmm.  It seems so unlikely.\"");
+         //   }
+         //}
+         //myTextBoxResults.Text = displayResults.ToString();
+         ////-----------------------------------------------------------------------------
+         //GameAction outAction = GameAction.TownspersonPerformsInfluencing;
+         //myGameEngine.PerformAction(ref gi, ref outAction);
+         //if (false == UpdateActionPanelButtons(gi))
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Perform_Influence(): Update_ActionPanelButtons() return false");
+         //   return;
+         //}
       }
       private bool DisplayCombats(IGameInstance gi, out bool isRetreatNeedAck)
       {
@@ -3969,6 +3858,13 @@ namespace PleasantvilleGame
                break;
             case GamePhase.Conversations:
                if( false == DisplayConversation(myGameInstance, tSelected))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_Conversation() returned error");
+                  return;
+               }
+               break;
+            case GamePhase.Influences:
+               if (false == DisplayInfluence(myGameInstance, tSelected))
                {
                   Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_Conversation() returned error");
                   return;

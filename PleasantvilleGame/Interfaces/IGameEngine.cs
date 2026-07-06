@@ -76,9 +76,9 @@ namespace PleasantvilleGame
       ConversationsRollEnd,
       ConversationsFinish,
 
-      TownspersonPerformsInfluencing,
-      TownspersonCompletesInfluencing, 
       InfluencesSelect,
+      InfluencesRoll,
+      InfluencesRollEnd,
       InfluencesFinish,
 
       AlienDisplaysRandomMovement,
