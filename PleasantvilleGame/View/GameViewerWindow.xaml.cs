@@ -3792,12 +3792,11 @@ namespace PleasantvilleGame
                }
                else
                {
-                  Logger.Log(LogEnum.LE_SHOW_TOWN_MOVE, "ClickButton_MapItem(): REmoving to SelectedMapItems mi=" + selectedMapItem.Name);
+                  Logger.Log(LogEnum.LE_SHOW_TOWN_MOVE, "ClickButton_MapItem(): Removing to SelectedMapItems mi=" + selectedMapItem.Name);
                   myGameInstance.SelectedMapItems.Remove(selectedMapItem.Name);
                }
                break;
             default:
-               Logger.Log(LogEnum.LE_ERROR, "ClickButton_MapItem(): reach default phase=" + myGameInstance.GamePhase.ToString());
                break;
          }
          e.Handled = true;
