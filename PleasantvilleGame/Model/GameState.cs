@@ -29,9 +29,9 @@ namespace PleasantvilleGame
             case GamePhase.GameSetup: return new GameStateSetup();
             case GamePhase.AlienMovement: return new GameStateAlienPlayerMovement();
             case GamePhase.AlienTakeover: return new GameStateAlienTakeover();
-            case GamePhase.Combat: return new GameStateCombat();
+            case GamePhase.Combats: return new GameStateCombat();
             case GamePhase.Conversations: return new GameStateConversations();
-            case GamePhase.ImplantRemoval: return new GameStateImplantRemoval();
+            case GamePhase.ImplantRemovals: return new GameStateImplantRemoval();
             case GamePhase.Influences: return new GameStateInfluences();
             case GamePhase.Iterrogations: return new GameStateIterogations();
             case GamePhase.RandomMovement: return new GameStateRandomMovement();
@@ -227,14 +227,9 @@ namespace PleasantvilleGame
                if ((true == mi.IsConversedThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsWary))
                   continue;
                if (true == mi.IsControlled)
-               {
                   controlledPeps.Add(mi);
-               }
-               else
-               {
-                  if(false == mi.IsAlienKnown) 
-                     uncontrolledPeps.Add(mi);
-               }
+               else if(false == mi.IsAlienKnown) 
+                  uncontrolledPeps.Add(mi);
             }
             if ((0 < controlledPeps.Count) && (0 < uncontrolledPeps.Count))
             {
@@ -270,13 +265,9 @@ namespace PleasantvilleGame
                if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
                   continue;
                if (true == mi.IsControlled)
-               {
                   controlledPeps.Add(mi);
-               }
-               else
-               {
-                  if (false == mi.IsAlienKnown) uncontrolledPeps.Add(mi);
-               }
+               else if (false == mi.IsAlienKnown) 
+                  uncontrolledPeps.Add(mi);
             }
             if ((0 < controlledPeps.Count) && (0 < uncontrolledPeps.Count))
             {
@@ -302,6 +293,37 @@ namespace PleasantvilleGame
       }
       protected bool CheckForPossibleCombats(IGameInstance gi, ref GameAction action)
       {
+         action = GameAction.Error;
+         foreach (Stack stack in gi.Stacks)
+         {
+            IMapItems controlledPeps = new MapItems();
+            IMapItems uncontrolledPeps = new MapItems();
+            IMapItems alienPeps = new MapItems();
+            foreach (MapItem mi in stack.MapItems)
+            {
+               if ((true == mi.IsCombatThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
+                  continue;
+               if (true == mi.IsControlled)
+                  controlledPeps.Add(mi);
+               else if ((false == mi.IsAlienKnown) || (false == mi.IsAlienUnknown))
+                  alienPeps.Add(mi);
+               else
+                  uncontrolledPeps.Add(mi)
+;            }
+            if ((0 < controlledPeps.Count) && ( (0 < uncontrolledPeps.Count) || (0 < alienPeps.Count) ) )
+            {
+               if (false == SetPhase(gi, GamePhase.Combats))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "CheckFor_Influences(): Set_Phase() returned error");
+                  return false;
+               }
+               gi.SelectedTerritories.Add(stack.Territory);
+               gi.EventDisplayed = gi.EventActive = "e011t";
+               action = GameAction.CombatsSelect;
+            }
+         }
+         if (GameAction.InfluencesSelect == action)
+            return true;
          if (false == CheckForIterogations(gi, ref action))
          {
             Logger.Log(LogEnum.LE_ERROR, "CheckFor_PossibleCombats(): CheckFor_Iterogations() returned error");
@@ -1446,7 +1468,7 @@ namespace PleasantvilleGame
                      }
                      if (false == CheckForConversations(gi, ref action))
                      {
-                        returnStatus = "CheckFor_Conversations() returned false in AlienAcksTownspersonMovement action";
+                        returnStatus = "CheckFor_Conversations() returned false";
                         Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(): " + returnStatus);
                      }
                   }
@@ -1498,6 +1520,100 @@ namespace PleasantvilleGame
          switch (action)
          {
             case GameAction.InfluencesRoll:
+               if (gi.SelectedMapItems.Count < 2)
+               {
+                  returnStatus = " 2 > (gi.Conversations.Count=" + gi.SelectedMapItems.Count + ")";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(): " + returnStatus);
+               }
+               else
+               {
+                  int indexOfLast = gi.SelectedMapItems.Count - 1;
+                  IMapItem? rightMapItem = gi.SelectedMapItems[indexOfLast];
+                  if( null == rightMapItem )
+                  {
+                     returnStatus = "rightMapItem = null";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(): " + returnStatus);
+                  }
+                  else
+                  {
+                     double totalInfluence = 0;
+                     bool isImplantHeld = false;
+                     for (int i = 0; i < indexOfLast; ++i)
+                     {
+                        IMapItem? influencer = gi.SelectedMapItems[i];
+                        if (null == influencer)
+                        {
+                           returnStatus = "influencer=null for i=" + i.ToString();
+                           Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(): " + returnStatus);
+                        }
+                        else
+                        {
+                           influencer.IsInfluencedThisTurn = true;
+                           totalInfluence += (double)influencer.Influence;
+                           if (true == influencer.IsImplantHeld)
+                              isImplantHeld = true;
+                        }
+                     }
+                     double odds = totalInfluence / ((double)rightMapItem.Influence);
+                     int dieThreshold;
+                     if (3.999 < odds)
+                        dieThreshold = 3;
+                     else if (2.999 < odds)
+                        dieThreshold = 4;
+                     else if (1.999 < odds)
+                        dieThreshold = 5;
+                     else if (1.499 < odds)
+                        dieThreshold = 6;
+                     else if (0.999 < odds)
+                        dieThreshold = 7;
+                     else if (0.666 < odds)
+                        dieThreshold = 8;
+                     else if (0.499 < odds)
+                        dieThreshold = 9;
+                     else
+                        dieThreshold = 10;
+                     int dieRollModifier = 0;
+                     if (true == isImplantHeld) // Subtact one if a controlled person holds evidence of an implant.
+                        --dieRollModifier;
+                     if (true == rightMapItem.IsSkeptical) // Check if MapItem is skeptical.  If both skeptical and wary,
+                        ++dieRollModifier;
+                     if (true == rightMapItem.IsWary)  // If not skeptical, check if wary.  This adds to the die roll.
+                        --dieRollModifier;
+                     dieThreshold += dieRollModifier;
+                     if (dieThreshold <= dieRoll) // Check for alien.  If alien, let user know it is discovered. Else, make the townsperson controlled.
+                     {
+                        if (true == rightMapItem.IsAlienUnknown)
+                        {
+                           if (false == gi.AddKnownAlien(rightMapItem))
+                           {
+                              returnStatus = "AddKnownAlien() returned error";
+                              Logger.Log(LogEnum.LE_ERROR, "ShowResult_Influence():" + returnStatus);
+                           }
+                        }
+                        else
+                        {
+                           if (false == gi.AddControlled(rightMapItem))
+                           {
+                              returnStatus = "AddKnownAlien() returned error";
+                              Logger.Log(LogEnum.LE_ERROR, "ShowResult_Influence():" + returnStatus);
+                           }
+                        }
+                     }
+                     else
+                     {
+                        if (false == rightMapItem.IsWary)  // wary people cannot become skeptical
+                           rightMapItem.IsSkeptical = true;
+                     }
+                     if ("OK" == returnStatus)
+                     {
+                        if (false == CheckForInfluences(gi, ref action))
+                        {
+                           returnStatus = "CheckFor_Influences() returned false";
+                           Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(): " + returnStatus);
+                        }
+                     }
+                  }
+               }
                break;
             case GameAction.InfluencesFinish:
                break;
@@ -1989,40 +2105,6 @@ namespace PleasantvilleGame
                gi.NextAction = "Alien Acknowledges Iterogations";
                break;
             case GameAction.AlienAcksIterogations:
-               bool isAnyMovement;
-               if (false == GameStateChecker.CheckForRandomMoves(gi, out isAnyMovement))
-               {
-                  returnStatus = "GameStateChecker.CheckForTownspersonCombats() returned false in AlienAcksTownspersonMovement action";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-               }
-               //-----------------------------------------------------
-               if (true == GameStateChecker.CheckForImplantRemoval(gi))
-               {
-                  gi.NextAction = "Townsperson chooses Flashing Space for Implant Removal";
-                  gi.GamePhase = GamePhase.ImplantRemoval;
-               }
-               else if (true == GameStateChecker.CheckForAlienTakeovers(gi))
-               {
-                  gi.GamePhase = GamePhase.AlienTakeover;
-                  gi.NextAction = "Alien Chooses Flashing Space for Takeover";
-               }
-               else if (true == GameStateChecker.CheckForEndOfGame(gi))
-               {
-                  action = GameAction.ShowEndGame;
-                  gi.GamePhase = GamePhase.ShowEndGame;
-                  gi.NextAction = "End Game";
-                  gi.GameTurn = 13;
-               }
-               else if (true == isAnyMovement)
-               {
-                  gi.NextAction = "Display Random Movement";
-                  gi.GamePhase = GamePhase.RandomMovement;
-               }
-               else
-               {
-                  gi.NextAction = "Alien Performs Movement";
-                  gi.GamePhase = GamePhase.AlienMovement;
-               }
                break;
             default:
                returnStatus = "reached default action=" + action.ToString();

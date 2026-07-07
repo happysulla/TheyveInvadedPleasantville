@@ -124,12 +124,13 @@ On a roll of nine or better including modifiers from the <InlineUIContainer><But
 After completion of all possible conversations, the game automatically moves to the Influence phase. Alternatively, the Town player can advance sooner by clicking image below.
 <LineBreak/><LineBreak/>
                                         <InlineUIContainer><Image Name='Continue009t' Height='100' Width='100'></Image></InlineUIContainer>"
-e010t	"<Bold>e010t Infleunces</Bold>  <InlineUIContainer><Button Content='r7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+e010t	"<Bold>e010t Influences</Bold>  <InlineUIContainer><Button Content='r7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
-Influencing is how the Town player convinces other uncontrolled townspeople to join their side. Click a flashing space to start a influence process.<LineBreak/><LineBreak/>
+Influencing is how the Town player convinces other uncontrolled townspeople to join their side. Click a flashing space to start a influence process.
 <LineBreak/><LineBreak/>
-To influence another uncontrolled counter, the Town player compares the Influence Factor of the Town controlled counters (bottom right per <InlineUIContainer><Button Content='r2.2.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>) to the Influence Factor of the uncontrolled townsperson. The odds ration is compared to 
-<InlineUIContainer><Button Content='Influence Modifiers' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table, 
+To influence another uncontrolled counter, the Town player compares the Influence Factors (bottom right per <InlineUIContainer><Button Content='r2.2.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>) and compares the odds ration to the 
+<InlineUIContainer><Button Content='Influence Results' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table adjusting with the 
+<InlineUIContainer><Button Content='Influence Modifiers' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>.
 <LineBreak/><LineBreak/>
 After completion of all possible infleunces have occurred, the game automatically moves to the Combat phase. Alternatively, the Town player can advance sooner by clicking image below.
 <LineBreak/><LineBreak/>

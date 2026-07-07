@@ -14,9 +14,9 @@ namespace PleasantvilleGame
       TownspersonMovement,
       Conversations,
       Influences,
-      Combat,
+      Combats,
       Iterrogations,
-      ImplantRemoval,
+      ImplantRemovals,
       AlienTakeover,
       ShowEndGame,
       UnitTest,
@@ -73,13 +73,15 @@ namespace PleasantvilleGame
 
       ConversationsSelect,
       ConversationsRoll,
-      ConversationsRollEnd,
       ConversationsFinish,
 
       InfluencesSelect,
       InfluencesRoll,
-      InfluencesRollEnd,
       InfluencesFinish,
+
+      CombatsSelect,
+      CombatsRoll,
+      CombatsFinish,
 
       AlienDisplaysRandomMovement,
       TownspersonDisplaysRandomMovement,

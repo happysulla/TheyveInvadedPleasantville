@@ -82,7 +82,7 @@ namespace PleasantvilleGame
       //=========================================================
       bool AddUnknownAlien(IMapItem newAlien);
       bool AddKnownAlien(IMapItem newAlien);
-      bool AddTownperson(IMapItem newPerson);
+      bool AddControlled(IMapItem newPerson);
       IMapItemMove? CreateMapItemMove(IMapItem mi, ITerritory newT);
    }
 }

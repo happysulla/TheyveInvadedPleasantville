@@ -7,11 +7,12 @@
         Name="myDialogTableListing"
         Topmost="True"
         Background="AntiqueWhite"
-        Title="Table Listing" Height="450" Width="260" MinWidth="130" MaxWidth="260" WindowStartupLocation="CenterScreen"
+        Title="Table Listing" Height="480" Width="260" MinWidth="130" MaxWidth="260" WindowStartupLocation="CenterScreen"
         Closed="Window_Closed">
    <ScrollViewer Name="myScrollViewer" VerticalScrollBarVisibility="Auto" Margin="0,0,0,0">
       <Grid Name="myGrid" >
          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -30,12 +31,13 @@
          <Button Grid.Row="1" Grid.Column="0" Content="Combat Results" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
          <Button Grid.Row="2" Grid.Column="0" Content="Conversation Modifiers" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
          <Button Grid.Row="3" Grid.Column="0" Content="Implant Removal" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
-         <Button Grid.Row="4" Grid.Column="0" Content="Influence Modifiers" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
-         <Button Grid.Row="5" Grid.Column="0" Content="Observation" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
-         <Button Grid.Row="6" Grid.Column="0" Content="Target Building" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
-         <Button Grid.Row="7" Grid.Column="0" Content="Town Loss" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
-         <Button Grid.Row="8" Grid.Column="0" Content="Town Player Starting" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
-         <Button Grid.Row="9" Grid.Column="0" Content="Townspeople" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
+         <Button Grid.Row="4" Grid.Column="0" Content="Influence Results" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
+         <Button Grid.Row="5" Grid.Column="0" Content="Influence Modifiers" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
+         <Button Grid.Row="6" Grid.Column="0" Content="Observation" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
+         <Button Grid.Row="7" Grid.Column="0" Content="Target Building" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
+         <Button Grid.Row="8" Grid.Column="0" Content="Town Loss" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
+         <Button Grid.Row="9" Grid.Column="0" Content="Town Player Starting" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
+         <Button Grid.Row="10" Grid.Column="0" Content="Townspeople" Click="ButtonShowRule_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60,10,0,10" Width="120"/>
       </Grid>
    </ScrollViewer>
 </Window>
