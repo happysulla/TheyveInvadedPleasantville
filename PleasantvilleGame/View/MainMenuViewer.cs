@@ -498,7 +498,6 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "MainMenuViewer::MenuItemNextAction_Click(): myGameEngine is null");
             return;
          }
-         GameAction action = GameAction.TownspersonDisplaysRandomMovement; // Game State follows the state pattern.  Each game state represents a different object.  The initial game state is Setup.
          //switch (myMenuItemNextAction.Header.ToString())
          //{
          //   case "_Start":

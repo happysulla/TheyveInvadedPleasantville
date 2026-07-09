@@ -23,16 +23,8 @@ namespace PleasantvilleGame.Networking
          GameAction.UpdateEventViewerActive,
          GameAction.UpdateEventViewerDisplay,
          GameAction.TownMovementTownPerforms,
-         GameAction.TownpersonCompletesMovement,
          GameAction.ConversationsRoll,
          GameAction.ConversationsFinish,
-         GameAction.TownspersonInitiateCombat,
-         GameAction.TownspersonPerformCombat,
-         GameAction.TownspersonCompletesCombat,
-         GameAction.TownspersonIterrogates,
-         GameAction.TownspersonCompletesIterogations,
-         GameAction.TownspersonRemovesImplant,
-         GameAction.TownspersonCompletesRemoval
       };
       //----------------------------------------------------------------------------------------
       private static readonly HashSet<GameAction> theAlienAllowedActions = new HashSet<GameAction>
@@ -40,17 +32,6 @@ namespace PleasantvilleGame.Networking
          GameAction.GameSetupStartingAlienSetRoll,
          GameAction.UpdateEventViewerActive,
          GameAction.UpdateEventViewerDisplay,
-         GameAction.AlienMovement,
-         GameAction.AlienCompletesMovement,
-         GameAction.AlienInitiateCombat,
-         GameAction.AlienPerformCombat,
-         GameAction.AlienCompletesCombat,
-         GameAction.AlienAcksTownspersonMovement,
-         GameAction.AlienStopsTownspersonMovement,
-         GameAction.AlienModifiesTownspersonMovement,
-         GameAction.AlienAcksIterogations,
-         GameAction.AlienTakeover,
-         GameAction.AlienCompletesTakeovers
       };
       //----------------------------------------------------------------------------------------
       private readonly object mySync = new object();

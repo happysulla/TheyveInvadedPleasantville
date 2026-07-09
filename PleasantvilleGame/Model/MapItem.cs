@@ -393,13 +393,13 @@ namespace PleasantvilleGame
             b.Background = Brushes.Black;
         // else if ( (true == mi.IsAlienKnown) || ((true == mi.IsAlienUnknown) && (true == GameEngine.theIsAlien)) ) 
          else if ((true == mi.IsAlienKnown) || (true == mi.IsAlienUnknown)) // <cgs> TEST
-            b.Background = Constants.theAlienControlledBrush;
+            b.Background = Utilities.theAlienControlledBrush;
          else if (true == mi.IsControlled)
-            b.Background = Constants.theTownControlledBrush;
+            b.Background = Utilities.theTownControlledBrush;
          else if (true == mi.IsSkeptical)
-            b.Background = Constants.theSkepticalBrush;
+            b.Background = Utilities.theSkepticalBrush;
          else if (true == mi.IsWary)
-            b.Background = Constants.theWaryBrush;
+            b.Background = Utilities.theWaryBrush;
          else
             b.Background = Brushes.White;
       }

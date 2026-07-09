@@ -200,7 +200,7 @@ namespace PleasantvilleGame
          SetDisplayIconForUninstall();   // This is specialized code to add to Windows Registry icon for uninstall
          CreateContentMenuForButtons();
          //-----------------------------------------------
-         this.BorderBrush = Constants.theNeutralBrush;
+         this.BorderBrush = Utilities.theNeutralBrush;
          mySolidColorBrushClear.Color = Color.FromArgb(0, 0, 1, 0);
          myBrushes.Add(Brushes.Green);  // Create a container of brushes for painting paths.
          myBrushes.Add(Brushes.Blue);
@@ -208,8 +208,8 @@ namespace PleasantvilleGame
          myBrushes.Add(Brushes.Violet);
          myBrushes.Add(Brushes.Red);
          myBrushes.Add(Brushes.DeepPink);
-         myBrushes.Add(Constants.theAlienControlledBrush);
-         myBrushes.Add(Constants.theTownControlledBrush);
+         myBrushes.Add(Utilities.theAlienControlledBrush);
+         myBrushes.Add(Utilities.theTownControlledBrush);
          myDashArray.Add(4);  // used for dotted lines
          myDashArray.Add(2);
          //---------------------------------------------------------------
@@ -237,9 +237,9 @@ namespace PleasantvilleGame
          }
          //---------------------------------------------------------------
          if (true == GameEngine.theIsAlien)
-            myTextBoxOpponent.Foreground = Constants.theAlienControlledBrush;
+            myTextBoxOpponent.Foreground = Utilities.theAlienControlledBrush;
          else
-            myTextBoxOpponent.Foreground = Constants.theTownControlledBrush;
+            myTextBoxOpponent.Foreground = Utilities.theTownControlledBrush;
          //----------------------------------------------------------
 #pragma warning disable CA1416 // Validate platform compatibility
          myTimer.Interval = ANIMATE_SPEED * 1000 + 1000;
@@ -1089,9 +1089,9 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
-               if ( false == DisplayConversations(gi))
+               if ( false == DisplayFlashingRegion(gi, mySolidColorBrushGray))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_Conversations() returned error ");
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
                   return;
                }
                break;
@@ -1103,9 +1103,23 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
-               if (false == DisplayInfluences(gi))
+               if (false == DisplayFlashingRegion(gi, Utilities.theTownControlledBrush))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_Influences() returned error ");
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
+                  return;
+               }
+               break;
+            case GameAction.CombatsSelect:
+               myRectangleMaps.Clear();
+               UpdateCanvasMainClear(myButtons, gi.Stacks, action);
+               if (false == UpdateCanvasMain(gi, action))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
+                  return;
+               }
+               if (false == DisplayFlashingRegion(gi, Utilities.theBrushBlood))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
                   return;
                }
                break;
@@ -1935,7 +1949,7 @@ namespace PleasantvilleGame
                if ( (GamePhase.TownspersonMovement == gi.GamePhase) && (mi.Movement <= mi.MovementUsed))
                {
                   Rectangle r = myRectangleMaps[mi];
-                  r.Stroke = Constants.theTownControlledBrush;
+                  r.Stroke = Utilities.theTownControlledBrush;
                }
                stacks.Add(mi); // add to new stack
                count++;
@@ -2175,7 +2189,7 @@ namespace PleasantvilleGame
          //return dlg.IsMoveStopped;
          return false;
       }
-      private bool DisplayConversations(IGameInstance gi)
+      private bool DisplayFlashingRegion(IGameInstance gi, SolidColorBrush brush)
       {
          myStoryboardFlashing = new Storyboard(); // Clear any previous flashing regions
          foreach (ITerritory t in gi.SelectedTerritories) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
@@ -2184,7 +2198,7 @@ namespace PleasantvilleGame
             {
                if (polygon.Name == t.ToString())
                {
-                  polygon.Fill = mySolidColorBrushGray;
+                  polygon.Fill = brush;
                   Canvas.SetZIndex(polygon, myZIndexLastUsed++);
                   DoubleAnimation anim = new DoubleAnimation();  // Perform animiation on the region
                   anim.From = 1.0;
@@ -2198,14 +2212,14 @@ namespace PleasantvilleGame
                }
                else
                {
-                  polygon.Fill = mySolidColorBrushClear;
+                  polygon.Fill = Utilities.theBrushRegionClear;
                }
             }
          }
          //-------------------------------------------
          if (0 == myStoryboardFlashing.Children.Count)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Display_Conversations(): myStoryboardFlashing.Children.Count=0");
+            Logger.Log(LogEnum.LE_ERROR, "Display_FlashingRegion(): myStoryboardFlashing.Children.Count=0");
             return false;
          }
          myStoryboardFlashing.Begin(this);
@@ -2351,42 +2365,6 @@ namespace PleasantvilleGame
          myGameInstance.EventActive = myGameInstance.EventDisplayed; // As soon as you roll the die, the current event becomes the active event
          GameAction action = myGameInstance.DieRollAction;
          myGameEngine.PerformAction(ref myGameInstance, ref action, dieRoll);
-      }
-      private bool DisplayInfluences(IGameInstance gi)
-      {
-         myStoryboardFlashing = new Storyboard(); // Clear any previous flashing regions
-         foreach (ITerritory t in gi.SelectedTerritories) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
-         {
-            foreach (Polygon polygon in myPolygons)
-            {
-               if (polygon.Name == t.ToString())
-               {
-                  polygon.Fill = Constants.theAlienControlledBrush;
-                  Canvas.SetZIndex(polygon, myZIndexLastUsed++);
-                  DoubleAnimation anim = new DoubleAnimation();  // Perform animiation on the region
-                  anim.From = 1.0;
-                  anim.To = 0.1;
-                  anim.Duration = new Duration(TimeSpan.FromSeconds(0.8));
-                  anim.AutoReverse = true;
-                  anim.RepeatBehavior = RepeatBehavior.Forever;
-                  myStoryboardFlashing.Children.Add(anim);
-                  Storyboard.SetTargetProperty(anim, new PropertyPath(OpacityProperty));
-                  Storyboard.SetTargetName(anim, polygon.Name); // Start flashing the region where the user can select
-               }
-               else
-               {
-                  polygon.Fill = mySolidColorBrushClear;
-               }
-            }
-         }
-         //-------------------------------------------
-         if (0 == myStoryboardFlashing.Children.Count)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Display_Conversations(): myStoryboardFlashing.Children.Count=0");
-            return false;
-         }
-         myStoryboardFlashing.Begin(this);
-         return true;
       }
       private bool DisplayInfluence(IGameInstance gi, ITerritory selectedTerritory)
       {
@@ -2677,14 +2655,6 @@ namespace PleasantvilleGame
          //----------------------------------------------------------------------
          isRetreatNeedAck = false;
          myStoryboardFlashing = new Storyboard();
-         foreach (UIElement ui in myCanvasMain.Children) // Clear any previous flashing regions
-         {
-            if (ui is Polygon)
-            {
-               Polygon p1 = (Polygon)ui;
-               p1.Fill = mySolidColorBrushClear;
-            }
-         }
          if (true == GameEngine.theIsAlien)
             myTerritoriesCombatForAlien.Clear();
          else
@@ -2930,32 +2900,6 @@ namespace PleasantvilleGame
          if ((false == myIsCombatInitiatedForAlien) && (false == myIsCombatInitiatedForTownsperson)) // Only initiate combat if there is not an outstanding combat happening.
          {
 
-            IMapItem? leftMapItem = myLeftMapItemsInActionPanel[0];
-            if( null == leftMapItem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::Perform_Combat(): myLeftMapItemsInActionPanel[0]=null");
-               return false;
-            }
-            if( null == gi.MapItemCombat)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::Perform_Combat(): gi.MapItemCombat=null");
-               return false;
-            }
-            gi.MapItemCombat.Territory = leftMapItem.TerritoryCurrent;
-            if (true == GameEngine.theIsAlien)
-            {
-               Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, "MouseLeftButtonDownCanvas():Combat: ALIEN myIsCombatInitiatedForAlien=true");
-               myIsCombatInitiatedForAlien = true;
-               GameAction outAction = GameAction.AlienInitiateCombat;
-               myGameEngine.PerformAction(ref gi, ref outAction);
-            }
-            else
-            {
-               Logger.Log(LogEnum.LE_SHOW_COMBAT_STATE, "MouseLeftButtonDownCanvas():Combat TP    myIsCombatInitiatedForTownsperson=true");
-               myIsCombatInitiatedForTownsperson = true;
-               GameAction outAction = GameAction.TownspersonInitiateCombat;
-               myGameEngine.PerformAction(ref gi, ref outAction);
-            }
          }
          return true;
       }
@@ -3585,8 +3529,8 @@ namespace PleasantvilleGame
          if (true == isIgnoreResults)
             UpdateActionPanelClear();
          //-----------------------------------------------------------------------------
-         GameAction outAction = GameAction.AlienTakeover;
-         myGameEngine.PerformAction(ref gi, ref outAction);
+         //GameAction outAction = GameAction.AlienTakeover;
+         //myGameEngine.PerformAction(ref gi, ref outAction);
          return true;
       }
       private bool PerformTakeoverObserved(IGameInstance gi)
@@ -4125,8 +4069,8 @@ namespace PleasantvilleGame
                         Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickExposeAlien(): returned error");
                         return;
                      }
-                     GameAction outAction = GameAction.ShowAlien;
-                     myGameEngine.PerformAction(ref myGameInstance, ref outAction); // Inform the user to return back
+                     //GameAction outAction = GameAction.ShowAlien;
+                     //myGameEngine.PerformAction(ref myGameInstance, ref outAction); // Inform the user to return back
                   }
                }
             }
@@ -4187,14 +4131,14 @@ namespace PleasantvilleGame
                            IMapItemMove modifiedMove = new MapItemMove(Territories.theTerritories, mim.MapItem, selectedMapItem.TerritoryCurrent); // Change to modified MapItemMove
                            myGameInstance.MapItemMoves[0] = modifiedMove;
                            mim.MapItem.MovementUsed = mim.MapItem.Movement; // ensure cannot move further
-                           if( false == UpdateCanvasMain(myGameInstance, GameAction.AlienStopsTownspersonMovement, true))
-                           {
-                              Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickStopMove() Update_CanvasMain() returned false");
-                              return;
-                           }
-                           //--------------------------------
-                           GameAction outAction = GameAction.AlienModifiesTownspersonMovement;
-                           myGameEngine.PerformAction(ref myGameInstance, ref outAction);
+                           //if( false == UpdateCanvasMain(myGameInstance, GameAction.AlienStopsTownspersonMovement, true))
+                           //{
+                           //   Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickStopMove() Update_CanvasMain() returned false");
+                           //   return;
+                           //}
+                           ////--------------------------------
+                           //GameAction outAction = GameAction.AlienModifiesTownspersonMovement;
+                           //myGameEngine.PerformAction(ref myGameInstance, ref outAction);
                         }
                      }
                   }
@@ -4213,8 +4157,8 @@ namespace PleasantvilleGame
             myTimer.Stop();
 #pragma warning restore CA1416 // Validate platform compatibility
             //-------------------------------
-            GameAction outAction = GameAction.AlienTimeoutOnMovement;
-            myGameEngine.PerformAction(ref myGameInstance, ref outAction);
+            //GameAction outAction = GameAction.AlienTimeoutOnMovement;
+            //myGameEngine.PerformAction(ref myGameInstance, ref outAction);
          }
       }
       private void MouseEnterMapItem(object sender, System.Windows.Input.MouseEventArgs e)
@@ -4386,8 +4330,8 @@ namespace PleasantvilleGame
                   }
                }
                myGameInstance.MapItemMoves.Clear();
-               outAction = GameAction.ResetMovement;
-               myGameEngine.PerformAction(ref myGameInstance, ref outAction); // Inform the user to return back
+               //outAction = GameAction.ResetMovement;
+               //myGameEngine.PerformAction(ref myGameInstance, ref outAction); // Inform the user to return back
             }
          }
          return true;

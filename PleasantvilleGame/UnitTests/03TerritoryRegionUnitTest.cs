@@ -35,7 +35,6 @@ namespace PleasantvilleGame
       private List<Ellipse> myEllipses = new List<Ellipse>();
       private List<IMapPoint> myPoints = new List<IMapPoint>();
       private readonly FontFamily myFontFam = new FontFamily("Tahoma");
-      private SolidColorBrush mySolidColorBrushClear = new SolidColorBrush() { Color = Color.FromArgb(0, 0, 1, 0) };
       //--------------------------------------------------------
       public bool CtorError { get; } = false;
       private int myIndexName = 0;
@@ -516,7 +515,7 @@ namespace PleasantvilleGame
                   points.Add(new System.Windows.Point(mp1.X, mp1.Y));
                Polygon aPolygon = new Polygon { Points = points, Name = t.ToString() };
                aPolygon.MouseDown += this.MouseDownPolygon2;
-               aPolygon.Fill = mySolidColorBrushClear;
+               aPolygon.Fill = Utilities.theBrushRegionClear;
                Canvas.SetZIndex(aPolygon, 10000);
                myCanvasMain.Children.Add(aPolygon);
             }
@@ -541,7 +540,7 @@ namespace PleasantvilleGame
                   points.Add(new System.Windows.Point(mp1.X, mp1.Y));
                Polygon aPolygon = new Polygon { Points = points, Name = t.ToString() };
                aPolygon.MouseDown += this.MouseDownPolygon3;
-               aPolygon.Fill = mySolidColorBrushClear;
+               aPolygon.Fill = Utilities.theBrushRegionClear;
                Canvas.SetZIndex(aPolygon, 10000);
                myCanvasMain.Children.Add(aPolygon);
             }

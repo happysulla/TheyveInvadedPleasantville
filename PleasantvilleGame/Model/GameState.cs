@@ -284,14 +284,14 @@ namespace PleasantvilleGame
          if (GameAction.InfluencesSelect == action)
             return true;
          //--------------------------------------------------
-         if (false == CheckForPossibleCombats(gi, ref action))
+         if (false == CheckForCombats(gi, ref action))
          {
             Logger.Log(LogEnum.LE_ERROR, "CheckFor_Influences(): Set_Phase() returned error");
             return false;
          }
          return true;
       }
-      protected bool CheckForPossibleCombats(IGameInstance gi, ref GameAction action)
+      protected bool CheckForCombats(IGameInstance gi, ref GameAction action)
       {
          action = GameAction.Error;
          foreach (Stack stack in gi.Stacks)
@@ -333,68 +333,91 @@ namespace PleasantvilleGame
       }
       protected bool CheckForIterogations(IGameInstance gi, ref GameAction action)
       {
-         gi.NumTownGuessesForZebulonLocation = 0;
          if (true == gi.Zebulon.IsAlienKnown)  // If Zebulon is already on the map board, no need to iterogate
-            return false;
-         IMapItems controlled = new MapItems();
-         IMapItems surrenderedAliens = new MapItems();
-         foreach (Stack stack in gi.Stacks)
          {
-            if (stack.MapItems.Count < 2)
-               continue;
-            foreach (MapItem mi in stack.MapItems)
+            IMapItems controlled = new MapItems();
+            IMapItems surrenderedAliens = new MapItems();
+            foreach (Stack stack in gi.Stacks)
             {
-               if ((true == mi.IsInterrogatedThisTurn) || (true == mi.IsInterrogated) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsStunned))
+               if (stack.MapItems.Count < 2)
                   continue;
-
-               if (true == mi.IsControlled)
+               foreach (MapItem mi in stack.MapItems)
                {
-                  if (false == mi.IsTiedUp)    // Must not be stunned to interogate
-                     controlled.Add(mi);
-               }
-               else
-               {
-                  if ((true == mi.IsAlienKnown) && ("Zebulon" != mi.Name) && ((true == mi.IsSurrendered) || (true == mi.IsTiedUp)))
+                  if ((true == mi.IsInterrogatedThisTurn) || (true == mi.IsInterrogated) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned))
+                     continue;
+                  if (true == mi.IsControlled)
                   {
-                     surrenderedAliens.Add(mi);
-                     mi.IsInterrogated = true;
-                     mi.IsInterrogatedThisTurn = true;
+                     if (false == mi.IsTiedUp)
+                        controlled.Add(mi);
+                  }
+                  else
+                  {
+                     if ((true == mi.IsAlienKnown) && ((true == mi.IsSurrendered) || (true == mi.IsTiedUp)))
+                     {
+                        surrenderedAliens.Add(mi);
+                     }
                   }
                }
+               if (((0 < controlled.Count) && (0 < surrenderedAliens.Count)))
+               {
+                  if (false == SetPhase(gi, GamePhase.Iterrogations))
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "CheckFor_Iterogations(): Set_Phase() returned error");
+                     return false;
+                  }
+                  gi.SelectedTerritories.Add(stack.Territory);
+                  gi.EventDisplayed = gi.EventActive = "e012t";
+                  action = GameAction.InterrogationsSelect;
+               }
             }
-            if (((0 < controlled.Count) && (0 < surrenderedAliens.Count)))
-               gi.NumTownGuessesForZebulonLocation += surrenderedAliens.Count * 4;
+            if (GameAction.InterrogationsSelect == action)
+               return true;
          }
-         if (0 < gi.NumTownGuessesForZebulonLocation)
-            return true;
-         return false;
+         if (false == CheckForImplantRemovals(gi, ref action))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CheckFor_Iterogations(): CheckFor_ImplantRemovals() returned error");
+            return false;
+         }
+         return true;
       }
-      protected bool CheckForImplantRemoval(IGameInstance gi, ref GameAction action)
+      protected bool CheckForImplantRemovals(IGameInstance gi, ref GameAction action)
       {
          foreach (Stack stack in gi.Stacks)
          {
             if (stack.MapItems.Count < 2)
                continue;
-
             IMapItems controlled = new MapItems();
             IMapItems aliens = new MapItems();
-
             foreach (MapItem mi in stack.MapItems)
             {
                if ((true == mi.IsImplantRemovalThisTurn) || (true == mi.IsKilled))
                   continue;
 
-               if ((true == mi.IsControlled) && (true == mi.IsUnconscious) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
+               if ((true == mi.IsControlled) && (false == mi.IsUnconscious) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
                   controlled.Add(mi);
-               else if ((true == mi.IsAlienKnown) && ("Zebulon" != mi.Name) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (false == mi.IsUnconscious)))
+               else if ((true == mi.IsAlienKnown) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (true == mi.IsUnconscious)))
                   aliens.Add(mi);
             }
-
-            if (((0 != controlled.Count) && (0 != aliens.Count)))
-               return true;
+            if ( (0 < controlled.Count) && (0 < aliens.Count) )
+            {
+               if (false == SetPhase(gi, GamePhase.Combats))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "CheckFor_ImplantRemovals(): Set_Phase() returned error");
+                  return false;
+               }
+               gi.SelectedTerritories.Add(stack.Territory);
+               gi.EventDisplayed = gi.EventActive = "e012t";
+               action = GameAction.ImplantRemovalsSelect;
+            }
          }
-
-         return false;
+         if (GameAction.ImplantRemovalsSelect == action)
+            return true;
+         if (false == CheckForAlienTakeovers(gi, ref action))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CheckFor_ImplantRemovals(): CheckFor_AlienTakeovers() returned error");
+            return false;
+         }
+         return true;
       }
       protected bool CheckForAlienTakeovers(IGameInstance gi, ref GameAction action)
       {
@@ -1375,9 +1398,6 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                }
                break;
-            case GameAction.ResetMovement:
-               gi.PreviousMapItemMove = null;
-               break;
             case GameAction.TownMovementTownPerforms:
                Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "GameStateTownPlayerMovement.PerformAction(TownMovementTownPerforms)");
                gi.MapItemMoves.Clear();
@@ -1659,20 +1679,6 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            case GameAction.AlienInitiateCombat:
-                break;
-            case GameAction.TownspersonInitiateCombat:
-               break;
-            case GameAction.AlienPerformCombat:
-               PerformCombat(gi);
-               gi.IsAlienInitiatedCombat = false;
-               break;
-            case GameAction.TownspersonPerformCombat:
-               PerformCombat(gi);
-               gi.IsTownsInitiatedCombat = false;
-               break;
-            case GameAction.TownspersonCompletesCombat:
-               break;
             default:
                returnStatus = "reached default action=" + action.ToString();
                Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(): " + returnStatus);
@@ -2094,18 +2100,6 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            case GameAction.TownspersonIterrogates:
-               if (0 == gi.NumTownGuessesForZebulonLocation)
-               {
-                  gi.NextAction = "Alien Acknowledges Iterogations";
-                  action = GameAction.TownspersonCompletesIterogations;
-               }
-               break;
-            case GameAction.TownspersonCompletesIterogations:
-               gi.NextAction = "Alien Acknowledges Iterogations";
-               break;
-            case GameAction.AlienAcksIterogations:
-               break;
             default:
                returnStatus = "reached default action=" + action.ToString();
                Logger.Log(LogEnum.LE_ERROR, "GameStateIterogations.PerformAction(): " + returnStatus);
@@ -2148,8 +2142,6 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            case GameAction.TownspersonCompletesRemoval:
-               break;
             default:
                returnStatus = "reached default action=" + action.ToString();
                Logger.Log(LogEnum.LE_ERROR, "GameStateImplantRemoval.PerformAction(): " + returnStatus);
@@ -2192,38 +2184,6 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            case GameAction.AlienTakeover:
-               returnStatus = PerformTakeover(ref gi);
-               break;
-            case GameAction.AlienCompletesTakeovers:
-               if (true == GameStateChecker.CheckForEndOfGame(gi))
-               {
-                  action = GameAction.ShowEndGame;
-                  gi.GamePhase = GamePhase.ShowEndGame;
-                  gi.NextAction = "End Game";
-                  gi.GameTurn = 13;
-               }
-               bool isAnyMovement;
-               if (false == GameStateChecker.CheckForRandomMoves(gi, out isAnyMovement))
-               {
-                  returnStatus = "GameStateChecker.CheckForTownspersonCombats() returned false in AlienAcksTownspersonMovement action";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
-               }
-               //-----------------------------------------------------
-               if ("OK" == returnStatus)
-               {
-                  if (true == isAnyMovement)
-                  {
-                     gi.NextAction = "Display Random Movement";
-                     gi.GamePhase = GamePhase.RandomMovement;
-                  }
-                  else
-                  {
-                     gi.NextAction = "Alien Performs Movement";
-                     gi.GamePhase = GamePhase.AlienMovement;
-                  }
-               }
-               break;
             default:
                returnStatus = "reached default action=" + action.ToString();
                Logger.Log(LogEnum.LE_ERROR, "GameStateAlienTakeover.PerformAction(): " + returnStatus);
@@ -2408,8 +2368,6 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
-            case GameAction.ShowEndGame:
-               break;
             case GameAction.ExitGame:
                Application.Current.Shutdown();
                break;
