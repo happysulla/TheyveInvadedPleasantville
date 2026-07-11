@@ -89,7 +89,7 @@ namespace PleasantvilleGame
             case GameAction.EndGameWin:
                ShowEndGameSuccess(myCanvas);
                break;
-            case GameAction.EndGameLost:
+            case GameAction.EndGame:
                ShowEndGameFail(myCanvas);
                break;
             default:

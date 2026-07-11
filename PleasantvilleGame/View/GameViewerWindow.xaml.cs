@@ -78,13 +78,10 @@ namespace PleasantvilleGame
       private List<Brush> myBrushes = new List<Brush>();
       private int myBrushIndex = 0;
       private DoubleCollection myDashArray = new DoubleCollection();
-      private SolidColorBrush mySolidColorBrushClear = new SolidColorBrush();
       private SolidColorBrush mySolidColorBrushBlack = new SolidColorBrush();
       private SolidColorBrush mySolidColorBrushGray = new SolidColorBrush()      { Color=Colors.DarkGray };     // Conversations
-      private SolidColorBrush mySolidColorBrushRed = new SolidColorBrush()       { Color = Colors.Red };        // Combat
       private SolidColorBrush mySolidColorBrushPurple = new SolidColorBrush()    { Color = Colors.Purple };     // Interogations
-      private SolidColorBrush mySolidColorBrushRosyBrown = new SolidColorBrush() { Color = Colors.Orange };     // Implant Removal
-      private SolidColorBrush mySolidColorBrushOrange = new SolidColorBrush()    { Color = Colors.DarkGray };   // Takeovers
+      private SolidColorBrush mySolidColorBrushRosyBrown = new SolidColorBrush() { Color = Colors.RosyBrown };     // Implant Removal
       //--------------------------------------------------------------
       private Dictionary<IMapItem, Rectangle> myRectangleMaps = new Dictionary<IMapItem, Rectangle>();
       private Rectangle? myMovingRectangle = null;                // Rentangle that is moving with button
@@ -201,7 +198,7 @@ namespace PleasantvilleGame
          CreateContentMenuForButtons();
          //-----------------------------------------------
          this.BorderBrush = Utilities.theNeutralBrush;
-         mySolidColorBrushClear.Color = Color.FromArgb(0, 0, 1, 0);
+         //mySolidColorBrushClear.Color = Color.FromArgb(0, 0, 1, 0);
          myBrushes.Add(Brushes.Green);  // Create a container of brushes for painting paths.
          myBrushes.Add(Brushes.Blue);
          myBrushes.Add(Brushes.Purple);
@@ -269,7 +266,7 @@ namespace PleasantvilleGame
                foreach (IMapPoint mp in t.Points)
                   points.Add(new Point(mp.X, mp.Y));
                PointCollection pointCollection = new PointCollection(points);
-               Polygon aPolygon = new Polygon() { Name = t.ToString(), Fill = mySolidColorBrushClear, Points = pointCollection };
+               Polygon aPolygon = new Polygon() { Name = t.ToString(), Fill = Utilities.theBrushRegionClear, Points = pointCollection };
                myCanvasMain.RegisterName(t.ToString(), aPolygon);
                myCanvasMain.Children.Add(aPolygon);
                myPolygons.Add(aPolygon);
@@ -1118,6 +1115,20 @@ namespace PleasantvilleGame
                   return;
                }
                if (false == DisplayFlashingRegion(gi, Utilities.theBrushBlood))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
+                  return;
+               }
+               break;
+            case GameAction.AlienTakeoversSelect:
+               myRectangleMaps.Clear();
+               UpdateCanvasMainClear(myButtons, gi.Stacks, action);
+               if (false == UpdateCanvasMain(gi, action))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
+                  return;
+               }
+               if (false == DisplayFlashingRegion(gi, Utilities.theAlienControlledBrush))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
                   return;
@@ -2740,7 +2751,7 @@ namespace PleasantvilleGame
                   Polygon p1 = (Polygon)ui;
                   if (p1.Name == targetName)
                   {
-                     p1.Fill = mySolidColorBrushRed;
+                     p1.Fill = Utilities.theBrushBlood;
                      Canvas.SetZIndex(p1, myZIndexLastUsed);
                      break;
                   }
@@ -2795,26 +2806,29 @@ namespace PleasantvilleGame
          IMapItems controlled = new MapItems();
          IMapItems uncontrolled = new MapItems();
          IMapItems wary = new MapItems();
-         foreach (MapItem mi in gi.Townspeople)
+         foreach(IStack stack in gi.Stacks)
          {
-            if ((selectedTerritory.Name == mi.TerritoryCurrent.Name) && (selectedTerritory.Subname == mi.TerritoryCurrent.Subname))
+            foreach (MapItem mi in stack.MapItems)
             {
-               if ((false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsKilled) || (true == mi.IsSurrendered))
-                  continue;
+               if ((selectedTerritory.Name == mi.TerritoryCurrent.Name) && (selectedTerritory.Subname == mi.TerritoryCurrent.Subname))
+               {
+                  if ((false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsKilled) || (true == mi.IsSurrendered))
+                     continue;
 
-               if (true == mi.IsAlienKnown)
-               {
-                  aliens.Add(mi);
-               }
-               else if (true == mi.IsControlled)
-               {
-                  controlled.Add(mi);
-               }
-               else
-               {
-                  if (true == mi.IsWary)
-                     wary.Add(mi);
-                  uncontrolled.Add(mi);
+                  if (true == mi.IsAlienKnown)
+                  {
+                     aliens.Add(mi);
+                  }
+                  else if (true == mi.IsControlled)
+                  {
+                     controlled.Add(mi);
+                  }
+                  else
+                  {
+                     if (true == mi.IsWary)
+                        wary.Add(mi);
+                     uncontrolled.Add(mi);
+                  }
                }
             }
          }
@@ -3036,7 +3050,7 @@ namespace PleasantvilleGame
                }  
                ITerritory? t = gi.ZebulonTerritories.Find(tagString);
                if (null == t)
-                  p1.Fill = mySolidColorBrushClear;
+                  p1.Fill = Utilities.theBrushRegionClear;
                else
                   p1.Fill = mySolidColorBrushBlack;
             }
@@ -3114,7 +3128,7 @@ namespace PleasantvilleGame
             if (ui is Polygon)
             {
                Polygon p1 = (Polygon)ui;
-               p1.Fill = mySolidColorBrushClear;
+               p1.Fill = Utilities.theBrushRegionClear; 
             }
          }
          //-------------------------------------------------------------- 
@@ -3326,7 +3340,7 @@ namespace PleasantvilleGame
             if (ui is Polygon)
             {
                Polygon p1 = (Polygon)ui;
-               p1.Fill = mySolidColorBrushClear;
+               p1.Fill = Utilities.theBrushRegionClear;
             }
          }
          //----------------------------------------------------------------------
@@ -3397,7 +3411,7 @@ namespace PleasantvilleGame
                   Polygon p1 = (Polygon)ui;
                   if (p1.Name == targetName)
                   {
-                     p1.Fill = mySolidColorBrushOrange;
+                     p1.Fill = Utilities.theAlienControlledBrush;
                      Canvas.SetZIndex(p1, myZIndexLastUsed);
                      break;
                   }

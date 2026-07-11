@@ -11,10 +11,7 @@ namespace PleasantvilleGame.Networking
          {
             return false;
          }
-         gameInstance.Townspeople.Clear();
          gameInstance.Stacks.Clear();
-         gameInstance.PersonsKnockedOut.Clear();
-         gameInstance.PersonsStunned.Clear();
          gameInstance.SelectedStack = null;
          gameInstance.MapItemCombat = null;
          gameInstance.Takeover = null;
@@ -63,16 +60,6 @@ namespace PleasantvilleGame.Networking
                IsWary = counter.IsWary,
                IsKilled = counter.IsKilled
             };
-            gameInstance.Townspeople.Add(mapItem);
-            gameInstance.Stacks.Add(mapItem);
-            if (counter.IsUnconscious)
-            {
-               gameInstance.PersonsKnockedOut.Add(mapItem);
-            }
-            if (counter.IsStunned)
-            {
-               gameInstance.PersonsStunned.Add(mapItem);
-            }
          }
          return true;
       }

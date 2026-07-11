@@ -24,5 +24,6 @@ namespace PleasantvilleGame
       bool GetStartingAlienCounters(IGameInstance gi);   
       bool BlockRandomMoves(IGameInstance gi);
       bool PerformAlienMoves(IGameInstance gi);
+      bool PerformAlienTakeover(IGameInstance gi, IMapItems aliens, IMapItems possibleVictims);
    }
 }

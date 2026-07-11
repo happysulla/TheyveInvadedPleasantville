@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
@@ -193,6 +194,11 @@ namespace PleasantvilleGame
          gi.MapItemMoves = alienMoves.Shuffle();
          return true;
       }
+      public bool PerformAlienTakeover(IGameInstance gi, IMapItems aliens, IMapItems possibleVictims)
+      {
+
+         return true;
+      }
       private List<TakeoverMetric> GetTakeoverMetrics(IGameInstance gi)
       {
          List<TakeoverMetric> metrics = new List<TakeoverMetric>();
@@ -207,13 +213,13 @@ namespace PleasantvilleGame
                   metric.myKnownAliens.Add(mi);
                else if (true == mi.IsAlienUnknown)
                   metric.myKnownAliens.Add(mi);
-               else if( (false == mi.IsAlienKnown) && (false == mi.IsAlienUnknown) && (false == mi.IsControlled) )
+               else if ((false == mi.IsAlienKnown) && (false == mi.IsAlienUnknown) && (false == mi.IsControlled))
                   metric.myUncontrolleds.Add(mi);
             }
-               metrics.Add(metric); // possible takeover
+            metrics.Add(metric); // possible takeover
          }
          //--------------------------------------------
-         foreach(TakeoverMetric metric in metrics)
+         foreach (TakeoverMetric metric in metrics)
          {
 
          }

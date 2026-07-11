@@ -163,7 +163,6 @@ namespace PleasantvilleGame
       }
       static public bool CreateTownspeople(IGameInstance gi)
       {
-         gi.Townspeople.Clear();
          //------------------------------------
          string tName = "";
          ITerritory? t = null;
@@ -195,7 +194,6 @@ namespace PleasantvilleGame
          string miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          IMapItem mi = new MapItem(miName, 0.8, name, t, 5, 10, 8);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -219,7 +217,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 4, 19, 5);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -243,7 +240,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 10, 7);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -267,7 +263,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 6, 11, 7);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -291,7 +286,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 7, 5);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -315,7 +309,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 6, 11, 9);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -339,7 +332,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 18, 7);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -363,7 +355,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 6, 12, 8);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -387,7 +378,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 11, 5);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -411,7 +401,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 11, 5);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -435,7 +424,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 11, 6);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -459,7 +447,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 10, 5);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -483,7 +470,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 9, 4);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -507,7 +493,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 16, 7);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.Name + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -531,7 +516,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 20, 6);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.Name + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -555,7 +539,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 6, 9, 5);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -579,7 +562,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 8, 8);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -603,7 +585,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 9, 7);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -627,7 +608,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 6, 15, 10);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -651,7 +631,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 8, 7);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -675,7 +654,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 10, 6);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -699,7 +677,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 10, 5);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -723,7 +700,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 4, 11, 5);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -747,7 +723,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 17, 4);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -771,7 +746,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 9, 6);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -795,7 +769,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 3, 3, 8);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -819,7 +792,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 13, 6);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -843,7 +815,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 9, 6);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -867,7 +838,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 4, 12, 4);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -891,7 +861,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 10, 7);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
@@ -915,7 +884,6 @@ namespace PleasantvilleGame
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 4, 8, 4);
-         gi.Townspeople.Add(mi);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------

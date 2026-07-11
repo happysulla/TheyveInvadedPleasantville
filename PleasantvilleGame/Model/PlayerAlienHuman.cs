@@ -56,5 +56,10 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Perform_AlienMoves(): not implemented");
          return false;
       }
+      public bool PerformAlienTakeover(IGameInstance gi, IMapItems aliens, IMapItems possibleVictims)
+      {
+         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Perform_AlienTakeovers(): not implemented");
+         return false;
+      }
    }
 }

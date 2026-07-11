@@ -52,9 +52,6 @@ namespace PleasantvilleGame
       ITerritories SelectedTerritories { set; get; }
       ITerritory? SelectedTerritory { set; get; }
       IMapItems SelectedMapItems { set; get; }
-      IMapItems Townspeople { set; get; }
-      IMapItems PersonsStunned { set; get; }
-      IMapItems PersonsKnockedOut { set; get; }
       IMapItem Zebulon { set; get; }
       IMapItemCombat? MapItemCombat { set; get; }
       IMapItemTakeover? Takeover { set; get; }

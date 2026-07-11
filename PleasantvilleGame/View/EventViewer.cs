@@ -295,7 +295,7 @@ namespace PleasantvilleGame
                else if (false == evRandomMovementMgr.PerformRandomMovement(ShowRandomMoveResults))
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Perform_RandomMovement() returned false");
                break;
-            case GameAction.EndGameLost:
+            case GameAction.EndGame:
             case GameAction.EndGameWin:
             default:
                gi.IsGridActive = false;

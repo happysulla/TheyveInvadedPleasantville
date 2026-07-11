@@ -102,7 +102,7 @@ namespace PleasantvilleGame
       UnitTestCleanup,
 
       EndGameWin,
-      EndGameLost,
+      EndGame,
       EndGameShowFeats,
       EndGameShowStats,
       EndGameClose,
