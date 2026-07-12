@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Globalization;
@@ -1086,7 +1087,8 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
-               if ( false == DisplayFlashingRegion(gi, mySolidColorBrushGray))
+               Logger.Log(LogEnum.LE_SHOW_CONVERSATIONS, "UpdateView(): calling Display_FlashingRegionss()");
+               if ( false == DisplayFlashingRegions(gi, mySolidColorBrushGray))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
                   return;
@@ -1100,7 +1102,8 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
-               if (false == DisplayFlashingRegion(gi, Utilities.theTownControlledBrush))
+               Logger.Log(LogEnum.LE_SHOW_INFLUENCES, "UpdateView(): calling Display_FlashingRegionss()");
+               if (false == DisplayFlashingRegions(gi, Utilities.theTownControlledBrush))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
                   return;
@@ -1114,7 +1117,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
-               if (false == DisplayFlashingRegion(gi, Utilities.theBrushBlood))
+               if (false == DisplayFlashingRegions(gi, Utilities.theBrushBlood))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
                   return;
@@ -1128,7 +1131,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
-               if (false == DisplayFlashingRegion(gi, Utilities.theAlienControlledBrush))
+               if (false == DisplayFlashingRegions(gi, Utilities.theAlienControlledBrush))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
                   return;
@@ -1735,7 +1738,10 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "ClickButton_OkInHelperPanel(): Roll_Influence() returned error");
                break;
             case GamePhase.ImplantRemovals: PerformImplantRemoval(myGameInstance, false); break;
-            case GamePhase.AlienTakeover: PerformTakeover(myGameInstance, false); break;
+            case GamePhase.AlienTakeover:
+               if (false == PerformTakeover())
+                  Logger.Log(LogEnum.LE_ERROR, "ClickButton_OkInHelperPanel(): Perform_Takeover() returned error");
+               break;
             case GamePhase.Combats:
                {
                   if ("" == myTextBoxResults.Text)
@@ -2200,7 +2206,7 @@ namespace PleasantvilleGame
          //return dlg.IsMoveStopped;
          return false;
       }
-      private bool DisplayFlashingRegion(IGameInstance gi, SolidColorBrush brush)
+      private bool DisplayFlashingRegions(IGameInstance gi, SolidColorBrush brush)
       {
          myStoryboardFlashing = new Storyboard(); // Clear any previous flashing regions
          foreach (ITerritory t in gi.SelectedTerritories) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
@@ -3502,49 +3508,32 @@ namespace PleasantvilleGame
          }
          return true;
       }
-      private bool PerformTakeover(IGameInstance gi, bool isIgnoreResults)
+      private bool PerformTakeover()
       {
          if( null == myGameEngine)
          {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::PerformTakeover(): myGameEngine is null");
-            return false;
-         }
-         if ((0 == myLeftMapItemsInActionPanelSelected.Count) || (0 == myRightMapItemsInActionPanelSelected.Count))
-         {
-            StringBuilder sb = new StringBuilder("PerformTakeover(): myLeft=");
-            sb.Append(myLeftMapItemsInActionPanel.Count.ToString());
-            sb.Append(" myRight=");
-            sb.Append(myRightMapItemsInActionPanel.Count.ToString());
-            sb.Append(" myLeftSelected=");
-            sb.Append(myLeftMapItemsInActionPanelSelected.Count.ToString());
-            sb.Append(" myRightSelected=");
-            sb.Append(myRightMapItemsInActionPanelSelected.Count.ToString());
-            Logger.Log(LogEnum.LE_ERROR, sb.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::Perform_Takeover(): myGameEngine is null");
             return false;
          }
          //-----------------------------------------------------------------------------
          IMapItem? alien = myLeftMapItemsInActionPanelSelected[0];
          if( null == alien)
          {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::PerformTakeover(): myLeftMapItemsInActionPanelSelected[0]=null");
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::Perform_Takeover(): alien=null");
             return false;
          }
-         alien.IsTakeoverThisTurn = true;
-         IMapItem? victum = myLeftMapItemsInActionPanelSelected[0];
-         if( null == victum)
+         myGameInstance.SelectedMapItems.Add(alien);
+         IMapItem? victim = myLeftMapItemsInActionPanelSelected[0];
+         if( null == victim)
          {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::PerformTakeover(): myRightMapItemsInActionPanelSelected[0]=null");
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::Perform_Takeover(): victim=null");
             return false;
          }
-         victum.IsTakeoverThisTurn = true;
+         myGameInstance.SelectedMapItems.Add(victim);
+         UpdateActionPanelClear();
          //-----------------------------------------------------------------------------
-         if (false == isIgnoreResults)
-            gi.Takeover = new MapItemTakeover(alien, victum);
-         if (true == isIgnoreResults)
-            UpdateActionPanelClear();
-         //-----------------------------------------------------------------------------
-         //GameAction outAction = GameAction.AlienTakeover;
-         //myGameEngine.PerformAction(ref gi, ref outAction);
+         GameAction outAction = GameAction.AlienTakeover;
+         myGameEngine.PerformAction(ref myGameInstance, ref outAction);
          return true;
       }
       private bool PerformTakeoverObserved(IGameInstance gi)

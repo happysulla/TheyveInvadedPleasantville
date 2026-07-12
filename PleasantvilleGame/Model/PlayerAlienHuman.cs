@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -56,8 +57,23 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Perform_AlienMoves(): not implemented");
          return false;
       }
-      public bool PerformAlienTakeover(IGameInstance gi, IMapItems aliens, IMapItems possibleVictims)
+      public bool PerformAlienTakeover(IGameInstance gi, IMapItems aliens, IMapItems victims, ref GameAction action)
       {
+         if (0 == aliens.Count || 0 == victims.Count)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Perform_AlienTakeovers(): aliens=" + aliens.Count.ToString() + " victims=" + victims.Count.ToString());
+            return false;
+         }
+         IMapItem? firstAlien = aliens[0];
+         if( null == firstAlien )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Perform_AlienTakeovers(): firstAlien=null");
+            return false;
+         }
+         ITerritory t = firstAlien.TerritoryCurrent;
+         gi.SelectedTerritories.Add(t);
+         action = GameAction.AlienTakeoversSelect;
+         Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "CheckFor_AlienTakeovers(): adding t=" + t.ToString());
          Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Perform_AlienTakeovers(): not implemented");
          return false;
       }

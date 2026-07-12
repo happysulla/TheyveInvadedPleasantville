@@ -194,7 +194,7 @@ namespace PleasantvilleGame
          gi.MapItemMoves = alienMoves.Shuffle();
          return true;
       }
-      public bool PerformAlienTakeover(IGameInstance gi, IMapItems aliens, IMapItems possibleVictims)
+      public bool PerformAlienTakeover(IGameInstance gi, IMapItems aliens, IMapItems possibleVictims, ref GameAction action)
       {
 
          return true;

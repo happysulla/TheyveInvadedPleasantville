@@ -627,7 +627,7 @@ namespace PleasantvilleGame
             if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
                break;
          }
-         name = "StationAttendant";
+         name = Utilities.RemoveSpaces(STATION_ATTENDANT);
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
          mi = new MapItem(miName, 0.8, name, t, 5, 8, 7);
@@ -650,33 +650,10 @@ namespace PleasantvilleGame
             if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
                break;
          }
-         name = Utilities.RemoveSpaces(STATION_ATTENDANT);
-         miName = name + Utilities.MapItemNum.ToString();
-         Utilities.MapItemNum++;
-         mi = new MapItem(miName, 0.8, name, t, 5, 10, 6);
-         gi.Stacks.Add(mi);
-         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
-         //------------------------------------
-         maxNum = 5;
-         randomNum = Utilities.RandomGenerator.Next(maxNum);
-         for (int i = 0; i < maxNum; i++)
-         {
-            int tNum = (randomNum + i) % maxNum;
-            tName = "Supermarket_" + tNum.ToString();
-            t = Territories.theTerritories.Find(tName);
-            if (null == t)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
-               return false;
-            }
-            IStack? tStack = gi.Stacks.Find(t);
-            if (null == tStack) // if stack exists, then mapitem already exists at this location. Skip it.
-               break;
-         }
          name = Utilities.RemoveSpaces(SUPERMARKET_MGR);
          miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         mi = new MapItem(miName, 0.8, name, t, 5, 10, 5);
+         mi = new MapItem(miName, 0.8, name, t, 5, 10, 6);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------

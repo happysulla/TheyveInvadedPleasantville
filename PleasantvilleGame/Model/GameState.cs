@@ -1,6 +1,7 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using PleasantvilleGame.Networking;
 using System;
+using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -236,6 +237,7 @@ namespace PleasantvilleGame
             {
                gi.SelectedTerritories.Add(stack.Territory);
                action = GameAction.ConversationsSelect;
+               Logger.Log(LogEnum.LE_SHOW_CONVERSATIONS, "CheckFor_Conversations(): adding stack=" + stack.Territory.ToString() ); 
             }
          }
          if (GameAction.ConversationsSelect == action)
@@ -283,7 +285,7 @@ namespace PleasantvilleGame
          }
          if (GameAction.InfluencesSelect == action)
          {
-            if (GamePhase.Conversations != gi.GamePhase)
+            if (GamePhase.Influences != gi.GamePhase)
             {
                if (false == ResetPhase(gi, GamePhase.Influences))
                {
@@ -422,7 +424,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "CheckFor_ImplantRemovals(): Reset_Phase() returned error");
                return false;
             }
-            gi.EventDisplayed = gi.EventActive = "e012t";
+            gi.EventDisplayed = gi.EventActive = "e013t";
             return true;
          }
          if (false == CheckForAlienTakeovers(gi, ref action))
@@ -442,7 +444,7 @@ namespace PleasantvilleGame
             IMapItems aliens = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) )  // Unconscious or dead cannot be taken over
+               if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) )  // Unconscious or dead cannot be taken over
                   continue;
                if ((true == mi.IsControlled) || (true == mi.IsWary))
                {
@@ -461,11 +463,13 @@ namespace PleasantvilleGame
                      possibleVictims.Add(mi);
                   }
                }
-            }
-            if ((1 < possibleVictims.Count) || ((1 == possibleVictims.Count) && (0 < aliens.Count))) // If any stack has two or more counters that are not controlled, return true       
-            {
-               gi.SelectedTerritories.Add(stack.Territory);
-               gi.EventDisplayed = gi.EventActive = "e012t";
+               if ((1 < possibleVictims.Count) || ((1 == possibleVictims.Count) && (0 < aliens.Count)))      
+               {
+                  if( false == gi.PlayerAlien.PerformAlienTakeover(gi, aliens, possibleVictims, ref action))
+                  {
+
+                  }
+               }
             }
          }
          if (GameAction.AlienTakeoversSelect == action)
@@ -475,12 +479,12 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): Reset_Phase() returned error");
                return false;
             }
-            action = GameAction.AlienTakeoversSelect;
+            gi.EventDisplayed = gi.EventActive = "e014t";
             return true;
          }
          if (false == CheckForEndOfGame(gi, ref action))
          {
-            Logger.Log(LogEnum.LE_ERROR, "CheckFor_ImplantRemovals(): CheckFor_EndOfGame() returned error");
+            Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): CheckFor_EndOfGame() returned error");
             return false;
          }
          return true;
@@ -728,23 +732,24 @@ namespace PleasantvilleGame
             }
          }
          //--------------------------------------------------------
-         if ((337 != totalInfluence) || (totalInfluence != (cogentInfluence + incapacitatedInfluence)) || (cogentInfluence != (controlledInfluence + knownInfluence + unknownInfluence + uncontrolledInfluence)) || (0 != errorInfluence))
+         if (337 != totalInfluence)
          {
-            StringBuilder sb = new StringBuilder("CheckFor_InfluenceError(): Influence Not Adding Up: ");
-            sb.Append("\n T="); sb.Append(totalInfluence.ToString());
-            sb.Append("\n cap="); sb.Append(cogentInfluence.ToString());
-            sb.Append("\n kn="); sb.Append(knownInfluence.ToString());
-            sb.Append("\n unk="); sb.Append(unknownInfluence.ToString());
-            sb.Append("\n tp="); sb.Append(controlledInfluence.ToString());
-            sb.Append("\n uc="); sb.Append(uncontrolledInfluence.ToString());
-            sb.Append("\n incap="); sb.Append(incapacitatedInfluence.ToString());
-            sb.Append("\n tu="); sb.Append(tiedUpInfluence.ToString());
-            sb.Append("\n st="); sb.Append(stunnedInfluence.ToString());
-            sb.Append("\n unc="); sb.Append(unconsciousInfluence.ToString());
-            sb.Append("\n sur="); sb.Append(surrenderedInfluence.ToString());
-            sb.Append("\n kia="); sb.Append(killedInfluence.ToString());
-            sb.Append("\n err="); sb.Append(errorInfluence.ToString());
-            Logger.Log(LogEnum.LE_ERROR, sb.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "CheckFor_InfluenceError(): 337 != (total=" + totalInfluence.ToString() + ")");
+            return false;
+         }
+         if (totalInfluence != (cogentInfluence + incapacitatedInfluence))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CheckFor_InfluenceError(): (t=" + totalInfluence.ToString() + ") != (cog=" + cogentInfluence.ToString() + " ) + " + "(inc=" + incapacitatedInfluence.ToString()+")");
+            return false;
+         }
+         if ( (cogentInfluence != (controlledInfluence + knownInfluence + unknownInfluence + uncontrolledInfluence)))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CheckFor_InfluenceError(): (cog=" + cogentInfluence.ToString() + ") != (c=" + controlledInfluence.ToString() + ") + " + "(k=" + knownInfluence.ToString() + ") " + "(uk=" + unknownInfluence.ToString() + ") " + "(uc=" + uncontrolledInfluence.ToString() + ")");
+            return false;
+         }
+         if (0 != errorInfluence)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CheckFor_InfluenceError(): 0 != (e=" + errorInfluence.ToString() + ")");
             return false;
          }
          return true;
@@ -2184,6 +2189,27 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
+            case GameAction.AlienTakeover:
+               if( 2 != gi.SelectedMapItems.Count)
+               {
+                  returnStatus = "2 != (count=" + action.ToString() + ")";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateAlienTakeover.PerformAction(AlienTakeover): " + returnStatus);
+               }
+               else
+               {
+                  IMapItem? alien = gi.SelectedMapItems[0];
+                  IMapItem? victim = gi.SelectedMapItems[1];
+                  if( null == alien || null == victim )
+                  {
+                     returnStatus = "alien or victim = null)";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateAlienTakeover.PerformAction(AlienTakeover): " + returnStatus);
+                  }
+                  else
+                  {
+                     IMapItemTakeover takeover = new MapItemTakeover(alien, victim);
+                  }
+               }
+               break;
             default:
                returnStatus = "reached default action=" + action.ToString();
                Logger.Log(LogEnum.LE_ERROR, "GameStateAlienTakeover.PerformAction(): " + returnStatus);
@@ -2214,144 +2240,134 @@ namespace PleasantvilleGame
       }
       private string PerformTakeover(ref IGameInstance gi)
       {
-         //StringBuilder sb = new StringBuilder();
-         //if (null == gi.Takeover)
-         //{
-         //   Logger.Log(LogEnum.LE_ERROR, "GameStateAlienTakeover::PerformTakeover(): takeover = null ");
-         //   return "PerformTakeover() ERROR";
-         //}
-         //if (null == gi.Takeover.Alien)
-         //{
-         //   Logger.Log(LogEnum.LE_ERROR, "GameStateAlienTakeover::PerformTakeover(): Alien = null ");
-         //   return "PerformTakeover() ERROR";
-         //}
-         //if (null == gi.Takeover.Uncontrolled)
-         //{
-         //   Logger.Log(LogEnum.LE_ERROR, "GameStateAlienTakeover::PerformTakeover(): Uncontrolled = null ");
-         //   return "PerformTakeover() ERROR";
-         //}
-         //// Determine if there are any observations.  If so, create a string to hold who and with what roll the observation happened.  
-         //foreach (String observation in gi.Takeover.Alien.TerritoryCurrent.Observations)
-         //{
-         //   IStack? stack = gi.Stacks.Find(observation);
-         //   if (null == stack)
-         //   {
-         //      Logger.Log(LogEnum.LE_ERROR, "PerformTakeover(): stack is null for observation=" + observation);
-         //      return "ERROR";
-         //   }
-         //   ITerritory? obsTerritory = Territories.theTerritories.Find(observation);
-         //   if (null == obsTerritory)
-         //   {
-         //      Logger.Log(LogEnum.LE_ERROR, "PerformTakeover(): obsTerritory is null for observation=" + observation);
-         //      return "ERROR";
-         //   }
-         //   IMapPath? path = Territory.GetBestPath(Territories.theTerritories, gi.Takeover.Alien.TerritoryCurrent, obsTerritory, 3); // Get distance between two territories
-         //   if (null == path)
-         //   {
-         //      Logger.Log(LogEnum.LE_ERROR, "PerformTakeover(): path is null for observation=" + observation);
-         //      return "ERROR";
-         //   }
-         //   foreach (IMapItem person in stack.MapItems)
-         //   {
-         //      if (gi.Takeover.Uncontrolled.Name == person.Name)
-         //         continue;
-         //      if ((true == person.IsWary) || (true == person.IsAlienKnown) || (true == person.IsAlienUnknown) || (false == person.IsUnconscious) || (true == person.IsStunned) || (true == person.IsKilled))
-         //         continue;
-         //      int dieRoll = Utilities.RandomGenerator.Next(6) + 1;
-         //      switch (path.Territories.Count)
-         //      {
-         //         case 0:
-         //            if (dieRoll < 5)
-         //            {
-         //               person.IsWary = true;
-         //               person.IsSkeptical = false;  // wary people are never skeptical
-         //               sb.Append(person.Name);
-         //               sb.Append(" observed with a die roll = ");
-         //               sb.Append(dieRoll.ToString());
-         //               sb.Append("\n");
-         //            }
-         //            break;
-         //         case 1:
-         //            if (dieRoll < 4)
-         //            {
-         //               person.IsWary = true;
-         //               person.IsSkeptical = false;  // wary people are never skeptical
-         //               sb.Append(person.Name);
-         //               sb.Append(" observed with a die roll = ");
-         //               sb.Append(dieRoll.ToString());
-         //               sb.Append("\n");
-         //            }
-         //            break;
-         //         case 2:
-         //            if (dieRoll < 3)
-         //            {
-         //               person.IsWary = true;
-         //               person.IsSkeptical = false;  // wary people are never skeptical
-         //               sb.Append(person.Name);
-         //               sb.Append(" observed with a die roll = ");
-         //               sb.Append(dieRoll.ToString());
-         //               sb.Append("\n");
-         //            }
-         //            break;
-         //         case 3:
-         //            if (dieRoll < 2)
-         //            {
-         //               person.IsWary = true;
-         //               person.IsSkeptical = false;  // wary people are never skeptical
-         //               sb.Append(person.Name);
-         //               sb.Append(" observed with a die roll = ");
-         //               sb.Append(dieRoll.ToString());
-         //               sb.Append("\n");
-         //            }
-         //            break;
-         //         default:
-         //            Logger.Log(LogEnum.LE_ERROR, "PerformTakeover(): reached default");
-         //            return "PerformTakeover() ERROR";
-         //      } // end switch
-         //   }
-         //}  //  end foreach (String observation in gi.Takeover.Alien.Territory.Observations)
-         //gi.Takeover.Observations = sb.ToString();
-         //if (0 == gi.Takeover.Observations.Count())
-         //{
-         //   gi.Takeover.Observations = "Nobody Noticed";
-         //   if ((true == gi.Takeover.Uncontrolled.IsControlled) || (true == gi.Takeover.Uncontrolled.IsWary))
-         //   {
-         //      Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS, "PerformTakeover(): Taking over controlled or wary ==> " + gi.Takeover.ToString());
-         //      if (false == gi.AddKnownAlien(gi.Takeover.Alien))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "PerformTakeover()1 returned error for " + gi.Takeover.Alien.Name);
-         //         return "PerformTakeover() ERROR";
-         //      }
-         //      if (false == gi.AddKnownAlien(gi.Takeover.Uncontrolled))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "PerformTakeover()2 returned error for " + gi.Takeover.Uncontrolled.Name);
-         //         return "PerformTakeover() ERROR";
-         //      }
-         //   }
-         //   else
-         //   {
-         //      Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS, "PerformTakeover(): Taking over uncontrolled without notice ==> " + gi.Takeover.ToString());
-         //      if (false == gi.AddUnknownAlien(gi.Takeover.Uncontrolled))
-         //      {
-         //         Logger.Log(LogEnum.LE_ERROR, "PerformTakeover()3 returned error for " + gi.Takeover.Uncontrolled.Name);
-         //         return "PerformTakeover() ERROR";
-         //      }
-         //   }
-         //}
-         //else
-         //{
-         //   Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS, "PerformTakeover(): Taking over uncontrolled w/ observation ==> " + gi.Takeover.ToString());
-         //   if (false == gi.AddKnownAlien(gi.Takeover.Alien))
-         //   {
-         //      Logger.Log(LogEnum.LE_ERROR, "PerformTakeover()4 returned error for " + gi.Takeover.Alien.Name);
-         //      return "PerformTakeover() ERROR";
-         //   }
-         //   if (false == gi.AddKnownAlien(gi.Takeover.Uncontrolled))
-         //   {
-         //      Logger.Log(LogEnum.LE_ERROR, "PerformTakeover()5 returned error for " + gi.Takeover.Uncontrolled.Name);
-         //      return "PerformTakeover() ERROR";
-         //   }
-         //}
+         StringBuilder sb = new StringBuilder();
+         if (null == gi.Takeover)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameStateAlienTakeover::PerformTakeover(): takeover = null ");
+            return "PerformTakeover() ERROR";
+         }
+         if (null == gi.Takeover.Alien)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameStateAlienTakeover::PerformTakeover(): Alien = null ");
+            return "PerformTakeover() ERROR";
+         }
+         if (null == gi.Takeover.Uncontrolled)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameStateAlienTakeover::PerformTakeover(): Uncontrolled = null ");
+            return "PerformTakeover() ERROR";
+         }
+         // Determine if there are any observations.  If so, create a string to hold who and with what roll the observation happened.  
+         foreach ( KeyValuePair<string, double> kvp in gi.Takeover.Alien.TerritoryCurrent.Observations)
+         {
+            string observation = kvp.Key;
+            double range = kvp.Value;
+            IStack? stack = gi.Stacks.Find(observation);
+            if (null == stack)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PerformTakeover(): stack is null for observation=" + observation);
+               return "ERROR";
+            }
+            foreach (IMapItem person in stack.MapItems)
+            {
+               if (true == gi.Takeover.Uncontrolled.Name.Contains(person.Name))
+                  continue;
+               if ((true == person.IsWary) || (true == person.IsAlienKnown) || (true == person.IsAlienUnknown) || (true == person.IsUnconscious) || (true == person.IsStunned) || (true == person.IsKilled))
+                  continue;
+               int dieRoll = Utilities.RandomGenerator.Next(6) + 1;
+               switch (range)
+               {
+                  case 0:
+                     if (dieRoll < 5)
+                     {
+                        person.IsWary = true;
+                        person.IsSkeptical = false;  // wary people are never skeptical
+                        sb.Append(person.Name);
+                        sb.Append(" observed with a die roll = ");
+                        sb.Append(dieRoll.ToString());
+                        sb.Append("\n");
+                     }
+                     break;
+                  case 1:
+                     if (dieRoll < 4)
+                     {
+                        person.IsWary = true;
+                        person.IsSkeptical = false;  // wary people are never skeptical
+                        sb.Append(person.Name);
+                        sb.Append(" observed with a die roll = ");
+                        sb.Append(dieRoll.ToString());
+                        sb.Append("\n");
+                     }
+                     break;
+                  case 2:
+                     if (dieRoll < 3)
+                     {
+                        person.IsWary = true;
+                        person.IsSkeptical = false;  // wary people are never skeptical
+                        sb.Append(person.Name);
+                        sb.Append(" observed with a die roll = ");
+                        sb.Append(dieRoll.ToString());
+                        sb.Append("\n");
+                     }
+                     break;
+                  case 3:
+                     if (dieRoll < 2)
+                     {
+                        person.IsWary = true;
+                        person.IsSkeptical = false;  // wary people are never skeptical
+                        sb.Append(person.Name);
+                        sb.Append(" observed with a die roll = ");
+                        sb.Append(dieRoll.ToString());
+                        sb.Append("\n");
+                     }
+                     break;
+                  default:
+                     Logger.Log(LogEnum.LE_ERROR, "PerformTakeover(): reached default");
+                     return "PerformTakeover() ERROR";
+               } // end switch
+            }
+         } 
+         gi.Takeover.Observations = sb.ToString();
+         if (0 == gi.Takeover.Observations.Count())
+         {
+            gi.Takeover.Observations = "Nobody Noticed";
+            if ((true == gi.Takeover.Uncontrolled.IsControlled) || (true == gi.Takeover.Uncontrolled.IsWary))
+            {
+               Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS, "PerformTakeover(): Taking over controlled or wary ==> " + gi.Takeover.ToString());
+               if (false == gi.AddKnownAlien(gi.Takeover.Alien))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "PerformTakeover()1 returned error for " + gi.Takeover.Alien.Name);
+                  return "PerformTakeover() ERROR";
+               }
+               if (false == gi.AddKnownAlien(gi.Takeover.Uncontrolled))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "PerformTakeover()2 returned error for " + gi.Takeover.Uncontrolled.Name);
+                  return "PerformTakeover() ERROR";
+               }
+            }
+            else
+            {
+               Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS, "PerformTakeover(): Taking over uncontrolled without notice ==> " + gi.Takeover.ToString());
+               if (false == gi.AddUnknownAlien(gi.Takeover.Uncontrolled))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "PerformTakeover()3 returned error for " + gi.Takeover.Uncontrolled.Name);
+                  return "PerformTakeover() ERROR";
+               }
+            }
+         }
+         else
+         {
+            Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS, "PerformTakeover(): Taking over uncontrolled w/ observation ==> " + gi.Takeover.ToString());
+            if (false == gi.AddKnownAlien(gi.Takeover.Alien))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PerformTakeover()4 returned error for " + gi.Takeover.Alien.Name);
+               return "PerformTakeover() ERROR";
+            }
+            if (false == gi.AddKnownAlien(gi.Takeover.Uncontrolled))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PerformTakeover()5 returned error for " + gi.Takeover.Uncontrolled.Name);
+               return "PerformTakeover() ERROR";
+            }
+         }
          return "OK";
       }
    }

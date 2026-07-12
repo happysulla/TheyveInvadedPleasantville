@@ -92,7 +92,7 @@ namespace PleasantvilleGame
       ImplantRemovalsSelectFinish,
 
       AlienTakeoversSelect,
-      AlienTakeoversRoll,
+      AlienTakeover,
       AlienTakeoversFinish,
 
       UnitTestStart,
