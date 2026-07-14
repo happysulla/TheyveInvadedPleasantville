@@ -24,6 +24,7 @@ namespace PleasantvilleGame
       //----------------------------------------------
       String[] StartingTownspeople { get; set; }
       List<RandomMoveData> RandomMoves { get; set; }
+      Dictionary<IMapItem, IMapItem> AlienTakeovers { get; set; }
       //----------------------------------------------
       IGameCommands GameCommands { set; get; }
       Options Options { get; set; }
@@ -54,7 +55,6 @@ namespace PleasantvilleGame
       IMapItems SelectedMapItems { set; get; }
       IMapItem Zebulon { set; get; }
       IMapItemCombat? MapItemCombat { set; get; }
-      IMapItemTakeover? Takeover { set; get; }
       IMapItemMove? PreviousMapItemMove { set; get; }
       //----------------------------------------------
       string PlayerTurn { set; get; }

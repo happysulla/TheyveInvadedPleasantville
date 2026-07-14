@@ -1,0 +1,529 @@
+﻿
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Xml.Linq;
+using WpfAnimatedGif;
+using FontFamily = System.Windows.Media.FontFamily;  
+using Label = System.Windows.Controls.Label;
+using Rectangle = System.Windows.Shapes.Rectangle;
+using Image = System.Windows.Controls.Image;
+using Button = System.Windows.Controls.Button;
+using Orientation = System.Windows.Controls.Orientation;
+using HorizontalAlignment = System.Windows.HorizontalAlignment;
+using CheckBox = System.Windows.Controls.CheckBox;
+
+namespace PleasantvilleGame
+{
+   public partial class EventViewerAlienTakeovers : System.Windows.Controls.UserControl
+   {
+      public delegate bool EndAlienTakeovers();
+      private const int STARTING_ASSIGNED_ROW = 6;
+      private const int MAX_ROW_COUNT = 25;
+      public enum E091Enum
+      {
+         PREPARE,
+         ROLL,
+         END
+      };
+      public bool CtorError { get; } = false;
+      private EndAlienTakeovers? myCallback = null;
+      private E091Enum myState = E091Enum.PREPARE;
+      private bool myIsRollInProgress = false;
+      private int myMaxRowNum = 0;
+      private int myRollResultRowNum = 0;
+      //---------------------------------------------------
+      public struct GridRow
+      {
+         public IMapItem myMapItem1;
+         public IMapItem myMapItem2;
+         public IMapItem? myObserver;
+         public double myProbability;
+         public int myDieRoll = Utilities.NO_RESULT;
+         public bool myIsResult = false;
+         public GridRow(IMapItem? observer, IMapItem mi1, IMapItem mi2, double probability )
+         {
+            myObserver = observer;
+            myMapItem1 = mi1;
+            myMapItem2 = mi2;
+            myProbability = probability;
+         }
+      };
+      private GridRow[] myGridRows = new GridRow[MAX_ROW_COUNT];
+      private int myMaxRowCount = 0;
+      private bool myIsPossibleBlock = false;
+      //---------------------------------------------------
+      private IGameEngine? myGameEngine;
+      private IGameInstance? myGameInstance;
+      private readonly Canvas? myCanvas;
+      private readonly ScrollViewer? myScrollViewer;
+      private RuleDialogViewer? myRulesMgr;
+      private IDieRoller? myDieRoller;
+      private string myDieRollResult="";
+      //---------------------------------------------------
+      private readonly FontFamily myFontFam = new FontFamily("Tahoma");
+      private readonly FontFamily myFontFam1 = new FontFamily("Courier New");
+      private readonly Thickness myMarginRight = new Thickness(5, 0, 0, 0);
+      //-------------------------------------------------------------------------------------
+      public EventViewerAlienTakeovers(IGameEngine? ge, IGameInstance? gi, Canvas? c, ScrollViewer? sv, RuleDialogViewer? rdv, IDieRoller dr)
+      {
+         InitializeComponent();
+         //--------------------------------------------------
+         if (null == ge) // check parameter inputs
+         {
+            Logger.Log(LogEnum.LE_ERROR, "EventViewerRandomMovement(): ge=null");
+            CtorError = true;
+            return;
+         }
+         myGameEngine = ge;
+         //--------------------------------------------------
+         if (null == gi) // check parameter inputs
+         {
+            Logger.Log(LogEnum.LE_ERROR, "EventViewerRandomMovement(): gi=null");
+            CtorError = true;
+            return;
+         }
+         myGameInstance = gi;
+         //--------------------------------------------------
+         if (null == c) // check parameter inputs
+         {
+            Logger.Log(LogEnum.LE_ERROR, "EventViewerRandomMovement(): c=null");
+            CtorError = true;
+            return;
+         }
+         myCanvas = c;
+         //--------------------------------------------------
+         if (null == sv)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "EventViewerRandomMovement(): sv=null");
+            CtorError = true;
+            return;
+         }
+         myScrollViewer = sv;
+         //--------------------------------------------------
+         if (null == rdv)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "EventViewerRandomMovement(): rdv=null");
+            CtorError = true;
+            return;
+         }
+         myRulesMgr = rdv;
+         //--------------------------------------------------
+         if (null == dr)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "EventViewerRandomMovement(): dr=true");
+            CtorError = true;
+            return;
+         }
+         myDieRoller = dr;
+         //--------------------------------------------------
+         myGrid.MouseDown += Grid_MouseDown;
+      }
+      public bool PerformAlienTakeovers(EndAlienTakeovers callback)
+      {
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeovers(): myGameEngine=null");
+            return false;
+         }
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeovers(): myGameInstance=null");
+            return false;
+         }
+         if (null == myCanvas)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeovers(): myCanvas=null");
+            return false;
+         }
+         if (null == myScrollViewer)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeovers(): myScrollViewer=null");
+            return false;
+         }
+         if (null == myRulesMgr)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeovers(): myRulesMgr=null");
+            return false;
+         }
+         if (null == myDieRoller)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeovers(): myDieRoller=null");
+            return false;
+         }
+         //--------------------------------------------------
+         myCallback = callback;
+         myState = E091Enum.PREPARE;
+         myIsRollInProgress = false;
+         int gridRowNum = 0;
+         foreach(KeyValuePair<IMapItem, IMapItem> kvp in myGameInstance.AlienTakeovers) // kvp1.Key=First_MapItem, kvp1.Value=Second_MapItem
+         {
+            bool isNoObservation = false;
+            ITerritory t = kvp.Key.TerritoryCurrent;
+            foreach(KeyValuePair<String, double> kvp1 in t.Observations) // look thru all territories that can observe this takeover
+            {
+               ITerritory? t1 = Territories.theTerritories.Find(kvp1.Key); // kvp1.Key=Territory_Name, kvp1.Value=Observe_Probability
+               if( null == t1 )
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeovers(): t1=null for " + kvp1.Key);
+                  return false;
+               }
+               IStack? stack = myGameInstance.Stacks.Find(t1);
+               if (null == stack)
+                  continue;
+               foreach(IMapItem mi in stack.MapItems )
+               {
+                  myGridRows[gridRowNum] = new GridRow(mi, kvp.Key, kvp.Value, kvp1.Value);
+                  gridRowNum++;
+               }
+            }
+            if (false == isNoObservation) // If there is no observations, indicate to user that zero probability of detection
+            {
+               myGridRows[gridRowNum] = new GridRow(null, kvp.Key, kvp.Value, 0.0);
+               gridRowNum++;
+            }
+         }
+         //--------------------------------------------------
+         if (false == UpdateGrid())
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeovers(): UpdateGrid() return false");
+            return false;
+         }
+         myScrollViewer.Content = myGrid;
+         return true;
+      }
+      private bool UpdateGrid()
+      {
+         if (false == UpdateEndState())
+         {
+            Logger.Log(LogEnum.LE_ERROR, "UpdateGrid(): UpdateEndState() returned false");
+            return false;
+         }
+         if (E091Enum.END == myState)
+            return true;
+         if (false == UpdateUserInstructions())
+         {
+            Logger.Log(LogEnum.LE_ERROR, "UpdateGrid(): UpdateUserInstructions() returned false");
+            return false;
+         }
+         if (false == UpdateAssignablePanel())
+         {
+            Logger.Log(LogEnum.LE_ERROR, "UpdateGrid(): UpdateAssignablePanel() returned false");
+            return false;
+         }
+         if (false == UpdateGridRows())
+         {
+            Logger.Log(LogEnum.LE_ERROR, "UpdateGrid(): UpdateGridRows() returned false");
+            return false;
+         }
+         return true;
+      }
+      private bool UpdateEndState()
+      {
+         if (E091Enum.END == myState)
+         {
+            if( null == myGameInstance )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Update_EndState(): myGameInstance=null");
+               return false;
+            }
+            if (null == myCallback)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Update_EndState(): myCallback=null");
+               return false;
+            }
+            if (false == myCallback())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Update_EndState(): myCallback() returned false");
+               return false;
+            }
+         }
+         return true;
+      }
+      private bool UpdateUserInstructions()
+      {
+         myTextBlockInstructions.Inlines.Clear();
+         if( true == myIsPossibleBlock )
+            myTextBlockInstructions.Inlines.Add(new Run("Check the box to block a controlled person from moving. Click the image to continue."));
+         else
+            myTextBlockInstructions.Inlines.Add(new Run("No blocks possible. Click the image to continue."));
+         return true;
+      }
+      private bool UpdateAssignablePanel()
+      {
+         myStackPanelAssignable.Children.Clear(); // clear out assignable panel 
+         System.Windows.Controls.Image img23 = new System.Windows.Controls.Image { Name = "Continue", Source = MapItem.theMapImages.GetBitmapImage("Continue"), Width = Utilities.ZOOM * Utilities.theMapItemSize, Height = Utilities.ZOOM * Utilities.theMapItemSize };
+         myStackPanelAssignable.Children.Add(img23);
+         return true;
+      }
+      private bool UpdateGridRows()
+      {
+         //------------------------------------------------------------
+         // Clear out existing Grid Row data
+         List<UIElement> results = new List<UIElement>();
+         foreach (UIElement ui in myGrid.Children)
+         {
+            int rowNum = Grid.GetRow(ui);
+            if (STARTING_ASSIGNED_ROW <= rowNum)
+               results.Add(ui);
+         }
+         foreach (UIElement ui1 in results)
+            myGrid.Children.Remove(ui1);
+         //------------------------------------------------------------
+         for (int i = 0; i < myMaxRowCount; ++i)
+         {
+            int rowNum = i + STARTING_ASSIGNED_ROW;
+            IMapItem? observer = myGridRows[i].myObserver;
+            if( null == observer )
+            {
+               Label labelForObserver= new Label() { FontFamily = myFontFam, FontSize = 16, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = "NA" };
+               myGrid.Children.Add(labelForObserver);
+               Grid.SetRow(labelForObserver, rowNum);
+               Grid.SetColumn(labelForObserver, 0);
+               Label labelForRoll1 = new Label() { FontFamily = myFontFam, FontSize = 16, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = "NA" };
+               myGrid.Children.Add(labelForRoll1);
+               Grid.SetRow(labelForRoll1, rowNum);
+               Grid.SetColumn(labelForRoll1, 4);
+            }
+            else
+            {
+               Button b0 = CreateButton(observer);
+               myGrid.Children.Add(b0);
+               Grid.SetRow(b0, rowNum);
+               Grid.SetColumn(b0, 0);
+               if (Utilities.NO_RESULT < myGridRows[i].myDieRoll)
+               {
+                  string result = "NA";
+                  if (true == myGridRows[i].myIsResult)
+                     result = myGridRows[i].myDieRoll.ToString();
+                  Label labelForRoll = new Label() { FontFamily = myFontFam, FontSize = 16, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = result };
+                  myGrid.Children.Add(labelForRoll);
+                  Grid.SetRow(labelForRoll, rowNum);
+                  Grid.SetColumn(labelForRoll, 4);
+               }
+               else
+               {
+                  BitmapImage bmi = new BitmapImage();
+                  bmi.BeginInit();
+                  bmi.UriSource = new Uri(MapImage.theImageDirectory + "dieRoll.gif", UriKind.Absolute);
+                  bmi.EndInit();
+                  System.Windows.Controls.Image img = new System.Windows.Controls.Image { Name = "dieRoll", Source = bmi, Width = Utilities.theMapItemOffset, Height = Utilities.theMapItemOffset };
+                  ImageBehavior.SetAnimatedSource(img, bmi);
+                  myGrid.Children.Add(img);
+                  Grid.SetRow(img, rowNum);
+                  Grid.SetColumn(img, 4);
+               }
+            }
+            //-----------------------------
+            Button b1 = CreateButton(myGridRows[i].myMapItem1);
+            myGrid.Children.Add(b1);
+            Grid.SetRow(b1, rowNum);
+            Grid.SetColumn(b1, 1);
+            //-----------------------------
+            Button b2 = CreateButton(myGridRows[i].myMapItem2);
+            myGrid.Children.Add(b2);
+            Grid.SetRow(b2, rowNum);
+            Grid.SetColumn(b2, 2);
+            //-----------------------------
+            int prob = (int)(myGridRows[i].myProbability * 100.0);
+            string sProb = prob.ToString() + "%";
+            Label labelForProb = new Label() { FontFamily = myFontFam, FontSize = 16, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = sProb };
+            myGrid.Children.Add(labelForProb);
+            Grid.SetRow(labelForProb, rowNum);
+            Grid.SetColumn(labelForProb, 3);
+         }
+         return true;
+      }
+      //------------------------------------------------------------------------------------
+      private string GetBuildingName(string tName)
+      {
+         if (true == tName.Contains("House"))
+         {
+            string modifiedTName = tName.Replace("_", " ");
+            return modifiedTName;
+         }
+         else
+         {
+            int arraySize = TableMgr.theBuildingSizes.GetLength(0);
+            for (int i = 0; i < arraySize; i++)
+            {
+               string matchingName = Utilities.RemoveSpaces(TableMgr.theBuildingSizes[i, 0]);
+               if (true == tName.Contains(matchingName))
+                  return TableMgr.theBuildingSizes[i, 0];
+            }
+         }
+         Logger.Log(LogEnum.LE_ERROR, "GetBuildingName(): unable to find building name for territory=" + tName);
+         return "ERROR";
+      }
+      private bool SetTerritory(IMapItem mi, ITerritory newT)
+      {
+         mi.TerritoryCurrent = newT;
+         double offset = mi.Zoom * Utilities.theMapItemOffset;
+         mi.Location.X = newT.CenterPoint.X - offset;
+         mi.Location.Y = newT.CenterPoint.Y - offset;
+         return true;
+      }
+      private Button CreateButton(IMapItem mi)
+      {
+         System.Windows.Controls.Button b = new Button { };
+         b.Name = Utilities.RemoveSpaces(mi.Name);
+         b.Width = 2.0 * mi.Zoom * Utilities.theMapItemSize;
+         b.Height = 2.0 * mi.Zoom * Utilities.theMapItemSize;
+         b.Background = new SolidColorBrush(Colors.Transparent);
+         b.Foreground = new SolidColorBrush(Colors.Transparent);
+         b.BorderThickness = new Thickness(1);
+         b.Margin = new Thickness(2);
+         MapItem.SetButtonContent(b, mi); // This sets the image as the button's content
+         return b;
+      }
+      //------------------------------------------------------------------------------------
+      public void ShowDieResults(int dieRoll)
+      {
+         if ( null == myGameInstance )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "EventViewerRandomMovement.ShowDieResults(): myGameInstance=null");
+            return;
+         }
+         int i = myRollResultRowNum - STARTING_ASSIGNED_ROW;
+         if (i < 0)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ShowDieResults(): 0 > i=" + i.ToString());
+            return;
+         }
+         myGridRows[i].myDieRoll = dieRoll;
+         switch (dieRoll)
+         {
+            case 1:
+               if (0.15 < myGridRows[i].myProbability)
+                  myGridRows[i].myIsResult = true;
+               break;
+            case 2:
+               if (0.32 < myGridRows[i].myProbability)
+                  myGridRows[i].myIsResult = true;
+               break;
+            case 3:
+               if (0.49 < myGridRows[i].myProbability)
+                  myGridRows[i].myIsResult = true;
+               break;
+            case 4:
+               if (0.65 < myGridRows[i].myProbability)
+                  myGridRows[i].myIsResult = true;
+               break;
+            case 5:
+            case 6:
+               break;
+            default:
+               Logger.Log(LogEnum.LE_ERROR, "UpdateGridRows(): invalid die roll=" + myGridRows[i].myDieRoll.ToString());
+               return;
+         }
+         if (false == UpdateGrid())
+            Logger.Log(LogEnum.LE_ERROR, "EventViewerRandomMovement.ShowDieResults(): UpdateGrid() return false");
+         myIsRollInProgress = false;
+      }
+      //---------------------Controller Function--------------------------------------------
+      private void ButtonRule_Click(object sender, RoutedEventArgs e)
+      {
+         if (null == myRulesMgr)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ButtonRule_Click(): myRulesMgr=null");
+            return;
+         }
+         Button b = (Button)sender;
+         string key = (string)b.Content;
+         if (true == key.StartsWith("r")) // rules based click
+         {
+            if (false == myRulesMgr.ShowRule(key))
+               Logger.Log(LogEnum.LE_ERROR, "ButtonRule_Click(): myRulesMgr.ShowRule() returned false key=" + key);
+         }
+         else
+         {
+            if (false == myRulesMgr.ShowTable(key))
+               Logger.Log(LogEnum.LE_ERROR, "Button_Click(): ShowTable() returned false for key=" + key);
+         }
+      }
+      private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
+      {
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Grid_MouseDown(): myGameEngine=null");
+            return;
+         }
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Grid_MouseDown(): myGameInstance=null");
+            return;
+         }
+         if (null == myCanvas)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Grid_MouseDown(): myCanvas=null");
+            return;
+         }
+         if (null == myScrollViewer)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Grid_MouseDown(): myScrollViewer=null");
+            return;
+         }
+         if (null == myRulesMgr)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Grid_MouseDown(): myRulesMgr=null");
+            return;
+         }
+         if (null == myDieRoller)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Grid_MouseDown(): myDieRoller=null");
+            return;
+         }
+         //--------------------------------------------------
+         System.Windows.Point p = e.GetPosition((UIElement)sender);
+         HitTestResult result = VisualTreeHelper.HitTest(myGrid, p);  // Get the Point where the hit test occurrs
+         foreach (UIElement ui in myGrid.Children)
+         {
+            if (ui is StackPanel panel)
+            {
+               foreach (UIElement ui1 in panel.Children)
+               {
+                  if (ui1 is Image img) // Check all images within the myStackPanelAssignable
+                  {
+                     if (result.VisualHit == img)
+                     {
+                        if ("Continue" == img.Name)
+                           myState = E091Enum.END;
+                        if (false == UpdateGrid())
+                           Logger.Log(LogEnum.LE_ERROR, "Grid_MouseDown(): UpdateGrid() return false");
+                        return;
+                     }
+                  }
+               }
+            }
+            else if (ui is Image img1) // next check all images within the Grid Rows
+            {
+               if (result.VisualHit == img1)
+               {
+                  if (false == myIsRollInProgress)
+                  {
+                     myIsRollInProgress = true;
+                     myRollResultRowNum = Grid.GetRow(img1);
+                     RollEndCallback callback = ShowDieResults;
+                     myDieRoller.RollMovingDie(myCanvas, callback);
+                     img1.Visibility = Visibility.Hidden;
+                  }
+                  return;
+               }
+            }
+         }
+      }
+
+   }
+}

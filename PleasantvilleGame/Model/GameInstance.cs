@@ -20,6 +20,7 @@ namespace PleasantvilleGame
       //------------------------------------------------
       public String[] StartingTownspeople { get; set; } = new String[3];
       public List<RandomMoveData> RandomMoves { get; set; } = new List<RandomMoveData>();
+      public Dictionary<IMapItem, IMapItem> AlienTakeovers { get; set; } = new Dictionary<IMapItem, IMapItem>();
       //------------------------------------------------
       public IGameCommands GameCommands { set; get; } = new GameCommands();
       public Options Options { get; set; } = new Options();
@@ -51,7 +52,6 @@ namespace PleasantvilleGame
       public IMapItem Zebulon { set; get; } = new MapItem("Zebulon", 0.8, "ZebulonBlack", new Territory(), 0, 0, 10);
       public IMapItems SelectedMapItems { set; get; } = new MapItems();
       public IMapItemCombat? MapItemCombat { set; get; } = null;
-      public IMapItemTakeover? Takeover { set; get; } = null;
       public IMapItemMove? PreviousMapItemMove { set; get; } = null;
       //---------------------------------------------------------------
       public string PlayerTurn { set; get; } = "Alien";

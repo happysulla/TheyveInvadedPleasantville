@@ -1506,7 +1506,6 @@ namespace PleasantvilleGame
          {
             case GamePhase.Conversations:
             case GamePhase.ImplantRemovals:
-            case GamePhase.AlienTakeover:
                myRectangle2.Visibility = Visibility.Hidden;
                myRectangle3.Visibility = Visibility.Hidden;
                myLeftMapItemsInActionPanelSelected.Clear();
@@ -1543,7 +1542,6 @@ namespace PleasantvilleGame
          {
             case GamePhase.Conversations:
             case GamePhase.ImplantRemovals:
-            case GamePhase.AlienTakeover:
                myRectangle1.Visibility = Visibility.Hidden;
                myRectangle3.Visibility = Visibility.Hidden;
                myLeftMapItemsInActionPanelSelected.Clear();
@@ -1580,7 +1578,6 @@ namespace PleasantvilleGame
          {
             case GamePhase.Conversations:
             case GamePhase.ImplantRemovals:
-            case GamePhase.AlienTakeover:
                myRectangle1.Visibility = Visibility.Hidden;
                myRectangle2.Visibility = Visibility.Hidden;
                myLeftMapItemsInActionPanelSelected.Clear();
@@ -1616,7 +1613,6 @@ namespace PleasantvilleGame
          {
             case GamePhase.Conversations:
             case GamePhase.ImplantRemovals:
-            case GamePhase.AlienTakeover:
                myRectangle5.Visibility = Visibility.Hidden;
                myRectangle6.Visibility = Visibility.Hidden;
                myRightMapItemsInActionPanelSelected.Clear();
@@ -1653,7 +1649,6 @@ namespace PleasantvilleGame
          {
             case GamePhase.Conversations:
             case GamePhase.ImplantRemovals:
-            case GamePhase.AlienTakeover:
                myRectangle4.Visibility = Visibility.Hidden;
                myRectangle6.Visibility = Visibility.Hidden;
                myRightMapItemsInActionPanelSelected.Clear();
@@ -1690,7 +1685,6 @@ namespace PleasantvilleGame
          {
             case GamePhase.Conversations:
             case GamePhase.ImplantRemovals:
-            case GamePhase.AlienTakeover:
                myRectangle4.Visibility = Visibility.Hidden;
                myRectangle5.Visibility = Visibility.Hidden;
                myRightMapItemsInActionPanelSelected.Clear();
@@ -1738,10 +1732,6 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "ClickButton_OkInHelperPanel(): Roll_Influence() returned error");
                break;
             case GamePhase.ImplantRemovals: PerformImplantRemoval(myGameInstance, false); break;
-            case GamePhase.AlienTakeover:
-               if (false == PerformTakeover())
-                  Logger.Log(LogEnum.LE_ERROR, "ClickButton_OkInHelperPanel(): Perform_Takeover() returned error");
-               break;
             case GamePhase.Combats:
                {
                   if ("" == myTextBoxResults.Text)
@@ -3328,239 +3318,6 @@ namespace PleasantvilleGame
          else if (false == UpdateActionPanelButtons(gi))
          {
             Logger.Log(LogEnum.LE_ERROR, "Perform_ImplantRemoval(): Update_ActionPanelButtons() return false");
-            return false;
-         }
-         return true;
-      }
-      private bool DisplayTakeovers(IGameInstance gi, ITerritory? selectedTerritory = null)
-      {
-         if (false == GameEngine.theIsAlien)
-         {
-            myStoryboardFlashing = null; // turn off any flashing spaces
-            return false;
-         }
-         //----------------------------------------------------------------------
-         myStoryboardFlashing = new Storyboard(); // Clear any previous flashing regions
-         foreach (UIElement ui in myCanvasMain.Children)
-         {
-            if (ui is Polygon)
-            {
-               Polygon p1 = (Polygon)ui;
-               p1.Fill = Utilities.theBrushRegionClear;
-            }
-         }
-         //----------------------------------------------------------------------
-         // Display flashing regions where takovers can happen.
-         // Iterate through the stacks looking for multiple counters per stack.;
-         foreach (Stack stack in gi.Stacks)
-         {
-            if (stack.MapItems.Count < 2)
-               continue;
-            // In each stack, get the count in the stack of the number of aliens 
-            // and controlled townspeople
-            IMapItems townspeopleControlled = new MapItems();
-            IMapItems possibleVictums = new MapItems();
-            IMapItems knownAliens = new MapItems();
-            IMapItems unknownAliens = new MapItems();
-            IMapItems uncontrolled = new MapItems();
-            foreach (MapItem mi in stack.MapItems)
-            {
-               if (stack.MapItems.Count < 2)
-                  continue;
-               if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsSurrendered) || ("Zebulon" == mi.Name))
-                  continue;
-
-               if ((true == mi.IsControlled) || (true == mi.IsWary))
-               {
-                  if ((true == mi.IsStunned) || (true == mi.IsTiedUp))
-                     possibleVictums.Add(mi);
-               }
-               else
-               {
-                  if (true == mi.IsAlienKnown)
-                  {
-                     if ((false == mi.IsStunned) && (false == mi.IsTiedUp)) // stunned or tied-up aliens cannot takeover
-                        knownAliens.Add(mi);
-                  }
-                  else if (true == mi.IsAlienUnknown)
-                  {
-                     if ((false == mi.IsStunned) && (false == mi.IsTiedUp)) // stunned or tied-up aliens cannot takeover
-                        unknownAliens.Add(mi);
-                  }
-                  else // uncontrolled 
-                  {
-                     possibleVictums.Add(mi);
-                  }
-               }
-            }
-            int countOfUnknown = possibleVictums.Count + unknownAliens.Count;
-            int countOfAliens = knownAliens.Count + unknownAliens.Count;
-            if (1 < countOfUnknown) // If any stack has two or more counters that are not controlled, return true       
-               myIsTakeOverPromptNeededToFoolOpponent = true;
-            if ((1 == countOfUnknown) && (0 < knownAliens.Count)) // If any stack has at least one possible victum with a known alien, return true   
-               myIsTakeOverPromptNeededToFoolOpponent = true;
-            if ((0 == possibleVictums.Count) || (0 == countOfAliens))
-               continue;
-            myIsTakeOverInOneRegion = true;
-            //-----------------------------------------------------------
-            IMapItem? possibleVictum = possibleVictums[0];
-            if( null == possibleVictum)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "DisplayTakeovers() possibleVictums[0]=null");
-               return false;
-            }  
-            String targetName = possibleVictum.TerritoryCurrent.Name + possibleVictum.TerritoryCurrent.Subname.ToString();  // Turn the region orange
-            foreach (UIElement ui in myCanvasMain.Children)
-            {
-               if (ui is Polygon)
-               {
-                  Polygon p1 = (Polygon)ui;
-                  if (p1.Name == targetName)
-                  {
-                     p1.Fill = Utilities.theAlienControlledBrush;
-                     Canvas.SetZIndex(p1, myZIndexLastUsed);
-                     break;
-                  }
-               }
-            }
-            //-----------------------------------------------------------
-            DoubleAnimation anim = new DoubleAnimation();  // Perform animiation on the region
-            anim.From = 0.7;
-            anim.To = 0.2;
-            anim.Duration = new Duration(TimeSpan.FromSeconds(0.6));
-            anim.AutoReverse = true;
-            anim.RepeatBehavior = RepeatBehavior.Forever;
-            myStoryboardFlashing.Children.Add(anim);
-            Storyboard.SetTargetProperty(anim, new PropertyPath(OpacityProperty));
-            Storyboard.SetTargetName(anim, targetName); // Start flashing the region where the user can select
-
-         } // end foreach (Stack stack in stacks)
-           //-------------------------------------------------------------------------------------------------
-         if (0 == myStoryboardFlashing.Children.Count)
-         {
-            if ((true == myIsTakeOverPromptNeededToFoolOpponent) && (false == myIsTakeOverInOneRegion))
-               return true;
-            else
-               return false;
-         }
-         myStoryboardFlashing.Begin(this);
-         return true;
-      }
-      private bool DisplayTakover(IGameInstance gi, ITerritory selectedTerritory)
-      {
-         UpdateActionPanelClear();
-         if (null == selectedTerritory) // If passed-in territory is not null, user has selected this region. Show a dialog of the conversation results.
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Display_Takover() selectedTerritory=null");
-            return false;
-         }
-         gi.Takeover = null;
-         IStack? stack = gi.Stacks.Find(selectedTerritory);
-         if (null == stack)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Display_Takover() stack=null");
-            return false;
-         }
-         if (null != stack.MapItems)
-         {
-            myLeftMapItemsInActionPanel.Clear();
-            myRightMapItemsInActionPanel.Clear();
-            foreach (IMapItem mi in stack.MapItems)
-            {
-               if (stack.MapItems.Count < 2)
-                  continue;
-
-               if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsSurrendered) || ("Zebulon" == mi.Name))
-                  continue;
-
-               if ((true == mi.IsControlled) || (true == mi.IsWary))
-               {
-                  if ((true == mi.IsStunned) || (true == mi.IsTiedUp))
-                     myRightMapItemsInActionPanel.Add(mi);
-               }
-               else
-               {
-                  if ((true == mi.IsAlienKnown) || (true == mi.IsAlienUnknown))
-                  {
-                     if ((false == mi.IsStunned) && (false == mi.IsTiedUp))
-                        myLeftMapItemsInActionPanel.Add(mi);
-                  }
-                  else // uncontrolled
-                  {
-                     myRightMapItemsInActionPanel.Add(mi);
-                  }
-               }
-            }
-            if ((0 != myLeftMapItemsInActionPanel.Count) && (0 != myRightMapItemsInActionPanel.Count))
-            {
-               if (false == UpdateActionPanel(gi, !GameEngine.theIsAlien))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "Display_Takover(): Update_ActionPanel() returned error");
-                  return false;
-               }
-               myLabelHeading.Visibility = Visibility.Visible;
-               myLabelArrow.Visibility = Visibility.Visible;
-               myTextBoxResults.Visibility = Visibility.Visible;
-               myLabelHeading.Content = "Takeover... \"You will be assimulated.\"";
-               myLabelLeftTop.Content = "Choose an alien who is assimulating:";
-               myLabelRightTop.Content = "Choose a person being assimulated:";
-            }
-         }
-         return true;
-      }
-      private bool PerformTakeover()
-      {
-         if( null == myGameEngine)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::Perform_Takeover(): myGameEngine is null");
-            return false;
-         }
-         //-----------------------------------------------------------------------------
-         IMapItem? alien = myLeftMapItemsInActionPanelSelected[0];
-         if( null == alien)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::Perform_Takeover(): alien=null");
-            return false;
-         }
-         myGameInstance.SelectedMapItems.Add(alien);
-         IMapItem? victim = myLeftMapItemsInActionPanelSelected[0];
-         if( null == victim)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::Perform_Takeover(): victim=null");
-            return false;
-         }
-         myGameInstance.SelectedMapItems.Add(victim);
-         UpdateActionPanelClear();
-         //-----------------------------------------------------------------------------
-         GameAction outAction = GameAction.AlienTakeover;
-         myGameEngine.PerformAction(ref myGameInstance, ref outAction);
-         return true;
-      }
-      private bool PerformTakeoverObserved(IGameInstance gi)
-      {
-         UpdateActionPanelClear();
-         if( null == gi.Takeover)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_TakeoverObserved() gi.Takeover=null");
-            return false;
-         }
-         myLeftMapItemsInActionPanel.Add(gi.Takeover.Alien);
-         myRightMapItemsInActionPanel.Add(gi.Takeover.Uncontrolled);
-         if (false == UpdateActionPanel(gi, !GameEngine.theIsAlien))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_TakeoverObserved(): Update_ActionPanel() returned error");
-            return false;
-         }
-         myLabelHeading.Visibility = Visibility.Visible;
-         myLabelArrow.Visibility = Visibility.Visible;
-         myTextBoxResults.Visibility = Visibility.Visible;
-         myLabelHeading.Content = "Takover... \"You will be assimulated.\"";
-         myLabelLeftTop.Content = "Alien who is assimulating:";
-         myLabelRightTop.Content = "Person being assimulated:";
-         myTextBoxResults.Text = gi.Takeover.Observations;
-         if (false == UpdateActionPanelButtons(gi))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_TakeoverObserved(): Update_ActionPanelButtons() return false");
             return false;
          }
          return true;

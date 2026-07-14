@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -196,7 +197,65 @@ namespace PleasantvilleGame
       }
       public bool PerformAlienTakeover(IGameInstance gi, IMapItems aliens, IMapItems possibleVictims, ref GameAction action)
       {
-
+         action = GameAction.AlienTakeoversShow;
+         if( 0 < aliens.Count )
+         {
+            if (0 < possibleVictims.Count)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeover(): 0=possibleVictims.Count");
+               return false;
+            }
+            int r1 = Utilities.RandomGenerator.Next(aliens.Count);
+            IMapItem? m1 = aliens[r1];
+            if( null == m1)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeover(): m1=null");
+               return false;
+            }
+            int r2 = Utilities.RandomGenerator.Next(possibleVictims.Count);
+            IMapItem? m2 = possibleVictims[r2];
+            if (null == m2)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeover(): m2=null");
+               return false;
+            }
+            int r3 = Utilities.RandomGenerator.Next(2);
+            if( 0 == r3 )
+               gi.AlienTakeovers[m1] = m2;
+            else
+               gi.AlienTakeovers[m2] = m1;
+            m1.IsTakeoverThisTurn = true;
+            m2.IsTakeoverThisTurn = true;
+         }
+         else
+         {
+            if( 1 < possibleVictims.Count )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeover(): 2 > possibleVictims.Count");
+               return false;
+            }
+            int r1 = Utilities.RandomGenerator.Next(possibleVictims.Count);
+            int r2 = -1;
+            while ( r1 != r2 )
+            {
+               r2 = Utilities.RandomGenerator.Next(possibleVictims.Count);
+            }
+            IMapItem? m1 = possibleVictims[r1];
+            if( null == m1 )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeover(): m1=null");
+               return false;
+            }
+            IMapItem? m2 = possibleVictims[r2];
+            if (null == m2)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeover(): m2=null");
+               return false;
+            }
+            gi.AlienTakeovers[m1] = m2;
+            m1.IsTakeoverThisTurn = true;
+            m2.IsTakeoverThisTurn = true;
+         }
          return true;
       }
       private List<TakeoverMetric> GetTakeoverMetrics(IGameInstance gi)

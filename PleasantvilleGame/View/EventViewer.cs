@@ -295,6 +295,13 @@ namespace PleasantvilleGame
                else if (false == evRandomMovementMgr.PerformRandomMovement(ShowRandomMoveResults))
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Perform_RandomMovement() returned false");
                break;
+            case GameAction.AlienTakeoversShow:
+               EventViewerAlienTakeovers evAlienTakeoverMgr = new EventViewerAlienTakeovers(myGameEngine, myGameInstance, myCanvasMain, myScrollViewerTextBlock, myRulesMgr, myDieRoller);
+               if (true == evAlienTakeoverMgr.CtorError)
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): evAlienTakeoverMgr.CtorError=true");
+               else if (false == evAlienTakeoverMgr.PerformAlienTakeovers(ShowAlienTakeoverResults))
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Perform_AlienTakeovers() returned false");
+               break;
             case GameAction.EndGame:
             case GameAction.EndGameWin:
             default:
@@ -1022,6 +1029,31 @@ namespace PleasantvilleGame
          else
             outAction = GameAction.RandomMovementTownsShow;
          StringBuilder sb11 = new StringBuilder("     ######ShowRandomMoveResults() :");
+         sb11.Append(" p="); sb11.Append(myGameInstance.GamePhase.ToString());
+         sb11.Append(" ae="); sb11.Append(myGameInstance.EventActive);
+         sb11.Append(" a="); sb11.Append(outAction.ToString());
+         Logger.Log(LogEnum.LE_VIEW_UPDATE_EVENTVIEWER, sb11.ToString());
+         myGameEngine.PerformAction(ref myGameInstance, ref outAction);
+         return true;
+      }
+      public bool ShowAlienTakeoverResults()
+      {
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ShowAlienTakeoverResults(): myGameInstance=null");
+            return false;
+         }
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ShowAlienTakeoverResults(): myGameEngine=null");
+            return false;
+         }
+         GameAction outAction = GameAction.Error;
+         if (true == GameEngine.theIsAlien)
+            outAction = GameAction.AlienTakeoversFinish;
+         else
+            outAction = GameAction.RandomMovementTownsShow;
+         StringBuilder sb11 = new StringBuilder("     ######ShowAlienTakeoverResults() :");
          sb11.Append(" p="); sb11.Append(myGameInstance.GamePhase.ToString());
          sb11.Append(" ae="); sb11.Append(myGameInstance.EventActive);
          sb11.Append(" a="); sb11.Append(outAction.ToString());

@@ -17,7 +17,7 @@ namespace PleasantvilleGame
       Combats,
       Iterrogations,
       ImplantRemovals,
-      AlienTakeover,
+      AlienTakeovers,
       ShowEndGame,
       UnitTest,
       Error
@@ -92,7 +92,7 @@ namespace PleasantvilleGame
       ImplantRemovalsSelectFinish,
 
       AlienTakeoversSelect,
-      AlienTakeover,
+      AlienTakeoversShow,
       AlienTakeoversFinish,
 
       UnitTestStart,
