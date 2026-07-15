@@ -791,7 +791,7 @@ namespace PleasantvilleGame
 			foreach (object o in myList)
 			{
 				ITerritory t = (ITerritory)o;
-				sb.Append(t.Name);
+				sb.Append(t.ToString());
 				sb.Append(" ");
 			}
 			sb.Append("]");

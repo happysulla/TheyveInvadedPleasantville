@@ -126,9 +126,10 @@ namespace PleasantvilleGame
          gi.IsTownsAckedRandomMovement = false;
          gi.NumTownGuessesForZebulonLocation = 0;
          gi.AlienTakeovers.Clear();
-         gi.SelectedMapItems.Clear();
          Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "Reset_Phase()");
          gi.MapItemMoves.Clear();
+         gi.SelectedMapItems.Clear();
+         gi.SelectedTerritories.Clear();
          if (false == ResetDieResults(gi))
          {
             Logger.Log(LogEnum.LE_ERROR, "Reset_Phase(): Reset_DieResults() returned false");
@@ -235,24 +236,22 @@ namespace PleasantvilleGame
             }
             if ((0 < controlledPeps.Count) && (0 < uncontrolledPeps.Count))
             {
+               if (GamePhase.Conversations != gi.GamePhase)
+               {
+                  if (false == ResetPhase(gi, GamePhase.Conversations))
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "CheckFor_Conversations(): Reset_Phase() returned error");
+                     return false;
+                  }
+                  gi.EventDisplayed = gi.EventActive = "e009t";
+               }
                gi.SelectedTerritories.Add(stack.Territory);
                action = GameAction.ConversationsSelect;
                Logger.Log(LogEnum.LE_SHOW_CONVERSATIONS, "CheckFor_Conversations(): adding stack=" + stack.Territory.ToString() ); 
             }
          }
          if (GameAction.ConversationsSelect == action)
-         {
-            if( GamePhase.Conversations != gi.GamePhase )
-            {
-               if (false == ResetPhase(gi, GamePhase.Conversations))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "CheckFor_Conversations(): Reset_Phase() returned error");
-                  return false;
-               }
-               gi.EventDisplayed = gi.EventActive = "e009t";
-            }
             return true;
-         }
          //--------------------------------------------------
          if( false == CheckForInfluences(gi, ref action))
          {
@@ -279,23 +278,21 @@ namespace PleasantvilleGame
             }
             if ((0 < controlledPeps.Count) && (0 < uncontrolledPeps.Count))
             {
+               if (GamePhase.Influences != gi.GamePhase)
+               {
+                  if (false == ResetPhase(gi, GamePhase.Influences))
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "CheckFor_Influences(): Reset_Phase() returned error");
+                     return false;
+                  }
+                  gi.EventDisplayed = gi.EventActive = "e010t";
+               }
                action = GameAction.InfluencesSelect;
                gi.SelectedTerritories.Add(stack.Territory);
             }
          }
          if (GameAction.InfluencesSelect == action)
-         {
-            if (GamePhase.Influences != gi.GamePhase)
-            {
-               if (false == ResetPhase(gi, GamePhase.Influences))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "CheckFor_Influences(): Reset_Phase() returned error");
-                  return false;
-               }
-               gi.EventDisplayed = gi.EventActive = "e010t";
-            }
             return true;
-         }
          //--------------------------------------------------
          if (false == CheckForCombats(gi, ref action))
          {
@@ -325,14 +322,18 @@ namespace PleasantvilleGame
 ;            }
             if ((0 < controlledPeps.Count) && ( (0 < uncontrolledPeps.Count) || (0 < alienPeps.Count) ) )
             {
-               if (false == ResetPhase(gi, GamePhase.Combats))
+               if (GamePhase.Combats != gi.GamePhase)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "CheckFor_Influences(): Reset_Phase() returned error");
-                  return false;
+                  if (false == ResetPhase(gi, GamePhase.Combats))
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "CheckFor_Influences(): Reset_Phase() returned error");
+                     return false;
+                  }
+                  gi.EventDisplayed = gi.EventActive = "e011t";
                }
-               gi.SelectedTerritories.Add(stack.Territory);
-               gi.EventDisplayed = gi.EventActive = "e011t";
                action = GameAction.CombatsSelect;
+               gi.SelectedTerritories.Add(stack.Territory);
+               gi.DieRollAction = GameAction.DieRollActionNone;
             }
          }
          if (GameAction.CombatsSelect == action)
@@ -373,14 +374,17 @@ namespace PleasantvilleGame
                }
                if (((0 < controlled.Count) && (0 < surrenderedAliens.Count)))
                {
-                  if (false == ResetPhase(gi, GamePhase.Iterrogations))
+                  if (GamePhase.Iterrogations != gi.GamePhase)
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "CheckFor_Iterogations(): Reset_Phase() returned error");
-                     return false;
+                     if (false == ResetPhase(gi, GamePhase.Iterrogations))
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "CheckFor_Iterogations(): Reset_Phase() returned error");
+                        return false;
+                     }
+                     gi.EventDisplayed = gi.EventActive = "e012t";
                   }
-                  gi.SelectedTerritories.Add(stack.Territory);
-                  gi.EventDisplayed = gi.EventActive = "e012t";
                   action = GameAction.InterrogationsSelect;
+                  gi.SelectedTerritories.Add(stack.Territory);
                }
             }
             if (GameAction.InterrogationsSelect == action)
@@ -413,20 +417,21 @@ namespace PleasantvilleGame
             }
             if ( (0 < controlled.Count) && (0 < aliens.Count) )
             {
+               if (GamePhase.ImplantRemovals != gi.GamePhase)
+               {
+                  if (false == ResetPhase(gi, GamePhase.ImplantRemovals))
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "CheckFor_ImplantRemovals(): Reset_Phase() returned error");
+                     return false;
+                  }
+                  gi.EventDisplayed = gi.EventActive = "e013t";
+               }
                action = GameAction.ImplantRemovalsSelect;
                gi.SelectedTerritories.Add(stack.Territory);
             }
          }
          if (GameAction.ImplantRemovalsSelect == action)
-         {
-            if (false == ResetPhase(gi, GamePhase.Combats))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "CheckFor_ImplantRemovals(): Reset_Phase() returned error");
-               return false;
-            }
-            gi.EventDisplayed = gi.EventActive = "e013t";
             return true;
-         }
          if (false == CheckForAlienTakeovers(gi, ref action))
          {
             Logger.Log(LogEnum.LE_ERROR, "CheckFor_ImplantRemovals(): CheckFor_AlienTakeovers() returned error");
@@ -463,9 +468,18 @@ namespace PleasantvilleGame
                      possibleVictims.Add(mi);
                   }
                }
-               if ((1 < possibleVictims.Count) || ((0 < possibleVictims.Count) && (0 < aliens.Count)))      
+               if ((1 < possibleVictims.Count) || (1 < aliens.Count) || ((0 < possibleVictims.Count) && (0 < aliens.Count)))      
                {
-                  if( false == gi.PlayerAlien.PerformAlienTakeover(gi, aliens, possibleVictims, ref action))
+                  if (GamePhase.AlienTakeovers != gi.GamePhase)
+                  {
+                     if (false == ResetPhase(gi, GamePhase.AlienTakeovers))
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): Reset_Phase() returned error");
+                        return false;
+                     }
+                     gi.EventDisplayed = gi.EventActive = "e014t";
+                  }
+                  if ( false == gi.PlayerAlien.ShowPossibleTakeover(gi, stack, ref action))
                   {
                      Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): Perform_AlienTakeover() returned error");
                      return false;
@@ -474,17 +488,7 @@ namespace PleasantvilleGame
             }
          }
          if ((GameAction.AlienTakeoversSelect == action) || (GameAction.AlienTakeoversShow == action))
-         {
-            if (GamePhase.AlienTakeovers != gi.GamePhase)
-            {
-               if (false == ResetPhase(gi, GamePhase.AlienTakeovers))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): Reset_Phase() returned error");
-                  return false;
-               }
-            }
             return true;
-         }
          if (false == CheckForEndOfGame(gi, ref action))
          {
             Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): CheckFor_EndOfGame() returned error");
@@ -1539,7 +1543,6 @@ namespace PleasantvilleGame
       public override string PerformAction(ref IGameInstance gi, ref GameAction action, int dieRoll)
       {
          GamePhase previousPhase = gi.GamePhase;
-
          GameAction previousAction = action;
          GameAction previousDieAction = gi.DieRollAction;
          string previousEvent = gi.EventActive;
@@ -1550,8 +1553,8 @@ namespace PleasantvilleGame
             case GameAction.InfluencesRoll:
                if (gi.SelectedMapItems.Count < 2)
                {
-                  returnStatus = " 2 > (gi.Conversations.Count=" + gi.SelectedMapItems.Count + ")";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(): " + returnStatus);
+                  returnStatus = " 2 > (gi.SelectedMapItems.Count=" + gi.SelectedMapItems.Count + ")";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateInfluences.PerformAction(InfluencesRoll): " + returnStatus);
                }
                else
                {
@@ -1560,10 +1563,11 @@ namespace PleasantvilleGame
                   if( null == rightMapItem )
                   {
                      returnStatus = "rightMapItem = null";
-                     Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(): " + returnStatus);
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateInfluences.PerformAction(InfluencesRoll): " + returnStatus);
                   }
                   else
                   {
+                     rightMapItem.IsInfluencedThisTurn = true; // only allow one influence per turn
                      double totalInfluence = 0;
                      bool isImplantHeld = false;
                      for (int i = 0; i < indexOfLast; ++i)
@@ -1572,11 +1576,11 @@ namespace PleasantvilleGame
                         if (null == influencer)
                         {
                            returnStatus = "influencer=null for i=" + i.ToString();
-                           Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(): " + returnStatus);
+                           Logger.Log(LogEnum.LE_ERROR, "GameStateInfluences.PerformAction(InfluencesRoll): " + returnStatus);
                         }
                         else
                         {
-                           influencer.IsInfluencedThisTurn = true;
+                           influencer.IsInfluencedThisTurn = true; // only allow one influence per turn
                            totalInfluence += (double)influencer.Influence;
                            if (true == influencer.IsImplantHeld)
                               isImplantHeld = true;
@@ -1615,7 +1619,7 @@ namespace PleasantvilleGame
                            if (false == gi.AddKnownAlien(rightMapItem))
                            {
                               returnStatus = "AddKnownAlien() returned error";
-                              Logger.Log(LogEnum.LE_ERROR, "ShowResult_Influence():" + returnStatus);
+                              Logger.Log(LogEnum.LE_ERROR, "GameStateInfluences.PerformAction(InfluencesRoll):" + returnStatus);
                            }
                         }
                         else
@@ -1623,7 +1627,7 @@ namespace PleasantvilleGame
                            if (false == gi.AddControlled(rightMapItem))
                            {
                               returnStatus = "AddKnownAlien() returned error";
-                              Logger.Log(LogEnum.LE_ERROR, "ShowResult_Influence():" + returnStatus);
+                              Logger.Log(LogEnum.LE_ERROR, "GameStateInfluences.PerformAction(InfluencesRoll):" + returnStatus);
                            }
                         }
                      }
@@ -1687,6 +1691,13 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
+            case GameAction.CombatsFinish:
+               if (false == CheckForIterogations(gi, ref action))
+               {
+                  returnStatus = "CheckFor_Iterogations() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsFinish): " + returnStatus);
+               }
+               break;
             default:
                returnStatus = "reached default action=" + action.ToString();
                Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(): " + returnStatus);

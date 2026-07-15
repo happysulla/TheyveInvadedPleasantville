@@ -131,36 +131,36 @@ namespace PleasantvilleGame
          //--------------------------------------------------
          myGrid.MouseDown += Grid_MouseDown;
       }
-      public bool PerformAlienTakeovers(EndAlienTakeovers callback)
+      public bool ConsumateAlienTakeovers(EndAlienTakeovers callback)
       {
          if (null == myGameEngine)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeovers(): myGameEngine=null");
+            Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): myGameEngine=null");
             return false;
          }
          if (null == myGameInstance)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeovers(): myGameInstance=null");
+            Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): myGameInstance=null");
             return false;
          }
          if (null == myCanvas)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeovers(): myCanvas=null");
+            Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): myCanvas=null");
             return false;
          }
          if (null == myScrollViewer)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeovers(): myScrollViewer=null");
+            Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): myScrollViewer=null");
             return false;
          }
          if (null == myRulesMgr)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeovers(): myRulesMgr=null");
+            Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): myRulesMgr=null");
             return false;
          }
          if (null == myDieRoller)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeovers(): myDieRoller=null");
+            Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): myDieRoller=null");
             return false;
          }
          //--------------------------------------------------
@@ -168,37 +168,80 @@ namespace PleasantvilleGame
          myState = E091Enum.PREPARE;
          myIsRollInProgress = false;
          int gridRowNum = 0;
-         foreach(KeyValuePair<IMapItem, IMapItem> kvp in myGameInstance.AlienTakeovers) // kvp1.Key=First_MapItem, kvp1.Value=Second_MapItem
+         foreach(ITerritory t in myGameInstance.SelectedTerritories) 
          {
+            IStack? stack = myGameInstance.Stacks.Find(t);
+            if( null == stack )
+            {
+               return false;
+            }
+            IMapItems possibleVictims = new MapItems();
+            IMapItems aliens = new MapItems();
+            foreach (IMapItem mi in stack.MapItems )
+            {
+               if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious))  // Unconscious or dead cannot be taken over
+                  continue;
+               if ((true == mi.IsControlled) || (true == mi.IsWary))
+               {
+                  if ((true == mi.IsStunned) || (true == mi.IsTiedUp))
+                     possibleVictims.Add(mi);
+               }
+               else
+               {
+                  if ((true == mi.IsAlienKnown) || (true == mi.IsAlienUnknown))
+                  {
+                     if ((false == mi.IsStunned) && (false == mi.IsTiedUp))
+                        aliens.Add(mi);
+                  }
+                  else
+                  {
+                     possibleVictims.Add(mi);
+                  }
+               }
+            }
+            //-----------------------------------------
+            IMapItem? mi1;
+            IMapItem? mi2;
+            if( false == myGameInstance.PlayerAlien.GetAlienTakeoverPair(t, aliens, possibleVictims, out mi1, out mi2))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): GetAlienTakeoverPair() returned false");
+               return false;
+            }
+            if ((null == mi1) || (null == mi2) )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): GetAlienTakeoverPair() returned null for either mi1 or mi2");
+               return false;
+            }
+            //-----------------------------------------
             bool isNoObservation = false;
-            ITerritory t = kvp.Key.TerritoryCurrent;
             foreach(KeyValuePair<String, double> kvp1 in t.Observations) // look thru all territories that can observe this takeover
             {
                ITerritory? t1 = Territories.theTerritories.Find(kvp1.Key); // kvp1.Key=Territory_Name, kvp1.Value=Observe_Probability
                if( null == t1 )
                {
-                  Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeovers(): t1=null for " + kvp1.Key);
+                  Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): t1=null for " + kvp1.Key);
                   return false;
                }
-               IStack? stack = myGameInstance.Stacks.Find(t1);
-               if (null == stack)
+               IStack? stackObs = myGameInstance.Stacks.Find(t1);
+               if (null == stackObs)
                   continue;
-               foreach(IMapItem mi in stack.MapItems )
+               foreach(IMapItem mi in stackObs.MapItems )
                {
-                  myGridRows[gridRowNum] = new GridRow(mi, kvp.Key, kvp.Value, kvp1.Value);
+                  myGridRows[gridRowNum] = new GridRow(mi, mi1, mi2, kvp1.Value);
                   gridRowNum++;
                }
             }
             if (false == isNoObservation) // If there is no observations, indicate to user that zero probability of detection
             {
-               myGridRows[gridRowNum] = new GridRow(null, kvp.Key, kvp.Value, 0.0);
+               myGridRows[gridRowNum] = new GridRow(null, mi1, mi2, 0.0);
                gridRowNum++;
             }
+            Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Consumate_AlienTakeovers(): Adding Key=" + mi1.Name + " Value=" + mi2.Name + " w/ obs?=" + isNoObservation.ToString());
          }
          //--------------------------------------------------
          if (false == UpdateGrid())
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienTakeovers(): UpdateGrid() return false");
+            Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): UpdateGrid() return false");
             return false;
          }
          myScrollViewer.Content = myGrid;
@@ -388,6 +431,7 @@ namespace PleasantvilleGame
          MapItem.SetButtonContent(b, mi); // This sets the image as the button's content
          return b;
       }
+
       //------------------------------------------------------------------------------------
       public void ShowDieResults(int dieRoll)
       {

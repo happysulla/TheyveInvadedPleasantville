@@ -299,8 +299,8 @@ namespace PleasantvilleGame
                EventViewerAlienTakeovers evAlienTakeoverMgr = new EventViewerAlienTakeovers(myGameEngine, myGameInstance, myCanvasMain, myScrollViewerTextBlock, myRulesMgr, myDieRoller);
                if (true == evAlienTakeoverMgr.CtorError)
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): evAlienTakeoverMgr.CtorError=true");
-               else if (false == evAlienTakeoverMgr.PerformAlienTakeovers(ShowAlienTakeoverResults))
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Perform_AlienTakeovers() returned false");
+               else if (false == evAlienTakeoverMgr.ConsumateAlienTakeovers(ShowAlienTakeoverResults))
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Consumate_AlienTakeovers() returned false");
                break;
             case GameAction.EndGame:
             case GameAction.EndGameWin:
@@ -1159,6 +1159,10 @@ namespace PleasantvilleGame
                            return;
                         case "Continue008t":
                            action = GameAction.TownMovementTownCompletes;
+                           myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+                           return;
+                        case "Continue011t":
+                           action = GameAction.CombatsFinish;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
                         case "ExitGame":

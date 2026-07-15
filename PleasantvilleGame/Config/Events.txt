@@ -131,21 +131,15 @@ To influence another uncontrolled counter, the Town player compares the Influenc
 <InlineUIContainer><Button Content='Influence Modifiers' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>.
 <LineBreak/><LineBreak/>
 After completion of all possible infleunces have occurred, the game automatically moves to the Combat phase."
-e011t	"<Bold>e011t Combats</Bold>  <InlineUIContainer><Button Content='r7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+e011t	"<Bold>e011t Combats</Bold>  <InlineUIContainer><Button Content='r8.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
-Influencing is how the Town player convinces other uncontrolled townspeople to join their side. Click a flashing space to start a influence process.
+All combat is voluntary. Combat is started by clicking a flashing red space. If the Town player attacks one or more uncontrolled counters thinking them to be Alien controlled, the result is automatically 'Attacker Wins' for the Town player, regardless of the number of uncontrolled townspeople. 
 <LineBreak/><LineBreak/>
-To influence another uncontrolled counter, the Town player compares the Influence Factors (bottom right per <InlineUIContainer><Button Content='r2.2.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>) and compares the odds ration to the 
-<InlineUIContainer><Button Content='Influence Results' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table adjusting with the 
-<InlineUIContainer><Button Content='Influence Modifiers' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>.
-<LineBreak/><LineBreak/>"
+The Combat Factors (<InlineUIContainer><Button Content='r2.2.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>) are compared to arriving at a postive difference (attacker is always greater number). The <InlineUIContainer><Button Content='Combat Results' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table determines the outcome.
+<LineBreak/><LineBreak/>Combat can be skipped by clicking the following image.
+<LineBreak/><LineBreak/>
+                                        <InlineUIContainer><Image Name='Continue011t' Height='100' Width='100'></Image></InlineUIContainer>"
 e012t	"<Bold>e012t Interrogations</Bold>  <InlineUIContainer><Button Content='r7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
-<LineBreak/><LineBreak/>
-Influencing is how the Town player convinces other uncontrolled townspeople to join their side. Click a flashing space to start a influence process.
-<LineBreak/><LineBreak/>
-To influence another uncontrolled counter, the Town player compares the Influence Factors (bottom right per <InlineUIContainer><Button Content='r2.2.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>) and compares the odds ration to the 
-<InlineUIContainer><Button Content='Influence Results' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table adjusting with the 
-<InlineUIContainer><Button Content='Influence Modifiers' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>.
 <LineBreak/><LineBreak/>"
 e501	"<Bold>e501 Game Won!!!</Bold>
 <LineBreak/><LineBreak/>"

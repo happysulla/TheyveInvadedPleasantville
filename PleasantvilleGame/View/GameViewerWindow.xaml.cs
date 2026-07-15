@@ -1124,6 +1124,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.AlienTakeoversSelect:
+            case GameAction.AlienTakeoversShow:
                myRectangleMaps.Clear();
                UpdateCanvasMainClear(myButtons, gi.Stacks, action);
                if (false == UpdateCanvasMain(gi, action))
