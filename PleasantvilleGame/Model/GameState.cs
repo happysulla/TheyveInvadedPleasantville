@@ -1098,7 +1098,8 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien(): startingAlien=null for name=" + name);
             return false;
          }
-         startingAlien.IsAlienUnknown = true; 
+         gi.AddUnknownAlien(startingAlien);
+         Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Assign_StartingAlien(): startingAlien=" + name);
          //------------------------------------
          name = gi.StartingTownspeople[2];
          if (true == String.IsNullOrEmpty(name))
@@ -1112,7 +1113,8 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien(): startingAlien=null for name=" + name);
             return false;
          }
-         startingAlien.IsAlienUnknown = true;  
+         gi.AddUnknownAlien(startingAlien);
+         Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Assign_StartingAlien(): startingAlien=" + name);
          return true;
       }
    }
@@ -1615,21 +1617,9 @@ namespace PleasantvilleGame
                      if (dieThreshold <= dieRoll) // Check for alien.  If alien, let user know it is discovered. Else, make the townsperson controlled.
                      {
                         if (true == rightMapItem.IsAlienUnknown)
-                        {
-                           if (false == gi.AddKnownAlien(rightMapItem))
-                           {
-                              returnStatus = "AddKnownAlien() returned error";
-                              Logger.Log(LogEnum.LE_ERROR, "GameStateInfluences.PerformAction(InfluencesRoll):" + returnStatus);
-                           }
-                        }
+                           gi.AddKnownAlien(rightMapItem);
                         else
-                        {
-                           if (false == gi.AddControlled(rightMapItem))
-                           {
-                              returnStatus = "AddKnownAlien() returned error";
-                              Logger.Log(LogEnum.LE_ERROR, "GameStateInfluences.PerformAction(InfluencesRoll):" + returnStatus);
-                           }
-                        }
+                           gi.AddControlled(rightMapItem);
                      }
                      else
                      {
@@ -1765,11 +1755,7 @@ namespace PleasantvilleGame
                   }
                   else if (true == mi.IsAlienUnknown)
                   {
-                     if (false == gi.AddKnownAlien(mi)) // All aliens in this combat become exposed.
-                     {
-                        Logger.Log(LogEnum.LE_ERROR, "PerformCombat(): AddKnownAlien() returned false");
-                        return false;
-                     }
+                     gi.AddKnownAlien(mi); // All aliens in this combat become exposed.
                      aliens.Add(mi);
                   }
                   else if (true == mi.IsControlled)
@@ -2204,6 +2190,14 @@ namespace PleasantvilleGame
          switch (action)
          {
             case GameAction.AlienTakeoversShow: // Handled by EventViewer
+               break;
+            case GameAction.AlienTakeoversFinish:
+               if (false == ResetPhase(gi, GamePhase.RandomMovement))
+               {
+                  returnStatus = "Reset_Phase() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
+               gi.EventActive = gi.EventDisplayed = "e005";
                break;
             default:
                returnStatus = "reached default action=" + action.ToString();

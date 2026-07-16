@@ -1048,11 +1048,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "ShowAlienTakeoverResults(): myGameEngine=null");
             return false;
          }
-         GameAction outAction = GameAction.Error;
-         if (true == GameEngine.theIsAlien)
-            outAction = GameAction.AlienTakeoversFinish;
-         else
-            outAction = GameAction.RandomMovementTownsShow;
+         GameAction outAction = GameAction.AlienTakeoversFinish;
          StringBuilder sb11 = new StringBuilder("     ######ShowAlienTakeoverResults() :");
          sb11.Append(" p="); sb11.Append(myGameInstance.GamePhase.ToString());
          sb11.Append(" ae="); sb11.Append(myGameInstance.EventActive);

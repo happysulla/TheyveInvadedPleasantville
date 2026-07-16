@@ -62,12 +62,5 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_ERROR, "Show_Takeover(): not implemented");
          return false;
       }
-      public bool GetAlienTakeoverPair(ITerritory t, IMapItems aliens, IMapItems possibleVictims, out IMapItem? mi1, out IMapItem? mi2)
-      {
-         mi1 = null;
-         mi2 = null;
-         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Perform_AlienTakeovers(): not implemented");
-         return false;
-      }
    }
 }

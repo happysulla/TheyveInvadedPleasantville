@@ -1138,6 +1138,15 @@ namespace PleasantvilleGame
                   return;
                }
                break;
+            case GameAction.AlienTakeoversFinish:
+               myRectangleMaps.Clear();
+               UpdateCanvasMainClear(myButtons, gi.Stacks, action);
+               if (false == UpdateCanvasMain(gi, action))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
+                  return;
+               }
+               break;
             default:
                if (false == UpdateCanvasMain(gi, action))
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
@@ -1891,7 +1900,7 @@ namespace PleasantvilleGame
                   continue;
                elementRemovals.Add(ui);
             }
-            else if (ui is Rectangle rectangle) 
+            else if (ui is Rectangle rectangle)
                elementRemovals.Add(ui);
             else if (ui is Label label)  // A Game Feat Label
                elementRemovals.Add(ui);
@@ -1899,6 +1908,8 @@ namespace PleasantvilleGame
                elementRemovals.Add(ui);
             else if (ui is Polyline polyline)
                elementRemovals.Add(ui);
+            else if (ui is Polygon polygon)
+               polygon.Fill = Utilities.theBrushRegionClear;
          }
          foreach (UIElement ui1 in elementRemovals)
             myCanvasMain.Children.Remove(ui1);
@@ -2202,7 +2213,6 @@ namespace PleasantvilleGame
          myStoryboardFlashing = new Storyboard(); // Clear any previous flashing regions
          foreach (Polygon polygon in myPolygons) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
             polygon.Fill = Utilities.theBrushRegionClear;
-
          foreach (ITerritory t in gi.SelectedTerritories) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
          {
             foreach (Polygon polygon in myPolygons) 
@@ -2613,20 +2623,12 @@ namespace PleasantvilleGame
             displayResults.Append(rightPersonName);
             if (true == rightMapItem.IsAlienUnknown)
             {
-               if (false == myGameInstance.AddKnownAlien(rightMapItem))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "ShowResult_Influence(): AddKnownAlien() returned error");
-                  return;
-               }
+               myGameInstance.AddKnownAlien(rightMapItem);
                displayResults.Append(" is an Alien!!!!!!");
             }
             else
             {
-               if (false == myGameInstance.AddControlled(rightMapItem))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "ShowResult_Influence(): AddControlled() returned error");
-                  return;
-               }
+               myGameInstance.AddControlled(rightMapItem);
                displayResults.Append(" says \"You are right.  Let's go get 'em!\"");
             }
          }
@@ -3290,20 +3292,12 @@ namespace PleasantvilleGame
                case 9:
                case 10:
                   displayResults.Append("\nImplant is removed but disintegrates.");
-                  if (false == gi.AddControlled(rightMapItem))
-                  {
-                     Logger.Log(LogEnum.LE_ERROR, "CheckForImplantRemoval() returned error");
-                     return false;
-                  }
+                  gi.AddControlled(rightMapItem);
                   break;
                case 11: // Implant usuable
                case 12:
                   displayResults.Append("\nImplant is removed intact! You now have evidence.");
-                  if (false == gi.AddControlled(rightMapItem))
-                  {
-                     Logger.Log(LogEnum.LE_ERROR, "Perform_ImplantRemoval() returned error");
-                     return false;
-                  }
+                  gi.AddControlled(rightMapItem);
                   leftMapItem.IsImplantHeld = true;
                   break;
                default:
@@ -3824,11 +3818,7 @@ namespace PleasantvilleGame
                   }
                   if (true == selectedMapItem.IsAlienUnknown)
                   {
-                     if (false == myGameInstance.AddKnownAlien(selectedMapItem))
-                     {
-                        Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickExposeAlien(): returned error");
-                        return;
-                     }
+                     myGameInstance.AddKnownAlien(selectedMapItem);
                      //GameAction outAction = GameAction.ShowAlien;
                      //myGameEngine.PerformAction(ref myGameInstance, ref outAction); // Inform the user to return back
                   }
@@ -3855,11 +3845,7 @@ namespace PleasantvilleGame
                   {
                      if (((true == selectedMapItem.IsAlienUnknown) || (true == selectedMapItem.IsAlienKnown)) && (true == myIsAlienAbleToStopMove) && (false == selectedMapItem.IsMoveStoppedThisTurn))
                      {
-                        if (false == myGameInstance.AddKnownAlien(selectedMapItem))
-                        {
-                           Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickStopMove(): returned error");
-                           return;
-                        }
+                        myGameInstance.AddKnownAlien(selectedMapItem);
                         selectedMapItem.IsMoveStoppedThisTurn = true;
                         if (0 < myGameInstance.MapItemMoves.Count) // Reset the moving MapItem
                         {

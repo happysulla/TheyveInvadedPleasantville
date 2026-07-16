@@ -77,9 +77,9 @@ namespace PleasantvilleGame
       //----------------------------------------------
       List<IUnitTest> UnitTests { get; }
       //=========================================================
-      bool AddUnknownAlien(IMapItem newAlien);
-      bool AddKnownAlien(IMapItem newAlien);
-      bool AddControlled(IMapItem newPerson);
+      void AddUnknownAlien(IMapItem newAlien);
+      void AddKnownAlien(IMapItem newAlien);
+      void AddControlled(IMapItem newPerson);
       IMapItemMove? CreateMapItemMove(IMapItem mi, ITerritory newT);
    }
 }

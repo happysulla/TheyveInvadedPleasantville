@@ -94,143 +94,29 @@ namespace PleasantvilleGame
          return sb.ToString();
       }
       //---------------------------------------------------------------
-      public bool AddUnknownAlien(IMapItem newAlien)
+      public void AddUnknownAlien(IMapItem newAlien)
       {
-         StringBuilder sb = new StringBuilder("AddUnknownAlien():"); 
-         if (false == newAlien.IsAlienUnknown)
-         {
-            if ((false == newAlien.IsTiedUp) && (false == newAlien.IsUnconscious) && (false == newAlien.IsStunned) && (false == newAlien.IsSurrendered) && (false == newAlien.IsKilled))
-            {
-               if (true == newAlien.IsControlled)
-               {
-                  InfluenceCountTownspeople -= newAlien.Influence;
-                  sb.Append(newAlien.Name); sb.Append(" ---- from TP "); 
-                  sb.Append(newAlien.Influence.ToString());
-                  sb.Append(" T="); sb.Append(this.InfluenceCountTotal.ToString());
-                  sb.Append(" Known="); sb.Append(this.InfluenceCountAlienKnown.ToString());
-                  sb.Append(" UnKnown="); sb.Append(this.InfluenceCountAlienUnknown.ToString());
-                  sb.Append(" TP="); sb.Append(this.InfluenceCountTownspeople.ToString());
-                  Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
-               }
-
-               InfluenceCountAlienUnknown += newAlien.Influence;
-               sb.Append(newAlien.Name); 
-               sb.Append(" ++++ to Unknown "); 
-               sb.Append(newAlien.Influence.ToString());
-               sb.Append(" T="); sb.Append(this.InfluenceCountTotal.ToString());
-               sb.Append(" Known="); sb.Append(this.InfluenceCountAlienKnown.ToString());
-               sb.Append(" UnKnown="); sb.Append(this.InfluenceCountAlienUnknown.ToString());
-               sb.Append(" TP="); sb.Append(this.InfluenceCountTownspeople.ToString());
-               Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
-            }
-            newAlien.IsAlienUnknown = true;
-            newAlien.IsWary = false;
-            newAlien.IsControlled = false;
-         }
-         return true;
+         newAlien.IsControlled = false;
+         newAlien.IsAlienUnknown = true;
+         newAlien.IsAlienKnown = false;
+         newAlien.IsWary = false;
+         newAlien.IsControlled = false;
       }
-      public bool AddKnownAlien(IMapItem newAlien)
+      public void AddKnownAlien(IMapItem newAlien)
       {
-         StringBuilder sb = new StringBuilder("Add_KnownAlien():");
-         if (false == newAlien.IsAlienKnown)  // Do not add if already known alien
-         {
-            if ((false == newAlien.IsTiedUp) && (false == newAlien.IsUnconscious) && (false == newAlien.IsStunned) && (false == newAlien.IsSurrendered) && (false == newAlien.IsKilled))
-            {
-               if (true == newAlien.IsControlled)
-               {
-                  InfluenceCountTownspeople -= newAlien.Influence;
-                  sb.Append(newAlien.Name); 
-                  sb.Append(" ---- from TP "); 
-                  sb.Append(newAlien.Influence.ToString());
-                  sb.Append(" T="); sb.Append(this.InfluenceCountTotal.ToString());
-                  sb.Append(" Known="); sb.Append(this.InfluenceCountAlienKnown.ToString());
-                  sb.Append(" UnKnown="); sb.Append(this.InfluenceCountAlienUnknown.ToString());
-                  sb.Append(" TP="); sb.Append(this.InfluenceCountTownspeople.ToString());
-                  Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
-               }
-               if (true == newAlien.IsAlienUnknown) // DeternewAlienne if already an alien.  If already an alien, need to remove from that influence 
-               {
-                  InfluenceCountAlienUnknown -= newAlien.Influence;
-                  sb.Append(newAlien.Name); 
-                  sb.Append(" ---- from Unknown "); 
-                  sb.Append(newAlien.Influence.ToString());
-                  sb.Append(" T="); sb.Append(this.InfluenceCountTotal.ToString());
-                  sb.Append(" Known="); sb.Append(this.InfluenceCountAlienKnown.ToString());
-                  sb.Append(" UnKnown="); sb.Append(this.InfluenceCountAlienUnknown.ToString());
-                  sb.Append(" TP="); sb.Append(this.InfluenceCountTownspeople.ToString());
-                  Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
-               }
-               InfluenceCountAlienKnown += newAlien.Influence;
-               sb =  sb.Append(newAlien.Name); 
-               sb.Append(" ++++ to Known "); 
-               sb.Append(newAlien.Influence.ToString());
-               sb.Append(" T="); sb.Append(this.InfluenceCountTotal.ToString());
-               sb.Append(" Known="); sb.Append(this.InfluenceCountAlienKnown.ToString());
-               sb.Append(" UnKnown="); sb.Append(this.InfluenceCountAlienUnknown.ToString());
-               sb.Append(" TP="); sb.Append(this.InfluenceCountTownspeople.ToString());
-               Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
-            }
-            newAlien.IsWary = false;
-            newAlien.IsControlled = false;
-            newAlien.IsAlienUnknown = false;
-            newAlien.IsAlienKnown = true;
-         }
-         return true;
+         newAlien.IsControlled = false;
+         newAlien.IsAlienUnknown = false;
+         newAlien.IsAlienKnown = true;
+         newAlien.IsWary = false;
+         newAlien.IsControlled = false;
       }
-      public bool AddControlled(IMapItem controlled)
+      public void AddControlled(IMapItem controlled)
       {
-         if (false == controlled.IsControlled)
-         {
-            if ((false == controlled.IsTiedUp) && (false == controlled.IsUnconscious) && (false == controlled.IsStunned) && (false == controlled.IsKilled))
-            {
-               if ((true == controlled.IsAlienKnown) && (false == controlled.IsSurrendered))
-               {
-                  InfluenceCountAlienKnown -= controlled.Influence;
-                  StringBuilder sb0 = new StringBuilder("AddControlled():"); sb0.Append(controlled.Name); sb0.Append(" ---- from known "); sb0.Append(controlled.Influence.ToString());
-                  sb0.Append(" T="); sb0.Append(this.InfluenceCountTotal.ToString());
-                  sb0.Append(" Known="); sb0.Append(this.InfluenceCountAlienKnown.ToString());
-                  sb0.Append(" UnKnown="); sb0.Append(this.InfluenceCountAlienUnknown.ToString());
-                  sb0.Append(" TP="); sb0.Append(this.InfluenceCountTownspeople.ToString());
-                  Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb0.ToString());
-               }
-
-               if ((true == controlled.IsAlienUnknown) && (false == controlled.IsSurrendered))
-               {
-                  InfluenceCountAlienUnknown -= controlled.Influence;
-                  StringBuilder sb1 = new StringBuilder("AddControlled():"); sb1.Append(controlled.Name); sb1.Append(" ---- from unknown "); sb1.Append(controlled.Influence.ToString());
-                  sb1.Append(" T="); sb1.Append(this.InfluenceCountTotal.ToString());
-                  sb1.Append(" Known="); sb1.Append(this.InfluenceCountAlienKnown.ToString());
-                  sb1.Append(" UnKnown="); sb1.Append(this.InfluenceCountAlienUnknown.ToString());
-                  sb1.Append(" TP="); sb1.Append(this.InfluenceCountTownspeople.ToString());
-                  Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb1.ToString());
-               }
-
-               if (true == controlled.IsSurrendered)
-               {
-                  InfluenceCountTotal += controlled.Influence; // A surrendered alien that converts gets added back to total influence
-                  StringBuilder sb2 = new StringBuilder("AddControlled():"); sb2.Append(controlled.Name); sb2.Append(" ++++ to total "); sb2.Append(controlled.Influence.ToString());
-                  sb2.Append(" T="); sb2.Append(this.InfluenceCountTotal.ToString());
-                  sb2.Append(" Known="); sb2.Append(this.InfluenceCountAlienKnown.ToString());
-                  sb2.Append(" UnKnown="); sb2.Append(this.InfluenceCountAlienUnknown.ToString());
-                  sb2.Append(" TP="); sb2.Append(this.InfluenceCountTownspeople.ToString());
-                  Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb2.ToString());
-               }
-
-               InfluenceCountTownspeople += controlled.Influence;
-               StringBuilder sb3 = new StringBuilder("AddControlled():"); sb3.Append(controlled.Name); sb3.Append(" ++++ to TP "); sb3.Append(controlled.Influence.ToString());
-               sb3.Append(" T="); sb3.Append(this.InfluenceCountTotal.ToString());
-               sb3.Append(" Known="); sb3.Append(this.InfluenceCountAlienKnown.ToString());
-               sb3.Append(" UnKnown="); sb3.Append(this.InfluenceCountAlienUnknown.ToString());
-               sb3.Append(" TP="); sb3.Append(this.InfluenceCountTownspeople.ToString());
-               Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb3.ToString());
-            }
-            controlled.IsAlienKnown = false;
-            controlled.IsControlled = true;
-            controlled.IsWary = false;
-            controlled.IsSurrendered = false;
-            controlled.IsAlienUnknown = false;
-         }
-         return true;
+         controlled.IsControlled = true;
+         controlled.IsAlienUnknown = false;
+         controlled.IsAlienKnown = false;
+         controlled.IsWary = false;
+         controlled.IsSurrendered = false;
       }
       public IMapItemMove? CreateMapItemMove(IMapItem mi, ITerritory newT)
       {
