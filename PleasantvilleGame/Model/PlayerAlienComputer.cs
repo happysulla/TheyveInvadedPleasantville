@@ -224,6 +224,21 @@ namespace PleasantvilleGame
                }
             }
          }
+         //-----------------------------------------
+         IMapItem? mi1;
+         IMapItem? mi2;
+         if (false == gi.PlayerAlien.GetAlienTakeoverPair(stack.Territory, aliens, possibleVictims, out mi1, out mi2))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Show_PossibleTakeover(): Get_AlienTakeoverPair() returned false");
+            return false;
+         }
+         if ((null == mi1) || (null == mi2))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Show_PossibleTakeover(): Get_AlienTakeoverPair() returned null for either mi1 or mi2");
+            return false;
+         }
+         IMetricObservation metric = new MetricObservation(gi, mi1, mi2);
+         Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): t=" + stack.Territory.ToString() + " mi1=" + mi1.ToString() + " mi2=" + mi2.ToString() + " m=" + metric.Value.ToString());
          //----------------------------------------------------
          if ((0 < possibleVictims.Count) && (0 < aliens.Count))
          {
@@ -239,10 +254,8 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Show_PossibleTakeover(): alien=null");
                return false;
             }
-            IMetricObservation metric = new MetricObservation(gi, alien);
-            if (0 == metric.Value) // only show if there is no chance of observation
+            if (100 == metric.Value) // only show if there is no chance of observation
             {
-               Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 2-t=" + stack.Territory.ToString() + " v=" + possibleVictims.ToString() + " a=" + aliens.ToString());
                gi.SelectedTerritories.Add(stack.Territory);
                action = GameAction.AlienTakeoversShow;
             }
@@ -255,10 +268,8 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Show_PossibleTakeover(): victim=null");
                return false;
             }
-            IMetricObservation metric = new MetricObservation(gi, victim);
-            if (0 == metric.Value) // only show if there is no chance of observation
+            if (100 == metric.Value) // only show if there is no chance of observation
             {
-               Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 3-t=" + stack.Territory.ToString() + " v=" + possibleVictims.ToString() + " a=" + aliens.ToString());
                gi.SelectedTerritories.Add(stack.Territory);
                action = GameAction.AlienTakeoversShow;
             }

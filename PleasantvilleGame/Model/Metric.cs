@@ -5,16 +5,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
+using Windows.ApplicationModel.Chat;
 
 namespace PleasantvilleGame
 {
    public class MetricObservation : IMetricObservation
    {
+      public IMapItem? Alien { get; set; } = null;
       public IMapItem Target { get; set; }
       public int Value { get; set; }
-      public MetricObservation(IGameInstance gi, IMapItem mi)
+      public MetricObservation(IGameInstance gi, IMapItem target)
       {
-         Target = mi;
+         Target = target;
+         Value = GetObservationMetric(gi);
+      }
+      public MetricObservation(IGameInstance gi, IMapItem target, IMapItem alien)
+      {
+         Alien = alien;
+         Target = target;
          Value = GetObservationMetric(gi);
       }
       private int GetObservationMetric(IGameInstance gi)
@@ -25,16 +33,15 @@ namespace PleasantvilleGame
             IStack? stack = gi.Stacks.Find(kvp.Key); 
             if (null == stack) // might not be a stack in this Territory
                continue;
-            for (int i = 0; i < stack.MapItems.Count; ++i)
+            foreach (IMapItem mi in stack.MapItems)
             {
-               if ((this.Target.TerritoryCurrent.ToString() == stack.Territory.ToString()) && (0 == i)) // do not count the first mapitem in the Observation Hex
-                  continue;
-               IMapItem? mi = stack.MapItems[i];
-               if (null == mi)
+               if (null != Alien)  // do not count the target and alien
                {
-                  Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "GetObservationMetric(): mi=null");
-                  return -1;
+                  if (this.Alien.Name == mi.Name)
+                     continue;
                }
+               if (this.Target.Name == mi.Name)   // do not count the target 
+                  continue;
                if ((true == mi.IsAlienUnknown) || (true == mi.IsAlienKnown)) // Aliens do not observe
                   continue;
                pTotal *= (1 - kvp.Value);

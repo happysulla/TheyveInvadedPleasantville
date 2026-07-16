@@ -2200,6 +2200,9 @@ namespace PleasantvilleGame
       private bool DisplayFlashingRegions(IGameInstance gi, SolidColorBrush brush)
       {
          myStoryboardFlashing = new Storyboard(); // Clear any previous flashing regions
+         foreach (Polygon polygon in myPolygons) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
+            polygon.Fill = Utilities.theBrushRegionClear;
+
          foreach (ITerritory t in gi.SelectedTerritories) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
          {
             foreach (Polygon polygon in myPolygons) 
@@ -2217,10 +2220,6 @@ namespace PleasantvilleGame
                   myStoryboardFlashing.Children.Add(anim);
                   Storyboard.SetTargetProperty(anim, new PropertyPath(OpacityProperty));
                   Storyboard.SetTargetName(anim, polygon.Name); // Start flashing the region where the user can select
-               }
-               else
-               {
-                  polygon.Fill = Utilities.theBrushRegionClear;
                }
             }
          }
