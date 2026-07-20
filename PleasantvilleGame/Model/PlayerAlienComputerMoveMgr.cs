@@ -66,7 +66,17 @@ namespace PleasantvilleGame
                   mim = gi.CreateMapItemMove(unknownAlien, metricVictim.Target.TerritoryCurrent);
                if (null == mim)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): CreateMapItemMove() returned null");
+                  Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): CreateMapItemMove() returned mim=null");
+                  return false;
+               }
+               if (null == mim.OldTerritory)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): CreateMapItemMove() returned mim.OldTerritory=null");
+                  return false;
+               }
+               if (null == mim.NewTerritory)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): CreateMapItemMove() returned mim.NewTerritory=null");
                   return false;
                }
                alienMoves.Add(mim);
@@ -167,7 +177,17 @@ namespace PleasantvilleGame
             IMapItemMove? mim = gi.CreateMapItemMove(movingMi, metric.Target.TerritoryCurrent);
             if (null == mim)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Move_Uncontrolled(): CreateMapItemMove() returned null");
+               Logger.Log(LogEnum.LE_ERROR, "Move_Uncontrolled(): CreateMapItemMove() returned mim=null");
+               return false;
+            }
+            if (null == mim.OldTerritory)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Move_Uncontrolled(): CreateMapItemMove() returned mim.OldTerritory=null");
+               return false;
+            }
+            if (null == mim.NewTerritory)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Move_Uncontrolled(): CreateMapItemMove() returned mim.NewTerritory=null");
                return false;
             }
             alienMoves.Add(mim);

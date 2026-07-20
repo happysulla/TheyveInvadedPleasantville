@@ -80,7 +80,7 @@ namespace PleasantvilleGame
       private int myBrushIndex = 0;
       private DoubleCollection myDashArray = new DoubleCollection();
       private SolidColorBrush mySolidColorBrushBlack = new SolidColorBrush();
-      private SolidColorBrush mySolidColorBrushGray = new SolidColorBrush()      { Color=Colors.DarkGray };     // Conversations
+      private SolidColorBrush mySolidColorBrushGray = new SolidColorBrush()      { Color = Colors.DarkGray };     // Conversations
       private SolidColorBrush mySolidColorBrushPurple = new SolidColorBrush()    { Color = Colors.Purple };     // Interogations
       private SolidColorBrush mySolidColorBrushRosyBrown = new SolidColorBrush() { Color = Colors.RosyBrown };     // Implant Removal
       //--------------------------------------------------------------
@@ -2224,7 +2224,7 @@ namespace PleasantvilleGame
                   DoubleAnimation anim = new DoubleAnimation();  // Perform animiation on the region
                   anim.From = 1.0;
                   anim.To = 0.1;
-                  anim.Duration = new Duration(TimeSpan.FromSeconds(0.8));
+                  anim.Duration = new Duration(TimeSpan.FromSeconds(0.7));
                   anim.AutoReverse = true;
                   anim.RepeatBehavior = RepeatBehavior.Forever;
                   myStoryboardFlashing.Children.Add(anim);
@@ -2654,133 +2654,6 @@ namespace PleasantvilleGame
          GameAction action = myGameInstance.DieRollAction;
          myGameEngine.PerformAction(ref myGameInstance, ref action, dieRoll);
       }
-      private bool DisplayCombats(IGameInstance gi, out bool isRetreatNeedAck)
-      {
-         // This method collects all possible combats in the respective containers 
-         // <myTerritoriesCombatForAlien> or <myTerritoriesCombatForTownsperson>.  It turns 
-         // the spaces red and causes them to flash as an indication to the user that they 
-         // can be selected.  This function returns true if there are any possible combats
-         // or retreats from previous combats.
-         //----------------------------------------------------------------------
-         isRetreatNeedAck = false;
-         myStoryboardFlashing = new Storyboard();
-         if (true == GameEngine.theIsAlien)
-            myTerritoriesCombatForAlien.Clear();
-         else
-            myTerritoriesCombatForTownsperson.Clear();
-         //----------------------------------------------------------------------
-         foreach (Stack stack in gi.Stacks) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
-         {
-            if (stack.MapItems.Count < 2)
-               continue;
-            // In each stack, get the count in the stack of the number of aliens, 
-            // uncontrolled, and controlled townspeople.
-            IMapItems controlled = new MapItems();
-            IMapItems uncontrolled = new MapItems();
-            IMapItems aliens = new MapItems();
-            IMapItems unknownAliens = new MapItems();
-            foreach (MapItem mi in stack.MapItems)
-            {
-               if ((true == mi.IsCombatThisTurn) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
-                  continue;
-               if (true == mi.IsControlled)
-                  controlled.Add(mi);
-               else if (true == mi.IsAlienKnown)
-                  aliens.Add(mi);
-               else if (true == mi.IsAlienUnknown)
-                  unknownAliens.Add(mi);
-               else
-                  uncontrolled.Add(mi);
-            }
-            // Based on counts, determine if a battle is possible.
-            // !!!!!REMEMBER!!!!!  unknown aliens will not trigger a combat against wary people
-            // unless the MapItem is exposed.  
-            ITerritory? combatTerritory = null;
-            if (true == GameEngine.theIsAlien)
-            {
-               if (0 == aliens.Count)
-                  continue;
-               IMapItem? alien = aliens[0];
-               if (null == alien)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "Display_Combats() aliens[0]=null");
-                  return false;
-               }
-               combatTerritory = alien.TerritoryCurrent;
-               if ((0 == controlled.Count) && (0 == uncontrolled.Count)) // If nobody to attack, skip
-                  continue;
-               if (0 == controlled.Count) // Alien can only attack uncontrolled counters that are wary
-               {
-                  bool isAnyMapItemsWary = false;
-                  foreach (IMapItem mi1 in uncontrolled)
-                  {
-                     if (true == mi1.IsWary)
-                        isAnyMapItemsWary = true;
-                  }
-                  if (false == isAnyMapItemsWary)
-                     continue;
-               }
-            }
-            else // Townspeople attacks
-            {
-               if (0 == controlled.Count)
-                  continue;
-               IMapItem? controlledMapItem = controlled[0];
-               if (null == controlledMapItem)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "Display_Combats() controlled[0]=null");
-                  return false;
-               }
-               combatTerritory = controlledMapItem.TerritoryCurrent;
-               if ((0 == aliens.Count) && ((0 == uncontrolled.Count) && (0 == unknownAliens.Count)))
-                  continue;
-            }
-            //------------------------------------------------------------------------------
-            if (true == GameEngine.theIsAlien)
-               myTerritoriesCombatForAlien.Add(combatTerritory);
-            else
-               myTerritoriesCombatForTownsperson.Add(combatTerritory);
-            //------------------------------------------------------------------------------
-            String targetName = combatTerritory.Name + combatTerritory.Subname.ToString(); // Turn the region red
-            foreach (UIElement ui in myCanvasMain.Children)
-            {
-               if (ui is Polygon)
-               {
-                  Polygon p1 = (Polygon)ui;
-                  if (p1.Name == targetName)
-                  {
-                     p1.Fill = Utilities.theBrushBlood;
-                     Canvas.SetZIndex(p1, myZIndexLastUsed);
-                     break;
-                  }
-               }
-            }
-            //------------------------------------------------------------------------------
-            DoubleAnimation anim = new DoubleAnimation();  // Perform animiation on the region
-            anim.From = 0.7;
-            anim.To = 0.2;
-            anim.Duration = new Duration(TimeSpan.FromSeconds(0.6));
-            anim.AutoReverse = true;
-            anim.RepeatBehavior = RepeatBehavior.Forever;
-            myStoryboardFlashing.Children.Add(anim);
-            Storyboard.SetTargetProperty(anim, new PropertyPath(OpacityProperty));
-            Storyboard.SetTargetName(anim, targetName); // Start flashing the region where the user can select
-         }
-         //------------------------------------------------------------------------------
-         if (0 == myStoryboardFlashing.Children.Count)
-         {
-            if (null == gi.MapItemCombat)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::Display_Combats() gi.MapItemCombat is null");
-               return false;
-            }
-            if (true == gi.MapItemCombat.IsAnyRetreat) // If the previous combat had retreats, do not assume combats are completed until the player explicitly indicates it with menu command. This allows them to see the retreats.
-               isRetreatNeedAck = true;
-            return true;
-         }
-         myStoryboardFlashing.Begin(this);
-         return true;
-      }
       private bool DisplayCombat(IGameInstance gi, ITerritory selectedTerritory)
       {
          UpdateActionPanelClear();
@@ -2789,79 +2662,73 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Display_Combat() selectedTerritory=null");
             return false;
          }
-         if (true == GameEngine.theIsAlien) // Only handle this mouse click if the selected territory is one where combat can occur.
+         IStack? stack = gi.Stacks.Find(selectedTerritory);
+         if (null == stack)
          {
-            if (null == myTerritoriesCombatForAlien.Find(selectedTerritory.Name))
-               return true;
+            Logger.Log(LogEnum.LE_ERROR, "Display_Conversation(): stack=null for t=" + selectedTerritory.ToString());
+            return false;
+         }
+         IMapItems shuffledStack = stack.MapItems.Shuffle();
+         //-------------------------------------------------------------------
+         int townCombatCount = 0;
+         int alienCombatCount = 0;
+         IMapItems waryPeps = new MapItems();
+         IMapItems controlledPeps = new MapItems();
+         IMapItems uncontrolledPeps = new MapItems();
+         IMapItems knownAliens = new MapItems();
+         foreach (MapItem mi in shuffledStack)
+         {
+            if ((true == mi.IsCombatThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
+               continue;
+            if (true == mi.IsControlled)
+            {
+               controlledPeps.Add(mi);
+               townCombatCount += mi.Combat;
+            }
+            else if (true == mi.IsAlienKnown)
+            {
+               knownAliens.Add(mi);
+               alienCombatCount += mi.Combat;
+            }
+            else
+            {
+               if (true == mi.IsWary)
+                  waryPeps.Add(mi);
+               uncontrolledPeps.Add(mi);
+            }
+         }
+         //-------------------------------------------------------------------
+         bool isTownAttacker  = true;
+         if (townCombatCount < alienCombatCount)
+            isTownAttacker = false;
+         if (true == isTownAttacker) // Setup the action panel.
+         {
+            foreach (IMapItem mi in controlledPeps)
+               myLeftMapItemsInActionPanel.Add(mi);
+            foreach (IMapItem mi in knownAliens)
+               myRightMapItemsInActionPanel.Add(mi);
+            if (0 == myRightMapItemsInActionPanel.Count)
+            {
+               foreach (IMapItem mi in uncontrolledPeps)
+                  myRightMapItemsInActionPanel.Add(mi);
+            }
          }
          else
          {
-            if (null == myTerritoriesCombatForTownsperson.Find(selectedTerritory.Name))
-               return true;
-         }
-         //-------------------------------------------------------------------
-         IMapItems aliens = new MapItems();
-         IMapItems controlled = new MapItems();
-         IMapItems uncontrolled = new MapItems();
-         IMapItems wary = new MapItems();
-         foreach(IStack stack in gi.Stacks)
-         {
-            foreach (MapItem mi in stack.MapItems)
+            foreach (IMapItem mi in knownAliens)
+               myLeftMapItemsInActionPanel.Add(mi);
+            foreach (IMapItem mi in controlledPeps)
+               myRightMapItemsInActionPanel.Add(mi);
+            if (0 == myRightMapItemsInActionPanel.Count)
             {
-               if ((selectedTerritory.Name == mi.TerritoryCurrent.Name) && (selectedTerritory.Subname == mi.TerritoryCurrent.Subname))
+               int r1 = Utilities.RandomGenerator.Next(waryPeps.Count);
+               IMapItem? mi = waryPeps[r1];
+               if( null == mi )
                {
-                  if ((false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsKilled) || (true == mi.IsSurrendered))
-                     continue;
-
-                  if (true == mi.IsAlienKnown)
-                  {
-                     aliens.Add(mi);
-                  }
-                  else if (true == mi.IsControlled)
-                  {
-                     controlled.Add(mi);
-                  }
-                  else
-                  {
-                     if (true == mi.IsWary)
-                        wary.Add(mi);
-                     uncontrolled.Add(mi);
-                  }
+                  Logger.Log(LogEnum.LE_ERROR, "Display_Combat(): unable to find r1" + r1.ToString() + " in w=" + waryPeps.ToString());
+                  return false;
                }
-            }
-         }
-         //-------------------------------------------------------------------
-         if (0 == controlled.Count) // If there is no combat, return from this method
-         {
-            if ((0 == aliens.Count) || (0 == wary.Count))
-               return true;
-         }
-         if (true == GameEngine.theIsAlien) // Setup the action pane.
-         {
-            foreach (IMapItem mi in aliens)
-               myLeftMapItemsInActionPanel.Add(mi);
-
-            foreach (IMapItem mi in controlled)
                myRightMapItemsInActionPanel.Add(mi);
-
-            if (0 == myRightMapItemsInActionPanel.Count)
-            {
-               foreach (IMapItem mi in wary)
-                  myRightMapItemsInActionPanel.Add(mi);
-            }
-         }
-         else
-         {
-            foreach (IMapItem mi in controlled)
-               myLeftMapItemsInActionPanel.Add(mi);
-
-            foreach (IMapItem mi in aliens)
-               myRightMapItemsInActionPanel.Add(mi);
-
-            if (0 == myRightMapItemsInActionPanel.Count)
-            {
-               foreach (IMapItem mi in uncontrolled)
-                  myRightMapItemsInActionPanel.Add(mi);
             }
          }
          //-------------------------------------------------------------------
@@ -2872,6 +2739,11 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Display_Combat(): Update_ActionPanel() returned error");
                return false;
             }
+            gi.MapItemCombat = new MapItemCombat(selectedTerritory);
+            foreach (IMapItem mi in myLeftMapItemsInActionPanel)
+               gi.MapItemCombat.Attackers.Add(mi);
+            foreach (IMapItem mi in myLeftMapItemsInActionPanel)
+               gi.MapItemCombat.Defenders.Add(mi);
             myLabelHeading.Visibility = Visibility.Visible;
             myLabelArrow.Visibility = Visibility.Visible;
             myTextBoxResults.Visibility = Visibility.Visible;
@@ -2885,42 +2757,19 @@ namespace PleasantvilleGame
       }
       private bool RollCombat(IGameInstance gi, bool isIgnoreResults)
       {
-         if( null == myGameEngine )
+         if (null == myGameInstance)
          {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow::Perform_Combat(): myGameEngine is null");
+            Logger.Log(LogEnum.LE_ERROR, "Roll_Combat(): myGameInstance=null");
             return false;
          }
-         if (true == isIgnoreResults)
+         if (null == myDieRoller)
          {
-            UpdateActionPanelClear();
-            return true;
-         }
-         if ((0 == myLeftMapItemsInActionPanel.Count) || (0 == myRightMapItemsInActionPanel.Count))
-         {
-            StringBuilder sb = new StringBuilder("GameViewerWindow::Perform_Combat(): myLeft=");
-            sb.Append(myLeftMapItemsInActionPanel.Count.ToString());
-            sb.Append(" myRight=");
-            sb.Append(myRightMapItemsInActionPanel.Count.ToString());
-            sb.Append(" myLeftSelected=");
-            sb.Append(myLeftMapItemsInActionPanelSelected.Count.ToString());
-            sb.Append(" myRightSelected=");
-            sb.Append(myRightMapItemsInActionPanelSelected.Count.ToString());
-            Logger.Log(LogEnum.LE_ERROR, sb.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "Roll_Combat(): myDieRoller=null");
             return false;
          }
-         //-----------------------------------------------------------------------------
-         if ((false == myIsCombatInitiatedForAlien) && (false == myIsCombatInitiatedForTownsperson)) // Only initiate combat if there is not an outstanding combat happening.
-         {
-
-         }
-         return true;
-      }
-      private bool ShowResultCombat(int dieRoll)
-      {
-         UpdateActionPanelClear();
          if (null == myGameInstance.MapItemCombat)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Display_CombatResults(): gi.MapItemCombat=null");
+            Logger.Log(LogEnum.LE_ERROR, "Roll_Combat(): myGameInstance.MapItemCombat=null");
             return false;
          }
          int totalCombatForAttacker = 0;
@@ -2954,20 +2803,35 @@ namespace PleasantvilleGame
                break;
          }
          //-----------------------------------------------------------------------------
+         myGameInstance.EventActive = myGameInstance.EventDisplayed; // As soon as you roll the die, the current event becomes the active event
+         myGameInstance.DieRollAction = GameAction.CombatsRoll;
+         myDieRoller.RollMovingDice(myCanvasMain, ShowResultCombat);
+         return true;
+      }
+      private void ShowResultCombat(int dieRoll)
+      {
+         UpdateActionPanelClear();
+         if (null == myGameInstance.MapItemCombat)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Show_ResultCombat(): gi.MapItemCombat=null");
+            return;
+         }
+
+         //-----------------------------------------------------------------------------
          if ((0 == myLeftMapItemsInActionPanel.Count) || (0 == myRightMapItemsInActionPanel.Count))
          {
-            StringBuilder sb = new StringBuilder("Display_CombatResults(): myLeft=");
+            StringBuilder sb = new StringBuilder("Show_ResultCombat(): myLeft=");
             sb.Append(myLeftMapItemsInActionPanel.Count.ToString());
             sb.Append(" myRight=");
             sb.Append(myRightMapItemsInActionPanel.Count.ToString());
             Logger.Log(LogEnum.LE_ERROR, sb.ToString());
-            return true;
+            return;
          }
          //-----------------------------------------------------------------------------
          if (false == UpdateActionPanel(myGameInstance, true))
          {
-            Logger.Log(LogEnum.LE_ERROR, "Display_CombatResults(): Update_ActionPanel() returned error");
-            return false;
+            Logger.Log(LogEnum.LE_ERROR, "Show_ResultCombat(): Update_ActionPanel() returned error");
+            return;
          }
          myLabelHeading.Visibility = Visibility.Visible;
          myLabelArrow.Visibility = Visibility.Visible;
@@ -3003,10 +2867,9 @@ namespace PleasantvilleGame
          if (false == UpdateActionPanelButtons(myGameInstance))
          {
             Logger.Log(LogEnum.LE_ERROR, "Display_CombatResults(): Update_ActionPanelButtons() return false");
-            return false;
+            return;
          }
          Logger.Log(LogEnum.LE_SHOW_COMBAT_THREAD, "Display_CombatResults(): myTextBoxResults.Text=" + myTextBoxResults.Text);
-         return true;
       }
       private void RollCombatRetreat(IGameInstance gi, bool isIgnoreResults)
       {
@@ -3569,6 +3432,13 @@ namespace PleasantvilleGame
                   return;
                }
                break;
+            case GamePhase.Combats:
+               if (false == DisplayCombat(myGameInstance, tSelected))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_Combat() returned error");
+                  return;
+               }
+               break;
             default:
                return;
          }
@@ -3648,7 +3518,7 @@ namespace PleasantvilleGame
                         Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownCanvas() t.ToString() is null or empty for territory in Territories.theTerritories");
                         continue;
                      }
-                     if (aPolygon.Tag.ToString() == Utilities.RemoveSpaces(tName))
+                     if (aPolygon.Name == Utilities.RemoveSpaces(tName))
                      {
                         selectedTerritory = t;
                         break;

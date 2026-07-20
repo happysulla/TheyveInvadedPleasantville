@@ -331,20 +331,21 @@ namespace PleasantvilleGame
                   unknownAliens.Add(mi);
                else
                   uncontrolledPeps.Add(mi)
-;            }
+;           }
             if ((0 < controlledPeps.Count) && ( (0 < uncontrolledPeps.Count) || (0 < knownAliens.Count) || (0 < unknownAliens.Count)) )
             {
                if (GamePhase.Combats != gi.GamePhase)
                {
                   if (false == ResetPhase(gi, GamePhase.Combats))
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "CheckFor_Influences(): Reset_Phase() returned error");
+                     Logger.Log(LogEnum.LE_ERROR, "CheckFor_Combats(): Reset_Phase() returned error");
                      return false;
                   }
                   gi.EventDisplayed = gi.EventActive = "e011t";
                }
                action = GameAction.CombatsSelect;
                gi.SelectedTerritories.Add(stack.Territory);
+               Logger.Log(LogEnum.LE_SHOW_COMBATS, "CheckFor_Combats(): Adding t=" + stack.Territory.ToString() + " c=" + controlledPeps.Count.ToString() + " u=" + uncontrolledPeps.Count.ToString() + " ka=" + knownAliens.Count.ToString() + " ua=" + unknownAliens.Count.ToString());
                gi.DieRollAction = GameAction.DieRollActionNone;
             }
          }
@@ -352,7 +353,7 @@ namespace PleasantvilleGame
             return true;
          if (false == CheckForIterogations(gi, ref action))
          {
-            Logger.Log(LogEnum.LE_ERROR, "CheckFor_PossibleCombats(): CheckFor_Iterogations() returned error");
+            Logger.Log(LogEnum.LE_ERROR, "CheckFor_Combats(): CheckFor_Iterogations() returned error");
             return false;
          }
          return true;
@@ -495,6 +496,7 @@ namespace PleasantvilleGame
                      }
                      gi.EventDisplayed = gi.EventActive = "e014t";
                   }
+                  Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "CheckFor_AlienTakeovers(): t=" + stack.Territory.ToString() + " v=" + possibleVictims.ToString() + " a=" + aliens.ToString());
                   if ( false == gi.PlayerAlien.ShowPossibleTakeover(gi, stack, ref action))
                   {
                      Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): Perform_AlienTakeover() returned error");
@@ -1488,6 +1490,8 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
+            case GameAction.UpdateEventViewerDisplay: // Only change active event
+            case GameAction.UpdateNewGameEnd:
             case GameAction.ShowGameFeatsDialog:
             case GameAction.ShowRuleListingDialog:
             case GameAction.ShowEventListingDialog:
@@ -1499,8 +1503,6 @@ namespace PleasantvilleGame
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
-            case GameAction.UpdateEventViewerDisplay: // Only change active event
-            case GameAction.UpdateNewGameEnd:
                break;
             case GameAction.UpdateRotateStack:
                if (false == RotateStack(gi))
@@ -1508,12 +1510,22 @@ namespace PleasantvilleGame
                   returnStatus = "Rotate_Stack() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                }
+               if (false == CheckForConversations(gi, ref action))
+               {
+                  returnStatus = "CheckFor_Conversations() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(ConversationsRoll): " + returnStatus);
+               }
                break;
             case GameAction.UpdateScatterStack:
                if (false == ScatterStack(gi))
                {
                   returnStatus = "Scatter_Stack() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
+               if (false == CheckForConversations(gi, ref action))
+               {
+                  returnStatus = "CheckFor_Conversations() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(ConversationsRoll): " + returnStatus);
                }
                break;
             case GameAction.ConversationsRoll:

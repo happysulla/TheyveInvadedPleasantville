@@ -22,10 +22,9 @@ namespace PleasantvilleGame
       private const int NUM_RANDOM_GEN = 13;
       public readonly static int STD_WAIT = 10;
       //--------------------------------------------
-      public readonly static SolidColorBrush theBrushBlood = new SolidColorBrush();
+      public readonly static SolidColorBrush theBrushBlood = new SolidColorBrush() { Color = System.Windows.Media.Colors.Red};
       public readonly static SolidColorBrush theBrushRegion = new SolidColorBrush() { Color = System.Windows.Media.Color.FromArgb(0, 0, 1, 0) };
-      public readonly static SolidColorBrush theBrushRegionClear = new SolidColorBrush();
-      public readonly static SolidColorBrush theBrushControlButton = new SolidColorBrush();
+      public readonly static SolidColorBrush theBrushRegionClear = new SolidColorBrush() { Color = System.Windows.Media.Color.FromArgb(0, 0, 1, 0) };
       public readonly static SolidColorBrush theTownControlledBrush = new SolidColorBrush() { Color = System.Windows.Media.Color.FromArgb(0xFF, 0x33, 0xAA, 0x33) };
       public readonly static SolidColorBrush theAlienControlledBrush = new SolidColorBrush() { Color = System.Windows.Media.Color.FromArgb(0xFF, 0xFF, 0xD5, 0x00) };
       public readonly static SolidColorBrush theSkepticalBrush = new SolidColorBrush() { Color = System.Windows.Media.Color.FromArgb(0xFF, 0xF2, 0xDE, 0x9B) };

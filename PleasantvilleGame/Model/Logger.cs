@@ -65,10 +65,11 @@ namespace PleasantvilleGame
       //-------------
       LE_SHOW_CONVERSATIONS,
       LE_SHOW_INFLUENCES,
-      LE_SHOW_ITEROGATIONS,
+      LE_SHOW_COMBATS,
       LE_SHOW_COMBAT_STATE,
       LE_SHOW_COMBAT_THREAD,
       LE_COMBAT_SUMS,
+      LE_SHOW_ITEROGATIONS,
       LE_SHOW_TAKEOVERS,
       LE_SHOW_OBSERVATIONS,
       LE_SHOW_OBSERVATIONS_METRIC,
@@ -165,10 +166,12 @@ namespace PleasantvilleGame
          //-------------
          SetOn(LogEnum.LE_SHOW_CONVERSATIONS);
          SetOn(LogEnum.LE_SHOW_INFLUENCES);
+         SetOn(LogEnum.LE_SHOW_COMBATS);
          SetOn(LogEnum.LE_SHOW_ITEROGATIONS);
          SetOn(LogEnum.LE_SHOW_COMBAT_STATE);
          SetOn(LogEnum.LE_SHOW_COMBAT_THREAD);
          SetOn(LogEnum.LE_COMBAT_SUMS);
+         SetOn(LogEnum.LE_SHOW_ITEROGATIONS);
          SetOn(LogEnum.LE_SHOW_TAKEOVERS);
          SetOn(LogEnum.LE_SHOW_OBSERVATIONS);
          //SetOn(LogEnum.LE_SHOW_OBSERVATIONS_METRIC);
