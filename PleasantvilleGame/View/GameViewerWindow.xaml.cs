@@ -2697,16 +2697,34 @@ namespace PleasantvilleGame
                uncontrolledPeps.Add(mi);
             }
          }
+         controlledPeps = controlledPeps.SortOnCombat();
+         knownAliens = knownAliens.SortOnCombat();
          //-------------------------------------------------------------------
          bool isTownAttacker  = true;
          if (townCombatCount < alienCombatCount)
             isTownAttacker = false;
          if (true == isTownAttacker) // Setup the action panel.
          {
+            int totalCombatForAttacker = 0;
+            int numOfAttackers = 0;
             foreach (IMapItem mi in controlledPeps)
+            {
                myLeftMapItemsInActionPanel.Add(mi);
+               myLeftMapItemsInActionPanelSelected.Add(mi);
+               totalCombatForAttacker += mi.Combat;
+               if (3 <= ++numOfAttackers)
+                  break;
+            }
+            int totalCombatForDefender = 0;
+            int numOfDefenders = 0;
             foreach (IMapItem mi in knownAliens)
+            {
                myRightMapItemsInActionPanel.Add(mi);
+               myRightMapItemsInActionPanelSelected.Add(mi);
+               totalCombatForDefender += mi.Combat;
+               if (3 <= ++numOfDefenders)
+                  break;
+            }
             if (0 == myRightMapItemsInActionPanel.Count)
             {
                foreach (IMapItem mi in uncontrolledPeps)
@@ -2715,20 +2733,30 @@ namespace PleasantvilleGame
          }
          else
          {
+            int totalCombatForAttacker = 0;
+            int numOfAttackers = 0;
             foreach (IMapItem mi in knownAliens)
+            {
                myLeftMapItemsInActionPanel.Add(mi);
+               myLeftMapItemsInActionPanelSelected.Add(mi);
+               totalCombatForAttacker += mi.Combat;
+               if (3 <= ++numOfAttackers)
+                  break;
+            }
+            int totalCombatForDefender = 0;
+            int numOfDefenders = 0;
             foreach (IMapItem mi in controlledPeps)
+            {
                myRightMapItemsInActionPanel.Add(mi);
+               myRightMapItemsInActionPanelSelected.Add(mi);
+               totalCombatForDefender += mi.Combat;
+               if (3 <= ++numOfDefenders)
+                  break;
+            }
             if (0 == myRightMapItemsInActionPanel.Count)
             {
-               int r1 = Utilities.RandomGenerator.Next(waryPeps.Count);
-               IMapItem? mi = waryPeps[r1];
-               if( null == mi )
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "Display_Combat(): unable to find r1" + r1.ToString() + " in w=" + waryPeps.ToString());
-                  return false;
-               }
-               myRightMapItemsInActionPanel.Add(mi);
+               foreach (IMapItem mi in waryPeps)
+                  myRightMapItemsInActionPanel.Add(mi);
             }
          }
          //-------------------------------------------------------------------
@@ -2816,7 +2844,6 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Show_ResultCombat(): gi.MapItemCombat=null");
             return;
          }
-
          //-----------------------------------------------------------------------------
          if ((0 == myLeftMapItemsInActionPanel.Count) || (0 == myRightMapItemsInActionPanel.Count))
          {
@@ -2827,12 +2854,12 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, sb.ToString());
             return;
          }
-         //-----------------------------------------------------------------------------
-         if (false == UpdateActionPanel(myGameInstance, true))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Show_ResultCombat(): Update_ActionPanel() returned error");
-            return;
-         }
+         int totalCombatForAttacker = 0;
+         foreach (IMapItem mi in myLeftMapItemsInActionPanelSelected)
+            totalCombatForAttacker += mi.Combat;
+         int totalCombatForDefender = 0;
+         foreach (IMapItem mi in myRightMapItemsInActionPanelSelected)
+            totalCombatForDefender += mi.Combat;
          myLabelHeading.Visibility = Visibility.Visible;
          myLabelArrow.Visibility = Visibility.Visible;
          Logger.Log(LogEnum.LE_SHOW_COMBAT_THREAD, "Display_CombatResults(): myTextBoxResults.Visibility = Visibility.Visible");
