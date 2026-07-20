@@ -52,7 +52,7 @@ namespace PleasantvilleGame
       public const string DEPUTY = "Deputy";
       public const string FIRE_CHIEF = "Fire Chief";
       public const string HOTEL_OWNER = "Hotel Owner";
-      public const string LAWYER = "Sheriff";
+      public const string LAWYER = "Lawyer";
       public const string JUDGE = "Judge";
       public const string MAID = "Maid";
       public const string MAITRE_D = "MaitreD";

@@ -306,7 +306,7 @@ Modifiers:<LineBreak/>
 r7.2.4	"<Bold>r7.2.4 Influence - No Effect Causes Skeptic</Bold><LineBreak/><LineBreak/>
 The townsperson did not believe the attempt to convince him or her. That particular townsperson is now highly skeptical about an alien invasion.
 <LineBreak/><LineBreak/>
-If an attempt to influence that counter is made again, the Town player must stubtract one from the die roll on the <InlineUIContainer><Button Content='Influence Results' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table for future attempts. The penalty is not cumulative."
+If an attempt to influence that counter is made again, the Town player must subtract one from the die roll on the <InlineUIContainer><Button Content='Influence Results' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table for future attempts. The penalty is not cumulative."
 r7.2.5	"<Bold>r7.2.5 Influence - Convinced Result</Bold><LineBreak/><LineBreak/>
 The counter is now a Town controlled counter. It will move and function as a Town controlled piece. "
 r7.2.6	"<Bold>r7.2.6 Influence - Alien Controlled Counters</Bold><LineBreak/><LineBreak/>

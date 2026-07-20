@@ -1,4 +1,5 @@
 ﻿
+using Google.Protobuf.WellKnownTypes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,14 +17,14 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
 using WpfAnimatedGif;
-using FontFamily = System.Windows.Media.FontFamily;  
-using Label = System.Windows.Controls.Label;
-using Rectangle = System.Windows.Shapes.Rectangle;
-using Image = System.Windows.Controls.Image;
 using Button = System.Windows.Controls.Button;
-using Orientation = System.Windows.Controls.Orientation;
-using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using CheckBox = System.Windows.Controls.CheckBox;
+using FontFamily = System.Windows.Media.FontFamily;  
+using HorizontalAlignment = System.Windows.HorizontalAlignment;
+using Image = System.Windows.Controls.Image;
+using Label = System.Windows.Controls.Label;
+using Orientation = System.Windows.Controls.Orientation;
+using Rectangle = System.Windows.Shapes.Rectangle;
 
 namespace PleasantvilleGame
 {
@@ -32,15 +33,16 @@ namespace PleasantvilleGame
       public delegate bool EndAlienTakeovers();
       private const int STARTING_ASSIGNED_ROW = 6;
       private const int MAX_ROW_COUNT = 25;
+      private const int NO_OBSERVER = 1000;
       public enum E091Enum
       {
-         PREPARE,
-         ROLL,
+         ROLL_FOR_OBSERVE,
+         ROLL_FOR_OBSERVE_SHOW,
          END
       };
       public bool CtorError { get; } = false;
       private EndAlienTakeovers? myCallback = null;
-      private E091Enum myState = E091Enum.PREPARE;
+      private E091Enum myState = E091Enum.ROLL_FOR_OBSERVE;
       private bool myIsRollInProgress = false;
       private int myMaxRowNum = 0;
       private int myRollResultRowNum = 0;
@@ -63,7 +65,6 @@ namespace PleasantvilleGame
       };
       private GridRow[] myGridRows = new GridRow[MAX_ROW_COUNT];
       private int myMaxRowCount = 0;
-      private bool myIsPossibleBlock = false;
       //---------------------------------------------------
       private IGameEngine? myGameEngine;
       private IGameInstance? myGameInstance;
@@ -165,55 +166,30 @@ namespace PleasantvilleGame
          }
          //--------------------------------------------------
          myCallback = callback;
-         myState = E091Enum.PREPARE;
+         myState = E091Enum.ROLL_FOR_OBSERVE;
          myIsRollInProgress = false;
          int gridRowNum = 0;
-         foreach(ITerritory t in myGameInstance.SelectedTerritories) 
+         foreach(KeyValuePair<IMapItem,IMapItem> kvp in myGameInstance.AlienTakeovers) 
          {
+            IMapItem leftMapItem = kvp.Key;
+            IMapItem rightMapItem = kvp.Value;
+            ITerritory t = leftMapItem.TerritoryCurrent;
             IStack? stack = myGameInstance.Stacks.Find(t);
             if( null == stack )
             {
-               return false;
-            }
-            IMapItems possibleVictims = new MapItems();
-            IMapItems aliens = new MapItems();
-            foreach (IMapItem mi in stack.MapItems )
-            {
-               if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious))  // Unconscious or dead cannot be taken over
-                  continue;
-               if ((true == mi.IsControlled) || (true == mi.IsWary))
-               {
-                  if ((true == mi.IsStunned) || (true == mi.IsTiedUp))
-                     possibleVictims.Add(mi);
-               }
-               else
-               {
-                  if ((true == mi.IsAlienKnown) || (true == mi.IsAlienUnknown))
-                  {
-                     if ((false == mi.IsStunned) && (false == mi.IsTiedUp))
-                        aliens.Add(mi);
-                  }
-                  else
-                  {
-                     possibleVictims.Add(mi);
-                  }
-               }
-            }
-            //-----------------------------------------
-            IMapItem? mi1;
-            IMapItem? mi2;
-            if( false == myGameInstance.PlayerAlien.GetAlienTakeoverPair(t, aliens, possibleVictims, out mi1, out mi2))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): GetAlienTakeoverPair() returned false");
-               return false;
-            }
-            if ((null == mi1) || (null == mi2) )
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): GetAlienTakeoverPair() returned null for either mi1 or mi2");
+               Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): stack=null for t=" + t.ToString());
                return false;
             }
             //-----------------------------------------
-            bool isNoObservation = false;
+            int randNum = Utilities.RandomGenerator.Next(2); // randomize which unit is displayed to user on left hand side
+            if( 0 == randNum )
+            {
+               IMapItem temp = leftMapItem;
+               leftMapItem = rightMapItem;
+               rightMapItem = temp;
+            }
+            //-----------------------------------------
+            bool isObservation = false;
             foreach(KeyValuePair<String, double> kvp1 in t.Observations) // look thru all territories that can observe this takeover
             {
                ITerritory? t1 = Territories.theTerritories.Find(kvp1.Key); // kvp1.Key=Territory_Name, kvp1.Value=Observe_Probability
@@ -222,21 +198,35 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): t1=null for " + kvp1.Key);
                   return false;
                }
-               IStack? stackObs = myGameInstance.Stacks.Find(t1);
+               IStack? stackObs = myGameInstance.Stacks.Find(t1); // could be nobody in this observation territory
                if (null == stackObs)
                   continue;
                foreach(IMapItem mi in stackObs.MapItems )
                {
-                  myGridRows[gridRowNum] = new GridRow(mi, mi1, mi2, kvp1.Value);
+                  if ((true == mi.Name.Contains(leftMapItem.Name)) || (true == mi.Name.Contains(rightMapItem.Name)))
+                     continue;
+                  if (true == mi.IsAlienKnown) // known aliens do not observer. Unknown aliens need to be listed so that town person does not suspect them as alien, but they will not find anything
+                     continue;
+                  myGridRows[gridRowNum] = new GridRow(mi, leftMapItem, rightMapItem, kvp1.Value);
                   gridRowNum++;
+                  isObservation = true;
                }
             }
-            if (false == isNoObservation) // If there is no observations, indicate to user that zero probability of detection
+            if (false == isObservation) // If there is no observations, indicate to user that zero probability of detection
             {
-               myGridRows[gridRowNum] = new GridRow(null, mi1, mi2, 0.0);
+               myGridRows[gridRowNum] = new GridRow(null, leftMapItem, rightMapItem, 0.0);
+               myGridRows[gridRowNum].myDieRoll = NO_OBSERVER;
                gridRowNum++;
             }
-            Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Consumate_AlienTakeovers(): Adding Key=" + mi1.Name + " Value=" + mi2.Name + " w/ obs?=" + isNoObservation.ToString());
+            Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Consumate_AlienTakeovers(): Adding Key=" + leftMapItem.Name + " Value=" + rightMapItem.Name + " w/ obs?=" + isObservation.ToString());
+         }
+         myMaxRowCount = gridRowNum;
+         //--------------------------------------------------
+         myState = E091Enum.ROLL_FOR_OBSERVE_SHOW;
+         foreach (GridRow gr in myGridRows)
+         {
+            if (gr.myDieRoll < 0)
+               myState = E091Enum.ROLL_FOR_OBSERVE;
          }
          //--------------------------------------------------
          if (false == UpdateGrid())
@@ -282,6 +272,36 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Update_EndState(): myGameInstance=null");
                return false;
             }
+            //-----------------------------------------------
+            for(int i=0; i<myMaxRowCount; ++i)
+            {
+               GridRow gr = myGridRows[i];
+               if ((true == gr.myMapItem1.IsAlienUnknown) || (true == gr.myMapItem1.IsAlienKnown))
+               {
+                  if (true == gr.myIsResult)
+                  {
+                     myGameInstance.AddKnownAlien(gr.myMapItem1);
+                     myGameInstance.AddKnownAlien(gr.myMapItem2);
+                  }
+                  else
+                  {
+                     myGameInstance.AddUnknownAlien(gr.myMapItem2);
+                  }
+               }
+               if ((true == gr.myMapItem2.IsAlienUnknown) || (true == gr.myMapItem2.IsAlienKnown))
+               {
+                  if (true == gr.myIsResult)
+                  {
+                     myGameInstance.AddKnownAlien(gr.myMapItem1);
+                     myGameInstance.AddKnownAlien(gr.myMapItem2);
+                  }
+                  else
+                  {
+                     myGameInstance.AddUnknownAlien(gr.myMapItem1);
+                  }
+               }
+            }
+            //-----------------------------------------------
             if (null == myCallback)
             {
                Logger.Log(LogEnum.LE_ERROR, "Update_EndState(): myCallback=null");
@@ -298,17 +318,35 @@ namespace PleasantvilleGame
       private bool UpdateUserInstructions()
       {
          myTextBlockInstructions.Inlines.Clear();
-         if( true == myIsPossibleBlock )
-            myTextBlockInstructions.Inlines.Add(new Run("Check the box to block a controlled person from moving. Click the image to continue."));
-         else
-            myTextBlockInstructions.Inlines.Add(new Run("No blocks possible. Click the image to continue."));
+         switch (myState)
+         {
+            case E091Enum.ROLL_FOR_OBSERVE:
+               myTextBlockInstructions.Inlines.Add(new Run("Click on die to roll for observation"));
+               break;
+            case E091Enum.ROLL_FOR_OBSERVE_SHOW:
+               myTextBlockInstructions.Inlines.Add(new Run("Click the image to continue."));
+               break;
+            default:
+               return false;
+         }
          return true;
       }
       private bool UpdateAssignablePanel()
       {
          myStackPanelAssignable.Children.Clear(); // clear out assignable panel 
-         System.Windows.Controls.Image img23 = new System.Windows.Controls.Image { Name = "Continue", Source = MapItem.theMapImages.GetBitmapImage("Continue"), Width = Utilities.ZOOM * Utilities.theMapItemSize, Height = Utilities.ZOOM * Utilities.theMapItemSize };
-         myStackPanelAssignable.Children.Add(img23);
+         switch(myState)
+         {
+            case E091Enum.ROLL_FOR_OBSERVE:
+               Rectangle r = new Rectangle() { Visibility = Visibility.Hidden, Width = Utilities.ZOOM * Utilities.theMapItemSize, Height = Utilities.ZOOM * Utilities.theMapItemSize };
+               myStackPanelAssignable.Children.Add(r);
+               break;
+            case E091Enum.ROLL_FOR_OBSERVE_SHOW:
+               System.Windows.Controls.Image img23 = new System.Windows.Controls.Image { Name = "Continue", Source = MapItem.theMapImages.GetBitmapImage("Continue"), Width = Utilities.ZOOM * Utilities.theMapItemSize, Height = Utilities.ZOOM * Utilities.theMapItemSize };
+               myStackPanelAssignable.Children.Add(img23);
+               break;
+            default:
+               return false;
+         }
          return true;
       }
       private bool UpdateGridRows()
@@ -390,34 +428,6 @@ namespace PleasantvilleGame
          return true;
       }
       //------------------------------------------------------------------------------------
-      private string GetBuildingName(string tName)
-      {
-         if (true == tName.Contains("House"))
-         {
-            string modifiedTName = tName.Replace("_", " ");
-            return modifiedTName;
-         }
-         else
-         {
-            int arraySize = TableMgr.theBuildingSizes.GetLength(0);
-            for (int i = 0; i < arraySize; i++)
-            {
-               string matchingName = Utilities.RemoveSpaces(TableMgr.theBuildingSizes[i, 0]);
-               if (true == tName.Contains(matchingName))
-                  return TableMgr.theBuildingSizes[i, 0];
-            }
-         }
-         Logger.Log(LogEnum.LE_ERROR, "GetBuildingName(): unable to find building name for territory=" + tName);
-         return "ERROR";
-      }
-      private bool SetTerritory(IMapItem mi, ITerritory newT)
-      {
-         mi.TerritoryCurrent = newT;
-         double offset = mi.Zoom * Utilities.theMapItemOffset;
-         mi.Location.X = newT.CenterPoint.X - offset;
-         mi.Location.Y = newT.CenterPoint.Y - offset;
-         return true;
-      }
       private Button CreateButton(IMapItem mi)
       {
          System.Windows.Controls.Button b = new Button { };
@@ -431,7 +441,6 @@ namespace PleasantvilleGame
          MapItem.SetButtonContent(b, mi); // This sets the image as the button's content
          return b;
       }
-
       //------------------------------------------------------------------------------------
       public void ShowDieResults(int dieRoll)
       {
@@ -447,30 +456,51 @@ namespace PleasantvilleGame
             return;
          }
          myGridRows[i].myDieRoll = dieRoll;
-         switch (dieRoll)
+         IMapItem? observer = myGridRows[i].myObserver;
+         if( null == observer )
          {
-            case 1:
-               if (0.15 < myGridRows[i].myProbability)
-                  myGridRows[i].myIsResult = true;
-               break;
-            case 2:
-               if (0.32 < myGridRows[i].myProbability)
-                  myGridRows[i].myIsResult = true;
-               break;
-            case 3:
-               if (0.49 < myGridRows[i].myProbability)
-                  myGridRows[i].myIsResult = true;
-               break;
-            case 4:
-               if (0.65 < myGridRows[i].myProbability)
-                  myGridRows[i].myIsResult = true;
-               break;
-            case 5:
-            case 6:
-               break;
-            default:
-               Logger.Log(LogEnum.LE_ERROR, "UpdateGridRows(): invalid die roll=" + myGridRows[i].myDieRoll.ToString());
-               return;
+            Logger.Log(LogEnum.LE_ERROR, "ShowDieResults(): myObserver=null");
+            return;
+         }
+         if( (true == observer.IsAlienKnown) ||  (true == observer.IsAlienUnknown) )
+         {
+            myGridRows[i].myDieRoll = NO_OBSERVER;
+         }
+         else
+         {
+            myGridRows[i].myDieRoll = dieRoll;
+            switch (dieRoll)
+            {
+               case 1:
+                  if (0.15 < myGridRows[i].myProbability)
+                     myGridRows[i].myIsResult = true;
+                  break;
+               case 2:
+                  if (0.32 < myGridRows[i].myProbability)
+                     myGridRows[i].myIsResult = true;
+                  break;
+               case 3:
+                  if (0.49 < myGridRows[i].myProbability)
+                     myGridRows[i].myIsResult = true;
+                  break;
+               case 4:
+                  if (0.65 < myGridRows[i].myProbability)
+                     myGridRows[i].myIsResult = true;
+                  break;
+               case 5:
+               case 6:
+                  break;
+               default:
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateGridRows(): invalid die roll=" + myGridRows[i].myDieRoll.ToString());
+                  return;
+            }
+         }
+         //-------------------------------
+         myState = E091Enum.ROLL_FOR_OBSERVE_SHOW;
+         foreach(GridRow gr in myGridRows)
+         {
+            if( gr.myDieRoll < 0 )
+               myState = E091Enum.ROLL_FOR_OBSERVE;
          }
          if (false == UpdateGrid())
             Logger.Log(LogEnum.LE_ERROR, "EventViewerRandomMovement.ShowDieResults(): UpdateGrid() return false");

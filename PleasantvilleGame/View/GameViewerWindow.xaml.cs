@@ -3483,6 +3483,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "ClickButton_MapItem(): AlienMovement not implemented");
                return;
             case GamePhase.TownspersonMovement:
+               myGameInstance.SelectedMapItems.Clear(); // clicking a unit causes others to become unselected
                if (null == myGameInstance.SelectedMapItems.Find(selectedMapItem.Name))
                {
                   Logger.Log(LogEnum.LE_SHOW_TOWN_MOVE, "ClickButton_MapItem(): Adding to SelectedMapItems mi=" + selectedMapItem.Name);
