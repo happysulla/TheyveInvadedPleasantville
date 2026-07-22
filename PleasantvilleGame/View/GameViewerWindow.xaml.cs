@@ -1087,7 +1087,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
-               Logger.Log(LogEnum.LE_SHOW_CONVERSATIONS, "UpdateView(): calling Display_FlashingRegionss()");
+               Logger.Log(LogEnum.LE_SHOW_CONVERSATIONS, "UpdateView(): calling Display_FlashingRegions() territories=" + gi.SelectedTerritories.ToString());
                if ( false == DisplayFlashingRegions(gi, mySolidColorBrushGray))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
@@ -1102,7 +1102,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
-               Logger.Log(LogEnum.LE_SHOW_INFLUENCES, "UpdateView(): calling Display_FlashingRegionss()");
+               Logger.Log(LogEnum.LE_SHOW_INFLUENCES, "UpdateView(): calling Display_FlashingRegions() territories=" + gi.SelectedTerritories.ToString());
                if (false == DisplayFlashingRegions(gi, Utilities.theTownControlledBrush))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
@@ -1117,6 +1117,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
+               Logger.Log(LogEnum.LE_SHOW_COMBATS, "UpdateView(): calling Display_FlashingRegions() territories=" + gi.SelectedTerritories.ToString());
                if (false == DisplayFlashingRegions(gi, Utilities.theBrushBlood))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
@@ -1527,7 +1528,7 @@ namespace PleasantvilleGame
          IMapItem? mi = myLeftMapItemsInActionPanel[0];
          if (null == mi)
          {
-            Logger.Log(LogEnum.LE_ERROR, "ClickButton1InHelperPanel() myLeftMapItemsInActionPanel[0]=null");
+            Logger.Log(LogEnum.LE_ERROR, "ClickButton1InHelperPanel(): myLeftMapItemsInActionPanel[0]=null");
             return;
          }
          if (Visibility.Hidden == myRectangle1.Visibility) // if selected, deselect it
@@ -1540,11 +1541,8 @@ namespace PleasantvilleGame
             myRectangle1.Visibility = Visibility.Hidden;
             myLeftMapItemsInActionPanelSelected.Remove(mi.Name);
          }
-
-         if ((0 < myLeftMapItemsInActionPanelSelected.Count) && (0 < myRightMapItemsInActionPanelSelected.Count))
-            myButtonHelperOK.IsEnabled = true;
-         else
-            myButtonHelperOK.IsEnabled = false;
+         if( false == UpdateActionPanel(myGameInstance, true))
+            Logger.Log(LogEnum.LE_ERROR, "ClickButton1InHelperPanel(): Update_ActionPanel() returned false");
       }
       private void ClickButton2InHelperPanel(object sender, RoutedEventArgs e)
       {
@@ -1576,11 +1574,8 @@ namespace PleasantvilleGame
             myRectangle2.Visibility = Visibility.Hidden;
             myLeftMapItemsInActionPanelSelected.Remove(mi.Name);
          }
-
-         if ((0 < myLeftMapItemsInActionPanelSelected.Count) && (0 < myRightMapItemsInActionPanelSelected.Count))
-            myButtonHelperOK.IsEnabled = true;
-         else
-            myButtonHelperOK.IsEnabled = false;
+         if (false == UpdateActionPanel(myGameInstance, true))
+            Logger.Log(LogEnum.LE_ERROR, "ClickButton2InHelperPanel(): Update_ActionPanel() returned false");
       }
       private void ClickButton3InHelperPanel(object sender, RoutedEventArgs e)
       {
@@ -1599,7 +1594,7 @@ namespace PleasantvilleGame
          IMapItem? mi = myLeftMapItemsInActionPanel[2];
          if (null == mi)
          {
-            Logger.Log(LogEnum.LE_ERROR, "ClickButton3InHelperPanel() myLeftMapItemsInActionPanel[0]=null");
+            Logger.Log(LogEnum.LE_ERROR, "ClickButton3InHelperPanel(): myLeftMapItemsInActionPanel[0]=null");
             return;
          }
          if (Visibility.Hidden == myRectangle3.Visibility) // if selected, deselect it
@@ -1612,10 +1607,8 @@ namespace PleasantvilleGame
             myRectangle3.Visibility = Visibility.Hidden;
             myLeftMapItemsInActionPanelSelected.Remove(mi.Name);
          }
-         if ((0 < myLeftMapItemsInActionPanelSelected.Count) && (0 < myRightMapItemsInActionPanelSelected.Count))
-            myButtonHelperOK.IsEnabled = true;
-         else
-            myButtonHelperOK.IsEnabled = false;
+         if (false == UpdateActionPanel(myGameInstance, true))
+            Logger.Log(LogEnum.LE_ERROR, "ClickButton3InHelperPanel(): Update_ActionPanel() returned false");
       }
       private void ClickButton4InHelperPanel(object sender, RoutedEventArgs e)
       {
@@ -1634,7 +1627,7 @@ namespace PleasantvilleGame
          IMapItem? mi = myRightMapItemsInActionPanel[0];
          if (null == mi)
          {
-            Logger.Log(LogEnum.LE_ERROR, "ClickButton3InHelperPanel() myLeftMapItemsInActionPanel[0]=null");
+            Logger.Log(LogEnum.LE_ERROR, "ClickButton4InHelperPanel(): myLeftMapItemsInActionPanel[0]=null");
             return;
          }
          if (Visibility.Hidden == myRectangle4.Visibility) // if selected, deselect it
@@ -1648,10 +1641,8 @@ namespace PleasantvilleGame
             myRightMapItemsInActionPanelSelected.Remove(mi.Name);
          }
          //-----------------------------------------------------------  
-         if ((0 < myLeftMapItemsInActionPanelSelected.Count) && (0 < myRightMapItemsInActionPanelSelected.Count))
-            myButtonHelperOK.IsEnabled = true;
-         else
-            myButtonHelperOK.IsEnabled = false;
+         if (false == UpdateActionPanel(myGameInstance, true))
+            Logger.Log(LogEnum.LE_ERROR, "ClickButton4InHelperPanel(): Update_ActionPanel() returned false");
       }
       private void ClickButton5InHelperPanel(object sender, RoutedEventArgs e)
       {
@@ -1670,7 +1661,7 @@ namespace PleasantvilleGame
          IMapItem? mi = myRightMapItemsInActionPanel[1];
          if (null == mi)
          {
-            Logger.Log(LogEnum.LE_ERROR, "ClickButton3InHelperPanel() myLeftMapItemsInActionPanel[0]=null");
+            Logger.Log(LogEnum.LE_ERROR, "ClickButton5InHelperPanel(): myLeftMapItemsInActionPanel[0]=null");
             return;
          }
          if (Visibility.Hidden == myRectangle5.Visibility) // if selected, deselect it
@@ -1684,10 +1675,8 @@ namespace PleasantvilleGame
             myRightMapItemsInActionPanelSelected.Remove(mi.Name);
          }
          //-----------------------------------------------------------  
-         if ((0 < myLeftMapItemsInActionPanelSelected.Count) && (0 < myRightMapItemsInActionPanelSelected.Count))
-            myButtonHelperOK.IsEnabled = true;
-         else
-            myButtonHelperOK.IsEnabled = false;
+         if (false == UpdateActionPanel(myGameInstance, true))
+            Logger.Log(LogEnum.LE_ERROR, "ClickButton5InHelperPanel(): Update_ActionPanel() returned false");
       }
       private void ClickButton6InHelperPanel(object sender, RoutedEventArgs e)
       {
@@ -1706,7 +1695,7 @@ namespace PleasantvilleGame
          IMapItem? mi = myRightMapItemsInActionPanel[2];
          if (null == mi)
          {
-            Logger.Log(LogEnum.LE_ERROR, "ClickButton6InHelperPanel() myRightMapItemsInActionPanel[2]=null");
+            Logger.Log(LogEnum.LE_ERROR, "ClickButton6InHelperPanel(): myRightMapItemsInActionPanel[2]=null");
             return;
          }
          if (Visibility.Hidden == myRectangle6.Visibility) // if selected, deselect it
@@ -1720,10 +1709,8 @@ namespace PleasantvilleGame
             myRightMapItemsInActionPanelSelected.Remove(mi.Name);
          }
          //-----------------------------------------------------------  
-         if ((0 < myLeftMapItemsInActionPanelSelected.Count) && (0 < myRightMapItemsInActionPanelSelected.Count))
-            myButtonHelperOK.IsEnabled = true;
-         else
-            myButtonHelperOK.IsEnabled = false;
+         if (false == UpdateActionPanel(myGameInstance, true))
+            Logger.Log(LogEnum.LE_ERROR, "ClickButton6InHelperPanel(): Update_ActionPanel() returned false");
       }
       private void ClickButtonOkInHelperPanel(object sender, RoutedEventArgs e)
       {
@@ -1752,7 +1739,7 @@ namespace PleasantvilleGame
                }
             default:
                Logger.Log(LogEnum.LE_ERROR, "ClickButton_OkInHelperPanel(): reached default gamephase=" + myGameInstance.GamePhase.ToString());
-               break; ;
+               break;
          }
       }
       private void ClickButtonCancelInHelperPanel(object sender, RoutedEventArgs e)
@@ -2379,6 +2366,11 @@ namespace PleasantvilleGame
          }
          myTextBoxResults.Text = displayResults.ToString();
          //------------------------------------------------
+         if( false == UpdateActionPanelButtons(myGameInstance))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ShowResult_Conversation(): Update_ActionPanelButtons() returned false");
+            return;
+         }
          myGameInstance.EventActive = myGameInstance.EventDisplayed; // As soon as you roll the die, the current event becomes the active event
          GameAction action = myGameInstance.DieRollAction;
          myGameEngine.PerformAction(ref myGameInstance, ref action, dieRoll);
@@ -2533,7 +2525,7 @@ namespace PleasantvilleGame
             IMapItem? influencer = myLeftMapItemsInActionPanelSelected[i];
             if (null == influencer)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_Influence(): influencer=null");
+               Logger.Log(LogEnum.LE_ERROR, "ShowResult_Influence(): influencer=null");
                return;
             }
             totalInfluence += (double)influencer.Influence;
@@ -2549,7 +2541,7 @@ namespace PleasantvilleGame
          string rightPersonName = TableMgr.GetTownspersonName(rightMapItem);
          if ("ERROR" == rightPersonName)
          {
-            Logger.Log(LogEnum.LE_ERROR, "ShowResult_Conversation(): GetTownspersonName() returned ERROR");
+            Logger.Log(LogEnum.LE_ERROR, "ShowResult_Influence(): GetTownspersonName() returned ERROR");
             return;
          }
          //-----------------------------------------------------------------------------
@@ -2650,6 +2642,12 @@ namespace PleasantvilleGame
          }
          myTextBoxResults.Text = displayResults.ToString();
          //------------------------------------------------
+         if (false == UpdateActionPanelButtons(myGameInstance))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ShowResult_Influence(): Update_ActionPanelButtons() returned false");
+            return;
+         }
+         //------------------------------------------------
          myGameInstance.EventActive = myGameInstance.EventDisplayed; // As soon as you roll the die, the current event becomes the active event
          GameAction action = myGameInstance.DieRollAction;
          myGameEngine.PerformAction(ref myGameInstance, ref action, dieRoll);
@@ -2662,12 +2660,15 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Display_Combat() selectedTerritory=null");
             return false;
          }
+
          IStack? stack = gi.Stacks.Find(selectedTerritory);
          if (null == stack)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Display_Conversation(): stack=null for t=" + selectedTerritory.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "Display_Combat(): stack=null for t=" + selectedTerritory.ToString());
             return false;
          }
+         //-------------------------------------------------------------------
+         gi.SelectedTerritory = selectedTerritory;
          IMapItems shuffledStack = stack.MapItems.Shuffle();
          //-------------------------------------------------------------------
          int townCombatCount = 0;
@@ -2710,7 +2711,6 @@ namespace PleasantvilleGame
             foreach (IMapItem mi in controlledPeps)
             {
                myLeftMapItemsInActionPanel.Add(mi);
-               myLeftMapItemsInActionPanelSelected.Add(mi);
                totalCombatForAttacker += mi.Combat;
                if (3 <= ++numOfAttackers)
                   break;
@@ -2720,7 +2720,7 @@ namespace PleasantvilleGame
             foreach (IMapItem mi in knownAliens)
             {
                myRightMapItemsInActionPanel.Add(mi);
-               myRightMapItemsInActionPanelSelected.Add(mi);
+               myLeftMapItemsInActionPanelSelected.Add(mi);
                totalCombatForDefender += mi.Combat;
                if (3 <= ++numOfDefenders)
                   break;
@@ -2728,7 +2728,10 @@ namespace PleasantvilleGame
             if (0 == myRightMapItemsInActionPanel.Count)
             {
                foreach (IMapItem mi in uncontrolledPeps)
+               {
                   myRightMapItemsInActionPanel.Add(mi);
+                  myRightMapItemsInActionPanelSelected.Add(mi);
+               }
             }
          }
          else
@@ -2756,30 +2759,30 @@ namespace PleasantvilleGame
             if (0 == myRightMapItemsInActionPanel.Count)
             {
                foreach (IMapItem mi in waryPeps)
+               {
                   myRightMapItemsInActionPanel.Add(mi);
+                  myRightMapItemsInActionPanelSelected.Add(mi);
+               }
             }
          }
          //-------------------------------------------------------------------
-         if ((0 != myLeftMapItemsInActionPanel.Count) && (0 != myRightMapItemsInActionPanel.Count))
+         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Display_Combat(): myLeft=" + myLeftMapItemsInActionPanel.ToString() + " right=" + myRightMapItemsInActionPanel.ToString());
+         
+         if ((0 < myLeftMapItemsInActionPanel.Count) && (0 < myRightMapItemsInActionPanel.Count))
          {
             if (false == UpdateActionPanel(gi, true))
             {
                Logger.Log(LogEnum.LE_ERROR, "Display_Combat(): Update_ActionPanel() returned error");
                return false;
             }
-            gi.MapItemCombat = new MapItemCombat(selectedTerritory);
-            foreach (IMapItem mi in myLeftMapItemsInActionPanel)
-               gi.MapItemCombat.Attackers.Add(mi);
-            foreach (IMapItem mi in myLeftMapItemsInActionPanel)
-               gi.MapItemCombat.Defenders.Add(mi);
             myLabelHeading.Visibility = Visibility.Visible;
             myLabelArrow.Visibility = Visibility.Visible;
             myTextBoxResults.Visibility = Visibility.Visible;
             myLabelLeftTop.Visibility = Visibility.Visible;
             myLabelRightTop.Visibility = Visibility.Visible;
             myLabelHeading.Content = "Combat... \"Let's Rumble!!!\"";
-            myLabelLeftTop.Content = "All of these are attacking:";
-            myLabelRightTop.Content = "All of these are defending:";
+            myLabelLeftTop.Content = "Select Attacking Units:";
+            myLabelRightTop.Content = "Select Defending Units:";
          }
          return true;
       }
@@ -2795,41 +2798,17 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Roll_Combat(): myDieRoller=null");
             return false;
          }
-         if (null == myGameInstance.MapItemCombat)
+         if (null == gi.SelectedTerritory)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Roll_Combat(): myGameInstance.MapItemCombat=null");
+            Logger.Log(LogEnum.LE_ERROR, "Roll_Combat(): gi.SelectedTerritory=null");
             return false;
          }
-         int totalCombatForAttacker = 0;
-         int numAttackers = 0;
-         IMapItems leftMapItems = new MapItems();
-         foreach (IMapItem mi in myGameInstance.MapItemCombat.Attackers)
-            leftMapItems.Add(mi);
-         leftMapItems = leftMapItems.SortOnCombat();
          //-----------------------------------------------------------------------------
-         foreach (IMapItem mi in leftMapItems)
-         {
-            myLeftMapItemsInActionPanel.Add(mi);
-            myLeftMapItemsInActionPanelSelected.Add(mi);
-            totalCombatForAttacker += mi.Combat;
-            if (3 <= ++numAttackers)
-               break;
-         }
-         //-----------------------------------------------------------------------------
-         int totalCombatForDefender = 0;
-         int numDefenders = 0;
-         IMapItems rightMapItems = new MapItems();
-         foreach (IMapItem mi in myGameInstance.MapItemCombat.Defenders)
-            rightMapItems.Add(mi);
-         rightMapItems = rightMapItems.SortOnCombat();
-         foreach (IMapItem mi in rightMapItems)
-         {
-            myRightMapItemsInActionPanel.Add(mi);
-            myRightMapItemsInActionPanelSelected.Add(mi);
-            totalCombatForDefender += mi.Combat;
-            if (3 <= ++numDefenders)
-               break;
-         }
+         gi.MapItemCombat = new MapItemCombat(gi.SelectedTerritory);
+         foreach (IMapItem mi in myLeftMapItemsInActionPanelSelected)
+            gi.MapItemCombat.Attackers.Add(mi);
+         foreach (IMapItem mi in myLeftMapItemsInActionPanelSelected)
+            gi.MapItemCombat.Defenders.Add(mi);
          //-----------------------------------------------------------------------------
          myGameInstance.EventActive = myGameInstance.EventDisplayed; // As soon as you roll the die, the current event becomes the active event
          myGameInstance.DieRollAction = GameAction.CombatsRoll;
@@ -2838,31 +2817,26 @@ namespace PleasantvilleGame
       }
       private void ShowResultCombat(int dieRoll)
       {
-         UpdateActionPanelClear();
-         if (null == myGameInstance.MapItemCombat)
+         if( null == myGameInstance.MapItemCombat)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Show_ResultCombat(): gi.MapItemCombat=null");
+            Logger.Log(LogEnum.LE_ERROR, "Show_ResultCombat(): myGameInstance.MapItemCombat=null");
             return;
          }
          //-----------------------------------------------------------------------------
-         if ((0 == myLeftMapItemsInActionPanel.Count) || (0 == myRightMapItemsInActionPanel.Count))
+         if ((0 == myGameInstance.MapItemCombat.Attackers.Count) || (0 == myGameInstance.MapItemCombat.Defenders.Count))
          {
-            StringBuilder sb = new StringBuilder("Show_ResultCombat(): myLeft=");
-            sb.Append(myLeftMapItemsInActionPanel.Count.ToString());
-            sb.Append(" myRight=");
-            sb.Append(myRightMapItemsInActionPanel.Count.ToString());
-            Logger.Log(LogEnum.LE_ERROR, sb.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "Show_ResultCombat(): l=" + myGameInstance.MapItemCombat.Attackers.Count.ToString() + " r=" + myGameInstance.MapItemCombat.Defenders.Count.ToString());
             return;
          }
          int totalCombatForAttacker = 0;
-         foreach (IMapItem mi in myLeftMapItemsInActionPanelSelected)
+         foreach (IMapItem mi in myGameInstance.MapItemCombat.Attackers)
             totalCombatForAttacker += mi.Combat;
          int totalCombatForDefender = 0;
-         foreach (IMapItem mi in myRightMapItemsInActionPanelSelected)
+         foreach (IMapItem mi in myGameInstance.MapItemCombat.Defenders)
             totalCombatForDefender += mi.Combat;
          myLabelHeading.Visibility = Visibility.Visible;
          myLabelArrow.Visibility = Visibility.Visible;
-         Logger.Log(LogEnum.LE_SHOW_COMBAT_THREAD, "Display_CombatResults(): myTextBoxResults.Visibility = Visibility.Visible");
+         Logger.Log(LogEnum.LE_SHOW_COMBAT_THREAD, "Show_ResultCombat(): myTextBoxResults.Visibility = Visibility.Visible");
          myLabelHeading.Content = "Combat Results";
          myLabelLeftTop.Content = "Attackers:";
          myLabelRightTop.Content = "Defenders:";
@@ -2885,18 +2859,22 @@ namespace PleasantvilleGame
          displayResults.Append(" => ");
          displayResults.Append(myGameInstance.MapItemCombat.Result.ToString());
          //-----------------------------------------------------------------------------
-         Logger.Log(LogEnum.LE_SHOW_COMBAT_THREAD, "Display_CombatResults(): myTextBoxResults.Text=displayResults");
          myTextBoxResults.Text = displayResults.ToString();
          myLabelLeftTop.Visibility = Visibility.Visible;
          myLabelRightTop.Visibility = Visibility.Visible;
          myTextBoxResults.Visibility = Visibility.Visible;
-         Logger.Log(LogEnum.LE_SHOW_COMBAT_THREAD, "Display_CombatResults(): myTextBoxResults.Text=" + myTextBoxResults.Text);
+         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Show_ResultCombat(): myTextBoxResults.Text=" + myTextBoxResults.Text);
+         //-----------------------------------------------------------------------------
          if (false == UpdateActionPanelButtons(myGameInstance))
          {
-            Logger.Log(LogEnum.LE_ERROR, "Display_CombatResults(): Update_ActionPanelButtons() return false");
+            Logger.Log(LogEnum.LE_ERROR, "Show_ResultCombat(): Update_ActionPanelButtons() return false");
             return;
          }
-         Logger.Log(LogEnum.LE_SHOW_COMBAT_THREAD, "Display_CombatResults(): myTextBoxResults.Text=" + myTextBoxResults.Text);
+         //------------------------------------------------
+         myGameInstance.EventActive = myGameInstance.EventDisplayed; // As soon as you roll the die, the current event becomes the active event
+         GameAction action = myGameInstance.DieRollAction;
+         myGameEngine.PerformAction(ref myGameInstance, ref action, dieRoll);
+         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Show_ResultCombat(): myTextBoxResults.Text=" + myTextBoxResults.Text);
       }
       private void RollCombatRetreat(IGameInstance gi, bool isIgnoreResults)
       {

@@ -1628,14 +1628,14 @@ namespace PleasantvilleGame
                if (false == RotateStack(gi))
                {
                   returnStatus = "Rotate_Stack() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateInfluences.PerformAction(): " + returnStatus);
                }
                break;
             case GameAction.UpdateScatterStack:
                if (false == ScatterStack(gi))
                {
                   returnStatus = "Scatter_Stack() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateInfluences.PerformAction(): " + returnStatus);
                }
                break;
             case GameAction.InfluencesRoll:
@@ -1703,14 +1703,23 @@ namespace PleasantvilleGame
                      if (dieThreshold <= dieRoll) // Check for alien.  If alien, let user know it is discovered. Else, make the townsperson controlled.
                      {
                         if (true == rightMapItem.IsAlienUnknown)
+                        {
                            gi.AddKnownAlien(rightMapItem);
+                           Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "GameStateInfluences.PerformAction(): AddingKnownAlien() rightMapItem=" + rightMapItem.Name + " dr=" + dieRoll.ToString() + " t=" + dieThreshold.ToString());
+                        }
                         else
+                        {
                            gi.AddControlled(rightMapItem);
+                           Logger.Log(LogEnum.LE_SHOW_TOWNS_ADD, "GameStateInfluences.PerformAction(): AddingKnownAlien() rightMapItem=" + rightMapItem.Name + " dr=" + dieRoll.ToString() + " t=" + dieThreshold.ToString());
+                        }
                      }
                      else
                      {
                         if (false == rightMapItem.IsWary)  // wary people cannot become skeptical
+                        {
                            rightMapItem.IsSkeptical = true;
+                           Logger.Log(LogEnum.LE_SHOW_WARY_ADD, "GameStateInfluences.PerformAction(): AddingKnownAlien() rightMapItem=" + rightMapItem.Name + " dr=" + dieRoll.ToString() + " t=" + dieThreshold.ToString());
+                        }
                      }
                      if ("OK" == returnStatus)
                      {
@@ -1800,6 +1809,28 @@ namespace PleasantvilleGame
                {
                   returnStatus = "CheckFor_Iterogations() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsFinish): " + returnStatus);
+               }
+               break;
+            case GameAction.CombatsRoll:
+               if( null == gi.MapItemCombat )
+               {
+                  returnStatus = "MapItemCombat=null";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsFinish): " + returnStatus);
+               }
+               else
+               {
+                  int totalCombatForAttacker = 0;
+                  foreach (IMapItem mi in gi.MapItemCombat.Attackers)
+                     totalCombatForAttacker += mi.Combat;
+                  int totalCombatForDefender = 0;
+                  foreach (IMapItem mi in gi.MapItemCombat.Defenders)
+                     totalCombatForDefender += mi.Combat;
+
+                  if (false == CheckForIterogations(gi, ref action))
+                  {
+                     returnStatus = "CheckFor_Iterogations() returned false";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsFinish): " + returnStatus);
+                  }
                }
                break;
             default:

@@ -449,6 +449,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Images\OSkeptical.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Pleasantville.ico">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>

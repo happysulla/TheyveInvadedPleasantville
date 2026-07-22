@@ -23,6 +23,7 @@ namespace PleasantvilleGame
       [NonSerialized] protected static BitmapImage? theImgImplant = theMapImages.GetBitmapImage("OImplant");
       [NonSerialized] protected static BitmapImage? theImgKia = theMapImages.GetBitmapImage("OKia");
       [NonSerialized] protected static BitmapImage? theImgKnockedOut = theMapImages.GetBitmapImage("OKnockedOut");
+      [NonSerialized] protected static BitmapImage? theImgSkeptical = theMapImages.GetBitmapImage("OSkeptical");
       [NonSerialized] protected static BitmapImage? theImgStunned = theMapImages.GetBitmapImage("OStunned");
       [NonSerialized] protected static BitmapImage? theImgSurrendered = theMapImages.GetBitmapImage("OSurrendered");
       [NonSerialized] protected static BitmapImage? theImgTieUp = theMapImages.GetBitmapImage("OTiedUp");
@@ -374,6 +375,20 @@ namespace PleasantvilleGame
                c.Children.Add(imgStunned);
                Canvas.SetLeft(imgStunned, 0);
                Canvas.SetTop(imgStunned, 0);
+            }
+            else if (true == mi.IsWary)
+            {
+               Image imgWary = new Image() { Source = theImgWary };
+               c.Children.Add(imgWary);
+               Canvas.SetLeft(imgWary, 0);
+               Canvas.SetTop(imgWary, 0);
+            }
+            else if (true == mi.IsSkeptical)
+            {
+               Image imgSkeptical = new Image() { Source = theImgSkeptical };
+               c.Children.Add(imgSkeptical);
+               Canvas.SetLeft(imgSkeptical, 0);
+               Canvas.SetTop(imgSkeptical, 0);
             }
          }
          else

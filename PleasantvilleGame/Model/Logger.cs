@@ -18,6 +18,7 @@ namespace PleasantvilleGame
       //-------------
       LE_SHOW_ALIEN_ADD,
       LE_SHOW_TOWNS_ADD,
+      LE_SHOW_WARY_ADD,
       //-------------
       LE_SHOW_RANDOM_MOVE,
       LE_SHOW_TOWN_MOVE,
@@ -129,6 +130,7 @@ namespace PleasantvilleGame
          //-------------
          SetOn(LogEnum.LE_SHOW_ALIEN_ADD);
          SetOn(LogEnum.LE_SHOW_TOWNS_ADD);
+         SetOn(LogEnum.LE_SHOW_WARY_ADD);
          //-------------
          //SetOn(LogEnum.LE_SHOW_RANDOM_MOVE);
          SetOn(LogEnum.LE_SHOW_TOWN_MOVE);

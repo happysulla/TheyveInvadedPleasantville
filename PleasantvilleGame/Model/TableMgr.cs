@@ -161,6 +161,43 @@ namespace PleasantvilleGame
          theTable[9, 4] = CombatResult.DefenderWins;
          theTable[10, 4] = CombatResult.DefenderWins;
       }
+      static public bool GetCombatResult(int dieRoll, IMapItemCombat combat, out CombatResult result)
+      {
+         result = CombatResult.AttackerWins;
+         if (dieRoll < 2 || dieRoll > 12)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): dieRoll1=" + dieRoll.ToString() + " is out of range");
+            return false;
+         }
+         if (null == combat)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): MapItemCombat=null");
+            return false;
+         }
+         int totalCombatForAttacker = 0;
+         foreach (IMapItem mi in combat.Attackers)
+            totalCombatForAttacker += mi.Combat;
+         int totalCombatForDefender = 0;
+         foreach (IMapItem mi in combat.Defenders)
+            totalCombatForDefender += mi.Combat;
+         int differential = totalCombatForAttacker - totalCombatForDefender;
+         if (differential < 0)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): 0 < (differential=" + differential.ToString() + ")");
+            return false;
+         }
+         if( differential < 1)
+            result = theTable[dieRoll, 0];
+         else if ( differential < 4)
+            result = theTable[dieRoll, 1];
+         else if (differential < 7)
+            result = theTable[dieRoll, 2];
+         else if (differential < 10)
+            result = theTable[dieRoll, 3];
+         else
+            result = theTable[dieRoll, 4];
+         return true;
+      }
       static public bool CreateTownspeople(IGameInstance gi)
       {
          //------------------------------------
