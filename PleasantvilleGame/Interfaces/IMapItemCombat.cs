@@ -21,7 +21,6 @@ namespace PleasantvilleGame
       CombatResult Result { get; set; }
       int DieRoll1 { get; set; }
       int DieRoll2 { get; set; }
-      bool IsAnyRetreat { get; set; }
    }
    public interface IMapItemCombats : System.Collections.IEnumerable
    {

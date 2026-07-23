@@ -77,7 +77,7 @@ namespace PleasantvilleGame
          myResult = combat.Result;
          myDieRoll1 = combat.DieRoll1;
          myDieRoll2 = combat.DieRoll2;
-         myIsAnyRetreat = combat.IsAnyRetreat;
+         //myIsAnyRetreat = combat.IsAnyRetreat;
       }
    }
    //==========================================================

@@ -161,9 +161,8 @@ namespace PleasantvilleGame
          theTable[9, 4] = CombatResult.DefenderWins;
          theTable[10, 4] = CombatResult.DefenderWins;
       }
-      static public bool GetCombatResult(int dieRoll, IMapItemCombat combat, out CombatResult result)
+      static public bool GetCombatResult(int dieRoll, IMapItemCombat combat)
       {
-         result = CombatResult.AttackerWins;
          if (dieRoll < 2 || dieRoll > 12)
          {
             Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): dieRoll1=" + dieRoll.ToString() + " is out of range");
@@ -174,6 +173,40 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): MapItemCombat=null");
             return false;
          }
+         if( 0 == combat.Attackers.Count)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): 0 == combat.Attackers.Count");
+            return false;
+         }
+         if (0 == combat.Defenders.Count)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): 0 == combat.Defenders.Count");
+            return false;
+         }
+         IMapItem? firstAttacker = combat.Attackers[0];
+         if( null == firstAttacker )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): firstAttacker=null");
+            return false;
+         }
+         IMapItem? firstDefender = combat.Attackers[0];
+         if (null == firstDefender)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): firstDefender=null");
+            return false;
+         }
+         //----------------------------------------
+         if( (true == firstAttacker.IsControlled) && ((false == firstDefender.IsAlienKnown) && (false == firstDefender.IsAlienUnknown) ) ) // Controlled townspeople can attack uncontrolled automatic win
+         {
+            combat.Result = CombatResult.AttackerWins;
+            return true;
+         }
+         else if ((true == firstDefender.IsControlled) && ((false == firstAttacker.IsAlienKnown) && (false == firstAttacker.IsAlienUnknown))) // Controlled townspeople can attack uncontrolled automatic win
+         {
+            combat.Result = CombatResult.DefenderWins;
+            return true;
+         }
+         //----------------------------------------
          int totalCombatForAttacker = 0;
          foreach (IMapItem mi in combat.Attackers)
             totalCombatForAttacker += mi.Combat;
@@ -186,16 +219,61 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): 0 < (differential=" + differential.ToString() + ")");
             return false;
          }
-         if( differential < 1)
-            result = theTable[dieRoll, 0];
-         else if ( differential < 4)
-            result = theTable[dieRoll, 1];
+         int tableFactor = 0;
+         if (differential < 1)
+            tableFactor = 0;
+         else if (differential < 4)
+            tableFactor = 1;
          else if (differential < 7)
-            result = theTable[dieRoll, 2];
+            tableFactor = 2;
          else if (differential < 10)
-            result = theTable[dieRoll, 3];
+            tableFactor = 3;
          else
-            result = theTable[dieRoll, 4];
+            tableFactor = 4;
+         //----------------------------------------
+         IMapItems aliens = combat.Attackers;
+         if (true == firstAttacker.IsControlled)
+            aliens = combat.Defenders;
+         foreach (IMapItem alien in aliens) // A column shift occurs if any aliens went through an influence attempt this turn.
+         {
+            if (true == alien.IsInfluencedThisTurn) 
+            {
+               if (true == firstAttacker.IsControlled)
+               {
+                  if (0 == differential) // shift column to right
+                     differential = 1;
+                  else if (1 == tableFactor)
+                     tableFactor = 2;
+                  else if (2 == tableFactor)
+                     tableFactor = 3;
+                  else if (3 == tableFactor)
+                     tableFactor = 4;
+               }
+               else                                  
+               {
+                  if (1 == tableFactor)   // shift column to left
+                     tableFactor = 0;
+                  else if (2 == tableFactor)
+                     tableFactor = 1;
+                  else if (3 == tableFactor)
+                     tableFactor = 2;
+                  else if (4 == tableFactor)
+                     tableFactor = 3;
+               }
+               break;  // only one column shift occurs.
+            }
+         }
+         //----------------------------------------
+         if ( differential < 1)
+            combat.Result = theTable[dieRoll, tableFactor];
+         else if ( differential < 4)
+            combat.Result = theTable[dieRoll, tableFactor];
+         else if (differential < 7)
+            combat.Result = theTable[dieRoll, tableFactor];
+         else if (differential < 10)
+            combat.Result = theTable[dieRoll, tableFactor];
+         else
+            combat.Result = theTable[dieRoll, tableFactor];
          return true;
       }
       static public bool CreateTownspeople(IGameInstance gi)

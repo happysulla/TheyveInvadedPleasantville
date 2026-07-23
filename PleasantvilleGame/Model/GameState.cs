@@ -1815,21 +1815,29 @@ namespace PleasantvilleGame
                if( null == gi.MapItemCombat )
                {
                   returnStatus = "MapItemCombat=null";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsFinish): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
                }
                else
                {
-                  int totalCombatForAttacker = 0;
-                  foreach (IMapItem mi in gi.MapItemCombat.Attackers)
-                     totalCombatForAttacker += mi.Combat;
-                  int totalCombatForDefender = 0;
-                  foreach (IMapItem mi in gi.MapItemCombat.Defenders)
-                     totalCombatForDefender += mi.Combat;
-
-                  if (false == CheckForIterogations(gi, ref action))
+                  if( false == TableMgr.GetCombatResult(dieRoll, gi.MapItemCombat))
                   {
-                     returnStatus = "CheckFor_Iterogations() returned false";
-                     Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsFinish): " + returnStatus);
+                        returnStatus = "GetCombat_Result() returned false";
+                        Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
+                  }
+                  switch (gi.MapItemCombat.Result)
+                  {
+                     case CombatResult.DefenderWins:
+                        break;
+                     case CombatResult.AttackerWins:
+                        break;
+                     case CombatResult.AttackerFlees:
+                        break;
+                     case CombatResult.DefenderFlees:
+                        break;
+                     default:
+                        returnStatus = "invalid CombatResult=" + gi.MapItemCombat.Result.ToString();
+                        Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
+                        break;
                   }
                }
                break;
@@ -1879,7 +1887,6 @@ namespace PleasantvilleGame
          combat.DieRoll1 = Utilities.RandomGenerator.Next(6) + 1; // Assignment increases roll by one
          combat.DieRoll2 = Utilities.RandomGenerator.Next(6) + 1; // Assignment increases roll by one
          int resultsRoll = combat.DieRoll1 + combat.DieRoll2 - 2;
-         combat.IsAnyRetreat = false;  // assume no retreats until the results are known
          //-------------------------------------------------------------------------------
          IMapItems aliens = new MapItems();
          IMapItems controlled = new MapItems();
@@ -2086,20 +2093,20 @@ namespace PleasantvilleGame
                foreach (IMapItem defender in combat.Defenders)
                {
                   PerformCombatResolveLoss(gi, defender);
-                  if (true == defender.IsStunned) // If the defender is stunned, they must retreat one territory
-                     combat.IsAnyRetreat = true;
+                  //if (true == defender.IsStunned) // If the defender is stunned, they must retreat one territory
+                  //   combat.IsAnyRetreat = true;
                }
                break;
             case CombatResult.DefenderWins:
                foreach (IMapItem attacker in combat.Attackers)
                {
                   PerformCombatResolveLoss(gi, attacker);
-                  if (true == attacker.IsStunned) // If the attacker is stunned, they must retreat one territory
-                     combat.IsAnyRetreat = true;
+                  //if (true == attacker.IsStunned) // If the attacker is stunned, they must retreat one territory
+                  //   combat.IsAnyRetreat = true;
                }
                break;
             case CombatResult.AttackerFlees:
-               combat.IsAnyRetreat = true;
+               //combat.IsAnyRetreat = true;
                foreach (IMapItem attacker in combat.Attackers)
                {
                   if (attacker.Name == "Zebulon")
@@ -2118,7 +2125,7 @@ namespace PleasantvilleGame
                }
                break;
             case CombatResult.DefenderFlees:
-               combat.IsAnyRetreat = true;
+               //combat.IsAnyRetreat = true;
                foreach (IMapItem defender in combat.Defenders)
                {
                   if (defender.Name == "Zebulon")
