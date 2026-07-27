@@ -273,30 +273,34 @@ namespace PleasantvilleGame
                return false;
             }
             //-----------------------------------------------
-            for(int i=0; i<myMaxRowCount; ++i)
+            for(int i=0; i<myMaxRowCount; ++i) // alien could be MapItem1 or MapItem2
             {
                GridRow gr = myGridRows[i];
-               if ((true == gr.myMapItem1.IsAlienUnknown) || (true == gr.myMapItem1.IsAlienKnown))
+               if ((true == gr.myMapItem1.IsAlienUnknown) || (true == gr.myMapItem1.IsAlienKnown))  
                {
-                  if (true == gr.myIsResult)
+                  if (true == gr.myIsResult) // true when observed doing takeover
                   {
-                     myGameInstance.AddKnownAlien(gr.myMapItem1);
-                     myGameInstance.AddKnownAlien(gr.myMapItem2);
+                     Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "GameStateInfluences.PerformAction(): 1-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem1.Name + " taking over " + gr.myMapItem2.Name);
+                     myGameInstance.AddKnownAlien(gr.myMapItem1); // EventViewerAlienTakeovers.UpdateEndState()
+                     myGameInstance.AddKnownAlien(gr.myMapItem2); // EventViewerAlienTakeovers.UpdateEndState()
                   }
                   else
                   {
+                     Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "GameStateInfluences.PerformAction(): 1-UNOBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem1.Name + " taking over " + gr.myMapItem2.Name);
                      myGameInstance.AddUnknownAlien(gr.myMapItem2);
                   }
                }
-               if ((true == gr.myMapItem2.IsAlienUnknown) || (true == gr.myMapItem2.IsAlienKnown))
+               else if ((true == gr.myMapItem2.IsAlienUnknown) || (true == gr.myMapItem2.IsAlienKnown))
                {
-                  if (true == gr.myIsResult)
+                  if (true == gr.myIsResult) // true when observed doing takeover
                   {
-                     myGameInstance.AddKnownAlien(gr.myMapItem1);
-                     myGameInstance.AddKnownAlien(gr.myMapItem2);
+                     Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "GameStateInfluences.PerformAction(): 2-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem2.Name + " taking over " + gr.myMapItem1.Name);
+                     myGameInstance.AddKnownAlien(gr.myMapItem1);  // EventViewerAlienTakeovers.UpdateEndState()
+                     myGameInstance.AddKnownAlien(gr.myMapItem2);  // EventViewerAlienTakeovers.UpdateEndState()
                   }
                   else
                   {
+                     Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "GameStateInfluences.PerformAction(): 2-UNOBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem2.Name + " taking over " + gr.myMapItem1.Name);
                      myGameInstance.AddUnknownAlien(gr.myMapItem1);
                   }
                }

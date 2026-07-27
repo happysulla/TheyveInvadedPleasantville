@@ -80,7 +80,7 @@ namespace PleasantvilleGame
       private int myBrushIndex = 0;
       private DoubleCollection myDashArray = new DoubleCollection();
       private SolidColorBrush mySolidColorBrushBlack = new SolidColorBrush();
-      private SolidColorBrush mySolidColorBrushGray = new SolidColorBrush()      { Color = Colors.DarkGray };     // Conversations
+      private SolidColorBrush mySolidColorBrushPink = new SolidColorBrush()      { Color = Colors.Pink };     // Conversations
       private SolidColorBrush mySolidColorBrushPurple = new SolidColorBrush()    { Color = Colors.Purple };     // Interogations
       private SolidColorBrush mySolidColorBrushRosyBrown = new SolidColorBrush() { Color = Colors.RosyBrown };     // Implant Removal
       //--------------------------------------------------------------
@@ -1088,7 +1088,7 @@ namespace PleasantvilleGame
                   return;
                }
                Logger.Log(LogEnum.LE_SHOW_CONVERSATIONS, "UpdateView(): calling Display_FlashingRegions() territories=" + gi.SelectedTerritories.ToString());
-               if ( false == DisplayFlashingRegions(gi, mySolidColorBrushGray))
+               if ( false == DisplayFlashingRegions(gi, mySolidColorBrushPink))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
                   return;
@@ -1270,8 +1270,8 @@ namespace PleasantvilleGame
       private bool UpdateActionPanel(IGameInstance gi, bool isOkButtonDisplayed)
       {
          Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "Update_ActionPanel(); isOkButtonDisplayed=" + isOkButtonDisplayed.ToString());
-         const int button1Left = 169;
-         const int button2Left = 97;
+         const double button1Left = 169;
+         const double button2Left = 97;
          myButton1.IsEnabled = true;
          myButton2.IsEnabled = true;
          myButton3.IsEnabled = true;
@@ -1280,6 +1280,12 @@ namespace PleasantvilleGame
          myButton6.IsEnabled = true;
          Canvas.SetZIndex(myButtonHelperOK, myZIndexLastUsed++);
          Canvas.SetZIndex(myButtonHelperCancel, myZIndexLastUsed);
+         double offset1 = (myLabelButton1.Width - myButton1.Width) * 0.5;
+         double offset2 = (myLabelButton2.Width - myButton2.Width) * 0.5;
+         double offset3 = (myLabelButton3.Width - myButton3.Width) * 0.5;
+         double offset4 = (myLabelButton4.Width - myButton4.Width) * 0.5;
+         double offset5 = (myLabelButton5.Width - myButton5.Width) * 0.5;
+         double offset6 = (myLabelButton6.Width - myButton6.Width) * 0.5;
          //-----------------------------------------
          switch (myLeftMapItemsInActionPanel.Count)
          {
@@ -1294,7 +1300,7 @@ namespace PleasantvilleGame
                myButton1.Visibility = Visibility.Visible;
                Canvas.SetLeft(myButton1, button1Left);
                Canvas.SetLeft(myRectangle1, button1Left);
-               Canvas.SetLeft(myLabelButton1, button1Left);
+               Canvas.SetLeft(myLabelButton1, button1Left - offset1);
                myRectangle1.Visibility = Visibility.Visible;
                myLeftMapItemsInActionPanelSelected.Add(leftMapItem);
                break;
@@ -1318,10 +1324,10 @@ namespace PleasantvilleGame
                myLabelLeftTop.Visibility = Visibility.Visible;
                Canvas.SetLeft(myButton1, button2Left);
                Canvas.SetLeft(myRectangle1, button2Left);
-               Canvas.SetLeft(myLabelButton1, button2Left);
+               Canvas.SetLeft(myLabelButton1, button2Left - offset1);
                Canvas.SetLeft(myButton2, button1Left);
                Canvas.SetLeft(myRectangle2, button1Left);
-               Canvas.SetLeft(myLabelButton2, button1Left);
+               Canvas.SetLeft(myLabelButton2, button1Left - offset2);
                break;
             case 3:
                myLeftMapItemsInActionPanel = myLeftMapItemsInActionPanel.Sort();
@@ -1335,6 +1341,7 @@ namespace PleasantvilleGame
                return false;
          }
          //-----------------------------------------
+         double offset1Right = (myLabelButton1.Width - myButton4.Width) * 0.5;
          switch (myRightMapItemsInActionPanel.Count)
          {
             case 1:
@@ -2366,11 +2373,6 @@ namespace PleasantvilleGame
          }
          myTextBoxResults.Text = displayResults.ToString();
          //------------------------------------------------
-         if( false == UpdateActionPanelButtons(myGameInstance))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "ShowResult_Conversation(): Update_ActionPanelButtons() returned false");
-            return;
-         }
          myGameInstance.EventActive = myGameInstance.EventDisplayed; // As soon as you roll the die, the current event becomes the active event
          GameAction action = myGameInstance.DieRollAction;
          myGameEngine.PerformAction(ref myGameInstance, ref action, dieRoll);
@@ -2614,15 +2616,9 @@ namespace PleasantvilleGame
             displayResults.Append("\n");
             displayResults.Append(rightPersonName);
             if (true == rightMapItem.IsAlienUnknown)
-            {
-               myGameInstance.AddKnownAlien(rightMapItem);
                displayResults.Append(" is an Alien!!!!!!");
-            }
             else
-            {
-               myGameInstance.AddControlled(rightMapItem);
                displayResults.Append(" says \"You are right.  Let's go get 'em!\"");
-            }
          }
          else
          {
@@ -2631,22 +2627,11 @@ namespace PleasantvilleGame
             displayResults.Append("\n");
             displayResults.Append(rightPersonName);
             if (false == rightMapItem.IsWary)  // wary people cannot become skeptical
-            {
-               rightMapItem.IsSkeptical = true;
                displayResults.Append(" says \"Are you crazy?  That is absurd!\"");
-            }
             else
-            {
                displayResults.Append(" says \"Hmmmm.  It seems so unlikely.\"");
-            }
          }
          myTextBoxResults.Text = displayResults.ToString();
-         //------------------------------------------------
-         if (false == UpdateActionPanelButtons(myGameInstance))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "ShowResult_Influence(): Update_ActionPanelButtons() returned false");
-            return;
-         }
          //------------------------------------------------
          myGameInstance.EventActive = myGameInstance.EventDisplayed; // As soon as you roll the die, the current event becomes the active event
          GameAction action = myGameInstance.DieRollAction;
@@ -2842,39 +2827,30 @@ namespace PleasantvilleGame
          myLabelRightTop.Content = "Defenders:";
          //-----------------------------------------------------------------------------
          StringBuilder displayResults = new StringBuilder();
-         displayResults.Append("Total Attacker Combat Factors=");
+         displayResults.Append("(Attacker=");
          displayResults.Append(totalCombatForAttacker.ToString());
-         displayResults.Append("\nTotal Defender Combat Factors=");
+         displayResults.Append(") - (Defender=");
          displayResults.Append(totalCombatForDefender.ToString());
          int differenceInCombat = totalCombatForAttacker - totalCombatForDefender;
-         displayResults.Append("\nDifference: ");
+         displayResults.Append(") = ");
          displayResults.Append(differenceInCombat.ToString());
          //-----------------------------------------------------------------------------
          int die1 = myGameInstance.MapItemCombat.DieRoll1;
          int die2 = myGameInstance.MapItemCombat.DieRoll2;
-         displayResults.Append("\nRoll: ");
-         displayResults.Append(die1.ToString());
-         displayResults.Append(" + ");
-         displayResults.Append(die2.ToString());
-         displayResults.Append(" => ");
+         int dr = myGameInstance.MapItemCombat.DieRoll1 + myGameInstance.MapItemCombat.DieRoll2;
+         displayResults.Append("\n(die roll=");
+         displayResults.Append(dr.ToString());
+         displayResults.Append(") >>> ");
          displayResults.Append(myGameInstance.MapItemCombat.Result.ToString());
          //-----------------------------------------------------------------------------
          myTextBoxResults.Text = displayResults.ToString();
          myLabelLeftTop.Visibility = Visibility.Visible;
          myLabelRightTop.Visibility = Visibility.Visible;
          myTextBoxResults.Visibility = Visibility.Visible;
-         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Show_ResultCombat(): myTextBoxResults.Text=" + myTextBoxResults.Text);
-         //-----------------------------------------------------------------------------
-         if (false == UpdateActionPanelButtons(myGameInstance))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Show_ResultCombat(): Update_ActionPanelButtons() return false");
-            return;
-         }
          //------------------------------------------------
          myGameInstance.EventActive = myGameInstance.EventDisplayed; // As soon as you roll the die, the current event becomes the active event
          GameAction action = myGameInstance.DieRollAction;
          myGameEngine.PerformAction(ref myGameInstance, ref action, dieRoll);
-         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Show_ResultCombat(): myTextBoxResults.Text=" + myTextBoxResults.Text);
       }
       private void RollCombatRetreat(IGameInstance gi, bool isIgnoreResults)
       {
@@ -2883,8 +2859,6 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "RollCombatRetreat() gi.MapItemCombat=null");
             return;
          }
-         //if (null != gi.MapItemCombat.Territory)
-         //   UpdateViewMovement(gi); // Show retreats
          UpdateViewState(gi);
          myIsCombatInitiatedForTownsperson = false;
          StringBuilder sb1 = new StringBuilder("UpdateView():TownspersonRollCombat: "); 

@@ -1118,8 +1118,8 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien(): startingAlien=null for name=" + name);
             return false;
          }
+         Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Assign_StartingAlien(): AddUnknownAlien() startingAlien=" + startingAlien.ToString());
          gi.AddUnknownAlien(startingAlien);
-         Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Assign_StartingAlien(): startingAlien=" + name);
          //------------------------------------
          name = gi.StartingTownspeople[2];
          if (true == String.IsNullOrEmpty(name))
@@ -1133,8 +1133,8 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Assign_StartingAlien(): startingAlien=null for name=" + name);
             return false;
          }
+         Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Assign_StartingAlien(): AddUnknownAlien() startingAlien=" + startingAlien.ToString() );
          gi.AddUnknownAlien(startingAlien);
-         Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Assign_StartingAlien(): startingAlien=" + name);
          return true;
       }
    }
@@ -1556,7 +1556,10 @@ namespace PleasantvilleGame
                      if (8 < dieRoll + dieRollModifier)
                      {
                         if (true == rightMapItem.IsAlienUnknown)
-                           gi.AddKnownAlien(rightMapItem);
+                        {
+                           Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "GameStateInfluences.PerformAction(): AddKnownAlien() rightMapItem=" + rightMapItem.ToString() + " dr=" + dieRoll.ToString() + " drm=" + dieRollModifier.ToString());
+                           gi.AddKnownAlien(rightMapItem);    // GameStateConversations.PerformAction(ConversationsRoll)
+                        }
                      }
                      if (false == CheckForConversations(gi, ref action))
                      {
@@ -1704,21 +1707,21 @@ namespace PleasantvilleGame
                      {
                         if (true == rightMapItem.IsAlienUnknown)
                         {
-                           gi.AddKnownAlien(rightMapItem);
-                           Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "GameStateInfluences.PerformAction(): AddingKnownAlien() rightMapItem=" + rightMapItem.Name + " dr=" + dieRoll.ToString() + " t=" + dieThreshold.ToString());
+                           Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "GameStateInfluences.PerformAction(): AddKnownAlien() rightMapItem=" + rightMapItem.ToString() + " dr=" + dieRoll.ToString() + " t=" + dieThreshold.ToString());
+                           gi.AddKnownAlien(rightMapItem); // GameStateInfluences.PerformAction(InfluencesRoll)
                         }
                         else
                         {
+                           Logger.Log(LogEnum.LE_SHOW_TOWNS_ADD, "GameStateInfluences.PerformAction(): AddControlled() rightMapItem=" + rightMapItem.ToString() + " dr=" + dieRoll.ToString() + " t=" + dieThreshold.ToString());
                            gi.AddControlled(rightMapItem);
-                           Logger.Log(LogEnum.LE_SHOW_TOWNS_ADD, "GameStateInfluences.PerformAction(): AddingKnownAlien() rightMapItem=" + rightMapItem.Name + " dr=" + dieRoll.ToString() + " t=" + dieThreshold.ToString());
                         }
                      }
                      else
                      {
                         if (false == rightMapItem.IsWary)  // wary people cannot become skeptical
                         {
+                           Logger.Log(LogEnum.LE_SHOW_WARY_ADD, "GameStateInfluences.PerformAction(): Adding Skeptical rightMapItem=" + rightMapItem.ToString() + " dr=" + dieRoll.ToString() + " t=" + dieThreshold.ToString());
                            rightMapItem.IsSkeptical = true;
-                           Logger.Log(LogEnum.LE_SHOW_WARY_ADD, "GameStateInfluences.PerformAction(): AddingKnownAlien() rightMapItem=" + rightMapItem.Name + " dr=" + dieRoll.ToString() + " t=" + dieThreshold.ToString());
                         }
                      }
                      if ("OK" == returnStatus)
@@ -1907,7 +1910,7 @@ namespace PleasantvilleGame
                   }
                   else if (true == mi.IsAlienUnknown)
                   {
-                     gi.AddKnownAlien(mi); // All aliens in this combat become exposed.
+                     gi.AddKnownAlien(mi); // PerformCombat() - All aliens in this combat become exposed.
                      aliens.Add(mi);
                   }
                   else if (true == mi.IsControlled)

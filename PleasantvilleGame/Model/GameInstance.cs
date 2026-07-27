@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -109,6 +110,7 @@ namespace PleasantvilleGame
          newAlien.IsAlienKnown = true;
          newAlien.IsWary = false;
          newAlien.IsControlled = false;
+         newAlien.IsSkeptical = false;
       }
       public void AddControlled(IMapItem controlled)
       {
@@ -117,6 +119,7 @@ namespace PleasantvilleGame
          controlled.IsAlienKnown = false;
          controlled.IsWary = false;
          controlled.IsSurrendered = false;
+         controlled.IsSkeptical = false;
       }
       public IMapItemMove? CreateMapItemMove(IMapItem mi, ITerritory newT)
       {

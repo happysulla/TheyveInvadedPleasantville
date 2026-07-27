@@ -288,6 +288,13 @@ namespace PleasantvilleGame
          sb.Append(Name);
          sb.Append("->");
          sb.Append(TerritoryCurrent.ToString());
+         sb.Append("(ka=");
+         sb.Append(IsAlienKnown.ToString());
+         sb.Append(" ua=");
+         sb.Append(IsAlienUnknown.ToString());
+         sb.Append(" c=");
+         sb.Append(IsControlled.ToString());
+         sb.Append(")");
          return sb.ToString();
       }
       //----------------------------------------------------------------------------
@@ -475,6 +482,11 @@ namespace PleasantvilleGame
       {
          get 
          {
+            if( index < 0 || index >= myList.Count)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "MapItemCombats.RemoveAt(): index=" + index.ToString() + " is out of range.");
+               return null;
+            }
             Object? o = myList[index];
             if (null == o)
             {

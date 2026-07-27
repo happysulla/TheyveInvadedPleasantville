@@ -624,7 +624,7 @@ namespace PleasantvilleGame
          }
          System.Windows.Rect rect = geometry.Bounds;
          System.Windows.Shapes.Path path = new System.Windows.Shapes.Path();
-         path.Fill = Utilities.theBrushRegion;
+         path.Fill = Utilities.theBrushRegionClear;
          path.Stroke = Brushes.Black;
          path.StrokeThickness = 1;
          path.Data = geometry;
@@ -650,7 +650,7 @@ namespace PleasantvilleGame
                bool isP2In = geometry.FillContains(p2);
                bool isP3In = geometry.FillContains(p3);
                bool isP4In = geometry.FillContains(p4);
-               Rectangle rect0 = new Rectangle() { Fill=Utilities.theBrushRegion, Stroke = Brushes.Black, Width = Utilities.theMapItemSize, Height = Utilities.theMapItemSize, StrokeThickness = 1 };
+               Rectangle rect0 = new Rectangle() { Fill=Utilities.theBrushRegionClear, Stroke = Brushes.Black, Width = Utilities.theMapItemSize, Height = Utilities.theMapItemSize, StrokeThickness = 1 };
                Canvas.SetLeft(rect0, XCenter - Utilities.theMapItemOffset);
                Canvas.SetTop(rect0, YCenter - Utilities.theMapItemOffset);
                if (false == isP1In && false == isP2In)

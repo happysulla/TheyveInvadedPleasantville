@@ -567,7 +567,7 @@ namespace PleasantvilleGame
          PointCollection points = new PointCollection();
          foreach (IMapPoint mp1 in t.Points)
             points.Add(new System.Windows.Point(mp1.X, mp1.Y));
-         Polygon aPolygon = new Polygon { Fill = Utilities.theBrushRegion, Points = points, Name = t.Name };
+         Polygon aPolygon = new Polygon { Fill = Utilities.theBrushRegionClear, Points = points, Name = t.Name };
          myCanvasMain.Children.Add(aPolygon);
          return true;
       }

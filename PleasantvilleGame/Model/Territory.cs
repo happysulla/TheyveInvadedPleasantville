@@ -8,7 +8,8 @@ namespace PleasantvilleGame
    [Serializable]
 	public class Territory : ITerritory
 	{
-		public static int MAX_PATH_COUNT = 30;
+      public static int ERROR = -1000;
+      public static int MAX_PATH_COUNT = 30;
 		public string Name { get; set; } = "Offboard";
 		public string CanvasName { get; set; } = "Main";
 		public string Subname { get; set; } = "ERROR";
@@ -566,6 +567,36 @@ namespace PleasantvilleGame
             }
          }
          return masterList;
+      }
+		public static int GetStackingCountUncontrolled(IStack stack)
+		{
+			int count = 0;
+		   foreach(IMapItem mi in stack.MapItems)
+			{
+				if( (false == mi.IsAlienKnown) && (false == mi.IsControlled) )
+					++count;
+         }
+         return count;
+		}
+      public static int GetStackingCountAlien(IStack stack)
+      {
+         int count = 0;
+         foreach (IMapItem mi in stack.MapItems)
+         {
+            if (true == mi.IsAlienKnown)
+               ++count;
+         }
+         return count;
+      }
+      public static int GetStackingCountControlled(IStack stack)
+      {
+         int count = 0;
+         foreach (IMapItem mi in stack.MapItems)
+         {
+            if (true == mi.IsControlled)
+               ++count;
+         }
+         return count;
       }
       //---------------------------------------------------------------
       private static double DistanceToSegment(Point p, Point a, Point b, out Point closestPoint)

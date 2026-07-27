@@ -163,7 +163,8 @@ namespace PleasantvilleGame
          myMovingTownsperson.IsMoveAllowedToResetThisTurn = false;
          if (false == alien.IsAlienKnown)
          {
-            myGameInstance.AddKnownAlien(alien);
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "DialogStopMovement:StopMove(): AddKnownAlien() rightMapItem=" + alien.ToString() );
+            myGameInstance.AddKnownAlien(alien);  // DialogStopMovement:StopMove()
          }
          myGameInstance.MapItemMoves.Clear();
          return true;

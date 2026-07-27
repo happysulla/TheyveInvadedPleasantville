@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,17 +54,44 @@ namespace PleasantvilleGame
             }
             Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "Move_UnknownAliens(): for unknownAlien=" + unknownAlien.Name + " metricVictim=" + metricVictim.ToString());
             //-----------------------------------------
-            unknownAlien.IsMovingThisTurn = true;         // do not allow alien to move other than to the victim
-            metricVictim.Target.IsMovingThisTurn = true;  // do not allow victim to move
             if( unknownAlien.TerritoryCurrent.ToString() != metricVictim.Target.TerritoryCurrent.ToString()) // If in same territory, do not move
             {
+               IStack? stack = gi.Stacks.Find(unknownAlien.TerritoryCurrent);
+               if (null == stack)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): stack=null for unknownAlien=" + unknownAlien.Name + " in territory=" + unknownAlien.TerritoryCurrent.ToString());
+                  return false;
+               }
+               int alienStackingCount = Territory.GetStackingCountUncontrolled(stack);
+               stack = gi.Stacks.Find(metricVictim.Target.TerritoryCurrent);
+               if (null == stack)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): stack=null for unknownAlien=" + metricVictim.Target.Name + " in territory=" + metricVictim.Target.TerritoryCurrent.ToString());
+                  return false;
+               }
+               int victimStackingCount = Territory.GetStackingCountUncontrolled(stack);
+               //-----------------------------------------
                IMapItemMove? mim = null;
                IMetricObservation metricAlien = new MetricObservation(gi, unknownAlien); // Is it better to move unknown to victum or victum to unknown
                Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "Move_UnknownAliens(): for metricAlien=" + metricAlien.ToString());
-               if (metricVictim.Value < metricAlien.Value) // higher probability of non-detection is path we want to go
-                  mim = gi.CreateMapItemMove(metricVictim.Target, unknownAlien.TerritoryCurrent);
-               else
-                  mim = gi.CreateMapItemMove(unknownAlien, metricVictim.Target.TerritoryCurrent);
+               if (metricVictim.Value < metricAlien.Value) // prefer to move the victim to the unknown alien's territory
+               {
+                  if (alienStackingCount < 3)
+                     mim = gi.CreateMapItemMove(metricVictim.Target, unknownAlien.TerritoryCurrent); // moving victim to unknown alien's territory
+                  else if (victimStackingCount < 3)
+                     mim = gi.CreateMapItemMove(unknownAlien, metricVictim.Target.TerritoryCurrent); // moving unknown alien to victim's territory
+                  else
+                     continue; // cannot move either because of stacking limits
+               }
+               else // prefer to move the alien to the victim's territory
+               {
+                  if (victimStackingCount < 3)
+                     mim = gi.CreateMapItemMove(unknownAlien, metricVictim.Target.TerritoryCurrent); // moving unknown alien to victim's territory
+                  else if (alienStackingCount < 3)
+                     mim = gi.CreateMapItemMove(metricVictim.Target, unknownAlien.TerritoryCurrent); // moving victim to unknown alien's territory
+                  else
+                     continue; // cannot move either because of stacking limits
+               }
                if (null == mim)
                {
                   Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): CreateMapItemMove() returned mim=null");
@@ -80,6 +108,8 @@ namespace PleasantvilleGame
                   return false;
                }
                alienMoves.Add(mim);
+               unknownAlien.IsMovingThisTurn = true;         // do not allow alien to move other than to the victim
+               metricVictim.Target.IsMovingThisTurn = true;  // do not allow victim to move
                Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE, "Move_UnknownAliens(): Moving mi=" + mim.MapItem.Name + " from " + mim.OldTerritory.ToString() + " to " + mim.NewTerritory.ToString());
             }
          }
