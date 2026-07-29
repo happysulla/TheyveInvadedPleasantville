@@ -233,12 +233,12 @@ namespace PleasantvilleGame
          int alienCount = knownAliens.Count + unknownAliens.Count;
          if ((0 == possibleVictims.Count) && (1 == alienCount)) // if no victims, then need to have two aliens
          {
-            Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): 1-v=" + possibleVictims.ToString() + " ua=" + unknownAliens.ToString() + " ka=" + knownAliens.ToString() + " in t=" + stack.Territory.ToString() + "stacks=\n" + gi.Stacks.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): 1-v=" + possibleVictims.ToString() + " ua=" + unknownAliens.ToString() + " ka=" + knownAliens.ToString() + " in t=" + stack.Territory.ToString() + " stacks=\n" + gi.Stacks.ToString());
             return false;
          }
          if ((possibleVictims.Count < 2) && (0 == alienCount)) // if no victims, then need to have two aliens
          {
-            Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): 2-v=" + possibleVictims.ToString() + " ua=" + unknownAliens.ToString() + " ka=" + knownAliens.ToString() + " in t=" + stack.Territory.ToString() + "stacks=\n" + gi.Stacks.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): 2-v=" + possibleVictims.ToString() + " ua=" + unknownAliens.ToString() + " ka=" + knownAliens.ToString() + " in t=" + stack.Territory.ToString() + " stacks=\n" + gi.Stacks.ToString());
             return false;
          }
          //----------------------------------------

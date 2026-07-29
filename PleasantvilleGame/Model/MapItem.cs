@@ -286,13 +286,11 @@ namespace PleasantvilleGame
       {
          StringBuilder sb = new StringBuilder();
          sb.Append(Name);
-         sb.Append("->");
-         sb.Append(TerritoryCurrent.ToString());
-         sb.Append("(ka=");
+         sb.Append("(k=");
          sb.Append(IsAlienKnown.ToString());
-         sb.Append(" ua=");
+         sb.Append(",u=");
          sb.Append(IsAlienUnknown.ToString());
-         sb.Append(" c=");
+         sb.Append(",c=");
          sb.Append(IsControlled.ToString());
          sb.Append(")");
          return sb.ToString();
@@ -596,15 +594,14 @@ namespace PleasantvilleGame
       public override String ToString()
       {
          StringBuilder sb = new StringBuilder();
+         sb.Append("[ ");
          foreach (Object o in myList)
          {
             IMapItem mi = (IMapItem)o;
-            sb.Append("<");
-            sb.Append(mi.Name);
-            sb.Append(",");
-            sb.Append(mi.TerritoryCurrent.ToString());
-            sb.Append(">");
+            sb.Append(mi.ToString());
+            sb.Append(" ");
          }
+         sb.Append("]");
          return sb.ToString();
       }
    }

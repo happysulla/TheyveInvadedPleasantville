@@ -2812,7 +2812,7 @@ namespace PleasantvilleGame
             foreach (IMapItem mi in knownAliens)
             {
                myRightMapItemsInActionPanel.Add(mi);
-               myLeftMapItemsInActionPanelSelected.Add(mi);
+               myRightMapItemsInActionPanelSelected.Add(mi);
                totalCombatForDefender += mi.Combat;
                if (3 <= ++numOfDefenders)
                   break;
@@ -2902,7 +2902,7 @@ namespace PleasantvilleGame
             gi.MapItemCombat.Attackers.Add(mi);
          foreach (IMapItem mi in myRightMapItemsInActionPanelSelected)
             gi.MapItemCombat.Defenders.Add(mi);
-         Logger.Log(LogEnum.LE_SHOW_COMBAT_THREAD, "Roll_Combat(): Combat=[[" + myGameInstance.MapItemCombat.ToString() + "]]");
+         Logger.Log(LogEnum.LE_SHOW_COMBAT_THREAD, "Roll_Combat(): " + myGameInstance.MapItemCombat.ToString() );
          //-----------------------------------------------------------------------------
          myGameInstance.EventActive = myGameInstance.EventDisplayed; // As soon as you roll the die, the current event becomes the active event
          myGameInstance.DieRollAction = GameAction.CombatsRoll;
@@ -2911,7 +2911,6 @@ namespace PleasantvilleGame
       }
       private void ShowResultCombat(int dieRoll)
       {
-        
          if ((0 == myGameInstance.MapItemCombat.Attackers.Count) || (0 == myGameInstance.MapItemCombat.Defenders.Count))
          {
             Logger.Log(LogEnum.LE_ERROR, "Show_ResultCombat(): l=" + myGameInstance.MapItemCombat.Attackers.Count.ToString() + " r=" + myGameInstance.MapItemCombat.Defenders.Count.ToString());
@@ -2943,6 +2942,11 @@ namespace PleasantvilleGame
          displayResults.Append("\n(die roll=");
          displayResults.Append(dieRoll.ToString());
          displayResults.Append(") >>> ");
+         if( false == TableMgr.GetCombatResult(dieRoll, myGameInstance.MapItemCombat))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Show_ResultCombat(): Get_CombatResult() returned false");
+            return;
+         }
          displayResults.Append(myGameInstance.MapItemCombat.Result.ToString());
          //-----------------------------------------------------------------------------
          myTextBoxResults.Text = displayResults.ToString();

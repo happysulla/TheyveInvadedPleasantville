@@ -77,7 +77,7 @@ namespace PleasantvilleGame
       public override String ToString()
       {
          StringBuilder sb = new StringBuilder();
-         sb.Append("Attackers=");
+         sb.Append("Attackers={ ");
          int totalAttackCombat = 0;
          foreach (IMapItem mi in myAttackers)
          {
@@ -87,7 +87,7 @@ namespace PleasantvilleGame
             sb.Append(") ");
             totalAttackCombat += mi.Combat;
          }
-         sb.Append("Defenders=");
+         sb.Append("} Defenders={ ");
          int totalDefendCombat = 0;
          foreach (IMapItem mi in myDefenders)
          {
@@ -97,7 +97,7 @@ namespace PleasantvilleGame
             sb.Append(") ");
             totalDefendCombat += mi.Combat;
          }
-         sb.Append("in ");
+         sb.Append("} in ");
          sb.Append(myTerritory.ToString());
          sb.Append(" odds=(");
          sb.Append(totalAttackCombat.ToString());
