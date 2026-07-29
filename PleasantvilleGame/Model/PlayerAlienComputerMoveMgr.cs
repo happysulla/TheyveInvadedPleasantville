@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
@@ -62,14 +63,14 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): stack=null for unknownAlien=" + unknownAlien.Name + " in territory=" + unknownAlien.TerritoryCurrent.ToString());
                   return false;
                }
-               int alienStackingCount = Territory.GetStackingCountUncontrolled(stack);
+               int alienStackingCount = Territory.GetStackingCountUncontrolled(stack, alienMoves);
                stack = gi.Stacks.Find(metricVictim.Target.TerritoryCurrent);
                if (null == stack)
                {
                   Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): stack=null for unknownAlien=" + metricVictim.Target.Name + " in territory=" + metricVictim.Target.TerritoryCurrent.ToString());
                   return false;
                }
-               int victimStackingCount = Territory.GetStackingCountUncontrolled(stack);
+               int victimStackingCount = Territory.GetStackingCountUncontrolled(stack, alienMoves);
                //-----------------------------------------
                IMapItemMove? mim = null;
                IMetricObservation metricAlien = new MetricObservation(gi, unknownAlien); // Is it better to move unknown to victum or victum to unknown
@@ -81,7 +82,10 @@ namespace PleasantvilleGame
                   else if (victimStackingCount < 3)
                      mim = gi.CreateMapItemMove(unknownAlien, metricVictim.Target.TerritoryCurrent); // moving unknown alien to victim's territory
                   else
+                  {
+                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE, "Move_UnknownAliens(): 2 - asc=" + alienStackingCount.ToString() + "(" + unknownAlien.TerritoryCurrent.ToString() + ") vsc=" + victimStackingCount.ToString() + "(" + metricVictim.Target.TerritoryCurrent.ToString() + ")");
                      continue; // cannot move either because of stacking limits
+                  }
                }
                else // prefer to move the alien to the victim's territory
                {
@@ -90,8 +94,13 @@ namespace PleasantvilleGame
                   else if (alienStackingCount < 3)
                      mim = gi.CreateMapItemMove(metricVictim.Target, unknownAlien.TerritoryCurrent); // moving victim to unknown alien's territory
                   else
+                  {
+                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE, "Move_UnknownAliens(): 2 - vsc=" + victimStackingCount.ToString() + "(" + metricVictim.Target.TerritoryCurrent.ToString() +  ") asc=" + alienStackingCount.ToString() + "(" + unknownAlien.TerritoryCurrent.ToString() + ")");
                      continue; // cannot move either because of stacking limits
+                  }
+   
                }
+               //-----------------------------------------
                if (null == mim)
                {
                   Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): CreateMapItemMove() returned mim=null");
@@ -110,7 +119,7 @@ namespace PleasantvilleGame
                alienMoves.Add(mim);
                unknownAlien.IsMovingThisTurn = true;         // do not allow alien to move other than to the victim
                metricVictim.Target.IsMovingThisTurn = true;  // do not allow victim to move
-               Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE, "Move_UnknownAliens(): Moving mi=" + mim.MapItem.Name + " from " + mim.OldTerritory.ToString() + " to " + mim.NewTerritory.ToString());
+               Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE, "Move_UnknownAliens(): Moving mi=" + mim.MapItem.Name + " from " + mim.OldTerritory.ToString() + " to " + mim.NewTerritory.ToString() + " asc=" + alienStackingCount.ToString() + " vsc=" + victimStackingCount.ToString());
             }
          }
          return true;
@@ -134,7 +143,7 @@ namespace PleasantvilleGame
             IMetricObservation metric = new MetricObservation(gi, uncontrolled); // the metric provides the probability that this uncontrolled person will be observed in a takeover in this territory
             uncontrolledMetrics.Add(metric);
          }
-         IMetricObservations sortedUncontrolledMetrics = uncontrolledMetrics.Sort(); // sort the metrics for all uncontrolled people
+         IMetricObservations sortedUncontrolledMetrics = uncontrolledMetrics.Sort(); // sort the metrics for all uncontrolled people - best locations to move uncontrolled people
          Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "Move_Uncontrolled(): for sortedUncontrolledMetrics=" + sortedUncontrolledMetrics.ToString());
          //----------------------------------------------------------------
          foreach (IMetricObservation metric in sortedUncontrolledMetrics)
@@ -155,7 +164,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "Move_Uncontrolled(): mim1.NewTerritory=null");
                   return false;
                }
-               if (mim1.NewTerritory.ToString() == metric.Target.ToString())
+               if (mim1.NewTerritory.ToString() == metric.Target.TerritoryCurrent.ToString())
                {
                   isAlienMovingHereAlready = true;
                   Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "Move_Uncontrolled(): alien=" + mim1.MapItem.ToString() + " already there");
@@ -163,6 +172,19 @@ namespace PleasantvilleGame
             }
             if (true == isAlienMovingHereAlready)
                continue;
+            //-----------------------------------------
+            IStack? stack = gi.Stacks.Find(metric.Target.TerritoryCurrent);
+            if (null == stack)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Move_Uncontrolled(): stack=null for in territory=" + metric.Target.ToString());
+               return false;
+            }
+            int uncontrolledStackingCount = Territory.GetStackingCountUncontrolled(stack, alienMoves);
+            if( 3 <= uncontrolledStackingCount) // cannot move to this territory because of stacking limits
+            {
+               Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE, "Move_Uncontrolled(): 1 - usc=" + uncontrolledStackingCount.ToString() + "(" + metric.Target.TerritoryCurrent.ToString() + ")");
+               continue;
+            }
             //-----------------------------------------
             IMapItems? closeMapItems = Territory.GetMapItemsWithinRange(gi, metric.Target.TerritoryCurrent, metric.Target.Movement); // Find mapitems that can be moved to the targets location
             if (null == closeMapItems)
@@ -201,8 +223,6 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Move_Uncontrolled(): movingMi=null");
                return false;
             }
-            metric.Target.IsMovingThisTurn = true;         // do not allow target to move 
-            movingMi.IsMovingThisTurn = true;              // do not allow victim to move
             //-----------------------------------------
             IMapItemMove? mim = gi.CreateMapItemMove(movingMi, metric.Target.TerritoryCurrent);
             if (null == mim)
@@ -221,7 +241,9 @@ namespace PleasantvilleGame
                return false;
             }
             alienMoves.Add(mim);
-            Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE, "Move_Uncontrolled(): Moving mi=" + mim.MapItem.Name + " from " + mim.OldTerritory.ToString() + " to " + mim.NewTerritory.ToString());
+            metric.Target.IsMovingThisTurn = true;         // do not allow target to move 
+            movingMi.IsMovingThisTurn = true;              // do not allow victim to move
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE, "Move_Uncontrolled(): Moving mi=" + mim.MapItem.Name + " from " + mim.OldTerritory.ToString() + " to " + mim.NewTerritory.ToString() + " usc=" + uncontrolledStackingCount.ToString() );
 
          }
          return true;

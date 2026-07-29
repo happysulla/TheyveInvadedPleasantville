@@ -168,11 +168,6 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): dieRoll1=" + dieRoll.ToString() + " is out of range");
             return false;
          }
-         if (null == combat)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): MapItemCombat=null");
-            return false;
-         }
          if( 0 == combat.Attackers.Count)
          {
             Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): 0 == combat.Attackers.Count");

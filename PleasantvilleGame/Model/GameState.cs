@@ -1874,288 +1874,288 @@ namespace PleasantvilleGame
       }
       public bool PerformCombat(IGameInstance gi)
       {
-         if (null == gi.MapItemCombat)
-         {
-            MessageBox.Show("No Combat");
-            Logger.Log(LogEnum.LE_ERROR, "PerformCombat(): No Combat");
-            return false;
-         }
-         IMapItemCombat combat = gi.MapItemCombat;
-         if (null == combat.Territory)
-         {
-            MessageBox.Show("No combat territory");
-            Logger.Log(LogEnum.LE_ERROR, "PerformCombat(): No combat territory");
-            return false;
-         }
-         combat.DieRoll1 = Utilities.RandomGenerator.Next(6) + 1; // Assignment increases roll by one
-         combat.DieRoll2 = Utilities.RandomGenerator.Next(6) + 1; // Assignment increases roll by one
-         int resultsRoll = combat.DieRoll1 + combat.DieRoll2 - 2;
-         //-------------------------------------------------------------------------------
-         IMapItems aliens = new MapItems();
-         IMapItems controlled = new MapItems();
-         IMapItems uncontrolled = new MapItems();
-         IMapItems wary = new MapItems();
-         foreach(IStack stack in gi.Stacks) // In each stack, get the count in the stack of the number of aliens and controlled townspeople
-         {
-            foreach (MapItem mi in stack.MapItems)
-            {
-               if ((combat.Territory.Name == mi.TerritoryCurrent.Name) && (combat.Territory.Subname == mi.TerritoryCurrent.Subname))
-               {
-                  if ((false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsKilled) || (true == mi.IsSurrendered))
-                     continue;
+         //if (null == gi.MapItemCombat)
+         //{
+         //   MessageBox.Show("No Combat");
+         //   Logger.Log(LogEnum.LE_ERROR, "PerformCombat(): No Combat");
+         //   return false;
+         //}
+         //IMapItemCombat combat = gi.MapItemCombat;
+         //if (null == combat.Territory)
+         //{
+         //   MessageBox.Show("No combat territory");
+         //   Logger.Log(LogEnum.LE_ERROR, "PerformCombat(): No combat territory");
+         //   return false;
+         //}
+         //combat.DieRoll1 = Utilities.RandomGenerator.Next(6) + 1; // Assignment increases roll by one
+         //combat.DieRoll2 = Utilities.RandomGenerator.Next(6) + 1; // Assignment increases roll by one
+         //int resultsRoll = combat.DieRoll1 + combat.DieRoll2 - 2;
+         ////-------------------------------------------------------------------------------
+         //IMapItems aliens = new MapItems();
+         //IMapItems controlled = new MapItems();
+         //IMapItems uncontrolled = new MapItems();
+         //IMapItems wary = new MapItems();
+         //foreach(IStack stack in gi.Stacks) // In each stack, get the count in the stack of the number of aliens and controlled townspeople
+         //{
+         //   foreach (MapItem mi in stack.MapItems)
+         //   {
+         //      if ((combat.Territory.Name == mi.TerritoryCurrent.Name) && (combat.Territory.Subname == mi.TerritoryCurrent.Subname))
+         //      {
+         //         if ((false == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsKilled) || (true == mi.IsSurrendered))
+         //            continue;
 
-                  if (true == mi.IsAlienKnown)
-                  {
-                     aliens.Add(mi);
-                  }
-                  else if (true == mi.IsAlienUnknown)
-                  {
-                     gi.AddKnownAlien(mi); // PerformCombat() - All aliens in this combat become exposed.
-                     aliens.Add(mi);
-                  }
-                  else if (true == mi.IsControlled)
-                  {
-                     controlled.Add(mi);
-                  }
-                  else
-                  {
-                     if (true == mi.IsWary)
-                        wary.Add(mi);
-                     uncontrolled.Add(mi);
-                  }
-               }
-            }
-         }
-         //-------------------------------------------------------
-         if (0 == controlled.Count) // If there is no combat, return from this method
-         {
-            if ((0 == aliens.Count) || (0 == wary.Count))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "PerformCombat(): aliens.Count=0 wary.Count=0 controlled.Count=0");
-               return false;
-            }
-         }
-         //-------------------------------------------------------
-         int alienAttackCombat = 0;
-         int alienCount = 0;
-         aliens = aliens.SortOnCombat();
-         foreach (IMapItem alien in aliens) // Determine the attack strength of the aliens.  Limit it to top three counters.
-         {
-            alienAttackCombat += alien.Combat;
-            StringBuilder sb = new StringBuilder("PerformCombat():"); sb.Append(alien.Name); sb.Append(" ++++ "); sb.Append(alien.Combat.ToString()); sb.Append(" to Alien="); sb.Append(alienAttackCombat.ToString());
-            Logger.Log(LogEnum.LE_COMBAT_SUMS, sb.ToString());
-            if (3 <= ++alienCount)
-               break;
-         }
-         // Determine the attack strength of the townspeople.  
-         // Limit it to top three counters.
-         int controlledAttackCombat = 0;
-         int controlledCount = 0;
-         controlled = controlled.SortOnCombat();
-         foreach (IMapItem person in controlled)
-         {
-            controlledAttackCombat += person.Combat;
-            StringBuilder sb = new StringBuilder("PerformCombat():"); sb.Append(person.Name); sb.Append(" ++++ "); sb.Append(person.Combat.ToString()); sb.Append(" to TP="); sb.Append(controlledAttackCombat.ToString());
-            Logger.Log(LogEnum.LE_COMBAT_SUMS, sb.ToString());
-            if (3 <= ++controlledCount)
-               break;
-         }
-         // Determine the attack strength of the wary townspeople.  
-         // Limit it to top three counters.
-         int waryAttackCombat = 0;
-         int waryCount = 0;
-         wary = wary.SortOnCombat();
-         foreach (IMapItem person in wary)
-         {
-            waryAttackCombat += person.Combat;
-            if (3 <= ++waryCount)
-               break;
-         }
-         int combatFactorDifference = 0;
-         if ((0 < aliens.Count) && (0 < controlled.Count)) // A normal attack with known aliens in the same hex as controlled townspeople
-         {
-            if ((0 == alienCount) || (0 == controlledCount)) // If there is no combat, ignore this stack
-            {
-               return true;
-            }
-            // Determine who is attackers and who are defenders based
-            // on which side has the most Combat Factors.
-            if (controlledAttackCombat < alienAttackCombat)
-            {
-               combatFactorDifference = alienAttackCombat - controlledAttackCombat;
-               combat.Attackers = aliens;
-               combat.Defenders = controlled;
-            }
-            else
-            {
-               combatFactorDifference = controlledAttackCombat - alienAttackCombat;
-               combat.Attackers = controlled;
-               combat.Defenders = aliens;
-            }
-            // Determine one index into the Combat Results Table.
-            int tableFactor = 0;
-            if (combatFactorDifference < 1)
-               tableFactor = 0;
-            else if (combatFactorDifference < 4)
-               tableFactor = 1;
-            else if (combatFactorDifference < 7)
-               tableFactor = 2;
-            else if (combatFactorDifference < 10)
-               tableFactor = 3;
-            else
-               tableFactor = 4;
-            foreach (IMapItem alien in aliens) // A column shift occurs if any aliens went through an influence attempt this turn.
-            {
-               if (true == alien.IsInfluencedThisTurn)
-               {
-                  if (controlledAttackCombat < alienAttackCombat)  // aliens are attackers
-                  {
-                     if (0 == tableFactor)                        // shift column to right
-                        tableFactor = 1;
-                     else if (1 == tableFactor)
-                        tableFactor = 2;
-                     else if (2 == tableFactor)
-                        tableFactor = 3;
-                     else if (3 == tableFactor)
-                        tableFactor = 4;
-                  }
-                  else                                             // aliens are defenders
-                  {
-                     if (1 == tableFactor)                        // shift column to left
-                        tableFactor = 0;
-                     else if (2 == tableFactor)
-                        tableFactor = 1;
-                     else if (3 == tableFactor)
-                        tableFactor = 2;
-                     else if (4 == tableFactor)
-                        tableFactor = 3;
-                  }
-                  break;  // only one column shift occurs.
-               }
-            }
-            combat.Result = TableMgr.theTable[resultsRoll, tableFactor]; // The dice roll determines the other index into the Combat Results Table.
-         }
-         //***********************************************************************************************
-         else if (0 < controlled.Count)  // Controlled townspeople attacking uncontrolled is automatic win
-         {
-            combat.Result = CombatResult.AttackerWins;
-            combat.Attackers = controlled;
-            combat.Defenders = uncontrolled;
-         }
-         //***********************************************************************************************
-         else  // Alien townspeople attacking wary 
-         {
-            if ((0 == alienCount) || (0 == waryCount)) // If there is no combat, ignore this stack
-            {
-               return true;
-            }
-            // Determine who is attackers and who are defenders based
-            // on which side has the most Combat Factors.
-            bool isAlienAttacker = false;
-            if (waryAttackCombat < alienAttackCombat)
-            {
-               combatFactorDifference = alienAttackCombat - waryAttackCombat;
-               combat.Attackers = aliens;
-               combat.Defenders = wary;
-               isAlienAttacker = true;
-            }
-            else
-            {
-               combatFactorDifference = waryAttackCombat - alienAttackCombat;
-               combat.Attackers = wary;
-               combat.Defenders = aliens;
-            }
-            // Determine one index into the Combat Results Table.
-            int tableFactor = 0;
-            if (combatFactorDifference < 1)
-               tableFactor = 0;
-            else if (combatFactorDifference < 4)
-               tableFactor = 1;
-            else if (combatFactorDifference < 7)
-               tableFactor = 2;
-            else if (combatFactorDifference < 10)
-               tableFactor = 3;
-            else
-               tableFactor = 4;
-            combat.Result = TableMgr.theTable[resultsRoll, tableFactor]; // The dice roll determines the other index into the Combat Results Table.
-                                                                         // If Aliens lose to Wary people, the results is that the aliens immediately flee.
-            if ((true == isAlienAttacker) && (CombatResult.DefenderWins == combat.Result))
-               combat.Result = CombatResult.DefenderFlees;
-            if ((false == isAlienAttacker) && (CombatResult.AttackerWins == combat.Result))
-               combat.Result = CombatResult.AttackerFlees;
-         }
-         // Indicate who participated in the attack
-         foreach (IMapItem defender in combat.Defenders)
-            defender.IsCombatThisTurn = true;
-         foreach (IMapItem attacker in combat.Attackers)
-            attacker.IsCombatThisTurn = true;
-         // Resolve the results
-         switch (combat.Result)
-         {
-            case CombatResult.AttackerWins:
-               foreach (IMapItem defender in combat.Defenders)
-               {
-                  PerformCombatResolveLoss(gi, defender);
-                  //if (true == defender.IsStunned) // If the defender is stunned, they must retreat one territory
-                  //   combat.IsAnyRetreat = true;
-               }
-               break;
-            case CombatResult.DefenderWins:
-               foreach (IMapItem attacker in combat.Attackers)
-               {
-                  PerformCombatResolveLoss(gi, attacker);
-                  //if (true == attacker.IsStunned) // If the attacker is stunned, they must retreat one territory
-                  //   combat.IsAnyRetreat = true;
-               }
-               break;
-            case CombatResult.AttackerFlees:
-               //combat.IsAnyRetreat = true;
-               foreach (IMapItem attacker in combat.Attackers)
-               {
-                  if (attacker.Name == "Zebulon")
-                  {
-                     IMapItem? zebulon = gi.Stacks.FindMapItem("Zebulon");
-                     if (null == zebulon)
-                     {
-                        Logger.Log(LogEnum.LE_ERROR, "PerformCombatResolveLoss(): Could not find Zebulon in gi.Persons");
-                        return false;
-                     }
-                     zebulon.IsKilled = true;
-                  }
-                  attacker.TerritoryStarting = attacker.TerritoryCurrent;  // If there are any pending moves, make sure they are removed
-                  //if (false == PerformMovement(gi, attacker))
-                  //   Console.WriteLine("PerformCombatResolveLoss() No Retreat to same place for {0} ", attacker.Name);
-               }
-               break;
-            case CombatResult.DefenderFlees:
-               //combat.IsAnyRetreat = true;
-               foreach (IMapItem defender in combat.Defenders)
-               {
-                  if (defender.Name == "Zebulon")
-                  {
-                     IMapItem? zebulon = gi.Stacks.FindMapItem("Zebulon");
-                     if (null == zebulon)
-                     {
-                        Logger.Log(LogEnum.LE_ERROR, "PerformCombatResolveLoss(): Could not find Zebulon in gi.Persons");
-                        return false;
-                     }
-                     zebulon.IsKilled = true;
-                     return true;
-                  }
-                  defender.TerritoryStarting = defender.TerritoryCurrent;  // If there are any pending moves, make sure they are removed
-                  //if (false == PerformMovement(gi, defender))
-                  //{
+         //         if (true == mi.IsAlienKnown)
+         //         {
+         //            aliens.Add(mi);
+         //         }
+         //         else if (true == mi.IsAlienUnknown)
+         //         {
+         //            gi.AddKnownAlien(mi); // PerformCombat() - All aliens in this combat become exposed.
+         //            aliens.Add(mi);
+         //         }
+         //         else if (true == mi.IsControlled)
+         //         {
+         //            controlled.Add(mi);
+         //         }
+         //         else
+         //         {
+         //            if (true == mi.IsWary)
+         //               wary.Add(mi);
+         //            uncontrolled.Add(mi);
+         //         }
+         //      }
+         //   }
+         //}
+         ////-------------------------------------------------------
+         //if (0 == controlled.Count) // If there is no combat, return from this method
+         //{
+         //   if ((0 == aliens.Count) || (0 == wary.Count))
+         //   {
+         //      Logger.Log(LogEnum.LE_ERROR, "PerformCombat(): aliens.Count=0 wary.Count=0 controlled.Count=0");
+         //      return false;
+         //   }
+         //}
+         ////-------------------------------------------------------
+         //int alienAttackCombat = 0;
+         //int alienCount = 0;
+         //aliens = aliens.SortOnCombat();
+         //foreach (IMapItem alien in aliens) // Determine the attack strength of the aliens.  Limit it to top three counters.
+         //{
+         //   alienAttackCombat += alien.Combat;
+         //   StringBuilder sb = new StringBuilder("PerformCombat():"); sb.Append(alien.Name); sb.Append(" ++++ "); sb.Append(alien.Combat.ToString()); sb.Append(" to Alien="); sb.Append(alienAttackCombat.ToString());
+         //   Logger.Log(LogEnum.LE_COMBAT_SUMS, sb.ToString());
+         //   if (3 <= ++alienCount)
+         //      break;
+         //}
+         //// Determine the attack strength of the townspeople.  
+         //// Limit it to top three counters.
+         //int controlledAttackCombat = 0;
+         //int controlledCount = 0;
+         //controlled = controlled.SortOnCombat();
+         //foreach (IMapItem person in controlled)
+         //{
+         //   controlledAttackCombat += person.Combat;
+         //   StringBuilder sb = new StringBuilder("PerformCombat():"); sb.Append(person.Name); sb.Append(" ++++ "); sb.Append(person.Combat.ToString()); sb.Append(" to TP="); sb.Append(controlledAttackCombat.ToString());
+         //   Logger.Log(LogEnum.LE_COMBAT_SUMS, sb.ToString());
+         //   if (3 <= ++controlledCount)
+         //      break;
+         //}
+         //// Determine the attack strength of the wary townspeople.  
+         //// Limit it to top three counters.
+         //int waryAttackCombat = 0;
+         //int waryCount = 0;
+         //wary = wary.SortOnCombat();
+         //foreach (IMapItem person in wary)
+         //{
+         //   waryAttackCombat += person.Combat;
+         //   if (3 <= ++waryCount)
+         //      break;
+         //}
+         //int combatFactorDifference = 0;
+         //if ((0 < aliens.Count) && (0 < controlled.Count)) // A normal attack with known aliens in the same hex as controlled townspeople
+         //{
+         //   if ((0 == alienCount) || (0 == controlledCount)) // If there is no combat, ignore this stack
+         //   {
+         //      return true;
+         //   }
+         //   // Determine who is attackers and who are defenders based
+         //   // on which side has the most Combat Factors.
+         //   if (controlledAttackCombat < alienAttackCombat)
+         //   {
+         //      combatFactorDifference = alienAttackCombat - controlledAttackCombat;
+         //      combat.Attackers = aliens;
+         //      combat.Defenders = controlled;
+         //   }
+         //   else
+         //   {
+         //      combatFactorDifference = controlledAttackCombat - alienAttackCombat;
+         //      combat.Attackers = controlled;
+         //      combat.Defenders = aliens;
+         //   }
+         //   // Determine one index into the Combat Results Table.
+         //   int tableFactor = 0;
+         //   if (combatFactorDifference < 1)
+         //      tableFactor = 0;
+         //   else if (combatFactorDifference < 4)
+         //      tableFactor = 1;
+         //   else if (combatFactorDifference < 7)
+         //      tableFactor = 2;
+         //   else if (combatFactorDifference < 10)
+         //      tableFactor = 3;
+         //   else
+         //      tableFactor = 4;
+         //   foreach (IMapItem alien in aliens) // A column shift occurs if any aliens went through an influence attempt this turn.
+         //   {
+         //      if (true == alien.IsInfluencedThisTurn)
+         //      {
+         //         if (controlledAttackCombat < alienAttackCombat)  // aliens are attackers
+         //         {
+         //            if (0 == tableFactor)                        // shift column to right
+         //               tableFactor = 1;
+         //            else if (1 == tableFactor)
+         //               tableFactor = 2;
+         //            else if (2 == tableFactor)
+         //               tableFactor = 3;
+         //            else if (3 == tableFactor)
+         //               tableFactor = 4;
+         //         }
+         //         else                                             // aliens are defenders
+         //         {
+         //            if (1 == tableFactor)                        // shift column to left
+         //               tableFactor = 0;
+         //            else if (2 == tableFactor)
+         //               tableFactor = 1;
+         //            else if (3 == tableFactor)
+         //               tableFactor = 2;
+         //            else if (4 == tableFactor)
+         //               tableFactor = 3;
+         //         }
+         //         break;  // only one column shift occurs.
+         //      }
+         //   }
+         //   combat.Result = TableMgr.theTable[resultsRoll, tableFactor]; // The dice roll determines the other index into the Combat Results Table.
+         //}
+         ////***********************************************************************************************
+         //else if (0 < controlled.Count)  // Controlled townspeople attacking uncontrolled is automatic win
+         //{
+         //   combat.Result = CombatResult.AttackerWins;
+         //   combat.Attackers = controlled;
+         //   combat.Defenders = uncontrolled;
+         //}
+         ////***********************************************************************************************
+         //else  // Alien townspeople attacking wary 
+         //{
+         //   if ((0 == alienCount) || (0 == waryCount)) // If there is no combat, ignore this stack
+         //   {
+         //      return true;
+         //   }
+         //   // Determine who is attackers and who are defenders based
+         //   // on which side has the most Combat Factors.
+         //   bool isAlienAttacker = false;
+         //   if (waryAttackCombat < alienAttackCombat)
+         //   {
+         //      combatFactorDifference = alienAttackCombat - waryAttackCombat;
+         //      combat.Attackers = aliens;
+         //      combat.Defenders = wary;
+         //      isAlienAttacker = true;
+         //   }
+         //   else
+         //   {
+         //      combatFactorDifference = waryAttackCombat - alienAttackCombat;
+         //      combat.Attackers = wary;
+         //      combat.Defenders = aliens;
+         //   }
+         //   // Determine one index into the Combat Results Table.
+         //   int tableFactor = 0;
+         //   if (combatFactorDifference < 1)
+         //      tableFactor = 0;
+         //   else if (combatFactorDifference < 4)
+         //      tableFactor = 1;
+         //   else if (combatFactorDifference < 7)
+         //      tableFactor = 2;
+         //   else if (combatFactorDifference < 10)
+         //      tableFactor = 3;
+         //   else
+         //      tableFactor = 4;
+         //   combat.Result = TableMgr.theTable[resultsRoll, tableFactor]; // The dice roll determines the other index into the Combat Results Table.
+         //                                                                // If Aliens lose to Wary people, the results is that the aliens immediately flee.
+         //   if ((true == isAlienAttacker) && (CombatResult.DefenderWins == combat.Result))
+         //      combat.Result = CombatResult.DefenderFlees;
+         //   if ((false == isAlienAttacker) && (CombatResult.AttackerWins == combat.Result))
+         //      combat.Result = CombatResult.AttackerFlees;
+         //}
+         //// Indicate who participated in the attack
+         //foreach (IMapItem defender in combat.Defenders)
+         //   defender.IsCombatThisTurn = true;
+         //foreach (IMapItem attacker in combat.Attackers)
+         //   attacker.IsCombatThisTurn = true;
+         //// Resolve the results
+         //switch (combat.Result)
+         //{
+         //   case CombatResult.AttackerWins:
+         //      foreach (IMapItem defender in combat.Defenders)
+         //      {
+         //         PerformCombatResolveLoss(gi, defender);
+         //         //if (true == defender.IsStunned) // If the defender is stunned, they must retreat one territory
+         //         //   combat.IsAnyRetreat = true;
+         //      }
+         //      break;
+         //   case CombatResult.DefenderWins:
+         //      foreach (IMapItem attacker in combat.Attackers)
+         //      {
+         //         PerformCombatResolveLoss(gi, attacker);
+         //         //if (true == attacker.IsStunned) // If the attacker is stunned, they must retreat one territory
+         //         //   combat.IsAnyRetreat = true;
+         //      }
+         //      break;
+         //   case CombatResult.AttackerFlees:
+         //      //combat.IsAnyRetreat = true;
+         //      foreach (IMapItem attacker in combat.Attackers)
+         //      {
+         //         if (attacker.Name == "Zebulon")
+         //         {
+         //            IMapItem? zebulon = gi.Stacks.FindMapItem("Zebulon");
+         //            if (null == zebulon)
+         //            {
+         //               Logger.Log(LogEnum.LE_ERROR, "PerformCombatResolveLoss(): Could not find Zebulon in gi.Persons");
+         //               return false;
+         //            }
+         //            zebulon.IsKilled = true;
+         //         }
+         //         attacker.TerritoryStarting = attacker.TerritoryCurrent;  // If there are any pending moves, make sure they are removed
+         //         //if (false == PerformMovement(gi, attacker))
+         //         //   Console.WriteLine("PerformCombatResolveLoss() No Retreat to same place for {0} ", attacker.Name);
+         //      }
+         //      break;
+         //   case CombatResult.DefenderFlees:
+         //      //combat.IsAnyRetreat = true;
+         //      foreach (IMapItem defender in combat.Defenders)
+         //      {
+         //         if (defender.Name == "Zebulon")
+         //         {
+         //            IMapItem? zebulon = gi.Stacks.FindMapItem("Zebulon");
+         //            if (null == zebulon)
+         //            {
+         //               Logger.Log(LogEnum.LE_ERROR, "PerformCombatResolveLoss(): Could not find Zebulon in gi.Persons");
+         //               return false;
+         //            }
+         //            zebulon.IsKilled = true;
+         //            return true;
+         //         }
+         //         defender.TerritoryStarting = defender.TerritoryCurrent;  // If there are any pending moves, make sure they are removed
+         //         //if (false == PerformMovement(gi, defender))
+         //         //{
 
-                  //}
-                  Console.WriteLine("PerformCombatResolveLoss() No Retreat to same place for {0} ", defender.Name);
-               }
-               break;
-            default:
-               Logger.Log(LogEnum.LE_ERROR, "PerformCombatResolveLoss(): reached default combat.Result=" + combat.Result.ToString());
-               break;
-         }
+         //         //}
+         //         Console.WriteLine("PerformCombatResolveLoss() No Retreat to same place for {0} ", defender.Name);
+         //      }
+         //      break;
+         //   default:
+         //      Logger.Log(LogEnum.LE_ERROR, "PerformCombatResolveLoss(): reached default combat.Result=" + combat.Result.ToString());
+         //      break;
+         //}
          return true;
-      } // end function
+      } 
       bool PerformCombatResolveLoss(IGameInstance gi, IMapItem mi)
       {
          if (mi.Name == "Zebulon")

@@ -1290,34 +1290,34 @@ namespace PleasantvilleGame
          switch (myLeftMapItemsInActionPanel.Count)
          {
             case 1:
-               IMapItem? leftMapItem = myLeftMapItemsInActionPanel[0];
-               if (null == leftMapItem)
+               IMapItem? leftMapItem1 = myLeftMapItemsInActionPanel[0];
+               if (null == leftMapItem1)
                {
                   Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): leftMapItem0 is null");
                   return false;
                }
-               MapItem.SetButtonContent(myButton1, leftMapItem, false);
+               MapItem.SetButtonContent(myButton1, leftMapItem1, false);
                myButton1.Visibility = Visibility.Visible;
                Canvas.SetLeft(myButton1, button1Left);
                Canvas.SetLeft(myRectangle1, button1Left);
                Canvas.SetLeft(myLabelButton1, button1Left - offset1);
-               myRectangle1.Visibility = Visibility.Visible;
-               myLeftMapItemsInActionPanelSelected.Add(leftMapItem);
+               if( true == myLeftMapItemsInActionPanelSelected.Contains(leftMapItem1))
+                  myRectangle1.Visibility = Visibility.Visible;
                break;
             case 2:
-               IMapItem? leftMapItem0 = myLeftMapItemsInActionPanel[0];
-               if (null == leftMapItem0)
+               leftMapItem1 = myLeftMapItemsInActionPanel[0];
+               if (null == leftMapItem1)
                {
                   Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): leftMapItem0 is null");
                   return false;
                }
-               IMapItem? leftMapItem1 = myLeftMapItemsInActionPanel[1];
-               if (null == leftMapItem1)
+               IMapItem? leftMapItem2 = myLeftMapItemsInActionPanel[1];
+               if (null == leftMapItem2)
                {
                   Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): leftMapItem1 is null");
                   return false;
                }
-               MapItem.SetButtonContent(myButton1, leftMapItem0, false);
+               MapItem.SetButtonContent(myButton1, leftMapItem1, false);
                MapItem.SetButtonContent(myButton2, leftMapItem1, false);
                myButton1.Visibility = Visibility.Visible;
                myButton2.Visibility = Visibility.Visible;
@@ -1328,45 +1328,112 @@ namespace PleasantvilleGame
                Canvas.SetLeft(myButton2, button1Left);
                Canvas.SetLeft(myRectangle2, button1Left);
                Canvas.SetLeft(myLabelButton2, button1Left - offset2);
+               if (true == myLeftMapItemsInActionPanelSelected.Contains(leftMapItem1))
+                  myRectangle1.Visibility = Visibility.Visible;
+               if (true == myLeftMapItemsInActionPanelSelected.Contains(leftMapItem2))
+                  myRectangle2.Visibility = Visibility.Visible;
                break;
             case 3:
+               leftMapItem1 = myLeftMapItemsInActionPanel[0];
+               if (null == leftMapItem1)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): leftMapItem0 is null");
+                  return false;
+               }
+               leftMapItem2 = myLeftMapItemsInActionPanel[1];
+               if (null == leftMapItem2)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): leftMapItem1 is null");
+                  return false;
+               }
+               IMapItem? leftMapItem3 = myLeftMapItemsInActionPanel[1];
+               if (null == leftMapItem3)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): leftMapItem1 is null");
+                  return false;
+               }
                myLeftMapItemsInActionPanel = myLeftMapItemsInActionPanel.Sort();
                myButton1.Visibility = Visibility.Visible;
                myButton2.Visibility = Visibility.Visible;
                myButton3.Visibility = Visibility.Visible;
                myLabelLeftTop.Visibility = Visibility.Visible;
+               if (true == myLeftMapItemsInActionPanelSelected.Contains(leftMapItem1))
+                  myRectangle1.Visibility = Visibility.Visible;
+               if (true == myLeftMapItemsInActionPanelSelected.Contains(leftMapItem2))
+                  myRectangle2.Visibility = Visibility.Visible;
+               if (true == myLeftMapItemsInActionPanelSelected.Contains(leftMapItem3))
+                  myRectangle3.Visibility = Visibility.Visible;
                break;
             default:
                Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): reached default myLeftMapItemsInActionPanel.Count=" + myLeftMapItemsInActionPanel.Count.ToString());
                return false;
          }
          //-----------------------------------------
-         double offset1Right = (myLabelButton1.Width - myButton4.Width) * 0.5;
          switch (myRightMapItemsInActionPanel.Count)
          {
             case 1:
-               IMapItem? rightMapItem = myRightMapItemsInActionPanel[0];
-               if (null == rightMapItem)
+               IMapItem? rightMapItem4 = myRightMapItemsInActionPanel[0];
+               if (null == rightMapItem4)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): rightMapItem is null");
+                  Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): rightMapItem4 is null");
                   return false;
                }
-               MapItem.SetButtonContent(myButton4, rightMapItem, false);
                myButton4.Visibility = Visibility.Visible;
-               myRectangle4.Visibility = Visibility.Visible;
-               myRightMapItemsInActionPanelSelected.Add(rightMapItem);
+               MapItem.SetButtonContent(myButton4, rightMapItem4, false);
+               if (true == myRightMapItemsInActionPanelSelected.Contains(rightMapItem4))
+                  myRectangle4.Visibility = Visibility.Visible;
                break;
             case 2:
+               rightMapItem4 = myRightMapItemsInActionPanel[0];
+               if (null == rightMapItem4)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): rightMapItem4 is null");
+                  return false;
+               }
+               IMapItem? rightMapItem5 = myRightMapItemsInActionPanel[1];
+               if (null == rightMapItem5)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): rightMapItem5 is null");
+                  return false;
+               }
                myButton4.Visibility = Visibility.Visible;
                myButton5.Visibility = Visibility.Visible;
                myLabelRightTop.Visibility = Visibility.Visible;
+               if (true == myLeftMapItemsInActionPanelSelected.Contains(rightMapItem4))
+                  myRectangle4.Visibility = Visibility.Visible;
+               if (true == myLeftMapItemsInActionPanelSelected.Contains(rightMapItem5))
+                  myRectangle5.Visibility = Visibility.Visible;
                break;
             case 3:
+               rightMapItem4 = myRightMapItemsInActionPanel[0];
+               if (null == rightMapItem4)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): rightMapItem4 is null");
+                  return false;
+               }
+               rightMapItem5 = myRightMapItemsInActionPanel[1];
+               if (null == rightMapItem5)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): rightMapItem5 is null");
+                  return false;
+               }
+               IMapItem? rightMapItem6 = myRightMapItemsInActionPanel[2];
+               if (null == rightMapItem6)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): rightMapItem6 is null");
+                  return false;
+               }
                myRightMapItemsInActionPanel = myRightMapItemsInActionPanel.Sort();
                myButton4.Visibility = Visibility.Visible;
                myButton5.Visibility = Visibility.Visible;
                myButton6.Visibility = Visibility.Visible;
                myLabelRightTop.Visibility = Visibility.Visible;
+               if (true == myLeftMapItemsInActionPanelSelected.Contains(rightMapItem4))
+                  myRectangle4.Visibility = Visibility.Visible;
+               if (true == myLeftMapItemsInActionPanelSelected.Contains(rightMapItem5))
+                  myRectangle5.Visibility = Visibility.Visible;
+               if (true == myLeftMapItemsInActionPanelSelected.Contains(rightMapItem6))
+                  myRectangle6.Visibility = Visibility.Visible;
                break;
             default:
                Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): reached default myLeftMapItemsInActionPanel.Count=" + myLeftMapItemsInActionPanel.Count.ToString());
@@ -1412,7 +1479,7 @@ namespace PleasantvilleGame
          {
             if (1 < myLeftMapItemsInActionPanel.Count)
             {
-               leftMapItem = myLeftMapItemsInActionPanel[0];
+               leftMapItem = myLeftMapItemsInActionPanel[1];
                if (null == leftMapItem)
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateAction_PanelButtons(): leftMapItem1 is null");
@@ -2261,7 +2328,27 @@ namespace PleasantvilleGame
          }
          if ((0 < myLeftMapItemsInActionPanel.Count) && (0 < myRightMapItemsInActionPanel.Count))
          {
-            if( false == UpdateActionPanel(gi, !GameEngine.theIsAlien))
+            if( 1 == myLeftMapItemsInActionPanel.Count)
+            {
+               IMapItem? leftMapItem1 = myLeftMapItemsInActionPanel[0];
+               if (null == leftMapItem1)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Display_Conversation(): leftMapItem0 is null");
+                  return false;
+               }
+               myLeftMapItemsInActionPanelSelected.Add(leftMapItem1);
+            }
+            if (1 == myRightMapItemsInActionPanel.Count)
+            {
+               IMapItem? rightMapItem1 = myRightMapItemsInActionPanel[0];
+               if (null == rightMapItem1)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Display_Conversation(): leftMapItem0 is null");
+                  return false;
+               }
+               myRightMapItemsInActionPanelSelected.Add(rightMapItem1);
+            }
+            if ( false == UpdateActionPanel(gi, !GameEngine.theIsAlien))
             {
                Logger.Log(LogEnum.LE_ERROR, "Display_Conversation(): Update_ActionPanel() returned error");
                return false;
@@ -2383,7 +2470,7 @@ namespace PleasantvilleGame
          IStack? stack = gi.Stacks.Find(selectedTerritory);
          if (null == stack)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Display_Conversation(): stack=null for t=" + selectedTerritory.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "Display_Influence(): stack=null for t=" + selectedTerritory.ToString());
             return false;
          }
          foreach (IMapItem mi in stack.MapItems)
@@ -2402,9 +2489,29 @@ namespace PleasantvilleGame
          }
          if ((0 < myLeftMapItemsInActionPanel.Count) && (0 < myRightMapItemsInActionPanel.Count))
          {
+            if (1 == myLeftMapItemsInActionPanel.Count)
+            {
+               IMapItem? leftMapItem1 = myLeftMapItemsInActionPanel[0];
+               if (null == leftMapItem1)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Display_Influence(): leftMapItem0 is null");
+                  return false;
+               }
+               myLeftMapItemsInActionPanelSelected.Add(leftMapItem1);
+            }
+            if (1 == myRightMapItemsInActionPanel.Count)
+            {
+               IMapItem? rightMapItem1 = myRightMapItemsInActionPanel[0];
+               if (null == rightMapItem1)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Display_Influence(): leftMapItem0 is null");
+                  return false;
+               }
+               myRightMapItemsInActionPanelSelected.Add(rightMapItem1);
+            }
             if (false == UpdateActionPanel(gi, !GameEngine.theIsAlien))
             {
-               Logger.Log(LogEnum.LE_ERROR, "Display_Conversation(): Update_ActionPanel() returned error");
+               Logger.Log(LogEnum.LE_ERROR, "Display_Influence(): Update_ActionPanel() returned error");
                return false;
             }
             //----------------------------------------------------------------------
@@ -2413,7 +2520,7 @@ namespace PleasantvilleGame
                IMapItem? leftMi = myLeftMapItemsInActionPanel[i];
                if (null == leftMi)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() myLeftMapItemsInActionPanel[" + i + "]=null");
+                  Logger.Log(LogEnum.LE_ERROR, "Display_Influence(): myLeftMapItemsInActionPanel[" + i + "]=null");
                   continue;
                }
                if (true == leftMi.IsImplantHeld)
@@ -2433,7 +2540,7 @@ namespace PleasantvilleGame
                IMapItem? rightMi = myRightMapItemsInActionPanel[i];
                if (null == rightMi)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() myRightMapItemsInActionPanel[" + i + "]=null");
+                  Logger.Log(LogEnum.LE_ERROR, "Display_Influence(): myRightMapItemsInActionPanel[" + i + "]=null");
                   return false;
                }
                if (true == rightMi.IsSkeptical)
@@ -2444,7 +2551,7 @@ namespace PleasantvilleGame
                      case 1: myLabelButton5.Visibility = Visibility.Visible; myLabelButton5.Content = "Skeptical"; break;
                      case 2: myLabelButton6.Visibility = Visibility.Visible; myLabelButton6.Content = "Skeptical"; break;
                      default:
-                        Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() reached default i=" + i.ToString());
+                        Logger.Log(LogEnum.LE_ERROR, "Display_Influence(): reached default i=" + i.ToString());
                         return false;
                   }
                }
@@ -2456,7 +2563,7 @@ namespace PleasantvilleGame
                      case 1: myLabelButton5.Visibility = Visibility.Visible; myLabelButton5.Content = "Wary"; break;
                      case 2: myLabelButton6.Visibility = Visibility.Visible; myLabelButton6.Content = "Wary"; break;
                      default:
-                        Logger.Log(LogEnum.LE_ERROR, "DisplayInfluence() reached default i=" + i.ToString());
+                        Logger.Log(LogEnum.LE_ERROR, "Display_Influence(): reached default i=" + i.ToString());
                         return false;
                   }
                }
@@ -2645,7 +2752,6 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Display_Combat() selectedTerritory=null");
             return false;
          }
-
          IStack? stack = gi.Stacks.Find(selectedTerritory);
          if (null == stack)
          {
@@ -2696,6 +2802,7 @@ namespace PleasantvilleGame
             foreach (IMapItem mi in controlledPeps)
             {
                myLeftMapItemsInActionPanel.Add(mi);
+               myLeftMapItemsInActionPanelSelected.Add(mi);
                totalCombatForAttacker += mi.Combat;
                if (3 <= ++numOfAttackers)
                   break;
@@ -2751,7 +2858,7 @@ namespace PleasantvilleGame
             }
          }
          //-------------------------------------------------------------------
-         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Display_Combat(): myLeft=" + myLeftMapItemsInActionPanel.ToString() + " right=" + myRightMapItemsInActionPanel.ToString());
+         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Display_Combat(): myLeft=" + myLeftMapItemsInActionPanelSelected.ToString() + " right=" + myRightMapItemsInActionPanelSelected.ToString());
          
          if ((0 < myLeftMapItemsInActionPanel.Count) && (0 < myRightMapItemsInActionPanel.Count))
          {
@@ -2789,11 +2896,13 @@ namespace PleasantvilleGame
             return false;
          }
          //-----------------------------------------------------------------------------
-         gi.MapItemCombat = new MapItemCombat(gi.SelectedTerritory);
+         gi.MapItemCombat.Clear();
+         gi.MapItemCombat.Territory = gi.SelectedTerritory;
          foreach (IMapItem mi in myLeftMapItemsInActionPanelSelected)
             gi.MapItemCombat.Attackers.Add(mi);
-         foreach (IMapItem mi in myLeftMapItemsInActionPanelSelected)
+         foreach (IMapItem mi in myRightMapItemsInActionPanelSelected)
             gi.MapItemCombat.Defenders.Add(mi);
+         Logger.Log(LogEnum.LE_SHOW_COMBAT_THREAD, "Roll_Combat(): Combat=[[" + myGameInstance.MapItemCombat.ToString() + "]]");
          //-----------------------------------------------------------------------------
          myGameInstance.EventActive = myGameInstance.EventDisplayed; // As soon as you roll the die, the current event becomes the active event
          myGameInstance.DieRollAction = GameAction.CombatsRoll;
@@ -2802,17 +2911,13 @@ namespace PleasantvilleGame
       }
       private void ShowResultCombat(int dieRoll)
       {
-         if( null == myGameInstance.MapItemCombat)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Show_ResultCombat(): myGameInstance.MapItemCombat=null");
-            return;
-         }
-         //-----------------------------------------------------------------------------
+        
          if ((0 == myGameInstance.MapItemCombat.Attackers.Count) || (0 == myGameInstance.MapItemCombat.Defenders.Count))
          {
             Logger.Log(LogEnum.LE_ERROR, "Show_ResultCombat(): l=" + myGameInstance.MapItemCombat.Attackers.Count.ToString() + " r=" + myGameInstance.MapItemCombat.Defenders.Count.ToString());
             return;
          }
+         myGameInstance.MapItemCombat.DieRoll = dieRoll;
          int totalCombatForAttacker = 0;
          foreach (IMapItem mi in myGameInstance.MapItemCombat.Attackers)
             totalCombatForAttacker += mi.Combat;
@@ -2821,7 +2926,7 @@ namespace PleasantvilleGame
             totalCombatForDefender += mi.Combat;
          myLabelHeading.Visibility = Visibility.Visible;
          myLabelArrow.Visibility = Visibility.Visible;
-         Logger.Log(LogEnum.LE_SHOW_COMBAT_THREAD, "Show_ResultCombat(): myTextBoxResults.Visibility = Visibility.Visible");
+         Logger.Log(LogEnum.LE_SHOW_COMBAT_THREAD, "Show_ResultCombat(): Combat=" + myGameInstance.MapItemCombat.ToString());
          myLabelHeading.Content = "Combat Results";
          myLabelLeftTop.Content = "Attackers:";
          myLabelRightTop.Content = "Defenders:";
@@ -2834,12 +2939,9 @@ namespace PleasantvilleGame
          int differenceInCombat = totalCombatForAttacker - totalCombatForDefender;
          displayResults.Append(") = ");
          displayResults.Append(differenceInCombat.ToString());
-         //-----------------------------------------------------------------------------
-         int die1 = myGameInstance.MapItemCombat.DieRoll1;
-         int die2 = myGameInstance.MapItemCombat.DieRoll2;
-         int dr = myGameInstance.MapItemCombat.DieRoll1 + myGameInstance.MapItemCombat.DieRoll2;
+         //-----------------------------------------------------------------------------2;
          displayResults.Append("\n(die roll=");
-         displayResults.Append(dr.ToString());
+         displayResults.Append(dieRoll.ToString());
          displayResults.Append(") >>> ");
          displayResults.Append(myGameInstance.MapItemCombat.Result.ToString());
          //-----------------------------------------------------------------------------

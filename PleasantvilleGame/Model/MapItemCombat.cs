@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Intrinsics.X86;
 using System.Text;
+using System.Windows.Documents;
 using MessageBox=System.Windows.MessageBox;
 
 namespace PleasantvilleGame
@@ -29,29 +30,17 @@ namespace PleasantvilleGame
          get { return myTerritory; }
          set { myTerritory = value; }
       }
-      private CombatResult myResult = CombatResult.AttackerWins;
+      private CombatResult myResult = CombatResult.Error;
       public CombatResult Result
       {
          get { return myResult; }
          set { myResult = value; }
       }
-      private int myDieRoll1 = 0;
-      public int DieRoll1
+      private int myDieRoll = Utilities.NO_RESULT;
+      public int DieRoll
       {
-         get { return myDieRoll1; }
-         set { myDieRoll1 = value; }
-      }
-      private int myDieRoll2 = 0;
-      public int DieRoll2
-      {
-         get { return myDieRoll2; }
-         set { myDieRoll2 = value; }
-      }
-      private bool myIsAnyRetreat = false;
-      public bool IsAnyRetreat
-      {
-         get { return myIsAnyRetreat; }
-         set { myIsAnyRetreat = value; }
+         get { return myDieRoll; }
+         set { myDieRoll = value; }
       }
       //--------------------------------------------------------
       public MapItemCombat() { }
@@ -75,9 +64,48 @@ namespace PleasantvilleGame
          }
          myTerritory = combat.Territory;
          myResult = combat.Result;
-         myDieRoll1 = combat.DieRoll1;
-         myDieRoll2 = combat.DieRoll2;
-         //myIsAnyRetreat = combat.IsAnyRetreat;
+         myDieRoll = combat.DieRoll;
+      }
+      public void Clear()
+      {
+         myAttackers.Clear();
+         myDefenders.Clear();
+         myTerritory = new Territory();
+         myResult = CombatResult.Error;
+         myDieRoll = Utilities.NO_RESULT;
+      }
+      public override String ToString()
+      {
+         StringBuilder sb = new StringBuilder();
+         sb.Append("Attackers=");
+         int totalAttackCombat = 0;
+         foreach (IMapItem mi in myAttackers)
+         {
+            sb.Append(mi.Name);
+            sb.Append("(");
+            sb.Append(mi.Combat.ToString());
+            sb.Append(") ");
+            totalAttackCombat += mi.Combat;
+         }
+         sb.Append("Defenders=");
+         int totalDefendCombat = 0;
+         foreach (IMapItem mi in myDefenders)
+         {
+            sb.Append(mi.Name);
+            sb.Append("(");
+            sb.Append(mi.Combat.ToString());
+            sb.Append(") ");
+            totalDefendCombat += mi.Combat;
+         }
+         sb.Append("in ");
+         sb.Append(myTerritory.ToString());
+         sb.Append(" odds=(");
+         sb.Append(totalAttackCombat.ToString());
+         sb.Append("vs");
+         sb.Append(totalDefendCombat.ToString());
+         sb.Append(") Result=");
+         sb.Append(myResult.ToString());
+         return sb.ToString();
       }
    }
    //==========================================================

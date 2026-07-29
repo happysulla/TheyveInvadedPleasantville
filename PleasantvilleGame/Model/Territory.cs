@@ -568,7 +568,7 @@ namespace PleasantvilleGame
          }
          return masterList;
       }
-		public static int GetStackingCountUncontrolled(IStack stack)
+		public static int GetStackingCountUncontrolled(IStack stack, IMapItemMoves pendingMoves)
 		{
 			int count = 0;
 		   foreach(IMapItem mi in stack.MapItems)
@@ -576,9 +576,18 @@ namespace PleasantvilleGame
 				if( (false == mi.IsAlienKnown) && (false == mi.IsControlled) )
 					++count;
          }
+         foreach (IMapItemMove mim in pendingMoves)
+         {
+            ITerritory? newT = mim.NewTerritory;
+            if (null != newT)
+            {
+               if ((false == mim.MapItem.IsAlienKnown) && (false == mim.MapItem.IsControlled) && (stack.Territory.ToString() == newT.ToString()))
+                  ++count;
+            }
+         }
          return count;
 		}
-      public static int GetStackingCountAlien(IStack stack)
+      public static int GetStackingCountAlien(IStack stack, IMapItemMoves pendingMoves)
       {
          int count = 0;
          foreach (IMapItem mi in stack.MapItems)
@@ -586,15 +595,33 @@ namespace PleasantvilleGame
             if (true == mi.IsAlienKnown)
                ++count;
          }
+         foreach (IMapItemMove mim in pendingMoves) 
+         {
+            ITerritory? newT = mim.NewTerritory;
+				if (null != newT)
+				{
+					if ((true == mim.MapItem.IsAlienKnown) && (stack.Territory.ToString() == newT.ToString()))
+						++count;
+				}
+         }
          return count;
       }
-      public static int GetStackingCountControlled(IStack stack)
+      public static int GetStackingCountControlled(IStack stack, IMapItemMoves pendingMoves)
       {
          int count = 0;
          foreach (IMapItem mi in stack.MapItems)
          {
             if (true == mi.IsControlled)
                ++count;
+         }
+         foreach (IMapItemMove mim in pendingMoves)
+         {
+            ITerritory? newT = mim.NewTerritory;
+				if (null != newT)
+				{
+					if ((true == mim.MapItem.IsControlled) && (stack.Territory.ToString() == newT.ToString()))
+						++count;
+				}
          }
          return count;
       }

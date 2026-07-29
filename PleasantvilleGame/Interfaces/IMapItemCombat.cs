@@ -19,8 +19,8 @@ namespace PleasantvilleGame
       IMapItems Defenders { get; set; }
       ITerritory Territory { get; set; }
       CombatResult Result { get; set; }
-      int DieRoll1 { get; set; }
-      int DieRoll2 { get; set; }
+      int DieRoll { get; set; }
+      void Clear();
    }
    public interface IMapItemCombats : System.Collections.IEnumerable
    {

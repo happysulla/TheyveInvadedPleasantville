@@ -52,7 +52,7 @@ namespace PleasantvilleGame
       public ITerritory? SelectedTerritory { set; get; } = null;
       public IMapItem Zebulon { set; get; } = new MapItem("Zebulon", 0.8, "ZebulonBlack", new Territory(), 0, 0, 10);
       public IMapItems SelectedMapItems { set; get; } = new MapItems();
-      public IMapItemCombat? MapItemCombat { set; get; } = null;
+      public IMapItemCombat MapItemCombat { set; get; } = new MapItemCombat();
       public IMapItemMove? PreviousMapItemMove { set; get; } = null;
       //---------------------------------------------------------------
       public string PlayerTurn { set; get; } = "Alien";
