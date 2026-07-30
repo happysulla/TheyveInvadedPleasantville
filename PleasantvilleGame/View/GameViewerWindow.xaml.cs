@@ -2925,7 +2925,6 @@ namespace PleasantvilleGame
             totalCombatForDefender += mi.Combat;
          myLabelHeading.Visibility = Visibility.Visible;
          myLabelArrow.Visibility = Visibility.Visible;
-         Logger.Log(LogEnum.LE_SHOW_COMBAT_THREAD, "Show_ResultCombat(): Combat=" + myGameInstance.MapItemCombat.ToString());
          myLabelHeading.Content = "Combat Results";
          myLabelLeftTop.Content = "Attackers:";
          myLabelRightTop.Content = "Defenders:";
@@ -2948,6 +2947,7 @@ namespace PleasantvilleGame
             return;
          }
          displayResults.Append(myGameInstance.MapItemCombat.Result.ToString());
+         Logger.Log(LogEnum.LE_SHOW_COMBAT_THREAD, "Show_ResultCombat(): Combat=" + myGameInstance.MapItemCombat.ToString());
          //-----------------------------------------------------------------------------
          myTextBoxResults.Text = displayResults.ToString();
          myLabelLeftTop.Visibility = Visibility.Visible;

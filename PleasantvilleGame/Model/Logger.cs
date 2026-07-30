@@ -61,6 +61,7 @@ namespace PleasantvilleGame
       LE_VIEW_UPDATE_MENU,
       LE_VIEW_UPDATE_STATUS_BAR,
       LE_VIEW_UPDATE_EVENTVIEWER,
+      LE_VIEW_IMAGE_SELECT,
       LE_VIEW_APPEND_EVENT,
       LE_VIEW_CONTROL_NAME,
       //-------------
@@ -181,6 +182,7 @@ namespace PleasantvilleGame
          //SetOn(LogEnum.LE_VIEW_UPDATE_MENU);
          //SetOn(LogEnum.LE_VIEW_UPDATE_STATUS_BAR);
          //SetOn(LogEnum.LE_VIEW_UPDATE_EVENTVIEWER);
+         SetOn(LogEnum.LE_VIEW_IMAGE_SELECT);
          //SetOn(LogEnum.LE_VIEW_APPEND_EVENT);
          //SetOn(LogEnum.LE_VIEW_UPDATE_MENU);
          //SetOn(LogEnum.LE_VIEW_CONTROL_NAME);

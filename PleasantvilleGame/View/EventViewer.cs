@@ -1111,6 +1111,7 @@ namespace PleasantvilleGame
                   if (result.VisualHit == img)
                   {
                      RollEndCallback rollEndCallback = ShowDieResult;
+                     Logger.Log(LogEnum.LE_VIEW_IMAGE_SELECT, "TextBlock_MouseDown(): img.Name=" + img.Name);
                      switch (img.Name)
                      {
                         case "DieRoll":

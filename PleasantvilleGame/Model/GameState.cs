@@ -1822,20 +1822,23 @@ namespace PleasantvilleGame
                }
                else
                {
-                  if( false == TableMgr.GetCombatResult(dieRoll, gi.MapItemCombat))
-                  {
-                        returnStatus = "GetCombat_Result() returned false";
-                        Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
-                  }
                   switch (gi.MapItemCombat.Result)
                   {
-                     case CombatResult.DefenderWins:
-                        break;
                      case CombatResult.AttackerWins:
+                        gi.EventActive = gi.EventDisplayed = "e011aw";
+                        action = GameAction.CombatAttackerWin;
                         break;
                      case CombatResult.AttackerFlees:
+                        gi.EventActive = gi.EventDisplayed = "e011af";
+                        action = GameAction.CombatAttackerFlee;
+                        break;
+                     case CombatResult.DefenderWins:
+                        gi.EventActive = gi.EventDisplayed = "e011dw";
+                        action = GameAction.CombatDefenderWin;
                         break;
                      case CombatResult.DefenderFlees:
+                        gi.EventActive = gi.EventDisplayed = "e011df";
+                        action = GameAction.CombatDefenderFlee;
                         break;
                      default:
                         returnStatus = "invalid CombatResult=" + gi.MapItemCombat.Result.ToString();
