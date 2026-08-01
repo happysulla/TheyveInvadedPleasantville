@@ -1124,6 +1124,16 @@ namespace PleasantvilleGame
                   return;
                }
                break;
+            case GameAction.CombatAttackerWin:
+            case GameAction.CombatAttackerFlee:
+            case GameAction.CombatDefenderWin:
+            case GameAction.CombatDefenderFlee:
+               if (false == UpdateCanvasMovement(gi, action, gi.Stacks, myButtons))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMovement() returned error ");
+                  return;
+               }
+               break;
             case GameAction.AlienTakeoversSelect:
             case GameAction.AlienTakeoversShow:
                myRectangleMaps.Clear();

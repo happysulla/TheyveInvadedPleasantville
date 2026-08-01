@@ -140,6 +140,7 @@ namespace PleasantvilleGame
             foreach(IMapItem mi in stack.MapItems)
             {
                mi.MovementUsed = 0;
+               mi.Movement = mi.MovementOriginal;
                mi.IsMoved = false;
                mi.IsMovingThisTurn = false;
                mi.IsConversedThisTurn = false;
@@ -463,10 +464,11 @@ namespace PleasantvilleGame
             if (stack.MapItems.Count < 2)
                continue;
             IMapItems possibleVictims = new MapItems();
-            IMapItems aliens = new MapItems();
+            IMapItems knownAliens = new MapItems();
+            IMapItems unknownAliens = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) )  // Unconscious or dead cannot be taken over
+               if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious))  // Unconscious or dead cannot be taken over
                   continue;
                if ((true == mi.IsControlled) || (true == mi.IsWary))
                {
@@ -475,33 +477,39 @@ namespace PleasantvilleGame
                }
                else
                {
-                  if ((true == mi.IsAlienKnown) || (true == mi.IsAlienUnknown) )
+                  if (true == mi.IsAlienKnown)
                   {
                      if ((false == mi.IsStunned) && (false == mi.IsTiedUp))
-                        aliens.Add(mi);
+                        knownAliens.Add(mi);
+                  }
+                  else if (true == mi.IsAlienUnknown)
+                  {
+                     if ((false == mi.IsStunned) && (false == mi.IsTiedUp))
+                        unknownAliens.Add(mi);
                   }
                   else
                   {
                      possibleVictims.Add(mi);
                   }
                }
-               if ((1 < possibleVictims.Count) || (1 < aliens.Count) || ((0 < possibleVictims.Count) && (0 < aliens.Count)))      
+            }
+            int alienCount = knownAliens.Count + unknownAliens.Count;
+            if ( (1 < possibleVictims.Count) || ((0 < unknownAliens.Count) && (0 < knownAliens.Count) ) || ((0 < possibleVictims.Count) && (0 < alienCount)))   // at least two non-town controlled mapitems  - cannnot be all known aliens
+            {
+               if (GamePhase.AlienTakeovers != gi.GamePhase)
                {
-                  if (GamePhase.AlienTakeovers != gi.GamePhase)
+                  if (false == ResetPhase(gi, GamePhase.AlienTakeovers))
                   {
-                     if (false == ResetPhase(gi, GamePhase.AlienTakeovers))
-                     {
-                        Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): Reset_Phase() returned error");
-                        return false;
-                     }
-                     gi.EventDisplayed = gi.EventActive = "e014t";
-                  }
-                  Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "CheckFor_AlienTakeovers(): t=" + stack.Territory.ToString() + " v=" + possibleVictims.ToString() + " a=" + aliens.ToString());
-                  if ( false == gi.PlayerAlien.ShowPossibleTakeover(gi, stack, ref action))
-                  {
-                     Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): Perform_AlienTakeover() returned error");
+                     Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): Reset_Phase() returned error");
                      return false;
                   }
+                  gi.EventDisplayed = gi.EventActive = "e014t";
+               }
+               Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "CheckFor_AlienTakeovers(): t=" + stack.Territory.ToString() + " v=" + possibleVictims.ToString() + " ua=" + unknownAliens.ToString() + " ka=" + knownAliens.ToString());
+               if ( false == gi.PlayerAlien.ShowPossibleTakeover(gi, stack, ref action))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): Perform_AlienTakeover() returned error");
+                  return false;
                }
             }
          }
@@ -1807,44 +1815,104 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                }
                break;
-            case GameAction.CombatsFinish:
-               if (false == CheckForIterogations(gi, ref action))
-               {
-                  returnStatus = "CheckFor_Iterogations() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsFinish): " + returnStatus);
-               }
-               break;
             case GameAction.CombatsRoll:
-               if( null == gi.MapItemCombat )
+               Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "GameStateCombat.PerformAction(CombatsRoll)");
+               gi.MapItemMoves.Clear();
+               if (null == gi.MapItemCombat)
                {
                   returnStatus = "MapItemCombat=null";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
                }
                else
                {
-                  switch (gi.MapItemCombat.Result)
+                  IMapItem? firstAttacker = gi.MapItemCombat.Attackers[0];
+                  if( null == firstAttacker )
                   {
-                     case CombatResult.AttackerWins:
-                        gi.EventActive = gi.EventDisplayed = "e011aw";
-                        action = GameAction.CombatAttackerWin;
-                        break;
-                     case CombatResult.AttackerFlees:
-                        gi.EventActive = gi.EventDisplayed = "e011af";
-                        action = GameAction.CombatAttackerFlee;
-                        break;
-                     case CombatResult.DefenderWins:
-                        gi.EventActive = gi.EventDisplayed = "e011dw";
-                        action = GameAction.CombatDefenderWin;
-                        break;
-                     case CombatResult.DefenderFlees:
-                        gi.EventActive = gi.EventDisplayed = "e011df";
-                        action = GameAction.CombatDefenderFlee;
-                        break;
-                     default:
-                        returnStatus = "invalid CombatResult=" + gi.MapItemCombat.Result.ToString();
-                        Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
-                        break;
+                     returnStatus = "firstAttacker=null";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
+
                   }
+                  else
+                  {
+                     switch (gi.MapItemCombat.Result)
+                     {
+                        case CombatResult.AttackerWins:
+                           if (true == firstAttacker.IsControlled)
+                           {
+                              gi.EventActive = gi.EventDisplayed = "e011tw";
+                           }
+                           else
+                           {
+                              gi.EventActive = gi.EventDisplayed = "e011aw";
+                           }
+                           action = GameAction.CombatAttackerWin;
+                           if (false == CreateMapItemFlees(gi, gi.MapItemCombat.Defenders))
+                           {
+                              returnStatus = "CreateMapItemFlee() returned false";
+                              Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
+                           }
+                           break;
+                        case CombatResult.AttackerFlees:
+                           if (true == firstAttacker.IsControlled)
+                           {
+                              gi.EventActive = gi.EventDisplayed = "e011tf";
+                           }
+                           else
+                           {
+                              gi.EventActive = gi.EventDisplayed = "e011af";
+                           }
+                           action = GameAction.CombatAttackerFlee;
+                           if (false == CreateMapItemFlees(gi, gi.MapItemCombat.Defenders))
+                           {
+                              returnStatus = "CreateMapItemFlee() returned false";
+                              Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
+                           }
+                           break;
+                        case CombatResult.DefenderWins:
+                           if (true == firstAttacker.IsControlled)
+                           {
+                              gi.EventActive = gi.EventDisplayed = "e011tf";
+                           }
+                           else
+                           {
+                              gi.EventActive = gi.EventDisplayed = "e011af";
+                           }
+                           action = GameAction.CombatDefenderWin;
+                           if (false == CreateMapItemFlees(gi, gi.MapItemCombat.Attackers))
+                           {
+                              returnStatus = "CreateMapItemFlee() returned false";
+                              Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
+                           }
+                           break;
+                        case CombatResult.DefenderFlees:
+                           if (true == firstAttacker.IsControlled)
+                           {
+                              gi.EventActive = gi.EventDisplayed = "e011tf";
+                           }
+                           else
+                           {
+                              gi.EventActive = gi.EventDisplayed = "e011af";
+                           }
+                           action = GameAction.CombatDefenderFlee;
+                           if (false == CreateMapItemFlees(gi, gi.MapItemCombat.Defenders))
+                           {
+                              returnStatus = "CreateMapItemFlee() returned false";
+                              Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
+                           }
+                           break;
+                        default:
+                           returnStatus = "invalid CombatResult=" + gi.MapItemCombat.Result.ToString();
+                           Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
+                           break;
+                     }
+                  }
+               }
+               break;
+            case GameAction.CombatsFinish:
+               if (false == CheckForIterogations(gi, ref action))
+               {
+                  returnStatus = "CheckFor_Iterogations() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsFinish): " + returnStatus);
                }
                break;
             default:
@@ -1874,6 +1942,65 @@ namespace PleasantvilleGame
          else
             Logger.Log(LogEnum.LE_ERROR, sb12.ToString());
          return returnStatus;
+      }
+      public bool CreateMapItemFlees(IGameInstance gi, IMapItems mapItems)
+      {
+         foreach (IMapItem mi in mapItems)
+         {
+            int die1 = Utilities.RandomGenerator.Next(5);
+            int die2 = Utilities.RandomGenerator.Next(6);
+            string name = TableMgr.GetTownspersonName(die1, die2);
+            if ("ERROR" == name)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_MapItemFlees(): TableMgr.GetTownspersonName() returned ERROR");
+               return false;
+            }
+            //------------------------------------------------------------
+            string? buildingName = mi.TerritoryCurrent.ToString();
+            if( null == buildingName )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_MapItemFlees(): TableMgr.GetTownspersonName() buildingName=null");
+               return false;
+            }
+            string fullBuildingName = "";
+            int count = 1000;
+            while(0 < count) // need to find a building name that is different than current buildname
+            {
+               die1 = Utilities.RandomGenerator.Next(5);
+               die2 = Utilities.RandomGenerator.Next(6);
+               fullBuildingName = TableMgr.GetTargetBuildingName(die1, die2); // Find the target building location.
+               if ("ERROR" == fullBuildingName)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Create_MapItemFlees(): GetTargetBuildingName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
+                  return false;
+               }
+               if (false == fullBuildingName.Contains(buildingName))
+                  break;
+            }
+            if(count < 0)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_MapItemFlees(): count < 0");
+               return false;
+            }
+
+            mi.Movement *= 2; // Movement is doubled when combat results in Attacker or Defender fleeing
+            ITerritory? newTerritory = Territories.theTerritories.Find(fullBuildingName);
+            if (null == newTerritory)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_MapItemFlees(): unable to find buildingName=" + fullBuildingName);
+               return false;
+            }
+            //-----------------------------------------
+            Logger.Log(LogEnum.LE_SHOW_COMBATS_RESULT, "Create_MapItemFlee(): mi=" + mi.Name + " entering t=" + newTerritory.Name);
+            IMapItemMove? mim = gi.CreateMapItemMove(mi, newTerritory);
+            if (null == mim)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_MapItemFlees(): Create_MapItemMove() returned null");
+               return false;
+            }
+            gi.MapItemMoves.Add(mim);
+         }
+         return true;
       }
       public bool PerformCombat(IGameInstance gi)
       {
@@ -2158,7 +2285,7 @@ namespace PleasantvilleGame
          //      break;
          //}
          return true;
-      } 
+      }
       bool PerformCombatResolveLoss(IGameInstance gi, IMapItem mi)
       {
          if (mi.Name == "Zebulon")

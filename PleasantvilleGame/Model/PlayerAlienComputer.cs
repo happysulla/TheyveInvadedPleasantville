@@ -244,7 +244,7 @@ namespace PleasantvilleGame
          //----------------------------------------
          IMapItem? leftMapItem = null;
          IMapItem? rightMapItem = null;
-         if (0 == possibleVictims.Count)
+         if (0 == possibleVictims.Count) // no possible takeover, but Townsperson does not know - so need to show
          {
             if (1 == unknownAliens.Count)
             {
@@ -253,31 +253,43 @@ namespace PleasantvilleGame
                int r2 = Utilities.RandomGenerator.Next(knownAliens.Count);
                rightMapItem = knownAliens[r2];
             }
+            else if (1 == knownAliens.Count)
+            {
+               int r1 = Utilities.RandomGenerator.Next(knownAliens.Count);
+               leftMapItem = knownAliens[0];
+               int r2 = Utilities.RandomGenerator.Next(unknownAliens.Count);
+               rightMapItem = unknownAliens[r2];
+            }
             else
             {
                int r1 = Utilities.RandomGenerator.Next(unknownAliens.Count);
                leftMapItem = unknownAliens[r1];
                int r2 = r1;
-               while (r2 == r1)
+               while (r2 == r1) 
                   r2 = Utilities.RandomGenerator.Next(unknownAliens.Count);
                rightMapItem = unknownAliens[r2];
             }
          }
-         else
+         else // possible victims
          {
-            if (0 < unknownAliens.Count)
+            if (0 < knownAliens.Count) // show known aliens
+            {
+               int r1 = Utilities.RandomGenerator.Next(knownAliens.Count);
+               leftMapItem = knownAliens[r1];
+               int r2 = Utilities.RandomGenerator.Next(possibleVictims.Count);
+               rightMapItem = possibleVictims[r2];
+            }
+            else if (0 < unknownAliens.Count)
             {
                int r1 = Utilities.RandomGenerator.Next(unknownAliens.Count);
                leftMapItem = unknownAliens[r1];
                int r2 = Utilities.RandomGenerator.Next(possibleVictims.Count);
                rightMapItem = possibleVictims[r2];
             }
-            else if (0 < unknownAliens.Count)
+            else if (2 == possibleVictims.Count)
             {
-               int r1 = Utilities.RandomGenerator.Next(knownAliens.Count);
-               leftMapItem = knownAliens[r1];
-               int r2 = Utilities.RandomGenerator.Next(possibleVictims.Count);
-               rightMapItem = possibleVictims[r2];
+               leftMapItem = possibleVictims[0];
+               rightMapItem = possibleVictims[1];
             }
             else
             {

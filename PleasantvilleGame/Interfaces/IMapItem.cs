@@ -44,6 +44,7 @@ namespace PleasantvilleGame
       int Combat { get; set; }
       int Influence { get; set; }
       int Movement { get; set; }
+      int MovementOriginal { get; set; }
       int MovementUsed { get; set; }
       //----------------------------------------
       bool IsUnconscious { get; set; }

@@ -139,6 +139,23 @@ The Combat Factors (<InlineUIContainer><Button Content='r2.2.5' FontFamily='Cour
 <LineBreak/><LineBreak/>Combat can be skipped by clicking the following image.
 <LineBreak/><LineBreak/>
                                         <InlineUIContainer><Image Name='Continue011t' Height='100' Width='100'></Image></InlineUIContainer>"
+e011aw	"<Bold>e011aw Combats - Alien Wins</Bold>  <InlineUIContainer><Button Content='r8.6' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+<LineBreak/><LineBreak/>
+Consult the 
+ <InlineUIContainer><Button Content='Town Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table. The dice are rolled for each individual counter of the defeated force, and the results are applied immediately.  "
+e011tw	"<Bold>e011tw Combats - Town Wins</Bold>  <InlineUIContainer><Button Content='r8.6' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+<LineBreak/><LineBreak/>
+Consult the  <InlineUIContainer><Button Content='Alien Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table. The dice are rolled for each individual counter of the defeated force, and the results are applied immediately."
+e011tf	"<Bold>e011af Combats - Town Flees</Bold>  <InlineUIContainer><Button Content='r8.6' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+<LineBreak/><LineBreak/>
+Each counter of the must flee using Random Movement per <InlineUIContainer><Button Content='r6.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. 
+<LineBreak/><LineBreak/>
+                                        <InlineUIContainer><Image Name='Continue011tf' Height='100' Width='100'></Image></InlineUIContainer>"
+e011af	"<Bold>e011af Combats - Defender Flees</Bold>  <InlineUIContainer><Button Content='r8.6' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+<LineBreak/><LineBreak/>
+Each counter of the must flee using Random Movement per <InlineUIContainer><Button Content='r6.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. 
+<LineBreak/><LineBreak/>
+                                        <InlineUIContainer><Image Name='Continue011af' Height='100' Width='100'></Image></InlineUIContainer>"
 e012t	"<Bold>e012t Interrogations</Bold>  <InlineUIContainer><Button Content='r7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>"
 e501	"<Bold>e501 Game Won!!!</Bold>

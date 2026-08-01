@@ -85,6 +85,7 @@ namespace PleasantvilleGame
       public int Combat { get; set; } = 0;
       public int Influence { get; set; } = 0;
       public int Movement { get; set; } = 0;
+      public int MovementOriginal { get; set; } = 0;
       public int MovementUsed { get; set; } = 0;
       //----------------------------------------
       public bool IsUnconscious { get; set; } = false;
@@ -176,6 +177,7 @@ namespace PleasantvilleGame
                   this(name, zoom, topImageName, territory)
       {
          this.Movement = movement;
+         this.MovementOriginal = movement;
          this.Influence = influence;
          this.Combat = combat;
       }
