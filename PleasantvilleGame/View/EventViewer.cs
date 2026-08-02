@@ -295,6 +295,14 @@ namespace PleasantvilleGame
                else if (false == evRandomMovementMgr.PerformRandomMovement(ShowRandomMoveResults))
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Perform_RandomMovement() returned false");
                break;
+            case GameAction.CombatAttackerWin:
+            case GameAction.CombatDefenderWin:
+               EventViewerCombatResolve evCombatResolve = new EventViewerCombatResolve(myGameEngine, myGameInstance, myCanvasMain, myScrollViewerTextBlock, myRulesMgr, myDieRoller);
+               if (true == evCombatResolve.CtorError)
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): evCombatResolve.CtorError=true");
+               else if (false == evCombatResolve.ResolveCombat(ShowCombatResults))
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Show_CombatResults() returned false");
+               break;
             case GameAction.AlienTakeoversShow:
                EventViewerAlienTakeovers evAlienTakeoverMgr = new EventViewerAlienTakeovers(myGameEngine, myGameInstance, myCanvasMain, myScrollViewerTextBlock, myRulesMgr, myDieRoller);
                if (true == evAlienTakeoverMgr.CtorError)
@@ -1029,6 +1037,27 @@ namespace PleasantvilleGame
          else
             outAction = GameAction.RandomMovementTownsShow;
          StringBuilder sb11 = new StringBuilder("     ######ShowRandomMoveResults() :");
+         sb11.Append(" p="); sb11.Append(myGameInstance.GamePhase.ToString());
+         sb11.Append(" ae="); sb11.Append(myGameInstance.EventActive);
+         sb11.Append(" a="); sb11.Append(outAction.ToString());
+         Logger.Log(LogEnum.LE_VIEW_UPDATE_EVENTVIEWER, sb11.ToString());
+         myGameEngine.PerformAction(ref myGameInstance, ref outAction);
+         return true;
+      }
+      public bool ShowCombatResults()
+      {
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Show_CombatResults(): myGameInstance=null");
+            return false;
+         }
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Show_CombatResults(): myGameEngine=null");
+            return false;
+         }
+         GameAction outAction = GameAction.CombatsSelect;
+         StringBuilder sb11 = new StringBuilder("     ######Show_CombatResults() :");
          sb11.Append(" p="); sb11.Append(myGameInstance.GamePhase.ToString());
          sb11.Append(" ae="); sb11.Append(myGameInstance.EventActive);
          sb11.Append(" a="); sb11.Append(outAction.ToString());

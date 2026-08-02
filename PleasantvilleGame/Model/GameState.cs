@@ -1836,31 +1836,14 @@ namespace PleasantvilleGame
                   {
                      switch (gi.MapItemCombat.Result)
                      {
+                        case CombatResult.DefenderWins:
                         case CombatResult.AttackerWins:
-                           if (true == firstAttacker.IsControlled)
-                           {
-                              gi.EventActive = gi.EventDisplayed = "e011tw";
-                           }
-                           else
-                           {
-                              gi.EventActive = gi.EventDisplayed = "e011aw";
-                           }
-                           action = GameAction.CombatAttackerWin;
-                           if (false == CreateMapItemFlees(gi, gi.MapItemCombat.Defenders))
-                           {
-                              returnStatus = "CreateMapItemFlee() returned false";
-                              Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
-                           }
                            break;
                         case CombatResult.AttackerFlees:
                            if (true == firstAttacker.IsControlled)
-                           {
                               gi.EventActive = gi.EventDisplayed = "e011tf";
-                           }
                            else
-                           {
                               gi.EventActive = gi.EventDisplayed = "e011af";
-                           }
                            action = GameAction.CombatAttackerFlee;
                            if (false == CreateMapItemFlees(gi, gi.MapItemCombat.Defenders))
                            {
@@ -1868,31 +1851,11 @@ namespace PleasantvilleGame
                               Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
                            }
                            break;
-                        case CombatResult.DefenderWins:
-                           if (true == firstAttacker.IsControlled)
-                           {
-                              gi.EventActive = gi.EventDisplayed = "e011tf";
-                           }
-                           else
-                           {
-                              gi.EventActive = gi.EventDisplayed = "e011af";
-                           }
-                           action = GameAction.CombatDefenderWin;
-                           if (false == CreateMapItemFlees(gi, gi.MapItemCombat.Attackers))
-                           {
-                              returnStatus = "CreateMapItemFlee() returned false";
-                              Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
-                           }
-                           break;
                         case CombatResult.DefenderFlees:
                            if (true == firstAttacker.IsControlled)
-                           {
                               gi.EventActive = gi.EventDisplayed = "e011tf";
-                           }
                            else
-                           {
                               gi.EventActive = gi.EventDisplayed = "e011af";
-                           }
                            action = GameAction.CombatDefenderFlee;
                            if (false == CreateMapItemFlees(gi, gi.MapItemCombat.Defenders))
                            {
