@@ -1619,11 +1619,13 @@ namespace PleasantvilleGame
          {
             myRectangle1.Visibility = Visibility.Visible;
             myLeftMapItemsInActionPanelSelected.Add(mi);
+            Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton1InHelperPanel(): Adding mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myLeftMapItemsInActionPanelSelected.ToString());
          }
          else
          {
             myRectangle1.Visibility = Visibility.Hidden;
             myLeftMapItemsInActionPanelSelected.Remove(mi.Name);
+            Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton1InHelperPanel(): Removing mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myLeftMapItemsInActionPanelSelected.ToString());
          }
          if( false == UpdateActionPanel(myGameInstance, true))
             Logger.Log(LogEnum.LE_ERROR, "ClickButton1InHelperPanel(): Update_ActionPanel() returned false");
@@ -1645,18 +1647,20 @@ namespace PleasantvilleGame
          IMapItem? mi = myLeftMapItemsInActionPanel[1];
          if (null == mi)
          {
-            Logger.Log(LogEnum.LE_ERROR, "ClickButton1InHelperPanel() myLeftMapItemsInActionPanel[0]=null");
+            Logger.Log(LogEnum.LE_ERROR, "ClickButton2InHelperPanel() myLeftMapItemsInActionPanel[0]=null");
             return;
          }
          if (Visibility.Hidden == myRectangle2.Visibility) // if selected, deselect it
          {
             myRectangle2.Visibility = Visibility.Visible;
             myLeftMapItemsInActionPanelSelected.Add(mi);
+            Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton2InHelperPanel(): Adding mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myLeftMapItemsInActionPanelSelected.ToString());
          }
          else
          {
             myRectangle2.Visibility = Visibility.Hidden;
             myLeftMapItemsInActionPanelSelected.Remove(mi.Name);
+            Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton2InHelperPanel(): Removing mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myLeftMapItemsInActionPanelSelected.ToString());
          }
          if (false == UpdateActionPanel(myGameInstance, true))
             Logger.Log(LogEnum.LE_ERROR, "ClickButton2InHelperPanel(): Update_ActionPanel() returned false");
@@ -1685,11 +1689,13 @@ namespace PleasantvilleGame
          {
             myRectangle3.Visibility = Visibility.Visible;
             myLeftMapItemsInActionPanelSelected.Add(mi);
+            Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton3InHelperPanel(): Adding mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myLeftMapItemsInActionPanelSelected.ToString());
          }
          else
          {
             myRectangle3.Visibility = Visibility.Hidden;
             myLeftMapItemsInActionPanelSelected.Remove(mi.Name);
+            Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton3InHelperPanel(): Removing mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myLeftMapItemsInActionPanelSelected.ToString());
          }
          if (false == UpdateActionPanel(myGameInstance, true))
             Logger.Log(LogEnum.LE_ERROR, "ClickButton3InHelperPanel(): Update_ActionPanel() returned false");
@@ -1718,11 +1724,13 @@ namespace PleasantvilleGame
          {
             myRectangle4.Visibility = Visibility.Visible;
             myRightMapItemsInActionPanelSelected.Add(mi);
+            Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton4InHelperPanel(): Adding mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myRightMapItemsInActionPanelSelected.ToString());
          }
          else
          {
             myRectangle4.Visibility = Visibility.Hidden;
             myRightMapItemsInActionPanelSelected.Remove(mi.Name);
+            Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton4InHelperPanel(): Removing mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myRightMapItemsInActionPanelSelected.ToString());
          }
          //-----------------------------------------------------------  
          if (false == UpdateActionPanel(myGameInstance, true))
@@ -1738,6 +1746,8 @@ namespace PleasantvilleGame
                myRectangle6.Visibility = Visibility.Hidden;
                myRightMapItemsInActionPanelSelected.Clear();
                break;
+            case GamePhase.Combats:
+               break;
             default:
                break;
          }
@@ -1751,12 +1761,14 @@ namespace PleasantvilleGame
          if (Visibility.Hidden == myRectangle5.Visibility) // if selected, deselect it
          {
             myRectangle5.Visibility = Visibility.Visible;
-            myRightMapItemsInActionPanelSelected.Add(mi);
+            myRightMapItemsInActionPanelSelected.Add(mi); 
+            Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton5InHelperPanel(): Adding mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myRightMapItemsInActionPanelSelected.ToString());
          }
          else
          {
             myRectangle5.Visibility = Visibility.Hidden;
             myRightMapItemsInActionPanelSelected.Remove(mi.Name);
+            Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton5InHelperPanel(): Removing mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myRightMapItemsInActionPanelSelected.ToString());
          }
          //-----------------------------------------------------------  
          if (false == UpdateActionPanel(myGameInstance, true))
@@ -1786,11 +1798,13 @@ namespace PleasantvilleGame
          {
             myRectangle6.Visibility = Visibility.Visible;
             myRightMapItemsInActionPanelSelected.Add(mi);
+            Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton6InHelperPanel(): Adding mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myRightMapItemsInActionPanelSelected.ToString());
          }
          else
          {
             myRectangle6.Visibility = Visibility.Hidden;
             myRightMapItemsInActionPanelSelected.Remove(mi.Name);
+            Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton6InHelperPanel(): Removing mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myRightMapItemsInActionPanelSelected.ToString());
          }
          //-----------------------------------------------------------  
          if (false == UpdateActionPanel(myGameInstance, true))
@@ -2868,8 +2882,7 @@ namespace PleasantvilleGame
             }
          }
          //-------------------------------------------------------------------
-         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Display_Combat(): myLeft=" + myLeftMapItemsInActionPanelSelected.ToString() + " right=" + myRightMapItemsInActionPanelSelected.ToString());
-         
+         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Display_Combat(): myLeftMapItemsInActionPanelSelected=" + myLeftMapItemsInActionPanelSelected.ToString() + " myRightMapItemsInActionPanelSelected=" + myRightMapItemsInActionPanelSelected.ToString());
          if ((0 < myLeftMapItemsInActionPanel.Count) && (0 < myRightMapItemsInActionPanel.Count))
          {
             if (false == UpdateActionPanel(gi, true))

@@ -366,7 +366,8 @@ namespace PleasantvilleGame
          for (int i = 0; i < myMaxRowCount; ++i)
          {
             int rowNum = i + STARTING_ASSIGNED_ROW;
-            Button b1 = CreateButton(myGridRows[i].myMapItem);
+            IMapItem mi = myGridRows[i].myMapItem;
+            Button b1 = CreateButton(mi);
             myGrid.Children.Add(b1);
             Grid.SetRow(b1, rowNum);
             Grid.SetColumn(b1, 0);
@@ -380,7 +381,31 @@ namespace PleasantvilleGame
                Label labelForResult = new Label() { FontFamily = myFontFam, FontSize = 16, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = myGridRows[i].myResult };
                myGrid.Children.Add(labelForResult);
                Grid.SetRow(labelForResult, rowNum);
-               Grid.SetColumn(labelForRoll, 2);
+               Grid.SetColumn(labelForResult, 2);
+               if( (true == mi.IsKilled) || (true == myIsTownDefender) || (true == myIsUncontrolledDefender))
+               {
+                  Label labelForTiedUp = new Label() { FontFamily = myFontFam, FontSize = 16, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = "NA"};
+                  myGrid.Children.Add(labelForTiedUp);
+                  Grid.SetRow(labelForTiedUp, rowNum);
+                  Grid.SetColumn(labelForTiedUp, 3);
+               }
+               else
+               {
+                  CheckBox cb = new CheckBox() { IsEnabled = true, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = System.Windows.VerticalAlignment.Center };
+                  myGrid.Children.Add(cb);
+                  Grid.SetRow(cb, rowNum);
+                  Grid.SetColumn(cb, 3);
+                  if( true == mi.IsTiedUp )
+                  {
+                     cb.Checked += CheckBox_Unchecked;
+                     cb.IsChecked = true;
+                  }
+                  else
+                  {
+                     cb.Unchecked += CheckBox_Checked;
+                     cb.IsChecked = false;
+                  }
+               }
             }
             else
             {
@@ -438,11 +463,13 @@ namespace PleasantvilleGame
             {
                myGridRows[i].myResult = "K.O.";
                myGridRows[i].myMapItem.IsUnconscious = true;
+               myGridRows[i].myMapItem.IsTiedUp = true;
             }
             else
             {
                myGridRows[i].myResult = "Hands-Up";
                myGridRows[i].myMapItem.IsSurrendered = true;
+               myGridRows[i].myMapItem.IsTiedUp = true;
             }
          }
          else if ( (true == myIsTownDefender) || (true == myIsUncontrolledDefender) )
@@ -571,6 +598,35 @@ namespace PleasantvilleGame
             }
          }
       }
-
+      private void CheckBox_Checked(object sender, RoutedEventArgs e)
+      {
+         CheckBox cb = (CheckBox)sender;
+         cb.IsChecked = true;
+         int rowNum = Grid.GetRow(cb);
+         int i = rowNum - STARTING_ASSIGNED_ROW;
+         if( i < 0 )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CheckBox_Checked(): i=" + i.ToString());
+            return;
+         }
+         myGridRows[i].myMapItem.IsTiedUp = true;
+         if (false == UpdateGrid())
+            Logger.Log(LogEnum.LE_ERROR, "CheckBox_Checked(): UpdateGrid() return false");
+      }
+      private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+      {
+         CheckBox cb = (CheckBox)sender;
+         cb.IsChecked = false;
+         int rowNum = Grid.GetRow(cb);
+         int i = rowNum - STARTING_ASSIGNED_ROW;
+         if (i < 0)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CheckBox_Unchecked(): i=" + i.ToString());
+            return;
+         }
+         myGridRows[i].myMapItem.IsTiedUp = false;
+         if (false == UpdateGrid())
+            Logger.Log(LogEnum.LE_ERROR, "CheckBox_Unchecked(): UpdateGrid() return false");
+      }
    }
 }

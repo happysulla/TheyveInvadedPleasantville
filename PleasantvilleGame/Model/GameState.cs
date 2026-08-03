@@ -1800,6 +1800,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
+            case GameAction.CombatsSelect: // handled in the GameViewWindow.xaml.cs file
                break;
             case GameAction.UpdateRotateStack:
                if (false == RotateStack(gi))
@@ -1837,7 +1838,10 @@ namespace PleasantvilleGame
                      switch (gi.MapItemCombat.Result)
                      {
                         case CombatResult.DefenderWins:
+                           action = GameAction.CombatDefenderWin;
+                           break;
                         case CombatResult.AttackerWins:
+                           action = GameAction.CombatAttackerWin;
                            break;
                         case CombatResult.AttackerFlees:
                            if (true == firstAttacker.IsControlled)
