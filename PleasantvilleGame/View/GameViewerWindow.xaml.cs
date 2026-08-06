@@ -1136,6 +1136,7 @@ namespace PleasantvilleGame
                break;
             case GameAction.AlienTakeoversSelect:
             case GameAction.AlienTakeoversShow:
+               UpdateActionPanelClear();
                myRectangleMaps.Clear();
                UpdateCanvasMainClear(myButtons, gi.Stacks, action);
                if (false == UpdateCanvasMain(gi, action))
@@ -1306,7 +1307,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): leftMapItem0 is null");
                   return false;
                }
-               MapItem.SetButtonContent(myButton1, leftMapItem1, false);
+               MapItem.SetButtonContent(myButton1, leftMapItem1);
                myButton1.Visibility = Visibility.Visible;
                Canvas.SetLeft(myButton1, button1Left);
                Canvas.SetLeft(myRectangle1, button1Left);
@@ -1327,8 +1328,8 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): leftMapItem1 is null");
                   return false;
                }
-               MapItem.SetButtonContent(myButton1, leftMapItem1, false);
-               MapItem.SetButtonContent(myButton2, leftMapItem1, false);
+               MapItem.SetButtonContent(myButton1, leftMapItem1);
+               MapItem.SetButtonContent(myButton2, leftMapItem1);
                myButton1.Visibility = Visibility.Visible;
                myButton2.Visibility = Visibility.Visible;
                myLabelLeftTop.Visibility = Visibility.Visible;
@@ -1389,7 +1390,7 @@ namespace PleasantvilleGame
                   return false;
                }
                myButton4.Visibility = Visibility.Visible;
-               MapItem.SetButtonContent(myButton4, rightMapItem4, false);
+               MapItem.SetButtonContent(myButton4, rightMapItem4);
                if (true == myRightMapItemsInActionPanelSelected.Contains(rightMapItem4))
                   myRectangle4.Visibility = Visibility.Visible;
                break;
@@ -1484,7 +1485,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "UpdateAction_PanelButtons(): leftMapItem0 is null");
             return false;
          }
-         MapItem.SetButtonContent(myButton1, leftMapItem, GameEngine.theIsAlien);
+         MapItem.SetButtonContent(myButton1, leftMapItem);
          if (Visibility.Visible == myButton2.Visibility)
          {
             if (1 < myLeftMapItemsInActionPanel.Count)
@@ -1495,7 +1496,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateAction_PanelButtons(): leftMapItem1 is null");
                   return false;
                }
-               MapItem.SetButtonContent(myButton2, leftMapItem, GameEngine.theIsAlien);
+               MapItem.SetButtonContent(myButton2, leftMapItem);
             }
          }
          if (Visibility.Visible == myButton3.Visibility)
@@ -1508,7 +1509,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateAction_PanelButtons(): leftMapItem2 is null");
                   return false;
                }
-               MapItem.SetButtonContent(myButton3, leftMapItem, GameEngine.theIsAlien);
+               MapItem.SetButtonContent(myButton3, leftMapItem);
             }
          }
          //-----------------------------------------------------------------------
@@ -1518,7 +1519,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "UpdateAction_PanelButtons(): rightMapItem4 is null");
             return false;
          }
-         MapItem.SetButtonContent(myButton4, rightMapItem, GameEngine.theIsAlien);
+         MapItem.SetButtonContent(myButton4, rightMapItem);
          if (Visibility.Visible == myButton5.Visibility)
          {
             if (1 < myRightMapItemsInActionPanel.Count)
@@ -1529,7 +1530,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateAction_PanelButtons(): rightMapItem5 is null");
                   return false;
                }
-               MapItem.SetButtonContent(myButton5, rightMapItem, GameEngine.theIsAlien);
+               MapItem.SetButtonContent(myButton5, rightMapItem);
             }
          }
          if (Visibility.Visible == myButton6.Visibility)
@@ -1542,7 +1543,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateAction_PanelButtons(): rightMapItem6 is null");
                   return false;
                }
-               MapItem.SetButtonContent(myButton6, rightMapItem, GameEngine.theIsAlien);
+               MapItem.SetButtonContent(myButton6, rightMapItem);
             }
          }
          return true;
@@ -1905,8 +1906,8 @@ namespace PleasantvilleGame
                else
                {
                   Logger.Log(LogEnum.LE_SHOW_STACK_ADD, "UpdateCanvasMain_MapItems(): Adding Button for mi=" + mi.Name + " X=" + mi.Location.X.ToString("F2") + " Y=" + mi.Location.Y.ToString("F2") + " in stack@" + stack.ToString());
-                  System.Windows.Controls.Button newButton = new Button { Name = mi.Name, Width = mi.Zoom * Utilities.theMapItemSize, Height = mi.Zoom * Utilities.theMapItemSize, BorderThickness = new Thickness(1), Background = new SolidColorBrush(Colors.Transparent), Foreground = new SolidColorBrush(Colors.Transparent) };
-                  MapItem.SetButtonContent(newButton, mi, true, true); // This sets the image as the button's content
+                  System.Windows.Controls.Button newButton = new Button { Name = mi.Name, Width = Utilities.theMapItemSize, Height = Utilities.theMapItemSize, BorderThickness = new Thickness(1), Background = new SolidColorBrush(Colors.Transparent), Foreground = new SolidColorBrush(Colors.Transparent) };
+                  MapItem.SetButtonContent(newButton, mi); // This sets the image as the button's content
                   myButtons.Add(newButton);
                   if (true == stack.IsStacked)
                   {
@@ -1971,7 +1972,7 @@ namespace PleasantvilleGame
                }
                else
                {
-                  MapItem.SetButtonContent(button, mi, true, true);
+                  MapItem.SetButtonContent(button, mi);
                }
             }
             else if (ui is Ellipse ellipse)

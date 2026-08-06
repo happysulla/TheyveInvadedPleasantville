@@ -317,86 +317,83 @@ namespace PleasantvilleGame
             mapItems = newOrder;
          }
       }
-      public static void SetButtonContent(Button b, IMapItem mi, bool isMapItemZoom = false, bool isDecoration = true)
+      public static void SetButtonContent(Button b, IMapItem mi, bool isMapItemZoom = false)
       {
-         double zoom = Utilities.ZOOM;
-         if (true == isMapItemZoom)
-            zoom = mi.Zoom;
          //------------------------------------------
          Grid g = new Grid() { };
          if (false == mi.IsAnimated)
          {
-            Image img = new Image() { Source = theMapImages.GetBitmapImage(mi.TopImageName), Stretch = Stretch.Fill };
-            img.Source = theMapImages.GetBitmapImage(mi.TopImageName);
-            g.Children.Add(img);
-            Canvas c = new Canvas() { };
-            g.Children.Add(c);
+            double offset = -1;
+            Canvas c = new Canvas() { Height= b.Height, Width= b.Width };
+            Image imgTop = new Image() { Source = theMapImages.GetBitmapImage(mi.TopImageName), Height = b.Height-2, Width = b.Width-2 };
+            c.Children.Add(imgTop);
+            Canvas.SetLeft(imgTop, offset);
+            Canvas.SetTop(imgTop, offset);
             if (true == mi.IsAlienKnown) // Add an alien head if the Controlled person knowns.
             {
-               double width = 0.4 * zoom * Utilities.theMapItemOffset;
-               double height = 1.3*width;
-               Image imgAlien = new Image() { Height = height, Width = width, Source = theImgAlien };
+               Image imgAlien = new Image() { Source = theImgAlien, Height = b.Height - 2, Width = b.Width - 2 };
                c.Children.Add(imgAlien);
-               Canvas.SetLeft(imgAlien, zoom * Utilities.theMapItemOffset - (0.7 * width));
-               Canvas.SetTop(imgAlien, 0);
+               Canvas.SetLeft(imgAlien, offset);
+               Canvas.SetTop(imgAlien, offset);
             }
             if (true == mi.IsTiedUp) // Add an tied up icon if tied up
             {
-               Image imgTiedUp = new Image() { Source = theImgTieUp, Stretch = Stretch.Fill };
+               Image imgTiedUp = new Image() { Source = theImgTieUp, Height = b.Height - 2, Width = b.Width - 2 };
                c.Children.Add(imgTiedUp);
-               Canvas.SetLeft(imgTiedUp, 0);
-               Canvas.SetTop(imgTiedUp, 0);
+               Canvas.SetLeft(imgTiedUp, offset);
+               Canvas.SetTop(imgTiedUp, offset);
             }
             if (true == mi.IsImplantHeld)
             {
-               Image imgImplant = new Image() { Source = theImgImplant, Stretch = Stretch.Fill };
+               Image imgImplant = new Image() { Source = theImgImplant, Height = b.Height - 2, Width = b.Width - 2 };
                c.Children.Add(imgImplant);
-               Canvas.SetLeft(imgImplant, 0);
-               Canvas.SetTop(imgImplant, 0);
+               Canvas.SetLeft(imgImplant, offset);
+               Canvas.SetTop(imgImplant, offset);
             }
             //---------------------------------------------
             if (true == mi.IsKilled) // Add additional words on image based on status. Only one of the following images is allowed.
             {
-               Image imgKia = new Image() { Source = theImgKia };
+               Image imgKia = new Image() { Source = theImgKia, Height = b.Height - 2, Width = b.Width - 2 };
                c.Children.Add(imgKia);
-               Canvas.SetLeft(imgKia, 0);
-               Canvas.SetTop(imgKia, 0);
+               Canvas.SetLeft(imgKia, offset);
+               Canvas.SetTop(imgKia, offset);
             }
             else if (true == mi.IsSurrendered)
             {
-               Image imgSurrendered = new Image() { Source = theImgSurrendered };
+               Image imgSurrendered = new Image() { Source = theImgSurrendered, Height = b.Height - 2, Width = b.Width - 2 };
                c.Children.Add(imgSurrendered);
                Canvas.SetLeft(imgSurrendered, 0);
                Canvas.SetTop(imgSurrendered, 0);
             }
             else if (true == mi.IsUnconscious)
             {
-               Image imgKnockedOut = new Image() { Source = theImgKnockedOut };
+               Image imgKnockedOut = new Image() { Source = theImgKnockedOut, Height = b.Height - 2, Width = b.Width - 2 };
                c.Children.Add(imgKnockedOut);
-               Canvas.SetLeft(imgKnockedOut, 0);
-               Canvas.SetTop(imgKnockedOut, 0);
+               Canvas.SetLeft(imgKnockedOut, offset);
+               Canvas.SetTop(imgKnockedOut, offset);
             }
             else if (true == mi.IsStunned)
             {
-               Image imgStunned = new Image() { Source = theImgStunned };
+               Image imgStunned = new Image() { Source = theImgStunned, Height = b.Height - 2, Width = b.Width - 2 };
                c.Children.Add(imgStunned);
-               Canvas.SetLeft(imgStunned, 0);
-               Canvas.SetTop(imgStunned, 0);
+               Canvas.SetLeft(imgStunned, offset);
+               Canvas.SetTop(imgStunned, offset);
             }
             else if (true == mi.IsWary)
             {
-               Image imgWary = new Image() { Source = theImgWary };
+               Image imgWary = new Image() { Source = theImgWary, Height = b.Height - 2, Width = b.Width - 2 };
                c.Children.Add(imgWary);
-               Canvas.SetLeft(imgWary, 0);
-               Canvas.SetTop(imgWary, 0);
+               Canvas.SetLeft(imgWary, offset);
+               Canvas.SetTop(imgWary, offset);
             }
             else if (true == mi.IsSkeptical)
             {
-               Image imgSkeptical = new Image() { Source = theImgSkeptical };
+               Image imgSkeptical = new Image() { Source = theImgSkeptical, Height = b.Height - 2, Width = b.Width - 2 };
                c.Children.Add(imgSkeptical);
-               Canvas.SetLeft(imgSkeptical, 0);
-               Canvas.SetTop(imgSkeptical, 0);
+               Canvas.SetLeft(imgSkeptical, offset);
+               Canvas.SetTop(imgSkeptical, offset);
             }
+            g.Children.Add(c);
          }
          else
          {

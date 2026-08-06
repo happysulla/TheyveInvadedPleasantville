@@ -18,7 +18,7 @@ namespace PleasantvilleGame
    {
       public const int NO_RESULT = -100;
       public const int STACK = 3;
-      public const double ZOOM = 1.25;
+      public const double ZOOM = 1.0;
       private const int NUM_RANDOM_GEN = 13;
       public readonly static int STD_WAIT = 10;
       //--------------------------------------------
