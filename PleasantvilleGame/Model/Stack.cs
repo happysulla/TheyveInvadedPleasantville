@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 
 namespace PleasantvilleGame
@@ -69,7 +70,11 @@ namespace PleasantvilleGame
       public bool Contains(IStack stack) { return myList.Contains(stack); }
       public IEnumerator GetEnumerator() { return myList.GetEnumerator(); }
       public int IndexOf(IStack stack) { return myList.IndexOf(stack); }
-      public void Remove(IStack stack) { myList.Remove(stack); }
+      public void Remove(IStack stack) 
+      {
+         Logger.Log(LogEnum.LE_SHOW_STACK_DEL, "Stack.Remove(IStack): Remove stack=" + stack.ToString());
+         myList.Remove(stack); 
+      }
       public IStack? Find(ITerritory t)
       {
          foreach (object o in myList)
@@ -125,6 +130,7 @@ namespace PleasantvilleGame
             {
                if (mi.Name == mapItem.Name)
                {
+                  Logger.Log(LogEnum.LE_SHOW_STACK_DEL, "Stack.Remove(IMapItem): Remove mi=" + mapItem.Name + " from stack=" + stack.ToString());
                   stack.MapItems.Remove(mapItem);
                   if (0 == stack.MapItems.Count)
                      Remove(stack);
@@ -142,6 +148,7 @@ namespace PleasantvilleGame
             {
                if (true == mapItem.Name.Contains(miName))
                {
+                  Logger.Log(LogEnum.LE_SHOW_STACK_DEL, "Stack.Remove(string): Remove mi=" + miName + " from stack=" + stack.ToString());
                   stack.MapItems.Remove(mapItem);
                   if (0 == stack.MapItems.Count)
                      Remove(stack);
@@ -164,6 +171,7 @@ namespace PleasantvilleGame
       }
       public IStacks Shuffle()
       {
+         Logger.Log(LogEnum.LE_SHOW_STACK_DEL, "Stack.Shuffle(): BEFORE stacks=" + this.ToString());
          IStacks newStacks = new Stacks();
          int count = myList.Count + 100;
          for (int i = 0; i < count; i++) // Randomly select object. Remove it and readd at top.
@@ -184,6 +192,7 @@ namespace PleasantvilleGame
                }
             }
          }
+         Logger.Log(LogEnum.LE_SHOW_STACK_DEL, "Stack.Shuffle(): AFTER stacks=" + newStacks.ToString());
          return newStacks;
       }
       public override string ToString()
@@ -193,7 +202,7 @@ namespace PleasantvilleGame
          sb.Append("]=");
          foreach (IStack stack in this)
          {
-            sb.Append("{");
+            sb.Append("\n{");
             sb.Append(stack.ToString());
             sb.Append("}");
          }

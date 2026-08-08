@@ -291,17 +291,11 @@ namespace PleasantvilleGame
       {
          if (E11Enum.END == myState)
          {
-            if( null == myGameInstance )
+            if( null == myGameInstance)
             {
                Logger.Log(LogEnum.LE_ERROR, "Update_EndState(): myGameInstance=null");
                return false;
             }
-            //-----------------------------------------------
-            for (int i = 0; i < myMaxRowCount; ++i) // alien could be MapItem1 or MapItem2
-            {
-               GridRow gr = myGridRows[i];
-            }
-            //-----------------------------------------------
             if (null == myCallback)
             {
                Logger.Log(LogEnum.LE_ERROR, "Update_EndState(): myCallback=null");
@@ -397,12 +391,12 @@ namespace PleasantvilleGame
                   Grid.SetColumn(cb, 3);
                   if( true == mi.IsTiedUp )
                   {
-                     cb.Checked += CheckBox_Unchecked;
+                     cb.Unchecked += CheckBox_Unchecked;
                      cb.IsChecked = true;
                   }
                   else
                   {
-                     cb.Unchecked += CheckBox_Checked;
+                     cb.Checked += CheckBox_Checked;
                      cb.IsChecked = false;
                   }
                }
@@ -441,7 +435,7 @@ namespace PleasantvilleGame
       {
          if ( null == myGameInstance )
          {
-            Logger.Log(LogEnum.LE_ERROR, "EventViewerRandomMovement.ShowDieResults(): myGameInstance=null");
+            Logger.Log(LogEnum.LE_ERROR, "EventViewerCombatResolve.ShowDieResults(): myGameInstance=null");
             return;
          }
          int i = myRollResultRowNum - STARTING_ASSIGNED_ROW;
@@ -464,12 +458,14 @@ namespace PleasantvilleGame
                myGridRows[i].myResult = "K.O.";
                myGridRows[i].myMapItem.IsUnconscious = true;
                myGridRows[i].myMapItem.IsTiedUp = true;
+               Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "ShowDieResults(): mi=" + myGridRows[i].myMapItem.ToString() + " ++TIED and KO");
             }
             else
             {
                myGridRows[i].myResult = "Hands-Up";
                myGridRows[i].myMapItem.IsSurrendered = true;
                myGridRows[i].myMapItem.IsTiedUp = true;
+               Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "ShowDieResults(): mi=" + myGridRows[i].myMapItem.ToString() + " ++TIED and gives up");
             }
          }
          else if ( (true == myIsTownDefender) || (true == myIsUncontrolledDefender) )
@@ -492,9 +488,10 @@ namespace PleasantvilleGame
          }
          else
          {
-            Logger.Log(LogEnum.LE_ERROR, "ShowDieResults(): Reached Default for mi=" + myGridRows[i].myMapItem.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "EventViewerCombatResolve.ShowDieResults(): Reached Default for mi=" + myGridRows[i].myMapItem.ToString());
             return;
          }
+         Logger.Log(LogEnum.LE_SHOW_COMBATS, "EventViewerCombatResolve.ShowDieResults(): dr=" + dieRoll.ToString() + " result=" + myGridRows[i].myResult + " for mi=" + myGridRows[i].myMapItem.ToString());
          //-------------------------------
          myState = E11Enum.ROLL_FOR_COMBAT_SHOW;
          foreach(GridRow gr in myGridRows)
@@ -503,7 +500,7 @@ namespace PleasantvilleGame
                myState = E11Enum.ROLL_FOR_COMBAT;
          }
          if (false == UpdateGrid())
-            Logger.Log(LogEnum.LE_ERROR, "EventViewerRandomMovement.ShowDieResults(): UpdateGrid() return false");
+            Logger.Log(LogEnum.LE_ERROR, "EventViewerCombatResolve.ShowDieResults(): UpdateGrid() return false");
          myIsRollInProgress = false;
       }
       //---------------------Controller Function--------------------------------------------
@@ -590,7 +587,7 @@ namespace PleasantvilleGame
                      myIsRollInProgress = true;
                      myRollResultRowNum = Grid.GetRow(img1);
                      RollEndCallback callback = ShowDieResults;
-                     myDieRoller.RollMovingDie(myCanvas, callback);
+                     myDieRoller.RollMovingDice(myCanvas, callback);
                      img1.Visibility = Visibility.Hidden;
                   }
                   return;
@@ -610,6 +607,7 @@ namespace PleasantvilleGame
             return;
          }
          myGridRows[i].myMapItem.IsTiedUp = true;
+         Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "CheckBox_Checked(): mi=" + myGridRows[i].myMapItem.ToString() + " ++TIED");
          if (false == UpdateGrid())
             Logger.Log(LogEnum.LE_ERROR, "CheckBox_Checked(): UpdateGrid() return false");
       }
@@ -625,6 +623,7 @@ namespace PleasantvilleGame
             return;
          }
          myGridRows[i].myMapItem.IsTiedUp = false;
+         Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "CheckBox_Unchecked(): mi=" + myGridRows[i].myMapItem.ToString() + " --TIED");
          if (false == UpdateGrid())
             Logger.Log(LogEnum.LE_ERROR, "CheckBox_Unchecked(): UpdateGrid() return false");
       }

@@ -935,12 +935,12 @@ namespace PleasantvilleGame
                {
                   case "ReadRules":
                   case "PlayTown":
-                  case "PlayAlien":
                      b.IsEnabled = true;
                      break;
+                  case "PlayAlien":
                   case "HostGame":
                   case "JoinGame":
-                     b.IsEnabled = true;
+                     b.IsEnabled = false;
                      break;
                   default:
                      Logger.Log(LogEnum.LE_ERROR, "Set_ButtonState(): reached default content=" + content);
@@ -1061,6 +1061,7 @@ namespace PleasantvilleGame
          sb11.Append(" p="); sb11.Append(myGameInstance.GamePhase.ToString());
          sb11.Append(" ae="); sb11.Append(myGameInstance.EventActive);
          sb11.Append(" a="); sb11.Append(outAction.ToString());
+         sb11.Append(" stacks="); sb11.Append(myGameInstance.Stacks.ToString());
          Logger.Log(LogEnum.LE_VIEW_UPDATE_EVENTVIEWER, sb11.ToString());
          myGameEngine.PerformAction(ref myGameInstance, ref outAction);
          return true;
