@@ -24,10 +24,6 @@ namespace PleasantvilleGame
       private CanvasImageViewer? myCanvasImageViewer = null;
       private ScrollViewer? myScrollViewerCanvas = null;
       private Canvas? myCanvasMain = null;
-      private IMapItem? myATG = null;
-      private IMapItem? mySPG = null;
-      private IMapItem? myPzIV = null;
-      private IMapItem? myTank = null;
       //--------------------------------------------------------------------
       private int myIndexName = 0;
       private List<string> myHeaderNames = new List<string>();
@@ -39,19 +35,13 @@ namespace PleasantvilleGame
       {
          //------------------------------------
          myIndexName = 0;
-         myHeaderNames.Add("08-Show Battle Map");
-         myHeaderNames.Add("08-1-ToHitNumberModsYourTank");
-         myHeaderNames.Add("08-2-ToHitNumberModsYourTank");
-         myHeaderNames.Add("08-3-ToHitNumberModsYourTank");
-         myHeaderNames.Add("08-4-ToHitNumberModsYourTank");
+         myHeaderNames.Add("08-Create Town People");
+         myHeaderNames.Add("08-Shuffle MapItems");
          myHeaderNames.Add("08-Finish");
          //------------------------------------
-         myCommandNames.Add("Show Battle Map");
-         myCommandNames.Add("ATG");
-         myCommandNames.Add("SPG");
-         myCommandNames.Add("PzIV");
-         myCommandNames.Add("TANK");
-         myCommandNames.Add("Finish");
+         myCommandNames.Add("00-Create Town Peope");
+         myCommandNames.Add("01-Shuffle");
+         myCommandNames.Add("02-Finish");
          //------------------------------------
          if (null == gi)
          {
@@ -135,52 +125,67 @@ namespace PleasantvilleGame
          //---------------------------------------------------
          if (CommandName == myCommandNames[0])
          {
-            List<UIElement> elements = new List<UIElement>();
-            foreach (UIElement ui in myCanvasMain.Children)
+            if( false == TableMgr.CreateTownspeople(myGameInstance))
             {
-               if (ui is Image img)
-                  elements.Add(ui);
+               Logger.Log(LogEnum.LE_ERROR, "Command(): CreateTownspeople() returned false");
+               return false;
             }
-            foreach (UIElement ui1 in elements)
-               myCanvasMain.Children.Remove(ui1);
-            //------------------------------------
+            string tName = "House_K";
+            ITerritory? t = Territories.theTerritories.Find(tName);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               return false;
+            }
+            //-----------------
+            IMapItem? wife = myGameInstance.Stacks.FindMapItem("Wife"); // move wife to House_K
+            if (null == wife)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find wife");
+               return false;
+            }
+            myGameInstance.Stacks.Remove(wife); // remove from existing stack
+            wife.TerritoryCurrent = wife.TerritoryStarting = t;
+            wife.Location.X = t.CenterPoint.X;
+            wife.Location.Y = t.CenterPoint.Y;
+            myGameInstance.Stacks.Add(wife); // add to new stack
+            //-----------------
+            IMapItem? sheriff = myGameInstance.Stacks.FindMapItem("Sheriff");  // move sheriff to House_K
+            if (null == sheriff)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find sheriff" );
+               return false;
+            }
+            myGameInstance.Stacks.Remove(sheriff); // remove from existing stack
+            sheriff.TerritoryCurrent = sheriff.TerritoryStarting = t;
+            sheriff.Location.X = t.CenterPoint.X;
+            sheriff.Location.Y = t.CenterPoint.Y;
+            myGameInstance.Stacks.Add(sheriff); // add to new stack
             ++myIndexName;
          } 
          //-----------------------------------------
          else if (CommandName == myCommandNames[1])
          {
-            if (null == myATG)
+            string tName = "House_K";
+            ITerritory? t = Territories.theTerritories.Find(tName);
+            if (null == t)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): myATG=null");
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
                return false;
             }
+            IStack? stack = myGameInstance.Stacks.Find(t);
+            if (null == stack)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find stack=null for House_K");
+               return false;
+            }
+            Logger.Log(LogEnum.LE_SHOW_UNIT_TEST, "Command(): stack=\n" + myGameInstance.Stacks.ToString());
+            IMapItems shuffleMapItems = stack.MapItems.Shuffle();
+            stack.MapItems = shuffleMapItems;
+            Logger.Log(LogEnum.LE_SHOW_UNIT_TEST, "Command(): stack=\n" + myGameInstance.Stacks.ToString());
          }
          //-----------------------------------------
-         else if (CommandName == myCommandNames[2])
-         {
-            if (null == mySPG)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): mySPG=null");
-               return false;
-            }
-         }
-         else if (CommandName == myCommandNames[3])
-         {
-            if (null == myPzIV)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): myPzIV=null");
-               return false;
-            }
-         }
-         else if (CommandName == myCommandNames[4])
-         {
-            if (null == myTank)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): myTank=null");
-               return false;
-            }
-         }
-         else if (CommandName == myCommandNames[5])
+         else 
          {
             if (false == Cleanup(ref gi))
             {
@@ -206,15 +211,7 @@ namespace PleasantvilleGame
          {
             ++myIndexName;
          }
-         else if (HeaderName == myHeaderNames[2])
-         {
-            ++myIndexName;
-         }
-         else if (HeaderName == myHeaderNames[3])
-         {
-            ++myIndexName;
-         }
-         else if (HeaderName == myHeaderNames[4])
+         else 
          {
             if (false == Cleanup(ref gi))
             {
@@ -232,8 +229,7 @@ namespace PleasantvilleGame
             return false;
          }
          CleanCanvas(gi, myCanvasMain);
-         //--------------------------------------------------
-         ++gi.GameTurn;
+         ++gi.GameTurn; // Move to next unit test
          return true;
       }
       //--------------------------------------------------------------------

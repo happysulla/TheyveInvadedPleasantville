@@ -93,6 +93,14 @@ namespace PleasantvilleGame
       public bool CreateUnitTests(IGameInstance gi, DockPanel dp, GameViewerWindow gvw, EventViewer ev, IDieRoller dr, CanvasImageViewer civ)
       {
          //-----------------------------------------------------------------------------
+         IUnitTest ut8 = new TableMgrUnitTest(dp, gi, civ, gvw);
+         if (true == ut8.CtorError)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): TableMgrUnitTest() ctor error");
+            return false;
+         }
+         gi.UnitTests.Add(ut8);
+         //-----------------------------------------------------------------------------
          IUnitTest ut1 = new GameViewerCreateUnitTest(dp, gi, civ);
          if (true == ut1.CtorError)
          {
@@ -148,14 +156,6 @@ namespace PleasantvilleGame
             return false;
          }
          gi.UnitTests.Add(ut7);
-         //-----------------------------------------------------------------------------
-         IUnitTest ut8 = new TableMgrUnitTest(dp, gi, civ, gvw);
-         if (true == ut8.CtorError)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): TableMgrUnitTest() ctor error");
-            return false;
-         }
-         gi.UnitTests.Add(ut8);
          //-----------------------------------------------------------------------------
          IUnitTest ut9 = new PlayerUnitTest(dp, gi, civ, gvw);
          if (true == ut9.CtorError)

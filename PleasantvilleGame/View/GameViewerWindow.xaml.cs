@@ -2782,7 +2782,8 @@ namespace PleasantvilleGame
          //-------------------------------------------------------------------
          gi.SelectedTerritory = selectedTerritory;
          Logger.Log(LogEnum.SHOW_SHUFFLE_STACK, "Display_Combat(): BEFORE t=" + selectedTerritory.ToString() + "\n" + myGameInstance.Stacks.ToString());
-         IMapItems shuffledStack = stack.MapItems.Shuffle();
+         IMapItems shuffleMapItems = stack.MapItems.Shuffle();
+         stack.MapItems = shuffleMapItems;
          Logger.Log(LogEnum.SHOW_SHUFFLE_STACK, "Display_Combat(): AFTER t=" + selectedTerritory.ToString() + "\n" + myGameInstance.Stacks.ToString());
          //-------------------------------------------------------------------
          int townCombatCount = 0;
@@ -2791,7 +2792,7 @@ namespace PleasantvilleGame
          IMapItems controlledPeps = new MapItems();
          IMapItems uncontrolledPeps = new MapItems();
          IMapItems knownAliens = new MapItems();
-         foreach (MapItem mi in shuffledStack)
+         foreach (MapItem mi in shuffleMapItems)
          {
             if ((true == mi.IsCombatThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
                continue;
@@ -2969,7 +2970,6 @@ namespace PleasantvilleGame
             return;
          }
          displayResults.Append(myGameInstance.MapItemCombat.Result.ToString());
-
          //-----------------------------------------------------------------------------
          myTextBoxResults.Text = displayResults.ToString();
          myLabelLeftTop.Visibility = Visibility.Visible;

@@ -72,7 +72,6 @@ namespace PleasantvilleGame
       public int IndexOf(IStack stack) { return myList.IndexOf(stack); }
       public void Remove(IStack stack) 
       {
-         Logger.Log(LogEnum.LE_SHOW_STACK_DEL, "Stack.Remove(IStack): Remove stack=" + stack.ToString());
          myList.Remove(stack); 
       }
       public IStack? Find(ITerritory t)
@@ -130,7 +129,6 @@ namespace PleasantvilleGame
             {
                if (mi.Name == mapItem.Name)
                {
-                  Logger.Log(LogEnum.LE_SHOW_STACK_DEL, "Stack.Remove(IMapItem): Remove mi=" + mapItem.Name + " from stack=" + stack.ToString());
                   stack.MapItems.Remove(mapItem);
                   if (0 == stack.MapItems.Count)
                      Remove(stack);
