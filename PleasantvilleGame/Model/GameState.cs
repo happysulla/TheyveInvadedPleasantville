@@ -1712,6 +1712,7 @@ namespace PleasantvilleGame
                      if (true == rightMapItem.IsWary)  // If not skeptical, check if wary.  This adds to the die roll.
                         --dieRollModifier;
                      int dieRollWithMod = dieRoll + dieRollModifier;
+                     Logger.Log(LogEnum.LE_SHOW_INFLUENCES, "GameStateInfluences.PerformAction(): odds=" + odds.ToString("F1") + " r=" + rightMapItem.ToString() + " (dr=" + dieRoll.ToString() + ") + (m=" + dieRollModifier.ToString() + ") <>=> (t=" + dieThreshold.ToString() + ")"); 
                      if (dieThreshold <= dieRollWithMod) // Check for alien.  If alien, let user know it is discovered. Else, make the townsperson controlled.
                      {
                         if (true == rightMapItem.IsAlienUnknown)
@@ -1721,14 +1722,15 @@ namespace PleasantvilleGame
                         }
                         else
                         {
-                           Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "GameStateInfluences.PerformAction(): NO EFFECT rightMapItem=" + rightMapItem.ToString() + " (dr=" + dieRoll.ToString() + ") + (m=" + dieRollModifier.ToString() + ") >= (t=" + dieThreshold.ToString() + ")");
+                           Logger.Log(LogEnum.LE_SHOW_TOWNS_ADD, "GameStateInfluences.PerformAction(): NO EFFECT rightMapItem=" + rightMapItem.ToString() + " (dr=" + dieRoll.ToString() + ") + (m=" + dieRollModifier.ToString() + ") >= (t=" + dieThreshold.ToString() + ")");
+                           gi.AddControlled(rightMapItem); // GameStateInfluences.PerformAction(InfluencesRoll)
                         }
                      }
                      else
                      {
                         if (false == rightMapItem.IsWary)  // wary people cannot become skeptical
                         {
-                           Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "GameStateInfluences.PerformAction(): Add Skeptical rightMapItem=" + rightMapItem.ToString() + " (dr=" + dieRoll.ToString() + ") + (m=" + dieRollModifier.ToString() + ") <>=> (t=" + dieThreshold.ToString() + ")"); rightMapItem.IsSkeptical = true;
+                           Logger.Log(LogEnum.LE_SHOW_WARY_ADD, "GameStateInfluences.PerformAction(): Add Skeptical rightMapItem=" + rightMapItem.ToString() + " (dr=" + dieRoll.ToString() + ") + (m=" + dieRollModifier.ToString() + ") <>=> (t=" + dieThreshold.ToString() + ")"); rightMapItem.IsSkeptical = true;
                         }
                      }
                      if ("OK" == returnStatus)
@@ -1736,7 +1738,7 @@ namespace PleasantvilleGame
                         if (false == CheckForInfluences(gi, ref action))
                         {
                            returnStatus = "CheckFor_Influences() returned false";
-                           Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(): " + returnStatus);
+                           Logger.Log(LogEnum.LE_ERROR, "GameStateInfluences.PerformAction(): " + returnStatus);
                         }
                      }
                   }
@@ -1848,10 +1850,15 @@ namespace PleasantvilleGame
                            break;
                         case CombatResult.AttackerFlees:
                            if (true == firstAttacker.IsControlled)
+                           {
                               gi.EventActive = gi.EventDisplayed = "e011tf";
+                              action = GameAction.CombatTownFlee;
+                           }
                            else
+                           {
                               gi.EventActive = gi.EventDisplayed = "e011af";
-                           action = GameAction.CombatAttackerFlee;
+                              action = GameAction.CombatAlienFlee;
+                           }
                            if (false == CreateMapItemFlees(gi, gi.MapItemCombat.Defenders))
                            {
                               returnStatus = "CreateMapItemFlee() returned false";
@@ -1860,22 +1867,35 @@ namespace PleasantvilleGame
                            break;
                         case CombatResult.DefenderFlees:
                            if (true == firstAttacker.IsControlled)
+                           {
                               gi.EventActive = gi.EventDisplayed = "e011tf";
+                              action = GameAction.CombatTownFlee;
+                           }
                            else
+                           {
                               gi.EventActive = gi.EventDisplayed = "e011af";
-                           action = GameAction.CombatDefenderFlee;
+                              action = GameAction.CombatAlienFlee;
+                           }
+                           action = GameAction.CombatTownFlee;
                            if (false == CreateMapItemFlees(gi, gi.MapItemCombat.Defenders))
                            {
                               returnStatus = "CreateMapItemFlee() returned false";
                               Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
                            }
-                           break;
+                           break;                   
                         default:
                            returnStatus = "invalid CombatResult=" + gi.MapItemCombat.Result.ToString();
                            Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
                            break;
                      }
                   }
+               }
+               break;
+            case GameAction.CombatShowFleeMove:
+               if (false == CheckForCombats(gi, ref action))
+               {
+                  returnStatus = "Check_ForCombats() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(): " + returnStatus);
                }
                break;
             case GameAction.CombatsFinish:

@@ -1115,9 +1115,9 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.CombatAttackerWin:
-            case GameAction.CombatAttackerFlee:
             case GameAction.CombatDefenderWin:
-            case GameAction.CombatDefenderFlee:
+            case GameAction.CombatAlienFlee:
+            case GameAction.CombatTownFlee:
                if (false == UpdateCanvasMovement(gi, action, gi.Stacks, myButtons))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMovement() returned error ");
@@ -1714,7 +1714,8 @@ namespace PleasantvilleGame
          if (Visibility.Hidden == myRectangle4.Visibility) // if selected, deselect it
          {
             myRectangle4.Visibility = Visibility.Visible;
-            myRightMapItemsInActionPanelSelected.Add(mi);
+            if( false == myRightMapItemsInActionPanel.Contains(mi))
+              myRightMapItemsInActionPanelSelected.Add(mi);
             Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton4InHelperPanel(): Adding mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myRightMapItemsInActionPanelSelected.ToString());
          }
          else
@@ -1752,7 +1753,8 @@ namespace PleasantvilleGame
          if (Visibility.Hidden == myRectangle5.Visibility) // if selected, deselect it
          {
             myRectangle5.Visibility = Visibility.Visible;
-            myRightMapItemsInActionPanelSelected.Add(mi); 
+            if (false == myRightMapItemsInActionPanel.Contains(mi))
+               myRightMapItemsInActionPanelSelected.Add(mi);
             Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton5InHelperPanel(): Adding mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myRightMapItemsInActionPanelSelected.ToString());
          }
          else
@@ -1788,7 +1790,8 @@ namespace PleasantvilleGame
          if (Visibility.Hidden == myRectangle6.Visibility) // if selected, deselect it
          {
             myRectangle6.Visibility = Visibility.Visible;
-            myRightMapItemsInActionPanelSelected.Add(mi);
+            if (false == myRightMapItemsInActionPanel.Contains(mi))
+               myRightMapItemsInActionPanelSelected.Add(mi);
             Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton6InHelperPanel(): Adding mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myRightMapItemsInActionPanelSelected.ToString());
          }
          else
@@ -2925,7 +2928,7 @@ namespace PleasantvilleGame
             gi.MapItemCombat.Attackers.Add(mi);
          foreach (IMapItem mi in myRightMapItemsInActionPanelSelected)
             gi.MapItemCombat.Defenders.Add(mi);
-         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Roll_Combat(): a=" + myLeftMapItemsInActionPanelSelected.ToString() + " d=" + myRightMapItemsInActionPanelSelected.ToString() + myGameInstance.MapItemCombat.ToString());
+         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Roll_Combat(): l=" + myLeftMapItemsInActionPanelSelected.ToString() + " r=" + myRightMapItemsInActionPanelSelected.ToString() + " " + myGameInstance.MapItemCombat.ToString());
          //-----------------------------------------------------------------------------
          myGameInstance.EventActive = myGameInstance.EventDisplayed; // As soon as you roll the die, the current event becomes the active event
          myGameInstance.DieRollAction = GameAction.CombatsRoll;

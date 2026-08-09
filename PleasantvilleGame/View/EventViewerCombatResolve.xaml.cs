@@ -225,7 +225,7 @@ namespace PleasantvilleGame
          }
          else
          {
-            Logger.Log(LogEnum.LE_ERROR, "Resolve_Combat(): Reached Default mi=" + firstDefender.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "Resolve_Combat(): Reached Default for unknown mi=" + firstDefender.ToString());
             return false;
          }
          //--------------------------------------------------

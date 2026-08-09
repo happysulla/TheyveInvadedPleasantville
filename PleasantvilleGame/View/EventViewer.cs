@@ -1192,6 +1192,11 @@ namespace PleasantvilleGame
                            action = GameAction.CombatsFinish;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
+                        case "Continue011af":
+                        case "Continue011tf":
+                           action = GameAction.CombatShowFleeMove;
+                           myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+                           return;
                         case "ExitGame":
                            action = GameAction.EndGameExit;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);

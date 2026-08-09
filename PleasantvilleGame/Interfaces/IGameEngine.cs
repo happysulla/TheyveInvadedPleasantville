@@ -82,9 +82,10 @@ namespace PleasantvilleGame
       CombatsSelect,
       CombatsRoll,
       CombatAttackerWin,
-      CombatAttackerFlee,
       CombatDefenderWin,
-      CombatDefenderFlee,
+      CombatAlienFlee,
+      CombatTownFlee,
+      CombatShowFleeMove,
       CombatsFinish,
 
       InterrogationsSelect,
