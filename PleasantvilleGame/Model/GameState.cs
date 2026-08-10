@@ -372,7 +372,7 @@ namespace PleasantvilleGame
                   continue;
                foreach (MapItem mi in stack.MapItems)
                {
-                  if ((true == mi.IsInterrogatedThisTurn) || (true == mi.IsInterrogated) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned))
+                  if ((true == mi.IsInterrogated) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned))
                      continue;
                   if (true == mi.IsControlled)
                   {
@@ -504,6 +504,7 @@ namespace PleasantvilleGame
                      Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): Reset_Phase() returned error");
                      return false;
                   }
+                  gi.EventDisplayed = gi.EventActive = "e014t";
                }
                Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "CheckFor_AlienTakeovers(): t=" + stack.Territory.ToString() + " v=" + possibleVictims.ToString() + " ua=" + unknownAliens.ToString() + " ka=" + knownAliens.ToString());
                if ( false == gi.PlayerAlien.ShowPossibleTakeover(gi, stack, ref action))
@@ -544,7 +545,6 @@ namespace PleasantvilleGame
                mi.IsConversedThisTurn = false;
                mi.IsInfluencedThisTurn = false;
                mi.IsCombatThisTurn = false;
-               mi.IsInterrogatedThisTurn = false;
                mi.IsImplantRemovalThisTurn = false;
                mi.IsTakeoverThisTurn = false;
                if ((true == mi.IsSurrendered) || (true == mi.IsKilled))
@@ -1800,6 +1800,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
+            case GameAction.CombatsSelect: // handled in the GameViewWindow.xaml.cs file
                break;
             case GameAction.UpdateRotateStack:
                if (false == RotateStack(gi))
@@ -1889,7 +1890,6 @@ namespace PleasantvilleGame
                   }
                }
                break;
-            case GameAction.CombatsSelect: // handled in the GameViewWindow.xaml.cs file
             case GameAction.CombatShowFleeMove:
                if (false == CheckForCombats(gi, ref action))
                {
@@ -2033,6 +2033,8 @@ namespace PleasantvilleGame
                   returnStatus = "Scatter_Stack() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                }
+               break;
+            case GameAction.InterrogationsSelect:
                break;
             default:
                returnStatus = "reached default action=" + action.ToString();

@@ -64,7 +64,6 @@ namespace PleasantvilleGame
       bool IsConversedThisTurn { get; set; }
       bool IsInfluencedThisTurn { get; set; }
       bool IsCombatThisTurn { get; set; }
-      bool IsInterrogatedThisTurn { get; set; }
       bool IsImplantRemovalThisTurn { get; set; }
       bool IsTakeoverThisTurn { get; set; }
       //----------------------------------------

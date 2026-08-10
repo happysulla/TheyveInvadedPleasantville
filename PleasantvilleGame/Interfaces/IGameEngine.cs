@@ -89,7 +89,7 @@ namespace PleasantvilleGame
       CombatsFinish,
 
       InterrogationsSelect,
-      InterrogationsRoll,
+      InterrogationsPerform,
       InterrogationsFinish,
 
       ImplantRemovalsSelect,

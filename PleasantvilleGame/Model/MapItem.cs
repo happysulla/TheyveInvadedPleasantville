@@ -220,7 +220,6 @@ namespace PleasantvilleGame
          this.IsConversedThisTurn = mi.IsConversedThisTurn;
          this.IsInfluencedThisTurn = mi.IsInfluencedThisTurn;
          this.IsCombatThisTurn = mi.IsCombatThisTurn;
-         this.IsInterrogatedThisTurn = mi.IsInterrogatedThisTurn;
          this.IsImplantRemovalThisTurn = mi.IsImplantRemovalThisTurn;
          this.IsTakeoverThisTurn = mi.IsTakeoverThisTurn;
       }
@@ -259,7 +258,6 @@ namespace PleasantvilleGame
          this.IsConversedThisTurn = mi.IsConversedThisTurn;
          this.IsInfluencedThisTurn = mi.IsInfluencedThisTurn;
          this.IsCombatThisTurn = mi.IsCombatThisTurn;
-         this.IsInterrogatedThisTurn = mi.IsInterrogatedThisTurn;
          this.IsImplantRemovalThisTurn = mi.IsImplantRemovalThisTurn;
          this.IsTakeoverThisTurn = mi.IsTakeoverThisTurn;
 
