@@ -1609,7 +1609,8 @@ namespace PleasantvilleGame
          if (Visibility.Hidden == myRectangle1.Visibility) // if selected, deselect it
          {
             myRectangle1.Visibility = Visibility.Visible;
-            myLeftMapItemsInActionPanelSelected.Add(mi);
+            if (false == myLeftMapItemsInActionPanelSelected.Contains(mi))
+               myLeftMapItemsInActionPanelSelected.Add(mi);
             Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton1InHelperPanel(): Adding mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myLeftMapItemsInActionPanelSelected.ToString());
          }
          else
@@ -1644,7 +1645,8 @@ namespace PleasantvilleGame
          if (Visibility.Hidden == myRectangle2.Visibility) // if selected, deselect it
          {
             myRectangle2.Visibility = Visibility.Visible;
-            myLeftMapItemsInActionPanelSelected.Add(mi);
+            if (false == myLeftMapItemsInActionPanelSelected.Contains(mi))
+               myLeftMapItemsInActionPanelSelected.Add(mi);
             Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton2InHelperPanel(): Adding mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myLeftMapItemsInActionPanelSelected.ToString());
          }
          else
@@ -1679,7 +1681,8 @@ namespace PleasantvilleGame
          if (Visibility.Hidden == myRectangle3.Visibility) // if selected, deselect it
          {
             myRectangle3.Visibility = Visibility.Visible;
-            myLeftMapItemsInActionPanelSelected.Add(mi);
+            if (false == myLeftMapItemsInActionPanelSelected.Contains(mi))
+               myLeftMapItemsInActionPanelSelected.Add(mi);
             Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton3InHelperPanel(): Adding mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myLeftMapItemsInActionPanelSelected.ToString());
          }
          else
@@ -1714,7 +1717,7 @@ namespace PleasantvilleGame
          if (Visibility.Hidden == myRectangle4.Visibility) // if selected, deselect it
          {
             myRectangle4.Visibility = Visibility.Visible;
-            if( false == myRightMapItemsInActionPanel.Contains(mi))
+            if( false == myRightMapItemsInActionPanelSelected.Contains(mi))
               myRightMapItemsInActionPanelSelected.Add(mi);
             Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton4InHelperPanel(): Adding mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myRightMapItemsInActionPanelSelected.ToString());
          }
@@ -1753,7 +1756,7 @@ namespace PleasantvilleGame
          if (Visibility.Hidden == myRectangle5.Visibility) // if selected, deselect it
          {
             myRectangle5.Visibility = Visibility.Visible;
-            if (false == myRightMapItemsInActionPanel.Contains(mi))
+            if (false == myRightMapItemsInActionPanelSelected.Contains(mi))
                myRightMapItemsInActionPanelSelected.Add(mi);
             Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton5InHelperPanel(): Adding mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myRightMapItemsInActionPanelSelected.ToString());
          }
@@ -1790,7 +1793,7 @@ namespace PleasantvilleGame
          if (Visibility.Hidden == myRectangle6.Visibility) // if selected, deselect it
          {
             myRectangle6.Visibility = Visibility.Visible;
-            if (false == myRightMapItemsInActionPanel.Contains(mi))
+            if (false == myRightMapItemsInActionPanelSelected.Contains(mi))
                myRightMapItemsInActionPanelSelected.Add(mi);
             Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton6InHelperPanel(): Adding mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myRightMapItemsInActionPanelSelected.ToString());
          }

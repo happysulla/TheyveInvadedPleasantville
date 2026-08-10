@@ -246,29 +246,21 @@ namespace PleasantvilleGame
                }
                else                                  
                {
-                  if (1 == tableFactor)   // shift column to left
+                  if (1 == differential)   // shift column to left
                      tableFactor = 0;
-                  else if (2 == tableFactor)
+                  else if (2 == differential)
                      tableFactor = 1;
-                  else if (3 == tableFactor)
+                  else if (3 == differential)
                      tableFactor = 2;
-                  else if (4 == tableFactor)
+                  else if (4 == differential)
                      tableFactor = 3;
                }
                break;  // only one column shift occurs.
             }
          }
          //----------------------------------------
-         if ( differential < 1)
-            combat.Result = theTable[dieRoll, tableFactor];
-         else if ( differential < 4)
-            combat.Result = theTable[dieRoll, tableFactor];
-         else if (differential < 7)
-            combat.Result = theTable[dieRoll, tableFactor];
-         else if (differential < 10)
-            combat.Result = theTable[dieRoll, tableFactor];
-         else
-            combat.Result = theTable[dieRoll, tableFactor];
+         combat.Result = theTable[dieRoll, tableFactor];
+         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Get_CombatResult(): dr=" + dieRoll.ToString() + " d=" + differential.ToString() + " tf=" + tableFactor.ToString() + " result=" + combat.Result.ToString());
          return true;
       }
       static public bool CreateTownspeople(IGameInstance gi)

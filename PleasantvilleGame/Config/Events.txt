@@ -149,7 +149,10 @@ e011tf	"<Bold>e011af Combats - Town Flees</Bold>  <InlineUIContainer><Button Con
 Each counter flees using Random Movement per <InlineUIContainer><Button Content='r6.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. Click image to continue.
 <LineBreak/><LineBreak/>
                                         <InlineUIContainer><Image Name='Continue011tf' Height='100' Width='100'></Image></InlineUIContainer>"
-e012t	"<Bold>e012t Interrogations</Bold>  <InlineUIContainer><Button Content='r7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+e012t	"<Bold>e012t Interrogations</Bold>  <InlineUIContainer><Button Content='r8.7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+<LineBreak/><LineBreak/>"
+e013t	"<Bold>e013t Implant Removals</Bold>  <InlineUIContainer><Button Content='r8.7.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> 
+<InlineUIContainer><Button Content='Implant Removal' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>"
 e501	"<Bold>e501 Game Won!!!</Bold>
 <LineBreak/><LineBreak/>"
