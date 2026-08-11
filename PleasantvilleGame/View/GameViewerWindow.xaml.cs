@@ -1620,7 +1620,7 @@ namespace PleasantvilleGame
          {
             myRectangle1.Visibility = Visibility.Visible;
             if (false == myLeftMapItemsInActionPanelSelected.Contains(mi))
-               myLeftMapItemsInActionPanelSelected.Remove(mi.Name);
+               myLeftMapItemsInActionPanelSelected.Add(mi);
             Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton1InHelperPanel(): Adding mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myLeftMapItemsInActionPanelSelected.ToString());
          }
          else
@@ -1658,7 +1658,7 @@ namespace PleasantvilleGame
          {
             myRectangle2.Visibility = Visibility.Visible;
             if (false == myLeftMapItemsInActionPanelSelected.Contains(mi))
-               myLeftMapItemsInActionPanelSelected.Remove(mi.Name);
+               myLeftMapItemsInActionPanelSelected.Add(mi);
             Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton2InHelperPanel(): Adding mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myLeftMapItemsInActionPanelSelected.ToString());
          }
          else
@@ -1695,7 +1695,8 @@ namespace PleasantvilleGame
          if (Visibility.Hidden == myRectangle3.Visibility) // if selected, deselect it
          {
             myRectangle3.Visibility = Visibility.Visible;
-            myLeftMapItemsInActionPanelSelected.Add(mi);
+            if (false == myLeftMapItemsInActionPanelSelected.Contains(mi))
+               myLeftMapItemsInActionPanelSelected.Add(mi);
             Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton3InHelperPanel(): Adding mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myLeftMapItemsInActionPanelSelected.ToString());
          }
          else
@@ -1713,6 +1714,7 @@ namespace PleasantvilleGame
          switch (myGameInstance.GamePhase)
          {
             case GamePhase.Conversations:
+            case GamePhase.Influences:
             case GamePhase.ImplantRemovals:
                myRectangle5.Visibility = Visibility.Hidden;
                myRectangle6.Visibility = Visibility.Hidden;
@@ -1750,6 +1752,7 @@ namespace PleasantvilleGame
          switch (myGameInstance.GamePhase)
          {
             case GamePhase.Conversations:
+            case GamePhase.Influences:
             case GamePhase.ImplantRemovals:
                myRectangle4.Visibility = Visibility.Hidden;
                myRectangle6.Visibility = Visibility.Hidden;
@@ -1789,6 +1792,7 @@ namespace PleasantvilleGame
          switch (myGameInstance.GamePhase)
          {
             case GamePhase.Conversations:
+            case GamePhase.Influences:
             case GamePhase.ImplantRemovals:
                myRectangle4.Visibility = Visibility.Hidden;
                myRectangle5.Visibility = Visibility.Hidden;
@@ -2515,7 +2519,7 @@ namespace PleasantvilleGame
          }
          foreach (IMapItem mi in stack.MapItems)
          {
-            if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsWary))
+            if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) )
                continue;
             if (true == mi.IsControlled)
             {
@@ -2741,9 +2745,9 @@ namespace PleasantvilleGame
          int dieRollModifier = 0;
          if (true == isImplantHeld) // Subtact one if a controlled person holds evidence of an implant.
             --dieRollModifier;
-         if (true == rightMapItem.IsSkeptical) // Check if MapItem is skeptical.  If both skeptical and wary,
+         if (true == rightMapItem.IsSkeptical) // Check if MapItem is skeptical.  This adds to die roll.
             ++dieRollModifier;
-         if (true == rightMapItem.IsWary)  // If not skeptical, check if wary.  This adds to the die roll.
+         if (true == rightMapItem.IsWary)  // Check if wary.  This subtracts to the die roll.
             --dieRollModifier;
          int final = dieRoll + dieRollModifier;
          //------------------------------------------------

@@ -178,7 +178,7 @@ namespace PleasantvilleGame
          SetOn(LogEnum.LE_SHOW_COMBATS);
          //SetOn(LogEnum.LE_SHOW_ITEROGATIONS);
          //SetOn(LogEnum.LE_SHOW_ITEROGATIONS);
-         //SetOn(LogEnum.LE_SHOW_TAKEOVERS);
+         SetOn(LogEnum.LE_SHOW_TAKEOVERS);
          //SetOn(LogEnum.LE_SHOW_OBSERVATIONS);
          //SetOn(LogEnum.LE_SHOW_OBSERVATIONS_METRIC);
          //-------------

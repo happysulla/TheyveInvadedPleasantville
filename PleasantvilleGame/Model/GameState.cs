@@ -1706,9 +1706,9 @@ namespace PleasantvilleGame
                      int dieRollModifier = 0;
                      if (true == isImplantHeld) // Subtact one if a controlled person holds evidence of an implant.
                         --dieRollModifier;
-                     if (true == rightMapItem.IsSkeptical) // Check if MapItem is skeptical.  If both skeptical and wary,
+                     if (true == rightMapItem.IsSkeptical) 
                         ++dieRollModifier;
-                     if (true == rightMapItem.IsWary)  // If not skeptical, check if wary.  This adds to the die roll.
+                     if (true == rightMapItem.IsWary)  
                         --dieRollModifier;
                      int dieRollWithMod = dieRoll + dieRollModifier;
                      Logger.Log(LogEnum.LE_SHOW_INFLUENCES, "GameStateInfluences.PerformAction(): odds=" + odds.ToString("F1") + " r=" + rightMapItem.ToString() + " (dr=" + dieRoll.ToString() + ") + (m=" + dieRollModifier.ToString() + ") <>=> (t=" + dieThreshold.ToString() + ")"); 
