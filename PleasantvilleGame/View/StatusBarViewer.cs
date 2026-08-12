@@ -37,7 +37,7 @@ namespace PleasantvilleGame
                Label label = (Label)item;
                if (label.Name == "myLabelInfluenceAlien")
                {
-                  if (false == GameEngine.theIsAlien)
+                  if ((GameType.MultiPlayerJoin == GameEngine.theGameType) || (GameType.SinglePlayerAlien == GameEngine.theGameType))
                      item.Visibility = Visibility.Hidden;
                }
             }
@@ -134,21 +134,21 @@ namespace PleasantvilleGame
                   sb.Append("Next Action = ");
                   if ("Decides Where to Perform Combats" == gi.NextAction)
                   {
-                     if (true == GameEngine.theIsAlien)
+                     if ((GameType.MultiPlayerJoin == GameEngine.theGameType) || (GameType.SinglePlayerAlien == GameEngine.theGameType))
                         sb.Append("Alien ");
                      else
                         sb.Append("Townsperson ");
                   }
                   else if ("Ack Random Movement" == gi.NextAction)
                   {
-                     if (true == GameEngine.theIsAlien)
+                     if ((GameType.MultiPlayerJoin == GameEngine.theGameType) || (GameType.SinglePlayerAlien == GameEngine.theGameType))
                         sb.Append("Awaiting Alien ");
                      else
                         sb.Append("Awaiting Townsperson ");
                   }
                   else if ("Display Random Movement" == gi.NextAction)
                   {
-                     if (true == GameEngine.theIsAlien)
+                     if ((GameType.MultiPlayerJoin == GameEngine.theGameType) || (GameType.SinglePlayerAlien == GameEngine.theGameType))
                         sb.Append("Awaiting Alien ");
                      else
                         sb.Append("Awaiting Townsperson ");

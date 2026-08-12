@@ -1032,7 +1032,7 @@ namespace PleasantvilleGame
             return false;
          }
          GameAction outAction = GameAction.Error;
-         if( true == GameEngine.theIsAlien )
+         if( GameType.MultiPlayerJoin == GameEngine.theGameType )
             outAction = GameAction.RandomMovementConfirmAlien;
          else
             outAction = GameAction.RandomMovementTownsShow;

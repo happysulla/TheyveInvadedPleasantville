@@ -235,7 +235,7 @@ namespace PleasantvilleGame
             return;
          }
          //---------------------------------------------------------------
-         if (true == GameEngine.theIsAlien)
+         if ((GameType.MultiPlayerJoin == GameEngine.theGameType) || (GameType.SinglePlayerAlien == GameEngine.theGameType))
             myTextBoxOpponent.Foreground = Utilities.theAlienControlledBrush;
          else
             myTextBoxOpponent.Foreground = Utilities.theTownControlledBrush;
@@ -311,7 +311,7 @@ namespace PleasantvilleGame
          mi2.InputGestureText = "Shift+S";
          mi2.Click += this.ContextMenuClickReturnToStart;
          myContextMenuButton.Items.Add(mi2);
-         if (true == GameEngine.theIsAlien)
+         if ((GameType.MultiPlayerJoin == GameEngine.theGameType) || (GameType.SinglePlayerAlien == GameEngine.theGameType))
          {
             MenuItem mi3 = new MenuItem();
             mi3.Header = "_Stop Townsperson Move";
@@ -936,14 +936,38 @@ namespace PleasantvilleGame
       private void UpdateWindowTitle()
       {
          StringBuilder sb55 = new StringBuilder();
-         if (true == GameEngine.theIsHost)
+         if (GameType.MultiPlayerHost== GameEngine.theGameType)
             sb55.Append("SERVER: ");
-         else
+         else if (GameType.MultiPlayerJoin == GameEngine.theGameType)
             sb55.Append("CLIENT: ");
-         if (true == GameEngine.theIsAlien)
-            sb55.Append("Pleasantville For Aliens");
+         if ((GameType.MultiPlayerJoin == GameEngine.theGameType) || (GameType.SinglePlayerAlien == GameEngine.theGameType))
+         {
+            if (0 < myGameInstance.GameTurn)
+            {
+               sb55.Append("Pleasantville For Aliens - Turn#");
+               sb55.Append(myGameInstance.GameTurn.ToString());
+            }
+            else
+            {
+               sb55.Append("Pleasantville For Town - Setup");
+            }
+         }
+         else if ((GameType.MultiPlayerHost == GameEngine.theGameType) || (GameType.SinglePlayerTown == GameEngine.theGameType))
+         {
+            if( 0 < myGameInstance.GameTurn)
+            {
+               sb55.Append("Pleasantville For Town - Turn#");
+               sb55.Append(myGameInstance.GameTurn.ToString());
+            }
+            else
+            {
+               sb55.Append("Pleasantville For Town - Setup");
+            }
+         }
          else
-            sb55.Append("Pleasantville For Humans");
+         {
+            sb55.Append("Pleasantville - Setup");
+         }
          this.Title = sb55.ToString();
       }
       //-------------INTERFACE FUNCTIONS---------------------------------
@@ -957,19 +981,16 @@ namespace PleasantvilleGame
             return;
          }
          myGameInstance = gi;
+         UpdateWindowTitle();
          switch (action) // Perform acton based on the current next action.
          {
             case GameAction.GameSetupHostGame:
-               UpdateWindowTitle();
                break;
             case GameAction.GameSetupJoinGame:
-               UpdateWindowTitle();
                break;
             case GameAction.GameSetupPlayAlien:
-               UpdateWindowTitle();
                break;
             case GameAction.GameSetupPlayTownsperson:
-               UpdateWindowTitle();
                break;
             case GameAction.RandomMovementStartTowns:
                UpdateActionPanelClear();
@@ -1276,9 +1297,9 @@ namespace PleasantvilleGame
          app.Shutdown();
       }
       //-------------HELPER PANEL--------------------------------------------
-      private bool UpdateActionPanel(IGameInstance gi, bool isOkButtonDisplayed)
+      private bool UpdateActionPanel(IGameInstance gi)
       {
-         Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "Update_ActionPanel(); isOkButtonDisplayed=" + isOkButtonDisplayed.ToString());
+         Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "Update_ActionPanel() ENTERED");
          const double button1Left = 169;
          const double button2Left = 97;
          myButton1.IsEnabled = true;
@@ -1448,7 +1469,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): reached default myLeftMapItemsInActionPanel.Count=" + myLeftMapItemsInActionPanel.Count.ToString());
                return false;
          }
-         if (true == isOkButtonDisplayed)
+         if ((GameType.MultiPlayerHost == GameEngine.theGameType) || (GameType.SinglePlayerTown == GameEngine.theGameType))
          {
             myButtonHelperOK.Visibility = Visibility.Visible;
             myButtonHelperCancel.Visibility = Visibility.Visible;
@@ -1629,7 +1650,7 @@ namespace PleasantvilleGame
             myLeftMapItemsInActionPanelSelected.Remove(mi.Name);
             Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton1InHelperPanel(): Removing mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myLeftMapItemsInActionPanelSelected.ToString());
          }
-         if( false == UpdateActionPanel(myGameInstance, true))
+         if( false == UpdateActionPanel(myGameInstance))
             Logger.Log(LogEnum.LE_ERROR, "ClickButton1InHelperPanel(): Update_ActionPanel() returned false");
       }
       private void ClickButton2InHelperPanel(object sender, RoutedEventArgs e)
@@ -1667,7 +1688,7 @@ namespace PleasantvilleGame
             myLeftMapItemsInActionPanelSelected.Remove(mi.Name);
             Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton2InHelperPanel(): Removing mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myLeftMapItemsInActionPanelSelected.ToString());
          }
-         if (false == UpdateActionPanel(myGameInstance, true))
+         if (false == UpdateActionPanel(myGameInstance))
             Logger.Log(LogEnum.LE_ERROR, "ClickButton2InHelperPanel(): Update_ActionPanel() returned false");
       }
       private void ClickButton3InHelperPanel(object sender, RoutedEventArgs e)
@@ -1706,7 +1727,7 @@ namespace PleasantvilleGame
                myLeftMapItemsInActionPanelSelected.Remove(mi.Name);
             Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton3InHelperPanel(): Removing mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myLeftMapItemsInActionPanelSelected.ToString());
          }
-         if (false == UpdateActionPanel(myGameInstance, true))
+         if (false == UpdateActionPanel(myGameInstance))
             Logger.Log(LogEnum.LE_ERROR, "ClickButton3InHelperPanel(): Update_ActionPanel() returned false");
       }
       private void ClickButton4InHelperPanel(object sender, RoutedEventArgs e)
@@ -1744,7 +1765,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton4InHelperPanel(): Removing mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myRightMapItemsInActionPanelSelected.ToString());
          }
          //-----------------------------------------------------------  
-         if (false == UpdateActionPanel(myGameInstance, true))
+         if (false == UpdateActionPanel(myGameInstance))
             Logger.Log(LogEnum.LE_ERROR, "ClickButton4InHelperPanel(): Update_ActionPanel() returned false");
       }
       private void ClickButton5InHelperPanel(object sender, RoutedEventArgs e)
@@ -1784,7 +1805,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton5InHelperPanel(): Removing mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myRightMapItemsInActionPanelSelected.ToString());
          }
          //-----------------------------------------------------------  
-         if (false == UpdateActionPanel(myGameInstance, true))
+         if (false == UpdateActionPanel(myGameInstance))
             Logger.Log(LogEnum.LE_ERROR, "ClickButton5InHelperPanel(): Update_ActionPanel() returned false");
       }
       private void ClickButton6InHelperPanel(object sender, RoutedEventArgs e)
@@ -1822,7 +1843,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL, "ClickButton6InHelperPanel(): Removing mi=" + mi.Name + " myRightMapItemsInActionPanelSelected=" + myRightMapItemsInActionPanelSelected.ToString());
          }
          //-----------------------------------------------------------  
-         if (false == UpdateActionPanel(myGameInstance, true))
+         if (false == UpdateActionPanel(myGameInstance))
             Logger.Log(LogEnum.LE_ERROR, "ClickButton6InHelperPanel(): Update_ActionPanel() returned false");
       }
       private void ClickButtonOkInHelperPanel(object sender, RoutedEventArgs e)
@@ -2238,7 +2259,7 @@ namespace PleasantvilleGame
       }
       private bool UpdateTownMovementTownPerforms(IGameInstance gi, GameAction action)
       {
-         if (false == GameEngine.theIsAlien)
+         if ((GameType.MultiPlayerHost == GameEngine.theGameType) || (GameType.SinglePlayerTown == GameEngine.theGameType))
          {
             myRectangleMaps.Clear();
             int index2 = 0;
@@ -2387,7 +2408,7 @@ namespace PleasantvilleGame
                }
                myRightMapItemsInActionPanelSelected.Add(rightMapItem1);
             }
-            if ( false == UpdateActionPanel(gi, !GameEngine.theIsAlien))
+            if ( false == UpdateActionPanel(gi))
             {
                Logger.Log(LogEnum.LE_ERROR, "Display_Conversation(): Update_ActionPanel() returned error");
                return false;
@@ -2553,7 +2574,7 @@ namespace PleasantvilleGame
                }
                myRightMapItemsInActionPanelSelected.Add(rightMapItem1);
             }
-            if (false == UpdateActionPanel(gi, !GameEngine.theIsAlien))
+            if (false == UpdateActionPanel(gi))
             {
                Logger.Log(LogEnum.LE_ERROR, "Display_Influence(): Update_ActionPanel() returned error");
                return false;
@@ -2913,7 +2934,7 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_SHOW_COMBATS, "Display_Combat(): a=" + myLeftMapItemsInActionPanelSelected.ToString() + " d=" + myRightMapItemsInActionPanelSelected.ToString());
          if ((0 < myLeftMapItemsInActionPanel.Count) && (0 < myRightMapItemsInActionPanel.Count))
          {
-            if (false == UpdateActionPanel(gi, true))
+            if (false == UpdateActionPanel(gi))
             {
                Logger.Log(LogEnum.LE_ERROR, "Display_Combat(): Update_ActionPanel() returned error");
                return false;
@@ -3055,7 +3076,7 @@ namespace PleasantvilleGame
                }
                myRightMapItemsInActionPanelSelected.Add(rightMapItem1);
             }
-            if (false == UpdateActionPanel(gi, !GameEngine.theIsAlien))
+            if (false == UpdateActionPanel(gi))
             {
                Logger.Log(LogEnum.LE_ERROR, "Display_Iterogations(): Update_ActionPanel() returned error");
                return false;
@@ -3274,7 +3295,7 @@ namespace PleasantvilleGame
 
             if ((0 != myLeftMapItemsInActionPanel.Count) && (0 != myRightMapItemsInActionPanel.Count))
             {
-               if (false == UpdateActionPanel(gi, !GameEngine.theIsAlien))
+               if (false == UpdateActionPanel(gi))
                {
                   Logger.Log(LogEnum.LE_ERROR, "Display_ImplantRemoval(): Update_ActionPanel() returned error");
                   return false;
@@ -3801,9 +3822,9 @@ namespace PleasantvilleGame
                   if (cm.Items[2] is MenuItem)
                   {
                      MenuItem menuItem = (MenuItem)cm.Items[0];
-                     if ((true == GameEngine.theIsAlien) && (GamePhase.AlienMovement == myGameInstance.GamePhase) && (true == mi.IsMoved))
+                     if (((GameType.MultiPlayerJoin == GameEngine.theGameType) || (GameType.SinglePlayerAlien == GameEngine.theGameType)) && (GamePhase.AlienMovement == myGameInstance.GamePhase) && (true == mi.IsMoved))
                         menuItem.IsEnabled = true;
-                     else if ((false == GameEngine.theIsAlien) && (GamePhase.TownspersonMovement == myGameInstance.GamePhase) && (true == mi.IsMoved))
+                     else if (((GameType.MultiPlayerHost == GameEngine.theGameType) || (GameType.SinglePlayerTown == GameEngine.theGameType)) && (GamePhase.TownspersonMovement == myGameInstance.GamePhase) && (true == mi.IsMoved))
                         menuItem.IsEnabled = true;
                   }
                }
@@ -4067,9 +4088,9 @@ namespace PleasantvilleGame
          //------------------------------------------------------------
          if (false == selectedMapItem.IsMoveAllowedToResetThisTurn) // if not allowed to reset, do nothing
          {
-            if ((true == myIsFlagSetForMoveReset) && (true == GameEngine.theIsAlien) && (GamePhase.AlienMovement == myGameInstance.GamePhase))
+            if ((true == myIsFlagSetForMoveReset) && ((GameType.MultiPlayerHost == GameEngine.theGameType) || (GameType.SinglePlayerTown == GameEngine.theGameType)) && (GamePhase.AlienMovement == myGameInstance.GamePhase))
                MessageBox.Show("Reset Not Allowed");
-            if ((true == myIsFlagSetForMoveReset) && (false == GameEngine.theIsAlien) && (GamePhase.TownspersonMovement == myGameInstance.GamePhase))
+            if ((true == myIsFlagSetForMoveReset) && ((GameType.MultiPlayerHost == GameEngine.theGameType) || (GameType.SinglePlayerTown == GameEngine.theGameType)) && (GamePhase.TownspersonMovement == myGameInstance.GamePhase))
                MessageBox.Show("Reset Not Allowed");
             myIsFlagSetForMoveReset = true;
 
@@ -4079,14 +4100,14 @@ namespace PleasantvilleGame
          switch (myGameInstance.GamePhase)
          {
             case GamePhase.AlienMovement:
-               if ((true == selectedMapItem.IsControlled) || (false == GameEngine.theIsAlien))
+               if ((true == selectedMapItem.IsControlled) || ((GameType.MultiPlayerHost == GameEngine.theGameType) || (GameType.SinglePlayerTown == GameEngine.theGameType)))
                {
                   myGameEngine.PerformAction(ref myGameInstance, ref outAction);
                   return true;  // do nothing
                }
                break;
             case GamePhase.TownspersonMovement:
-               if ((false == selectedMapItem.IsControlled) || (true == GameEngine.theIsAlien))
+               if ((false == selectedMapItem.IsControlled) || ((GameType.MultiPlayerJoin == GameEngine.theGameType) || (GameType.SinglePlayerAlien == GameEngine.theGameType)))
                {
                   myGameEngine.PerformAction(ref myGameInstance, ref outAction);
                   return true;  // do nothing

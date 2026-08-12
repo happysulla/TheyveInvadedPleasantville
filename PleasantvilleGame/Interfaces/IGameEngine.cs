@@ -5,6 +5,14 @@ using System.Windows.Controls;
 
 namespace PleasantvilleGame
 {
+   public enum GameType
+   {
+      Error,
+      SinglePlayerTown,
+      SinglePlayerAlien,
+      MultiPlayerHost,
+      MultiPlayerJoin
+   };
    [Serializable]
    public enum GamePhase
    {

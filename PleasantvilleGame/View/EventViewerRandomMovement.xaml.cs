@@ -181,9 +181,9 @@ namespace PleasantvilleGame
             }
             myGridRows[numPeopleMoved] = new GridRow(mi, buildingName);
             numPeopleMoved++;
-            if ((false == GameEngine.theIsAlien) && (true == mi.IsControlled))
+            if ((GameType.SinglePlayerAlien != GameEngine.theGameType) && (true == mi.IsControlled) )
                myIsPossibleBlock = true;
-            else if ((true == GameEngine.theIsAlien) && ((true == mi.IsAlienKnown) || (true == mi.IsAlienUnknown)))
+            else if ((GameType.MultiPlayerJoin == GameEngine.theGameType) && ((true == mi.IsAlienKnown) || (true == mi.IsAlienUnknown)) )
                myIsPossibleBlock = true;
          }
          myMaxRowCount = numPeopleMoved;
@@ -330,15 +330,15 @@ namespace PleasantvilleGame
                Grid.SetRow(labelForBlock, rowNum);
                Grid.SetColumn(labelForBlock, 3);
             }
-            else if ((false == GameEngine.theIsAlien) && (true == mi.IsControlled))
+            else if ((GameType.SinglePlayerAlien != GameEngine.theGameType) && (true == mi.IsControlled))
             {
                cb1.IsEnabled = true;
                cb1.IsChecked = myGridRows[i].myIsBlockedFromMove;
                cb1.Checked += CheckBox_Checked;
                cb1.Unchecked += CheckBox_Unchecked;
             }
-            else if ((true == GameEngine.theIsAlien) && ((true == mi.IsAlienKnown) || (true == mi.IsAlienUnknown)))
-            {
+            else if ((GameType.MultiPlayerJoin == GameEngine.theGameType) && ((true == mi.IsAlienKnown) || (true == mi.IsAlienUnknown)))
+               {
                cb1.IsEnabled = true;
                cb1.IsChecked = myGridRows[i].myIsBlockedFromMove;
                cb1.Checked += CheckBox_Checked;

@@ -866,9 +866,8 @@ namespace PleasantvilleGame
                      }
                      else
                      {
-                        GameEngine.theIsAlien = false;
-                        GameEngine.theIsHost = true;
-                        HostSessionResultDataTranferObject hostResult = GameEngine.theMultiplayerSessionManager.StartHosting(gi, hostDialog.SessionName, hostDialog.Port);
+                        GameEngine.theGameType = GameType.MultiPlayerHost;
+                          HostSessionResultDataTranferObject hostResult = GameEngine.theMultiplayerSessionManager.StartHosting(gi, hostDialog.SessionName, hostDialog.Port);
                         if (false == hostResult.IsSuccess || null == hostResult.Session)
                         {
                            returnStatus = "Unable to host multiplayer game: " + hostResult.ErrorMessage;
@@ -905,6 +904,7 @@ namespace PleasantvilleGame
                }
                else
                {
+                  GameEngine.theGameType = GameType.MultiPlayerJoin;
                   joinDialog.Owner = MainWindow.theGameViewerWindow;
                   if (true == joinDialog.ShowDialog())
                   {
@@ -923,8 +923,6 @@ namespace PleasantvilleGame
                         }
                         else
                         {
-                           GameEngine.theIsAlien = false;
-                           GameEngine.theIsHost = false;
                            if (false == MultiplayerStateApplier.ApplyVisibleState(gi, joinResult.State, MultiplayerRole.Town))
                            {
                               returnStatus = "Failed to apply the visible host state";
@@ -949,16 +947,14 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.GameSetupPlayAlien:
-               GameEngine.theIsHost = true;
-               GameEngine.theIsAlien = true;
+               GameEngine.theGameType = GameType.SinglePlayerAlien;
                gi.PlayerAlien = new PlayerAlienHuman();
                gi.PlayerTown = new PlayerTownComputer();
                gi.EventActive = gi.EventDisplayed = "e002";
                gi.DieRollAction = GameAction.GameSetupStartingTownsplayerSetRoll;
                break;
             case GameAction.GameSetupPlayTownsperson:
-               GameEngine.theIsHost = true;
-               GameEngine.theIsAlien = false;
+               GameEngine.theGameType = GameType.SinglePlayerTown;
                gi.PlayerAlien = new PlayerAlienComputer();
                gi.PlayerTown = new PlayerTownHuman();
                gi.EventActive = gi.EventDisplayed = "e002";
@@ -1037,6 +1033,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.GameSetupRandomMovementSetup:
+               gi.GameTurn++;
                if (false == ResetPhase(gi, GamePhase.RandomMovement))
                {
                   returnStatus = "Reset_Phase() returned false";
@@ -2179,16 +2176,15 @@ namespace PleasantvilleGame
             case GameAction.AlienTakeoversShow: // Handled by EventViewer
                break;
             case GameAction.AlienTakeoversFinish:
-               if (false == ResetPhase(gi, GamePhase.RandomMovement))
+               if (false == CheckForEndOfGame(gi, ref action))
                {
-                  returnStatus = "Reset_Phase() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                  returnStatus = "CheckFor_EndOfGame() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): " + returnStatus);
                }
-               gi.EventActive = gi.EventDisplayed = "e005";
                break;
             default:
                returnStatus = "reached default action=" + action.ToString();
-               Logger.Log(LogEnum.LE_ERROR, "GameStateAlienTakeover.PerformAction(): " + returnStatus);
+               Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                break;
          }
          StringBuilder sb12 = new StringBuilder();
