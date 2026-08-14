@@ -101,8 +101,8 @@ namespace PleasantvilleGame
       InterrogationsFinish,
 
       ImplantRemovalsSelect,
-      ImplantRemovalsSelectRoll,
-      ImplantRemovalsSelectFinish,
+      ImplantRemovalsRoll,
+      ImplantRemovalsFinish,
 
       AlienTakeoversSelect,
       AlienTakeoversShow,

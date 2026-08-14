@@ -52,6 +52,7 @@ namespace PleasantvilleGame
       bool IsAlienKnown { get; set; }
       bool IsControlled { get; set; }
       bool IsImplantHeld { get; set; }
+      bool IsImplantRemovalAttempt { get; set; }
       bool IsInterrogated { get; set; }
       bool IsSkeptical { get; set; }
       bool IsStunned { get; set; }
@@ -64,7 +65,7 @@ namespace PleasantvilleGame
       bool IsConversedThisTurn { get; set; }
       bool IsInfluencedThisTurn { get; set; }
       bool IsCombatThisTurn { get; set; }
-      bool IsImplantRemovalThisTurn { get; set; }
+      bool IsImplantRemovalAttemptThisTurn { get; set; }
       bool IsTakeoverThisTurn { get; set; }
       //----------------------------------------
       void Copy(IMapItem mi);

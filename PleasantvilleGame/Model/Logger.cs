@@ -69,6 +69,7 @@ namespace PleasantvilleGame
       LE_SHOW_INFLUENCES,
       LE_SHOW_COMBATS,
       LE_SHOW_ITEROGATIONS,
+      LE_SHOW_REMOVALS,
       LE_SHOW_TAKEOVERS,
       LE_SHOW_OBSERVATIONS,
       LE_SHOW_OBSERVATIONS_METRIC,
@@ -164,8 +165,8 @@ namespace PleasantvilleGame
          //SetOn(LogEnum.LE_VIEW_SHOW_STATS_MIN);
          //SetOn(LogEnum.LE_VIEW_SHOW_SETTINGS);
          //-------------
-         SetOn(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL_CLEAR);
-         SetOn(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL);
+         //SetOn(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL_CLEAR);
+         //SetOn(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL);
          SetOn(LogEnum.LE_VIEW_UPDATE_EVENTVIEWER);
          //SetOn(LogEnum.LE_VIEW_UPDATE_MENU);
          //SetOn(LogEnum.LE_VIEW_UPDATE_STATUS_BAR);
@@ -173,11 +174,11 @@ namespace PleasantvilleGame
          //SetOn(LogEnum.LE_VIEW_APPEND_EVENT);
          //SetOn(LogEnum.LE_VIEW_CONTROL_NAME);
          //-------------
-         //SetOn(LogEnum.LE_SHOW_CONVERSATIONS);
+         SetOn(LogEnum.LE_SHOW_CONVERSATIONS);
          SetOn(LogEnum.LE_SHOW_INFLUENCES);
          SetOn(LogEnum.LE_SHOW_COMBATS);
-         //SetOn(LogEnum.LE_SHOW_ITEROGATIONS);
-         //SetOn(LogEnum.LE_SHOW_ITEROGATIONS);
+         SetOn(LogEnum.LE_SHOW_ITEROGATIONS);
+         SetOn(LogEnum.LE_SHOW_REMOVALS);
          SetOn(LogEnum.LE_SHOW_TAKEOVERS);
          //SetOn(LogEnum.LE_SHOW_OBSERVATIONS);
          //SetOn(LogEnum.LE_SHOW_OBSERVATIONS_METRIC);

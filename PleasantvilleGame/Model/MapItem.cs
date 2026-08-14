@@ -92,6 +92,7 @@ namespace PleasantvilleGame
       public bool IsAlienUnknown { get; set; } = false;
       public bool IsAlienKnown { get; set; } = false;
       public bool IsControlled { get; set; } = false;
+      public bool IsImplantRemovalAttempt { get; set; } = false;
       public bool IsImplantHeld { get; set; } = false;
       public bool IsInterrogated { get; set; } = false;
       public bool IsSkeptical { get; set; } = false;
@@ -106,7 +107,7 @@ namespace PleasantvilleGame
       public bool IsInfluencedThisTurn { get; set; } = false;
       public bool IsCombatThisTurn { get; set; } = false;
       public bool IsInterrogatedThisTurn { get; set; } = false;
-      public bool IsImplantRemovalThisTurn { get; set; } = false;
+      public bool IsImplantRemovalAttemptThisTurn { get; set; } = false;
       public bool IsTakeoverThisTurn { get; set; } = false;
       //----------------------------------------
       public MapItem(string name)
@@ -220,7 +221,7 @@ namespace PleasantvilleGame
          this.IsConversedThisTurn = mi.IsConversedThisTurn;
          this.IsInfluencedThisTurn = mi.IsInfluencedThisTurn;
          this.IsCombatThisTurn = mi.IsCombatThisTurn;
-         this.IsImplantRemovalThisTurn = mi.IsImplantRemovalThisTurn;
+         this.IsImplantRemovalAttempt = mi.IsImplantRemovalAttempt;
          this.IsTakeoverThisTurn = mi.IsTakeoverThisTurn;
       }
       public void Sync(IMapItem mi)
@@ -258,7 +259,7 @@ namespace PleasantvilleGame
          this.IsConversedThisTurn = mi.IsConversedThisTurn;
          this.IsInfluencedThisTurn = mi.IsInfluencedThisTurn;
          this.IsCombatThisTurn = mi.IsCombatThisTurn;
-         this.IsImplantRemovalThisTurn = mi.IsImplantRemovalThisTurn;
+         this.IsImplantRemovalAttempt = mi.IsImplantRemovalAttempt;
          this.IsTakeoverThisTurn = mi.IsTakeoverThisTurn;
 
       } // sync this mapitem data with passed-in parameter during spotting

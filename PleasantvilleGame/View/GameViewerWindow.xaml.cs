@@ -1871,7 +1871,8 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "ClickButton_OkInHelperPanel(): PerformInterrogation() returned error");
                break;
             case GamePhase.ImplantRemovals:
-               PerformImplantRemoval(myGameInstance, false);
+               if (false == RollImplantRemoval(myGameInstance))
+                  Logger.Log(LogEnum.LE_ERROR, "ClickButton_OkInHelperPanel(): PerformInterrogation() returned error");
                break;
             default:
                Logger.Log(LogEnum.LE_ERROR, "ClickButton_OkInHelperPanel(): reached default gamephase=" + myGameInstance.GamePhase.ToString());
@@ -3197,73 +3198,6 @@ namespace PleasantvilleGame
          myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
          return true;
       }
-      private bool DisplayImplantRemovals(IGameInstance gi)
-      {
-         myStoryboardFlashing = new Storyboard();
-         foreach (UIElement ui in myCanvasMain.Children) // Clear any previous flashing regions
-         {
-            if (ui is Polygon)
-            {
-               Polygon p1 = (Polygon)ui;
-               p1.Fill = Utilities.theBrushRegionClear; 
-            }
-         }
-         //-------------------------------------------------------------- 
-         foreach (Stack stack in gi.Stacks) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
-         {
-            if (stack.MapItems.Count < 2)
-               continue;
-            IMapItems controlledMapItems = new MapItems();
-            IMapItems aliens = new MapItems();
-            foreach (MapItem mi in stack.MapItems) // In each stack, get the count in the stack of the number of aliens  and controlled townspeople
-            {
-               if ((true == mi.IsImplantRemovalThisTurn) || (true == mi.IsKilled))
-                  continue;
-               if ((true == mi.IsControlled) && (true == mi.IsUnconscious) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
-                  controlledMapItems.Add(mi);
-               else if ((true == mi.IsAlienKnown) && ("Zebulon" != mi.Name) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (false == mi.IsUnconscious)))
-                  aliens.Add(mi);
-            }
-            if ((0 == controlledMapItems.Count) || (0 == aliens.Count))
-               continue;
-            //-------------------------------------------------------------- 
-            IMapItem? controlledMapItem = controlledMapItems[0];
-            if( null == controlledMapItem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "DisplayImplantRemovals() controlledMapItems[0]=null");
-               return false;
-            }
-            String targetName = controlledMapItem.TerritoryCurrent.Name + controlledMapItem.TerritoryCurrent.Subname.ToString();  // Turn the region red
-            foreach (UIElement ui in myCanvasMain.Children)
-            {
-               if (ui is Polygon)
-               {
-                  Polygon p1 = (Polygon)ui;
-                  if (p1.Name == targetName)
-                  {
-                     p1.Fill = mySolidColorBrushRosyBrown;
-                     Canvas.SetZIndex(p1, myZIndexLastUsed);
-                     break;
-                  }
-               }
-            }
-            //-------------------------------------------------------------- 
-            DoubleAnimation anim = new DoubleAnimation(); // Perform animiation on the region
-            anim.From = 0.7;
-            anim.To = 0.2;
-            anim.Duration = new Duration(TimeSpan.FromSeconds(0.6));
-            anim.AutoReverse = true;
-            anim.RepeatBehavior = RepeatBehavior.Forever;
-            myStoryboardFlashing.Children.Add(anim);
-            Storyboard.SetTargetProperty(anim, new PropertyPath(OpacityProperty));
-            Storyboard.SetTargetName(anim, targetName); // Start flashing the region where the user can select
-         }
-         //-------------------------------------------------------------- 
-         if (0 == myStoryboardFlashing.Children.Count)
-            return false;
-         myStoryboardFlashing.Begin(this);
-         return true;
-      }
       private bool DisplayImplantRemoval(IGameInstance gi, ITerritory selectedTerritory)
       {
          UpdateActionPanelClear();
@@ -3280,20 +3214,17 @@ namespace PleasantvilleGame
          }
          if (null != stack.MapItems)
          {
-            myLeftMapItemsInActionPanel.Clear();
-            myRightMapItemsInActionPanel.Clear();
             foreach (IMapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsImplantRemovalThisTurn) || (true == mi.IsKilled))
+               if ((true == mi.IsImplantRemovalAttemptThisTurn) || (true == mi.IsImplantRemovalAttempt) || (true == mi.IsKilled))
                   continue;
-
                if ((true == mi.IsControlled) && (true == mi.IsUnconscious) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
                   myLeftMapItemsInActionPanel.Add(mi);
-               else if ((true == mi.IsAlienKnown) && ("Zebulon" != mi.Name) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (false == mi.IsUnconscious)))
+               else if ((true == mi.IsAlienKnown) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (false == mi.IsUnconscious)))
                   myRightMapItemsInActionPanel.Add(mi);
             }
 
-            if ((0 != myLeftMapItemsInActionPanel.Count) && (0 != myRightMapItemsInActionPanel.Count))
+            if ((0 < myLeftMapItemsInActionPanel.Count) && (0 < myRightMapItemsInActionPanel.Count))
             {
                if (false == UpdateActionPanel(gi))
                {
@@ -3310,90 +3241,77 @@ namespace PleasantvilleGame
          }
          return true;
       }
-      private bool PerformImplantRemoval(IGameInstance gi, bool isIgnoreResults)
+      private bool RollImplantRemoval(IGameInstance gi)
       {
-         if ((0 == myLeftMapItemsInActionPanelSelected.Count) || (0 == myRightMapItemsInActionPanelSelected.Count))
+         if (null == myGameInstance)
          {
-            StringBuilder sb = new StringBuilder("Perform_ImplantRemoval(): myLeft=");
-            sb.Append(myLeftMapItemsInActionPanel.Count.ToString());
-            sb.Append(" myRight=");
-            sb.Append(myRightMapItemsInActionPanel.Count.ToString());
-            sb.Append(" myLeftSelected=");
-            sb.Append(myLeftMapItemsInActionPanelSelected.Count.ToString());
-            sb.Append(" myRightSelected=");
-            sb.Append(myRightMapItemsInActionPanelSelected.Count.ToString());
-            Logger.Log(LogEnum.LE_ERROR, sb.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "Roll_ImplantRemoval(): myGameInstance=null");
             return false;
          }
-         //-----------------------------------------------------------------------------
-         IMapItem? leftMapItem = myLeftMapItemsInActionPanelSelected[0];
-         if( null == leftMapItem)
+         if (null == myDieRoller)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_ImplantRemoval(): myLeftMapItemsInActionPanelSelected[0]=null");
+            Logger.Log(LogEnum.LE_ERROR, "Roll_ImplantRemoval(): myDieRoller=null");
             return false;
          }
-         leftMapItem.IsImplantRemovalThisTurn = true;
-         //-----------------------------------------------------------------------------
-         IMapItem? rightMapItem = myRightMapItemsInActionPanelSelected[0];
-         if (null == rightMapItem)
+         //-------------------------------------------------------------
+         StringBuilder sb = new StringBuilder("Roll_ImplantRemoval(): left=");
+         IMapItem? selectedLeft= myLeftMapItemsInActionPanelSelected[0];
+         if (null == selectedLeft)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_ImplantRemoval(): myRightMapItemsInActionPanelSelected[0]=null");
+            Logger.Log(LogEnum.LE_ERROR, "Roll_ImplantRemoval(): myLeftMapItemsInActionPanelSelected[0]=null");
             return false;
          }
-         rightMapItem.IsImplantRemovalThisTurn = true;
-         //-----------------------------------------------------------------------------
-         if (false == isIgnoreResults)
+         sb.Append(selectedLeft.ToString());
+         myGameInstance.SelectedMapItems.Add(selectedLeft);
+         //-------------------------------------------------------------
+         IMapItem? selectedRight = myRightMapItemsInActionPanelSelected[0];
+         if (null == selectedRight)
          {
-            int die1 = Utilities.RandomGenerator.Next(6) + 1;
-            int die2 = Utilities.RandomGenerator.Next(6) + 1;
-            int sum = die1 + die2;
-            StringBuilder displayResults = new StringBuilder("Roll: ");
-            displayResults.Append(die1.ToString());
-            displayResults.Append(" + ");
-            displayResults.Append(die2.ToString());
-            displayResults.Append(" = ");
-            displayResults.Append(sum.ToString());
-            switch (sum)
-            {
-               case 2: // Implant Explodes
-               case 3:
-                  displayResults.Append("\nImplant Explodes!!");
-                  rightMapItem.IsKilled = true;           // Kill the townsperson counter
-                  leftMapItem.IsKilled = true;                       // Kill the Alien counter
-                  break;
-               case 4: // Implant is too tighly attached
-               case 5:
-               case 6:
-                  displayResults.Append("\nImplant is too tighly attached. Try again next turn.");
-                  break;
-               case 7: // Implant is removed but disintegrates
-               case 8:
-               case 9:
-               case 10:
-                  displayResults.Append("\nImplant is removed but disintegrates.");
-                  gi.AddControlled(rightMapItem);
-                  break;
-               case 11: // Implant usuable
-               case 12:
-                  displayResults.Append("\nImplant is removed intact! You now have evidence.");
-                  gi.AddControlled(rightMapItem);
-                  leftMapItem.IsImplantHeld = true;
-                  break;
-               default:
-                  Logger.Log(LogEnum.LE_ERROR, "Perform_ImplantRemoval() reached default dr=" + sum.ToString());
-                  return false;
-            }
-            myTextBoxResults.Text = displayResults.ToString();
-         }
-         //-----------------------------------------------------------------------------
-         if (true == isIgnoreResults)
-            UpdateActionPanelClear();
-         else if (false == UpdateActionPanelButtons(gi))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_ImplantRemoval(): Update_ActionPanelButtons() return false");
+            Logger.Log(LogEnum.LE_ERROR, "Roll_ImplantRemoval(): myRightMapItemsInActionPanelSelected[0]=null");
             return false;
          }
+         myGameInstance.SelectedMapItems.Add(selectedRight);
+         sb.Append(" right=");
+         sb.Append(selectedRight.ToString());
+         Logger.Log(LogEnum.LE_SHOW_INFLUENCES, sb.ToString());
+         //-------------------------------------------------------------
+         myGameInstance.EventActive = myGameInstance.EventDisplayed; // As soon as you roll the die, the current event becomes the active event
+         myGameInstance.DieRollAction = GameAction.ImplantRemovalsRoll;
+         myDieRoller.RollMovingDice(myCanvasMain, ShowResultImplantRemoval);
          return true;
+      }
+      private void ShowResultImplantRemoval(int dieRoll)
+      {
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ShowResult_Influence(): myGameInstance=null");
+            return;
+         }
+         if (null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ShowResult_Influence(): myGameEngine=null");
+            return;
+         }
+         //-----------------------------------------------------------------------------
+         StringBuilder displayResults = new StringBuilder("");
+         displayResults.Append(dieRoll.ToString());
+         displayResults.Append("(roll) ==> ");
+         string result = TableMgr.GetImplantRemovalResult(dieRoll);
+         if( "ERROR" == result )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ShowResult_Influence(): Get_ImplantRemovalResult() returned ERROR");
+            return;
+         }
+         displayResults.Append(result);
+         //-----------------------------------------------------------------------------
+         if (false == UpdateActionPanelButtons(myGameInstance))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "ShowResult_Influence(): UpdateActionPanelButtons() returned false");
+            return;
+         }
+         myGameInstance.EventActive = myGameInstance.EventDisplayed; // As soon as you roll the die, the current event becomes the active event
+         GameAction action = myGameInstance.DieRollAction;
+         myGameEngine.PerformAction(ref myGameInstance, ref action, dieRoll);
       }
       //-------------CONTROLLER FUNCTIONS---------------------------------
       private void MouseLeftButtonDownMarquee(object sender, MouseEventArgs e)
@@ -3635,7 +3553,7 @@ namespace PleasantvilleGame
             case GamePhase.Influences:
                if (false == DisplayInfluence(myGameInstance, tSelected))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_Conversation() returned error");
+                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_Influence() returned error");
                   return;
                }
                break;
@@ -3649,7 +3567,14 @@ namespace PleasantvilleGame
             case GamePhase.Iterrogations:
                if (false == DisplayIterogations(myGameInstance, tSelected))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_Conversation() returned error");
+                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_Iterogations() returned error");
+                  return;
+               }
+               break;
+            case GamePhase.ImplantRemovals:
+               if (false == DisplayImplantRemoval(myGameInstance, tSelected))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_ImplantRemoval() returned error");
                   return;
                }
                break;

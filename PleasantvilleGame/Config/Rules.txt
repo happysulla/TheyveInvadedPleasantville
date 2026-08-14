@@ -405,7 +405,7 @@ Only four choices may be made per interrogation, and each Alien controlled count
 r8.7.3	"<Bold>r8.7.3  Combat - Post Combat Activity - Implant Removal</Bold><LineBreak/><LineBreak/>
 Townspeople are taken-over by Alien controlled counters by means of a bio-mechanical implant attached to the back of the victum's neck. As long as the implant remains attached, that counter remains under the Alien player's control. 
 <LineBreak/><LineBreak/>
-The Town player may try to remove the implant thus breaking the Alien player's control over that counter. The Town player may try to remove this implant from a defeated Alien controlled townsperson, thus breaking the Alien player's control. One Town controlled counter is chose to attempt the removal. The Town player rolls two dice and consults the 
+The Town player may try to remove this implant from a defeated Alien controlled townsperson, thus breaking the Alien player's control. One Town controlled counter is chosen to attempt the removal. The Town player rolls two dice and consults the 
 <InlineUIContainer><Button Content='Implant Removal' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table.
 <LineBreak/><LineBreak/>
 Successfully removing the implant causes the victim to come under control of the Town player. If an implant is removed intact, it can be carried as evidence. Such evidence adds +1 to the influence roll when the townsperson carrying the implant tries to influence another townsperson per <InlineUIContainer><Button Content='r7.2.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. 

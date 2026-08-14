@@ -362,7 +362,7 @@ namespace PleasantvilleGame
       }
       protected bool CheckForIterogations(IGameInstance gi, ref GameAction action)
       {
-         if (true == gi.Zebulon.IsAlienKnown)  // If Zebulon is already on the map board, no need to iterogate
+         if (false == gi.Zebulon.IsAlienKnown)  // If Zebulon is already on the map board, no need to iterogate
          {
             IMapItems controlled = new MapItems();
             IMapItems surrenderedAliens = new MapItems();
@@ -424,9 +424,8 @@ namespace PleasantvilleGame
             IMapItems aliens = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsImplantRemovalThisTurn) || (true == mi.IsKilled))
+               if ((true == mi.IsImplantRemovalAttempt) || (true == mi.IsImplantRemovalAttemptThisTurn) || (true == mi.IsKilled))
                   continue;
-
                if ((true == mi.IsControlled) && (false == mi.IsUnconscious) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
                   controlled.Add(mi);
                else if ((true == mi.IsAlienKnown) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (true == mi.IsUnconscious)))
@@ -545,7 +544,7 @@ namespace PleasantvilleGame
                mi.IsConversedThisTurn = false;
                mi.IsInfluencedThisTurn = false;
                mi.IsCombatThisTurn = false;
-               mi.IsImplantRemovalThisTurn = false;
+               mi.IsImplantRemovalAttemptThisTurn = false;
                mi.IsTakeoverThisTurn = false;
                if ((true == mi.IsSurrendered) || (true == mi.IsKilled))
                   continue;
@@ -1798,6 +1797,11 @@ namespace PleasantvilleGame
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
             case GameAction.CombatsSelect: // handled in the GameViewWindow.xaml.cs file
+               if (false == CheckForCombats(gi, ref action))
+               {
+                  returnStatus = "Check_ForCombats() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsSelect): " + returnStatus);
+               }
                break;
             case GameAction.UpdateRotateStack:
                if (false == RotateStack(gi))
@@ -2093,14 +2097,62 @@ namespace PleasantvilleGame
                if (false == RotateStack(gi))
                {
                   returnStatus = "Rotate_Stack() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateImplantRemoval.PerformAction(): " + returnStatus);
                }
                break;
             case GameAction.UpdateScatterStack:
                if (false == ScatterStack(gi))
                {
                   returnStatus = "Scatter_Stack() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateImplantRemoval.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.ImplantRemovalsRoll:
+               if (2 != gi.SelectedMapItems.Count)
+               {
+                  returnStatus = " 2 != (gi.SelectedMapItems.Count=" + gi.SelectedMapItems.Count + ")";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateImplantRemoval.PerformAction(ImplantRemovalsRoll): " + returnStatus);
+               }
+               else
+               {
+                  IMapItem? leftMapItem = gi.SelectedMapItems[0];
+                  IMapItem? rightMapItem = gi.SelectedMapItems[1];
+                  if (null == leftMapItem || null == rightMapItem)
+                  {
+                     returnStatus = " leftMapItem or rightMapItem = null";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateImplantRemoval.PerformAction(ImplantRemovalsRoll): " + returnStatus);
+                  }
+                  else
+                  {
+                     string result = TableMgr.GetImplantRemovalResult(dieRoll);
+                     switch (result)
+                     {
+                        case "Implant Explodes!":
+                           rightMapItem.IsKilled = true;           // Kill the townsperson counter
+                           leftMapItem.IsKilled = true;            // Kill the Alien counter
+                           rightMapItem.IsImplantRemovalAttempt = true;
+                           break;
+                        case "Implant is tighly attached. Try again next turn.":
+                           rightMapItem.IsImplantRemovalAttemptThisTurn = true;
+                           break;
+                        case "Implant is removed but disintegrates.":
+                           rightMapItem.IsImplantRemovalAttempt = true;
+                           break;
+                        case "Implant is removed intact! Use as evidence.":
+                           rightMapItem.IsImplantRemovalAttempt = true;
+                           leftMapItem.IsImplantHeld = true;
+                           break;
+                        default:
+                           returnStatus = "reached default with result=" + result;
+                           Logger.Log(LogEnum.LE_ERROR, "GameStateImplantRemoval.PerformAction(): " + returnStatus);
+                           break;
+                     }
+                  }
+                  if (false == CheckForImplantRemovals(gi, ref action))
+                  {
+                     returnStatus = "CheckForImplantRemovals() returned false";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateImplantRemoval.PerformAction(): " + returnStatus);
+                  }
                }
                break;
             default:

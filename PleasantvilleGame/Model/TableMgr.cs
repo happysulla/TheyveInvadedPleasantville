@@ -1063,5 +1063,29 @@ namespace PleasantvilleGame
             }
          }
       }
+      static public string GetImplantRemovalResult(int dieRoll)
+      {
+         switch (dieRoll)
+         {
+            case 2: // Implant Explodes
+            case 3:
+               return "Implant Explodes!";
+            case 4: // Implant is too tighly attached
+            case 5:
+            case 6:
+               return "Implant is tighly attached. Try again next turn.";
+            case 7: // Implant is removed but disintegrates
+            case 8:
+            case 9:
+            case 10:
+               return "Implant is removed but disintegrates.";
+            case 11: // Implant usuable
+            case 12:
+               return "Implant is removed intact! Use as evidence.";
+            default:
+               Logger.Log(LogEnum.LE_ERROR, "Perform_ImplantRemoval() reached default dr=" + dieRoll.ToString());
+               return "ERROR";
+         }
+      }
    }
 }
