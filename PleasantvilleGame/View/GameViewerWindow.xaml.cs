@@ -992,6 +992,8 @@ namespace PleasantvilleGame
                break;
             case GameAction.GameSetupPlayTownsperson:
                break;
+            case GameAction.InterrogationsPerform:
+               break;
             case GameAction.RandomMovementStartTowns:
                UpdateActionPanelClear();
                if (false == UpdateCanvasMain(gi, action))
@@ -1151,6 +1153,16 @@ namespace PleasantvilleGame
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
                   return;
+               }
+               break;
+            case GameAction.InterrogationsGuess:
+               foreach (ITerritory t in gi.ZebulonTerritories) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
+               {
+                  foreach (Polygon polygon in myPolygons)
+                  {
+                     if (t.Name == polygon.Name)
+                        polygon.Fill = mySolidColorBrushBlack;
+                  }
                }
                break;
             case GameAction.AlienTakeoversSelect:
@@ -1467,11 +1479,8 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): reached default myLeftMapItemsInActionPanel.Count=" + myLeftMapItemsInActionPanel.Count.ToString());
                return false;
          }
-         if ((GameType.MultiPlayerHost == GameEngine.theGameType) || (GameType.SinglePlayerTown == GameEngine.theGameType))
-         {
-            myButtonHelperOK.Visibility = Visibility.Visible;
-            myButtonHelperCancel.Visibility = Visibility.Visible;
-         }
+         myButtonHelperOK.Visibility = Visibility.Visible;
+         myButtonHelperCancel.Visibility = Visibility.Visible;
          if ((0 < myLeftMapItemsInActionPanelSelected.Count) && (0 < myRightMapItemsInActionPanelSelected.Count))
             myButtonHelperOK.IsEnabled = true;
          else
@@ -2031,9 +2040,6 @@ namespace PleasantvilleGame
          }
          foreach (UIElement ui1 in elementRemovals)
             myCanvasMain.Children.Remove(ui1);
-      }
-      private void UpdateViewState(IGameInstance gi)
-      {
       }
       private bool UpdateCanvasMovement(IGameInstance gi, GameAction action, IStacks stacks, List<Button> buttons)
       {
@@ -3049,18 +3055,12 @@ namespace PleasantvilleGame
                continue;
             if (true == mi.IsControlled)
             {
-               if (false == mi.IsTiedUp)
-               {
-                  myLeftMapItemsInActionPanel.Add(mi);
-                  myLeftMapItemsInActionPanelSelected.Add(mi); // all controlled on left side are selected and cannot be unselected
-               }
+               myLeftMapItemsInActionPanel.Add(mi);
+               myLeftMapItemsInActionPanelSelected.Add(mi); // all controlled on left side are selected and cannot be unselected
             }
-            else
+            else if ((true == mi.IsAlienKnown) && ((true == mi.IsSurrendered) || (true == mi.IsTiedUp)))
             {
-               if ((true == mi.IsAlienKnown) && ((true == mi.IsSurrendered) || (true == mi.IsTiedUp)))
-               {
-                  myRightMapItemsInActionPanel.Add(mi);
-               }
+               myRightMapItemsInActionPanel.Add(mi);
             }
          }
          if ((0 < myLeftMapItemsInActionPanel.Count) && (0 < myRightMapItemsInActionPanel.Count))
@@ -3090,99 +3090,19 @@ namespace PleasantvilleGame
          }
          return true;
       }
-      private bool DisplayIterogations(IGameInstance gi, out bool isInterrogations)
-      {
-         isInterrogations = false;
-         myStoryboardFlashing = new Storyboard();
-         foreach (UIElement ui in myCanvasMain.Children) // Clear any previous flashing regions
-         {
-            if (ui is Polygon)
-            {
-               Polygon p1 = (Polygon)ui;
-               if( null == p1.Tag)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "DisplayIterogations() Polygon.Tag=null");
-                  return false;
-               }
-               string tagString = (string)p1.Tag;
-               if( null == tagString)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "DisplayIterogations() Polygon.Tag.ToString()=null");
-                  return false;
-               }  
-               ITerritory? t = gi.ZebulonTerritories.Find(tagString);
-               if (null == t)
-                  p1.Fill = Utilities.theBrushRegionClear;
-               else
-                  p1.Fill = mySolidColorBrushBlack;
-            }
-         }
-         //--------------------------------------------------------------
-         foreach (Stack stack in gi.Stacks) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
-         {
-            if (stack.MapItems.Count < 2)
-               continue;
-            // In each stack, get the count in the stack of the number of aliens and controlled townspeople
-            IMapItems townspeopleControlled = new MapItems();
-            IMapItems surrenderedAliens = new MapItems();
-            foreach (MapItem mi in stack.MapItems)
-            {
-               if ((true == mi.IsInterrogated) || (true == mi.IsKilled) || (false == mi.IsUnconscious) || (true == mi.IsStunned))
-                  continue;
-               if (true == mi.IsControlled)
-               {
-                  if (false == mi.IsTiedUp)
-                     townspeopleControlled.Add(mi);
-               }
-               else
-               {
-                  if ((true == mi.IsAlienKnown) && ("Zebulon" != mi.Name) && ((true == mi.IsSurrendered) || (true == mi.IsTiedUp)))
-                     surrenderedAliens.Add(mi);
-               }
-            }
-            if ((0 == townspeopleControlled.Count) || (0 == surrenderedAliens.Count))
-               continue;
-            //--------------------------------------------------------------
-            IMapItem? controlled = townspeopleControlled[0];
-            if( null == controlled)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "DisplayIterogations() townspeopleControlled[0]=null");
-               return false;
-            }  
-            String targetName = controlled.TerritoryCurrent.Name + controlled.TerritoryCurrent.Subname.ToString();
-            foreach (UIElement ui in myCanvasMain.Children) // Turn the region red
-            {
-               if (ui is Polygon)
-               {
-                  Polygon p1 = (Polygon)ui;
-                  if (p1.Name == targetName)
-                  {
-                     p1.Fill = mySolidColorBrushPurple;
-                     Canvas.SetZIndex(p1, myZIndexLastUsed);
-                     break;
-                  }
-               }
-            }
-            //--------------------------------------------------------------
-            DoubleAnimation anim = new DoubleAnimation(); // Perform animiation on the region
-            anim.From = 0.7;
-            anim.To = 0.2;
-            anim.Duration = new Duration(TimeSpan.FromSeconds(0.6));
-            anim.AutoReverse = true;
-            anim.RepeatBehavior = RepeatBehavior.Forever;
-            myStoryboardFlashing.Children.Add(anim);
-            Storyboard.SetTargetProperty(anim, new PropertyPath(OpacityProperty));
-            Storyboard.SetTargetName(anim, targetName); // Start flashing the region where the user can select
-         } // end foreach (Stack stack in stacks)
-           //--------------------------------------------------------------
-         if (0 < myStoryboardFlashing.Children.Count)
-            myStoryboardFlashing.Begin(this);
-         if (0 < gi.NumTownGuessesForZebulonLocation)
-            return true;
-         return false;
-      }
       private bool PerformInterrogation(IGameInstance gi)
       {
+         foreach (Polygon polygon in myPolygons) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
+            polygon.Fill = Utilities.theBrushRegionClear;
+         foreach (ITerritory t in gi.ZebulonTerritories) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
+         {
+            foreach (Polygon polygon in myPolygons)
+            {
+               if( t.Name == polygon.Name)
+                  polygon.Fill = mySolidColorBrushBlack;
+            }
+         }
+         //-----------------------------------------------
          myGameInstance.SelectedMapItems.Clear();
          IMapItem? selectedRight = myRightMapItemsInActionPanelSelected[0];
          if (null == selectedRight)
@@ -3563,7 +3483,26 @@ namespace PleasantvilleGame
                }
                break;
             case GamePhase.Iterrogations:
-               if (false == DisplayIterogations(myGameInstance, tSelected))
+               if( 0 < myGameInstance.NumTownGuessesForZebulonLocation)
+               {
+                  Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "MouseDown_Polygon(): tSelected=" + tSelected.ToString());
+                  bool isAlreadySelected = false;
+                  foreach (ITerritory t in myGameInstance.ZebulonTerritories)
+                  {
+                     if (tSelected.ToString() == t.ToString())
+                     {
+                        isAlreadySelected = true;
+                        break;
+                     }
+                  }
+                  if( (true == tSelected.IsBuilding()) && (false == isAlreadySelected) ) // if not a building or territory already selected, do nothing
+                  {
+                     myGameInstance.SelectedTerritory = tSelected;
+                     GameAction action = GameAction.InterrogationsGuess;
+                     myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+                  }
+               }
+               else if (false == DisplayIterogations(myGameInstance, tSelected))
                {
                   Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_Iterogations() returned error");
                   return;

@@ -91,80 +91,41 @@ namespace PleasantvilleGame
          Label labelZoom = new Label() { FontFamily = myFontFam, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Left, Content = sbZ.ToString() };
          myStatusBar.Items.Add(labelZoom);
          //--------------------------------------------
-         myStatusBar.Items.Add(new Separator());
-         Label labelGoto = new Label() { FontFamily = myFontFam, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Left, Content = "Goto:" };
-         myStatusBar.Items.Add(labelGoto);
-         System.Windows.Controls.Button buttonGoto = new System.Windows.Controls.Button { Content = myGameInstance.EventActive, FontFamily = myFontFam1, Width = 40, Height = 15, };
-         if (true == gi.IsGridActive)
-            buttonGoto.IsEnabled = false;
-         else
-            buttonGoto.IsEnabled = true;
-         buttonGoto.Click += ButtonEventActive_Click;
-         myStatusBar.Items.Add(buttonGoto);
-         foreach (Control item in myStatusBar.Items)
+         if( GamePhase.GameSetup != myGameInstance.GamePhase)
          {
-            if (item is Label)
+            myStatusBar.Items.Add(new Separator());
+            int uncontrolledInfluence = 0;
+            int controlledInfluence = 0;
+            int alienInfluence = 0;
+            foreach (IStack stack in myGameInstance.Stacks)
             {
-               Label label = (Label)item;
-               if (label.Name == "myLabelInfluenceTotal")
+               foreach (MapItem mi in stack.MapItems)
                {
-                  label.Content = "Total Influence=" + gi.InfluenceCountTotal.ToString();
-               }
-               else if (label.Name == "myLabelInfluenceTownspeople")
-               {
-                  label.Content = "Town's People Influence=" + gi.InfluenceCountTownspeople.ToString();
-               }
-               else if (label.Name == "myLabelInfluenceAlienKnown")
-               {
-                  label.Content = "Alien Influence=" + gi.InfluenceCountAlienKnown.ToString();
-               }
-               else if (label.Name == "myLabelInfluenceAlien")
-               {
-                  label.Content = "UnKnown Influence=" + gi.InfluenceCountAlienUnknown.ToString();
-               }
-               else if (label.Name == "myLabelGamePhase")
-               {
-                  item.Visibility = Visibility.Visible;
-                  label.Content = "Game Phase = " + gi.GamePhase;
-               }
-               else if (label.Name == "myLabelNextAction")
-               {
-                  item.Visibility = Visibility.Visible;
-                  StringBuilder sb = new StringBuilder();
-                  sb.Append("Next Action = ");
-                  if ("Decides Where to Perform Combats" == gi.NextAction)
-                  {
-                     if ((GameType.MultiPlayerJoin == GameEngine.theGameType) || (GameType.SinglePlayerAlien == GameEngine.theGameType))
-                        sb.Append("Alien ");
-                     else
-                        sb.Append("Townsperson ");
-                  }
-                  else if ("Ack Random Movement" == gi.NextAction)
-                  {
-                     if ((GameType.MultiPlayerJoin == GameEngine.theGameType) || (GameType.SinglePlayerAlien == GameEngine.theGameType))
-                        sb.Append("Awaiting Alien ");
-                     else
-                        sb.Append("Awaiting Townsperson ");
-                  }
-                  else if ("Display Random Movement" == gi.NextAction)
-                  {
-                     if ((GameType.MultiPlayerJoin == GameEngine.theGameType) || (GameType.SinglePlayerAlien == GameEngine.theGameType))
-                        sb.Append("Awaiting Alien ");
-                     else
-                        sb.Append("Awaiting Townsperson ");
-                  }
-                  sb.Append(gi.NextAction);
-                  label.Content = sb.ToString();
+                  if (true == mi.IsKilled)
+                     continue;
+                  else if (true == mi.IsControlled)
+                     controlledInfluence += mi.Influence;
+                  else if (true == mi.IsAlienKnown)
+                     alienInfluence += mi.Influence;
+                  else
+                     uncontrolledInfluence += mi.Influence;
                }
             }
+            int totalInfluence = controlledInfluence + alienInfluence + uncontrolledInfluence;
+            StringBuilder sbInfluence = new StringBuilder("INFLUENCES: Total=");
+            sbInfluence.Append(totalInfluence.ToString());
+            sbInfluence.Append("   Uncontrolled=");
+            sbInfluence.Append(uncontrolledInfluence.ToString());
+            sbInfluence.Append("   Town=");
+            sbInfluence.Append(controlledInfluence.ToString());
+            sbInfluence.Append("   Known Alien=");
+            sbInfluence.Append(alienInfluence.ToString());
+            Label labelUncontrolled = new Label() { FontFamily = myFontFam, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Left, Content = sbInfluence.ToString() };
+            myStatusBar.Items.Add(labelUncontrolled);
          }
+
       }
       //--------------------------------------------------------------
-      private void ButtonEventActive_Click(object sender, RoutedEventArgs e)
-      {
-         GameAction action = GameAction.UpdateEventViewerActive;
-         myGameEngine.PerformAction(ref myGameInstance, ref action);
-      }
       private void ButtonZoomOut_Click(object sender, RoutedEventArgs e)
       {
          if (Utilities.ZoomCanvas < 3.0)

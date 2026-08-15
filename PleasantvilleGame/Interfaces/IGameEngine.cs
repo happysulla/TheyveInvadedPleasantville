@@ -98,6 +98,7 @@ namespace PleasantvilleGame
 
       InterrogationsSelect,
       InterrogationsPerform,
+      InterrogationsGuess,
       InterrogationsFinish,
 
       ImplantRemovalsSelect,

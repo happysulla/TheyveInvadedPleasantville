@@ -253,9 +253,9 @@ namespace PleasantvilleGame
                   }
                   gi.EventDisplayed = gi.EventActive = "e009t";
                }
+               Logger.Log(LogEnum.LE_SHOW_CONVERSATIONS, "CheckFor_Conversations(): adding stack=" + stack.ToString());
                gi.SelectedTerritories.Add(stack.Territory);
                action = GameAction.ConversationsSelect;
-               Logger.Log(LogEnum.LE_SHOW_CONVERSATIONS, "CheckFor_Conversations(): adding stack=" + stack.Territory.ToString() ); 
             }
          }
          if (GameAction.ConversationsSelect == action)
@@ -297,8 +297,9 @@ namespace PleasantvilleGame
                   }
                   gi.EventDisplayed = gi.EventActive = "e010t";
                }
-               action = GameAction.InfluencesSelect;
+               Logger.Log(LogEnum.LE_SHOW_INFLUENCES, "CheckFor_Influences(): adding stack=" + stack.ToString());
                gi.SelectedTerritories.Add(stack.Territory);
+               action = GameAction.InfluencesSelect;
             }
          }
          if (GameAction.InfluencesSelect == action)
@@ -346,10 +347,10 @@ namespace PleasantvilleGame
                   }
                   gi.EventDisplayed = gi.EventActive = "e011t";
                }
-               action = GameAction.CombatsSelect;
-               gi.SelectedTerritories.Add(stack.Territory);
                Logger.Log(LogEnum.LE_SHOW_COMBATS, "CheckFor_Combats(): Adding t=" + stack.Territory.ToString() + " c=" + controlledPeps.Count.ToString() + " u=" + uncontrolledPeps.Count.ToString() + " ka=" + knownAliens.Count.ToString() + " ua=" + unknownAliens.Count.ToString());
+               gi.SelectedTerritories.Add(stack.Territory); 
                gi.DieRollAction = GameAction.DieRollActionNone;
+               action = GameAction.CombatsSelect;
             }
          }
          if (GameAction.CombatsSelect == action)
@@ -363,6 +364,8 @@ namespace PleasantvilleGame
       }
       protected bool CheckForIterogations(IGameInstance gi, ref GameAction action)
       {
+         gi.SelectedMapItems.Clear();
+         gi.SelectedTerritories.Clear();
          if (false == gi.Zebulon.IsAlienKnown)  // If Zebulon is already on the map board, no need to iterogate
          {
             IMapItems controlled = new MapItems();
@@ -399,8 +402,9 @@ namespace PleasantvilleGame
                      }
                      gi.EventDisplayed = gi.EventActive = "e012t";
                   }
-                  action = GameAction.InterrogationsSelect;
+                  Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "CheckFor_Iterogations(): adding stack=" + stack.ToString());
                   gi.SelectedTerritories.Add(stack.Territory);
+                  action = GameAction.InterrogationsSelect;
                }
             }
             if (GameAction.InterrogationsSelect == action)
@@ -443,8 +447,9 @@ namespace PleasantvilleGame
                   }
                   gi.EventDisplayed = gi.EventActive = "e013t";
                }
-               action = GameAction.ImplantRemovalsSelect;
+               Logger.Log(LogEnum.LE_SHOW_REMOVALS, "CheckFor_ImplantRemovals(): adding stack=" + stack.ToString());
                gi.SelectedTerritories.Add(stack.Territory);
+               action = GameAction.ImplantRemovalsSelect;
             }
          }
          if (GameAction.ImplantRemovalsSelect == action)
@@ -2027,17 +2032,51 @@ namespace PleasantvilleGame
                if (false == RotateStack(gi))
                {
                   returnStatus = "Rotate_Stack() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateIterogations.PerformAction(): " + returnStatus);
                }
                break;
             case GameAction.UpdateScatterStack:
                if (false == ScatterStack(gi))
                {
                   returnStatus = "Scatter_Stack() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateIterogations.PerformAction(): " + returnStatus);
                }
                break;
             case GameAction.InterrogationsSelect:
+               break;
+            case GameAction.InterrogationsPerform:
+               foreach(IMapItem mi in gi.SelectedMapItems)
+                  mi.IsInterrogated = true;
+               gi.NumTownGuessesForZebulonLocation = 4;
+               break;
+            case GameAction.InterrogationsGuess:
+               if (null == gi.SelectedTerritory)
+               {
+                  returnStatus = "SelectedTerritory=null";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateIterogations.PerformAction(): " + returnStatus);
+               }
+               else
+               {
+                  if( gi.SelectedTerritory.ToString() == gi.Zebulon.TerritoryCurrent.ToString())
+                  {
+                     gi.Zebulon.IsAlienKnown = true;
+                     gi.NumTownGuessesForZebulonLocation = 0;
+                  }
+                  else
+                  {
+                     gi.ZebulonTerritories.Add(gi.SelectedTerritory);
+                     gi.SelectedTerritory = null;  
+                     gi.NumTownGuessesForZebulonLocation--;
+                  }
+                  if( 0 == gi.NumTownGuessesForZebulonLocation)
+                  {
+                     if (false == CheckForIterogations(gi, ref action))
+                     {
+                        returnStatus = "CheckFor_Iterogations() returned false";
+                        Logger.Log(LogEnum.LE_ERROR, "GameStateIterogations.PerformAction(InterrogationsGuess): " + returnStatus);
+                     }
+                  }
+               }
                break;
             default:
                returnStatus = "reached default action=" + action.ToString();

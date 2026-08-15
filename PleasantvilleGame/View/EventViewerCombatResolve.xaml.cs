@@ -376,7 +376,7 @@ namespace PleasantvilleGame
                myGrid.Children.Add(labelForResult);
                Grid.SetRow(labelForResult, rowNum);
                Grid.SetColumn(labelForResult, 2);
-               if( (true == mi.IsKilled) || (true == myIsTownDefender) || (true == myIsUncontrolledDefender))
+               if( (true == mi.IsKilled) || (true == myIsTownDefender) || (true == myIsUncontrolledDefender) || (true == mi.IsControlled)) // only aliens are tied up
                {
                   Label labelForTiedUp = new Label() { FontFamily = myFontFam, FontSize = 16, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = "NA"};
                   myGrid.Children.Add(labelForTiedUp);
@@ -457,14 +457,16 @@ namespace PleasantvilleGame
             {
                myGridRows[i].myResult = "K.O.";
                myGridRows[i].myMapItem.IsUnconscious = true;
-               myGridRows[i].myMapItem.IsTiedUp = true;
+               if( true == myGridRows[i].myMapItem.IsAlienKnown)
+                  myGridRows[i].myMapItem.IsTiedUp = true;
                Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "ShowDieResults(): mi=" + myGridRows[i].myMapItem.ToString() + " ++TIED and KO");
             }
             else
             {
                myGridRows[i].myResult = "Hands-Up";
                myGridRows[i].myMapItem.IsSurrendered = true;
-               myGridRows[i].myMapItem.IsTiedUp = true;
+               if (true == myGridRows[i].myMapItem.IsAlienKnown)
+                  myGridRows[i].myMapItem.IsTiedUp = true;
                Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "ShowDieResults(): mi=" + myGridRows[i].myMapItem.ToString() + " ++TIED and gives up");
             }
          }
