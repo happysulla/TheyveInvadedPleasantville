@@ -227,12 +227,10 @@ namespace PleasantvilleGame
          gi.SelectedMapItems.Clear();
          gi.SelectedTerritories.Clear();
          action = GameAction.Error;
-         IMapItems controlledPeps = new MapItems();
-         IMapItems uncontrolledPeps = new MapItems();
          foreach (Stack stack in gi.Stacks)
          {
-            controlledPeps.Clear();
-            uncontrolledPeps.Clear();
+            IMapItems controlledPeps = new MapItems();
+            IMapItems uncontrolledPeps = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
                if ((true == mi.IsConversedThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsWary))
@@ -368,20 +366,19 @@ namespace PleasantvilleGame
          gi.SelectedTerritories.Clear();
          if (false == gi.Zebulon.IsAlienKnown)  // If Zebulon is already on the map board, no need to iterogate
          {
-            IMapItems controlled = new MapItems();
-            IMapItems surrenderedAliens = new MapItems();
             foreach (Stack stack in gi.Stacks)
             {
                if (stack.MapItems.Count < 2)
                   continue;
+               IMapItems controlled = new MapItems();
+               IMapItems surrenderedAliens = new MapItems();
                foreach (MapItem mi in stack.MapItems)
                {
                   if ((true == mi.IsInterrogated) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned))
                      continue;
                   if (true == mi.IsControlled)
                   {
-                     if (false == mi.IsTiedUp)
-                        controlled.Add(mi);
+                     controlled.Add(mi);
                   }
                   else
                   {
@@ -1565,6 +1562,7 @@ namespace PleasantvilleGame
                         dieRollModifier = 1;
                      if (8 < dieRoll + dieRollModifier)
                      {
+                        rightMapItem.IsConversedThisTurn = true; // if successful, no need to talk to in same turn
                         if (true == rightMapItem.IsAlienUnknown)
                         {
                            Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "GameStateInfluences.PerformAction(): AddKnownAlien() rightMapItem=" + rightMapItem.ToString() + " dr=" + dieRoll.ToString() + " drm=" + dieRollModifier.ToString());

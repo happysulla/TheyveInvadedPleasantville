@@ -3092,14 +3092,24 @@ namespace PleasantvilleGame
       }
       private bool PerformInterrogation(IGameInstance gi)
       {
-         foreach (Polygon polygon in myPolygons) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
-            polygon.Fill = Utilities.theBrushRegionClear;
-         foreach (ITerritory t in gi.ZebulonTerritories) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
+         foreach (Polygon polygon in myPolygons) // Fill in spaces as black - all other spaces can be selected by user when searching for Zebulon
          {
-            foreach (Polygon polygon in myPolygons)
+            ITerritory? t1 = Territories.theTerritories.Find(polygon.Name);
+            if( null == t1 )
             {
-               if( t.Name == polygon.Name)
+               Logger.Log(LogEnum.LE_ERROR, "Perform_Interrogation(): t1=null for polygon=" + polygon.Name);
+               return false;
+            }
+            if (false == t1.IsBuilding())
+            {
+               polygon.Fill = mySolidColorBrushBlack;
+            }
+            else
+            {
+               if( true == gi.ZebulonTerritories.Contains(t1))
                   polygon.Fill = mySolidColorBrushBlack;
+               else
+                  polygon.Fill = Utilities.theBrushRegionClear;
             }
          }
          //-----------------------------------------------
