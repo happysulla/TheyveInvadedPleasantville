@@ -119,6 +119,7 @@ namespace PleasantvilleGame
       }
       protected bool ResetPhase(IGameInstance gi, GamePhase phase)
       {
+         Logger.Log(LogEnum.LE_SHOW_RESET_PHASE, "Reset_Phase(): ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + phase.ToString());
          gi.GamePhase = phase;
          gi.IsAlienDisplayedRandomMovement = false;
          gi.IsTownDisplayedRandomMovement = false;
@@ -1707,7 +1708,7 @@ namespace PleasantvilleGame
                      if (true == rightMapItem.IsWary)  
                         --dieRollModifier;
                      int dieRollWithMod = dieRoll + dieRollModifier;
-                     Logger.Log(LogEnum.LE_SHOW_INFLUENCES, "GameStateInfluences.PerformAction(): odds=" + odds.ToString("F1") + " r=" + rightMapItem.ToString() + " (dr=" + dieRoll.ToString() + ") + (m=" + dieRollModifier.ToString() + ") <>=> (t=" + dieThreshold.ToString() + ")"); 
+                     Logger.Log(LogEnum.LE_SHOW_INFLUENCES, "GameStateInfluences.PerformAction(): odds=" + odds.ToString("F1") + " r=" + rightMapItem.ToString() + " (dr=" + dieRoll.ToString() + ") + (m=" + dieRollModifier.ToString() + ") ??? (t=" + dieThreshold.ToString() + ")"); 
                      if (dieThreshold <= dieRollWithMod) // Check for alien.  If alien, let user know it is discovered. Else, make the townsperson controlled.
                      {
                         if (true == rightMapItem.IsAlienUnknown)
@@ -1725,7 +1726,8 @@ namespace PleasantvilleGame
                      {
                         if (false == rightMapItem.IsWary)  // wary people cannot become skeptical
                         {
-                           Logger.Log(LogEnum.LE_SHOW_WARY_ADD, "GameStateInfluences.PerformAction(): Add Skeptical rightMapItem=" + rightMapItem.ToString() + " (dr=" + dieRoll.ToString() + ") + (m=" + dieRollModifier.ToString() + ") <>=> (t=" + dieThreshold.ToString() + ")"); rightMapItem.IsSkeptical = true;
+                           Logger.Log(LogEnum.LE_SHOW_SKEPTICAL_ADD, "GameStateInfluences.PerformAction(): Add Skeptical rightMapItem=" + rightMapItem.ToString() + " (dr=" + dieRoll.ToString() + ") + (m=" + dieRollModifier.ToString() + ") <>=> (t=" + dieThreshold.ToString() + ")"); 
+                           rightMapItem.IsSkeptical = true;
                         }
                      }
                      if ("OK" == returnStatus)

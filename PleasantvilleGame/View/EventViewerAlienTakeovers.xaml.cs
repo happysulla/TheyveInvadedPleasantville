@@ -207,6 +207,8 @@ namespace PleasantvilleGame
                      continue;
                   if (true == mi.IsAlienKnown) // known aliens do not observer. Unknown aliens need to be listed so that town person does not suspect them as alien, but they will not find anything
                      continue;
+                  if ((true == mi.IsKilled) || (true == mi.IsUnconscious)) // stuned, killed people cannot observe
+                     continue;
                   myGridRows[gridRowNum] = new GridRow(mi, leftMapItem, rightMapItem, kvp1.Value);
                   gridRowNum++;
                   isObservation = true;

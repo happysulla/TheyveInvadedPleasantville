@@ -1382,7 +1382,6 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): leftMapItem1 is null");
                   return false;
                }
-               myLeftMapItemsInActionPanel = myLeftMapItemsInActionPanel.Sort();
                myButton1.Visibility = Visibility.Visible;
                myButton2.Visibility = Visibility.Visible;
                myButton3.Visibility = Visibility.Visible;
@@ -1453,7 +1452,6 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "Update_ActionPanel(): rightMapItem6 is null");
                   return false;
                }
-               myRightMapItemsInActionPanel = myRightMapItemsInActionPanel.Sort();
                myButton4.Visibility = Visibility.Visible;
                myButton5.Visibility = Visibility.Visible;
                myButton6.Visibility = Visibility.Visible;
