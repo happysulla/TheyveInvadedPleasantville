@@ -124,41 +124,41 @@ namespace PleasantvilleGame
          //--------------------------------------------------
          myGrid.MouseDown += Grid_MouseDown;
       }
-      public bool PerformRandomMovement(EndPerformRandomMovement callback)
+      public bool PrepRandomMovement(EndPerformRandomMovement callback)
       {
          if (null == myGameEngine)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): myGameEngine=null");
+            Logger.Log(LogEnum.LE_ERROR, "Prep_RandomMovement(): myGameEngine=null");
             return false;
          }
          if (null == myGameInstance)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): myGameInstance=null");
+            Logger.Log(LogEnum.LE_ERROR, "Prep_RandomMovement(): myGameInstance=null");
             return false;
          }
          if (null == myCanvas)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): myCanvas=null");
+            Logger.Log(LogEnum.LE_ERROR, "Prep_RandomMovement(): myCanvas=null");
             return false;
          }
          if (null == myScrollViewer)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): myScrollViewer=null");
+            Logger.Log(LogEnum.LE_ERROR, "Prep_RandomMovement(): myScrollViewer=null");
             return false;
          }
          if (null == myRulesMgr)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): myRulesMgr=null");
+            Logger.Log(LogEnum.LE_ERROR, "Prep_RandomMovement(): myRulesMgr=null");
             return false;
          }
          if (null == myDieRoller)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): myDieRoller=null");
+            Logger.Log(LogEnum.LE_ERROR, "Prep_RandomMovement(): myDieRoller=null");
             return false;
          }
-         if( 4 != myGameInstance.RandomMoves.Count )
+         if( 0 == myGameInstance.RandomMoves.Count )
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): invalid state myGameInstance.RandomMoves.Count=" + myGameInstance.RandomMoves.Count.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "Prep_RandomMovement(): invalid state myGameInstance.RandomMoves.Count=" + myGameInstance.RandomMoves.Count.ToString());
             return false;
          }
          //--------------------------------------------------
@@ -170,13 +170,13 @@ namespace PleasantvilleGame
             string buildingName = GetBuildingName(rmd.myBuildingName);
             if( "ERROR" == buildingName)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): GetBuildingName() returned ERROR for kvp.Value=" + rmd.myBuildingName);
+               Logger.Log(LogEnum.LE_ERROR, "Prep_RandomMovement(): GetBuildingName() returned ERROR for kvp.Value=" + rmd.myBuildingName);
                return false;
             }
             IMapItem? mi = myGameInstance.Stacks.FindMapItem(rmd.myName);
             if (mi == null)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): mi=null for " + rmd.myName);
+               Logger.Log(LogEnum.LE_ERROR, "Prep_RandomMovement(): mi=null for " + rmd.myName);
                return false;
             }
             myGridRows[numPeopleMoved] = new GridRow(mi, buildingName);
@@ -193,7 +193,7 @@ namespace PleasantvilleGame
          //--------------------------------------------------
          if (false == UpdateGrid())
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMovement(): UpdateGrid() return false");
+            Logger.Log(LogEnum.LE_ERROR, "Prep_RandomMovement(): UpdateGrid() return false");
             return false;
          }
          myScrollViewer.Content = myGrid;
@@ -322,7 +322,6 @@ namespace PleasantvilleGame
             Grid.SetRow(labelforBuildingName, rowNum);
             Grid.SetColumn(labelforBuildingName, 2);
             //-----------------------------
-            CheckBox cb1 = new CheckBox() { FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = System.Windows.VerticalAlignment.Center };
             if ((true == mi.IsTiedUp) || (true == mi.IsUnconscious) || (true == mi.IsKilled))
             {
                Label labelForBlock = new Label() { FontFamily = myFontFam, FontSize = 16, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = "NA" };
@@ -330,28 +329,32 @@ namespace PleasantvilleGame
                Grid.SetRow(labelForBlock, rowNum);
                Grid.SetColumn(labelForBlock, 3);
             }
-            else if ((GameType.SinglePlayerAlien != GameEngine.theGameType) && (true == mi.IsControlled))
-            {
-               cb1.IsEnabled = true;
-               cb1.IsChecked = myGridRows[i].myIsBlockedFromMove;
-               cb1.Checked += CheckBox_Checked;
-               cb1.Unchecked += CheckBox_Unchecked;
-            }
-            else if ((GameType.MultiPlayerJoin == GameEngine.theGameType) && ((true == mi.IsAlienKnown) || (true == mi.IsAlienUnknown)))
-               {
-               cb1.IsEnabled = true;
-               cb1.IsChecked = myGridRows[i].myIsBlockedFromMove;
-               cb1.Checked += CheckBox_Checked;
-               cb1.Unchecked += CheckBox_Unchecked;
-            }
             else
             {
-               cb1.IsEnabled = false;
-               cb1.IsChecked = false;
+               CheckBox cb1 = new CheckBox() { FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = System.Windows.VerticalAlignment.Center };
+               if ((GameType.SinglePlayerAlien != GameEngine.theGameType) && (true == mi.IsControlled))
+               {
+                  cb1.IsEnabled = true;
+                  cb1.IsChecked = myGridRows[i].myIsBlockedFromMove;
+                  cb1.Checked += CheckBox_Checked;
+                  cb1.Unchecked += CheckBox_Unchecked;
+               }
+               else if ((GameType.MultiPlayerJoin == GameEngine.theGameType) && ((true == mi.IsAlienKnown) || (true == mi.IsAlienUnknown)))
+               {
+                  cb1.IsEnabled = true;
+                  cb1.IsChecked = myGridRows[i].myIsBlockedFromMove;
+                  cb1.Checked += CheckBox_Checked;
+                  cb1.Unchecked += CheckBox_Unchecked;
+               }
+               else
+               {
+                  cb1.IsEnabled = false;
+                  cb1.IsChecked = false;
+               }
+               myGrid.Children.Add(cb1);
+               Grid.SetRow(cb1, rowNum);
+               Grid.SetColumn(cb1, 3);
             }
-            myGrid.Children.Add(cb1);
-            Grid.SetRow(cb1, rowNum);
-            Grid.SetColumn(cb1, 3);
          }
          return true;
       }

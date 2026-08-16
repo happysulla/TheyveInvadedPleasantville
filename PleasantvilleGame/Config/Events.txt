@@ -135,7 +135,7 @@ e011t	"<Bold>e011t Combats</Bold>  <InlineUIContainer><Button Content='r8.0' Fon
 <LineBreak/><LineBreak/>
 All combat is voluntary. Combat is started by clicking a flashing red space. If the Town player attacks one or more uncontrolled counters thinking them to be Alien controlled, the result is automatically 'Attacker Wins' for the Town player, regardless of the number of uncontrolled townspeople. 
 <LineBreak/><LineBreak/>
-The Combat Factors (<InlineUIContainer><Button Content='r2.2.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>) are compared to arriving at a postive difference (attacker is always greater number). The <InlineUIContainer><Button Content='Combat Results' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table determines the outcome.
+The Combat Factors <InlineUIContainer><Button Content='r2.2.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> are compared to arriving at a postive difference (attacker is always greater number). The <InlineUIContainer><Button Content='Combat Results' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table determines the outcome.
 <LineBreak/><LineBreak/>Combat can be skipped by clicking the following image.
 <LineBreak/><LineBreak/>
                                         <InlineUIContainer><Image Name='Continue011t' Height='100' Width='100'></Image></InlineUIContainer>"

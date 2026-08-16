@@ -1015,6 +1015,11 @@ namespace PleasantvilleGame
                            Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() mi=null for rmd.myName=" + rmd.myName);
                            return;
                         }
+                        if( 7 < index )
+                        {
+                           Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() INVALID STATE index=" + index.ToString() + " randomMoves=" + myGameInstance.RandomMoves.ToString());
+                           return;
+                        }
                         Rectangle r = new Rectangle() { Width=b.Width + 2, Height=b.Height + 2, Visibility=Visibility.Visible, Stroke = myBrushes[index], StrokeThickness=3.0, StrokeDashArray=myDashArray  };
                         myRectangleMaps[mi] = r;
                         index++;
@@ -3507,6 +3512,7 @@ namespace PleasantvilleGame
                   }
                   if( (true == tSelected.IsBuilding()) && (false == isAlreadySelected) ) // if not a building or territory already selected, do nothing
                   {
+                     p.Fill = mySolidColorBrushBlack;
                      myGameInstance.SelectedTerritory = tSelected;
                      GameAction action = GameAction.InterrogationsGuess;
                      myGameEngine.PerformAction(ref myGameInstance, ref action, 0);

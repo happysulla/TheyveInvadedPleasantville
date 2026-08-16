@@ -292,8 +292,8 @@ namespace PleasantvilleGame
                EventViewerRandomMovement evRandomMovementMgr = new EventViewerRandomMovement(myGameEngine, myGameInstance, myCanvasMain, myScrollViewerTextBlock, myRulesMgr, myDieRoller);
                if (true == evRandomMovementMgr.CtorError)
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): evRandomMovementMgr.CtorError=true");
-               else if (false == evRandomMovementMgr.PerformRandomMovement(ShowRandomMoveResults))
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Perform_RandomMovement() returned false");
+               else if (false == evRandomMovementMgr.PrepRandomMovement(ShowRandomMoveResults))
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Prep_RandomMovement() returned false");
                break;
             case GameAction.CombatAttackerWin:
             case GameAction.CombatDefenderWin:

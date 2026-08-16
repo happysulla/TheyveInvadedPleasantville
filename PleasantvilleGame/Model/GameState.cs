@@ -121,6 +121,7 @@ namespace PleasantvilleGame
       {
          Logger.Log(LogEnum.LE_SHOW_RESET_PHASE, "Reset_Phase(): ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + phase.ToString());
          gi.GamePhase = phase;
+         gi.DieRollAction = GameAction.DieRollActionNone;
          gi.IsAlienDisplayedRandomMovement = false;
          gi.IsTownDisplayedRandomMovement = false;
          gi.IsAlienAckedRandomMovement = false;
@@ -1287,6 +1288,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Choose_RandomMovePeopleAndDest(): GetTargetBuildingName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
                return false;
             }
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): moving " + name + " to " + fullBuildingName);
             //------------------------------------------------------------
             bool isDuplicate = false;
             RandomMoveData randomMove = new RandomMoveData(name, fullBuildingName);
@@ -1303,7 +1305,11 @@ namespace PleasantvilleGame
             {
                gi.RandomMoves.Add(randomMove);
                numPeopleMoved++;
-               Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): prep moving " + name + " to " + fullBuildingName);
+               Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): adding moving " + name + " to " + fullBuildingName);
+            }
+            else
+            {
+               Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): skipping " + name + " to " + fullBuildingName + " since already moving");
             }
          }
          if (loopCount < 0)
@@ -1324,6 +1330,8 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): mi=null for " + rmd.myName);
                return false;
             }
+            if ((true == mi.IsTiedUp) || (true == mi.IsUnconscious) || (true == mi.IsKilled))
+               continue;
             string buildingName = rmd.myBuildingName;
             mi.Movement *= 2; // Movement is doubled during Random Movement
             ITerritory? newTerritory = Territories.theTerritories.Find(buildingName);
