@@ -155,7 +155,11 @@ Any conscious, defeated, Alien controlled counter may be interrogated by a Town 
 e013t	"<Bold>e013t Implant Removals</Bold>  <InlineUIContainer><Button Content='r8.7.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> 
 <InlineUIContainer><Button Content='Implant Removal' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
-The Town player may try to remove this implant from a defeated Alien controlled townsperson, thus breaking the Alien player's control. Removing the implant generates an electric shock may erases all memory of the Alien HQ from the victim's memory, a unique safegard which is built into the implant's circuits. Click a flashing space to begin."
+The Town player may try to remove this implant from a defeated Alien controlled townsperson, thus breaking the Alien player's control.
+<LineBreak/><LineBreak/>
+ Removing the implant generates an electric shock may erases all memory of the Alien HQ from the victim's memory, a unique safegard which is built into the implant's circuits.
+<LineBreak/><LineBreak/>
+Click a flashing space to begin."
 e501	"<Bold>e501 Game Won!!!</Bold>
 <LineBreak/><LineBreak/>"
 e502	"<Bold>e502 Game Lost</Bold>

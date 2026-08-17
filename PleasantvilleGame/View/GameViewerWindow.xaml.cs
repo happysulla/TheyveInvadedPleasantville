@@ -80,7 +80,7 @@ namespace PleasantvilleGame
       private List<Brush> myBrushes = new List<Brush>();
       private int myBrushIndex = 0;
       private DoubleCollection myDashArray = new DoubleCollection();
-      private SolidColorBrush mySolidColorBrushBlack = new SolidColorBrush();
+      private SolidColorBrush mySolidColorBrushBlack = new SolidColorBrush() { Color = Colors.Black };
       private SolidColorBrush mySolidColorBrushPink = new SolidColorBrush()      { Color = Colors.Pink };     // Conversations
       private SolidColorBrush mySolidColorBrushPurple = new SolidColorBrush()    { Color = Colors.Purple };     // Interogations
       private SolidColorBrush mySolidColorBrushRosyBrown = new SolidColorBrush() { Color = Colors.RosyBrown };     // Implant Removal
@@ -1161,7 +1161,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
-               Logger.Log(LogEnum.LE_SHOW_COMBATS, "UpdateView(): calling Display_FlashingRegions() territories=" + gi.SelectedTerritories.ToString());
+               Logger.Log(LogEnum.LE_SHOW_REMOVALS, "UpdateView(): calling Display_FlashingRegions() territories=" + gi.SelectedTerritories.ToString());
                if (false == DisplayFlashingRegions(gi, mySolidColorBrushRosyBrown))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
@@ -1169,6 +1169,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.InterrogationsSelect:
+               Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "UpdateView(): calling Display_FlashingRegions() territories=" + gi.SelectedTerritories.ToString());
                if (false == DisplayFlashingRegions(gi, mySolidColorBrushPurple))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
@@ -1176,6 +1177,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.InterrogationsGuess:
+               Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "UpdateView(): fill polygons due to guesses for territories=" + gi.ZebulonTerritories.ToString());
                foreach (ITerritory t in gi.ZebulonTerritories) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
                {
                   foreach (Polygon polygon in myPolygons)
@@ -3158,35 +3160,53 @@ namespace PleasantvilleGame
          IStack? stack = gi.Stacks.Find(selectedTerritory);
          if (null == stack)
          {
-            Logger.Log(LogEnum.LE_ERROR, "DisplayImplantRemoval() stack=null");
+            Logger.Log(LogEnum.LE_ERROR, "Display_ImplantRemoval() stack=null");
             return false;
          }
-         if (null != stack.MapItems)
+         //-----------------------------------------
+         foreach (IMapItem mi in stack.MapItems)
          {
-            foreach (IMapItem mi in stack.MapItems)
+            if ((true == mi.IsImplantRemovalAttemptThisTurn) || (true == mi.IsImplantRemovalAttempt) || (true == mi.IsKilled))
+               continue;
+            if ((true == mi.IsControlled) && (false == mi.IsUnconscious) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
+               myLeftMapItemsInActionPanel.Add(mi);
+            else if ((true == mi.IsAlienKnown) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (true == mi.IsUnconscious)))
+               myRightMapItemsInActionPanel.Add(mi);
+         }
+         //-----------------------------------------
+         if ((0 < myLeftMapItemsInActionPanel.Count) && (0 < myRightMapItemsInActionPanel.Count))
+         {
+            if (1 == myLeftMapItemsInActionPanel.Count)
             {
-               if ((true == mi.IsImplantRemovalAttemptThisTurn) || (true == mi.IsImplantRemovalAttempt) || (true == mi.IsKilled))
-                  continue;
-               if ((true == mi.IsControlled) && (true == mi.IsUnconscious) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
-                  myLeftMapItemsInActionPanel.Add(mi);
-               else if ((true == mi.IsAlienKnown) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (false == mi.IsUnconscious)))
-                  myRightMapItemsInActionPanel.Add(mi);
-            }
-
-            if ((0 < myLeftMapItemsInActionPanel.Count) && (0 < myRightMapItemsInActionPanel.Count))
-            {
-               if (false == UpdateActionPanel(gi))
+               IMapItem? leftMapItem1 = myLeftMapItemsInActionPanel[0];
+               if (null == leftMapItem1)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "Display_ImplantRemoval(): Update_ActionPanel() returned error");
+                  Logger.Log(LogEnum.LE_ERROR, "Display_ImplantRemoval(): leftMapItem0 is null");
                   return false;
                }
-               myLabelHeading.Visibility = Visibility.Visible;
-               myLabelArrow.Visibility = Visibility.Visible;
-               myTextBoxResults.Visibility = Visibility.Visible;
-               myLabelHeading.Content = "Remove Implant to Hold Evidence of Alien Takeover";
-               myLabelLeftTop.Content = "Choose a person who is removing implant:";
-               myLabelRightTop.Content = "Choose a person to have implant removed:";
+               myLeftMapItemsInActionPanelSelected.Add(leftMapItem1);
             }
+            if (1 == myRightMapItemsInActionPanel.Count)
+            {
+               IMapItem? rightMapItem1 = myRightMapItemsInActionPanel[0];
+               if (null == rightMapItem1)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Display_ImplantRemoval(): leftMapItem0 is null");
+                  return false;
+               }
+               myRightMapItemsInActionPanelSelected.Add(rightMapItem1);
+            }
+            if (false == UpdateActionPanel(gi))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Display_ImplantRemoval(): Update_ActionPanel() returned error");
+               return false;
+            }
+            myLabelHeading.Visibility = Visibility.Visible;
+            myLabelArrow.Visibility = Visibility.Visible;
+            myTextBoxResults.Visibility = Visibility.Visible;
+            myLabelHeading.Content = "Remove Implant to Hold Evidence of Alien Takeover";
+            myLabelLeftTop.Content = "Choose a person who is removing implant:";
+            myLabelRightTop.Content = "Choose a person to have implant removed:";
          }
          return true;
       }
