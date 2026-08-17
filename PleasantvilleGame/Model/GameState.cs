@@ -540,7 +540,6 @@ namespace PleasantvilleGame
             bool isFriendlyAlienHelping = false;
             bool isFriendlyControlledHelping = false;
             //--------------------------------------------------------
-            StringBuilder sb1 = new StringBuilder("CheckFor_EndOfGame(): Tied Up Units in t=\n"); sb1.Append(stack.Territory.ToString());
             foreach (MapItem mi in stack.MapItems)
             {
                mi.IsMoveStoppedThisTurn = false;
@@ -558,22 +557,13 @@ namespace PleasantvilleGame
                      alienTiedUpPersons.Add(mi);
                   else if (true == mi.IsControlled)
                      controlledTiedUpPersons.Add(mi);
-                  sb1.Append(" ");
-                  sb1.Append(mi.Name);
                }
                if ((false == mi.IsTiedUp) && (false == mi.IsUnconscious) && (false == mi.IsStunned))
                {
                   if (true == mi.IsAlienKnown)
-                  {
                      isFriendlyAlienHelping = true;
-                     sb1.Append(" FRIENDLY ALIEN=");
-                  }
                   else if (true == mi.IsControlled)
-                  {
                      isFriendlyControlledHelping = true;
-                     sb1.Append(" FRIENDLY TP=");
-                  }
-                  sb1.Append(mi.Name);
                }
                if( true == mi.IsStunned)// Unstunned - For each person who was stunned returns to the game
                {
@@ -629,8 +619,6 @@ namespace PleasantvilleGame
                foreach (IMapItem alien in alienTiedUpPersons) // known aliens tied up
                {
                   alien.IsTiedUp = false;
-                  sb1.Append(" untied alien=");
-                  sb1.Append(alien.Name);
                   if ((false == alien.IsUnconscious) && (false == alien.IsStunned))
                   {
                      gi.InfluenceCountTotal += alien.Influence;
@@ -657,8 +645,6 @@ namespace PleasantvilleGame
                foreach (IMapItem controlled in controlledTiedUpPersons)
                {
                   controlled.IsTiedUp = false;
-                  sb1.Append(" untied TP=");
-                  sb1.Append(controlled.Name);
                   if ((true == controlled.IsUnconscious) && (false == controlled.IsStunned))
                   {
                      gi.InfluenceCountTotal += controlled.Influence;
@@ -678,7 +664,6 @@ namespace PleasantvilleGame
                   }
                }
             }
-            Logger.Log(LogEnum.LE_GAME_END, sb1.ToString());
          }
          //-----------------------------------------------------------
          if (false == CheckForInfluenceError(gi)) // check for any errors
@@ -1280,15 +1265,15 @@ namespace PleasantvilleGame
                return false;
             }
             //------------------------------------------------------------
-            die1 = Utilities.RandomGenerator.Next(5);
-            die2 = Utilities.RandomGenerator.Next(6);
-            string fullBuildingName = TableMgr.GetTargetBuildingName(die1, die2); // Find the target building location.
+            int die3 = Utilities.RandomGenerator.Next(5);
+            int die4 = Utilities.RandomGenerator.Next(6);
+            string fullBuildingName = TableMgr.GetTargetBuildingName(die3, die4); // Find the target building location.
             if ("ERROR" == fullBuildingName)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Choose_RandomMovePeopleAndDest(): GetTargetBuildingName() returned ERROR for die1=" + die1.ToString() + " die2=" + die2.ToString());
+               Logger.Log(LogEnum.LE_ERROR, "Choose_RandomMovePeopleAndDest(): GetTargetBuildingName() returned ERROR for d3=" + die3.ToString() + " d4=" + die4.ToString());
                return false;
             }
-            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): moving " + name + " to " + fullBuildingName);
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): moving " + name + " to " + fullBuildingName + " d1=" + die1.ToString() + " d2=" + die2.ToString() + " d3=" + die3.ToString() + " d4=" + die4.ToString());
             //------------------------------------------------------------
             bool isDuplicate = false;
             RandomMoveData randomMove = new RandomMoveData(name, fullBuildingName);
@@ -1327,7 +1312,7 @@ namespace PleasantvilleGame
             IMapItem? mi = gi.Stacks.FindMapItem(rmd.myName);
             if (mi == null)
             {
-               Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): mi=null for " + rmd.myName);
+               Logger.Log(LogEnum.LE_ERROR, "Choose_RandomMovePeopleAndDest(): mi=null for " + rmd.myName);
                return false;
             }
             if ((true == mi.IsTiedUp) || (true == mi.IsUnconscious) || (true == mi.IsKilled))
@@ -1341,7 +1326,7 @@ namespace PleasantvilleGame
                return false;
             }
             //-----------------------------------------
-            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Perform_RandomMoves(): mi=" + mi.Name + " entering t=" + newTerritory.Name);
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Perform_RandomMoves(): mi=" + mi.Name + " entering t=" + newTerritory.ToString());
             IMapItemMove? mim = gi.CreateMapItemMove(mi, newTerritory);
             if (null == mim)
             {
