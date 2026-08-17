@@ -1153,6 +1153,21 @@ namespace PleasantvilleGame
                   return;
                }
                break;
+            case GameAction.ImplantRemovalsSelect:
+               myRectangleMaps.Clear();
+               UpdateCanvasMainClear(myButtons, gi.Stacks, action);
+               if (false == UpdateCanvasMain(gi, action))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
+                  return;
+               }
+               Logger.Log(LogEnum.LE_SHOW_COMBATS, "UpdateView(): calling Display_FlashingRegions() territories=" + gi.SelectedTerritories.ToString());
+               if (false == DisplayFlashingRegions(gi, mySolidColorBrushRosyBrown))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
+                  return;
+               }
+               break;
             case GameAction.InterrogationsSelect:
                if (false == DisplayFlashingRegions(gi, mySolidColorBrushPurple))
                {

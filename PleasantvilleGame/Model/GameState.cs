@@ -563,7 +563,6 @@ namespace PleasantvilleGame
                      Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): Reset_Phase() returned error");
                      return false;
                   }
-                  gi.EventDisplayed = gi.EventActive = "e014t";
                }
                Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "CheckFor_AlienTakeovers(): t=" + stack.Territory.ToString() + " v=" + possibleVictims.ToString() + " ua=" + unknownAliens.ToString() + " ka=" + knownAliens.ToString());
                if ( false == gi.PlayerAlien.ShowPossibleTakeover(gi, stack, ref action))
@@ -2102,6 +2101,8 @@ namespace PleasantvilleGame
                   }
                }
                break;
+            case GameAction.SkipTerritory:
+               break;
             default:
                returnStatus = "reached default action=" + action.ToString();
                Logger.Log(LogEnum.LE_ERROR, "GameStateIterogations.PerformAction(): " + returnStatus);
@@ -2215,9 +2216,18 @@ namespace PleasantvilleGame
                   }
                   if (false == CheckForImplantRemovals(gi, ref action))
                   {
-                     returnStatus = "CheckForImplantRemovals() returned false";
+                     returnStatus = "Check_ForImplantRemovals() returned false";
                      Logger.Log(LogEnum.LE_ERROR, "GameStateImplantRemoval.PerformAction(): " + returnStatus);
                   }
+               }
+               break;
+            case GameAction.SkipTerritory:
+               foreach (IMapItem mi in gi.SelectedMapItems)
+                  mi.IsImplantRemovalAttemptThisTurn = true;
+               if (false == CheckForImplantRemovals(gi, ref action))
+               {
+                  returnStatus = "Check_ForImplantRemovals() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateImplantRemoval.PerformAction(SkipTerritory): " + returnStatus);
                }
                break;
             default:
