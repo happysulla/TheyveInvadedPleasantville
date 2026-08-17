@@ -38,6 +38,7 @@ namespace PleasantvilleGame
       UpdateEventViewerDisplay,
       UpdateEventViewerActive,
       DieRollActionNone,          // The field in IGameInstance indicates what the roll apply. If none expected, it is set to this value.
+      SkipTerritory,              // User selected Cancel button for this territory causing this read to be skipped
 
       UpdateView,
       UpdateNewGame,              // Menu Options

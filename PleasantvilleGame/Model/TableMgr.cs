@@ -970,12 +970,12 @@ namespace PleasantvilleGame
       }
       static public string GetTownspersonName(int die1, int die2)
       {
-         if (die1 < 0 || 5 < die1)
+         if (die1 < 0 || 4 < die1)
          {
             Logger.Log(LogEnum.LE_ERROR, "TableMgr.Get_Townsperson(): die1 out of range: " + die1);
             return "ERROR";
          }
-         if (die2 < 0 || 6 < die2)
+         if (die2 < 0 || 5 < die2)
          {
             Logger.Log(LogEnum.LE_ERROR, "TableMgr.Get_Townsperson(): die2 out of range: " + die2);
             return "ERROR";
@@ -1000,12 +1000,12 @@ namespace PleasantvilleGame
       //---------------------------------------------------------------------
       static public string GetTargetBuildingName(int die1, int die2)
       {
-         if (die1 < 0 || 5 < die1)
+         if (die1 < 0 || 4 < die1)
          {
             Logger.Log(LogEnum.LE_ERROR, "TableMgr.GetTargetBuildingName(): die1 out of range: " + die1);
             return "ERROR";
          }
-         if (die2 < 0 || 6 < die2)
+         if (die2 < 0 || 5 < die2)
          {
             Logger.Log(LogEnum.LE_ERROR, "TableMgr.GetTargetBuildingName(): die2 out of range: " + die2);
             return "ERROR";

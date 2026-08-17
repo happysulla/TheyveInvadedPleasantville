@@ -1893,7 +1893,13 @@ namespace PleasantvilleGame
       }
       private void ClickButtonCancelInHelperPanel(object sender, RoutedEventArgs e)
       {
-
+         myGameInstance.SelectedMapItems.Clear();
+         foreach (IMapItem mi in myLeftMapItemsInActionPanel)
+            myGameInstance.SelectedMapItems.Add(mi);
+         foreach (IMapItem mi in myRightMapItemsInActionPanel)
+            myGameInstance.SelectedMapItems.Add(mi);
+         GameAction action = GameAction.SkipTerritory;
+         myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
       }
       //-------------UPDATE HELPER FUNCTIONS---------------------------------
       private bool UpdateCanvasMain(IGameInstance gi, GameAction action, bool isOnlyLastLineRemoved = false)
@@ -2704,14 +2710,8 @@ namespace PleasantvilleGame
          //-----------------------------------------------------------------------------
          double totalInfluence = 0;
          bool isImplantHeld = false;
-         for (int i= 0; i< myLeftMapItemsInActionPanelSelected.Count; ++i)
+         foreach(IMapItem influencer in myLeftMapItemsInActionPanelSelected)
          {
-            IMapItem? influencer = myLeftMapItemsInActionPanelSelected[i];
-            if (null == influencer)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ShowResult_Influence(): influencer=null");
-               return;
-            }
             totalInfluence += (double)influencer.Influence;
             if (true == influencer.IsImplantHeld)
                isImplantHeld = true;
@@ -2781,6 +2781,7 @@ namespace PleasantvilleGame
          if (true == rightMapItem.IsWary)  // Check if wary.  This subtracts to the die roll.
             --dieRollModifier;
          int final = dieRoll + dieRollModifier;
+         Logger.Log(LogEnum.LE_SHOW_INFLUENCES, "ShowResult_Influence(): totalInfluence=" + totalInfluence.ToString("F1") + " r=" + rightMapItem.Influence.ToString() + " odds=" + odds.ToString("F1") + " threshold=" + dieThreshold.ToString());
          //------------------------------------------------
          displayResults.Append(dieRoll.ToString());
          displayResults.Append("(roll)");

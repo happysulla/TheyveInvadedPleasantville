@@ -223,6 +223,62 @@ namespace PleasantvilleGame
          }
          return true;
       }
+      protected bool ChooseRandomMovePeopleAndDest(IGameInstance gi)
+      {
+         gi.RandomMoves.Clear();
+         const int numPeopleToMove = 4;
+         int numPeopleMoved = 0;
+         int loopCount = 200;
+         while ((numPeopleMoved < numPeopleToMove) && (0 < loopCount--))
+         {
+            int die1 = Utilities.RandomGenerator.Next(5);
+            int die2 = Utilities.RandomGenerator.Next(6);
+            string name = TableMgr.GetTownspersonName(die1, die2); // die rolls expected to be 0 index based
+            if ("ERROR" == name)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Choose_RandomMovePeopleAndDest(): TableMgr.GetTownspersonName() returned ERROR");
+               return false;
+            }
+            die1 += 1;
+            die2 += 1;
+            //------------------------------------------------------------
+            int die3 = Utilities.RandomGenerator.Next(5);
+            int die4 = Utilities.RandomGenerator.Next(6);
+            string fullBuildingName = TableMgr.GetTargetBuildingName(die3, die4); // die rolls expected to be 0 index based
+            if ("ERROR" == fullBuildingName)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Choose_RandomMovePeopleAndDest(): GetTargetBuildingName() returned ERROR for d3=" + die3.ToString() + " d4=" + die4.ToString());
+               return false;
+            }
+            die3 += 1;
+            die4 += 1;
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): moving " + name + " to " + fullBuildingName + " d1=" + die1.ToString() + " d2=" + die2.ToString() + " d3=" + die3.ToString() + " d4=" + die4.ToString());
+            //------------------------------------------------------------
+            bool isDuplicate = false;
+            RandomMoveData randomMove = new RandomMoveData(name, fullBuildingName);
+            foreach (RandomMoveData rmd in gi.RandomMoves)
+            {
+               if (rmd.myName == name)
+               {
+                  Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): skipping name=" + name + " to building=" + fullBuildingName + " because it is in the RandomMovesData list");
+                  isDuplicate = true;
+                  break;
+               }
+            }
+            if (false == isDuplicate)
+            {
+               gi.RandomMoves.Add(randomMove);
+               numPeopleMoved++;
+            }
+         }
+         if (loopCount < 0)
+         {
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): invalid state loopCount=" + loopCount.ToString());
+            return false;
+         }
+         return true;
+      }
+
       protected bool CheckForConversations(IGameInstance gi, ref GameAction action)
       {
          gi.SelectedMapItems.Clear();
@@ -697,7 +753,12 @@ namespace PleasantvilleGame
          //-----------------------------------------------------------
          if (false == ResetPhase(gi, GamePhase.RandomMovement))
          {
-            Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): Reset_Phase() returned error");
+            Logger.Log(LogEnum.LE_ERROR, "CheckFor_EndOfGame(): Reset_Phase() returned error");
+            return false;
+         }
+         if (false == ChooseRandomMovePeopleAndDest(gi)) // setup for next Random Move Phase
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CheckFor_EndOfGame(): Create_RandomMoves() returned false");
             return false;
          }
          action = GameAction.RandomMovementStartTowns;
@@ -1194,9 +1255,9 @@ namespace PleasantvilleGame
                   returnStatus = "Create_RandomMoves() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
                }
-               else if (false == PerformRandomMoves(gi))
+               else if (false == CreateRandomMoves(gi))
                {
-                  returnStatus = "PerformRandomMoves() returned false";
+                  returnStatus = "Create_RandomMoves() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(RandomMovementConfirmed): " + returnStatus);
                }
                gi.EventActive = gi.EventDisplayed = "e005t";
@@ -1248,63 +1309,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, sb12.ToString());
          return returnStatus;
       }
-      public bool ChooseRandomMovePeopleAndDest(IGameInstance gi)
-      {
-         gi.RandomMoves.Clear();
-         const int numPeopleToMove = 4;
-         int numPeopleMoved = 0;
-         int loopCount = 200;
-         while ((numPeopleMoved < numPeopleToMove) && (0 < loopCount--))
-         {
-            int die1 = Utilities.RandomGenerator.Next(5);
-            int die2 = Utilities.RandomGenerator.Next(6);
-            string name = TableMgr.GetTownspersonName(die1, die2);
-            if ("ERROR" == name)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Choose_RandomMovePeopleAndDest(): TableMgr.GetTownspersonName() returned ERROR");
-               return false;
-            }
-            //------------------------------------------------------------
-            int die3 = Utilities.RandomGenerator.Next(5);
-            int die4 = Utilities.RandomGenerator.Next(6);
-            string fullBuildingName = TableMgr.GetTargetBuildingName(die3, die4); // Find the target building location.
-            if ("ERROR" == fullBuildingName)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Choose_RandomMovePeopleAndDest(): GetTargetBuildingName() returned ERROR for d3=" + die3.ToString() + " d4=" + die4.ToString());
-               return false;
-            }
-            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): moving " + name + " to " + fullBuildingName + " d1=" + die1.ToString() + " d2=" + die2.ToString() + " d3=" + die3.ToString() + " d4=" + die4.ToString());
-            //------------------------------------------------------------
-            bool isDuplicate = false;
-            RandomMoveData randomMove = new RandomMoveData(name, fullBuildingName);
-            foreach (RandomMoveData rmd in gi.RandomMoves)
-            {
-               if(rmd.myName == name) 
-               {
-                  Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): skipping name=" + name + " to building=" + fullBuildingName + " because it is in the RandomMovesData list");
-                  isDuplicate = true;
-                  break;
-               }
-            }
-            if( false == isDuplicate)
-            {
-               gi.RandomMoves.Add(randomMove);
-               numPeopleMoved++;
-               Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): adding moving " + name + " to " + fullBuildingName);
-            }
-            else
-            {
-               Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): skipping " + name + " to " + fullBuildingName + " since already moving");
-            }
-         }
-         if (loopCount < 0)
-         {
-            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): invalid state loopCount=" + loopCount.ToString());
-            return false;
-         }
-         return true;
-      }
-      public bool PerformRandomMoves(IGameInstance gi)
+      public bool CreateRandomMoves(IGameInstance gi)
       {
          for (int i = 0; i < gi.RandomMoves.Count; i++)
          {
@@ -1312,7 +1317,7 @@ namespace PleasantvilleGame
             IMapItem? mi = gi.Stacks.FindMapItem(rmd.myName);
             if (mi == null)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Choose_RandomMovePeopleAndDest(): mi=null for " + rmd.myName);
+               Logger.Log(LogEnum.LE_ERROR, "Create_RandomMoves(): mi=null for " + rmd.myName);
                return false;
             }
             if ((true == mi.IsTiedUp) || (true == mi.IsUnconscious) || (true == mi.IsKilled))
@@ -1322,15 +1327,15 @@ namespace PleasantvilleGame
             ITerritory? newTerritory = Territories.theTerritories.Find(buildingName);
             if (null == newTerritory)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMoves(): unable to find buildingName=" + buildingName);
+               Logger.Log(LogEnum.LE_ERROR, "Create_RandomMoves(): unable to find buildingName=" + buildingName);
                return false;
             }
             //-----------------------------------------
-            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Perform_RandomMoves(): mi=" + mi.Name + " entering t=" + newTerritory.ToString());
+            Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Create_RandomMoves(): mi=" + mi.Name + " entering t=" + newTerritory.ToString());
             IMapItemMove? mim = gi.CreateMapItemMove(mi, newTerritory);
             if (null == mim)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_RandomMoves(): Create_MapItemMove() returned null");
+               Logger.Log(LogEnum.LE_ERROR, "Create_RandomMoves(): Create_MapItemMove() returned null");
                return false;
             }
             gi.MapItemMoves.Add(mim);
@@ -1572,6 +1577,15 @@ namespace PleasantvilleGame
                break;
             case GameAction.ConversationsFinish:
                break;
+            case GameAction.SkipTerritory:
+               foreach (IMapItem mi in gi.SelectedMapItems)
+                  mi.IsConversedThisTurn = true;
+               if (false == CheckForConversations(gi, ref action))
+               {
+                  returnStatus = "CheckFor_Conversations() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(SkipTerritory): " + returnStatus);
+               }
+               break;
             default:
                returnStatus = "reached default action=" + action.ToString();
                Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(): " + returnStatus);
@@ -1696,6 +1710,7 @@ namespace PleasantvilleGame
                         dieThreshold = 9;
                      else
                         dieThreshold = 10;
+                     Logger.Log(LogEnum.LE_SHOW_INFLUENCES, "GameStateInfluences.PerformAction(): totalInfluence=" + totalInfluence.ToString("F1") + " r=" + rightMapItem.Influence.ToString() + " odds=" + odds.ToString("F1") + " threshold=" + dieThreshold.ToString() + " indexOfLast=" + indexOfLast.ToString());
                      int dieRollModifier = 0;
                      if (true == isImplantHeld) // Subtact one if a controlled person holds evidence of an implant.
                         --dieRollModifier;
@@ -1738,6 +1753,15 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.InfluencesFinish:
+               break;
+            case GameAction.SkipTerritory:
+               foreach (IMapItem mi in gi.SelectedMapItems)
+                  mi.IsInfluencedThisTurn = true;
+               if (false == CheckForInfluences(gi, ref action))
+               {
+                  returnStatus = "CheckFor_Influences() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(SkipTerritory): " + returnStatus);
+               }
                break;
             default:
                returnStatus = "reached default action=" + action.ToString();
@@ -1902,6 +1926,15 @@ namespace PleasantvilleGame
                {
                   returnStatus = "CheckFor_Iterogations() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsFinish): " + returnStatus);
+               }
+               break;
+            case GameAction.SkipTerritory:
+               foreach (IMapItem mi in gi.SelectedMapItems)
+                  mi.IsCombatThisTurn = true;
+               if (false == CheckForCombats(gi, ref action))
+               {
+                  returnStatus = "Check_ForCombats() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(SkipTerritory): " + returnStatus);
                }
                break;
             default:
