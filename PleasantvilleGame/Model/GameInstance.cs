@@ -120,6 +120,7 @@ namespace PleasantvilleGame
          controlled.IsWary = false;
          controlled.IsSurrendered = false;
          controlled.IsSkeptical = false;
+         controlled.IsTiedUp = false;
       }
       public IMapItemMove? CreateMapItemMove(IMapItem mi, ITerritory newT)
       {

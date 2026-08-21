@@ -1860,6 +1860,29 @@ namespace PleasantvilleGame
                   }
                   else
                   {
+                     if (true == firstAttacker.IsControlled) // If Town attacks unknown alien, make it known alien
+                     {
+                        foreach (IMapItem defender in gi.MapItemCombat.Defenders)
+                        {
+                           if (true == defender.IsAlienUnknown)
+                           {
+                              Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "GameStateCombat.PerformAction(CombatsRoll): AddKnownAlien() defender=" + defender.ToString());
+                              gi.AddKnownAlien(defender);
+                           }
+                        }
+                     }
+                     else
+                     {
+                        foreach (IMapItem attacker in gi.MapItemCombat.Attackers)
+                        {
+                           if (true == attacker.IsAlienUnknown)
+                           {
+                              Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "GameStateCombat.PerformAction(CombatsRoll): AddKnownAlien() attacker=" + attacker.ToString() );
+                              gi.AddKnownAlien(attacker);
+                           }
+                        }
+                     }
+                     //----------------------------------------------
                      Logger.Log(LogEnum.LE_SHOW_COMBATS, "GameStateCombat.PerformAction(CombatsRoll): Combat=" + gi.MapItemCombat.ToString() + " action=" + action.ToString() + " dr=" + dieRoll.ToString() + " 1stA=" + firstAttacker.Name + " in " + firstAttacker.TerritoryCurrent.ToString());
                      switch (gi.MapItemCombat.Result)
                      {
@@ -2203,10 +2226,12 @@ namespace PleasantvilleGame
                            break;
                         case "Implant is removed but disintegrates.":
                            rightMapItem.IsImplantRemovalAttempt = true;
+                           gi.AddControlled(rightMapItem);
                            break;
                         case "Implant is removed intact! Use as evidence.":
                            rightMapItem.IsImplantRemovalAttempt = true;
                            leftMapItem.IsImplantHeld = true;
+                           gi.AddControlled(rightMapItem);
                            break;
                         default:
                            returnStatus = "reached default with result=" + result;

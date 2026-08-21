@@ -21,6 +21,7 @@ namespace PleasantvilleGame
 {
    public class EventViewer : IView
    {
+      public static bool theIsEventViewerSubclassActive = false; // In GameViewerWindow, do not react to flashing polygon user click
       public bool CtorError { get; } = false;
       private IGameEngine? myGameEngine = null;
       private IGameInstance? myGameInstance = null;
@@ -1188,6 +1189,7 @@ namespace PleasantvilleGame
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
                         case "Continue011t":
+                           Logger.Log(LogEnum.LE_SHOW_COMBATS, "TextBlock_MouseDown(): user selected CombatsFinished");
                            action = GameAction.CombatsFinish;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
