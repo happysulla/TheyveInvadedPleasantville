@@ -162,7 +162,7 @@ namespace PleasantvilleGame
          //-------------
          //SetOn(LogEnum.LE_SHOW_UNCONTROLLED);
          //-------------
-         //SetOn(LogEnum.LE_VIEW_SHOW_OPTIONS);
+         SetOn(LogEnum.LE_VIEW_SHOW_OPTIONS);
          //SetOn(LogEnum.LE_VIEW_SHOW_FEATS);
          //SetOn(LogEnum.LE_VIEW_SHOW_STATS);
          //SetOn(LogEnum.LE_VIEW_SHOW_GAMESAVES);
@@ -184,7 +184,7 @@ namespace PleasantvilleGame
          SetOn(LogEnum.LE_SHOW_ITEROGATIONS);
          SetOn(LogEnum.LE_SHOW_REMOVALS);
          SetOn(LogEnum.LE_SHOW_TAKEOVERS);
-         //SetOn(LogEnum.LE_SHOW_OBSERVATIONS);
+         SetOn(LogEnum.LE_SHOW_OBSERVATIONS);
          //SetOn(LogEnum.LE_SHOW_OBSERVATIONS_METRIC);
          //-------------
          //SetOn(LogEnum.LE_TIMER_ELAPED);

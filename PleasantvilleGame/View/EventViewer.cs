@@ -1176,7 +1176,7 @@ namespace PleasantvilleGame
                            action = GameAction.RandomMovementTownAck;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
-                        case "Continue006t":
+                        case "Alien":
                            action = GameAction.AlienMovementTownsShow;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
@@ -1184,7 +1184,7 @@ namespace PleasantvilleGame
                            action = GameAction.AlienMovementTownsAck;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
-                        case "Continue008t":
+                        case "Welcome":
                            action = GameAction.TownMovementTownCompletes;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
@@ -1196,6 +1196,10 @@ namespace PleasantvilleGame
                         case "Continue011af":
                         case "Continue011tf":
                            action = GameAction.CombatShowFleeMove;
+                           myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+                           return;
+                        case "Continue012t":
+                           action = GameAction.InterrogationsFinish;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
                         case "ExitGame":

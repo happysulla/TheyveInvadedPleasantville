@@ -1168,6 +1168,7 @@ namespace PleasantvilleGame
                break;
             case GameAction.InterrogationsGuess:
                Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "UpdateView(): fill polygons due to guesses for territories=" + gi.ZebulonTerritories.ToString());
+               myStoryboardFlashing = null;
                foreach (ITerritory t in gi.ZebulonTerritories) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
                {
                   foreach (Polygon polygon in myPolygons)
@@ -1996,21 +1997,6 @@ namespace PleasantvilleGame
       private bool UpdateCanvasMain(IGameInstance gi, GameAction action, bool isOnlyLastLineRemoved = false)
       {
          UpdateCanvasMainClear(myButtons, gi.Stacks, action);
-         //--------------------------------------------------------------
-         if (true == gi.Zebulon.IsAlienKnown)
-         {
-            Button? b = myButtons.Find(gi.Zebulon.Name);
-            if (null == b)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMain_MapItems(): could not find Zebulon in myButtons");
-               return false;
-            }
-            if (null != b)
-            {
-               b.Visibility = Visibility.Visible;
-               Canvas.SetZIndex(b, 100000);
-            }
-         }
          //---------------------------------------------------------------
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMain_MapItems(): " + gi.Stacks.ToString());
          foreach (IStack stack in gi.Stacks)
@@ -2486,11 +2472,12 @@ namespace PleasantvilleGame
                continue;
             if (true == mi.IsControlled)
             {
-               myLeftMapItemsInActionPanel.Add(mi);
+               if( myLeftMapItemsInActionPanel.Count < 3 )
+                  myLeftMapItemsInActionPanel.Add(mi);
             }
             else
             {
-               if (false == mi.IsAlienKnown)
+               if ( (false == mi.IsAlienKnown) && (myRightMapItemsInActionPanel.Count < 3) )
                   myRightMapItemsInActionPanel.Add(mi);
             }
          }
@@ -2652,11 +2639,12 @@ namespace PleasantvilleGame
                continue;
             if (true == mi.IsControlled)
             {
-               myLeftMapItemsInActionPanel.Add(mi);
+               if ((false == mi.IsAlienKnown) && (myLeftMapItemsInActionPanel.Count < 3))
+                  myLeftMapItemsInActionPanel.Add(mi);
             }
             else
             {
-               if (false == mi.IsAlienKnown)
+               if ((false == mi.IsAlienKnown) && (myRightMapItemsInActionPanel.Count<3) )
                   myRightMapItemsInActionPanel.Add(mi);
             }
          }
@@ -3160,12 +3148,16 @@ namespace PleasantvilleGame
                continue;
             if (true == mi.IsControlled)
             {
-               myLeftMapItemsInActionPanel.Add(mi);
-               myLeftMapItemsInActionPanelSelected.Add(mi); // all controlled on left side are selected and cannot be unselected
+               if (myLeftMapItemsInActionPanel.Count < 3)
+               {
+                  myLeftMapItemsInActionPanel.Add(mi);
+                  myLeftMapItemsInActionPanelSelected.Add(mi); // all controlled on left side are selected and cannot be unselected
+               }
             }
             else if ((true == mi.IsAlienKnown) && ((true == mi.IsSurrendered) || (true == mi.IsTiedUp)))
             {
-               myRightMapItemsInActionPanel.Add(mi);
+               if (myRightMapItemsInActionPanel.Count < 3)
+                  myRightMapItemsInActionPanel.Add(mi);
             }
          }
          if ((0 < myLeftMapItemsInActionPanel.Count) && (0 < myRightMapItemsInActionPanel.Count))
@@ -3256,9 +3248,9 @@ namespace PleasantvilleGame
          {
             if ((true == mi.IsImplantRemovalAttemptThisTurn) || (true == mi.IsImplantRemovalAttempt) || (true == mi.IsKilled))
                continue;
-            if ((true == mi.IsControlled) && (false == mi.IsUnconscious) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
+            if ((true == mi.IsControlled) && (false == mi.IsUnconscious) && (false == mi.IsTiedUp) && (false == mi.IsStunned) && (myLeftMapItemsInActionPanel.Count < 3) )
                myLeftMapItemsInActionPanel.Add(mi);
-            else if ((true == mi.IsAlienKnown) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (true == mi.IsUnconscious)))
+            else if ((true == mi.IsAlienKnown) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (true == mi.IsUnconscious)) && (myRightMapItemsInActionPanel.Count < 3))
                myRightMapItemsInActionPanel.Add(mi);
          }
          //-----------------------------------------
@@ -3628,6 +3620,7 @@ namespace PleasantvilleGame
             case GamePhase.Iterrogations:
                if (0 < myGameInstance.NumTownGuessesForZebulonLocation)
                {
+                  myStoryboardFlashing = null; // stop all flashing
                   Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "MouseDown_Polygon(): tSelected=" + tSelected.ToString());
                   bool isAlreadySelected = false;
                   foreach (ITerritory t in myGameInstance.ZebulonTerritories)

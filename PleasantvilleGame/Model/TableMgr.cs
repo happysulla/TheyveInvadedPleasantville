@@ -168,7 +168,8 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): dieRoll1=" + dieRoll.ToString() + " is out of range");
             return false;
          }
-         if( 0 == combat.Attackers.Count)
+         dieRoll -= 2; // normalize to 0-10 for theTable array
+         if ( 0 == combat.Attackers.Count)
          {
             Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): 0 == combat.Attackers.Count");
             return false;
@@ -184,19 +185,19 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): firstAttacker=null");
             return false;
          }
-         IMapItem? firstDefender = combat.Attackers[0];
+         IMapItem? firstDefender = combat.Defenders[0];
          if (null == firstDefender)
          {
             Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): firstDefender=null");
             return false;
          }
          //----------------------------------------
-         if( (true == firstAttacker.IsControlled) && ((false == firstDefender.IsAlienKnown) && (false == firstDefender.IsAlienUnknown) ) ) // Controlled townspeople can attack uncontrolled automatic win
+         if( (true == firstAttacker.IsControlled) && ((false == firstDefender.IsAlienKnown) && (false == firstDefender.IsAlienUnknown) ) ) // Controlled townspeople attacking uncontrolled automatic win
          {
             combat.Result = CombatResult.AttackerWins;
             return true;
          }
-         else if ((true == firstDefender.IsControlled) && ((false == firstAttacker.IsAlienKnown) && (false == firstAttacker.IsAlienUnknown))) // Controlled townspeople can attack uncontrolled automatic win
+         else if ((true == firstDefender.IsControlled) && ((false == firstAttacker.IsAlienKnown) && (false == firstAttacker.IsAlienUnknown))) // Controlled townspeople attacking uncontrolled automatic win
          {
             combat.Result = CombatResult.DefenderWins;
             return true;

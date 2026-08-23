@@ -36,8 +36,7 @@ namespace PleasantvilleGame
       [NonSerialized]
       public static string[] theDefaults = new string[] 
       {
-         "OriginalGame",
-         "CustomGame"
+         "AutoSetupTown"
       };
       private readonly ArrayList myList;
       public Options() { myList = new ArrayList(); }
@@ -86,22 +85,6 @@ namespace PleasantvilleGame
             copy.Add(copyO);
          }
          return copy;
-      }
-      public int GetGameIndex()
-      {
-         Option option = this.Find("CustomGame");
-         if (true == option.IsEnabled)
-            return 4;
-         option = this.Find("Generalv25No3PlusTactic");
-         if (true == option.IsEnabled)
-            return 3;
-         option = this.Find("TacticsGame");
-         if (true == option.IsEnabled)
-            return 2;
-         option = this.Find("Generalv25No3");
-         if (true == option.IsEnabled)
-            return 1;
-         return 0;
       }
       public void SetOriginalGameOptions()
       {

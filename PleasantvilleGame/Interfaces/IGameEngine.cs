@@ -56,6 +56,7 @@ namespace PleasantvilleGame
       ShowGameFeatsDialog,
       ShowReportErrorDialog,
       ShowAboutDialog,
+      ShowZebulonGuesses,
 
       GameSetupHostGame,
       GameSetupJoinGame,

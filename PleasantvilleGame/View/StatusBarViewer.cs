@@ -97,6 +97,7 @@ namespace PleasantvilleGame
             int uncontrolledInfluence = 0;
             int controlledInfluence = 0;
             int alienInfluence = 0;
+            int unknownAlienInfluence = 0;
             foreach (IStack stack in myGameInstance.Stacks)
             {
                foreach (MapItem mi in stack.MapItems)
@@ -108,7 +109,11 @@ namespace PleasantvilleGame
                   else if (true == mi.IsAlienKnown)
                      alienInfluence += mi.Influence;
                   else
+                  {
                      uncontrolledInfluence += mi.Influence;
+                     if( true == mi.IsAlienUnknown)
+                        unknownAlienInfluence += mi.Influence;
+                  }
                }
             }
             int totalInfluence = controlledInfluence + alienInfluence + uncontrolledInfluence;
@@ -120,6 +125,8 @@ namespace PleasantvilleGame
             sbInfluence.Append(controlledInfluence.ToString());
             sbInfluence.Append("   Known Alien=");
             sbInfluence.Append(alienInfluence.ToString());
+            sbInfluence.Append("   Unknown Alien=");
+            sbInfluence.Append(unknownAlienInfluence.ToString());
             Label labelUncontrolled = new Label() { FontFamily = myFontFam, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Left, Content = sbInfluence.ToString() };
             myStatusBar.Items.Add(labelUncontrolled);
          }

@@ -205,7 +205,7 @@ namespace PleasantvilleGame
          IMapItems unknownAliens = new MapItems();
          foreach (MapItem mi in stack.MapItems)
          {
-            if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious))  // Unconscious or dead cannot be taken over
+            if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsWary) )  // Unconscious, dead, or Wary cannot be taken over
                continue;
             if ((true == mi.IsControlled) || (true == mi.IsWary))
             {

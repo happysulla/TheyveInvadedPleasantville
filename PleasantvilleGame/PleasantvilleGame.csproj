@@ -32,6 +32,7 @@
     <None Remove="Config\Town Loss.xml" />
     <None Remove="Config\Town Player Starting.xml" />
     <None Remove="Config\Townspeople.xml" />
+    <None Remove="Images\Alien.gif" />
     <None Remove="Images\BankGuard.gif" />
     <None Remove="Images\BankPresident.gif" />
     <None Remove="Images\BarAndGrillOwner.gif" />
@@ -63,6 +64,7 @@
     <None Remove="Images\FireChief.gif" />
     <None Remove="Images\GameBox.gif" />
     <None Remove="Images\HotelOwner.gif" />
+    <None Remove="Images\Interrogation.gif" />
     <None Remove="Images\Judge.gif" />
     <None Remove="Images\Lawyer.gif" />
     <None Remove="Images\Lawyer1.gif" />
@@ -104,6 +106,7 @@
     <None Remove="Images\Victory.gif" />
     <None Remove="Images\Waitress.gif" />
     <None Remove="Images\WarVeteran.gif" />
+    <None Remove="Images\Welcome.gif" />
     <None Remove="Images\Welder.gif" />
     <None Remove="Images\Wife.gif" />
     <None Remove="Images\Win.gif" />
@@ -167,6 +170,9 @@
     </Content>
     <Content Include="Config\Townspeople.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Alien.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\BankGuard.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -259,6 +265,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\HotelOwner.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Interrogation.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Judge.gif">
@@ -379,6 +388,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\WarVeteran.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Welcome.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Welder.gif">

@@ -228,6 +228,7 @@ namespace PleasantvilleGame
                      continue;
                   if ((true == mi.IsKilled) || (true == mi.IsUnconscious)) // stuned, killed people cannot observe
                      continue;
+                  Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS, "Consumate_AlienTakeovers(): t1=" + t1.ToString() + " obs=" + mi.ToString() + " l=" + leftMapItem.ToString() + " r=" + rightMapItem.ToString());
                   myGridRows[gridRowNum] = new GridRow(mi, leftMapItem, rightMapItem, kvp1.Value);
                   gridRowNum++;
                   isObservation = true;
@@ -446,7 +447,7 @@ namespace PleasantvilleGame
          return b;
       }
       //------------------------------------------------------------------------------------
-      public void ShowDieResults(int dieRoll)
+      private void ShowDieResults(int dieRoll)
       {
          if (null == myGameInstance)
          {
@@ -517,7 +518,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "EventViewerRandomMovement.ShowDieResults(): UpdateGrid() return false");
          myIsRollInProgress = false;
       }
-      public bool PerformObservation(GridRow gr)
+      private bool PerformObservation(GridRow gr)
       {
          if (null == myGameInstance)
          {
@@ -584,6 +585,20 @@ namespace PleasantvilleGame
             {
                Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 4-UNOBSERVED - AddingUnknownAlien() rightMapItem=" + gr.myMapItem2.Name + " taking over " + gr.myMapItem1.Name);
                myGameInstance.AddUnknownAlien(gr.myMapItem1);
+            }
+         }
+         //------------------------------------------------
+         for(int i=0; i< myMaxRowCount; ++i) // If a alien beccomes known thru observation, remove it from being an observer
+         {
+            GridRow row = myGridRows[i];
+            if (null != row.myObserver)
+            {
+               if (true == row.myObserver.IsAlienKnown)
+               {
+                  row.myDieRoll = NO_OBSERVER;
+                  row.myProbability = 0.0;
+                  row.myObserver = null;
+               }
             }
          }
          return true;

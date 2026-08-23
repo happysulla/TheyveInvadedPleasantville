@@ -232,7 +232,7 @@ namespace PleasantvilleGame
       }
       private void ApplyOptionsToCurrentGame(Options newOptions, Options currentOptions)
       {
-         string name = "SkipTutorial0";
+         string name = "AutoSetupTown";
          Option? currentOption = currentOptions.Find(name);
          if (null == currentOption)
          {
@@ -253,49 +253,6 @@ namespace PleasantvilleGame
             Option newbie = new Option(option.Name, option.IsEnabled);
             currentOptions.Add(newbie);
          }
-      }
-      public bool UpdateCanvasShowZebulonLocations()
-      {
-         //SolidColorBrush aSolidColorBrush1 = new SolidColorBrush();
-         //aSolidColorBrush1.Color = Color.FromArgb(0, 0, 1, 0);
-         //if (false == myIsZebulonTerritoriesVisible)
-         //{
-         //   myIsZebulonTerritoriesVisible = true;
-
-         //   SolidColorBrush aSolidColorBrush2 = new SolidColorBrush();
-         //   aSolidColorBrush2.Color = Colors.Black;
-
-         //   foreach (UIElement ui in myCanvas.Children)
-         //   {
-         //      if (ui is Polygon)
-         //      {
-         //         Polygon? p = (Polygon)ui;
-         //         if( null == p )
-         //         {
-         //            Logger.Log(LogEnum.LE_VIEW_UPDATE_MENU, "MainMenuViewer::UpdateCanvas_ShowZebulonLocations() => polygon is null");
-         //            continue;
-         //         }
-         //         ITerritory? t = myGameInstance.ZebulonTerritories.Find(p.Name);
-         //         if (null == t)
-         //            p.Fill = aSolidColorBrush1;
-         //         else
-         //            p.Fill = aSolidColorBrush2;
-         //      }
-         //   }
-         //}
-         //else
-         //{
-         //   myIsZebulonTerritoriesVisible = false;
-         //   foreach (UIElement ui in myCanvas.Children)
-         //   {
-         //      if (ui is Polygon)
-         //      {
-         //         Polygon p = (Polygon)ui;
-         //         p.Fill = aSolidColorBrush1;
-         //      }
-         //   }
-         //}
-         return true;
       }
       //----------------------------------------------------------
       public void MenuItemNew_Click(object sender, RoutedEventArgs e)
@@ -488,8 +445,8 @@ namespace PleasantvilleGame
       //----------------------------------------------------------
       public void MenuItemDisplay_Click(object sender, RoutedEventArgs e)
       {
-         if (false == UpdateCanvasShowZebulonLocations())
-            Logger.Log(LogEnum.LE_ERROR, "MainMenuViewer::MenuItemDisplay_Click(): UpdateCanvas_ShowZebulonLocations() returned false");
+         GameAction action = GameAction.ShowZebulonGuesses;
+         myGameEngine.PerformAction(ref myGameInstance, ref action);
       }
    }
 }

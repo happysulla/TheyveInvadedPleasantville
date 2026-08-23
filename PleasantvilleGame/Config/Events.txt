@@ -56,7 +56,7 @@ Tied-up, Unconscious, or Killed people do not move. Stunned still move.
 <LineBreak/><LineBreak/>
 If a controlled townsperson (either Town or Alien) is selected, the owner has the option to block moving it. However, the Alien player exposes that it is an alien controlled person if not known. Click image to continue.
 <LineBreak/><LineBreak/>
-                                        <InlineUIContainer><Image Name='Continue005' Height='100' Width='100'></Image></InlineUIContainer>"
+                                        <InlineUIContainer><Image Name='Continue005' Height='100' Width='128'></Image></InlineUIContainer>"
 e005a	"<Bold>e005a Awaiting Alien Confirmation of Random Move</Bold> <InlineUIContainer><Button Content='r6.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
 Alien player needs to confirm random moves before continuing."
@@ -96,7 +96,7 @@ Can move Alien controlled, skeptical per
 <InlineUIContainer><Button Content='r7.2.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>, 
 or totally uncontrolled. Click image to continue.
 <LineBreak/><LineBreak/>
-                                        <InlineUIContainer><Image Name='Continue006t' Height='100' Width='100'></Image></InlineUIContainer>"
+                                <InlineUIContainer><Image Name='Alien' Height='100' Width='130'></Image></InlineUIContainer>"
 e007t	"<Bold>e007t Confirm Alien Movement</Bold> <InlineUIContainer><Button Content='r6.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
 Confirm alien moves by clicking image.
@@ -109,11 +109,13 @@ The Town player moves any townsperson or group of townspeople in the same hex th
 -- Tied Up per <InlineUIContainer><Button Content='r6.3.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
 -- Unconscious per <InlineUIContainer><Button Content='Alien Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> or <InlineUIContainer><Button Content='Town Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Tables
 <LineBreak/><LineBreak/>
-Click on a green color townperson. To move a group, click on multiple townspeople in same area. Click on target area to move. If you click more than one area away, it will take a shortest random path to that location. When all movement is done, click on image below to continue to the next phase.
+Click on a green color townperson. To move a group, click on multiple townspeople in same area. Click on target area to move. If you click more than one area away, it takes a shortest random path to that location.
 <LineBreak/><LineBreak/>
 Once in this phase, each alien controlled counter may halt all movement of one town controlled counter when it attempts to enter its space. 
 <LineBreak/><LineBreak/>
-                                        <InlineUIContainer><Image Name='Continue008t' Height='100' Width='100'></Image></InlineUIContainer>"
+When all movement is done, click on image below to continue to the next phase.
+<LineBreak/><LineBreak/>
+                              <InlineUIContainer><Image Name='Welcome' Height='125' Width='200'></Image></InlineUIContainer>"
 e009t	"<Bold>e009t Conversations</Bold>  <InlineUIContainer><Button Content='r7.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
 Conversation is how the Town player discovers if a townsperson is Alien controlled.
@@ -151,7 +153,21 @@ Each counter flees using Random Movement per <InlineUIContainer><Button Content=
                                         <InlineUIContainer><Image Name='Continue011tf' Height='100' Width='100'></Image></InlineUIContainer>"
 e012t	"<Bold>e012t Interrogations</Bold>  <InlineUIContainer><Button Content='r8.7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
-Any conscious, defeated, Alien controlled counter may be interrogated by a Town controlled piece. Choose a building area that is not colored black. If Zebulon is found, the counter is placed on the board and can be defeated in combat to win the game. Click a flashing space to begin."
+Any conscious, defeated, Alien controlled counter may be interrogated by a Town controlled piece. Choose a building area that is not colored black. If Zebulon is found, the counter is placed on the board and can be defeated in combat to win the game. 
+<LineBreak/><LineBreak/>
+Click a flashing space to begin.
+<LineBreak/><LineBreak/>
+                    <InlineUIContainer><Image Name='Interrogation' Height='180' Width='300'></Image></InlineUIContainer>"
+e012t1	"<Bold>e012t.1 Interrogations</Bold>  <InlineUIContainer><Button Content='r8.7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+<LineBreak/><LineBreak/>
+The alien sub-commander, Zebulon, is not discovered. Click image to continue.
+<LineBreak/><LineBreak/>
+                                        <InlineUIContainer><Image Name='Continue012t' Height='100' Width='100'></Image></InlineUIContainer>"
+e012t2	"<Bold>e012t.2 Interrogations</Bold>  <InlineUIContainer><Button Content='r8.7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+<LineBreak/><LineBreak/>
+Since Town player guessed the correct location, the Alien sub-commander, Zebulon, is placed on the map board. The Town player can win by engaging and defeating Zebulon in combat. Click image to continue.
+<LineBreak/><LineBreak/>
+                                        <InlineUIContainer><Image Name='Continue012t' Height='100' Width='100'></Image></InlineUIContainer>"
 e013t	"<Bold>e013t Implant Removals</Bold>  <InlineUIContainer><Button Content='r8.7.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> 
 <InlineUIContainer><Button Content='Implant Removal' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>

@@ -278,7 +278,6 @@ namespace PleasantvilleGame
          }
          return true;
       }
-
       protected bool CheckForConversations(IGameInstance gi, ref GameAction action)
       {
          gi.SelectedMapItems.Clear();
@@ -620,7 +619,7 @@ namespace PleasantvilleGame
                   else if (true == mi.IsControlled)
                      isFriendlyControlledHelping = true;
                }
-               if( true == mi.IsStunned)// Unstunned - For each person who was stunned returns to the game
+               if( true == mi.IsStunned) // Unstunned - For each person who was stunned returns to the game
                {
                   mi.IsStunned = false;
                   gi.InfluenceCountTotal += mi.Influence;
@@ -665,7 +664,34 @@ namespace PleasantvilleGame
                if( true == mi.IsUnconscious )
                {
                   mi.IsUnconscious = false;
-                  mi.IsStunned = true;
+                  if (( true == mi.IsControlled) || (true == mi.IsUncontrolled()) ) // alien counters do not become stunned
+                  {
+                     mi.IsStunned = true;
+                  }
+                  else
+                  {
+                     gi.InfluenceCountTotal += mi.Influence;
+                     if (true == mi.IsAlienUnknown)
+                     {
+                        gi.InfluenceCountAlienUnknown += mi.Influence;
+                        sb = new StringBuilder("CheckFor_EndOfGame(): alien unconscious "); sb.Append(mi.Name); sb.Append(" ++++ to unknown "); sb.Append(mi.Influence.ToString());
+                        sb.Append(" Tot="); sb.Append(gi.InfluenceCountTotal.ToString());
+                        sb.Append(" Known="); sb.Append(gi.InfluenceCountAlienKnown.ToString());
+                        sb.Append(" UnKnown="); sb.Append(gi.InfluenceCountAlienUnknown.ToString());
+                        sb.Append(" TP="); sb.Append(gi.InfluenceCountTownspeople.ToString());
+                        Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
+                     }
+                     else if (true == mi.IsAlienKnown)
+                     {
+                        gi.InfluenceCountAlienKnown += mi.Influence;
+                        sb = new StringBuilder("CheckFor_EndOfGame(): alien unconscious "); sb.Append(mi.Name); sb.Append(" ++++ to known "); sb.Append(mi.Influence.ToString());
+                        sb.Append(" Tot="); sb.Append(gi.InfluenceCountTotal.ToString());
+                        sb.Append(" Known="); sb.Append(gi.InfluenceCountAlienKnown.ToString());
+                        sb.Append(" UnKnown="); sb.Append(gi.InfluenceCountAlienUnknown.ToString());
+                        sb.Append(" TP="); sb.Append(gi.InfluenceCountTownspeople.ToString());
+                        Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
+                     }
+                  }
                }
             }
             //--------------------------------------------------------
@@ -890,7 +916,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.RemoveSplashScreen: // GameStateSetup.PerformAction()
-               if (false == SetupNewGame(gi, ref action))
+               if (false == SetupNewGame(gi))
                {
                   returnStatus = "SetupNewGame() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
@@ -1017,6 +1043,18 @@ namespace PleasantvilleGame
                else
                {
                   gi.Zebulon.TerritoryCurrent = gi.Zebulon.TerritoryStarting = tZebutonStart;
+                  gi.Zebulon.Location = Territory.GetRandomPoint(tZebutonStart, gi.Zebulon.Zoom * Utilities.theMapItemOffset);
+               }
+               Option option = gi.Options.Find("AutoSetupTown");
+               if (true == option.IsEnabled)
+               {
+                  if (false == AutoSetupNewTownSoloGame(gi))
+                  {
+                     returnStatus = "AutoSetupNewGame() returned false";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                  }
+                  gi.EventActive = gi.EventDisplayed = "e005";
+                  action = GameAction.RandomMovementStartTowns;
                }
                break;
             case GameAction.GameSetupStartingTownsplayerSetRoll:
@@ -1079,6 +1117,11 @@ namespace PleasantvilleGame
                   returnStatus = "Assign_StartingAlien() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                }
+               else if (false == AddStartingTestingState(gi)) // TestingStartAmbush
+               {
+                  returnStatus = "Add_StartingTestingState() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
                break;
             case GameAction.GameSetupRandomMovementSetup:
                gi.GameTurn++;
@@ -1088,6 +1131,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                }
                gi.EventActive = gi.EventDisplayed = "e005";
+               action = GameAction.RandomMovementStartTowns;
                break;
             default:
                returnStatus = "reached default action=" + action.ToString();
@@ -1117,7 +1161,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, sb12.ToString());
          return returnStatus;
       }
-      private bool SetupNewGame(IGameInstance gi, ref GameAction outAction)
+      private bool SetupNewGame(IGameInstance gi)
       {
          PrintDiagnosticInfoToLog();
          gi.GamePhase = GamePhase.GameSetup;
@@ -1128,16 +1172,57 @@ namespace PleasantvilleGame
          //-------------------------------------------------------
          Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "Setup_NewGame(): gi.MapItemMoves.Clear()");
          gi.MapItemMoves.Clear();
-         //---------------------------------------------
-         if (false == AddStartingTestingState(gi)) // TestingStartAmbush
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Setup_NewGame():  Add_StartingTestingState() returned false");
-            return false;
-         }
          return true;
       }
-      private bool AddStartingTestingState(IGameInstance gi)
+      private bool AutoSetupNewTownSoloGame(IGameInstance gi)
       {
+         int die = Utilities.RandomGenerator.Next(6) + 1;
+         gi.DieRollAction = GameAction.DieRollActionNone;
+         if (false == gi.PlayerTown.GetStartingTownCounter(gi, die))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "AutoSetup_NewTownSoloGame(): Get_StartingTownsperson() returned false");
+            return false;
+         }
+         //-------------------------------------------------
+         if (false == gi.PlayerAlien.GetStartingAlienCounters(gi))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "AutoSetup_NewTownSoloGame(): Get_StartingAlienCounters() returned false");
+            return false;
+         }
+         //-------------------------------------------------
+         if (false == TableMgr.CreateTownspeople(gi))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "AutoSetup_NewTownSoloGame(): Create_Townspeople() returned false");
+            return false;
+         }
+         if (false == AssignStartingTownsplayer(gi))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "AutoSetup_NewTownSoloGame(): Assign_StartingTownsplayer() returned false");
+            return false;
+         }
+         if (false == AssignStartingAlien(gi))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "AutoSetup_NewTownSoloGame(): Assign_StartingAlien() returned false");
+            return false;
+         }
+         if (false == AddStartingTestingState(gi)) // TestingStartAmbush
+         {
+            Logger.Log(LogEnum.LE_ERROR, "AutoSetup_NewTownSoloGame(): Add_StartingTestingState() returned false");
+            return false;
+         }
+         //-------------------------------------------------
+         if (false == ChooseRandomMovePeopleAndDest(gi))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "AutoSetup_NewTownSoloGame(): Choose_RandomMovePeopleAndDest() returned false");
+            return false;
+         }
+         //-------------------------------------------------
+         gi.GameTurn++;
+         if (false == ResetPhase(gi, GamePhase.RandomMovement))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "AutoSetup_NewTownSoloGame(): Reset_Phase() returned false");
+            return false;
+         }
          return true;
       }
       private bool AssignStartingTownsplayer(IGameInstance gi)
@@ -1190,6 +1275,10 @@ namespace PleasantvilleGame
          gi.AddUnknownAlien(startingAlien);
          return true;
       }
+      private bool AddStartingTestingState(IGameInstance gi)
+      {
+         return true;
+      }
    }
    //----------------------------------------------------------------
    class GameStateRandomMovement : GameState
@@ -1217,6 +1306,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
+               break;
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show
                break;
@@ -1422,6 +1512,9 @@ namespace PleasantvilleGame
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
                break;
+            case GameAction.UpdateEventViewerActive: // Only change active event
+               gi.EventDisplayed = gi.EventActive; // next screen to show
+               break;
             case GameAction.UpdateRotateStack:
                if (false == RotateStack(gi))
                {
@@ -1507,6 +1600,9 @@ namespace PleasantvilleGame
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
+               break;
+            case GameAction.UpdateEventViewerActive: // Only change active event
+               gi.EventDisplayed = gi.EventActive; // next screen to show
                break;
             case GameAction.UpdateRotateStack:
                if (false == RotateStack(gi))
@@ -1640,6 +1736,9 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
+               break;
+            case GameAction.UpdateEventViewerActive: // Only change active event
+               gi.EventDisplayed = gi.EventActive; // next screen to show
                break;
             case GameAction.UpdateRotateStack:
                if (false == RotateStack(gi))
@@ -1817,6 +1916,10 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
+               break;
+            case GameAction.UpdateEventViewerActive: // Only change active event
+               gi.EventDisplayed = gi.EventActive; // next screen to show
+               break;
             case GameAction.CombatsSelect: // handled in the GameViewWindow.xaml.cs file
                if (false == CheckForCombats(gi, ref action))
                {
@@ -2074,6 +2177,9 @@ namespace PleasantvilleGame
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
                break;
+            case GameAction.UpdateEventViewerActive: // Only change active event
+               gi.EventDisplayed = gi.EventActive; // next screen to show
+               break;
             case GameAction.UpdateRotateStack:
                if (false == RotateStack(gi))
                {
@@ -2105,8 +2211,9 @@ namespace PleasantvilleGame
                {
                   if( gi.SelectedTerritory.ToString() == gi.Zebulon.TerritoryCurrent.ToString())
                   {
-                     gi.Zebulon.IsAlienKnown = true;
                      gi.NumTownGuessesForZebulonLocation = 0;
+                     gi.Zebulon.IsAlienKnown = true;
+                     gi.Stacks.Add(gi.Zebulon);
                   }
                   else
                   {
@@ -2116,12 +2223,18 @@ namespace PleasantvilleGame
                   }
                   if( 0 == gi.NumTownGuessesForZebulonLocation)
                   {
-                     if (false == CheckForIterogations(gi, ref action))
-                     {
-                        returnStatus = "CheckFor_Iterogations() returned false";
-                        Logger.Log(LogEnum.LE_ERROR, "GameStateIterogations.PerformAction(InterrogationsGuess): " + returnStatus);
-                     }
+                     if( true == gi.Zebulon.IsAlienKnown  )
+                        gi.EventDisplayed = gi.EventActive = "e012t2";
+                     else
+                        gi.EventDisplayed = gi.EventActive = "e012t1";
                   }
+               }
+               break;
+            case GameAction.InterrogationsFinish:
+               if (false == CheckForIterogations(gi, ref action))
+               {
+                  returnStatus = "CheckFor_Iterogations() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateIterogations.PerformAction(InterrogationsGuess): " + returnStatus);
                }
                break;
             case GameAction.SkipTerritory:
@@ -2181,6 +2294,9 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
+               break;
+            case GameAction.UpdateEventViewerActive: // Only change active event
+               gi.EventDisplayed = gi.EventActive; // next screen to show
                break;
             case GameAction.UpdateRotateStack:
                if (false == RotateStack(gi))
@@ -2311,6 +2427,9 @@ namespace PleasantvilleGame
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
                break;
+            case GameAction.UpdateEventViewerActive: // Only change active event
+               gi.EventDisplayed = gi.EventActive; // next screen to show
+               break;
             case GameAction.UpdateRotateStack:
                if (false == RotateStack(gi))
                {
@@ -2390,6 +2509,9 @@ namespace PleasantvilleGame
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
                break;
+            case GameAction.UpdateEventViewerActive: // Only change active event
+               gi.EventDisplayed = gi.EventActive; // next screen to show
+               break;
             case GameAction.UpdateRotateStack:
                if (false == RotateStack(gi))
                {
@@ -2462,6 +2584,9 @@ namespace PleasantvilleGame
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
                break;
+            case GameAction.UpdateEventViewerActive: // Only change active event
+               gi.EventDisplayed = gi.EventActive; // next screen to show
+               break;
             case GameAction.UpdateRotateStack:
                if (false == RotateStack(gi))
                {
@@ -2475,9 +2600,6 @@ namespace PleasantvilleGame
                   returnStatus = "Scatter_Stack() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                }
-               break;
-            case GameAction.UpdateEventViewerActive: // Only change active event
-               gi.EventDisplayed = gi.EventActive; // next screen to show
                break;
             case GameAction.RemoveSplashScreen:  // GameStateUnitTest.PerformAction() - Unit Test PerintDiagnosticInfoToLog()
                PrintDiagnosticInfoToLog();
