@@ -412,7 +412,7 @@ Successfully removing the implant causes the victim to come under control of the
 <LineBreak/><LineBreak/>
 As only Alien controlled counters may be interrogated, it is wise to interrogate per <InlineUIContainer><Button Content='r8.7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>  before attempting to remove an implant. Removing the implant generates an electric shock which erases all memory of the Alien HQ from the victim's memory, a unique safegard which is built into the implant's circuits."
 r9.0	"<Bold>r9.0 Alien Take-Over And Observation</Bold><LineBreak/><LineBreak/>
-During this phase, the Alien player may 'take-over' uncontrolled townspeople, thus bringing them under Alien control. This is handled secretly so the Town player does know know which counters are Alien controlled.
+During this phase, the Alien player may 'take-over' uncontrolled townspeople or stunned controlled Town pieces (but not unconscious), thus bringing them under Alien control. This is handled secretly so the Town player does know know which counters are Alien controlled.
 <LineBreak/><LineBreak/>
 <InlineUIContainer><Button Content='r9.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Take-Over<LineBreak/>
 <InlineUIContainer><Button Content='r9.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Observation<LineBreak/>"

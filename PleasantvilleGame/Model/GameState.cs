@@ -1314,21 +1314,21 @@ namespace PleasantvilleGame
                if (false == LoadGame(ref gi))
                {
                   returnStatus = "Load_Game() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
                }
                break;
             case GameAction.UpdateRotateStack:
                if (false == RotateStack(gi))
                {
                   returnStatus = "Rotate_Stack() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
                }
                break;
             case GameAction.UpdateScatterStack:
                if (false == ScatterStack(gi))
                {
                   returnStatus = "Scatter_Stack() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
                }
                break;
             case GameAction.RandomMovementStartTowns:
@@ -1445,6 +1445,44 @@ namespace PleasantvilleGame
          string key = gi.EventActive;
          switch (action)
          {
+            case GameAction.ShowGameFeatsDialog:
+            case GameAction.ShowRuleListingDialog:
+            case GameAction.ShowEventListingDialog:
+            case GameAction.ShowTableListing:
+            case GameAction.ShowReportErrorDialog:
+            case GameAction.ShowCharacterDescription:
+            case GameAction.ShowAboutDialog:
+            case GameAction.EndGameShowFeats:
+            case GameAction.UpdateStatusBar:
+            case GameAction.UpdateGameOptions:
+            case GameAction.UpdateShowRegion:
+            case GameAction.UpdateEventViewerDisplay: // Only change active event
+            case GameAction.UpdateNewGameEnd:
+               break;
+            case GameAction.UpdateEventViewerActive: // Only change active event
+               gi.EventDisplayed = gi.EventActive; // next screen to show
+               break;
+            case GameAction.UpdateLoadingGame:
+               if (false == LoadGame(ref gi))
+               {
+                  returnStatus = "Load_Game() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateAlienPlayerMovement.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateRotateStack:
+               if (false == RotateStack(gi))
+               {
+                  returnStatus = "Rotate_Stack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateAlienPlayerMovement.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateScatterStack:
+               if (false == ScatterStack(gi))
+               {
+                  returnStatus = "Scatter_Stack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateAlienPlayerMovement.PerformAction(): " + returnStatus);
+               }
+               break;
             case GameAction.AlienMovementTownsShow:
                gi.EventDisplayed = gi.EventActive = "e007t";
                break;
@@ -1452,7 +1490,7 @@ namespace PleasantvilleGame
                if (false == ResetPhase(gi, GamePhase.TownspersonMovement))
                {
                   returnStatus = "Reset_Phase() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(RandomMovementConfirmed): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateAlienPlayerMovement.PerformAction(RandomMovementConfirmed): " + returnStatus);
                }
                gi.EventDisplayed = gi.EventActive = "e008t";
                break;

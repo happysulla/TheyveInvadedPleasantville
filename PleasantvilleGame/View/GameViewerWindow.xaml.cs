@@ -1169,12 +1169,25 @@ namespace PleasantvilleGame
             case GameAction.InterrogationsGuess:
                Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "UpdateView(): fill polygons due to guesses for territories=" + gi.ZebulonTerritories.ToString());
                myStoryboardFlashing = null;
-               foreach (ITerritory t in gi.ZebulonTerritories) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
+               if( true == gi.Zebulon.IsAlienKnown )
                {
                   foreach (Polygon polygon in myPolygons)
+                     polygon.Fill = Utilities.theBrushRegionClear;
+                  if (false == UpdateCanvasMain(gi, action))
                   {
-                     if (t.Name == polygon.Name)
-                        polygon.Fill = mySolidColorBrushBlack;
+                     Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
+                     return;
+                  }
+               }
+               else
+               {
+                  foreach (ITerritory t in gi.ZebulonTerritories) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
+                  {
+                     foreach (Polygon polygon in myPolygons)
+                     {
+                        if (t.Name == polygon.Name)
+                           polygon.Fill = mySolidColorBrushBlack;
+                     }
                   }
                }
                break;
@@ -2819,42 +2832,42 @@ namespace PleasantvilleGame
          int dieThreshold = -99;
          if (3.999 < odds)
          {
-            dieThreshold = 3;
+            dieThreshold = 2;
             displayResults.Append("4-1(odds): ");
          }
          else if (2.999 < odds)
          {
-            dieThreshold = 4;
+            dieThreshold = 3;
             displayResults.Append("3-1(odds): ");
          }
          else if (1.999 < odds)
          {
-            dieThreshold = 5;
+            dieThreshold = 4;
             displayResults.Append("2-1(odds): ");
          }
          else if (1.499 < odds)
          {
-            dieThreshold = 6;
+            dieThreshold = 5;
             displayResults.Append("3-2(odds): ");
          }
          else if (0.999 < odds)
          {
-            dieThreshold = 7;
+            dieThreshold = 6;
             displayResults.Append("1-1(odds): ");
          }
          else if (0.666 < odds)
          {
-            dieThreshold = 8;
+            dieThreshold = 7;
             displayResults.Append("2-3(odds): ");
          }
          else if (0.499 < odds)
          {
-            dieThreshold = 9;
+            dieThreshold = 8;
             displayResults.Append("1-2(odds): ");
          }
          else
          {
-            dieThreshold = 10;
+            dieThreshold = 9;
             displayResults.Append("1-3(odds): ");
          }
          //------------------------------------------------
@@ -2877,7 +2890,7 @@ namespace PleasantvilleGame
          displayResults.Append( Math.Abs(dieRollModifier).ToString());
          displayResults.Append("(mod) = ");
          displayResults.Append(final.ToString());
-         if (dieThreshold <= final) // Check for alien.  If alien, let user know it is discovered. Else, make the townsperson controlled.
+         if (dieThreshold < final) // Check for alien.  If alien, let user know it is discovered. Else, make the townsperson controlled.
          {
             displayResults.Append(" > ");
             displayResults.Append(dieThreshold.ToString());

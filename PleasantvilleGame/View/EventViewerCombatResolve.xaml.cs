@@ -58,11 +58,7 @@ namespace PleasantvilleGame
       };
       private GridRow[] myGridRows = new GridRow[MAX_ROW_COUNT];
       private int myMaxRowCount = 0;
-      private bool myIsTownAttacker = false;
-      private bool myIsAlienAttacker = false;
-      private bool myIsTownDefender = false;
-      private bool myIsAlienDefender = false;
-      private bool myIsUncontrolledDefender = false;
+      private bool myIsAlienLoss = false;
       //---------------------------------------------------
       private IGameEngine? myGameEngine;
       private IGameInstance? myGameInstance;
@@ -183,17 +179,6 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Resolve_Combat(): firstAttacker=null");
             return false;
          }
-         myIsTownAttacker = false;
-         myIsAlienAttacker = false;
-         if (true == firstAttacker.IsControlled)
-            myIsTownAttacker = true;
-         else if (true == firstAttacker.IsAlienKnown)
-            myIsAlienAttacker = true; 
-         else
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Resolve_Combat(): Reached Default firstAttacker=" + firstAttacker.ToString());
-            return false;
-         }
          //--------------------------------------------------
          if (0 == myGameInstance.MapItemCombat.Defenders.Count)
          {
@@ -206,44 +191,20 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Resolve_Combat(): firstDefender=null");
             return false;
          }
-         myIsTownDefender = false;
-         myIsAlienDefender = false;
-         myIsUncontrolledDefender = false;
-         if (true == firstDefender.IsControlled)
-         {
-            myIsTownDefender = true;
-            myButtonLossTable.Content = "Town Loss";
-         }
-         else if (true == firstDefender.IsAlienKnown)
-         {
-            myIsAlienDefender = true;
-            myButtonLossTable.Content = "Alien Loss";
-         }
-         else if (true == firstDefender.IsUncontrolled())
-         {
-            myIsUncontrolledDefender = true;
-            myButtonLossTable.Content = "Town Loss";
-         }
-         else
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Resolve_Combat(): Reached Default for unknown mi=" + firstDefender.ToString());
-            return false;
-         }
          //--------------------------------------------------
          IMapItems mapItems;
-         if( CombatResult.AttackerWins == myGameInstance.MapItemCombat.Result)
+         if(   ( (CombatResult.AttackerWins == myGameInstance.MapItemCombat.Result ) && (true == firstDefender.IsAlienKnown) ) 
+            || ( (CombatResult.DefenderWins == myGameInstance.MapItemCombat.Result)  && (true == firstAttacker.IsAlienKnown) ) )
          {
             mapItems = myGameInstance.MapItemCombat.Defenders;
-
+            myIsAlienLoss = true;
+            myButtonLossTable.Content = "Alien Loss";
          }
-         else if (CombatResult.DefenderWins == myGameInstance.MapItemCombat.Result)
+         else 
          {
             mapItems = myGameInstance.MapItemCombat.Attackers;
-         }
-         else
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Resolve_Combat(): invalid state myGameInstance.MapItemCombat.Result=" + myGameInstance.MapItemCombat);
-            return false;
+            myIsAlienLoss = false;
+            myButtonLossTable.Content = "Town Loss";
          }
          //--------------------------------------------------
          int gridRowNum = 0;
@@ -378,7 +339,7 @@ namespace PleasantvilleGame
                myGrid.Children.Add(labelForResult);
                Grid.SetRow(labelForResult, rowNum);
                Grid.SetColumn(labelForResult, 2);
-               if( (true == mi.IsKilled) || (true == myIsTownDefender) || (true == myIsUncontrolledDefender) || (true == mi.IsControlled)) // only aliens are tied up
+               if( (false == mi.IsAlienKnown ) || (true == mi.IsKilled) ) // only undead aliens are tied up
                {
                   Label labelForTiedUp = new Label() { FontFamily = myFontFam, FontSize = 16, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = "NA"};
                   myGrid.Children.Add(labelForTiedUp);
@@ -440,6 +401,11 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "EventViewerCombatResolve.ShowDieResults(): myGameInstance=null");
             return;
          }
+         if (null == myGameInstance.MapItemCombat)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "EventViewerCombatResolve.ShowDieResults(): myGameInstance.MapItemCombat=null");
+            return;
+         }
          int i = myRollResultRowNum - STARTING_ASSIGNED_ROW;
          if (i < 0)
          {
@@ -448,7 +414,7 @@ namespace PleasantvilleGame
          }
          myGridRows[i].myDieRoll = dieRoll;
          //-------------------------------
-         if(true == myIsAlienDefender)
+         if(true == myIsAlienLoss) 
          {
             if( dieRoll < 5 )
             {
@@ -472,7 +438,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "ShowDieResults(): mi=" + myGridRows[i].myMapItem.ToString() + " ++TIED and gives up");
             }
          }
-         else if ( (true == myIsTownDefender) || (true == myIsUncontrolledDefender) )
+         else 
          {
             if (dieRoll < 5)
             {
@@ -489,11 +455,6 @@ namespace PleasantvilleGame
                myGridRows[i].myResult = "Stunned";
                myGridRows[i].myMapItem.IsStunned = true;
             }
-         }
-         else
-         {
-            Logger.Log(LogEnum.LE_ERROR, "EventViewerCombatResolve.ShowDieResults(): Reached Default for mi=" + myGridRows[i].myMapItem.ToString());
-            return;
          }
          Logger.Log(LogEnum.LE_SHOW_COMBATS, "EventViewerCombatResolve.ShowDieResults(): dr=" + dieRoll.ToString() + " result=" + myGridRows[i].myResult + " for mi=" + myGridRows[i].myMapItem.ToString());
          //-------------------------------

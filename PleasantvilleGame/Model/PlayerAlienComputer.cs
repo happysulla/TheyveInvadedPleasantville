@@ -209,7 +209,7 @@ namespace PleasantvilleGame
                continue;
             if ((true == mi.IsControlled) || (true == mi.IsWary))
             {
-               if ((true == mi.IsStunned) || (true == mi.IsTiedUp))
+               if (true == mi.IsStunned)  // stunned townspeople can be taken over
                   possibleVictims.Add(mi);
             }
             else

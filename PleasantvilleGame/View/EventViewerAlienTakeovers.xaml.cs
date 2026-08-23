@@ -182,19 +182,19 @@ namespace PleasantvilleGame
                return false;
             }
             //-----------------------------------------
-            IMapItems tiedUpControlledPeps = new MapItems(); // If combat occurred, chance that Controlled Townsperson is able to be taken over if stunned - that is Alien priority
+            IMapItems stunnedControlledPeps = new MapItems(); // If combat occurred, chance that Controlled Townsperson is able to be taken over if stunned - that is Alien priority
             foreach(IMapItem mi in stack.MapItems)
             {
                if( (true == mi.IsControlled) && (true == mi.IsStunned ) )
-                  tiedUpControlledPeps.Add(mi);
+                  stunnedControlledPeps.Add(mi);
             }
-            if( 0 < tiedUpControlledPeps.Count )
+            if( 0 < stunnedControlledPeps.Count )
             {
-               int randNum1 = Utilities.RandomGenerator.Next(tiedUpControlledPeps.Count); // randomize which unit is displayed to user on left hand side
-               IMapItem? mi = tiedUpControlledPeps[randNum1];
+               int randNum1 = Utilities.RandomGenerator.Next(stunnedControlledPeps.Count); // randomize which unit is displayed to user on left hand side
+               IMapItem? mi = stunnedControlledPeps[randNum1];
                if( null == mi )
                {
-                  Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): tiedUpControlledPeps[" + randNum1.ToString() + "] is null");
+                  Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): stunnedControlledPeps[" + randNum1.ToString() + "] is null");
                   return false;
                }
                rightMapItem = mi;
