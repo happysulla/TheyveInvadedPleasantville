@@ -1143,6 +1143,13 @@ namespace PleasantvilleGame
                   return;
                }
                break;
+            case GameAction.CombatsRetreat:
+               if( false == UpdateCanvasCombatRetreat(gi, action))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): UpdateCanva_CombatRetreat() returned error ");
+                  return;
+               }
+               break;
             case GameAction.ImplantRemovalsSelect:
                myRectangleMaps.Clear();
                UpdateCanvasMainClear(myButtons, gi.Stacks, action);
@@ -2003,6 +2010,7 @@ namespace PleasantvilleGame
             myGameInstance.SelectedMapItems.Add(mi);
          foreach (IMapItem mi in myRightMapItemsInActionPanel)
             myGameInstance.SelectedMapItems.Add(mi);
+         UpdateActionPanelClear();
          GameAction action = GameAction.SkipTerritory;
          myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
       }
@@ -2205,6 +2213,32 @@ namespace PleasantvilleGame
          {
             Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMovement():  EXCEPTION THROWN e=\n" + e.ToString());
             return false;
+         }
+         return true;
+      }
+      private bool UpdateCanvasCombatRetreat(IGameInstance gi, GameAction action)
+      {
+         if( null == gi.MapItemCombat)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "UpdateCanvas_CombatRetreat(): gi.MapItemCombat=null");
+            return false;
+         }
+         foreach(string adjacent in gi.MapItemCombat.Territory.Adjacents)
+         {
+            ITerritory? t = Territories.theTerritories.Find(adjacent);
+            if( null == t )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "UpdateCanvas_CombatRetreat(): t=null for adjacent=" + adjacent);
+               return false;
+            }
+            foreach(Polygon p in myPolygons)
+            {
+               if( t.ToString() == p.Name )
+               {
+                  p.Fill = Brushes.LightBlue;
+                  break;
+               }
+            }
          }
          return true;
       }

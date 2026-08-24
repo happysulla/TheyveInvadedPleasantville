@@ -37,6 +37,7 @@ namespace PleasantvilleGame
       {
          ROLL_FOR_COMBAT,
          ROLL_FOR_COMBAT_SHOW,
+         CHOOSE_RETREAT_AREA_FOR_STUNNED,
          END
       };
       public bool CtorError { get; } = false;
@@ -193,16 +194,33 @@ namespace PleasantvilleGame
          }
          //--------------------------------------------------
          IMapItems mapItems;
-         if(   ( (CombatResult.AttackerWins == myGameInstance.MapItemCombat.Result ) && (true == firstDefender.IsAlienKnown) ) 
-            || ( (CombatResult.DefenderWins == myGameInstance.MapItemCombat.Result)  && (true == firstAttacker.IsAlienKnown) ) )
+         if( (CombatResult.AttackerWins == myGameInstance.MapItemCombat.Result ) && (true == firstDefender.IsAlienKnown) ) 
          {
             mapItems = myGameInstance.MapItemCombat.Defenders;
             myIsAlienLoss = true;
             myButtonLossTable.Content = "Alien Loss";
          }
-         else 
+         else if ( (CombatResult.DefenderWins == myGameInstance.MapItemCombat.Result)  && (true == firstAttacker.IsAlienKnown) )
          {
             mapItems = myGameInstance.MapItemCombat.Attackers;
+            myIsAlienLoss = true;
+            myButtonLossTable.Content = "Alien Loss";
+         }
+         else
+         {
+            if (true == firstAttacker.IsUncontrolled())
+               mapItems = myGameInstance.MapItemCombat.Attackers;
+            else if (true == firstDefender.IsUncontrolled())
+               mapItems = myGameInstance.MapItemCombat.Defenders;
+            else if (CombatResult.AttackerWins == myGameInstance.MapItemCombat.Result)
+               mapItems = myGameInstance.MapItemCombat.Defenders;
+            else if (CombatResult.DefenderWins == myGameInstance.MapItemCombat.Result)
+               mapItems = myGameInstance.MapItemCombat.Attackers;
+            else
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Resolve_Combat(): reached default firstAttacker=" + firstAttacker.ToString() + " firstDefender=" + firstDefender.ToString() + " result=" + myGameInstance.MapItemCombat.Result.ToString());
+               return false;
+            }
             myIsAlienLoss = false;
             myButtonLossTable.Content = "Town Loss";
          }
@@ -283,6 +301,9 @@ namespace PleasantvilleGame
             case E11Enum.ROLL_FOR_COMBAT_SHOW:
                myTextBlockInstructions.Inlines.Add(new Run("Click the image to continue."));
                break;
+            case E11Enum.CHOOSE_RETREAT_AREA_FOR_STUNNED:
+               myTextBlockInstructions.Inlines.Add(new Run("Click a blue area to retreat stunned person."));
+               break;
             default:
                return false;
          }
@@ -293,6 +314,7 @@ namespace PleasantvilleGame
          myStackPanelAssignable.Children.Clear(); // clear out assignable panel 
          switch(myState)
          {
+            case E11Enum.CHOOSE_RETREAT_AREA_FOR_STUNNED:
             case E11Enum.ROLL_FOR_COMBAT:
                Rectangle r = new Rectangle() { Visibility = Visibility.Hidden, Width = Utilities.ZOOM * Utilities.theMapItemSize, Height = Utilities.ZOOM * Utilities.theMapItemSize };
                myStackPanelAssignable.Children.Add(r);
@@ -396,6 +418,11 @@ namespace PleasantvilleGame
       //------------------------------------------------------------------------------------
       public void ShowDieResults(int dieRoll)
       {
+         if( null == myGameEngine)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "EventViewerCombatResolve.ShowDieResults(): myGameEngine=null");
+            return;
+         }
          if ( null == myGameInstance )
          {
             Logger.Log(LogEnum.LE_ERROR, "EventViewerCombatResolve.ShowDieResults(): myGameInstance=null");
@@ -454,6 +481,14 @@ namespace PleasantvilleGame
             {
                myGridRows[i].myResult = "Stunned";
                myGridRows[i].myMapItem.IsStunned = true;
+               myState = E11Enum.CHOOSE_RETREAT_AREA_FOR_STUNNED;
+               if (false == UpdateGrid())
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "EventViewerCombatResolve.ShowDieResults(): UpdateGrid() return false");
+                  return;
+               }
+               GameAction action = GameAction.CombatsRetreat;
+               myGameEngine.PerformAction(ref myGameInstance, ref action);
             }
          }
          Logger.Log(LogEnum.LE_SHOW_COMBATS, "EventViewerCombatResolve.ShowDieResults(): dr=" + dieRoll.ToString() + " result=" + myGridRows[i].myResult + " for mi=" + myGridRows[i].myMapItem.ToString());

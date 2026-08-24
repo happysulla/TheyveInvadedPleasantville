@@ -96,6 +96,7 @@ namespace PleasantvilleGame
       CombatAlienFlee,
       CombatTownFlee,
       CombatShowFleeMove,
+      CombatsRetreat,
       CombatsFinish,
 
       InterrogationsSelect,

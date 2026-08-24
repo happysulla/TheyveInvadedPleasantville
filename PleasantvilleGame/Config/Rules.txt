@@ -373,13 +373,13 @@ A maximum of three counters per player may be involved in one combat. If the Tow
 r8.6	"<Bold>r8.6 Combat - Results</Bold><LineBreak/><LineBreak/>
 There are four results that can occur from combat:<LineBreak/><LineBreak/>
 -- Attacker Flees (AF): Each counter of the Attacker must flee using Random Movement per <InlineUIContainer><Button Content='r6.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. If the counter is already in the building, roll again until a different target building is determined. The Alien Sub-Commander cannot flee and instead defeated. Should the Town Player defeat the Sub-Commander, the game is automatically ended with a Town player victory.
-<LineBreak/>.<LineBreak/>
+<LineBreak/><LineBreak/>
 -- Defender Flees (DF): Same mechanics as Attacker flees but for Defender.
-<LineBreak/>.<LineBreak/>
+<LineBreak/><LineBreak/>
 -- Attacker Wins (A): Consult the appropriate table: 
  <InlineUIContainer><Button Content='Alien Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table or  
  <InlineUIContainer><Button Content='Town Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table. The dice are rolled for each individual counter of the defeated force, and the results are applied immediately.  Should the Town Player defeat the Sub-Commander, the game is automatically ended with a Town player victory!.
-<LineBreak/>.<LineBreak/>
+<LineBreak/><LineBreak/>
 -- Defender Wins (D): Same mechanics as Attacker Wins but for Defender."
 r8.7	"<Bold>r8.7 Combat - Post Combat Activity</Bold><LineBreak/><LineBreak/>
 The Town player after winning a combat may choose to do one of the following actions with the defeated Alien controlled counters. These actions are purely voluntary on the part of the Town player, though they can be crucial to the Town player's chances of victory. 

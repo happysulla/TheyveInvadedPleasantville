@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Shapes;
 using System.Xml.Linq;
 
 namespace PleasantvilleGame
@@ -230,38 +231,40 @@ namespace PleasantvilleGame
          IMapItems aliens = combat.Attackers;
          if (true == firstAttacker.IsControlled)
             aliens = combat.Defenders;
+         bool isInfluencedThiSTurn = false;
          foreach (IMapItem alien in aliens) // A column shift occurs if any aliens went through an influence attempt this turn.
          {
-            if (true == alien.IsInfluencedThisTurn) 
+            if (true == alien.IsInfluencedThisTurn)
+               isInfluencedThiSTurn = true;
+         }
+         if( true == isInfluencedThiSTurn)
+         { 
+            if (true == firstAttacker.IsControlled)
             {
-               if (true == firstAttacker.IsControlled)
-               {
-                  if (0 == differential) // shift column to right
-                     differential = 1;
-                  else if (1 == tableFactor)
-                     tableFactor = 2;
-                  else if (2 == tableFactor)
-                     tableFactor = 3;
-                  else if (3 == tableFactor)
-                     tableFactor = 4;
-               }
-               else                                  
-               {
-                  if (1 == differential)   // shift column to left
-                     tableFactor = 0;
-                  else if (2 == differential)
-                     tableFactor = 1;
-                  else if (3 == differential)
-                     tableFactor = 2;
-                  else if (4 == differential)
-                     tableFactor = 3;
-               }
-               break;  // only one column shift occurs.
+               if (0 == differential) // shift column to right
+                  tableFactor = 1;
+               else if (1 == tableFactor)
+                  tableFactor = 2;
+               else if (2 == tableFactor)
+                  tableFactor = 3;
+               else if (3 == tableFactor)
+                  tableFactor = 4;
+            }
+            else                                  
+            {
+               if (1 == differential)   // shift column to left
+                  tableFactor = 0;
+               else if (2 == differential)
+                  tableFactor = 1;
+               else if (3 == differential)
+                  tableFactor = 2;
+               else if (4 == differential)
+                  tableFactor = 3;
             }
          }
          //----------------------------------------
          combat.Result = theTable[dieRoll, tableFactor];
-         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Get_CombatResult(): dr=" + dieRoll.ToString() + " d=" + differential.ToString() + " tf=" + tableFactor.ToString() + " result=" + combat.Result.ToString());
+         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Get_CombatResult(): dr=" + dieRoll.ToString() + " diff=" + differential.ToString() + " tf=" + tableFactor.ToString() + " result=" + combat.Result.ToString() + "influnced?=" + isInfluencedThiSTurn.ToString());
          return true;
       }
       static public bool CreateTownspeople(IGameInstance gi)

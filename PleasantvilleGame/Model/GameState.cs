@@ -305,10 +305,11 @@ namespace PleasantvilleGame
                      Logger.Log(LogEnum.LE_ERROR, "CheckFor_Conversations(): Reset_Phase() returned error");
                      return false;
                   }
-                  gi.EventDisplayed = gi.EventActive = "e009t";
                }
                Logger.Log(LogEnum.LE_SHOW_CONVERSATIONS, "CheckFor_Conversations(): adding stack=" + stack.ToString());
                gi.SelectedTerritories.Add(stack.Territory);
+               gi.DieRollAction = GameAction.DieRollActionNone;
+               gi.EventDisplayed = gi.EventActive = "e009t";
                action = GameAction.ConversationsSelect;
             }
          }
@@ -349,10 +350,11 @@ namespace PleasantvilleGame
                      Logger.Log(LogEnum.LE_ERROR, "CheckFor_Influences(): Reset_Phase() returned error");
                      return false;
                   }
-                  gi.EventDisplayed = gi.EventActive = "e010t";
                }
                Logger.Log(LogEnum.LE_SHOW_INFLUENCES, "CheckFor_Influences(): adding stack=" + stack.ToString());
                gi.SelectedTerritories.Add(stack.Territory);
+               gi.DieRollAction = GameAction.DieRollActionNone;
+               gi.EventDisplayed = gi.EventActive = "e010t";
                action = GameAction.InfluencesSelect;
             }
          }
@@ -399,11 +401,11 @@ namespace PleasantvilleGame
                      Logger.Log(LogEnum.LE_ERROR, "CheckFor_Combats(): Reset_Phase() returned error");
                      return false;
                   }
-                  gi.EventDisplayed = gi.EventActive = "e011t";
                }
                Logger.Log(LogEnum.LE_SHOW_COMBATS, "CheckFor_Combats(): Adding t=" + stack.Territory.ToString() + " c=" + controlledPeps.Count.ToString() + " u=" + uncontrolledPeps.Count.ToString() + " ka=" + knownAliens.Count.ToString() + " ua=" + unknownAliens.Count.ToString());
                gi.SelectedTerritories.Add(stack.Territory); 
                gi.DieRollAction = GameAction.DieRollActionNone;
+               gi.EventActive = gi.EventDisplayed = "e011t";
                action = GameAction.CombatsSelect;
             }
          }
@@ -453,10 +455,12 @@ namespace PleasantvilleGame
                         Logger.Log(LogEnum.LE_ERROR, "CheckFor_Iterogations(): Reset_Phase() returned error");
                         return false;
                      }
-                     gi.EventDisplayed = gi.EventActive = "e012t";
+
                   }
                   Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "CheckFor_Iterogations(): adding stack=" + stack.ToString());
                   gi.SelectedTerritories.Add(stack.Territory);
+                  gi.DieRollAction = GameAction.DieRollActionNone;
+                  gi.EventDisplayed = gi.EventActive = "e012t";
                   action = GameAction.InterrogationsSelect;
                }
             }
@@ -498,10 +502,12 @@ namespace PleasantvilleGame
                      Logger.Log(LogEnum.LE_ERROR, "CheckFor_ImplantRemovals(): Reset_Phase() returned error");
                      return false;
                   }
-                  gi.EventDisplayed = gi.EventActive = "e013t";
+
                }
                Logger.Log(LogEnum.LE_SHOW_REMOVALS, "CheckFor_ImplantRemovals(): adding stack=" + stack.ToString());
                gi.SelectedTerritories.Add(stack.Territory);
+               gi.DieRollAction = GameAction.DieRollActionNone;
+               gi.EventDisplayed = gi.EventActive = "e013t";
                action = GameAction.ImplantRemovalsSelect;
             }
          }
@@ -1860,12 +1866,12 @@ namespace PleasantvilleGame
                      {
                         if (true == rightMapItem.IsAlienUnknown)
                         {
-                           Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "GameStateInfluences.PerformAction(): AddKnownAlien() rightMapItem=" + rightMapItem.ToString() + " (dr=" + dieRoll.ToString() + ") + (m=" + dieRollModifier.ToString()  + ") >= (t=" + dieThreshold.ToString() + ")");
+                           Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "GameStateInfluences.PerformAction(): CONVINCED - AddKnownAlien() rightMapItem=" + rightMapItem.ToString() + " (dr=" + dieRoll.ToString() + ") + (m=" + dieRollModifier.ToString()  + ") >= (t=" + dieThreshold.ToString() + ")");
                            gi.AddKnownAlien(rightMapItem); // GameStateInfluences.PerformAction(InfluencesRoll)
                         }
                         else
                         {
-                           Logger.Log(LogEnum.LE_SHOW_TOWNS_ADD, "GameStateInfluences.PerformAction(): NO EFFECT rightMapItem=" + rightMapItem.ToString() + " (dr=" + dieRoll.ToString() + ") + (m=" + dieRollModifier.ToString() + ") >= (t=" + dieThreshold.ToString() + ")");
+                           Logger.Log(LogEnum.LE_SHOW_TOWNS_ADD, "GameStateInfluences.PerformAction(): CONVINCED - AddControlled() rightMapItem=" + rightMapItem.ToString() + " (dr=" + dieRoll.ToString() + ") + (m=" + dieRollModifier.ToString() + ") >= (t=" + dieThreshold.ToString() + ")");
                            gi.AddControlled(rightMapItem); // GameStateInfluences.PerformAction(InfluencesRoll)
                         }
                      }
@@ -1873,7 +1879,7 @@ namespace PleasantvilleGame
                      {
                         if (false == rightMapItem.IsWary)  // wary people cannot become skeptical
                         {
-                           Logger.Log(LogEnum.LE_SHOW_SKEPTICAL_ADD, "GameStateInfluences.PerformAction(): Add Skeptical rightMapItem=" + rightMapItem.ToString() + " (dr=" + dieRoll.ToString() + ") + (m=" + dieRollModifier.ToString() + ") <>=> (t=" + dieThreshold.ToString() + ")"); 
+                           Logger.Log(LogEnum.LE_SHOW_SKEPTICAL_ADD, "GameStateInfluences.PerformAction(): NO EFFECT - Add Skeptical rightMapItem=" + rightMapItem.ToString() + " (dr=" + dieRoll.ToString() + ") + (m=" + dieRollModifier.ToString() + ") <>=> (t=" + dieThreshold.ToString() + ")"); 
                            rightMapItem.IsSkeptical = true;
                         }
                      }

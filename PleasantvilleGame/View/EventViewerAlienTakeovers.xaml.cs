@@ -532,8 +532,11 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 1-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem1.Name + " taking over " + gr.myMapItem2.Name);
                myGameInstance.AddKnownAlien(gr.myMapItem1); // PerformObservation()
                myGameInstance.AddKnownAlien(gr.myMapItem2); // PerformObservation()
-               if (null != gr.myObserver)
-                  gr.myObserver.IsWary = true;
+               if (null != gr.myObserver )
+               {
+                  if (false == gr.myObserver.IsControlled) // controlled units do not become Wary
+                     gr.myObserver.IsWary = true;
+               }
             }
             else
             {
