@@ -37,7 +37,7 @@ namespace PleasantvilleGame
       LE_SHOW_ENTERED_HEX,
       LE_SHOW_BUTTON_MOVE,
       LE_SHOW_ROLL_STATE,
-      LE_RESET_ROLL_STATE,
+      LE_SHOW_ROLL_RESET,
       LE_SHOW_DICE_MOVING,
       LE_SHOW_UPLOAD_GAME,
       LE_SHOW_VP_TOTAL,
@@ -150,7 +150,7 @@ namespace PleasantvilleGame
          //SetOn(LogEnum.LE_SHOW_ENTERED_HEX);
          //SetOn(LogEnum.LE_SHOW_BUTTON_MOVE);
          //SetOn(LogEnum.LE_SHOW_ROLL_STATE);
-         //SetOn(LogEnum.LE_RESET_ROLL_STATE);
+         //SetOn(LogEnum.LE_SHOW_ROLL_RESET);
          //SetOn(LogEnum.LE_SHOW_DICE_MOVING);
          //SetOn(LogEnum.LE_SHOW_UPLOAD_GAME);
          //SetOn(LogEnum.LE_SHOW_VP_TOTAL);

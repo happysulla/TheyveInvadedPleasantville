@@ -98,7 +98,7 @@ namespace PleasantvilleGame
       {
          try
          {
-            Logger.Log(LogEnum.LE_RESET_ROLL_STATE, "Reset_DieResults(): resetting die rolls gi.DieResults.Count=" + gi.DieResults.Count.ToString());
+            Logger.Log(LogEnum.LE_SHOW_ROLL_RESET, "Reset_DieResults(): resetting die rolls gi.DieResults.Count=" + gi.DieResults.Count.ToString());
             if (0 == gi.DieResults.Count)
             {
                Logger.Log(LogEnum.LE_ERROR, "Reset_DieResults(): count=0;");
@@ -589,10 +589,6 @@ namespace PleasantvilleGame
       protected bool CheckForEndOfGame(IGameInstance gi, ref GameAction action)
       {
          StringBuilder sb;
-         gi.SelectedMapItems.Clear();
-         gi.SelectedTerritories.Clear();
-         gi.NumTownGuessesForZebulonLocation = 0;
-         //--------------------------------------------------------
          foreach (Stack stack in gi.Stacks) //  Tied Up MapItems - Tied up players are freed if a friendly counter is in the same hex at the end of the turn.
          {
             IMapItems alienTiedUpPersons = new MapItems();
@@ -759,23 +755,36 @@ namespace PleasantvilleGame
             return false;
          }
          //-----------------------------------------------------------
+         Logger.Log(LogEnum.LE_GAME_END_CHECK, "Check_ForEndOfGame(): z="+ gi.Zebulon.ToString() + " uk=" + gi.InfluenceCountAlienUnknown.ToString() + " k=" + gi.InfluenceCountAlienKnown.ToString() + " tp=" + gi.InfluenceCountTownspeople.ToString());
          if (true == gi.Zebulon.IsKilled)
          {
+            Logger.Log(LogEnum.LE_GAME_END, "Check_ForEndOfGame(): Zebulon is KIA");
             gi.EndGameReason = "Zebulon is defeated";
             gi.GamePhase = GamePhase.ShowEndGame;
             action = GameAction.EndGame;
             gi.EventDisplayed = gi.EventActive = "e502";
          }
-         if (((gi.InfluenceCountAlienUnknown <= 0) && (gi.InfluenceCountAlienKnown <= 0)) || (gi.InfluenceCountTownspeople <= 0))  // If either the Alien or Townscontrolled influcence reaches zero, game over
+         int alienInfluenceTotal = gi.InfluenceCountAlienUnknown + gi.InfluenceCountAlienKnown;
+         if (alienInfluenceTotal <= 0)   // If either the Alien or Townscontrolled influcence reaches zero, game over
          {
-            gi.EndGameReason = "Zebulon is defeated";
+            Logger.Log(LogEnum.LE_GAME_END, "Check_ForEndOfGame(): Alien Player eliminated uk=" + gi.InfluenceCountAlienUnknown.ToString() + " k=" + gi.InfluenceCountAlienKnown.ToString());
+            gi.EndGameReason = "Alien Player eliminated";
             gi.GamePhase = GamePhase.ShowEndGame;
             action = GameAction.EndGame;
             gi.EventDisplayed = gi.EventActive = "e502";
+         }
+         if (gi.InfluenceCountTownspeople <= 0)  // If either the Alien or Townscontrolled influcence reaches zero, game over
+         {
+            Logger.Log(LogEnum.LE_GAME_END, "Check_ForEndOfGame(): Town player is eliminated influence=" + gi.InfluenceCountTownspeople.ToString());
+            gi.EndGameReason = "Town Player is eliminated";
+            gi.GamePhase = GamePhase.ShowEndGame;
+            action = GameAction.EndGame;
+            gi.EventDisplayed = gi.EventActive = "e501";
          }
          gi.GameTurn++;
          if (12 < gi.GameTurn) // Determine turn number.  If reach 12, game is over.
          {
+            Logger.Log(LogEnum.LE_GAME_END, "Check_ForEndOfGame(): Turn=" + gi.GameTurn);
             gi.EndGameReason = "Game ends on turns";
             gi.GamePhase = GamePhase.ShowEndGame;
             action = GameAction.EndGame;
@@ -2089,6 +2098,43 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(): " + returnStatus);
                }
                break;
+            case GameAction.CombatsRetreatStart: // handled in GameViewerWindow to highlight territories for user to choose 
+               break;
+            case GameAction.CombatsRetreatShow:  // user selected territory
+               if( 0 == gi.SelectedMapItems.Count )
+               {
+                  returnStatus = "gi.SelectedMapItems.Count=0";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(): " + returnStatus);
+               }
+               else if (null == gi.SelectedTerritory)
+               {
+                  returnStatus = "gi.SelectedTerritory=null";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(): " + returnStatus);
+               }
+               else
+               {
+                  IMapItem? mi = gi.SelectedMapItems[0];
+                  if( null == mi )
+                  {
+                     returnStatus = "gi.SelectedMapItems[0]=null";
+                     Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(): " + returnStatus);
+                  }
+                  else
+                  {
+                     Logger.Log(LogEnum.LE_SHOW_COMBATS, "GameStateCombat.PerformAction(): mi=" + mi.Name + " retreating to t=" + gi.SelectedTerritory.ToString());
+                     IMapItemMove? mim = gi.CreateMapItemMove(mi, gi.SelectedTerritory);
+                     if (null == mim)
+                     {
+                        returnStatus = "Create_MapItemMove() returned false";
+                        Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(): " + returnStatus);
+                     }
+                     else
+                     {
+                        gi.MapItemMoves.Add(mim);
+                     }
+                  }
+               }
+               break;
             case GameAction.CombatsFinish:
                Logger.Log(LogEnum.LE_SHOW_COMBATS, "GameStateCombat.PerformAction(CombatsFinish): Combat Finished");
                if (false == CheckForIterogations(gi, ref action))
@@ -2182,7 +2228,7 @@ namespace PleasantvilleGame
                return false;
             }
             //-----------------------------------------
-            Logger.Log(LogEnum.LE_SHOW_COMBATS, "Create_MapItemFlee(): mi=" + mi.Name + " entering t=" + newTerritory.Name);
+            Logger.Log(LogEnum.LE_SHOW_COMBATS, "Create_MapItemFlee(): mi=" + mi.Name + " fleeing to t=" + newTerritory.Name);
             IMapItemMove? mim = gi.CreateMapItemMove(mi, newTerritory);
             if (null == mim)
             {

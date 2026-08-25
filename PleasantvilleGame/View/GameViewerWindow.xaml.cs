@@ -1063,7 +1063,7 @@ namespace PleasantvilleGame
             case GameAction.AlienMovementTownsShow:
                if (false == UpdateCanvasMovement(gi, action, gi.Stacks, myButtons))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMovement() returned error ");
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(AlienMovementTownsShow): Update_CanvasMovement() returned error ");
                   return;
                }
                break;
@@ -1143,10 +1143,17 @@ namespace PleasantvilleGame
                   return;
                }
                break;
-            case GameAction.CombatsRetreat:
+            case GameAction.CombatsRetreatStart: // initiated by EventViewerCombatResolve - Show Retreat spaces
                if( false == UpdateCanvasCombatRetreat(gi, action))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): UpdateCanva_CombatRetreat() returned error ");
+                  return;
+               }
+               break;
+            case GameAction.CombatsRetreatShow: // initiated by MouseDownPolygon() when user clicks space - setup MapItemMove in GameState
+               if (false == UpdateCanvasMovement(gi, action, gi.Stacks, myButtons))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(CombatsRetreatShow): Update_CanvasMovement() returned error ");
                   return;
                }
                break;
@@ -1718,7 +1725,7 @@ namespace PleasantvilleGame
       }
       private void ClickButton1InHelperPanel(object sender, RoutedEventArgs e)
       {
-         if (false == myIsHelperPanelActive)
+         if ((false == myIsHelperPanelActive) || (true == EventViewer.theIsEventViewerSubclassActive))
             return;
          IMapItem? mi = myLeftMapItemsInActionPanel[0];
          if (null == mi)
@@ -1761,7 +1768,7 @@ namespace PleasantvilleGame
       }
       private void ClickButton2InHelperPanel(object sender, RoutedEventArgs e)
       {
-         if (false == myIsHelperPanelActive)
+         if ((false == myIsHelperPanelActive) || (true == EventViewer.theIsEventViewerSubclassActive))
             return;
          IMapItem? mi = myLeftMapItemsInActionPanel[1];
          if (null == mi)
@@ -1804,7 +1811,7 @@ namespace PleasantvilleGame
       }
       private void ClickButton3InHelperPanel(object sender, RoutedEventArgs e)
       {
-         if (false == myIsHelperPanelActive)
+         if ((false == myIsHelperPanelActive) || (true == EventViewer.theIsEventViewerSubclassActive))
             return;
          IMapItem? mi = myLeftMapItemsInActionPanel[2];
          if (null == mi)
@@ -1847,7 +1854,7 @@ namespace PleasantvilleGame
       }
       private void ClickButton4InHelperPanel(object sender, RoutedEventArgs e)
       {
-         if (false == myIsHelperPanelActive)
+         if ((false == myIsHelperPanelActive) || (true == EventViewer.theIsEventViewerSubclassActive))
             return;
          IMapItem? mi = myRightMapItemsInActionPanel[0];
          if (null == mi)
@@ -1888,7 +1895,7 @@ namespace PleasantvilleGame
       }
       private void ClickButton5InHelperPanel(object sender, RoutedEventArgs e)
       {
-         if (false == myIsHelperPanelActive)
+         if ((false == myIsHelperPanelActive) || (true == EventViewer.theIsEventViewerSubclassActive))
             return;
          IMapItem? mi = myRightMapItemsInActionPanel[1];
          if (null == mi)
@@ -1929,7 +1936,7 @@ namespace PleasantvilleGame
       }
       private void ClickButton6InHelperPanel(object sender, RoutedEventArgs e)
       {
-         if (false == myIsHelperPanelActive)
+         if ((false == myIsHelperPanelActive) || (true == EventViewer.theIsEventViewerSubclassActive))
             return;
          IMapItem? mi = myRightMapItemsInActionPanel[2];
          if (null == mi)
@@ -2218,6 +2225,7 @@ namespace PleasantvilleGame
       }
       private bool UpdateCanvasCombatRetreat(IGameInstance gi, GameAction action)
       {
+         myStoryboardFlashing = null;
          if( null == gi.MapItemCombat)
          {
             Logger.Log(LogEnum.LE_ERROR, "UpdateCanvas_CombatRetreat(): gi.MapItemCombat=null");
@@ -2505,6 +2513,8 @@ namespace PleasantvilleGame
       }
       private bool DisplayConversation(IGameInstance gi, ITerritory selectedTerritory)
       {
+         if (true == EventViewer.theIsEventViewerSubclassActive)
+            return true;
          myIsHelperPanelActive = true;
          UpdateActionPanelClear(); 
          IStack? stack = gi.Stacks.Find(selectedTerritory);
@@ -2672,6 +2682,8 @@ namespace PleasantvilleGame
       }
       private bool DisplayInfluence(IGameInstance gi, ITerritory selectedTerritory)
       {
+         if (true == EventViewer.theIsEventViewerSubclassActive)
+            return true;
          myIsHelperPanelActive = true;
          UpdateActionPanelClear(); 
          IStack? stack = gi.Stacks.Find(selectedTerritory);
@@ -2923,9 +2935,9 @@ namespace PleasantvilleGame
             displayResults.Append(" - ");
          displayResults.Append( Math.Abs(dieRollModifier).ToString());
          displayResults.Append("(mod) = ");
-         displayResults.Append(final.ToString());
          if (dieThreshold < final) // Check for alien.  If alien, let user know it is discovered. Else, make the townsperson controlled.
          {
+            displayResults.Append(final.ToString());
             displayResults.Append(" > ");
             displayResults.Append(dieThreshold.ToString());
             displayResults.Append("\n");
@@ -2937,6 +2949,8 @@ namespace PleasantvilleGame
          }
          else
          {
+            final += 1;
+            displayResults.Append(final.ToString());
             displayResults.Append(" < ");
             displayResults.Append(dieThreshold.ToString());
             displayResults.Append("\n");
@@ -2959,13 +2973,20 @@ namespace PleasantvilleGame
       }
       private bool DisplayCombat(IGameInstance gi, ITerritory selectedTerritory)
       {
-         myIsHelperPanelActive = true;
-         UpdateActionPanelClear();
+         gi.SelectedTerritory = selectedTerritory;
          if (null == selectedTerritory)  // If passed-in territory is not null, user has selected this region. Show a dialog of the conversation results.
          {
             Logger.Log(LogEnum.LE_ERROR, "Display_Combat() selectedTerritory=null");
             return false;
          }
+         if (true == EventViewer.theIsEventViewerSubclassActive) // user clicked on a space to retreat a counter
+         {
+            GameAction action = GameAction.CombatsRetreatShow;
+            myGameEngine.PerformAction(ref gi, ref action);
+            return true;
+         }
+         myIsHelperPanelActive = true;
+         UpdateActionPanelClear();
          IStack? stack = gi.Stacks.Find(selectedTerritory);
          if (null == stack)
          {
@@ -2973,7 +2994,6 @@ namespace PleasantvilleGame
             return false;
          }
          //-------------------------------------------------------------------
-         gi.SelectedTerritory = selectedTerritory;
          Logger.Log(LogEnum.SHOW_SHUFFLE_STACK, "Display_Combat(): BEFORE t=" + selectedTerritory.ToString() + "\n" + myGameInstance.Stacks.ToString());
          IMapItems shuffleMapItems = stack.MapItems.Shuffle();
          stack.MapItems = shuffleMapItems;
@@ -3181,6 +3201,8 @@ namespace PleasantvilleGame
       }
       private bool DisplayIterogation(IGameInstance gi, ITerritory selectedTerritory)
       {
+         if (true == EventViewer.theIsEventViewerSubclassActive)
+            return true;
          myIsHelperPanelActive = true;
          UpdateActionPanelClear();
          IStack? stack = gi.Stacks.Find(selectedTerritory);
@@ -3277,6 +3299,8 @@ namespace PleasantvilleGame
       }
       private bool DisplayImplantRemoval(IGameInstance gi, ITerritory selectedTerritory)
       {
+         if (true == EventViewer.theIsEventViewerSubclassActive)
+            return true;
          myIsHelperPanelActive = true;
          UpdateActionPanelClear();
          if (null == selectedTerritory)  // Show a dialog of the conversation results.
@@ -3655,13 +3679,10 @@ namespace PleasantvilleGame
                }
                break;
             case GamePhase.Combats:
-               if (false == EventViewer.theIsEventViewerSubclassActive)
+               if (false == DisplayCombat(myGameInstance, tSelected))
                {
-                  if (false == DisplayCombat(myGameInstance, tSelected))
-                  {
-                     Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_Combat() returned error");
-                     return;
-                  }
+                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_Combat() returned error");
+                  return;
                }
                break;
             case GamePhase.Iterrogations:

@@ -68,6 +68,10 @@ namespace PleasantvilleGame
       {
          myViews.Add(view);
       }
+      public void RemoveFromUpdates(IView view)
+      {
+         myViews.Remove(view);
+      }
       public void PerformAction(ref IGameInstance gi, ref GameAction action, int dieRoll)
       {
          theMultiplayerSessionManager?.TrackGameInstance(gi);

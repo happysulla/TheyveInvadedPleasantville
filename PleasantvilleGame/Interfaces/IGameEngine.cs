@@ -96,7 +96,8 @@ namespace PleasantvilleGame
       CombatAlienFlee,
       CombatTownFlee,
       CombatShowFleeMove,
-      CombatsRetreat,
+      CombatsRetreatStart,
+      CombatsRetreatShow,
       CombatsFinish,
 
       InterrogationsSelect,
@@ -137,6 +138,7 @@ namespace PleasantvilleGame
    {
       List<IView> Views { get; }
       void RegisterForUpdates(IView view);
+      void RemoveFromUpdates(IView view);
       void PerformAction(ref IGameInstance gi, ref GameAction action, int dieRoll = 0);
       bool CreateUnitTests(IGameInstance gi, DockPanel dp, GameViewerWindow gvw, EventViewer ev, IDieRoller dr, CanvasImageViewer civ);
    }

@@ -28,7 +28,7 @@ using Rectangle = System.Windows.Shapes.Rectangle;
 
 namespace PleasantvilleGame
 {
-   public partial class EventViewerCombatResolve : System.Windows.Controls.UserControl
+   public partial class EventViewerCombatResolve : System.Windows.Controls.UserControl, IView
    {
       public delegate bool EndCombatResolve();
       private const int STARTING_ASSIGNED_ROW = 6;
@@ -75,7 +75,6 @@ namespace PleasantvilleGame
       //-------------------------------------------------------------------------------------
       public EventViewerCombatResolve(IGameEngine? ge, IGameInstance? gi, Canvas? c, ScrollViewer? sv, RuleDialogViewer? rdv, IDieRoller dr)
       {
-         EventViewer.theIsEventViewerSubclassActive = true;
          InitializeComponent();
          //--------------------------------------------------
          if (null == ge) // check parameter inputs
@@ -241,6 +240,20 @@ namespace PleasantvilleGame
          myScrollViewer.Content = myGrid;
          return true;
       }
+      public void UpdateView(ref IGameInstance gi, GameAction action)
+      {
+         if( GameAction.CombatsRetreatShow == action) // after user select retreat space for stunned town piece, this function is called.
+         {
+            myState = E11Enum.ROLL_FOR_COMBAT_SHOW;
+            foreach (GridRow gr in myGridRows)
+            {
+               if (gr.myDieRoll < 0)
+                  myState = E11Enum.ROLL_FOR_COMBAT;
+            }
+            if (false == UpdateGrid())
+               Logger.Log(LogEnum.LE_ERROR, "UpdateView(): UpdateGrid() return false");
+         }
+      }
       private bool UpdateGrid()
       {
          if (false == UpdateEndState())
@@ -271,12 +284,6 @@ namespace PleasantvilleGame
       {
          if (E11Enum.END == myState)
          {
-            if( null == myGameInstance)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Update_EndState(): myGameInstance=null");
-               return false;
-            }
-            EventViewer.theIsEventViewerSubclassActive = false;
             if (null == myCallback)
             {
                Logger.Log(LogEnum.LE_ERROR, "Update_EndState(): myCallback=null");
@@ -433,12 +440,14 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "EventViewerCombatResolve.ShowDieResults(): myGameInstance.MapItemCombat=null");
             return;
          }
+         //-------------------------------
          int i = myRollResultRowNum - STARTING_ASSIGNED_ROW;
          if (i < 0)
          {
             Logger.Log(LogEnum.LE_ERROR, "ShowDieResults(): 0 > i=" + i.ToString());
             return;
          }
+         IMapItem selectedMapItem = myGridRows[i].myMapItem;
          myGridRows[i].myDieRoll = dieRoll;
          //-------------------------------
          if(true == myIsAlienLoss) 
@@ -446,23 +455,23 @@ namespace PleasantvilleGame
             if( dieRoll < 5 )
             {
                myGridRows[i].myResult = "KIA";
-               myGridRows[i].myMapItem.IsKilled = true;
+               selectedMapItem.IsKilled = true;
             }
             else if (dieRoll < 7 )
             {
                myGridRows[i].myResult = "K.O.";
-               myGridRows[i].myMapItem.IsUnconscious = true;
-               if( true == myGridRows[i].myMapItem.IsAlienKnown)
-                  myGridRows[i].myMapItem.IsTiedUp = true;
-               Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "ShowDieResults(): mi=" + myGridRows[i].myMapItem.ToString() + " ++TIED and KO");
+               selectedMapItem.IsUnconscious = true;
+               if( true == selectedMapItem.IsAlienKnown)
+                  selectedMapItem.IsTiedUp = true;
+               Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "ShowDieResults(): mi=" + selectedMapItem.ToString() + " ++TIED and KO");
             }
             else
             {
                myGridRows[i].myResult = "Hands-Up";
-               myGridRows[i].myMapItem.IsSurrendered = true;
-               if (true == myGridRows[i].myMapItem.IsAlienKnown)
-                  myGridRows[i].myMapItem.IsTiedUp = true;
-               Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "ShowDieResults(): mi=" + myGridRows[i].myMapItem.ToString() + " ++TIED and gives up");
+               selectedMapItem.IsSurrendered = true;
+               if (true == selectedMapItem.IsAlienKnown)
+                  selectedMapItem.IsTiedUp = true;
+               Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "ShowDieResults(): mi=" + selectedMapItem.ToString() + " ++TIED and gives up");
             }
          }
          else 
@@ -470,24 +479,26 @@ namespace PleasantvilleGame
             if (dieRoll < 5)
             {
                myGridRows[i].myResult = "KIA";
-               myGridRows[i].myMapItem.IsKilled = true;
+               selectedMapItem.IsKilled = true;
             }
             else if (dieRoll < 7)
             {
                myGridRows[i].myResult = "K.O.";
-               myGridRows[i].myMapItem.IsUnconscious = true;
+               selectedMapItem.IsUnconscious = true;
             }
             else
             {
+               myGameInstance.SelectedMapItems.Clear();
+               myGameInstance.SelectedMapItems.Add(selectedMapItem);
                myGridRows[i].myResult = "Stunned";
-               myGridRows[i].myMapItem.IsStunned = true;
+               selectedMapItem.IsStunned = true;
                myState = E11Enum.CHOOSE_RETREAT_AREA_FOR_STUNNED;
                if (false == UpdateGrid())
                {
                   Logger.Log(LogEnum.LE_ERROR, "EventViewerCombatResolve.ShowDieResults(): UpdateGrid() return false");
                   return;
                }
-               GameAction action = GameAction.CombatsRetreat;
+               GameAction action = GameAction.CombatsRetreatStart;
                myGameEngine.PerformAction(ref myGameInstance, ref action);
             }
          }

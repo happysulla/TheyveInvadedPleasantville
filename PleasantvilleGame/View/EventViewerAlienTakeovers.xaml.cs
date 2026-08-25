@@ -80,7 +80,6 @@ namespace PleasantvilleGame
       //-------------------------------------------------------------------------------------
       public EventViewerAlienTakeovers(IGameEngine? ge, IGameInstance? gi, Canvas? c, ScrollViewer? sv, RuleDialogViewer? rdv, IDieRoller dr)
       {
-         EventViewer.theIsEventViewerSubclassActive = true;
          InitializeComponent();
          //--------------------------------------------------
          if (null == ge) // check parameter inputs
@@ -306,7 +305,6 @@ namespace PleasantvilleGame
                }
             }
             //-----------------------------------------------
-            EventViewer.theIsEventViewerSubclassActive = false;
             if (null == myCallback)
             {
                Logger.Log(LogEnum.LE_ERROR, "Update_EndState(): myCallback=null");
