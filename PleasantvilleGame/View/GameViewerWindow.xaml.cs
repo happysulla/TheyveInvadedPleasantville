@@ -1158,6 +1158,9 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.CombatsRetreatShow: // initiated by MouseDownPolygon() when user clicks space - setup MapItemMove in GameState
+               myStoryboardFlashing = null; // UpdateCanvasCombatRetreat()
+               foreach (Polygon polygon in myPolygons)
+                  polygon.Fill = Utilities.theBrushRegionClear;
                if (false == UpdateCanvasMovement(gi, action, gi.Stacks, myButtons))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(CombatsRetreatShow): Update_CanvasMovement() returned error ");
@@ -1190,10 +1193,9 @@ namespace PleasantvilleGame
             case GameAction.InterrogationsGuess:
                Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "UpdateView(): fill polygons due to guesses for territories=" + gi.ZebulonTerritories.ToString());
                myStoryboardFlashing = null; // InterrogationsGuess
-               foreach (Polygon polygon in myPolygons)
-                  polygon.Fill = Utilities.theBrushRegionClear;
                if ( true == gi.Zebulon.IsAlienKnown )
                {
+                  UpdateCanvasMainClear(myButtons, gi.Stacks, action);
                   if (false == UpdateCanvasMain(gi, action))
                   {
                      Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
@@ -1202,13 +1204,10 @@ namespace PleasantvilleGame
                }
                else
                {
-                  foreach (ITerritory t in gi.ZebulonTerritories) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
+                  if (false == PerformInterrogationFillPoloygons(gi))
                   {
-                     foreach (Polygon polygon in myPolygons)
-                     {
-                        if (t.Name == polygon.Name)
-                           polygon.Fill = mySolidColorBrushBlack;
-                     }
+                     Logger.Log(LogEnum.LE_ERROR, "UpdateView(): PerformInterrogationFillPoloygons() returned false");
+                     return;
                   }
                }
                break;
@@ -2990,8 +2989,11 @@ namespace PleasantvilleGame
          }
          if (true == EventViewer.theIsEventViewerSubclassActive) // user clicked on a space to retreat a counter
          {
-            GameAction action = GameAction.CombatsRetreatShow;
-            myGameEngine.PerformAction(ref gi, ref action);
+            if( 0 < gi.SelectedMapItems.Count ) // only perform if there is selected MapItem to retreat
+            {
+               GameAction action = GameAction.CombatsRetreatShow;
+               myGameEngine.PerformAction(ref gi, ref action);
+            }
             return true;
          }
          myIsHelperPanelActive = true;
@@ -3003,18 +3005,15 @@ namespace PleasantvilleGame
             return false;
          }
          //-------------------------------------------------------------------
-         Logger.Log(LogEnum.SHOW_SHUFFLE_STACK, "Display_Combat(): BEFORE t=" + selectedTerritory.ToString() + "\n" + myGameInstance.Stacks.ToString());
-         IMapItems shuffleMapItems = stack.MapItems.Shuffle();
-         stack.MapItems = shuffleMapItems;
-         Logger.Log(LogEnum.SHOW_SHUFFLE_STACK, "Display_Combat(): AFTER t=" + selectedTerritory.ToString() + "\n" + myGameInstance.Stacks.ToString());
-         //-------------------------------------------------------------------
          int townCombatCount = 0;
          int alienCombatCount = 0;
+         int uncontrolledCombatCount = 0;
+         int waryCombatCount = 0;
          IMapItems waryPeps = new MapItems();
          IMapItems controlledPeps = new MapItems();
          IMapItems uncontrolledPeps = new MapItems();
          IMapItems knownAliens = new MapItems();
-         foreach (MapItem mi in shuffleMapItems)
+         foreach (MapItem mi in stack.MapItems)
          {
             if ((true == mi.IsCombatThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
                continue;
@@ -3031,77 +3030,86 @@ namespace PleasantvilleGame
             else
             {
                if (true == mi.IsWary)
+               {
                   waryPeps.Add(mi);
+                  waryCombatCount += mi.Combat;
+               }
                uncontrolledPeps.Add(mi);
+               uncontrolledCombatCount += mi.Combat;
             }
          }
          controlledPeps = controlledPeps.SortOnCombat();
          knownAliens = knownAliens.SortOnCombat();
+         uncontrolledPeps = uncontrolledPeps.SortOnCombat();
+         waryPeps = waryPeps.SortOnCombat();
          //-------------------------------------------------------------------
-         bool isTownAttacker  = true;
-         if (townCombatCount < alienCombatCount)
-            isTownAttacker = false;
-         if (true == isTownAttacker) // Setup the action panel.
+         if( (0 < townCombatCount) && (0 < alienCombatCount) ) // normal battle
          {
-            int totalCombatForAttacker = 0;
             int numOfAttackers = 0;
             foreach (IMapItem mi in controlledPeps)
             {
                myLeftMapItemsInActionPanel.Add(mi);
                myLeftMapItemsInActionPanelSelected.Add(mi);
-               totalCombatForAttacker += mi.Combat;
                if (3 <= ++numOfAttackers)
                   break;
             }
-            int totalCombatForDefender = 0;
             int numOfDefenders = 0;
             foreach (IMapItem mi in knownAliens)
             {
                myRightMapItemsInActionPanel.Add(mi);
                myRightMapItemsInActionPanelSelected.Add(mi);
-               totalCombatForDefender += mi.Combat;
                if (3 <= ++numOfDefenders)
                   break;
             }
-            if (0 == myRightMapItemsInActionPanel.Count)
+         }
+         else if ((0 < townCombatCount) && (0 < uncontrolledCombatCount)) // Town Player attacking uncontrolled
+         {
+            int numOfAttackers = 0;
+            foreach (IMapItem mi in controlledPeps)
             {
-               foreach (IMapItem mi in uncontrolledPeps)
-               {
-                  myRightMapItemsInActionPanel.Add(mi);
-                  myRightMapItemsInActionPanelSelected.Add(mi);
-               }
+               myLeftMapItemsInActionPanel.Add(mi);
+               myLeftMapItemsInActionPanelSelected.Add(mi);
+               if (3 <= ++numOfAttackers)
+                  break;
+            }
+            int numOfDefenders = 0;
+            foreach (IMapItem mi in uncontrolledPeps)
+            {
+               myRightMapItemsInActionPanel.Add(mi);
+               myRightMapItemsInActionPanelSelected.Add(mi);
+               if (3 <= ++numOfDefenders)
+                  break;
+            }
+         }
+         else if ((0 < alienCombatCount) && (0 < waryCombatCount)) // alien attacking Wary People
+         {
+            int numOfAttackers = 0;
+            foreach (IMapItem mi in knownAliens)
+            {
+               myLeftMapItemsInActionPanel.Add(mi);
+               myLeftMapItemsInActionPanel.Add(mi);
+               if (3 <= ++numOfAttackers)
+                  break;
+            }
+            int numOfDefenders = 0;
+            foreach (IMapItem mi in waryPeps)
+            {
+               myRightMapItemsInActionPanel.Add(mi);
+               myRightMapItemsInActionPanelSelected.Add(mi);
+               if (3 <= ++numOfDefenders)
+                  break;
             }
          }
          else
          {
-            int totalCombatForAttacker = 0;
-            int numOfAttackers = 0;
-            foreach (IMapItem mi in knownAliens)
-            {
-               myLeftMapItemsInActionPanel.Add(mi);
-               myLeftMapItemsInActionPanelSelected.Add(mi);
-               totalCombatForAttacker += mi.Combat;
-               if (3 <= ++numOfAttackers)
-                  break;
-            }
-            int totalCombatForDefender = 0;
-            int numOfDefenders = 0;
-            foreach (IMapItem mi in controlledPeps)
-            {
-               myRightMapItemsInActionPanel.Add(mi);
-               myRightMapItemsInActionPanelSelected.Add(mi);
-               totalCombatForDefender += mi.Combat;
-               if (3 <= ++numOfDefenders)
-                  break;
-            }
-            if (0 == myRightMapItemsInActionPanel.Count)
-            {
-               foreach (IMapItem mi in waryPeps)
-               {
-                  myRightMapItemsInActionPanel.Add(mi);
-                  myRightMapItemsInActionPanelSelected.Add(mi);
-               }
-            }
+            Logger.Log(LogEnum.LE_ERROR, "Display_Combat(): invalid state with tp=" + townCombatCount.ToString() + " ac=" + alienCombatCount.ToString() + " uc=" + uncontrolledCombatCount.ToString() + " wc=" + waryCombatCount.ToString());
+            return false;
+         }
+         //-------------------------------------------------------------------
+         if (false == UpdateActionPanelCombat(myGameInstance)) // Place attacker on appropriate side
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Display_Combat(): Update_ActionPanelCombat() returned false");
+            return false;
          }
          //-------------------------------------------------------------------
          Logger.Log(LogEnum.LE_SHOW_COMBATS, "Display_Combat(): a=" + myLeftMapItemsInActionPanelSelected.ToString() + " d=" + myRightMapItemsInActionPanelSelected.ToString());
@@ -3208,7 +3216,7 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_SHOW_COMBATS, "Show_ResultCombat(): Combat=" + myGameInstance.MapItemCombat.ToString() + " action=" + action.ToString());
          myGameEngine.PerformAction(ref myGameInstance, ref action, dieRoll);
       }
-      private bool DisplayIterogation(IGameInstance gi, ITerritory selectedTerritory)
+      private bool DisplayIterrogation(IGameInstance gi, ITerritory selectedTerritory)
       {
          if (true == EventViewer.theIsEventViewerSubclassActive)
             return true;
@@ -3272,25 +3280,10 @@ namespace PleasantvilleGame
       }
       private bool PerformInterrogation(IGameInstance gi)
       {
-         foreach (Polygon polygon in myPolygons) // Fill in spaces as black - all other spaces can be selected by user when searching for Zebulon
+         if( false == PerformInterrogationFillPoloygons(gi))
          {
-            ITerritory? t1 = Territories.theTerritories.Find(polygon.Name);
-            if( null == t1 )
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_Interrogation(): t1=null for polygon=" + polygon.Name);
-               return false;
-            }
-            if (false == t1.IsBuilding())
-            {
-               polygon.Fill = mySolidColorBrushBlack;
-            }
-            else
-            {
-               if( true == gi.ZebulonTerritories.Contains(t1))
-                  polygon.Fill = mySolidColorBrushBlack;
-               else
-                  polygon.Fill = Utilities.theBrushRegionClear;
-            }
+            Logger.Log(LogEnum.LE_ERROR, "Perform_Interrogation(): PerformInterrogationFillPoloygons() returned false");
+            return false;
          }
          //-----------------------------------------------
          myGameInstance.SelectedMapItems.Clear();
@@ -3302,8 +3295,33 @@ namespace PleasantvilleGame
          }
          myGameInstance.SelectedMapItems.Add(selectedRight);
          Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "Perform_Interrogation(): mi="+ selectedRight.ToString() );
+         //-----------------------------------------------
          GameAction action = GameAction.InterrogationsPerform;
          myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+         return true;
+      }
+      private bool PerformInterrogationFillPoloygons(IGameInstance gi)
+      {
+         foreach (Polygon polygon in myPolygons) // Fill in spaces as black - all other spaces can be selected by user when searching for Zebulon
+         {
+            ITerritory? t1 = Territories.theTerritories.Find(polygon.Name);
+            if (null == t1)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PerformInterrogationFillPoloygons(): t1=null for polygon=" + polygon.Name);
+               return false;
+            }
+            if (false == t1.IsBuilding())
+            {
+               polygon.Fill = mySolidColorBrushBlack;
+            }
+            else
+            {
+               if (true == gi.ZebulonTerritories.Contains(t1))
+                  polygon.Fill = mySolidColorBrushBlack;
+               else
+                  polygon.Fill = Utilities.theBrushRegionClear;
+            }
+         }
          return true;
       }
       private bool DisplayImplantRemoval(IGameInstance gi, ITerritory selectedTerritory)
@@ -3511,62 +3529,107 @@ namespace PleasantvilleGame
          myDraggedButton = null;
       }
       //---------------
-      private void TextBoxEntryTextChanged(object sender, TextChangedEventArgs e)
+      private void MouseDownPolygon(object sender, MouseButtonEventArgs e)
       {
-         //if (null != myGameEngine)
-         //{
-         //   string entry = myTextBoxOpponent.Text;  // Do not do anything unless a carriage return happens
-         //   int length = entry.Count();
-         //   if (0 == length)
-         //      return;
-         //   if ('\n' == entry[length - 1])
-         //   {
-         //      myTextBoxOpponent.Text = "";
-         //      StringBuilder sb = new StringBuilder("You say: ");
-         //      sb.Append(entry);
-         //      myTextBoxDisplay.AppendText(sb.ToString());
-         //      myTextBoxDisplay.ScrollToEnd();
-         //      //myGameEngine.SendText(entry);
-         //   }
-         //}
-      }
-      private void MouseMoveGameViewerWindow(object sender, MouseEventArgs e)
-      {
-         if (null == myDraggedButton)
-         {
-            base.OnMouseMove(e);
-            return;
-         }
          if (null == myGameInstance)
          {
-            Logger.Log(LogEnum.LE_ERROR, "MouseMove_GameViewerWindow(): myGameInstance=null");
+            Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() myGameInstance=null");
             return;
          }
-         //-----------------------------------
-         IMapItem? selectedMapItem = myGameInstance.Stacks.FindMapItem(myDraggedButton.Name); // selectedMapItem is the new target
-         if (null == selectedMapItem)
+         Polygon p = (Polygon)sender;
+         if (null == p)
          {
-            Logger.Log(LogEnum.LE_ERROR, "MouseMove_GameViewerWindow(): selectedMapItem=null for button.Name=" + myDraggedButton.Name);
+            Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() polygon=null");
             return;
          }
-         //-----------------------------------
-         System.Windows.Point newPoint = e.GetPosition(myCanvasMain);
-         if (true == Territory.IsPointInPolygon(selectedMapItem.TerritoryCurrent, newPoint))
+         ITerritory? tSelected = Territories.theTerritories.Find(p.Name);
+         if (null == tSelected)
          {
-            Logger.Log(LogEnum.LE_SHOW_BUTTON_MOVE, "MouseMove_GameViewerWindow(): button.Name=" + myDraggedButton.Name + " moving to p=(" + newPoint.X.ToString("###") + "," + newPoint.Y.ToString("###") + ")");
-            double offset = selectedMapItem.Zoom * Utilities.theMapItemOffset;
-            selectedMapItem.Location.X = newPoint.X - offset;
-            selectedMapItem.Location.Y = newPoint.Y - offset;
-            Canvas.SetLeft(myDraggedButton, newPoint.X - offset);
-            Canvas.SetTop(myDraggedButton, newPoint.Y - offset);
-            Canvas.SetZIndex(myDraggedButton, myZIndexLastUsed++);
-            if (true == myRectangleMaps.ContainsKey(selectedMapItem))
-            {
-               Rectangle r = myRectangleMaps[selectedMapItem];
-               Canvas.SetLeft(r, selectedMapItem.Location.X);
-               Canvas.SetTop(r, selectedMapItem.Location.Y);
-               Canvas.SetZIndex(r, myZIndexLastUsed++);
-            }
+            Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() tSelected=null for p.Name=" + p.Name);
+            return;
+         }
+         GameAction outAction = GameAction.Error;
+         switch (myGameInstance.GamePhase)
+         {
+            case GamePhase.AlienMovement:
+               myGameInstance.SelectedTerritory = tSelected;
+               break;
+            case GamePhase.TownspersonMovement:
+               Logger.Log(LogEnum.LE_SHOW_TOWN_MOVE, "MouseDown_Polygon(): gi.SelectedMapItems.Count=" + myGameInstance.SelectedMapItems.Count.ToString() + " p.Name=" + p.Name);
+               if (0 == myGameInstance.SelectedMapItems.Count) // if no selected mapitems, do nothing
+                  return;
+               IMapItem? mi = myGameInstance.SelectedMapItems[0];
+               if (null == mi)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() mi=null");
+                  return;
+               }
+               if (mi.TerritoryCurrent.ToString() == p.Name) // if clicking in same territory at unit, do nothing.
+                  return;
+               myGameInstance.SelectedTerritory = tSelected;
+               outAction = GameAction.TownMovementTownPerforms;
+               myGameEngine.PerformAction(ref myGameInstance, ref outAction);
+               break;
+            case GamePhase.Conversations:
+               if (false == DisplayConversation(myGameInstance, tSelected))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_Conversation() returned error");
+                  return;
+               }
+               break;
+            case GamePhase.Influences:
+               if (false == DisplayInfluence(myGameInstance, tSelected))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_Influence() returned error");
+                  return;
+               }
+               break;
+            case GamePhase.Combats:
+               if (false == DisplayCombat(myGameInstance, tSelected))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_Combat() returned error");
+                  return;
+               }
+               break;
+            case GamePhase.Iterrogations:
+               if (0 < myGameInstance.NumTownGuessesForZebulonLocation)
+               {
+                  myStoryboardFlashing = null; // Iterrogations - stop all flashing
+                  foreach (Polygon polygon in myPolygons)
+                     polygon.Fill = Utilities.theBrushRegionClear;
+                  Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "MouseDown_Polygon(): tSelected=" + tSelected.ToString());
+                  bool isAlreadySelected = false;
+                  foreach (ITerritory t in myGameInstance.ZebulonTerritories)
+                  {
+                     if (tSelected.ToString() == t.ToString())
+                     {
+                        isAlreadySelected = true;
+                        break;
+                     }
+                  }
+                  if ((true == tSelected.IsBuilding()) && (false == isAlreadySelected)) // if not a building or territory already selected, do nothing
+                  {
+                     p.Fill = mySolidColorBrushBlack;
+                     myGameInstance.SelectedTerritory = tSelected;
+                     GameAction action = GameAction.InterrogationsGuess;
+                     myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+                  }
+               }
+               else if (false == DisplayIterrogation(myGameInstance, tSelected))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_Iterogations() returned error");
+                  return;
+               }
+               break;
+            case GamePhase.ImplantRemovals:
+               if (false == DisplayImplantRemoval(myGameInstance, tSelected))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_ImplantRemoval() returned error");
+                  return;
+               }
+               break;
+            default:
+               return;
          }
          e.Handled = true;
       }
@@ -3632,107 +3695,62 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "MouseDoubleClickMapItem() MapItemReturnToStart() returned error");
          }
       }
-      private void MouseDownPolygon(object sender, MouseButtonEventArgs e)
+      private void TextBoxEntryTextChanged(object sender, TextChangedEventArgs e)
       {
+         //if (null != myGameEngine)
+         //{
+         //   string entry = myTextBoxOpponent.Text;  // Do not do anything unless a carriage return happens
+         //   int length = entry.Count();
+         //   if (0 == length)
+         //      return;
+         //   if ('\n' == entry[length - 1])
+         //   {
+         //      myTextBoxOpponent.Text = "";
+         //      StringBuilder sb = new StringBuilder("You say: ");
+         //      sb.Append(entry);
+         //      myTextBoxDisplay.AppendText(sb.ToString());
+         //      myTextBoxDisplay.ScrollToEnd();
+         //      //myGameEngine.SendText(entry);
+         //   }
+         //}
+      }
+      private void MouseMoveGameViewerWindow(object sender, MouseEventArgs e)
+      {
+         if (null == myDraggedButton)
+         {
+            base.OnMouseMove(e);
+            return;
+         }
          if (null == myGameInstance)
          {
-            Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() myGameInstance=null");
+            Logger.Log(LogEnum.LE_ERROR, "MouseMove_GameViewerWindow(): myGameInstance=null");
             return;
          }
-         Polygon p = (Polygon)sender;
-         if(null == p )
+         //-----------------------------------
+         IMapItem? selectedMapItem = myGameInstance.Stacks.FindMapItem(myDraggedButton.Name); // selectedMapItem is the new target
+         if (null == selectedMapItem)
          {
-            Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() polygon=null");
+            Logger.Log(LogEnum.LE_ERROR, "MouseMove_GameViewerWindow(): selectedMapItem=null for button.Name=" + myDraggedButton.Name);
             return;
          }
-         ITerritory? tSelected = Territories.theTerritories.Find(p.Name);
-         if (null == tSelected)
+         //-----------------------------------
+         System.Windows.Point newPoint = e.GetPosition(myCanvasMain);
+         if (true == Territory.IsPointInPolygon(selectedMapItem.TerritoryCurrent, newPoint))
          {
-            Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() tSelected=null for p.Name=" + p.Name);
-            return;
-         }
-         GameAction outAction = GameAction.Error;
-         switch (myGameInstance.GamePhase)
-         {
-            case GamePhase.AlienMovement:
-               myGameInstance.SelectedTerritory = tSelected;
-               break;
-            case GamePhase.TownspersonMovement:
-               Logger.Log(LogEnum.LE_SHOW_TOWN_MOVE, "MouseDown_Polygon(): gi.SelectedMapItems.Count=" + myGameInstance.SelectedMapItems.Count.ToString() + " p.Name=" + p.Name);
-               if (0 == myGameInstance.SelectedMapItems.Count) // if no selected mapitems, do nothing
-                  return;
-               IMapItem? mi = myGameInstance.SelectedMapItems[0];
-               if( null == mi )
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() mi=null");
-                  return;
-               }
-               if (mi.TerritoryCurrent.ToString() == p.Name) // if clicking in same territory at unit, do nothing.
-                  return;
-               myGameInstance.SelectedTerritory = tSelected;
-               outAction = GameAction.TownMovementTownPerforms;
-               myGameEngine.PerformAction(ref myGameInstance, ref outAction);
-               break;
-            case GamePhase.Conversations:
-               if (false == DisplayConversation(myGameInstance, tSelected))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_Conversation() returned error");
-                  return;
-               }
-               break;
-            case GamePhase.Influences:
-               if (false == DisplayInfluence(myGameInstance, tSelected))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_Influence() returned error");
-                  return;
-               }
-               break;
-            case GamePhase.Combats:
-               if (false == DisplayCombat(myGameInstance, tSelected))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_Combat() returned error");
-                  return;
-               }
-               break;
-            case GamePhase.Iterrogations:
-               if (0 < myGameInstance.NumTownGuessesForZebulonLocation)
-               {
-                  myStoryboardFlashing = null; // Iterrogations - stop all flashing
-                  foreach (Polygon polygon in myPolygons)
-                     polygon.Fill = Utilities.theBrushRegionClear;
-                  Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "MouseDown_Polygon(): tSelected=" + tSelected.ToString());
-                  bool isAlreadySelected = false;
-                  foreach (ITerritory t in myGameInstance.ZebulonTerritories)
-                  {
-                     if (tSelected.ToString() == t.ToString())
-                     {
-                        isAlreadySelected = true;
-                        break;
-                     }
-                  }
-                  if ((true == tSelected.IsBuilding()) && (false == isAlreadySelected)) // if not a building or territory already selected, do nothing
-                  {
-                     p.Fill = mySolidColorBrushBlack;
-                     myGameInstance.SelectedTerritory = tSelected;
-                     GameAction action = GameAction.InterrogationsGuess;
-                     myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
-                  }
-               }
-               else if (false == DisplayIterogation(myGameInstance, tSelected))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_Iterogations() returned error");
-                  return;
-               }
-               break;
-            case GamePhase.ImplantRemovals:
-               if (false == DisplayImplantRemoval(myGameInstance, tSelected))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() Display_ImplantRemoval() returned error");
-                  return;
-               }
-               break;
-            default:
-               return;
+            Logger.Log(LogEnum.LE_SHOW_BUTTON_MOVE, "MouseMove_GameViewerWindow(): button.Name=" + myDraggedButton.Name + " moving to p=(" + newPoint.X.ToString("###") + "," + newPoint.Y.ToString("###") + ")");
+            double offset = selectedMapItem.Zoom * Utilities.theMapItemOffset;
+            selectedMapItem.Location.X = newPoint.X - offset;
+            selectedMapItem.Location.Y = newPoint.Y - offset;
+            Canvas.SetLeft(myDraggedButton, newPoint.X - offset);
+            Canvas.SetTop(myDraggedButton, newPoint.Y - offset);
+            Canvas.SetZIndex(myDraggedButton, myZIndexLastUsed++);
+            if (true == myRectangleMaps.ContainsKey(selectedMapItem))
+            {
+               Rectangle r = myRectangleMaps[selectedMapItem];
+               Canvas.SetLeft(r, selectedMapItem.Location.X);
+               Canvas.SetTop(r, selectedMapItem.Location.Y);
+               Canvas.SetZIndex(r, myZIndexLastUsed++);
+            }
          }
          e.Handled = true;
       }

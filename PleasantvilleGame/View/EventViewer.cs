@@ -198,16 +198,17 @@ namespace PleasantvilleGame
             case GameAction.UnitTestCommand:
             case GameAction.UnitTestNext:
             case GameAction.UpdateGameOptions:
+            case GameAction.CombatsRetreatStart: // do nothing 
                break;
-            case GameAction.CombatsRetreatShow: 
-               if( null == myEventViewerCombatResolve )
+            case GameAction.CombatsRetreatShow: // this action happens when user selects retreat space - need to myEventViewerCombatResolve 
+               if ( null == myEventViewerCombatResolve )
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): CombatsRetreatShow=null");
                   return;
                }
                else
                {
-                  if( false == myEventViewerCombatResolve.PerformRetreat(gi) )
+                  if( false == myEventViewerCombatResolve.ConfirmRetreat(gi) )
                   {
                      Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Perform_Retreat() returned false");
                      return;

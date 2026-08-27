@@ -37,7 +37,7 @@ namespace PleasantvilleGame
             IMetricObservations metrics = new MetricObservations();
             foreach (IMapItem target in closeMapItems)
             {
-               if ((true == target.IsControlled) || (true == target.IsAlienUnknown) || (true == target.IsAlienKnown) || (true == target.IsMovingThisTurn)) // do not include controlled MapItems as candidates
+               if ((true == target.IsControlled) || (true == target.IsAlienUnknown) || (true == target.IsAlienKnown) || (true == target.IsMovingThisTurn) || (true == target.IsWary)) // do not include controlled MapItems as candidates
                   continue;
                IMetricObservation metric = new MetricObservation(gi, target);
                metrics.Add(metric);

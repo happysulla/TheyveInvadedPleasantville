@@ -205,29 +205,31 @@ namespace PleasantvilleGame
          IMapItems unknownAliens = new MapItems();
          foreach (MapItem mi in stack.MapItems)
          {
-            if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsWary) )  // Unconscious, dead, or Wary cannot be taken over
+            if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsSurrendered) )  // Unconscious, dead, or surrendered cannot partipate
                continue;
-            if ((true == mi.IsControlled) || (true == mi.IsWary))
+            if (true == mi.IsControlled)
             {
-               if (true == mi.IsStunned)  // stunned townspeople can be taken over
+               if (true == mi.IsStunned)
                   possibleVictims.Add(mi);
             }
-            else
+            else if (true == mi.IsAlienKnown)
             {
-               if (true == mi.IsAlienKnown)
-               {
-                  if ((false == mi.IsStunned) && (false == mi.IsTiedUp))
-                     knownAliens.Add(mi);
-               }
-               else if (true == mi.IsAlienUnknown)
-               {
-                  if ((false == mi.IsStunned) && (false == mi.IsTiedUp))
-                     unknownAliens.Add(mi);
-               }
-               else
-               {
+               if (false == mi.IsTiedUp)
+                  knownAliens.Add(mi);
+            }
+            else if (true == mi.IsAlienUnknown)
+            {
+               if (false == mi.IsTiedUp)
+                  unknownAliens.Add(mi);
+            }
+            else if (true == mi.IsWary)
+            {
+               if (true == mi.IsStunned)
                   possibleVictims.Add(mi);
-               }
+            }
+            else // conscious, unwary, uncontrolled townspeople
+            {
+               possibleVictims.Add(mi);
             }
          }
          int alienCount = knownAliens.Count + unknownAliens.Count;

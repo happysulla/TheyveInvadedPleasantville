@@ -240,8 +240,9 @@ namespace PleasantvilleGame
          myScrollViewer.Content = myGrid;
          return true;
       }
-      public bool PerformRetreat(IGameInstance gi)
+      public bool ConfirmRetreat(IGameInstance gi)
       {
+         myIsRollInProgress = false;
          myState = E11Enum.ROLL_FOR_COMBAT_SHOW;
          foreach (GridRow gr in myGridRows)
          {
@@ -250,7 +251,7 @@ namespace PleasantvilleGame
          }
          if (false == UpdateGrid())
          {
-            Logger.Log(LogEnum.LE_ERROR, "UpdateView(): UpdateGrid() return false");
+            Logger.Log(LogEnum.LE_ERROR, "ConfirmRetreat(): UpdateGrid() return false");
             return false;
          }
          return true;
@@ -495,12 +496,10 @@ namespace PleasantvilleGame
                selectedMapItem.IsStunned = true;
                myState = E11Enum.CHOOSE_RETREAT_AREA_FOR_STUNNED;
                if (false == UpdateGrid())
-               {
                   Logger.Log(LogEnum.LE_ERROR, "EventViewerCombatResolve.ShowDieResults(): UpdateGrid() return false");
-                  return;
-               }
                GameAction action = GameAction.CombatsRetreatStart;
                myGameEngine.PerformAction(ref myGameInstance, ref action);
+               return;
             }
          }
          Logger.Log(LogEnum.LE_SHOW_COMBATS, "EventViewerCombatResolve.ShowDieResults(): dr=" + dieRoll.ToString() + " result=" + myGridRows[i].myResult + " for mi=" + myGridRows[i].myMapItem.ToString());

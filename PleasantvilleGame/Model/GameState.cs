@@ -533,29 +533,31 @@ namespace PleasantvilleGame
             IMapItems unknownAliens = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout))  // Unconscious or dead cannot be taken over
+               if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsSurrendered))  // Unconscious or dead cannot be taken over
                   continue;
-               if ((true == mi.IsControlled) || (true == mi.IsWary))
+               if (true == mi.IsControlled)
                {
-                  if ((true == mi.IsStunned) || (true == mi.IsTiedUp))
+                  if(true == mi.IsStunned)
                      possibleVictims.Add(mi);
                }
-               else
+               else if (true == mi.IsAlienKnown)
                {
-                  if (true == mi.IsAlienKnown)
-                  {
-                     if ((false == mi.IsStunned) && (false == mi.IsTiedUp))
-                        knownAliens.Add(mi);
-                  }
-                  else if (true == mi.IsAlienUnknown)
-                  {
-                     if ((false == mi.IsStunned) && (false == mi.IsTiedUp))
-                        unknownAliens.Add(mi);
-                  }
-                  else
-                  {
+                  if (false == mi.IsTiedUp)
+                     knownAliens.Add(mi);
+               }
+               else if (true == mi.IsAlienUnknown)
+               {
+                  if (false == mi.IsTiedUp)
+                     unknownAliens.Add(mi);
+               }
+               else if (true == mi.IsWary)
+               {
+                  if (true == mi.IsStunned)
                      possibleVictims.Add(mi);
-                  }
+               }
+               else // conscious, unwary, uncontrolled townspeople
+               {
+                  possibleVictims.Add(mi);
                }
             }
             int alienCount = knownAliens.Count + unknownAliens.Count;
@@ -2099,6 +2101,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.CombatsRetreatStart: // handled in GameViewerWindow to highlight territories for user to choose 
+               gi.DieRollAction = GameAction.DieRollActionNone;
                break;
             case GameAction.CombatsRetreatShow:  // user selected territory
                Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "GameStateCombat.PerformAction(CombatsRetreatShow): Clear any retreats");
@@ -2132,6 +2135,8 @@ namespace PleasantvilleGame
                      }
                      else
                      {
+                        gi.SelectedMapItems.Clear();       // once moved, do not allow additional movement
+                        mi.MovementUsed = mi.Movement - 1; // only allow retreating one space
                         gi.MapItemMoves.Add(mim);
                      }
                   }
