@@ -52,7 +52,7 @@ namespace PleasantvilleGame.Networking
                IsAlienKnown = counter.IsAlienControlledVisible && counter.IsControlledByRemotePlayer,
                IsAlienUnknown = localRole == MultiplayerRole.Alien && counter.IsAlienControlledVisible && !counter.IsControlledByLocalPlayer ? true : false,
                IsImplantHeld = counter.IsImplantHeld,
-               IsUnconscious = counter.IsUnconscious,
+               IsKnockedout = counter.IsKnockedout,
                IsStunned = counter.IsStunned,
                IsSurrendered = counter.IsSurrendered,
                IsTiedUp = counter.IsTiedUp,

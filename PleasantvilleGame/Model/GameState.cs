@@ -289,7 +289,7 @@ namespace PleasantvilleGame
             IMapItems uncontrolledPeps = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsConversedThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsWary))
+               if ((true == mi.IsConversedThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsWary))
                   continue;
                if (true == mi.IsControlled)
                   controlledPeps.Add(mi);
@@ -334,7 +334,7 @@ namespace PleasantvilleGame
             IMapItems uncontrolledPeps = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
+               if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
                   continue;
                if (true == mi.IsControlled)
                   controlledPeps.Add(mi);
@@ -381,7 +381,7 @@ namespace PleasantvilleGame
             IMapItems unknownAliens = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsCombatThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
+               if ((true == mi.IsCombatThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
                   continue;
                if (true == mi.IsControlled)
                   controlledPeps.Add(mi);
@@ -432,7 +432,7 @@ namespace PleasantvilleGame
                IMapItems surrenderedAliens = new MapItems();
                foreach (MapItem mi in stack.MapItems)
                {
-                  if ((true == mi.IsInterrogated) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned))
+                  if ((true == mi.IsInterrogated) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned))
                      continue;
                   if (true == mi.IsControlled)
                   {
@@ -488,9 +488,9 @@ namespace PleasantvilleGame
             {
                if ((true == mi.IsImplantRemovalAttempt) || (true == mi.IsImplantRemovalAttemptThisTurn) || (true == mi.IsKilled))
                   continue;
-               if ((true == mi.IsControlled) && (false == mi.IsUnconscious) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
+               if ((true == mi.IsControlled) && (false == mi.IsKnockedout) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
                   controlled.Add(mi);
-               else if ((true == mi.IsAlienKnown) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (true == mi.IsUnconscious)))
+               else if ((true == mi.IsAlienKnown) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (true == mi.IsKnockedout)))
                   aliens.Add(mi);
             }
             if ( (0 < controlled.Count) && (0 < aliens.Count) )
@@ -533,7 +533,7 @@ namespace PleasantvilleGame
             IMapItems unknownAliens = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious))  // Unconscious or dead cannot be taken over
+               if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout))  // Unconscious or dead cannot be taken over
                   continue;
                if ((true == mi.IsControlled) || (true == mi.IsWary))
                {
@@ -614,7 +614,7 @@ namespace PleasantvilleGame
                   else if (true == mi.IsControlled)
                      controlledTiedUpPersons.Add(mi);
                }
-               if ((false == mi.IsTiedUp) && (false == mi.IsUnconscious) && (false == mi.IsStunned))
+               if ((false == mi.IsTiedUp) && (false == mi.IsKnockedout) && (false == mi.IsStunned))
                {
                   if (true == mi.IsAlienKnown)
                      isFriendlyAlienHelping = true;
@@ -663,9 +663,9 @@ namespace PleasantvilleGame
                      Logger.Log(LogEnum.LE_INFLUENCE_CHANGE, sb.ToString());
                   }
                }
-               if( true == mi.IsUnconscious )
+               if( true == mi.IsKnockedout )
                {
-                  mi.IsUnconscious = false;
+                  mi.IsKnockedout = false;
                   if (( true == mi.IsControlled) || (true == mi.IsUncontrolled()) ) // alien counters do not become stunned
                   {
                      mi.IsStunned = true;
@@ -702,7 +702,7 @@ namespace PleasantvilleGame
                foreach (IMapItem alien in alienTiedUpPersons) // known aliens tied up
                {
                   alien.IsTiedUp = false;
-                  if ((false == alien.IsUnconscious) && (false == alien.IsStunned))
+                  if ((false == alien.IsKnockedout) && (false == alien.IsStunned))
                   {
                      gi.InfluenceCountTotal += alien.Influence;
                      sb = new StringBuilder("CheckForEndOfGame(): untie "); sb.Append(alien.Name); sb.Append(" ++++ to Total "); sb.Append(alien.Influence.ToString());
@@ -728,7 +728,7 @@ namespace PleasantvilleGame
                foreach (IMapItem controlled in controlledTiedUpPersons)
                {
                   controlled.IsTiedUp = false;
-                  if ((true == controlled.IsUnconscious) && (false == controlled.IsStunned))
+                  if ((true == controlled.IsKnockedout) && (false == controlled.IsStunned))
                   {
                      gi.InfluenceCountTotal += controlled.Influence;
                      sb = new StringBuilder("CheckForEndOfGame(): untie "); sb.Append(controlled.Name); sb.Append(" ++++ to Total "); sb.Append(controlled.Influence.ToString());
@@ -825,7 +825,7 @@ namespace PleasantvilleGame
             foreach (IMapItem mi in stack.MapItems)
             {
                totalInfluence += mi.Influence;
-               if ((false == mi.IsTiedUp) && (false == mi.IsUnconscious) && (false == mi.IsStunned) && (false == mi.IsSurrendered) && (false == mi.IsKilled))
+               if ((false == mi.IsTiedUp) && (false == mi.IsKnockedout) && (false == mi.IsStunned) && (false == mi.IsSurrendered) && (false == mi.IsKilled))
                {
                   cogentInfluence += mi.Influence;
                   if (true == mi.IsControlled)
@@ -844,7 +844,7 @@ namespace PleasantvilleGame
                      killedInfluence += mi.Influence;
                   else if (true == mi.IsSurrendered)
                      surrenderedInfluence += mi.Influence;
-                  else if (true == mi.IsUnconscious)
+                  else if (true == mi.IsKnockedout)
                      unconsciousInfluence += mi.Influence;
                   else if (true == mi.IsStunned)
                      stunnedInfluence += mi.Influence;
@@ -1424,7 +1424,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Create_RandomMoves(): mi=null for " + rmd.myName);
                return false;
             }
-            if ((true == mi.IsTiedUp) || (true == mi.IsUnconscious) || (true == mi.IsKilled))
+            if ((true == mi.IsTiedUp) || (true == mi.IsKnockedout) || (true == mi.IsKilled))
                continue;
             string buildingName = rmd.myBuildingName;
             mi.Movement *= 2; // Movement is doubled during Random Movement
@@ -1973,13 +1973,6 @@ namespace PleasantvilleGame
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show
                break;
-            case GameAction.CombatsSelect: // handled in the GameViewWindow.xaml.cs file
-               if (false == CheckForCombats(gi, ref action))
-               {
-                  returnStatus = "Check_ForCombats() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsSelect): " + returnStatus);
-               }
-               break;
             case GameAction.UpdateRotateStack:
                if (false == RotateStack(gi))
                {
@@ -1992,6 +1985,13 @@ namespace PleasantvilleGame
                {
                   returnStatus = "Scatter_Stack() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.CombatsSelect: // handled in the GameViewWindow.xaml.cs file
+               if (false == CheckForCombats(gi, ref action))
+               {
+                  returnStatus = "Check_ForCombats() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsSelect): " + returnStatus);
                }
                break;
             case GameAction.CombatsRoll:
@@ -2059,7 +2059,7 @@ namespace PleasantvilleGame
                               gi.EventActive = gi.EventDisplayed = "e011af";
                               action = GameAction.CombatAlienFlee;
                            }
-                           if (false == CreateMapItemFlees(gi, gi.MapItemCombat.Defenders))
+                           if (false == CreateMapItemFlees(gi, gi.MapItemCombat.Attackers))
                            {
                               returnStatus = "CreateMapItemFlee() returned false";
                               Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
@@ -2101,7 +2101,9 @@ namespace PleasantvilleGame
             case GameAction.CombatsRetreatStart: // handled in GameViewerWindow to highlight territories for user to choose 
                break;
             case GameAction.CombatsRetreatShow:  // user selected territory
-               if( 0 == gi.SelectedMapItems.Count )
+               Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "GameStateCombat.PerformAction(CombatsRetreatShow): Clear any retreats");
+               gi.MapItemMoves.Clear();
+               if ( 0 == gi.SelectedMapItems.Count )
                {
                   returnStatus = "gi.SelectedMapItems.Count=0";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(): " + returnStatus);

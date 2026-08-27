@@ -28,7 +28,7 @@ using Rectangle = System.Windows.Shapes.Rectangle;
 
 namespace PleasantvilleGame
 {
-   public partial class EventViewerCombatResolve : System.Windows.Controls.UserControl, IView
+   public partial class EventViewerCombatResolve : System.Windows.Controls.UserControl
    {
       public delegate bool EndCombatResolve();
       private const int STARTING_ASSIGNED_ROW = 6;
@@ -240,19 +240,20 @@ namespace PleasantvilleGame
          myScrollViewer.Content = myGrid;
          return true;
       }
-      public void UpdateView(ref IGameInstance gi, GameAction action)
+      public bool PerformRetreat(IGameInstance gi)
       {
-         if( GameAction.CombatsRetreatShow == action) // after user select retreat space for stunned town piece, this function is called.
+         myState = E11Enum.ROLL_FOR_COMBAT_SHOW;
+         foreach (GridRow gr in myGridRows)
          {
-            myState = E11Enum.ROLL_FOR_COMBAT_SHOW;
-            foreach (GridRow gr in myGridRows)
-            {
-               if (gr.myDieRoll < 0)
-                  myState = E11Enum.ROLL_FOR_COMBAT;
-            }
-            if (false == UpdateGrid())
-               Logger.Log(LogEnum.LE_ERROR, "UpdateView(): UpdateGrid() return false");
+            if (gr.myDieRoll < 0)
+               myState = E11Enum.ROLL_FOR_COMBAT;
          }
+         if (false == UpdateGrid())
+         {
+            Logger.Log(LogEnum.LE_ERROR, "UpdateView(): UpdateGrid() return false");
+            return false;
+         }
+         return true;
       }
       private bool UpdateGrid()
       {
@@ -460,7 +461,7 @@ namespace PleasantvilleGame
             else if (dieRoll < 7 )
             {
                myGridRows[i].myResult = "K.O.";
-               selectedMapItem.IsUnconscious = true;
+               selectedMapItem.IsKnockedout = true;
                if( true == selectedMapItem.IsAlienKnown)
                   selectedMapItem.IsTiedUp = true;
                Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "ShowDieResults(): mi=" + selectedMapItem.ToString() + " ++TIED and KO");
@@ -484,7 +485,7 @@ namespace PleasantvilleGame
             else if (dieRoll < 7)
             {
                myGridRows[i].myResult = "K.O.";
-               selectedMapItem.IsUnconscious = true;
+               selectedMapItem.IsKnockedout = true;
             }
             else
             {

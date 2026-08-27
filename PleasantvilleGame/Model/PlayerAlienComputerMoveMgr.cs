@@ -207,7 +207,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "Move_Uncontrolled(): movingMi=null for randUm=" + randomNum.ToString() + " in closeMapItems=" + closeMapItems.ToString());
                   return false;
                }
-               if ((true == movingMi.IsWary) || (true == movingMi.IsUnconscious) || (true == movingMi.IsKilled) || (true == movingMi.IsTiedUp) || (true == movingMi.IsStunned) || (true == movingMi.IsControlled))
+               if ((true == movingMi.IsWary) || (true == movingMi.IsKnockedout) || (true == movingMi.IsKilled) || (true == movingMi.IsTiedUp) || (true == movingMi.IsStunned) || (true == movingMi.IsControlled))
                   continue;
                if (true == movingMi.IsMovingThisTurn) // already moving or targeted so skip moving
                   continue;

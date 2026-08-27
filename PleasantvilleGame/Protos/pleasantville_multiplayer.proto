@@ -94,7 +94,7 @@ message VisibleCounter {
   bool is_controlled_by_local_player = 8;
   bool is_controlled_by_remote_player = 9;
   bool is_alien_controlled_visible = 10;
-  bool is_unconscious = 11;
+  bool is_knockedout = 11;
   bool is_stunned = 12;
   bool is_surrendered = 13;
   bool is_tied_up = 14;

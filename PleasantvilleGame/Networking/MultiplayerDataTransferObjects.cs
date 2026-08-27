@@ -33,7 +33,7 @@ namespace PleasantvilleGame.Networking
       public bool IsControlledByLocalPlayer { get; set; }
       public bool IsControlledByRemotePlayer { get; set; }
       public bool IsAlienControlledVisible { get; set; }
-      public bool IsUnconscious { get; set; }
+      public bool IsKnockedout { get; set; }
       public bool IsStunned { get; set; }
       public bool IsSurrendered { get; set; }
       public bool IsTiedUp { get; set; }

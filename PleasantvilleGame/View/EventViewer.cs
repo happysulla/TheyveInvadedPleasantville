@@ -10,12 +10,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Xml;
 using WpfAnimatedGif;
+using static PleasantvilleGame.EventViewerCombatResolve;
 using Button = System.Windows.Controls.Button;
-using Cursors = System.Windows.Input.Cursors;
-using Point = System.Windows.Point;
 using CheckBox = System.Windows.Controls.CheckBox;
-using Image = System.Windows.Controls.Image;
+using Cursors = System.Windows.Input.Cursors;
 using FontFamily = System.Windows.Media.FontFamily;
+using Image = System.Windows.Controls.Image;
+using Point = System.Windows.Point;
 
 namespace PleasantvilleGame
 {
@@ -36,7 +37,8 @@ namespace PleasantvilleGame
       private RuleListingDialog? myDialogRuleListing = null;
       private RuleListingDialog? myDialogEventListing = null;
       private TableListingDialog? myDialogTableListing = null;
-       //--------------------------------------------------------------------
+      private EventViewerCombatResolve? myEventViewerCombatResolve = null;
+      //--------------------------------------------------------------------
       private ScrollViewer? myScrollViewerTextBlock;
       private Canvas? myCanvasMain = null;
       private TextBlock? myTextBlock = null;
@@ -120,6 +122,14 @@ namespace PleasantvilleGame
             CtorError = true;
             return;
          }
+         //--------------------------------------------------------
+         myEventViewerCombatResolve = new EventViewerCombatResolve(myGameEngine, myGameInstance, myCanvasMain, myScrollViewerTextBlock, myRulesMgr, myDieRoller);
+         if (true == myEventViewerCombatResolve.CtorError)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "EventViewer(): EventViewerCombatResolve.CtorError=true");
+            CtorError = true;
+            return;
+         }
       }
       private bool CreateEvents(IGameInstance gi)
       {
@@ -188,6 +198,21 @@ namespace PleasantvilleGame
             case GameAction.UnitTestCommand:
             case GameAction.UnitTestNext:
             case GameAction.UpdateGameOptions:
+               break;
+            case GameAction.CombatsRetreatShow: 
+               if( null == myEventViewerCombatResolve )
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): CombatsRetreatShow=null");
+                  return;
+               }
+               else
+               {
+                  if( false == myEventViewerCombatResolve.PerformRetreat(gi) )
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Perform_Retreat() returned false");
+                     return;
+                  }
+               }
                break;
             case GameAction.ShowCharacterDescription:
                ShowCounterHelpDialog dialogShowCharDesc = new ShowCounterHelpDialog(myRulesMgr);
@@ -290,6 +315,7 @@ namespace PleasantvilleGame
             //   }
             //   break;
             case GameAction.RandomMovementStartTowns:
+               theIsEventViewerSubclassActive = true;
                EventViewerRandomMovement evRandomMovementMgr = new EventViewerRandomMovement(myGameEngine, myGameInstance, myCanvasMain, myScrollViewerTextBlock, myRulesMgr, myDieRoller);
                if (true == evRandomMovementMgr.CtorError)
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): evRandomMovementMgr.CtorError=true");
@@ -298,13 +324,14 @@ namespace PleasantvilleGame
                break;
             case GameAction.CombatAttackerWin:
             case GameAction.CombatDefenderWin:
-               EventViewerCombatResolve evCombatResolve = new EventViewerCombatResolve(myGameEngine, myGameInstance, myCanvasMain, myScrollViewerTextBlock, myRulesMgr, myDieRoller);
-               if (true == evCombatResolve.CtorError)
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): evCombatResolve.CtorError=true");
-               else if (false == evCombatResolve.ResolveCombat(ShowCombatResults))
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Show_CombatResults() returned false");
+               theIsEventViewerSubclassActive = true;
+               if( null == myEventViewerCombatResolve)
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): myEventViewerCombatResolve=null");
+               else if (false == myEventViewerCombatResolve.ResolveCombat(ShowCombatResults))
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Resolve_Combat() returned false");
                break;
             case GameAction.AlienTakeoversShow:
+               theIsEventViewerSubclassActive = true;
                EventViewerAlienTakeovers evAlienTakeoverMgr = new EventViewerAlienTakeovers(myGameEngine, myGameInstance, myCanvasMain, myScrollViewerTextBlock, myRulesMgr, myDieRoller);
                if (true == evAlienTakeoverMgr.CtorError)
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): evAlienTakeoverMgr.CtorError=true");
@@ -1022,6 +1049,7 @@ namespace PleasantvilleGame
       }
       public bool ShowRandomMoveResults()
       {
+         theIsEventViewerSubclassActive = false;
          if (null == myGameInstance)
          {
             Logger.Log(LogEnum.LE_ERROR, "ShowRandomMoveResults(): myGameInstance=null");
@@ -1047,6 +1075,7 @@ namespace PleasantvilleGame
       }
       public bool ShowCombatResults()
       {
+         theIsEventViewerSubclassActive = false;
          if (null == myGameInstance)
          {
             Logger.Log(LogEnum.LE_ERROR, "Show_CombatResults(): myGameInstance=null");
@@ -1068,6 +1097,7 @@ namespace PleasantvilleGame
       }
       public bool ShowAlienTakeoverResults()
       {
+         theIsEventViewerSubclassActive = false;
          if (null == myGameInstance)
          {
             Logger.Log(LogEnum.LE_ERROR, "ShowAlienTakeoverResults(): myGameInstance=null");

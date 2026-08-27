@@ -47,7 +47,7 @@ namespace PleasantvilleGame
       int MovementOriginal { get; set; }
       int MovementUsed { get; set; }
       //----------------------------------------
-      bool IsUnconscious { get; set; }
+      bool IsKnockedout { get; set; }
       bool IsAlienUnknown { get; set; }
       bool IsAlienKnown { get; set; }
       bool IsControlled { get; set; }

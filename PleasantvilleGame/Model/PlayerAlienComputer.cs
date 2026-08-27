@@ -169,7 +169,7 @@ namespace PleasantvilleGame
                   unknownAliens.Add(mi);
                else if (true == mi.IsControlled)
                   townControlledPeoples.Add(mi);
-               else if ((false == mi.IsWary) && (false == mi.IsUnconscious) && (false == mi.IsKilled) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
+               else if ((false == mi.IsWary) && (false == mi.IsKnockedout) && (false == mi.IsKilled) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
                   uncontrolledPeoples.Add(mi);
             }
          }
@@ -205,7 +205,7 @@ namespace PleasantvilleGame
          IMapItems unknownAliens = new MapItems();
          foreach (MapItem mi in stack.MapItems)
          {
-            if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsWary) )  // Unconscious, dead, or Wary cannot be taken over
+            if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsWary) )  // Unconscious, dead, or Wary cannot be taken over
                continue;
             if ((true == mi.IsControlled) || (true == mi.IsWary))
             {

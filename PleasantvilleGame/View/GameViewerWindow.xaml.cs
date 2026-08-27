@@ -975,14 +975,21 @@ namespace PleasantvilleGame
          switch (action) // Perform acton based on the current next action.
          {
             case GameAction.GameSetupHostGame:
-               break;
             case GameAction.GameSetupJoinGame:
-               break;
             case GameAction.GameSetupPlayAlien:
-               break;
             case GameAction.GameSetupPlayTownsperson:
-               break;
             case GameAction.InterrogationsPerform:
+            case GameAction.UpdateStatusBar:
+            case GameAction.UpdateShowRegion:
+            case GameAction.UpdateEventViewerDisplay:
+            case GameAction.UpdateEventViewerActive:
+            case GameAction.ShowRuleListingDialog:
+            case GameAction.ShowEventListingDialog:
+            case GameAction.ShowTableListing:
+            case GameAction.ShowCharacterDescription:
+            case GameAction.ShowGameFeatsDialog:
+            case GameAction.ShowReportErrorDialog:
+            case GameAction.ShowAboutDialog:
                break;
             case GameAction.RandomMovementStartTowns:
                UpdateActionPanelClear();
@@ -1182,11 +1189,11 @@ namespace PleasantvilleGame
                break;
             case GameAction.InterrogationsGuess:
                Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "UpdateView(): fill polygons due to guesses for territories=" + gi.ZebulonTerritories.ToString());
-               myStoryboardFlashing = null;
-               if( true == gi.Zebulon.IsAlienKnown )
+               myStoryboardFlashing = null; // InterrogationsGuess
+               foreach (Polygon polygon in myPolygons)
+                  polygon.Fill = Utilities.theBrushRegionClear;
+               if ( true == gi.Zebulon.IsAlienKnown )
                {
-                  foreach (Polygon polygon in myPolygons)
-                     polygon.Fill = Utilities.theBrushRegionClear;
                   if (false == UpdateCanvasMain(gi, action))
                   {
                      Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
@@ -2099,7 +2106,9 @@ namespace PleasantvilleGame
       {
          if (GamePhase.UnitTest == myGameInstance.GamePhase)
             return;
-         myStoryboardFlashing = null;
+         myStoryboardFlashing = null; // UpdateCanvasMainClear()
+         foreach (Polygon polygon in myPolygons)
+            polygon.Fill = Utilities.theBrushRegionClear;
          //-------------------------------------------
          Logger.Log(LogEnum.LE_SHOW_MAIN_CLEAR, "Update_CanvasMainClear(): Clearing action=" + action.ToString() + " stacks=" + stacks.ToString());
          List<UIElement> elementRemovals = new List<UIElement>();
@@ -2151,8 +2160,6 @@ namespace PleasantvilleGame
                elementRemovals.Add(ui);
             else if (ui is Polyline polyline)
                elementRemovals.Add(ui);
-            else if (ui is Polygon polygon)
-               polygon.Fill = Utilities.theBrushRegionClear;
          }
          foreach (UIElement ui1 in elementRemovals)
             myCanvasMain.Children.Remove(ui1);
@@ -2225,8 +2232,10 @@ namespace PleasantvilleGame
       }
       private bool UpdateCanvasCombatRetreat(IGameInstance gi, GameAction action)
       {
-         myStoryboardFlashing = null;
-         if( null == gi.MapItemCombat)
+         myStoryboardFlashing = null; // UpdateCanvasCombatRetreat()
+         foreach (Polygon polygon in myPolygons)
+            polygon.Fill = Utilities.theBrushRegionClear;
+         if ( null == gi.MapItemCombat)
          {
             Logger.Log(LogEnum.LE_ERROR, "UpdateCanvas_CombatRetreat(): gi.MapItemCombat=null");
             return false;
@@ -2415,7 +2424,7 @@ namespace PleasantvilleGame
             {
                foreach (IMapItem mi in stack.MapItems)
                {
-                  if ((true == mi.IsControlled) && (false == mi.IsTiedUp) && (false == mi.IsUnconscious) && (false == mi.IsStunned) && (mi.MovementUsed < mi.Movement))
+                  if ((true == mi.IsControlled) && (false == mi.IsTiedUp) && (false == mi.IsKnockedout) && (false == mi.IsStunned) && (mi.MovementUsed < mi.Movement))
                   {
                      foreach (Button b in myButtons)
                      {
@@ -2525,7 +2534,7 @@ namespace PleasantvilleGame
          }
          foreach (IMapItem mi in stack.MapItems)
          {
-            if ((true == mi.IsConversedThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsWary))
+            if ((true == mi.IsConversedThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsWary))
                continue;
             if (true == mi.IsControlled)
             {
@@ -2656,7 +2665,7 @@ namespace PleasantvilleGame
          displayResults.Append(finalValue.ToString());
          if (8 < finalValue)
          {
-            displayResults.Append(" > 8\n");
+            displayResults.Append(" > 8 Succeeds\n");
             displayResults.Append(rightPersonName);
             if (true == rightMapItem.IsAlienUnknown)
                displayResults.Append(" is an Alien!!!!!!");
@@ -2665,7 +2674,7 @@ namespace PleasantvilleGame
          }
          else
          {
-            displayResults.Append(" < 9\n");
+            displayResults.Append(" < 9 Fails\n");
             displayResults.Append(rightPersonName);
             displayResults.Append(" says, \"Really?  Have you been drinking?\"");
          }
@@ -2694,7 +2703,7 @@ namespace PleasantvilleGame
          }
          foreach (IMapItem mi in stack.MapItems)
          {
-            if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp) )
+            if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned) || (true == mi.IsTiedUp) )
                continue;
             if (true == mi.IsControlled)
             {
@@ -2949,9 +2958,9 @@ namespace PleasantvilleGame
          }
          else
          {
-            final += 1;
             displayResults.Append(final.ToString());
             displayResults.Append(" < ");
+            dieThreshold += 1;
             displayResults.Append(dieThreshold.ToString());
             displayResults.Append("\n");
             displayResults.Append(rightPersonName);
@@ -3007,7 +3016,7 @@ namespace PleasantvilleGame
          IMapItems knownAliens = new MapItems();
          foreach (MapItem mi in shuffleMapItems)
          {
-            if ((true == mi.IsCombatThisTurn) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
+            if ((true == mi.IsCombatThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
                continue;
             if (true == mi.IsControlled)
             {
@@ -3213,7 +3222,7 @@ namespace PleasantvilleGame
          }
          foreach (MapItem mi in stack.MapItems)
          {
-            if ((true == mi.IsInterrogated) || (true == mi.IsKilled) || (true == mi.IsUnconscious) || (true == mi.IsStunned))
+            if ((true == mi.IsInterrogated) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned))
                continue;
             if (true == mi.IsControlled)
             {
@@ -3319,9 +3328,9 @@ namespace PleasantvilleGame
          {
             if ((true == mi.IsImplantRemovalAttemptThisTurn) || (true == mi.IsImplantRemovalAttempt) || (true == mi.IsKilled))
                continue;
-            if ((true == mi.IsControlled) && (false == mi.IsUnconscious) && (false == mi.IsTiedUp) && (false == mi.IsStunned) && (myLeftMapItemsInActionPanel.Count < 3) )
+            if ((true == mi.IsControlled) && (false == mi.IsKnockedout) && (false == mi.IsTiedUp) && (false == mi.IsStunned) && (myLeftMapItemsInActionPanel.Count < 3) )
                myLeftMapItemsInActionPanel.Add(mi);
-            else if ((true == mi.IsAlienKnown) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (true == mi.IsUnconscious)) && (myRightMapItemsInActionPanel.Count < 3))
+            else if ((true == mi.IsAlienKnown) && ((true == mi.IsTiedUp) || (true == mi.IsSurrendered) || (true == mi.IsKnockedout)) && (myRightMapItemsInActionPanel.Count < 3))
                myRightMapItemsInActionPanel.Add(mi);
          }
          //-----------------------------------------
@@ -3688,7 +3697,9 @@ namespace PleasantvilleGame
             case GamePhase.Iterrogations:
                if (0 < myGameInstance.NumTownGuessesForZebulonLocation)
                {
-                  myStoryboardFlashing = null; // stop all flashing
+                  myStoryboardFlashing = null; // Iterrogations - stop all flashing
+                  foreach (Polygon polygon in myPolygons)
+                     polygon.Fill = Utilities.theBrushRegionClear;
                   Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "MouseDown_Polygon(): tSelected=" + tSelected.ToString());
                   bool isAlreadySelected = false;
                   foreach (ITerritory t in myGameInstance.ZebulonTerritories)

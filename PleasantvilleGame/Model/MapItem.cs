@@ -88,7 +88,7 @@ namespace PleasantvilleGame
       public int MovementOriginal { get; set; } = 0;
       public int MovementUsed { get; set; } = 0;
       //----------------------------------------
-      public bool IsUnconscious { get; set; } = false;
+      public bool IsKnockedout { get; set; } = false;
       public bool IsAlienUnknown { get; set; } = false;
       public bool IsAlienKnown { get; set; } = false;
       public bool IsControlled { get; set; } = false;
@@ -205,7 +205,7 @@ namespace PleasantvilleGame
          this.Movement = mi.Movement;
          this.MovementUsed = mi.MovementUsed;
          //--------------------------------------
-         this.IsUnconscious = mi.IsUnconscious;
+         this.IsKnockedout = mi.IsKnockedout;
          this.IsAlienUnknown = mi.IsAlienUnknown;
          this.IsAlienKnown = mi.IsAlienKnown;
          this.IsControlled = mi.IsControlled;
@@ -243,7 +243,7 @@ namespace PleasantvilleGame
          this.Movement = mi.Movement;
          this.MovementUsed = mi.MovementUsed;
          //--------------------------------------
-         this.IsUnconscious = mi.IsUnconscious;
+         this.IsKnockedout = mi.IsKnockedout;
          this.IsAlienUnknown = mi.IsAlienUnknown;
          this.IsAlienKnown = mi.IsAlienKnown;
          this.IsControlled = mi.IsControlled;
@@ -364,7 +364,7 @@ namespace PleasantvilleGame
                Canvas.SetLeft(imgSurrendered, 0);
                Canvas.SetTop(imgSurrendered, 0);
             }
-            else if (true == mi.IsUnconscious)
+            else if (true == mi.IsKnockedout)
             {
                Image imgKnockedOut = new Image() { Source = theImgKnockedOut, Height = b.Height - 2, Width = b.Width - 2 };
                c.Children.Add(imgKnockedOut);
@@ -524,7 +524,7 @@ namespace PleasantvilleGame
          {
             IMapItem mi1 = (IMapItem)o;
             bool isMapItemInserted = false;
-            if ((true == mi1.IsUnconscious) && (false == mi1.IsTiedUp) && (false == mi1.IsStunned))
+            if ((true == mi1.IsKnockedout) && (false == mi1.IsTiedUp) && (false == mi1.IsStunned))
             {
                int metric1 = mi1.Movement + mi1.Combat + mi1.Influence;
                int index = 0;
@@ -552,7 +552,7 @@ namespace PleasantvilleGame
          {
             IMapItem mi1 = (IMapItem)o;
             bool isMapItemInserted = false;
-            if ((true == mi1.IsUnconscious) && (false == mi1.IsTiedUp) && (false == mi1.IsStunned))
+            if ((true == mi1.IsKnockedout) && (false == mi1.IsTiedUp) && (false == mi1.IsStunned))
             {
                int index = 0;
                foreach (IMapItem mi2 in sortedMapItems)

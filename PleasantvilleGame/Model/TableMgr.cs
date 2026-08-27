@@ -169,7 +169,6 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): dieRoll1=" + dieRoll.ToString() + " is out of range");
             return false;
          }
-         dieRoll -= 2; // normalize to 0-10 for theTable array
          if ( 0 == combat.Attackers.Count)
          {
             Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): 0 == combat.Attackers.Count");
@@ -263,8 +262,9 @@ namespace PleasantvilleGame
             }
          }
          //----------------------------------------
-         combat.Result = theTable[dieRoll, tableFactor];
-         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Get_CombatResult(): dr=" + dieRoll.ToString() + " diff=" + differential.ToString() + " tf=" + tableFactor.ToString() + " result=" + combat.Result.ToString() + "influnced?=" + isInfluencedThiSTurn.ToString());
+         int normalizedDieRoll = dieRoll - 2; // normalize to 0-10 for theTable array
+         combat.Result = theTable[normalizedDieRoll, tableFactor];
+         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Get_CombatResult():  diff=" + differential.ToString() + " dr=" + dieRoll.ToString() +  " tf=" + tableFactor.ToString() + " result=" + combat.Result.ToString() + " influnced?=" + isInfluencedThiSTurn.ToString());
          return true;
       }
       static public bool CreateTownspeople(IGameInstance gi)

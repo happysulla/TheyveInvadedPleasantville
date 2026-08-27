@@ -306,7 +306,7 @@ namespace PleasantvilleGame
             Grid.SetColumn(b1, 0);
             //-----------------------------
             CheckBox cb = new CheckBox() { FontSize = 12, IsEnabled = false, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = System.Windows.VerticalAlignment.Center };
-            if ( (true == mi.IsTiedUp) || (true == mi.IsUnconscious) || (true == mi.IsKilled))
+            if ( (true == mi.IsTiedUp) || (true == mi.IsKnockedout) || (true == mi.IsKilled))
                cb.IsChecked = true;
             else
                cb.IsChecked = false;
@@ -315,14 +315,14 @@ namespace PleasantvilleGame
             Grid.SetColumn(cb, 1);
             //-----------------------------
             string dest = myGridRows[i].myBuildingName;
-            if ((true == mi.IsTiedUp) || (true == mi.IsUnconscious) || (true == mi.IsKilled))
+            if ((true == mi.IsTiedUp) || (true == mi.IsKnockedout) || (true == mi.IsKilled))
                dest = "NA";
             Label labelforBuildingName = new Label() { FontFamily = myFontFam, FontSize = 16, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = dest };
             myGrid.Children.Add(labelforBuildingName);
             Grid.SetRow(labelforBuildingName, rowNum);
             Grid.SetColumn(labelforBuildingName, 2);
             //-----------------------------
-            if ((true == mi.IsTiedUp) || (true == mi.IsUnconscious) || (true == mi.IsKilled))
+            if ((true == mi.IsTiedUp) || (true == mi.IsKnockedout) || (true == mi.IsKilled))
             {
                Label labelForBlock = new Label() { FontFamily = myFontFam, FontSize = 16, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = "NA" };
                myGrid.Children.Add(labelForBlock);
