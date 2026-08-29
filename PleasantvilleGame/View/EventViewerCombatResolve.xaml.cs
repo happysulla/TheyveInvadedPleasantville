@@ -463,7 +463,8 @@ namespace PleasantvilleGame
             {
                myGridRows[i].myResult = "K.O.";
                selectedMapItem.IsKnockedout = true;
-               if( true == selectedMapItem.IsAlienKnown)
+               selectedMapItem.IsKnockedoutThisTurn = true;  // do not awaken until next of next combat phase
+               if ( true == selectedMapItem.IsAlienKnown)
                   selectedMapItem.IsTiedUp = true;
                Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "ShowDieResults(): mi=" + selectedMapItem.ToString() + " ++TIED and KO");
             }
@@ -487,6 +488,7 @@ namespace PleasantvilleGame
             {
                myGridRows[i].myResult = "K.O.";
                selectedMapItem.IsKnockedout = true;
+               selectedMapItem.IsKnockedoutThisTurn = true; // do not awaken until next of next combat phase
             }
             else
             {

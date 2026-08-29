@@ -139,7 +139,7 @@ namespace PleasantvilleGame
          }
          foreach (IStack stack in gi.Stacks)
          {
-            foreach(IMapItem mi in stack.MapItems)
+            foreach (IMapItem mi in stack.MapItems)
             {
                mi.MovementUsed = 0;
                mi.Movement = mi.MovementOriginal;
@@ -293,7 +293,7 @@ namespace PleasantvilleGame
                   continue;
                if (true == mi.IsControlled)
                   controlledPeps.Add(mi);
-               else if(false == mi.IsAlienKnown) 
+               else if (false == mi.IsAlienKnown)
                   uncontrolledPeps.Add(mi);
             }
             if ((0 < controlledPeps.Count) && (0 < uncontrolledPeps.Count))
@@ -316,7 +316,7 @@ namespace PleasantvilleGame
          if (GameAction.ConversationsSelect == action)
             return true;
          //--------------------------------------------------
-         if( false == CheckForInfluences(gi, ref action))
+         if (false == CheckForInfluences(gi, ref action))
          {
             Logger.Log(LogEnum.LE_ERROR, "CheckFor_Conversations(): CheckFor_Influence() returned error");
             return false;
@@ -338,7 +338,7 @@ namespace PleasantvilleGame
                   continue;
                if (true == mi.IsControlled)
                   controlledPeps.Add(mi);
-               else if (false == mi.IsAlienKnown) 
+               else if (false == mi.IsAlienKnown)
                   uncontrolledPeps.Add(mi);
             }
             if ((0 < controlledPeps.Count) && (0 < uncontrolledPeps.Count))
@@ -385,14 +385,14 @@ namespace PleasantvilleGame
                   continue;
                if (true == mi.IsControlled)
                   controlledPeps.Add(mi);
-               else if (true == mi.IsAlienKnown) 
+               else if (true == mi.IsAlienKnown)
                   knownAliens.Add(mi);
                else if (true == mi.IsAlienUnknown)
                   unknownAliens.Add(mi);
                else
                   uncontrolledPeps.Add(mi)
-;           }
-            if ((0 < controlledPeps.Count) && ( (0 < uncontrolledPeps.Count) || (0 < knownAliens.Count) || (0 < unknownAliens.Count)) )
+; }
+            if ((0 < controlledPeps.Count) && ((0 < uncontrolledPeps.Count) || (0 < knownAliens.Count) || (0 < unknownAliens.Count)))
             {
                if (GamePhase.Combats != gi.GamePhase)
                {
@@ -403,7 +403,7 @@ namespace PleasantvilleGame
                   }
                }
                Logger.Log(LogEnum.LE_SHOW_COMBATS, "CheckFor_Combats(): Adding t=" + stack.Territory.ToString() + " c=" + controlledPeps.Count.ToString() + " u=" + uncontrolledPeps.Count.ToString() + " ka=" + knownAliens.Count.ToString() + " ua=" + unknownAliens.Count.ToString());
-               gi.SelectedTerritories.Add(stack.Territory); 
+               gi.SelectedTerritories.Add(stack.Territory);
                gi.DieRollAction = GameAction.DieRollActionNone;
                gi.EventActive = gi.EventDisplayed = "e011t";
                action = GameAction.CombatsSelect;
@@ -411,12 +411,32 @@ namespace PleasantvilleGame
          }
          if (GameAction.CombatsSelect == action)
             return true;
+         CompleteCombatPhase(gi);
          if (false == CheckForIterogations(gi, ref action))
          {
             Logger.Log(LogEnum.LE_ERROR, "CheckFor_Combats(): CheckFor_Iterogations() returned error");
             return false;
          }
          return true;
+      }
+      protected void CompleteCombatPhase(IGameInstance gi)
+      {
+         foreach (Stack stack in gi.Stacks) 
+         {
+            foreach (IMapItem mi in stack.MapItems)
+            {
+               if ((true == mi.IsStunned) && (false == mi.IsStunnedThisTurn) ) // Unstunned - For each person who was stunned returns to the game
+               {
+                  mi.IsStunned = false;
+               }
+               if ((true == mi.IsKnockedout) && (false == mi.IsKnockedoutThisTurn) )
+               {
+                  mi.IsKnockedout = false;
+                  if ((true == mi.IsControlled) || (true == mi.IsUncontrolled())) // alien counters do not become stunned
+                     mi.IsStunned = true;
+               }
+            }
+         }
       }
       protected bool CheckForIterogations(IGameInstance gi, ref GameAction action)
       {
@@ -632,6 +652,8 @@ namespace PleasantvilleGame
                mi.IsConversedThisTurn = false;
                mi.IsInfluencedThisTurn = false;
                mi.IsCombatThisTurn = false;
+               mi.IsKnockedoutThisTurn = false;
+               mi.IsStunnedThisTurn = false;
                mi.IsImplantRemovalAttemptThisTurn = false;
                mi.IsTakeoverThisTurn = false;
                if ((true == mi.IsSurrendered) || (true == mi.IsKilled))
@@ -649,45 +671,6 @@ namespace PleasantvilleGame
                      isFriendlyAlienHelping = true;
                   else if (true == mi.IsControlled)
                      isFriendlyControlledHelping = true;
-               }
-               if( true == mi.IsStunned) // Unstunned - For each person who was stunned returns to the game
-               {
-                  mi.IsStunned = false;
-                  totalInfluence += mi.Influence;
-                  if (true == mi.IsAlienUnknown)
-                  {
-                     unknownAlienInfluence += mi.Influence;
-                     uncontrolledInfluence += mi.Influence;
-                  }
-                  else if (true == mi.IsAlienKnown)
-                  {
-                     alienInfluence += mi.Influence;
-                  }
-                  else if (true == mi.IsControlled)
-                  {
-                     controlledInfluence += mi.Influence;
-                  }
-               }
-               if( true == mi.IsKnockedout )
-               {
-                  mi.IsKnockedout = false;
-                  if (( true == mi.IsControlled) || (true == mi.IsUncontrolled()) ) // alien counters do not become stunned
-                  {
-                     mi.IsStunned = true;
-                  }
-                  else
-                  {
-                     totalInfluence += mi.Influence;
-                     if (true == mi.IsAlienUnknown)
-                     {
-                        unknownAlienInfluence += mi.Influence;
-                        uncontrolledInfluence += mi.Influence;
-                     }
-                     else if (true == mi.IsAlienKnown)
-                     {
-                        alienInfluence += mi.Influence;
-                     }
-                  }
                }
             }
             //--------------------------------------------------------
@@ -2147,6 +2130,7 @@ namespace PleasantvilleGame
                break;
             case GameAction.CombatsFinish:
                Logger.Log(LogEnum.LE_SHOW_COMBATS, "GameStateCombat.PerformAction(CombatsFinish): Combat Finished");
+               CompleteCombatPhase(gi);
                if (false == CheckForIterogations(gi, ref action))
                {
                   returnStatus = "CheckFor_Iterogations() returned false";

@@ -62,8 +62,10 @@
     <None Remove="Images\EndGameSuccess.gif" />
     <None Remove="Images\EndGameSuccess2.gif" />
     <None Remove="Images\FireChief.gif" />
+    <None Remove="Images\Frown.gif" />
     <None Remove="Images\GameBox.gif" />
     <None Remove="Images\HotelOwner.gif" />
+    <None Remove="Images\Idiot.gif" />
     <None Remove="Images\Implant.gif" />
     <None Remove="Images\Interrogation.gif" />
     <None Remove="Images\Judge.gif" />
@@ -75,10 +77,13 @@
     <None Remove="Images\Lawyer5.gif" />
     <None Remove="Images\LawyerStunned.gif" />
     <None Remove="Images\LawyerTiedUp.gif" />
+    <None Remove="Images\Loser1.gif" />
+    <None Remove="Images\Loser2.gif" />
     <None Remove="Images\Maid.gif" />
     <None Remove="Images\MaitreD.gif" />
     <None Remove="Images\Mayor.gif" />
     <None Remove="Images\Minister.gif" />
+    <None Remove="Images\Muscle.gif" />
     <None Remove="Images\OAlien.gif" />
     <None Remove="Images\OBlood1.gif" />
     <None Remove="Images\OImplant.gif" />
@@ -96,6 +101,8 @@
     <None Remove="Images\RepairShopOwner.gif" />
     <None Remove="Images\Sheriff.gif" />
     <None Remove="Images\Sherman3.gif" />
+    <None Remove="Images\Skulls.gif" />
+    <None Remove="Images\Star.gif" />
     <None Remove="Images\StationAttendant.gif" />
     <None Remove="Images\SuperMarketManager.gif" />
     <None Remove="Images\Tailor.gif" />
@@ -262,10 +269,19 @@
     <Content Include="Images\FireChief.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\Frown.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\GameBox.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\HotelOwner.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Idiot - Copy.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Idiot.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Implant.gif">
@@ -301,6 +317,12 @@
     <Content Include="Images\LawyerTiedUp.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\Loser1.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Loser2.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\Maid.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -311,6 +333,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Minister.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Muscle.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\OAlien.gif">
@@ -359,6 +384,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Sheriff.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Skulls.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Star.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\StationAttendant.gif">

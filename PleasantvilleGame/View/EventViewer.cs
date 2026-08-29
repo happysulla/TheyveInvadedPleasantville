@@ -827,7 +827,7 @@ namespace PleasantvilleGame
                      myTextBlock.Inlines.Add(new Run("                                  "));
                      break;
                   case 3:
-                     imgEndGameLost = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("FarmerDead"), Width = 300, Height = 300 };
+                     imgEndGameLost = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("DeadPerson"), Width = 300, Height = 300 };
                      myTextBlock.Inlines.Add(new Run("                                  "));
                      break;
                   case 4:

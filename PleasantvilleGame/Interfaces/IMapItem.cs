@@ -48,6 +48,7 @@ namespace PleasantvilleGame
       int MovementUsed { get; set; }
       //----------------------------------------
       bool IsKnockedout { get; set; }
+      bool IsKnockedoutThisTurn { get; set; }
       bool IsAlienUnknown { get; set; }
       bool IsAlienKnown { get; set; }
       bool IsControlled { get; set; }
@@ -56,6 +57,7 @@ namespace PleasantvilleGame
       bool IsInterrogated { get; set; }
       bool IsSkeptical { get; set; }
       bool IsStunned { get; set; }
+      bool IsStunnedThisTurn { get; set; } // must wait until end of next turn to unstunn
       bool IsSurrendered { get; set; }
       bool IsTiedUp { get; set; }
       bool IsWary { get; set; }

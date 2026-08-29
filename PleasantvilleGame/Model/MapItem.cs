@@ -89,6 +89,7 @@ namespace PleasantvilleGame
       public int MovementUsed { get; set; } = 0;
       //----------------------------------------
       public bool IsKnockedout { get; set; } = false;
+      public bool IsKnockedoutThisTurn { get; set; } = false;
       public bool IsAlienUnknown { get; set; } = false;
       public bool IsAlienKnown { get; set; } = false;
       public bool IsControlled { get; set; } = false;
@@ -97,6 +98,7 @@ namespace PleasantvilleGame
       public bool IsInterrogated { get; set; } = false;
       public bool IsSkeptical { get; set; } = false;
       public bool IsStunned { get; set; } = false;
+      public bool IsStunnedThisTurn { get; set; } = false;
       public bool IsSurrendered { get; set; } = false;
       public bool IsTiedUp { get; set; } = false;
       public bool IsWary { get; set; } = false;
