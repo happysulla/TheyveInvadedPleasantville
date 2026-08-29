@@ -64,6 +64,7 @@
     <None Remove="Images\FireChief.gif" />
     <None Remove="Images\GameBox.gif" />
     <None Remove="Images\HotelOwner.gif" />
+    <None Remove="Images\Implant.gif" />
     <None Remove="Images\Interrogation.gif" />
     <None Remove="Images\Judge.gif" />
     <None Remove="Images\Lawyer.gif" />
@@ -265,6 +266,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\HotelOwner.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Implant.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Interrogation.gif">
