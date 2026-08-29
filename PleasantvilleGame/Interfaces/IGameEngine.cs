@@ -26,7 +26,7 @@ namespace PleasantvilleGame
       Iterrogations,
       ImplantRemovals,
       AlienTakeovers,
-      ShowEndGame,
+      GameEnd,
       UnitTest,
       Error
    };
@@ -120,13 +120,11 @@ namespace PleasantvilleGame
       UnitTestCleanup,
 
       EndGameWin,
-      EndGame,
+      EndGameLose,
       EndGameShowFeats,
       EndGameShowStats,
       EndGameClose,
       EndGameExit,
-      ExitGame,
-
       Error
    };
    //================================================================================================

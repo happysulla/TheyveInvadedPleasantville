@@ -27,10 +27,6 @@ namespace PleasantvilleGame.Networking
          gameInstance.NextAction = state.NextAction;
          gameInstance.GameTurn = state.GameTurn;
          gameInstance.Day = state.Day;
-         gameInstance.InfluenceCountTotal = state.InfluenceTotal;
-         gameInstance.InfluenceCountTownspeople = state.InfluenceTownspeople;
-         gameInstance.InfluenceCountAlienUnknown = state.InfluenceAlienUnknown;
-         gameInstance.InfluenceCountAlienKnown = state.InfluenceAlienKnown;
          gameInstance.DieRollAction = GameAction.DieRollActionNone;
          if (Enum.TryParse(state.GamePhase, true, out GamePhase parsedPhase))
          {

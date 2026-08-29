@@ -102,7 +102,7 @@ namespace PleasantvilleGame
             {
                foreach (MapItem mi in stack.MapItems)
                {
-                  if (true == mi.IsKilled)
+                  if ((true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned))
                      continue;
                   else if (true == mi.IsControlled)
                      controlledInfluence += mi.Influence;

@@ -57,10 +57,6 @@ namespace PleasantvilleGame
       //---------------------------------------------------------------
       public string PlayerTurn { set; get; } = "Alien";
       public string NextAction { set; get; } = "";
-      public int InfluenceCountTotal { set; get; } = 0;
-      public int InfluenceCountTownspeople { set; get; } = 0;
-      public int InfluenceCountAlienUnknown { set; get; } = 0;
-      public int InfluenceCountAlienKnown { set; get; } = 0;
       public int NumTownGuessesForZebulonLocation { set; get; } = 0;
       public bool IsAlienStarted { set; get; } = false;
       public bool IsTownsStarted { set; get; } = false;

@@ -523,7 +523,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Perform_Observation(): myGameInstance=null");
             return false;
          }
-         if ((true == gr.myMapItem1.IsAlienUnknown) && (true == gr.myMapItem2.IsUncontrolled())) // Alien can be in either of these positions.
+         if ((true == gr.myMapItem1.IsAlienUnknown) && (true == gr.myMapItem2.IsUncontrolled()) ) // Alien can be in either of these positions.
          {
             if (true == gr.myIsResult) // true when observed doing takeover
             {
@@ -542,7 +542,7 @@ namespace PleasantvilleGame
                myGameInstance.AddUnknownAlien(gr.myMapItem2);
             }
          }
-         else if ((true == gr.myMapItem2.IsAlienUnknown) && (true == gr.myMapItem1.IsUncontrolled())) // Alien can be in either of these positions.
+         else if ( (true == gr.myMapItem2.IsAlienUnknown) && (true == gr.myMapItem1.IsUncontrolled()) ) // Alien can be in either of these positions.
          {
             if (true == gr.myIsResult) // true when observed doing takeover
             {
@@ -561,7 +561,7 @@ namespace PleasantvilleGame
                myGameInstance.AddUnknownAlien(gr.myMapItem1);
             }
          }
-         else if ((true == gr.myMapItem1.IsAlienKnown) && (true == gr.myMapItem2.IsUncontrolled())) // Alien can be in either of these positions.
+         else if ((true == gr.myMapItem1.IsAlienKnown) && (true == gr.myMapItem2.IsUncontrolled()) )  // Alien can be in either of these positions.
          {
             if (true == gr.myIsResult) // true when observed doing takeover
             {
@@ -579,7 +579,7 @@ namespace PleasantvilleGame
                myGameInstance.AddUnknownAlien(gr.myMapItem2);
             }
          }
-         else if ((true == gr.myMapItem2.IsAlienKnown) && (true == gr.myMapItem1.IsUncontrolled())) // Alien can be in either of these positions.
+         else if ( (true == gr.myMapItem2.IsAlienKnown) && (true == gr.myMapItem1.IsUncontrolled()) ) // Alien can be in either of these positions.
          {
             if (true == gr.myIsResult) // true when observed doing takeover
             {
@@ -597,8 +597,37 @@ namespace PleasantvilleGame
                myGameInstance.AddUnknownAlien(gr.myMapItem1);
             }
          }
+         else if ((true == gr.myMapItem1.IsAlienKnown) && (true == gr.myMapItem2.IsControlled)) // alien can takeover controlled stunned units
+         {
+            myGameInstance.AddKnownAlien(gr.myMapItem1); // PerformObservation()
+            myGameInstance.AddKnownAlien(gr.myMapItem2); // PerformObservation()
+         }
+         else if ((true == gr.myMapItem1.IsAlienUnknown) && (true == gr.myMapItem2.IsControlled))
+         {
+            myGameInstance.AddKnownAlien(gr.myMapItem1); // PerformObservation()
+            myGameInstance.AddKnownAlien(gr.myMapItem2); // PerformObservation()
+         }
+         else if ((true == gr.myMapItem2.IsAlienKnown) && (true == gr.myMapItem1.IsControlled))
+         {
+            myGameInstance.AddKnownAlien(gr.myMapItem1); // PerformObservation()
+            myGameInstance.AddKnownAlien(gr.myMapItem2); // PerformObservation()
+         }
+         else if ((true == gr.myMapItem2.IsAlienUnknown) && (true == gr.myMapItem1.IsControlled))
+         {
+            myGameInstance.AddKnownAlien(gr.myMapItem1); // PerformObservation()
+            myGameInstance.AddKnownAlien(gr.myMapItem2); // PerformObservation()
+         }
+         else if ((true == gr.myMapItem1.IsUncontrolled()) && (true == gr.myMapItem2.IsUncontrolled()) )
+         {
+            // if both uncontrolled, do nothing
+         }
+         else
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_Observation(): Invalid State - mi1=" + gr.myMapItem1.ToString() + " mi2=" + gr.myMapItem2.ToString());
+            return false;
+         }
          //------------------------------------------------
-         for(int i=0; i< myMaxRowCount; ++i) // If a alien beccomes known thru observation, remove it from being an observer
+         for (int i = 0; i < myMaxRowCount; ++i) // If a alien beccomes known thru observation, remove it from being an observer
          {
             GridRow row = myGridRows[i];
             if (null != row.myObserver)

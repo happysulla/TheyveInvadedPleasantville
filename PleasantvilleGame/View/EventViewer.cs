@@ -339,7 +339,7 @@ namespace PleasantvilleGame
                else if (false == evAlienTakeoverMgr.ConsumateAlienTakeovers(ShowAlienTakeoverResults))
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Consumate_AlienTakeovers() returned false");
                break;
-            case GameAction.EndGame:
+            case GameAction.EndGameLose:
             case GameAction.EndGameWin:
             default:
                gi.IsGridActive = false;
@@ -793,7 +793,7 @@ namespace PleasantvilleGame
                      imgEndGameWon = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("Star"), Width = 300, Height = 300 };
                      myTextBlock.Inlines.Add(new LineBreak());
                      myTextBlock.Inlines.Add(new LineBreak());
-                     myTextBlock.Inlines.Add(new Run("                           "));
+                     myTextBlock.Inlines.Add(new Run("                   "));
                      break;
                }
                myTextBlock.Inlines.Add(new InlineUIContainer(imgEndGameWon));
@@ -860,7 +860,7 @@ namespace PleasantvilleGame
                   myTextBlock.Inlines.Add(new Run("Receive a Europe Campaign medal for participating in Europe Campaign."));
                   myTextBlock.Inlines.Add(new LineBreak());
                   myTextBlock.Inlines.Add(new LineBreak());
-                  Image imgEndGame1 = new Image { Name = "ExitGame", Source = MapItem.theMapImages.GetBitmapImage("DecorationEasternCampaign"), Width = 150, Height = 300 };
+                  Image imgEndGame1 = new Image { Name = "EndGameExit", Source = MapItem.theMapImages.GetBitmapImage("DecorationEasternCampaign"), Width = 150, Height = 300 };
                   myTextBlock.Inlines.Add(new Run("                                           "));
                   myTextBlock.Inlines.Add(new InlineUIContainer(imgEndGame1));
                }
@@ -869,7 +869,7 @@ namespace PleasantvilleGame
                   myTextBlock.Inlines.Add(new Run("Receive a Europe Campaign medal for participation and Victory medal since after Feb 1945."));
                   myTextBlock.Inlines.Add(new LineBreak());
                   myTextBlock.Inlines.Add(new LineBreak());
-                  Image imgEndGame2 = new Image { Name = "ExitGame", Source = MapItem.theMapImages.GetBitmapImage("DecorationVictoryMedal"), Width = 300, Height = 300 };
+                  Image imgEndGame2 = new Image { Name = "EndGameExit", Source = MapItem.theMapImages.GetBitmapImage("DecorationVictoryMedal"), Width = 300, Height = 300 };
                   myTextBlock.Inlines.Add(new Run("                        "));
                   myTextBlock.Inlines.Add(new InlineUIContainer(imgEndGame2));
                }
@@ -1233,7 +1233,7 @@ namespace PleasantvilleGame
                            action = GameAction.InterrogationsFinish;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;
-                        case "ExitGame":
+                        case "EndGameExit":
                            action = GameAction.EndGameExit;
                            myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
                            return;

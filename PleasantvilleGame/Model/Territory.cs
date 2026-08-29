@@ -781,10 +781,25 @@ namespace PleasantvilleGame
 		public void Clear() { myList.Clear(); }
 		public bool Contains(ITerritory t)
 		{
-			foreach (object o in myList)
+			string? tName = t.ToString();
+			if( null == tName )
+			{
+				Logger.Log(LogEnum.LE_ERROR, "Territory.Contains() tName=null");
+				return false;
+			}
+			tName = Utilities.RemoveSpaces(tName);
+			//--------------------------------------
+         foreach (object o in myList)
 			{
 				ITerritory t1 = (ITerritory)o;
-				if (Utilities.RemoveSpaces(t.Name) == Utilities.RemoveSpaces(t1.Name)) // match on name
+				string? t1Name = t1.ToString();
+            if (null == t1Name)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Territory.Contains() t1Name=null");
+               return false;
+            }
+            t1Name = Utilities.RemoveSpaces(t1Name);
+            if (tName == t1Name) // match on name
 					return true;
 			}
 			return false;

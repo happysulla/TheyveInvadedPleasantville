@@ -1158,6 +1158,8 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.CombatsRetreatShow: // initiated by MouseDownPolygon() when user clicks space - setup MapItemMove in GameState
+               if (null != myStoryboardFlashing)
+                  myStoryboardFlashing.Stop();
                myStoryboardFlashing = null; // UpdateCanvasCombatRetreat()
                foreach (Polygon polygon in myPolygons)
                   polygon.Fill = Utilities.theBrushRegionClear;
@@ -1191,10 +1193,12 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.InterrogationsGuess:
-               Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "UpdateView(): fill polygons due to guesses for territories=" + gi.ZebulonTerritories.ToString());
+               if (null != myStoryboardFlashing)
+                  myStoryboardFlashing.Stop();
                myStoryboardFlashing = null; // InterrogationsGuess
                if ( true == gi.Zebulon.IsAlienKnown )
                {
+                  Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "UpdateView(): Zebulon?=" + gi.Zebulon.IsAlienKnown.ToString() + " CLEAR polygons due to guesses for territories=" + gi.ZebulonTerritories.ToString());
                   UpdateCanvasMainClear(myButtons, gi.Stacks, action);
                   if (false == UpdateCanvasMain(gi, action))
                   {
@@ -1204,9 +1208,10 @@ namespace PleasantvilleGame
                }
                else
                {
+                  Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "UpdateView(): Zebulon?=" + gi.Zebulon.IsAlienKnown.ToString() + " FILL polygons due to guesses for territories=" + gi.ZebulonTerritories.ToString());
                   if (false == PerformInterrogationFillPoloygons(gi))
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "UpdateView(): PerformInterrogationFillPoloygons() returned false");
+                     Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Perform_InterrogationFillPoloygons() returned false");
                      return;
                   }
                }
@@ -2105,6 +2110,8 @@ namespace PleasantvilleGame
       {
          if (GamePhase.UnitTest == myGameInstance.GamePhase)
             return;
+         if (null != myStoryboardFlashing)
+            myStoryboardFlashing.Stop();
          myStoryboardFlashing = null; // UpdateCanvasMainClear()
          foreach (Polygon polygon in myPolygons)
             polygon.Fill = Utilities.theBrushRegionClear;
@@ -2231,6 +2238,8 @@ namespace PleasantvilleGame
       }
       private bool UpdateCanvasCombatRetreat(IGameInstance gi, GameAction action)
       {
+         if (null != myStoryboardFlashing)
+            myStoryboardFlashing.Stop();
          myStoryboardFlashing = null; // UpdateCanvasCombatRetreat()
          foreach (Polygon polygon in myPolygons)
             polygon.Fill = Utilities.theBrushRegionClear;
@@ -2487,6 +2496,8 @@ namespace PleasantvilleGame
       }
       private bool DisplayFlashingRegions(IGameInstance gi, SolidColorBrush brush)
       {
+         if (null != myStoryboardFlashing)
+            myStoryboardFlashing.Stop();
          myStoryboardFlashing = new Storyboard(); // Clear any previous flashing regions
          foreach (Polygon polygon in myPolygons) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
             polygon.Fill = Utilities.theBrushRegionClear;
@@ -2927,11 +2938,11 @@ namespace PleasantvilleGame
          //------------------------------------------------
          int dieRollModifier = 0;
          if (true == isImplantHeld) // Subtact one if a controlled person holds evidence of an implant.
-            --dieRollModifier;
-         if (true == rightMapItem.IsSkeptical) // Check if MapItem is skeptical.  This adds to die roll.
             ++dieRollModifier;
-         if (true == rightMapItem.IsWary)  // Check if wary.  This subtracts to the die roll.
+         if (true == rightMapItem.IsSkeptical) // Check if MapItem is skeptical.  This adds to die roll.
             --dieRollModifier;
+         if (true == rightMapItem.IsWary)  // Check if wary.  This subtracts to the die roll.
+            ++dieRollModifier;
          int final = dieRoll + dieRollModifier;
          Logger.Log(LogEnum.LE_SHOW_INFLUENCES, "ShowResult_Influence(): totalInfluence=" + totalInfluence.ToString("F1") + " r=" + rightMapItem.Influence.ToString() + " odds=" + odds.ToString("F1") + " threshold=" + dieThreshold.ToString());
          //------------------------------------------------
@@ -3282,7 +3293,7 @@ namespace PleasantvilleGame
       {
          if( false == PerformInterrogationFillPoloygons(gi))
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_Interrogation(): PerformInterrogationFillPoloygons() returned false");
+            Logger.Log(LogEnum.LE_ERROR, "Perform_Interrogation(): Perform_InterrogationFillPoloygons() returned false");
             return false;
          }
          //-----------------------------------------------
@@ -3302,12 +3313,14 @@ namespace PleasantvilleGame
       }
       private bool PerformInterrogationFillPoloygons(IGameInstance gi)
       {
+         foreach (Polygon polygon in myPolygons)
+            polygon.Fill = Utilities.theBrushRegionClear;
          foreach (Polygon polygon in myPolygons) // Fill in spaces as black - all other spaces can be selected by user when searching for Zebulon
          {
             ITerritory? t1 = Territories.theTerritories.Find(polygon.Name);
             if (null == t1)
             {
-               Logger.Log(LogEnum.LE_ERROR, "PerformInterrogationFillPoloygons(): t1=null for polygon=" + polygon.Name);
+               Logger.Log(LogEnum.LE_ERROR, "Perform_InterrogationFillPoloygons(): t1=null for polygon=" + polygon.Name);
                return false;
             }
             if (false == t1.IsBuilding())
@@ -3318,8 +3331,6 @@ namespace PleasantvilleGame
             {
                if (true == gi.ZebulonTerritories.Contains(t1))
                   polygon.Fill = mySolidColorBrushBlack;
-               else
-                  polygon.Fill = Utilities.theBrushRegionClear;
             }
          }
          return true;
@@ -3594,10 +3605,12 @@ namespace PleasantvilleGame
             case GamePhase.Iterrogations:
                if (0 < myGameInstance.NumTownGuessesForZebulonLocation)
                {
+                  if (null != myStoryboardFlashing)
+                     myStoryboardFlashing.Stop();
                   myStoryboardFlashing = null; // Iterrogations - stop all flashing
                   foreach (Polygon polygon in myPolygons)
                      polygon.Fill = Utilities.theBrushRegionClear;
-                  Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "MouseDown_Polygon(): tSelected=" + tSelected.ToString());
+                  Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "MouseDown_Polygon(): tSelected=" + tSelected.ToString() + " guesses=" + myGameInstance.NumTownGuessesForZebulonLocation.ToString());
                   bool isAlreadySelected = false;
                   foreach (ITerritory t in myGameInstance.ZebulonTerritories)
                   {
@@ -3672,7 +3685,7 @@ namespace PleasantvilleGame
             case GamePhase.Iterrogations:
             case GamePhase.ImplantRemovals:
             case GamePhase.AlienTakeovers:
-            case GamePhase.ShowEndGame:
+            case GamePhase.GameEnd:
                GameAction outAction = GameAction.UpdateRotateStack;
                myGameEngine.PerformAction(ref myGameInstance, ref outAction);
                break;
