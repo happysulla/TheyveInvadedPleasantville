@@ -65,7 +65,7 @@ e005t	"<Bold>e005t Confirm Random Move</Bold> <InlineUIContainer><Button Content
 Confirm random moves by clicking image.
 <LineBreak/><LineBreak/>
                                         <InlineUIContainer><Image Name='Continue005t' Height='100' Width='100'></Image></InlineUIContainer>"
-e006a	"<Bold>e006 Alien Player Movement</Bold> <InlineUIContainer><Button Content='r6.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+e006a	"<Bold>e006a Alien Player Movement</Bold> <InlineUIContainer><Button Content='r6.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
 During his or her movement phase, the Alien player may move up to five townsperson counters. However, these townspeople may not be:
 <LineBreak/><LineBreak/>
@@ -104,18 +104,27 @@ Confirm alien moves by clicking image.
                                         <InlineUIContainer><Image Name='Continue007t' Height='100' Width='100'></Image></InlineUIContainer>"
 e008t	"<Bold>e008t Town Player Movement</Bold>  <InlineUIContainer><Button Content='r6.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
-The Town player moves any townsperson or group of townspeople in the same hex that is controlled by the Town player that are not:
+The Town player moves any townsperson controlled by the Town player that are not:
 <LineBreak/><LineBreak/>
 -- Tied Up per <InlineUIContainer><Button Content='r6.3.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer><LineBreak/>
 -- Unconscious per <InlineUIContainer><Button Content='Alien Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> or <InlineUIContainer><Button Content='Town Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Tables
+-- Stunned per <InlineUIContainer><Button Content='Alien Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> or <InlineUIContainer><Button Content='Town Loss' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Tables
 <LineBreak/><LineBreak/>
-Click on a green color townperson. To move a group, click on multiple townspeople in same area. Click on target area to move. If you click more than one area away, it takes a shortest random path to that location.
+Click on a green color townperson. Click on target area to move. If you click more than one area away, it takes a shortest random path to that location.
 <LineBreak/><LineBreak/>
 Once in this phase, each alien controlled counter may halt all movement of one town controlled counter when it attempts to enter its space. 
 <LineBreak/><LineBreak/>
 When all movement is done, click on image below to continue to the next phase.
 <LineBreak/><LineBreak/>
                               <InlineUIContainer><Image Name='Welcome' Height='125' Width='200'></Image></InlineUIContainer>"
+e008t1	"<Bold>e008t1 Town Player Movement - Overstacking</Bold>  <InlineUIContainer><Button Content='r6.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+<LineBreak/><LineBreak/>
+The Town player are overstacked in the flashing spaces. The town player must move counters away from these spaces to reduce the number of controlled town controlled counters to three.
+<LineBreak/><LineBreak/>
+Click on a green color townperson. Click on target area to move. If you click more than one area away, it takes a shortest random path to that location.
+<LineBreak/><LineBreak/>
+Once in this phase, each alien controlled counter may halt all movement of one town controlled counter when it attempts to enter its space. 
+<LineBreak/><LineBreak/>"
 e009t	"<Bold>e009t Conversations</Bold>  <InlineUIContainer><Button Content='r7.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
 Conversation is how the Town player discovers if a townsperson is Alien controlled.
@@ -158,12 +167,12 @@ Any conscious, defeated, Alien controlled counter may be interrogated by a Town 
 Click a flashing space to begin.
 <LineBreak/><LineBreak/>
                     <InlineUIContainer><Image Name='Interrogation' Height='180' Width='300'></Image></InlineUIContainer>"
-e012t1	"<Bold>e012t.1 Interrogations</Bold>  <InlineUIContainer><Button Content='r8.7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+e012t1	"<Bold>e012t1 Interrogations</Bold>  <InlineUIContainer><Button Content='r8.7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
 The alien sub-commander, Zebulon, is not discovered. Click image to continue.
 <LineBreak/><LineBreak/>
                                         <InlineUIContainer><Image Name='Continue012t' Height='100' Width='100'></Image></InlineUIContainer>"
-e012t2	"<Bold>e012t.2 Interrogations</Bold>  <InlineUIContainer><Button Content='r8.7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+e012t2	"<Bold>e012t2 Interrogations</Bold>  <InlineUIContainer><Button Content='r8.7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
 Since Town player guessed the correct location, the Alien sub-commander, Zebulon, is placed on the map board. The Town player can win by engaging and defeating Zebulon in combat. Click image to continue.
 <LineBreak/><LineBreak/>

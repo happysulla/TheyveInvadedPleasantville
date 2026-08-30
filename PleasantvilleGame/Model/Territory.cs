@@ -573,7 +573,7 @@ namespace PleasantvilleGame
 			int count = 0;
 		   foreach(IMapItem mi in stack.MapItems)
 			{
-				if( (false == mi.IsAlienKnown) && (false == mi.IsControlled) )
+				if( (false == mi.IsAlienKnown) && (false == mi.IsControlled) ) //
 					++count;
          }
          foreach (IMapItemMove mim in pendingMoves)
@@ -592,7 +592,7 @@ namespace PleasantvilleGame
          int count = 0;
          foreach (IMapItem mi in stack.MapItems)
          {
-            if (true == mi.IsAlienKnown)
+            if ( (true == mi.IsAlienKnown) && (false == mi.IsTiedUp) ) // tied up people do not count against stacking limits
                ++count;
          }
          foreach (IMapItemMove mim in pendingMoves) 
@@ -611,7 +611,7 @@ namespace PleasantvilleGame
          int count = 0;
          foreach (IMapItem mi in stack.MapItems)
          {
-            if (true == mi.IsControlled)
+            if ((true == mi.IsControlled)  && (false == mi.IsTiedUp)) // tied up people do not count against stacking limits - very rare to have tied up Town Player counter if at all
                ++count;
          }
          foreach (IMapItemMove mim in pendingMoves)

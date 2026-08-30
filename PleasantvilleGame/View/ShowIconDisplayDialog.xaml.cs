@@ -62,6 +62,10 @@ namespace PleasantvilleGame
          myGrid.Children.Add(img);
          Grid.SetRow(img, ++row);
          Grid.SetColumn(img, col);
+         img = new Image() { Height = 50, Width = 50, IsEnabled = false, Source = MapItem.theMapImages.GetBitmapImage("DeadPerson") };
+         myGrid.Children.Add(img);
+         Grid.SetRow(img, ++row);
+         Grid.SetColumn(img, col);
       }
       private void ButtonOk_Click(object sender, RoutedEventArgs e)
       {

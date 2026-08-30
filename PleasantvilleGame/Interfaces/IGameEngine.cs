@@ -79,6 +79,7 @@ namespace PleasantvilleGame
       AlienMovementTownsAck,
 
       TownMovementTownPerforms,
+      TownMovementOverstack,
       TownMovementTownCompletes,
 
       ConversationsSelect,

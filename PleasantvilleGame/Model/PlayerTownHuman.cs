@@ -61,6 +61,8 @@ namespace PleasantvilleGame
          }
          foreach (IMapItem mi in gi.SelectedMapItems)
          {
+            if ((false == mi.IsControlled) || (true == mi.IsKnockedout) || (true == mi.IsTiedUp) || (true == mi.IsStunned) || (true == mi.IsKilled))
+               continue;
             IMapItemMove? mim = gi.CreateMapItemMove(mi, gi.SelectedTerritory);
             if (null == mim)
             {
@@ -70,6 +72,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "PerformTownMove(): mi=" + mi.ToString() + " t=" + gi.SelectedTerritory.ToString());
             gi.MapItemMoves.Add(mim);
          }
+         gi.SelectedMapItems.Clear();
          return true;
       }
    }

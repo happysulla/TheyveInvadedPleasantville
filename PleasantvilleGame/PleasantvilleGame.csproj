@@ -53,6 +53,7 @@
     <None Remove="Images\CheckoutGirl.gif" />
     <None Remove="Images\Continue.gif" />
     <None Remove="Images\CrossedAntenna.gif" />
+    <None Remove="Images\DeadPerson.gif" />
     <None Remove="Images\Deny.gif" />
     <None Remove="Images\Deputy.gif" />
     <None Remove="Images\dieRoll.gif" />
@@ -242,6 +243,9 @@
     <Content Include="Images\CrossedAntenna.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\DeadPerson.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\Deny.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -276,9 +280,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\HotelOwner.gif">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Idiot - Copy.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Idiot.gif">

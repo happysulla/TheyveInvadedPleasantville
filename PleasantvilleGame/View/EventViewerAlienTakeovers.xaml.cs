@@ -621,6 +621,22 @@ namespace PleasantvilleGame
          {
             // if both uncontrolled, do nothing
          }
+         else if ((true == gr.myMapItem1.IsAlienKnown) && (true == gr.myMapItem2.IsAlienUnknown))
+         {
+            // if both aliens, do nothing
+         }
+         else if ((true == gr.myMapItem1.IsAlienUnknown) && (true == gr.myMapItem2.IsAlienKnown))
+         {
+            // if both aliens, do nothing
+         }
+         else if ((true == gr.myMapItem1.IsAlienKnown) && (true == gr.myMapItem2.IsAlienKnown))
+         {
+            // if both aliens, do nothing
+         }
+         else if ((true == gr.myMapItem1.IsAlienKnown) && (true == gr.myMapItem2.IsAlienKnown))
+         {
+            // if both aliens, do nothing
+         }
          else
          {
             Logger.Log(LogEnum.LE_ERROR, "Perform_Observation(): Invalid State - mi1=" + gr.myMapItem1.ToString() + " mi2=" + gr.myMapItem2.ToString());

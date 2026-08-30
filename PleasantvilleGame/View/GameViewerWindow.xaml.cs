@@ -978,18 +978,20 @@ namespace PleasantvilleGame
             case GameAction.GameSetupJoinGame:
             case GameAction.GameSetupPlayAlien:
             case GameAction.GameSetupPlayTownsperson:
-            case GameAction.InterrogationsPerform:
+            case GameAction.UpdateGameOptions:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateShowRegion:
-            case GameAction.UpdateEventViewerDisplay:
-            case GameAction.UpdateEventViewerActive:
+            case GameAction.ShowGameFeatsDialog:
             case GameAction.ShowRuleListingDialog:
             case GameAction.ShowEventListingDialog:
             case GameAction.ShowTableListing:
-            case GameAction.ShowCharacterDescription:
-            case GameAction.ShowGameFeatsDialog:
             case GameAction.ShowReportErrorDialog:
+            case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
+               break;
+            case GameAction.InterrogationsPerform:
+            case GameAction.UpdateEventViewerDisplay:
+            case GameAction.UpdateEventViewerActive:
                break;
             case GameAction.RandomMovementStartTowns:
                UpdateActionPanelClear();
@@ -1040,7 +1042,6 @@ namespace PleasantvilleGame
                myRectangleMaps.Clear();
                break;
             case GameAction.RandomMovementTownAck:
-
                if (false == UpdateCanvasMain(gi, action))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
@@ -1082,9 +1083,9 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
-               if( false == UpdateTownMovementTownPerforms(gi, action))
+               if (false == DisplayFlashingRegions(gi, Utilities.theTownControlledBrush))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_TownMovementTownPerforms() returned error ");
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(AlienMovementTownsAck): Display_FlashingRegion() returned error ");
                   return;
                }
                break;
@@ -1092,6 +1093,11 @@ namespace PleasantvilleGame
                if (false == UpdateCanvasMovement(gi, action, gi.Stacks, myButtons))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMovement() returned error ");
+                  return;
+               }
+               if (false == DisplayFlashingRegions(gi, Utilities.theTownControlledBrush))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(TownMovementTownPerforms): Display_FlashingRegion() returned error ");
                   return;
                }
                break;
@@ -1241,6 +1247,8 @@ namespace PleasantvilleGame
                   return;
                }
                break;
+            case GameAction.UpdateRotateStack:
+            case GameAction.UpdateScatterStack:
             default:
                if (false == UpdateCanvasMain(gi, action))
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
@@ -2023,11 +2031,11 @@ namespace PleasantvilleGame
       private void ClickButtonCancelInHelperPanel(object sender, RoutedEventArgs e)
       {
          myIsHelperPanelActive = false;
-         myGameInstance.SelectedMapItems.Clear();
+         myGameInstance.SelectedMapItems.Clear(); // ClickButton_CancelInHelperPanel()
          foreach (IMapItem mi in myLeftMapItemsInActionPanel)
-            myGameInstance.SelectedMapItems.Add(mi);
+            myGameInstance.SelectedMapItems.Add(mi); // ClickButton_CancelInHelperPanel()
          foreach (IMapItem mi in myRightMapItemsInActionPanel)
-            myGameInstance.SelectedMapItems.Add(mi);
+            myGameInstance.SelectedMapItems.Add(mi); // ClickButton_CancelInHelperPanel()
          UpdateActionPanelClear();
          GameAction action = GameAction.SkipTerritory;
          myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
@@ -2036,6 +2044,14 @@ namespace PleasantvilleGame
       private bool UpdateCanvasMain(IGameInstance gi, GameAction action, bool isOnlyLastLineRemoved = false)
       {
          UpdateCanvasMainClear(myButtons, gi.Stacks, action);
+         //---------------------------------------------------------------
+         foreach(IMapItem killed in gi.DeadPeople)
+         {
+            Image img = new Image() { Height = 30, Width = 35, IsEnabled = false, Source = MapItem.theMapImages.GetBitmapImage("DeadPerson") };
+            myCanvasMain.Children.Add(img);
+            Canvas.SetLeft(img, killed.Location.X);
+            Canvas.SetTop(img, killed.Location.Y);
+         }
          //---------------------------------------------------------------
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMain_MapItems(): " + gi.Stacks.ToString());
          foreach (IStack stack in gi.Stacks)
@@ -2090,6 +2106,7 @@ namespace PleasantvilleGame
                   newButton.ContextMenu = myContextMenuButton;
                   newButton.PreviewMouseLeftButtonDown += PreviewMouseLeftButtonDownMapItem;
                   newButton.PreviewMouseLeftButtonUp += PreviewMouseLeftButtonUpMapItem;
+                  newButton.Click += ClickButtonMapItem;
                }
                if (true == myRectangleMaps.ContainsKey(mi))
                {
@@ -2219,11 +2236,6 @@ namespace PleasantvilleGame
                mi.Location.X = endPoint.X;
                mi.Location.Y = endPoint.Y;
                mi.MovementUsed += mim.BestPath.Territories.Count;
-               if ( (GamePhase.TownspersonMovement == gi.GamePhase) && (mi.Movement <= mi.MovementUsed))
-               {
-                  Rectangle r = myRectangleMaps[mi];
-                  r.Stroke = Utilities.theTownControlledBrush;
-               }
                Logger.Log(LogEnum.LE_SHOW_STACK_ADD, "Update_CanvasMovement(): adding mi=" + mi.Name + " from stacls=" + stacks.ToString());
                stacks.Add(mi); // add to new stack
                count++;
@@ -2422,41 +2434,6 @@ namespace PleasantvilleGame
             return false;
          }
       }
-      private bool UpdateTownMovementTownPerforms(IGameInstance gi, GameAction action)
-      {
-         if ((GameType.MultiPlayerHost == GameEngine.theGameType) || (GameType.SinglePlayerTown == GameEngine.theGameType))
-         {
-            myRectangleMaps.Clear();
-            int index2 = 0;
-            foreach (IStack stack in gi.Stacks) // add the event handler for the button click for controlled townspeople only
-            {
-               foreach (IMapItem mi in stack.MapItems)
-               {
-                  if ((true == mi.IsControlled) && (false == mi.IsTiedUp) && (false == mi.IsKnockedout) && (false == mi.IsStunned) && (mi.MovementUsed < mi.Movement))
-                  {
-                     foreach (Button b in myButtons)
-                     {
-                        if (mi.Name == b.Name)
-                        {
-                           b.Click += ClickButtonMapItem;
-                           mi.MovementUsed = 0;
-                           Rectangle r = new Rectangle() { Width = b.Width + 2, Height = b.Height + 2, Visibility = Visibility.Visible, Stroke = myBrushes[4], StrokeThickness = 3.0, StrokeDashArray = myDashArray };
-                           myRectangleMaps[mi] = r;
-                           index2++;
-                           myCanvasMain.Children.Add(r);
-                           double left = Canvas.GetLeft(b) - RO;
-                           double top = Canvas.GetTop(b) - RO;
-                           Canvas.SetLeft(r, left);
-                           Canvas.SetTop(r, top);
-                           Canvas.SetZIndex(r, myZIndexLastUsed);
-                        }
-                     }
-                  }
-               }
-            }
-         }
-         return true;
-      }
       //-------------HELPER FUNCTIONS---------------------------------
       private bool IsMoveStoppedByAlienBeforeStarted(IGameInstance gi)
       {
@@ -2508,7 +2485,7 @@ namespace PleasantvilleGame
                if (polygon.Name == t.ToString())
                {
                   polygon.Fill = brush;
-                  Canvas.SetZIndex(polygon, myZIndexLastUsed++);
+                  Canvas.SetZIndex(polygon, 999);
                   DoubleAnimation anim = new DoubleAnimation();  // Perform animiation on the region
                   anim.From = 1.0;
                   anim.To = 0.1;
@@ -2606,20 +2583,21 @@ namespace PleasantvilleGame
             return false;
          }
          //-------------------------------------------------------------
+         myGameInstance.SelectedMapItems.Clear(); // Roll_Conversation()
          IMapItem? selectedLeft = myLeftMapItemsInActionPanelSelected[0];
          if (null == selectedLeft)
          {
             Logger.Log(LogEnum.LE_ERROR, "Roll_Conversation(): myLeftMapItemsInActionPanelSelected[0]=null");
             return false;
          }
-         myGameInstance.SelectedMapItems.Add(selectedLeft);
+         myGameInstance.SelectedMapItems.Add(selectedLeft); // Roll_Conversation()
          IMapItem? selectedRight = myRightMapItemsInActionPanelSelected[0];
          if (null == selectedRight)
          {
             Logger.Log(LogEnum.LE_ERROR, "Roll_Conversation(): myLeftMapItemsInActionPanelSelected[0]=null");
             return false;
          }
-         myGameInstance.SelectedMapItems.Add(selectedRight);
+         myGameInstance.SelectedMapItems.Add(selectedRight); // Roll_Conversation()
          //-------------------------------------------------------------
          StringBuilder sb = new StringBuilder("Roll_Conversation(): left=");
          sb.Append(selectedLeft.ToString());
@@ -2835,12 +2813,13 @@ namespace PleasantvilleGame
             return false;
          }
          //-------------------------------------------------------------
+         myGameInstance.SelectedMapItems.Clear();  // Roll_Influence()
          StringBuilder sb = new StringBuilder("Roll_Influence(): left=");
          foreach (IMapItem mi in myLeftMapItemsInActionPanelSelected)
          {
             sb.Append(mi.ToString());
             sb.Append(" ");
-            myGameInstance.SelectedMapItems.Add(mi);
+            myGameInstance.SelectedMapItems.Add(mi); // Roll_Influence()
          }
          IMapItem? selectedRight = myRightMapItemsInActionPanelSelected[0];
          if (null == selectedRight)
@@ -2848,7 +2827,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Roll_Influence(): myLeftMapItemsInActionPanelSelected[0]=null");
             return false;
          }
-         myGameInstance.SelectedMapItems.Add(selectedRight);
+         myGameInstance.SelectedMapItems.Add(selectedRight); // Roll_Influence()
          sb.Append(" right=");
          sb.Append(selectedRight.ToString());
          Logger.Log(LogEnum.LE_SHOW_INFLUENCES, sb.ToString());
@@ -3297,14 +3276,14 @@ namespace PleasantvilleGame
             return false;
          }
          //-----------------------------------------------
-         myGameInstance.SelectedMapItems.Clear();
+         myGameInstance.SelectedMapItems.Clear(); // Perform_Interrogation()
          IMapItem? selectedRight = myRightMapItemsInActionPanelSelected[0];
          if (null == selectedRight)
          {
             Logger.Log(LogEnum.LE_ERROR, "Perform_Interrogation(): myLeftMapItemsInActionPanelSelected[0]=null");
             return false;
          }
-         myGameInstance.SelectedMapItems.Add(selectedRight);
+         myGameInstance.SelectedMapItems.Add(selectedRight); // Perform_Interrogation()
          Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "Perform_Interrogation(): mi="+ selectedRight.ToString() );
          //-----------------------------------------------
          GameAction action = GameAction.InterrogationsPerform;
@@ -3412,6 +3391,7 @@ namespace PleasantvilleGame
             return false;
          }
          //-------------------------------------------------------------
+         gi.SelectedMapItems.Clear(); // Roll_ImplantRemoval()
          StringBuilder sb = new StringBuilder("Roll_ImplantRemoval(): left=");
          IMapItem? selectedLeft= myLeftMapItemsInActionPanelSelected[0];
          if (null == selectedLeft)
@@ -3419,8 +3399,8 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Roll_ImplantRemoval(): myLeftMapItemsInActionPanelSelected[0]=null");
             return false;
          }
-         sb.Append(selectedLeft.ToString());
-         myGameInstance.SelectedMapItems.Add(selectedLeft);
+         sb.Append(selectedLeft.ToString()); 
+         myGameInstance.SelectedMapItems.Add(selectedLeft); // Roll_ImplantRemoval()
          //-------------------------------------------------------------
          IMapItem? selectedRight = myRightMapItemsInActionPanelSelected[0];
          if (null == selectedRight)
@@ -3428,8 +3408,8 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Roll_ImplantRemoval(): myRightMapItemsInActionPanelSelected[0]=null");
             return false;
          }
-         myGameInstance.SelectedMapItems.Add(selectedRight);
-         sb.Append(" right=");
+         myGameInstance.SelectedMapItems.Add(selectedRight); // Roll_ImplantRemoval()
+         sb.Append(" right="); 
          sb.Append(selectedRight.ToString());
          Logger.Log(LogEnum.LE_SHOW_REMOVALS, sb.ToString());
          //-------------------------------------------------------------
@@ -3669,29 +3649,12 @@ namespace PleasantvilleGame
          myGameInstance.SelectedStack = myGameInstance.Stacks.Find(selectedMapItem.TerritoryCurrent);
          if (null == myGameInstance.SelectedStack)
          {
-            Logger.Log(LogEnum.LE_ERROR, "MapItemCommonAction(): stack=null for t=" + selectedMapItem.TerritoryCurrent.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "ClickButton_MapItem(): stack=null for t=" + selectedMapItem.TerritoryCurrent.ToString());
             return;
          }
          //------------------------------------------------------------
-         myGameInstance.SelectedMapItems.Clear(); // clicking a unit causes others to become unselected
-         myGameInstance.SelectedMapItems.Add(selectedMapItem);
-         switch (myGameInstance.GamePhase)
-         {
-            case GamePhase.AlienMovement:
-            case GamePhase.TownspersonMovement:
-            case GamePhase.Conversations:
-            case GamePhase.Influences:
-            case GamePhase.Combats:
-            case GamePhase.Iterrogations:
-            case GamePhase.ImplantRemovals:
-            case GamePhase.AlienTakeovers:
-            case GamePhase.GameEnd:
-               GameAction outAction = GameAction.UpdateRotateStack;
-               myGameEngine.PerformAction(ref myGameInstance, ref outAction);
-               break;
-            default:
-               break;
-         }
+         myGameInstance.SelectedMapItems.Clear(); // ClickButton_MapItem() - clicking a unit causes others to become unselected
+         myGameInstance.SelectedMapItems.Add(selectedMapItem); // ClickButton_MapItem()
          e.Handled = true;
       }
       private void DoubleClickMapItem(object sender, RoutedEventArgs e)

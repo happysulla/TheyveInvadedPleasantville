@@ -144,10 +144,6 @@ namespace PleasantvilleGame
                mi.MovementUsed = 0;
                mi.Movement = mi.MovementOriginal;
                mi.IsMoved = false;
-               mi.IsMovingThisTurn = false;
-               mi.IsConversedThisTurn = false;
-               mi.IsInfluencedThisTurn = false;
-               mi.IsTakeoverThisTurn = false;
             }
          }
          return true;
@@ -276,6 +272,33 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): invalid state loopCount=" + loopCount.ToString());
             return false;
          }
+         return true;
+      }
+      protected bool CheckForTownMovement(IGameInstance gi)
+      {
+         gi.SelectedMapItems.Clear();
+         gi.SelectedTerritories.Clear();
+         bool isOverstack = false;
+         foreach (Stack stack in gi.Stacks)
+         {
+            IMapItems controlledPeps = new MapItems();
+            foreach (MapItem mi in stack.MapItems)
+            {
+               if ((true == mi.IsKilled) || (true == mi.IsTiedUp) || (true == mi.IsKnockedout) || (true == mi.IsStunned) || (mi.MovementUsed == mi.Movement))
+                  continue;
+               if (true == mi.IsControlled)
+                  controlledPeps.Add(mi);
+            }
+            if( 0 < controlledPeps.Count )
+               gi.SelectedTerritories.Add(stack.Territory);
+            if (3 < controlledPeps.Count)
+               isOverstack = true;
+         }
+         //--------------------------------------------------
+         if( true == isOverstack)
+            gi.EventDisplayed = gi.EventActive = "e008t1";
+         else
+            gi.EventDisplayed = gi.EventActive = "e008t";
          return true;
       }
       protected bool CheckForConversations(IGameInstance gi, ref GameAction action)
@@ -610,41 +633,13 @@ namespace PleasantvilleGame
       }
       protected bool CheckForEndOfGame(IGameInstance gi, ref GameAction action)
       {
-         StringBuilder sb;
-         int uncontrolledInfluence = 0;
-         int controlledInfluence = 0;
-         int alienInfluence = 0;
-         int unknownAlienInfluence = 0;
-         int totalInfluence = 0;
+         IMapItems killedMapItems = new MapItems();
          foreach (Stack stack in gi.Stacks) //  Tied Up MapItems - Tied up players are freed if a friendly counter is in the same hex at the end of the turn.
          {
             IMapItems alienTiedUpPersons = new MapItems();
             IMapItems controlledTiedUpPersons = new MapItems();
             bool isFriendlyAlienHelping = false;
             bool isFriendlyControlledHelping = false;
-            //--------------------------------------------------------
-            foreach (IStack stack1 in gi.Stacks)
-            {
-               foreach (MapItem mi in stack1.MapItems)
-               {
-                  if (true == mi.IsKilled)
-                     continue;
-                  if ((true == mi.IsKnockedout) || (true == mi.IsStunned))
-                     continue;
-                  else if (true == mi.IsControlled)
-                     controlledInfluence += mi.Influence;
-                  else if (true == mi.IsAlienKnown)
-                     alienInfluence += mi.Influence;
-                  else
-                  {
-                     uncontrolledInfluence += mi.Influence;
-                     if (true == mi.IsAlienUnknown)
-                        unknownAlienInfluence += mi.Influence;
-                  }
-               }
-            }
-            //--------------------------------------------------------
-            totalInfluence += (controlledInfluence + alienInfluence + uncontrolledInfluence);
             foreach (MapItem mi in stack.MapItems)
             {
                mi.IsMoveStoppedThisTurn = false;
@@ -656,8 +651,13 @@ namespace PleasantvilleGame
                mi.IsStunnedThisTurn = false;
                mi.IsImplantRemovalAttemptThisTurn = false;
                mi.IsTakeoverThisTurn = false;
-               if ((true == mi.IsSurrendered) || (true == mi.IsKilled))
+               if (true == mi.IsSurrendered)
                   continue;
+               if( true == mi.IsKilled)
+               {
+                  killedMapItems.Add(mi);
+                  continue;
+               }
                if (true == mi.IsTiedUp) // Cound be stunned or unconscious
                {
                   if (true == mi.IsAlienKnown)
@@ -673,7 +673,6 @@ namespace PleasantvilleGame
                      isFriendlyControlledHelping = true;
                }
             }
-            //--------------------------------------------------------
             if (true == isFriendlyAlienHelping)
             {
                foreach (IMapItem alien in alienTiedUpPersons) // known aliens tied up
@@ -686,10 +685,44 @@ namespace PleasantvilleGame
             }
          }
          //-----------------------------------------------------------
+         foreach(IMapItem mi in killedMapItems)
+         {
+            gi.Stacks.Remove(mi);
+            gi.DeadPeople.Add(mi);
+            mi.Location = Territory.GetRandomPoint(mi.TerritoryCurrent, 30);
+         }
+         //-----------------------------------------------------------
          if (false == CheckForInfluenceError(gi)) // check for any errors
          {
             Logger.Log(LogEnum.LE_ERROR, "CheckFor_EndOfGame(): CheckFor_InfluenceError() returned error");
             return false;
+         }
+         //-----------------------------------------------------------
+         int uncontrolledInfluence = 0;
+         int controlledInfluence = 0;
+         int alienInfluence = 0;
+         int unknownAlienInfluence = 0;
+         int totalInfluence = 0;
+         foreach (IStack stack1 in gi.Stacks)
+         {
+            foreach (MapItem mi in stack1.MapItems)
+            {
+               if (true == mi.IsKilled)
+                  continue;
+               if ((true == mi.IsKnockedout) || (true == mi.IsStunned))
+                  continue;
+               else if (true == mi.IsControlled)
+                  controlledInfluence += mi.Influence;
+               else if (true == mi.IsAlienKnown)
+                  alienInfluence += mi.Influence;
+               else
+               {
+                  uncontrolledInfluence += mi.Influence;
+                  if (true == mi.IsAlienUnknown)
+                     unknownAlienInfluence += mi.Influence;
+               }
+            }
+            totalInfluence += (controlledInfluence + alienInfluence + uncontrolledInfluence);
          }
          //-----------------------------------------------------------
          Logger.Log(LogEnum.LE_GAME_END_CHECK, "Check_ForEndOfGame(): z="+ gi.Zebulon.ToString() + " uk=" + unknownAlienInfluence.ToString() + " k=" + alienInfluence.ToString() + " tp=" + controlledInfluence.ToString());
@@ -790,6 +823,8 @@ namespace PleasantvilleGame
                }
             }
          }
+         foreach(IMapItem mi in gi.DeadPeople)
+            totalInfluence += mi.Influence;
          //--------------------------------------------------------
          if (337 != totalInfluence)
          {
@@ -1442,7 +1477,11 @@ namespace PleasantvilleGame
                   returnStatus = "Reset_Phase() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateAlienPlayerMovement.PerformAction(RandomMovementConfirmed): " + returnStatus);
                }
-               gi.EventDisplayed = gi.EventActive = "e008t";
+               else if( false == CheckForTownMovement(gi))
+               {
+                  returnStatus = "CheckFor_TownOverstack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateAlienPlayerMovement.PerformAction(RandomMovementConfirmed): " + returnStatus);
+               }
                break;
             default:
                returnStatus = "reached default action=" + action.ToString();
@@ -1524,6 +1563,11 @@ namespace PleasantvilleGame
                {
                   returnStatus = "Perform_TownMove() returned false for " + action.ToString();
                   Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(TownMovementTownPerforms): " + returnStatus);
+               }
+               else if (false == CheckForTownMovement(gi))
+               {
+                  returnStatus = "CheckFor_TownOverstack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(RandomMovementConfirmed): " + returnStatus);
                }
                break;
             case GameAction.TownMovementTownCompletes:
@@ -1619,7 +1663,7 @@ namespace PleasantvilleGame
             case GameAction.ConversationsRoll:
                if(2 != gi.SelectedMapItems.Count)
                {
-                  returnStatus = " 2 != (gi.Conversations.Count=" + gi.SelectedMapItems.Count + ")";
+                  returnStatus = " 2 != (gi.SelectedMapItems.Count=" + gi.SelectedMapItems.Count + ") gi.SelectedMapItems=" + gi.SelectedMapItems.ToString() ;
                   Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(ConversationsRoll): " + returnStatus);
                }
                else

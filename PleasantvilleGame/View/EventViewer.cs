@@ -198,7 +198,10 @@ namespace PleasantvilleGame
             case GameAction.UnitTestCommand:
             case GameAction.UnitTestNext:
             case GameAction.UpdateGameOptions:
-            case GameAction.CombatsRetreatStart: // do nothing 
+            case GameAction.UpdateStatusBar:
+            case GameAction.UpdateShowRegion:
+            case GameAction.UpdateRotateStack:
+            case GameAction.UpdateScatterStack:
                break;
             case GameAction.CombatsRetreatShow: // this action happens when user selects retreat space - need to myEventViewerCombatResolve 
                if ( null == myEventViewerCombatResolve )
@@ -244,7 +247,7 @@ namespace PleasantvilleGame
             case GameAction.ShowEventListingDialog:
                if (null == myDialogEventListing)
                {
-                  myDialogEventListing = new RuleListingDialog(myRulesMgr, false, CloseEventListingDialog);
+                  myDialogEventListing = new RuleListingDialog(myRulesMgr, true, CloseEventListingDialog);
                   if (true == myDialogEventListing.CtorError)
                   {
                      Logger.Log(LogEnum.LE_ERROR, "UpdateView(): myDialogEventListing CtorError=true");

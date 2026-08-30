@@ -32,6 +32,8 @@
          <TextBox Grid.Row="1" Grid.Column="3" Height="100" Width="320" TextWrapping="Wrap" IsEnabled="False"  Text="Alien counters may surrender (i.e., Give Up) due to combat. They can be interrogated, and if the implant device is removed, they convert to a Town controlled counter."/>
          <TextBox Grid.Row="2" Grid.Column="3" Height="100" Width="320" TextWrapping="Wrap" IsEnabled="False"  Text="Alien counters can be tied up if they surrender or are knocked out due to combat. They can be untied by the Alien player if they coexist with an alien controlled counter at end of game turn. When tied up, they do not count against stacking restrictions."/>
          <TextBox Grid.Row="3" Grid.Column="3" Height="100" Width="320" TextWrapping="Wrap" IsEnabled="False"  Text="Wary counters are uncontrolled townspeople who successfully witness an alien takeover. They cannot be taken over by the Alien player unless they are defeated in combat. They add one (making it easier) to future influence rolls."/>
+         <TextBox Grid.Row="4" Grid.Column="3" Height="100" Width="320" TextWrapping="Wrap" IsEnabled="False"  Text="Counters that are killed are removed from board at end of turn. They are replaced by this icon indicating a dead person exists in the space."/>
+
          <StackPanel Name="myStackPanelButtons" Grid.Row="11" Grid.ColumnSpan="10"  Orientation="Horizontal" VerticalAlignment="Center"  HorizontalAlignment="Center" Margin="5,5,5,5" >
             <Button x:Name="myButtonOK" HorizontalAlignment="Center" Width="70" Height="30" VerticalAlignment="Top" Margin="0,10,0,0" FontSize="14" Click="ButtonOk_Click" IsDefault="True">OK</Button>
          </StackPanel>
