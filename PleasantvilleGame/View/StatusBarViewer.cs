@@ -102,7 +102,7 @@ namespace PleasantvilleGame
             {
                foreach (MapItem mi in stack.MapItems)
                {
-                  if ((true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned))
+                  if ((true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
                      continue;
                   else if (true == mi.IsControlled)
                      controlledInfluence += mi.Influence;
@@ -117,6 +117,7 @@ namespace PleasantvilleGame
                }
             }
             int totalInfluence = controlledInfluence + alienInfluence + uncontrolledInfluence;
+            int totalAlienInfluence = alienInfluence + unknownAlienInfluence;
             StringBuilder sbInfluence = new StringBuilder("INFLUENCES: Total=");
             sbInfluence.Append(totalInfluence.ToString());
             sbInfluence.Append("   Uncontrolled=");
@@ -125,8 +126,8 @@ namespace PleasantvilleGame
             sbInfluence.Append(controlledInfluence.ToString());
             sbInfluence.Append("   Known Alien=");
             sbInfluence.Append(alienInfluence.ToString());
-            sbInfluence.Append("   Unknown Alien=");
-            sbInfluence.Append(unknownAlienInfluence.ToString());
+            sbInfluence.Append("   Alien=");
+            sbInfluence.Append(totalAlienInfluence.ToString());
             Label labelUncontrolled = new Label() { FontFamily = myFontFam, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Left, Content = sbInfluence.ToString() };
             myStatusBar.Items.Add(labelUncontrolled);
          }

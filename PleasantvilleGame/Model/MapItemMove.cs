@@ -56,13 +56,10 @@ namespace PleasantvilleGame
             return;
          }
          int countOfTerritories = BestPath.Territories.Count;
-         if (0 == countOfTerritories)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "MapItemMove(): countOfTerritories=0");
-            CtorError = true;
-            return;
-         }
-         NewTerritory = BestPath.Territories[countOfTerritories - 1];         
+         if (0 < countOfTerritories)
+            NewTerritory = BestPath.Territories[countOfTerritories - 1];
+         else
+            NewTerritory = OldTerritory;
       }
       public override string ToString()
       {

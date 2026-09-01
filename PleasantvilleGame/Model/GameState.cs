@@ -257,15 +257,19 @@ namespace PleasantvilleGame
                if (rmd.myName == name)
                {
                   Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): skipping name=" + name + " to building=" + fullBuildingName + " because it is in the RandomMovesData list");
-                  isDuplicate = true;
+                  isDuplicate = true; // duplicate still counts as a moved unit even though only moved once
                   break;
                }
             }
-            if (false == isDuplicate)
+            bool isDead = false;
+            foreach(IMapItem mi in gi.DeadPeople)
             {
-               gi.RandomMoves.Add(randomMove);
-               numPeopleMoved++;
+               if (true == mi.Name.Contains(name))
+                  isDead = true;
             }
+            numPeopleMoved++; 
+            if ( (false == isDuplicate) && (false == isDead) )
+               gi.RandomMoves.Add(randomMove);
          }
          if (loopCount < 0)
          {
@@ -707,9 +711,7 @@ namespace PleasantvilleGame
          {
             foreach (MapItem mi in stack1.MapItems)
             {
-               if (true == mi.IsKilled)
-                  continue;
-               if ((true == mi.IsKnockedout) || (true == mi.IsStunned))
+               if ((true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
                   continue;
                else if (true == mi.IsControlled)
                   controlledInfluence += mi.Influence;
@@ -824,7 +826,10 @@ namespace PleasantvilleGame
             }
          }
          foreach(IMapItem mi in gi.DeadPeople)
+         {
+            incapacitatedInfluence += mi.Influence;
             totalInfluence += mi.Influence;
+         }
          //--------------------------------------------------------
          if (337 != totalInfluence)
          {
@@ -1412,7 +1417,34 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Create_RandomMoves(): Create_MapItemMove() returned null");
                return false;
             }
-            gi.MapItemMoves.Add(mim);
+            if( null == mim.BestPath )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_RandomMoves(): Create_MapItemMove() mim.BestPath = null");
+               return false;
+            }
+            //-----------------------------------------
+            int count = 10;
+            while(0 < count--)
+            {
+               if (0 == mim.BestPath.Territories.Count) // do not move
+                  break;
+               ITerritory t = mim.BestPath.Territories.Last();
+               int uncontrolledStackingCount = Territory.GetStackingCountUncontrolled(gi, t, gi.MapItemMoves);
+               if (uncontrolledStackingCount < 3) // cannot move to this territory because of stacking limits
+               {
+                  gi.MapItemMoves.Add(mim);
+                  break;
+               }
+               else
+               {
+                  mim.BestPath.Territories.RemoveAt(mim.BestPath.Territories.Count - 1);
+               }
+            }
+            if( count < 0 )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_RandomMoves(): count < 0 for ");
+               return false;
+            }
          }
          return true;
       }
@@ -2156,7 +2188,7 @@ namespace PleasantvilleGame
                   }
                   else
                   {
-                     Logger.Log(LogEnum.LE_SHOW_COMBATS, "GameStateCombat.PerformAction(): mi=" + mi.Name + " retreating to t=" + gi.SelectedTerritory.ToString());
+                     Logger.Log(LogEnum.LE_SHOW_COMBATS, "GameStateCombat.PerformAction(CombatsRetreatShow): mi=" + mi.Name + " retreating to t=" + gi.SelectedTerritory.ToString());
                      IMapItemMove? mim = gi.CreateMapItemMove(mi, gi.SelectedTerritory);
                      if (null == mim)
                      {

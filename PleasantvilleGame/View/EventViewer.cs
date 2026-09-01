@@ -211,9 +211,10 @@ namespace PleasantvilleGame
                }
                else
                {
-                  if( false == myEventViewerCombatResolve.ConfirmRetreat(gi) )
+                  Logger.Log(LogEnum.LE_SHOW_COMBATS, "UpdateView(CombatsRetreatShow): Entering");
+                  if ( false == myEventViewerCombatResolve.ConfirmRetreat(gi) )
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Perform_Retreat() returned false");
+                     Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Confirm_Retreat() returned false");
                      return;
                   }
                }
@@ -819,27 +820,27 @@ namespace PleasantvilleGame
                {
                   case 0:
                      imgEndGameLost = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("Deny"), Width = 300, Height = 300 };
-                     myTextBlock.Inlines.Add(new Run("                                  "));
+                     myTextBlock.Inlines.Add(new Run("                        "));
                      break;
                   case 1:
                      imgEndGameLost = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("Idiot"), Width = 300, Height = 300 };
-                     myTextBlock.Inlines.Add(new Run("                                  "));
+                     myTextBlock.Inlines.Add(new Run("                         "));
                      break;
                   case 2:
                      imgEndGameLost = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("OBlood1"), Width = 300, Height = 300 };
-                     myTextBlock.Inlines.Add(new Run("                                  "));
+                     myTextBlock.Inlines.Add(new Run("                         "));
                      break;
                   case 3:
                      imgEndGameLost = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("DeadPerson"), Width = 300, Height = 300 };
-                     myTextBlock.Inlines.Add(new Run("                                  "));
+                     myTextBlock.Inlines.Add(new Run("                       "));
                      break;
                   case 4:
                      imgEndGameLost = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("Skulls"), Width = 300, Height = 300 };
-                     myTextBlock.Inlines.Add(new Run("                                  "));
+                     myTextBlock.Inlines.Add(new Run("                        "));
                      break;
                   case 5:
                      imgEndGameLost = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("Loser1"), Width = 260, Height = 300 };
-                     myTextBlock.Inlines.Add(new Run("                                         "));
+                     myTextBlock.Inlines.Add(new Run("                               "));
                      break;
                   case 6:
                      imgEndGameLost = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("Loser2"), Width = 300, Height = 230 };

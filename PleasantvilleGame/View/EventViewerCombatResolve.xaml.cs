@@ -242,6 +242,12 @@ namespace PleasantvilleGame
       }
       public bool ConfirmRetreat(IGameInstance gi)
       {
+         if( null == myScrollViewer )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Confirm_Retreat(): myScrollViewer=null");
+            return false;
+         }
+         myScrollViewer.Content = myGrid;
          myIsRollInProgress = false;
          myState = E11Enum.ROLL_FOR_COMBAT_SHOW;
          foreach (GridRow gr in myGridRows)
@@ -249,9 +255,10 @@ namespace PleasantvilleGame
             if (gr.myDieRoll < 0)
                myState = E11Enum.ROLL_FOR_COMBAT;
          }
+         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Confirm_Retreat(): state=" + myState.ToString());
          if (false == UpdateGrid())
          {
-            Logger.Log(LogEnum.LE_ERROR, "ConfirmRetreat(): UpdateGrid() return false");
+            Logger.Log(LogEnum.LE_ERROR, "Confirm_Retreat(): UpdateGrid() return false");
             return false;
          }
          return true;

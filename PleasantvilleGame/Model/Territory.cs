@@ -568,58 +568,70 @@ namespace PleasantvilleGame
          }
          return masterList;
       }
-		public static int GetStackingCountUncontrolled(IStack stack, IMapItemMoves pendingMoves)
+		public static int GetStackingCountUncontrolled(IGameInstance gi, ITerritory t, IMapItemMoves pendingMoves)
 		{
-			int count = 0;
-		   foreach(IMapItem mi in stack.MapItems)
+         int count = 0;
+         IStack? stack = gi.Stacks.Find(t);
+			if (null != stack)
 			{
-				if( (false == mi.IsAlienKnown) && (false == mi.IsControlled) ) //
-					++count;
+            foreach (IMapItem mi in stack.MapItems)
+            {
+               if ((false == mi.IsAlienKnown) && (false == mi.IsControlled)) //
+                  ++count;
+            }
          }
          foreach (IMapItemMove mim in pendingMoves)
          {
             ITerritory? newT = mim.NewTerritory;
             if (null != newT)
             {
-               if ((false == mim.MapItem.IsAlienKnown) && (false == mim.MapItem.IsControlled) && (stack.Territory.ToString() == newT.ToString()))
+               if ((false == mim.MapItem.IsAlienKnown) && (false == mim.MapItem.IsControlled) && (t.ToString() == newT.ToString()))
                   ++count;
             }
          }
          return count;
 		}
-      public static int GetStackingCountAlien(IStack stack, IMapItemMoves pendingMoves)
+      public static int GetStackingCountAlien(IGameInstance gi, ITerritory t, IMapItemMoves pendingMoves)
       {
          int count = 0;
-         foreach (IMapItem mi in stack.MapItems)
+         IStack? stack = gi.Stacks.Find(t);
+         if (null != stack)
          {
-            if ( (true == mi.IsAlienKnown) && (false == mi.IsTiedUp) ) // tied up people do not count against stacking limits
-               ++count;
+            foreach (IMapItem mi in stack.MapItems)
+            {
+               if ((true == mi.IsAlienKnown) && (false == mi.IsTiedUp)) // tied up people do not count against stacking limits
+                  ++count;
+            }
          }
          foreach (IMapItemMove mim in pendingMoves) 
          {
             ITerritory? newT = mim.NewTerritory;
 				if (null != newT)
 				{
-					if ((true == mim.MapItem.IsAlienKnown) && (stack.Territory.ToString() == newT.ToString()))
+					if ((true == mim.MapItem.IsAlienKnown) && (t.ToString() == newT.ToString()))
 						++count;
 				}
          }
          return count;
       }
-      public static int GetStackingCountControlled(IStack stack, IMapItemMoves pendingMoves)
+      public static int GetStackingCountControlled(IGameInstance gi, ITerritory t, IMapItemMoves pendingMoves)
       {
          int count = 0;
-         foreach (IMapItem mi in stack.MapItems)
+         IStack? stack = gi.Stacks.Find(t);
+         if (null != stack)
          {
-            if ((true == mi.IsControlled)  && (false == mi.IsTiedUp)) // tied up people do not count against stacking limits - very rare to have tied up Town Player counter if at all
-               ++count;
+            foreach (IMapItem mi in stack.MapItems)
+            {
+               if ((true == mi.IsControlled) && (false == mi.IsTiedUp)) // tied up people do not count against stacking limits - very rare to have tied up Town Player counter if at all
+                  ++count;
+            }
          }
          foreach (IMapItemMove mim in pendingMoves)
          {
             ITerritory? newT = mim.NewTerritory;
 				if (null != newT)
 				{
-					if ((true == mim.MapItem.IsControlled) && (stack.Territory.ToString() == newT.ToString()))
+					if ((true == mim.MapItem.IsControlled) && (t.ToString() == newT.ToString()))
 						++count;
 				}
          }

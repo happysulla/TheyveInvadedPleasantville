@@ -57,20 +57,8 @@ namespace PleasantvilleGame
             //-----------------------------------------
             if( unknownAlien.TerritoryCurrent.ToString() != metricVictim.Target.TerritoryCurrent.ToString()) // If in same territory, do not move
             {
-               IStack? stack = gi.Stacks.Find(unknownAlien.TerritoryCurrent);
-               if (null == stack)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): stack=null for unknownAlien=" + unknownAlien.Name + " in territory=" + unknownAlien.TerritoryCurrent.ToString());
-                  return false;
-               }
-               int alienStackingCount = Territory.GetStackingCountUncontrolled(stack, alienMoves);
-               stack = gi.Stacks.Find(metricVictim.Target.TerritoryCurrent);
-               if (null == stack)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): stack=null for unknownAlien=" + metricVictim.Target.Name + " in territory=" + metricVictim.Target.TerritoryCurrent.ToString());
-                  return false;
-               }
-               int victimStackingCount = Territory.GetStackingCountUncontrolled(stack, alienMoves);
+               int alienStackingCount = Territory.GetStackingCountUncontrolled(gi, unknownAlien.TerritoryCurrent, alienMoves);
+               int victimStackingCount = Territory.GetStackingCountUncontrolled(gi, metricVictim.Target.TerritoryCurrent, alienMoves);
                //-----------------------------------------
                IMapItemMove? mim = null;
                IMetricObservation metricAlien = new MetricObservation(gi, unknownAlien); // Is it better to move unknown to victum or victum to unknown
@@ -173,13 +161,7 @@ namespace PleasantvilleGame
             if (true == isAlienMovingHereAlready)
                continue;
             //-----------------------------------------
-            IStack? stack = gi.Stacks.Find(metric.Target.TerritoryCurrent);
-            if (null == stack)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Move_Uncontrolled(): stack=null for in territory=" + metric.Target.ToString());
-               return false;
-            }
-            int uncontrolledStackingCount = Territory.GetStackingCountUncontrolled(stack, alienMoves);
+            int uncontrolledStackingCount = Territory.GetStackingCountUncontrolled(gi, metric.Target.TerritoryCurrent, alienMoves);
             if( 3 <= uncontrolledStackingCount) // cannot move to this territory because of stacking limits
             {
                Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE, "Move_Uncontrolled(): 1 - usc=" + uncontrolledStackingCount.ToString() + "(" + metric.Target.TerritoryCurrent.ToString() + ")");
