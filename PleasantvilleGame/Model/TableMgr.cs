@@ -69,7 +69,7 @@ namespace PleasantvilleGame
       public const string TEACHER = "Teacher";
       public const string TELLER = "Teller";
       public const string TOWN_DRUNK = "Town Drunk";
-      public const string VET = "Vet";
+      public const string VET = "Veterinarian";
       public const string WAITRESS = "Waitress";
       public const string WAR_VET = "War Veteran";
       public const string WELDER = "Welder";

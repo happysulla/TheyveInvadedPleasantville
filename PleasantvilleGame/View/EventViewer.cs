@@ -198,6 +198,7 @@ namespace PleasantvilleGame
             case GameAction.UnitTestCommand:
             case GameAction.UnitTestNext:
             case GameAction.UpdateGameOptions:
+            case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateRotateStack:
@@ -640,12 +641,12 @@ namespace PleasantvilleGame
                myTextBlock.Inlines.Add(new Run("Roll for for starting townsplayer: "));
                if (Utilities.NO_RESULT == gi.DieResults[key][0])
                {
-                  BitmapImage bmi = new BitmapImage();
-                  bmi.BeginInit();
-                  bmi.UriSource = new Uri(MapImage.theImageDirectory + "dieRoll.gif", UriKind.Absolute);
-                  bmi.EndInit();
-                  Image imgDie = new Image { Name = "DieRoll", Source = bmi, Width = Utilities.theMapItemOffset, Height = Utilities.theMapItemOffset };
-                  ImageBehavior.SetAnimatedSource(imgDie, bmi);
+                  BitmapImage bmie002 = new BitmapImage();
+                  bmie002.BeginInit();
+                  bmie002.UriSource = new Uri(MapImage.theImageDirectory + "dieRoll.gif", UriKind.Absolute);
+                  bmie002.EndInit();
+                  Image imgDie = new Image { Name = "DieRoll", Source = bmie002, Width = Utilities.theMapItemOffset, Height = Utilities.theMapItemOffset };
+                  ImageBehavior.SetAnimatedSource(imgDie, bmie002);
                   myTextBlock.Inlines.Add(new InlineUIContainer(imgDie));
                }
                if( Utilities.NO_RESULT < firstDieResult)
@@ -678,12 +679,12 @@ namespace PleasantvilleGame
                myTextBlock.Inlines.Add(new Run("Roll first die for starting alien: "));
                if (Utilities.NO_RESULT == gi.DieResults[key][0])
                {
-                  BitmapImage bmi = new BitmapImage();
-                  bmi.BeginInit();
-                  bmi.UriSource = new Uri(MapImage.theImageDirectory + "dieRoll.gif", UriKind.Absolute);
-                  bmi.EndInit();
-                  Image imgDie = new Image { Name = "DieRoll", Source = bmi, Width = Utilities.theMapItemOffset, Height = Utilities.theMapItemOffset };
-                  ImageBehavior.SetAnimatedSource(imgDie, bmi);
+                  BitmapImage bmie003 = new BitmapImage();
+                  bmie003.BeginInit();
+                  bmie003.UriSource = new Uri(MapImage.theImageDirectory + "dieRoll.gif", UriKind.Absolute);
+                  bmie003.EndInit();
+                  Image imgDie = new Image { Name = "DieRoll", Source = bmie003, Width = Utilities.theMapItemOffset, Height = Utilities.theMapItemOffset };
+                  ImageBehavior.SetAnimatedSource(imgDie, bmie003);
                   myTextBlock.Inlines.Add(new InlineUIContainer(imgDie));
                }
                else if (5 == gi.DieResults[key][0])
@@ -704,12 +705,12 @@ namespace PleasantvilleGame
                   myTextBlock.Inlines.Add(new LineBreak());
                   myTextBlock.Inlines.Add(new LineBreak());
                   myTextBlock.Inlines.Add(new Run("Roll 2nd die for starting alien: "));
-                  BitmapImage bmi = new BitmapImage();
-                  bmi.BeginInit();
-                  bmi.UriSource = new Uri(MapImage.theImageDirectory + "dieRoll.gif", UriKind.Absolute);
-                  bmi.EndInit();
-                  Image imgDie = new Image { Name = "DieRoll", Source = bmi, Width = Utilities.theMapItemOffset, Height = Utilities.theMapItemOffset };
-                  ImageBehavior.SetAnimatedSource(imgDie, bmi);
+                  BitmapImage bmie003 = new BitmapImage();
+                  bmie003.BeginInit();
+                  bmie003.UriSource = new Uri(MapImage.theImageDirectory + "dieRoll.gif", UriKind.Absolute);
+                  bmie003.EndInit();
+                  Image imgDie = new Image { Name = "DieRoll", Source = bmie003, Width = Utilities.theMapItemOffset, Height = Utilities.theMapItemOffset };
+                  ImageBehavior.SetAnimatedSource(imgDie, bmie003);
                   myTextBlock.Inlines.Add(new InlineUIContainer(imgDie));
                }
                else
@@ -728,6 +729,16 @@ namespace PleasantvilleGame
                   myTextBlock.Inlines.Add(new LineBreak());
                   myTextBlock.Inlines.Add("Click image to continue.");
                }
+               break;
+            case "e011ts":
+               myTextBlock.Inlines.Add(new Run("       "));
+               BitmapImage bmie011ts = new BitmapImage();
+               bmie011ts.BeginInit();
+               bmie011ts.UriSource = new Uri(MapImage.theImageDirectory + "Runaway.gif", UriKind.Absolute);
+               bmie011ts.EndInit();
+               Image imge001ts = new Image { Width = 300, Height = 300, Source = bmie011ts };
+               ImageBehavior.SetAnimatedSource(imge001ts, bmie011ts);
+               myTextBlock.Inlines.Add(new InlineUIContainer(imge001ts));
                break;
             case "e101":
                break;
@@ -820,19 +831,19 @@ namespace PleasantvilleGame
                {
                   case 0:
                      imgEndGameLost = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("Deny"), Width = 300, Height = 300 };
-                     myTextBlock.Inlines.Add(new Run("                        "));
+                     myTextBlock.Inlines.Add(new Run("                "));
                      break;
                   case 1:
                      imgEndGameLost = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("Idiot"), Width = 300, Height = 300 };
-                     myTextBlock.Inlines.Add(new Run("                         "));
+                     myTextBlock.Inlines.Add(new Run("                 "));
                      break;
                   case 2:
                      imgEndGameLost = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("OBlood1"), Width = 300, Height = 300 };
-                     myTextBlock.Inlines.Add(new Run("                         "));
+                     myTextBlock.Inlines.Add(new Run("                    "));
                      break;
                   case 3:
                      imgEndGameLost = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("DeadPerson"), Width = 300, Height = 300 };
-                     myTextBlock.Inlines.Add(new Run("                       "));
+                     myTextBlock.Inlines.Add(new Run("                  "));
                      break;
                   case 4:
                      imgEndGameLost = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("Skulls"), Width = 300, Height = 300 };
@@ -840,15 +851,15 @@ namespace PleasantvilleGame
                      break;
                   case 5:
                      imgEndGameLost = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("Loser1"), Width = 260, Height = 300 };
-                     myTextBlock.Inlines.Add(new Run("                               "));
+                     myTextBlock.Inlines.Add(new Run("                          "));
                      break;
                   case 6:
                      imgEndGameLost = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("Loser2"), Width = 300, Height = 230 };
-                     myTextBlock.Inlines.Add(new Run("                                  "));
+                     myTextBlock.Inlines.Add(new Run("                        "));
                      break;
                   default:
                      imgEndGameLost = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("Frown"), Width = 300, Height = 300 };
-                     myTextBlock.Inlines.Add(new Run("                           "));
+                     myTextBlock.Inlines.Add(new Run("                 "));
                      break;
                }
                myTextBlock.Inlines.Add(new InlineUIContainer(imgEndGameLost));

@@ -234,18 +234,18 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Update_EndState(): myGameInstance=null");
                return false;
             }
-            foreach (GridRow gr in myGridRows)
+            for(int i =0; i<myMaxRowCount; ++i)
             {
-               if (null == gr.myMapItem)
+               if (null == myGridRows[i].myMapItem)
                {
                   Logger.Log(LogEnum.LE_ERROR, "Update_EndState(): null map item in grid row");
                   return false;
                }
-               if (true == gr.myIsBlockedFromMove )
+               if (true == myGridRows[i].myIsBlockedFromMove ) // removed blocked 
                {
                   foreach(RandomMoveData rmd in myGameInstance.RandomMoves)
                   {
-                     if( true == gr.myMapItem.Name.Contains(rmd.myName) )
+                     if( true == myGridRows[i].myMapItem.Name.Contains(rmd.myName) )
                      {
                         myGameInstance.RandomMoves.Remove(rmd);
                         break;
@@ -253,6 +253,7 @@ namespace PleasantvilleGame
                   }
                }
             }
+            //----------------------------------------------------
             if (null == myCallback)
             {
                Logger.Log(LogEnum.LE_ERROR, "Update_EndState(): myCallback=null");

@@ -503,6 +503,7 @@ namespace PleasantvilleGame
                myGameInstance.SelectedMapItems.Add(selectedMapItem);
                myGridRows[i].myResult = "Stunned";
                selectedMapItem.IsStunned = true;
+               selectedMapItem.IsStunnedThisTurn = true;
                myState = E11Enum.CHOOSE_RETREAT_AREA_FOR_STUNNED;
                if (false == UpdateGrid())
                   Logger.Log(LogEnum.LE_ERROR, "EventViewerCombatResolve.ShowDieResults(): UpdateGrid() return false");

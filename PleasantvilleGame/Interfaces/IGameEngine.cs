@@ -33,6 +33,7 @@ namespace PleasantvilleGame
    public enum GameAction
    {
       RemoveSplashScreen,
+      UpdateMainCanvas,
       UpdateStatusBar,
       UpdateShowRegion,
       UpdateEventViewerDisplay,

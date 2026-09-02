@@ -659,6 +659,11 @@ namespace PleasantvilleGame
                   continue;
                if( true == mi.IsKilled)
                {
+                  mi.IsTiedUp = false;
+                  mi.IsKnockedout = false;
+                  mi.IsStunned = false;
+                  mi.IsWary = false;
+                  mi.IsSkeptical = false;
                   killedMapItems.Add(mi);
                   continue;
                }
@@ -750,11 +755,20 @@ namespace PleasantvilleGame
             gi.GameTurn++;
             if (12 < gi.GameTurn) // Determine turn number.  If reach 12, game is over.
             {
-               Logger.Log(LogEnum.LE_GAME_END, "Check_ForEndOfGame(): Turn=" + gi.GameTurn);
+               int halfInfluence = (int)((double)totalInfluence * 0.5);
+               Logger.Log(LogEnum.LE_GAME_END, "Check_ForEndOfGame(): Turn=" + gi.GameTurn + " tot=" + totalInfluence.ToString() + " half=" + halfInfluence.ToString() + " tp=" + controlledInfluence.ToString() + " a=" + alienInfluenceTotal.ToString());
                gi.EndGameReason = "Game ends on turns";
                gi.GamePhase = GamePhase.GameEnd;
-               action = GameAction.EndGameWin;
-               gi.EventDisplayed = gi.EventActive = "e502";
+               if(halfInfluence <= controlledInfluence)
+               {
+                  action = GameAction.EndGameWin;
+                  gi.EventDisplayed = gi.EventActive = "e501";
+               }
+               else
+               {
+                  action = GameAction.EndGameLose;
+                  gi.EventDisplayed = gi.EventActive = "e502";
+               }
             }
          }
          //-----------------------------------------------------------
@@ -875,6 +889,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -1291,6 +1306,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -1470,6 +1486,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -1565,6 +1582,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -1661,6 +1679,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -1795,6 +1814,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -1975,6 +1995,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -2163,6 +2184,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.CombatsRetreatStart: // handled in GameViewerWindow to highlight territories for user to choose 
+               gi.EventActive = gi.EventDisplayed = "e011ts";
                gi.DieRollAction = GameAction.DieRollActionNone;
                break;
             case GameAction.CombatsRetreatShow:  // user selected territory
@@ -2331,6 +2353,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -2449,6 +2472,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -2581,6 +2605,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -2663,6 +2688,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -2741,6 +2767,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:

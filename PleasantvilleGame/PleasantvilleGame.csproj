@@ -100,6 +100,7 @@
     <None Remove="Images\PleasantvilleMap.gif" />
     <None Remove="Images\Plumber.gif" />
     <None Remove="Images\RepairShopOwner.gif" />
+    <None Remove="Images\Runaway.gif" />
     <None Remove="Images\Sheriff.gif" />
     <None Remove="Images\Sherman3.gif" />
     <None Remove="Images\Skulls.gif" />
@@ -111,7 +112,7 @@
     <None Remove="Images\Teller.gif" />
     <None Remove="Images\TownDrunk.gif" />
     <None Remove="Images\Tutorial0.gif" />
-    <None Remove="Images\Vet.gif" />
+    <None Remove="Images\Veterinarian.gif" />
     <None Remove="Images\Victory.gif" />
     <None Remove="Images\Waitress.gif" />
     <None Remove="Images\WarVeteran.gif" />
@@ -384,6 +385,9 @@
     <Content Include="Images\RepairShopOwner.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\Runaway.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\Sheriff.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -414,7 +418,7 @@
     <Content Include="Images\Tutorial0.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Vet.gif">
+    <Content Include="Images\Veterinarian.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Victory.gif">

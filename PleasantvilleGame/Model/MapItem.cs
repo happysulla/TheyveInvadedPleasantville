@@ -330,27 +330,6 @@ namespace PleasantvilleGame
             c.Children.Add(imgTop);
             Canvas.SetLeft(imgTop, offset);
             Canvas.SetTop(imgTop, offset);
-            if (true == mi.IsAlienKnown) // Add an alien head if the Controlled person knowns.
-            {
-               Image imgAlien = new Image() { Source = theImgAlien, Height = b.Height - 2, Width = b.Width - 2 };
-               c.Children.Add(imgAlien);
-               Canvas.SetLeft(imgAlien, offset);
-               Canvas.SetTop(imgAlien, offset);
-            }
-            if (true == mi.IsTiedUp) // Add an tied up icon if tied up
-            {
-               Image imgTiedUp = new Image() { Source = theImgTieUp, Height = b.Height - 2, Width = b.Width - 2 };
-               c.Children.Add(imgTiedUp);
-               Canvas.SetLeft(imgTiedUp, offset);
-               Canvas.SetTop(imgTiedUp, offset);
-            }
-            if (true == mi.IsImplantHeld)
-            {
-               Image imgImplant = new Image() { Source = theImgImplant, Height = b.Height - 2, Width = b.Width - 2 };
-               c.Children.Add(imgImplant);
-               Canvas.SetLeft(imgImplant, offset);
-               Canvas.SetTop(imgImplant, offset);
-            }
             //---------------------------------------------
             if (true == mi.IsKilled) // Add additional words on image based on status. Only one of the following images is allowed.
             {
@@ -359,40 +338,65 @@ namespace PleasantvilleGame
                Canvas.SetLeft(imgKia, offset);
                Canvas.SetTop(imgKia, offset);
             }
-            else if (true == mi.IsSurrendered)
+            else
             {
-               Image imgSurrendered = new Image() { Source = theImgSurrendered, Height = b.Height - 2, Width = b.Width - 2 };
-               c.Children.Add(imgSurrendered);
-               Canvas.SetLeft(imgSurrendered, 0);
-               Canvas.SetTop(imgSurrendered, 0);
-            }
-            else if (true == mi.IsKnockedout)
-            {
-               Image imgKnockedOut = new Image() { Source = theImgKnockedOut, Height = b.Height - 2, Width = b.Width - 2 };
-               c.Children.Add(imgKnockedOut);
-               Canvas.SetLeft(imgKnockedOut, offset);
-               Canvas.SetTop(imgKnockedOut, offset);
-            }
-            else if (true == mi.IsStunned)
-            {
-               Image imgStunned = new Image() { Source = theImgStunned, Height = b.Height - 2, Width = b.Width - 2 };
-               c.Children.Add(imgStunned);
-               Canvas.SetLeft(imgStunned, offset);
-               Canvas.SetTop(imgStunned, offset);
-            }
-            else if (true == mi.IsWary)
-            {
-               Image imgWary = new Image() { Source = theImgWary, Height = b.Height - 2, Width = b.Width - 2 };
-               c.Children.Add(imgWary);
-               Canvas.SetLeft(imgWary, offset);
-               Canvas.SetTop(imgWary, offset);
-            }
-            else if (true == mi.IsSkeptical)
-            {
-               Image imgSkeptical = new Image() { Source = theImgSkeptical, Height = b.Height - 2, Width = b.Width - 2 };
-               c.Children.Add(imgSkeptical);
-               Canvas.SetLeft(imgSkeptical, offset);
-               Canvas.SetTop(imgSkeptical, offset);
+               if (true == mi.IsAlienKnown) // Add an alien head if the Controlled person knowns.
+               {
+                  Image imgAlien = new Image() { Source = theImgAlien, Height = b.Height - 2, Width = b.Width - 2 };
+                  c.Children.Add(imgAlien);
+                  Canvas.SetLeft(imgAlien, offset);
+                  Canvas.SetTop(imgAlien, offset);
+               }
+               if (true == mi.IsTiedUp) // Add an tied up icon if tied up
+               {
+                  Image imgTiedUp = new Image() { Source = theImgTieUp, Height = b.Height - 2, Width = b.Width - 2 };
+                  c.Children.Add(imgTiedUp);
+                  Canvas.SetLeft(imgTiedUp, offset);
+                  Canvas.SetTop(imgTiedUp, offset);
+               }
+               if (true == mi.IsImplantHeld)
+               {
+                  Image imgImplant = new Image() { Source = theImgImplant, Height = b.Height - 2, Width = b.Width - 2 };
+                  c.Children.Add(imgImplant);
+                  Canvas.SetLeft(imgImplant, offset);
+                  Canvas.SetTop(imgImplant, offset);
+               }
+               //---------------------------
+               if (true == mi.IsSurrendered)
+               {
+                  Image imgSurrendered = new Image() { Source = theImgSurrendered, Height = b.Height - 2, Width = b.Width - 2 };
+                  c.Children.Add(imgSurrendered);
+                  Canvas.SetLeft(imgSurrendered, 0);
+                  Canvas.SetTop(imgSurrendered, 0);
+               }
+               else if (true == mi.IsKnockedout)
+               {
+                  Image imgKnockedOut = new Image() { Source = theImgKnockedOut, Height = b.Height - 2, Width = b.Width - 2 };
+                  c.Children.Add(imgKnockedOut);
+                  Canvas.SetLeft(imgKnockedOut, offset);
+                  Canvas.SetTop(imgKnockedOut, offset);
+               }
+               else if (true == mi.IsStunned)
+               {
+                  Image imgStunned = new Image() { Source = theImgStunned, Height = b.Height - 2, Width = b.Width - 2 };
+                  c.Children.Add(imgStunned);
+                  Canvas.SetLeft(imgStunned, offset);
+                  Canvas.SetTop(imgStunned, offset);
+               }
+               else if (true == mi.IsWary)
+               {
+                  Image imgWary = new Image() { Source = theImgWary, Height = b.Height - 2, Width = b.Width - 2 };
+                  c.Children.Add(imgWary);
+                  Canvas.SetLeft(imgWary, offset);
+                  Canvas.SetTop(imgWary, offset);
+               }
+               else if (true == mi.IsSkeptical)
+               {
+                  Image imgSkeptical = new Image() { Source = theImgSkeptical, Height = b.Height - 2, Width = b.Width - 2 };
+                  c.Children.Add(imgSkeptical);
+                  Canvas.SetLeft(imgSkeptical, offset);
+                  Canvas.SetTop(imgSkeptical, offset);
+               }
             }
             g.Children.Add(c);
          }

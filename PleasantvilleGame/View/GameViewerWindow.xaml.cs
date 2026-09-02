@@ -1103,7 +1103,7 @@ namespace PleasantvilleGame
                break;
             case GameAction.ConversationsSelect:
                myRectangleMaps.Clear();
-               UpdateCanvasMainClear(myButtons, gi.Stacks, action);
+               UpdateCanvasMainClear(myButtons, gi.Stacks);
                if (false == UpdateCanvasMain(gi, action))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
@@ -1118,7 +1118,7 @@ namespace PleasantvilleGame
                break;
             case GameAction.InfluencesSelect:
                myRectangleMaps.Clear();
-               UpdateCanvasMainClear(myButtons, gi.Stacks, action);
+               UpdateCanvasMainClear(myButtons, gi.Stacks);
                if (false == UpdateCanvasMain(gi, action))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
@@ -1133,7 +1133,7 @@ namespace PleasantvilleGame
                break;
             case GameAction.CombatsSelect:
                myRectangleMaps.Clear();
-               UpdateCanvasMainClear(myButtons, gi.Stacks, action);
+               UpdateCanvasMainClear(myButtons, gi.Stacks);
                if (false == UpdateCanvasMain(gi, action))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
@@ -1177,7 +1177,7 @@ namespace PleasantvilleGame
                break;
             case GameAction.ImplantRemovalsSelect:
                myRectangleMaps.Clear();
-               UpdateCanvasMainClear(myButtons, gi.Stacks, action);
+               UpdateCanvasMainClear(myButtons, gi.Stacks);
                if (false == UpdateCanvasMain(gi, action))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
@@ -1205,7 +1205,7 @@ namespace PleasantvilleGame
                if ( true == gi.Zebulon.IsAlienKnown )
                {
                   Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "UpdateView(): Zebulon?=" + gi.Zebulon.IsAlienKnown.ToString() + " CLEAR polygons due to guesses for territories=" + gi.ZebulonTerritories.ToString());
-                  UpdateCanvasMainClear(myButtons, gi.Stacks, action);
+                  UpdateCanvasMainClear(myButtons, gi.Stacks);
                   if (false == UpdateCanvasMain(gi, action))
                   {
                      Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
@@ -1225,7 +1225,7 @@ namespace PleasantvilleGame
             case GameAction.AlienTakeoversSelect:
             case GameAction.AlienTakeoversShow:
                myRectangleMaps.Clear();
-               UpdateCanvasMainClear(myButtons, gi.Stacks, action);
+               UpdateCanvasMainClear(myButtons, gi.Stacks);
                if (false == UpdateCanvasMain(gi, action))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
@@ -1240,7 +1240,7 @@ namespace PleasantvilleGame
             case GameAction.AlienTakeoversFinish:
                UpdateActionPanelClear();
                myRectangleMaps.Clear();
-               UpdateCanvasMainClear(myButtons, gi.Stacks, action);
+               UpdateCanvasMainClear(myButtons, gi.Stacks);
                if (false == UpdateCanvasMain(gi, action))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
@@ -1249,6 +1249,7 @@ namespace PleasantvilleGame
                break;
             case GameAction.UpdateRotateStack:
             case GameAction.UpdateScatterStack:
+            case GameAction.UpdateMainCanvas:
             default:
                if (false == UpdateCanvasMain(gi, action))
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
@@ -2043,7 +2044,7 @@ namespace PleasantvilleGame
       //-------------UPDATE HELPER FUNCTIONS---------------------------------
       private bool UpdateCanvasMain(IGameInstance gi, GameAction action, bool isOnlyLastLineRemoved = false)
       {
-         UpdateCanvasMainClear(myButtons, gi.Stacks, action);
+         UpdateCanvasMainClear(myButtons, gi.Stacks);
          //---------------------------------------------------------------
          foreach(IMapItem killed in gi.DeadPeople)
          {
@@ -2123,7 +2124,7 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMain_MapItems(): action=" + action.ToString() + " stacks=" + gi.Stacks.ToString());
          return true;
       }
-      private void UpdateCanvasMainClear(List<Button> buttons, IStacks stacks, GameAction action)
+      private void UpdateCanvasMainClear(List<Button> buttons, IStacks stacks)
       {
          if (GamePhase.UnitTest == myGameInstance.GamePhase)
             return;
@@ -2133,7 +2134,7 @@ namespace PleasantvilleGame
          foreach (Polygon polygon in myPolygons)
             polygon.Fill = Utilities.theBrushRegionClear;
          //-------------------------------------------
-         Logger.Log(LogEnum.LE_SHOW_MAIN_CLEAR, "Update_CanvasMainClear(): Clearing action=" + action.ToString() + " stacks=" + stacks.ToString());
+         Logger.Log(LogEnum.LE_SHOW_MAIN_CLEAR, "Update_CanvasMainClear(): Clearing stacks=" + stacks.ToString());
          List<UIElement> elementRemovals = new List<UIElement>();
          foreach (UIElement ui in myCanvasMain.Children) // Clean the Canvas of all marks
          {
@@ -3655,6 +3656,30 @@ namespace PleasantvilleGame
          //------------------------------------------------------------
          myGameInstance.SelectedMapItems.Clear(); // ClickButton_MapItem() - clicking a unit causes others to become unselected
          myGameInstance.SelectedMapItems.Add(selectedMapItem); // ClickButton_MapItem()
+         if( GamePhase.TownspersonMovement == myGameInstance.GamePhase )
+         {
+            UpdateCanvasMainClear(myButtons, myGameInstance.Stacks);
+            myRectangleMaps.Clear();
+            int moveLeft = selectedMapItem.Movement - selectedMapItem.MovementUsed;
+            if ((true == selectedMapItem.IsControlled) && (0 < moveLeft) )
+            {
+               foreach (Button b in myButtons)
+               {
+                  if (true == selectedMapItem.Name.Contains(b.Name))
+                  {
+                     Rectangle r = new Rectangle() { Width = b.Width + 2, Height = b.Height + 2, Visibility = Visibility.Visible, Stroke = Utilities.theBrushBlood, StrokeThickness = 3.0, StrokeDashArray = myDashArray };
+                     myRectangleMaps[selectedMapItem] = r;
+                     myCanvasMain.Children.Add(r);
+                     double left = Canvas.GetLeft(b) - RO;
+                     double top = Canvas.GetTop(b) - RO;
+                     Grid.SetZIndex(r, myZIndexLastUsed++);
+                     Canvas.SetLeft(r, left);
+                     Canvas.SetTop(r, top);
+                     break;
+                  }
+               }
+            }
+         }
          e.Handled = true;
       }
       private void DoubleClickMapItem(object sender, RoutedEventArgs e)

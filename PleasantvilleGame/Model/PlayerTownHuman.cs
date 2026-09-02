@@ -56,20 +56,22 @@ namespace PleasantvilleGame
       {
          if (null == gi.SelectedTerritory)
          {
-            Logger.Log(LogEnum.LE_ERROR, "PerformTownMove(): gi.SelectedTerritory=null");
+            Logger.Log(LogEnum.LE_ERROR, "Perform_TownMove(): gi.SelectedTerritory=null");
             return false;
          }
          foreach (IMapItem mi in gi.SelectedMapItems)
          {
+            if (gi.SelectedTerritory.ToString() == mi.TerritoryCurrent.ToString())
+               continue;
             if ((false == mi.IsControlled) || (true == mi.IsKnockedout) || (true == mi.IsTiedUp) || (true == mi.IsStunned) || (true == mi.IsKilled))
                continue;
             IMapItemMove? mim = gi.CreateMapItemMove(mi, gi.SelectedTerritory);
             if (null == mim)
             {
-               Logger.Log(LogEnum.LE_ERROR, "PerformTownMove(): mim=null for mi=" + mi.ToString() + " t=" + gi.SelectedTerritory.ToString());
+               Logger.Log(LogEnum.LE_ERROR, "Perform_TownMove(): mim=null for mi=" + mi.ToString() + " moving to t=" + gi.SelectedTerritory.ToString());
                return false;
             }
-            Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "PerformTownMove(): mi=" + mi.ToString() + " t=" + gi.SelectedTerritory.ToString());
+            Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "PerformPerform_TownMoveTownMove(): mi=" + mi.ToString() + " moving to t=" + gi.SelectedTerritory.ToString());
             gi.MapItemMoves.Add(mim);
          }
          gi.SelectedMapItems.Clear();

@@ -155,11 +155,15 @@ e011af	"<Bold>e011af Combats - Aliens Flees</Bold>  <InlineUIContainer><Button C
 Each counter flees using Random Movement per <InlineUIContainer><Button Content='r6.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. Click image to continue.
 <LineBreak/><LineBreak/>
                                         <InlineUIContainer><Image Name='Continue011af' Height='100' Width='100'></Image></InlineUIContainer>"
-e011tf	"<Bold>e011af Combats - Town Flees</Bold>  <InlineUIContainer><Button Content='r8.6' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+e011tf	"<Bold>e011tf Combats - Town Flees</Bold>  <InlineUIContainer><Button Content='r8.6' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
 Each counter flees using Random Movement per <InlineUIContainer><Button Content='r6.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. Click image to continue.
 <LineBreak/><LineBreak/>
                                         <InlineUIContainer><Image Name='Continue011tf' Height='100' Width='100'></Image></InlineUIContainer>"
+e011ts	"<Bold>e011ts Combats - Town Counter Stunned</Bold>  <InlineUIContainer><Button Content='r8.6' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
+<LineBreak/><LineBreak/>
+Stunned town people retreat one space. Click on one of the blue colored spaces to retreat the town player counter.
+<LineBreak/><LineBreak/>"
 e012t	"<Bold>e012t Interrogations</Bold>  <InlineUIContainer><Button Content='r8.7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
 Any conscious, defeated, Alien controlled counter may be interrogated by a Town controlled piece. Choose a building area that is not colored black. If Zebulon is found, the counter is placed on the board and can be defeated in combat to win the game. 
