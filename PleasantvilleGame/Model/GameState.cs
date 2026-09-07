@@ -280,7 +280,6 @@ namespace PleasantvilleGame
       }
       protected bool CheckForTownMovement(IGameInstance gi)
       {
-         gi.SelectedMapItems.Clear();
          gi.SelectedTerritories.Clear();
          bool isOverstack = false;
          foreach (Stack stack in gi.Stacks)
@@ -709,9 +708,8 @@ namespace PleasantvilleGame
          //-----------------------------------------------------------
          int uncontrolledInfluence = 0;
          int controlledInfluence = 0;
-         int alienInfluence = 0;
+         int knownAlienInfluence = 0;
          int unknownAlienInfluence = 0;
-         int totalInfluence = 0;
          foreach (IStack stack1 in gi.Stacks)
          {
             foreach (MapItem mi in stack1.MapItems)
@@ -721,22 +719,20 @@ namespace PleasantvilleGame
                else if (true == mi.IsControlled)
                   controlledInfluence += mi.Influence;
                else if (true == mi.IsAlienKnown)
-                  alienInfluence += mi.Influence;
+                  knownAlienInfluence += mi.Influence;
+               if (true == mi.IsAlienUnknown)
+                  unknownAlienInfluence += mi.Influence;
                else
-               {
                   uncontrolledInfluence += mi.Influence;
-                  if (true == mi.IsAlienUnknown)
-                     unknownAlienInfluence += mi.Influence;
-               }
             }
-            totalInfluence += (controlledInfluence + alienInfluence + uncontrolledInfluence);
          }
+         int totalInfluence = uncontrolledInfluence + knownAlienInfluence + unknownAlienInfluence + controlledInfluence;
          //-----------------------------------------------------------
-         Logger.Log(LogEnum.LE_GAME_END_CHECK, "Check_ForEndOfGame(): z="+ gi.Zebulon.ToString() + " uk=" + unknownAlienInfluence.ToString() + " k=" + alienInfluence.ToString() + " tp=" + controlledInfluence.ToString());
-         int alienInfluenceTotal = unknownAlienInfluence + alienInfluence;
+         Logger.Log(LogEnum.LE_GAME_END_CHECK, "Check_ForEndOfGame(): z="+ gi.Zebulon.ToString() + " (uc=" + uncontrolledInfluence.ToString() + ") + (k=" + knownAlienInfluence.ToString() + ") + (uk=" + unknownAlienInfluence.ToString() + ") + (tp=" + controlledInfluence.ToString() + ") = (tot=" + totalInfluence.ToString() + ")");
+         int alienInfluenceTotal = unknownAlienInfluence + knownAlienInfluence;
          if (alienInfluenceTotal <= 0)   // If either the Alien controlled influcence reaches zero, game over
          {
-            Logger.Log(LogEnum.LE_GAME_END, "Check_ForEndOfGame(): Alien Player eliminated uk=" + unknownAlienInfluence.ToString() + " k=" + alienInfluence.ToString());
+            Logger.Log(LogEnum.LE_GAME_END, "Check_ForEndOfGame(): Alien Player eliminated uk=" + unknownAlienInfluence.ToString() + " k=" + knownAlienInfluence.ToString());
             gi.EndGameReason = "Alien Player Eliminated";
             gi.GamePhase = GamePhase.GameEnd;
             action = GameAction.EndGameWin;
@@ -752,8 +748,7 @@ namespace PleasantvilleGame
          }
          else
          {
-            gi.GameTurn++;
-            if (12 < gi.GameTurn) // Determine turn number.  If reach 12, game is over.
+            if (11 < gi.GameTurn) // Determine turn number.  If reach 12, game is over.
             {
                int halfInfluence = (int)((double)totalInfluence * 0.5);
                Logger.Log(LogEnum.LE_GAME_END, "Check_ForEndOfGame(): Turn=" + gi.GameTurn + " tot=" + totalInfluence.ToString() + " half=" + halfInfluence.ToString() + " tp=" + controlledInfluence.ToString() + " a=" + alienInfluenceTotal.ToString());
@@ -774,6 +769,7 @@ namespace PleasantvilleGame
          //-----------------------------------------------------------
          if ( (GameAction.EndGameWin != action) && (GameAction.EndGameLose != action)  )
          {
+            gi.GameTurn++;
             if (false == ResetPhase(gi, GamePhase.RandomMovement))
             {
                Logger.Log(LogEnum.LE_ERROR, "CheckFor_EndOfGame(): Reset_Phase() returned error");

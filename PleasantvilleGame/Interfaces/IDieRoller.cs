@@ -12,7 +12,8 @@ namespace PleasantvilleGame
       void HideDie();
       int RollStationaryDie(Canvas c, RollEndCallback cb);
       int RollStationaryDice(Canvas c, RollEndCallback cb);
-      int RollMovingDie(Canvas c, RollEndCallback cb);
+      int RollMovingDie(Canvas c, RollEndCallback cb, int dieRoll=Utilities.NO_RESULT);
+      int RollMovingDieHiddenFace(Canvas c, RollEndCallback cb, int dieRoll);
       int RollMovingDice(Canvas c, RollEndCallback cb);
    }
 }

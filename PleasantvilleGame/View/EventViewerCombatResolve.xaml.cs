@@ -523,6 +523,8 @@ namespace PleasantvilleGame
          if (false == UpdateGrid())
             Logger.Log(LogEnum.LE_ERROR, "EventViewerCombatResolve.ShowDieResults(): UpdateGrid() return false");
          myIsRollInProgress = false;
+         GameAction action1 = GameAction.UpdateMainCanvas;
+         myGameEngine.PerformAction(ref myGameInstance, ref action1);
       }
       //---------------------Controller Function--------------------------------------------
       private void ButtonRule_Click(object sender, RoutedEventArgs e)

@@ -50,6 +50,7 @@
     <None Remove="Images\c05dieRoll2.gif" />
     <None Remove="Images\c06dieRoll.gif" />
     <None Remove="Images\c06dieRoll2.gif" />
+    <None Remove="Images\cDieRollUnk.gif" />
     <None Remove="Images\CheckoutGirl.gif" />
     <None Remove="Images\Continue.gif" />
     <None Remove="Images\CrossedAntenna.gif" />
@@ -233,6 +234,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\c06dieRoll2.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\cDieRollUnk.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\CheckoutGirl.gif">

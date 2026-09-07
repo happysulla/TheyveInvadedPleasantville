@@ -27,7 +27,7 @@ namespace PleasantvilleGame
       private const double ACCELERATION_RATIO = 0.05;  // how fast the animation decelerates
       private const double BUTTON_BOARDER = 15;        // add for the button border
       private const double ZOOM_DICE = 1.707;
-      private const int ARRAY_SIZE = 12;
+      private const int ARRAY_SIZE = 13;
       private RollEndCallback? myCallbackEndRoll;
       private LoadEndCallback myCallbackEndLoad;
       private int myDieRollResults = 0;
@@ -118,14 +118,16 @@ namespace PleasantvilleGame
          myDieRollResults = die1 + die2;
          return myDieRollResults;
       }
-      public int RollMovingDie(Canvas c, RollEndCallback cb)
+      public int RollMovingDie(Canvas c, RollEndCallback cb, int dieNumber)
       {
          myDieRollResults = 0;
          myCallbackEndRoll = cb;
          ScrollViewer sv = (ScrollViewer)c.Parent;
          HideDie();
          IMapPoint mp = GetCanvasCenter(sv, c);
-         int randomNum = Utilities.RandomGenerator.Next(0, 6);
+         int randomNum = dieNumber;
+         if( Utilities.NO_RESULT == randomNum)
+            randomNum = Utilities.RandomGenerator.Next(0, 6);
          int die1 = RollMovingDie(sv, c, mp, randomNum);
          if (0 == die1)
          {
@@ -133,6 +135,49 @@ namespace PleasantvilleGame
             return 0;
          }
          myDieRollResults = die1;
+         return myDieRollResults;
+      }
+      public int RollMovingDieHiddenFace(Canvas c, RollEndCallback cb, int dieNumber)
+      {
+         myDieRollResults = 0;
+         myCallbackEndRoll = cb;
+         ScrollViewer sv = (ScrollViewer)c.Parent;
+         HideDie();
+         IMapPoint mp = GetCanvasCenter(sv, c);
+         //----------------------------------------------------
+         Button? b = theDice[12];
+         if (null == b)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "RollMovingDieHiddenFace(): b=null");
+            return 0;
+         }
+         //----------------------------------------------------
+         double zoom = ZOOM_DICE / Utilities.ZoomCanvas;
+         b.Width = zoom * Utilities.theMapItemSize;
+         b.Height = zoom * Utilities.theMapItemSize;
+         b.Visibility = Visibility.Visible;
+         b.IsEnabled = true;
+         Image img = (Image)b.Content;
+         ImageAnimationController controller = ImageBehavior.GetAnimationController(img);
+         if (null == controller)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "RollMovingDieHiddenFace(): controller=null img.Name=" + img.Name);
+            return 0;
+         }
+         controller.GotoFrame(0);
+         controller.Play();
+         IMapPoint centerPoint = new MapPoint(mp.X - zoom * Utilities.theMapItemOffset, mp.Y - zoom * Utilities.theMapItemOffset);
+         Canvas.SetLeft(b, centerPoint.X);
+         Canvas.SetTop(b, centerPoint.Y);
+         Canvas.SetZIndex(theDice[12], 10000);
+         Thread.Sleep(100);
+         //----------------------------------------------------
+         if (false == DiceAnimate(sv, c, b, centerPoint))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "RollMovingDieHiddenFace(): MovePathAnimate() returned false");
+            return 0;
+         }
+         myDieRollResults = dieNumber + 1; // return number between 1 and 6
          return myDieRollResults;
       }
       public int RollMovingDice(Canvas c, RollEndCallback cb)
@@ -278,13 +323,13 @@ namespace PleasantvilleGame
       {
          if( (randomNum < 0) || (ARRAY_SIZE <= randomNum) )
          {
-            Logger.Log(LogEnum.LE_ERROR, "RollStationaryDie(): invalid range randomNum=" + randomNum.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "RollMovingDie(): invalid range randomNum=" + randomNum.ToString());
             return 0;
          }
-         Button b = theDice[randomNum];
+         Button? b = theDice[randomNum];
          if (null == b)
          {
-            Logger.Log(LogEnum.LE_ERROR, "RollStationaryDie(): b=null");
+            Logger.Log(LogEnum.LE_ERROR, "RollMovingDie(): b=null");
             return 0;
          }
          double zoom = ZOOM_DICE / Utilities.ZoomCanvas;
@@ -296,7 +341,7 @@ namespace PleasantvilleGame
          ImageAnimationController controller = ImageBehavior.GetAnimationController(img);
          if (null == controller)
          {
-            Logger.Log(LogEnum.LE_ERROR, "RollStationaryDie(): controller=null img.Name=" + img.Name);
+            Logger.Log(LogEnum.LE_ERROR, "RollMovingDie(): controller=null img.Name=" + img.Name);
             return 0;
          }
          controller.GotoFrame(0);

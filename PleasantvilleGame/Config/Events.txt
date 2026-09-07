@@ -170,7 +170,7 @@ Any conscious, defeated, Alien controlled counter may be interrogated by a Town 
 <LineBreak/><LineBreak/>
 Click a flashing space to begin.
 <LineBreak/><LineBreak/>
-                    <InlineUIContainer><Image Name='Interrogation' Height='180' Width='300'></Image></InlineUIContainer>"
+                <InlineUIContainer><Image Name='Interrogation' Height='180' Width='300'></Image></InlineUIContainer>"
 e012t1	"<Bold>e012t1 Interrogations</Bold>  <InlineUIContainer><Button Content='r8.7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
 The alien sub-commander, Zebulon, is not discovered. Click image to continue.

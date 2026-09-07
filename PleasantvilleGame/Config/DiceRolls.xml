@@ -47,4 +47,8 @@
 		<Zoom value="1.707" />
 		<TopImageName value="c06dieRoll2" />
 	</DiceRoll>
+   <DiceRoll value="DieUnk">
+      <Zoom value="1.707" />
+      <TopImageName value="cDieRollUnk" />
+   </DiceRoll>
 </DiceRolls>

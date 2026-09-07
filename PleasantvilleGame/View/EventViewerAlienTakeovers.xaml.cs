@@ -499,7 +499,7 @@ namespace PleasantvilleGame
                case 6:
                   break;
                default:
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateGridRows(): invalid die roll=" + myGridRows[i].myDieRoll.ToString());
+                  Logger.Log(LogEnum.LE_ERROR, "ShowDieResults(): invalid die roll=" + myGridRows[i].myDieRoll.ToString());
                   return;
             }
          }
@@ -509,7 +509,7 @@ namespace PleasantvilleGame
          {
             if (false == PerformObservation(myGridRows[i], out isMapUpdateNeeded))
             {
-               Logger.Log(LogEnum.LE_ERROR, "UpdateGridRows(): PerformObservation(() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "ShowDieResults(): PerformObservation(() returned false");
                return;
             }
          }
@@ -764,7 +764,43 @@ namespace PleasantvilleGame
                      myIsRollInProgress = true;
                      myRollResultRowNum = Grid.GetRow(img1);
                      RollEndCallback callback = ShowDieResults;
-                     myDieRoller.RollMovingDie(myCanvas, callback);
+                     int dieRoll = Utilities.RandomGenerator.Next(6); // number between 0 and 5
+                     int i = myRollResultRowNum - STARTING_ASSIGNED_ROW;
+                     if (i < 0)
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "Grid_MouseDown(): 0 > i=" + i.ToString());
+                        return;
+                     }
+                     bool isDieShown = false;
+                     switch (dieRoll)
+                     {
+                        case 0:
+                           if (0.15 < myGridRows[i].myProbability)
+                              isDieShown = true;
+                           break;
+                        case 1:
+                           if (0.32 < myGridRows[i].myProbability)
+                              isDieShown = true;
+                           break;
+                        case 2:
+                           if (0.49 < myGridRows[i].myProbability)
+                              isDieShown = true;
+                           break;
+                        case 3:
+                           if (0.65 < myGridRows[i].myProbability)
+                              isDieShown = true;
+                           break;
+                        case 4:
+                        case 5:
+                           break;
+                        default:
+                           Logger.Log(LogEnum.LE_ERROR, "Grid_MouseDown(): invalid die roll=" + dieRoll.ToString());
+                           return;
+                     }
+                     if( true == isDieShown )
+                        myDieRoller.RollMovingDie(myCanvas, callback, dieRoll);
+                     else
+                        myDieRoller.RollMovingDieHiddenFace(myCanvas, callback, dieRoll);
                      img1.Visibility = Visibility.Hidden;
                   }
                   return;
@@ -772,6 +808,5 @@ namespace PleasantvilleGame
             }
          }
       }
-
    }
 }

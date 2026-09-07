@@ -74,7 +74,6 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "PerformPerform_TownMoveTownMove(): mi=" + mi.ToString() + " moving to t=" + gi.SelectedTerritory.ToString());
             gi.MapItemMoves.Add(mim);
          }
-         gi.SelectedMapItems.Clear();
          return true;
       }
    }

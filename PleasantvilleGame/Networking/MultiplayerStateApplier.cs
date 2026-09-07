@@ -13,7 +13,6 @@ namespace PleasantvilleGame.Networking
          }
          gameInstance.Stacks.Clear();
          gameInstance.SelectedStack = null;
-         gameInstance.MapItemCombat = null;
          gameInstance.PreviousMapItemMove = null;
          gameInstance.MapItemMoves.Clear();
          gameInstance.ZebulonTerritories.Clear();

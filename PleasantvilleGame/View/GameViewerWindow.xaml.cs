@@ -1095,6 +1095,11 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMovement() returned error ");
                   return;
                }
+               if (false == UpdateRectanglesAfterMove(gi))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(TownMovementTownPerforms): Update_AfterTownMove() returned error ");
+                  return;
+               }
                if (false == DisplayFlashingRegions(gi, Utilities.theTownControlledBrush))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(TownMovementTownPerforms): Display_FlashingRegion() returned error ");
@@ -1157,7 +1162,12 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.CombatsRetreatStart: // initiated by EventViewerCombatResolve - Show Retreat spaces
-               if( false == UpdateCanvasCombatRetreat(gi, action))
+               if (false == UpdateCanvasMain(gi, action))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
+                  return;
+               }
+               if ( false == UpdateCanvasCombatRetreat(gi, action))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): UpdateCanva_CombatRetreat() returned error ");
                   return;
@@ -1166,7 +1176,7 @@ namespace PleasantvilleGame
             case GameAction.CombatsRetreatShow: // initiated by MouseDownPolygon() when user clicks space - setup MapItemMove in GameState
                if (null != myStoryboardFlashing)
                   myStoryboardFlashing.Stop();
-               myStoryboardFlashing = null; // UpdateCanvasCombatRetreat()
+               myStoryboardFlashing = null; // UpdateView(CombatsRetreatShow)
                foreach (Polygon polygon in myPolygons)
                   polygon.Fill = Utilities.theBrushRegionClear;
                if (false == UpdateCanvasMovement(gi, action, gi.Stacks, myButtons))
@@ -2071,6 +2081,7 @@ namespace PleasantvilleGame
                Button? b = myButtons.Find(mi.Name);
                if (null != b)
                {
+                  MapItem.SetButtonContent(b, mi); // This sets the image as the button's content
                   b.BeginAnimation(Canvas.LeftProperty, null); // end animation offset
                   b.BeginAnimation(Canvas.TopProperty, null);  // end animation offset
                   Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMain_MapItems(): Updating mi=" + mi.Name + " X=" + mi.Location.X.ToString("F2") + " Y=" + mi.Location.Y.ToString("F2"));
@@ -2240,6 +2251,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_SHOW_STACK_ADD, "Update_CanvasMovement(): adding mi=" + mi.Name + " from stacls=" + stacks.ToString());
                stacks.Add(mi); // add to new stack
                count++;
+               //------------------------------------------
             }
          }
          catch (Exception e)
@@ -2249,11 +2261,27 @@ namespace PleasantvilleGame
          }
          return true;
       }
+      private bool UpdateRectanglesAfterMove(IGameInstance gi)
+      {
+         foreach(IMapItem mi in gi.SelectedMapItems)
+         {
+            int moveLeft = mi.Movement - mi.MovementUsed;
+            if (moveLeft < 1)
+            {
+               if (true == myRectangleMaps.ContainsKey(mi))
+               {
+                  Rectangle r = myRectangleMaps[mi];
+                  myCanvasMain.Children.Remove(r);
+               }
+            }
+         }
+         return true;
+      }
       private bool UpdateCanvasCombatRetreat(IGameInstance gi, GameAction action)
       {
          if (null != myStoryboardFlashing)
             myStoryboardFlashing.Stop();
-         myStoryboardFlashing = null; // UpdateCanvasCombatRetreat()
+         myStoryboardFlashing = null; // UpdateCanvas_CombatRetreat()
          foreach (Polygon polygon in myPolygons)
             polygon.Fill = Utilities.theBrushRegionClear;
          if ( null == gi.MapItemCombat)
@@ -3546,7 +3574,7 @@ namespace PleasantvilleGame
             case GamePhase.AlienMovement:
                myGameInstance.SelectedTerritory = tSelected;
                break;
-            case GamePhase.TownspersonMovement:
+            case GamePhase.TownspersonMovement:  // MouseDown_Polygon()
                Logger.Log(LogEnum.LE_SHOW_TOWN_MOVE, "MouseDown_Polygon(): gi.SelectedMapItems.Count=" + myGameInstance.SelectedMapItems.Count.ToString() + " p.Name=" + p.Name);
                if (0 == myGameInstance.SelectedMapItems.Count) // if no selected mapitems, do nothing
                   return;
@@ -3556,6 +3584,9 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon() mi=null");
                   return;
                }
+               int moveLeft = mi.Movement - mi.MovementUsed;
+               if (moveLeft < 1)
+                  return;
                if (mi.TerritoryCurrent.ToString() == p.Name) // if clicking in same territory at unit, do nothing.
                   return;
                myGameInstance.SelectedTerritory = tSelected;
