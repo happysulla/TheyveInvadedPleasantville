@@ -1778,8 +1778,9 @@ namespace PleasantvilleGame
                   myLeftMapItemsInActionPanelSelected.Remove(removal);
                break;
             case GamePhase.Influences:
-            case GamePhase.Combats: 
                break;
+            case GamePhase.Combats: // all combat units are selected - so do not unselect any combat units
+               return;
             case GamePhase.Iterrogations: // Cannot unselect Controlled
                return; 
             default:
@@ -1821,8 +1822,9 @@ namespace PleasantvilleGame
                   myLeftMapItemsInActionPanelSelected.Remove(removal);
                break;
             case GamePhase.Influences:
-            case GamePhase.Combats: 
                break;
+            case GamePhase.Combats: // all combat units are selected - so do not unselect any combat units
+               return;
             case GamePhase.Iterrogations: // Cannot unselect Controlled - so return
                return;
             default:
@@ -1864,8 +1866,9 @@ namespace PleasantvilleGame
                   myLeftMapItemsInActionPanelSelected.Remove(removal);
                break;
             case GamePhase.Influences:
-            case GamePhase.Combats: 
                break;
+            case GamePhase.Combats: // all combat units are selected - so do not unselect any combat units
+               return;
             case GamePhase.Iterrogations: // Cannot unselect Controlled 
                return;
             default:
@@ -1907,8 +1910,8 @@ namespace PleasantvilleGame
                foreach (IMapItem removal in removals)
                   myRightMapItemsInActionPanelSelected.Remove(removal);
                break;
-            case GamePhase.Combats: 
-               break;
+             case GamePhase.Combats: // all combat units are selected - so do not unselect any combat units
+               return;
             default:
                break;
          }
@@ -1948,8 +1951,8 @@ namespace PleasantvilleGame
                foreach (IMapItem removal in removals)
                   myRightMapItemsInActionPanelSelected.Remove(removal);
                break;
-            case GamePhase.Combats:
-               break;
+            case GamePhase.Combats: // all combat units are selected - so do not unselect any combat units
+               return;
             default:
                break;
          }
@@ -1989,8 +1992,8 @@ namespace PleasantvilleGame
                foreach (IMapItem removal in removals)
                   myRightMapItemsInActionPanelSelected.Remove(removal);
                break;
-            case GamePhase.Combats:
-               break;
+            case GamePhase.Combats: // all combat units are selected - so do not unselect any combat units
+               return;
             default:
                break;
          }

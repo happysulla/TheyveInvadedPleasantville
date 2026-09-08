@@ -1,5 +1,6 @@
 ﻿
 using Google.Protobuf.WellKnownTypes;
+using Microsoft.AspNetCore.Hosting.Server;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -772,30 +773,43 @@ namespace PleasantvilleGame
                         return;
                      }
                      bool isDieShown = false;
-                     switch (dieRoll)
+                     IMapItem? observer = myGridRows[i].myObserver;
+                     if (null == observer)
                      {
-                        case 0:
-                           if (0.15 < myGridRows[i].myProbability)
-                              isDieShown = true;
-                           break;
-                        case 1:
-                           if (0.32 < myGridRows[i].myProbability)
-                              isDieShown = true;
-                           break;
-                        case 2:
-                           if (0.49 < myGridRows[i].myProbability)
-                              isDieShown = true;
-                           break;
-                        case 3:
-                           if (0.65 < myGridRows[i].myProbability)
-                              isDieShown = true;
-                           break;
-                        case 4:
-                        case 5:
-                           break;
-                        default:
-                           Logger.Log(LogEnum.LE_ERROR, "Grid_MouseDown(): invalid die roll=" + dieRoll.ToString());
-                           return;
+                        Logger.Log(LogEnum.LE_ERROR, "Grid_MouseDown(): myObserver=null");
+                        return;
+                     }
+                     if ((true == observer.IsAlienKnown) || (true == observer.IsAlienUnknown))
+                     {
+                        myGridRows[i].myDieRoll = NO_OBSERVER;
+                     }
+                     else
+                     {
+                        switch (dieRoll)
+                        {
+                           case 0:
+                              if (0.15 < myGridRows[i].myProbability)
+                                 isDieShown = true;
+                              break;
+                           case 1:
+                              if (0.32 < myGridRows[i].myProbability)
+                                 isDieShown = true;
+                              break;
+                           case 2:
+                              if (0.49 < myGridRows[i].myProbability)
+                                 isDieShown = true;
+                              break;
+                           case 3:
+                              if (0.65 < myGridRows[i].myProbability)
+                                 isDieShown = true;
+                              break;
+                           case 4:
+                           case 5:
+                              break;
+                           default:
+                              Logger.Log(LogEnum.LE_ERROR, "Grid_MouseDown(): invalid die roll=" + dieRoll.ToString());
+                              return;
+                        }
                      }
                      if( true == isDieShown )
                         myDieRoller.RollMovingDie(myCanvas, callback, dieRoll);

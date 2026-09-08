@@ -335,7 +335,7 @@ Combat takes place only between counters sharing the same space. It is not permi
 <LineBreak/><LineBreak/>
 All combat is voluntary. Neither player is forced to start combat. Thus, combat takes place only when at least one player desires it.
 <LineBreak/><LineBreak/>
-Either player may start combat as desired. Combat for each space is resolved separately and individually. There is no way combat in one are will affect combat in another area. Each counter may only be involved in one combat per turn.
+Either player may start combat as desired. Combat for each space is resolved separately and individually. Combat in one area will not affect combat in another area. Each counter may only be involved in one combat per turn.
 "
 r8.2	"<Bold>r8.2 Combat - Attacking Uncontrolled Townspeople</Bold><LineBreak/><LineBreak/>
 Only Alien or Town controlled counters that are not Tied Up, unconscious, or stunned may start a combat in the combat phase. 

@@ -12,6 +12,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Shapes;
 using System.Xml.Linq;
 using static PleasantvilleGame.EventViewerRandomMovement;
 using Application = System.Windows.Application;
@@ -669,27 +670,46 @@ namespace PleasantvilleGame
                if (true == mi.IsTiedUp) // Cound be stunned or unconscious
                {
                   if (true == mi.IsAlienKnown)
+                  {
                      alienTiedUpPersons.Add(mi);
+                     Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "CheckFor_EndOfGame(): adding to alienTiedUpPersons mi=" + mi.ToString() + " in t=" + stack.Territory.ToString());
+                  }
                   else if (true == mi.IsControlled)
+                  {
                      controlledTiedUpPersons.Add(mi);
+                     Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "CheckFor_EndOfGame(): adding to controlledTiedUpPersons mi=" + mi.ToString()+ " in t=" + stack.Territory.ToString());
+                  }
                }
                if ((false == mi.IsTiedUp) && (false == mi.IsKnockedout) && (false == mi.IsStunned))
                {
                   if (true == mi.IsAlienKnown)
+                  {
                      isFriendlyAlienHelping = true;
+                     Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "CheckFor_EndOfGame(): isFriendlyAlienHelping=true due to mi=" + mi.ToString());
+                  }
                   else if (true == mi.IsControlled)
+                  {
                      isFriendlyControlledHelping = true;
+                     Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "CheckFor_EndOfGame(): isFriendlyControlledHelping=true due to mi=" + mi.ToString());
+                  }
                }
             }
             if (true == isFriendlyAlienHelping)
             {
                foreach (IMapItem alien in alienTiedUpPersons) // known aliens tied up
+               {
                   alien.IsTiedUp = false;
+                  alien.IsSurrendered = false;
+                  Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "CheckFor_EndOfGame(): untieing alien=" + alien.ToString());
+               }
             }
             if (true == isFriendlyControlledHelping)
             {
                foreach (IMapItem controlled in controlledTiedUpPersons)
+               {
                   controlled.IsTiedUp = false;
+                  Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "CheckFor_EndOfGame(): untieing controlled=" + controlled.ToString());
+               }
             }
          }
          //-----------------------------------------------------------
@@ -1866,6 +1886,7 @@ namespace PleasantvilleGame
                         {
                            influencer.IsInfluencedThisTurn = true; // only allow one influence per turn
                            totalInfluence += (double)influencer.Influence;
+                           Logger.Log(LogEnum.LE_SHOW_INFLUENCES, "GameStateInfluences.PerformAction(): mi=" + influencer.Name + " adding " + influencer.Influence.ToString() + " to totalInfluence = " + totalInfluence.ToString("F1") );
                            if (true == influencer.IsImplantHeld)
                               isImplantHeld = true;
                         }
