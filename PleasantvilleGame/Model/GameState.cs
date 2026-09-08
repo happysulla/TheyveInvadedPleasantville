@@ -655,8 +655,6 @@ namespace PleasantvilleGame
                mi.IsStunnedThisTurn = false;
                mi.IsImplantRemovalAttemptThisTurn = false;
                mi.IsTakeoverThisTurn = false;
-               if (true == mi.IsSurrendered)
-                  continue;
                if( true == mi.IsKilled)
                {
                   mi.IsTiedUp = false;
@@ -667,6 +665,8 @@ namespace PleasantvilleGame
                   killedMapItems.Add(mi);
                   continue;
                }
+               if (true == mi.IsSurrendered)
+                  continue;
                if (true == mi.IsTiedUp) // Cound be stunned or unconscious
                {
                   if (true == mi.IsAlienKnown)
