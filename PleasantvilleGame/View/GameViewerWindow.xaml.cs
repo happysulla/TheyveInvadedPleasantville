@@ -3060,6 +3060,21 @@ namespace PleasantvilleGame
                uncontrolledCombatCount += mi.Combat;
             }
          }
+         //-------------------------------------------
+         if (0 < knownAliens.Count)
+         {
+            foreach (MapItem mi in stack.MapItems)
+            {
+               if (true == mi.IsAlienKnown)
+               {
+                  Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Display_Combat(): AddKnownAlien() due to combat with known alien mi=" + mi.ToString());
+                  gi.AddKnownAlien(mi);
+                  knownAliens.Add(mi);
+                  alienCombatCount += mi.Combat;
+               }
+            }
+         }
+         //-------------------------------------------
          controlledPeps = controlledPeps.SortOnCombat();
          knownAliens = knownAliens.SortOnCombat();
          uncontrolledPeps = uncontrolledPeps.SortOnCombat();

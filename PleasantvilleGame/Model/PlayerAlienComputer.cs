@@ -198,6 +198,10 @@ namespace PleasantvilleGame
          gi.MapItemMoves = alienMoves.Shuffle();
          return true;
       }
+      public bool BlockTownMove(ref IMapItemMove mim)
+      {
+         return true;
+      }
       public bool ShowPossibleTakeover(IGameInstance gi, IStack stack, ref GameAction action)
       {
          IMapItems possibleVictims = new MapItems();

@@ -71,6 +71,11 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Perform_TownMove(): mim=null for mi=" + mi.ToString() + " moving to t=" + gi.SelectedTerritory.ToString());
                return false;
             }
+            if( false == gi.PlayerAlien.BlockTownMove(ref mim))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Perform_TownMove(): BlockTownMoves() returned false for mi=" + mi.ToString() + " moving to t=" + gi.SelectedTerritory.ToString());
+               return false;
+            }
             Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "PerformPerform_TownMoveTownMove(): mi=" + mi.ToString() + " moving to t=" + gi.SelectedTerritory.ToString());
             gi.MapItemMoves.Add(mim);
          }
