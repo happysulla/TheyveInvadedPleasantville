@@ -1232,7 +1232,6 @@ namespace PleasantvilleGame
                   }
                }
                break;
-            case GameAction.AlienTakeoversSelect:
             case GameAction.AlienTakeoversShow:
                myRectangleMaps.Clear();
                UpdateCanvasMainClear(myButtons, gi.Stacks);
@@ -3065,7 +3064,7 @@ namespace PleasantvilleGame
          {
             foreach (MapItem mi in stack.MapItems)
             {
-               if (true == mi.IsAlienKnown)
+               if (true == mi.IsAlienUnknown)
                {
                   Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Display_Combat(): AddKnownAlien() due to combat with known alien mi=" + mi.ToString());
                   gi.AddKnownAlien(mi);

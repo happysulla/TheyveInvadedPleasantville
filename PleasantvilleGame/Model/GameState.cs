@@ -569,8 +569,13 @@ namespace PleasantvilleGame
       }
       protected bool CheckForAlienTakeovers(IGameInstance gi, ref GameAction action)
       {
-         gi.SelectedMapItems.Clear();
-         gi.SelectedTerritories.Clear();
+         bool isAlienTakeover = false;
+         if (false == ResetPhase(gi, GamePhase.AlienTakeovers))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): Reset_Phase() returned error");
+            return false;
+         }
+         action = GameAction.AlienTakeoversShow;
          foreach (Stack stack in gi.Stacks)
          {
             if (stack.MapItems.Count < 2)
@@ -578,14 +583,15 @@ namespace PleasantvilleGame
             IMapItems possibleVictims = new MapItems();
             IMapItems knownAliens = new MapItems();
             IMapItems unknownAliens = new MapItems();
+            IMapItems stuns = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsSurrendered))  // Unconscious or dead cannot be taken over
+               if ((true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsSurrendered))  // Unconscious or dead cannot be taken over
                   continue;
                if (true == mi.IsControlled)
                {
                   if(true == mi.IsStunned)
-                     possibleVictims.Add(mi);
+                     stuns.Add(mi);
                }
                else if (true == mi.IsAlienKnown)
                {
@@ -607,31 +613,27 @@ namespace PleasantvilleGame
                   possibleVictims.Add(mi);
                }
             }
+            //--------------------------------------------
             int alienCount = knownAliens.Count + unknownAliens.Count;
-            if ( (1 < possibleVictims.Count) || ((0 < unknownAliens.Count) && (0 < knownAliens.Count) ) || ((0 < possibleVictims.Count) && (0 < alienCount)))   // at least two non-town controlled mapitems  - cannnot be all known aliens
+            if ((1 < possibleVictims.Count) || ((0 < unknownAliens.Count) && (0 < knownAliens.Count)) || ((0 < possibleVictims.Count) && (0 < alienCount)) || ((0 < stuns.Count) && (0 < alienCount)))   // at least two non-town controlled mapitems  - cannnot be all known aliens
             {
-               if (GamePhase.AlienTakeovers != gi.GamePhase)
-               {
-                  if (false == ResetPhase(gi, GamePhase.AlienTakeovers))
-                  {
-                     Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): Reset_Phase() returned error");
-                     return false;
-                  }
-               }
+               isAlienTakeover = true;
+               gi.SelectedTerritories.Add(stack.Territory);
                Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "CheckFor_AlienTakeovers(): t=" + stack.Territory.ToString() + " v=" + possibleVictims.ToString() + " ua=" + unknownAliens.ToString() + " ka=" + knownAliens.ToString());
-               if ( false == gi.PlayerAlien.ShowPossibleTakeover(gi, stack, ref action))
+               if (false == gi.PlayerAlien.ShowPossibleTakeover(gi, stack))
                {
                   Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): Perform_AlienTakeover() returned error");
                   return false;
                }
             }
          }
-         if ((GameAction.AlienTakeoversSelect == action) || (GameAction.AlienTakeoversShow == action))
-            return true;
-         if (false == CheckForEndOfGame(gi, ref action))
+         if( false == isAlienTakeover )
          {
-            Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): CheckFor_EndOfGame() returned error");
-            return false;
+            if (false == CheckForEndOfGame(gi, ref action))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): CheckFor_EndOfGame() returned error");
+               return false;
+            }
          }
          return true;
       }
@@ -654,7 +656,6 @@ namespace PleasantvilleGame
                mi.IsKnockedoutThisTurn = false;
                mi.IsStunnedThisTurn = false;
                mi.IsImplantRemovalAttemptThisTurn = false;
-               mi.IsTakeoverThisTurn = false;
                if( true == mi.IsKilled)
                {
                   mi.IsTiedUp = false;

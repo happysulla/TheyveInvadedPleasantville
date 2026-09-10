@@ -111,7 +111,6 @@ namespace PleasantvilleGame
       ImplantRemovalsRoll,
       ImplantRemovalsFinish,
 
-      AlienTakeoversSelect,
       AlienTakeoversShow,
       AlienTakeoversFinish,
 

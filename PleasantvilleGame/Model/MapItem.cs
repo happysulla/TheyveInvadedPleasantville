@@ -110,7 +110,6 @@ namespace PleasantvilleGame
       public bool IsCombatThisTurn { get; set; } = false;
       public bool IsInterrogatedThisTurn { get; set; } = false;
       public bool IsImplantRemovalAttemptThisTurn { get; set; } = false;
-      public bool IsTakeoverThisTurn { get; set; } = false;
       //----------------------------------------
       public MapItem(string name)
       {
@@ -224,7 +223,6 @@ namespace PleasantvilleGame
          this.IsInfluencedThisTurn = mi.IsInfluencedThisTurn;
          this.IsCombatThisTurn = mi.IsCombatThisTurn;
          this.IsImplantRemovalAttempt = mi.IsImplantRemovalAttempt;
-         this.IsTakeoverThisTurn = mi.IsTakeoverThisTurn;
       }
       public void Sync(IMapItem mi)
       {
@@ -262,8 +260,6 @@ namespace PleasantvilleGame
          this.IsInfluencedThisTurn = mi.IsInfluencedThisTurn;
          this.IsCombatThisTurn = mi.IsCombatThisTurn;
          this.IsImplantRemovalAttempt = mi.IsImplantRemovalAttempt;
-         this.IsTakeoverThisTurn = mi.IsTakeoverThisTurn;
-
       } // sync this mapitem data with passed-in parameter during spotting
       public void SetBloodSpots(int percent = 30)
       {
@@ -284,6 +280,12 @@ namespace PleasantvilleGame
          if ((true == this.IsControlled) || (true == this.IsAlienUnknown) || (true == this.IsAlienKnown))
             return false;
          return true;
+      }
+      public bool IsAlien()
+      {
+         if ((true == this.IsAlienUnknown) || (true == this.IsAlienKnown))
+            return true;
+         return false;
       }
       public override string ToString()
       {

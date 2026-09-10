@@ -165,6 +165,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): myDieRoller=null");
             return false;
          }
+         Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Consumate_AlienTakeovers(): takeover count=" + myGameInstance.AlienTakeovers.Count.ToString());
          //--------------------------------------------------
          myCallback = callback;
          myState = E091Enum.ROLL_FOR_OBSERVE;
@@ -180,24 +181,6 @@ namespace PleasantvilleGame
             {
                Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): stack=null for t=" + t.ToString());
                return false;
-            }
-            //-----------------------------------------
-            IMapItems stunnedControlledPeps = new MapItems(); // If combat occurred, chance that Controlled Townsperson is able to be taken over if stunned - that is Alien priority
-            foreach(IMapItem mi in stack.MapItems)
-            {
-               if( (true == mi.IsControlled) && (true == mi.IsStunned ) )
-                  stunnedControlledPeps.Add(mi);
-            }
-            if( 0 < stunnedControlledPeps.Count )
-            {
-               int randNum1 = Utilities.RandomGenerator.Next(stunnedControlledPeps.Count); // randomize which unit is displayed to user on left hand side
-               IMapItem? mi = stunnedControlledPeps[randNum1];
-               if( null == mi )
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): stunnedControlledPeps[" + randNum1.ToString() + "] is null");
-                  return false;
-               }
-               rightMapItem = mi;
             }
             //-----------------------------------------
             int randNum = Utilities.RandomGenerator.Next(2); // randomize which unit is displayed to user on left hand side
@@ -232,6 +215,7 @@ namespace PleasantvilleGame
                   myGridRows[gridRowNum] = new GridRow(mi, leftMapItem, rightMapItem, kvp1.Value);
                   gridRowNum++;
                   isObservation = true;
+                  Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Consumate_AlienTakeovers(): Adding Key=" + leftMapItem.Name + " Value=" + rightMapItem.Name + " w/ obs?=" + isObservation.ToString());
                }
             }
             if (false == isObservation) // If there is no observations, indicate to user that zero probability of detection
@@ -239,8 +223,8 @@ namespace PleasantvilleGame
                myGridRows[gridRowNum] = new GridRow(null, leftMapItem, rightMapItem, 0.0);
                myGridRows[gridRowNum].myDieRoll = NO_OBSERVER;
                gridRowNum++;
+               Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Consumate_AlienTakeovers(): Adding Key=" + leftMapItem.Name + " Value=" + rightMapItem.Name + " w/ obs?=NA" );
             }
-            Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Consumate_AlienTakeovers(): Adding Key=" + leftMapItem.Name + " Value=" + rightMapItem.Name + " w/ obs?=" + isObservation.ToString());
          }
          myMaxRowCount = gridRowNum;
          //--------------------------------------------------
@@ -471,11 +455,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "ShowDieResults(): myObserver=null");
             return;
          }
-         if ((true == observer.IsAlienKnown) || (true == observer.IsAlienUnknown))
-         {
-            myGridRows[i].myDieRoll = NO_OBSERVER;
-         }
-         else
+         if (NO_OBSERVER != myGridRows[i].myDieRoll) 
          {
             myGridRows[i].myDieRoll = dieRoll;
             switch (dieRoll)
@@ -780,6 +760,10 @@ namespace PleasantvilleGame
                         return;
                      }
                      if ((true == observer.IsAlienKnown) || (true == observer.IsAlienUnknown))
+                     {
+                        myGridRows[i].myDieRoll = NO_OBSERVER;
+                     }
+                     else if( (false == myGridRows[i].myMapItem1.IsAlien()) && (false == myGridRows[i].myMapItem2.IsAlien()))
                      {
                         myGridRows[i].myDieRoll = NO_OBSERVER;
                      }

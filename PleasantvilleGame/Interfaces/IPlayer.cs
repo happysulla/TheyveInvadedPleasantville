@@ -25,6 +25,6 @@ namespace PleasantvilleGame
       bool BlockRandomMoves(IGameInstance gi);
       bool PerformAlienMoves(IGameInstance gi);
       bool BlockTownMove(ref IMapItemMove mim);
-      bool ShowPossibleTakeover(IGameInstance gi, IStack stack, ref GameAction action);
+      bool ShowPossibleTakeover(IGameInstance gi, IStack stack);
    }
 }

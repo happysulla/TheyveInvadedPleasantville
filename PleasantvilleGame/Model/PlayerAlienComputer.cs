@@ -202,19 +202,20 @@ namespace PleasantvilleGame
       {
          return true;
       }
-      public bool ShowPossibleTakeover(IGameInstance gi, IStack stack, ref GameAction action)
+      public bool ShowPossibleTakeover(IGameInstance gi, IStack stack)
       {
          IMapItems possibleVictims = new MapItems();
          IMapItems knownAliens = new MapItems();
          IMapItems unknownAliens = new MapItems();
+         IMapItems stuns = new MapItems();
          foreach (MapItem mi in stack.MapItems)
          {
-            if ((true == mi.IsTakeoverThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsSurrendered) )  // Unconscious, dead, or surrendered cannot partipate
+            if ((true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsSurrendered) )  // Unconscious, dead, or surrendered cannot partipate
                continue;
             if (true == mi.IsControlled)
             {
                if (true == mi.IsStunned)
-                  possibleVictims.Add(mi);
+                  stuns.Add(mi);
             }
             else if (true == mi.IsAlienKnown)
             {
@@ -236,13 +237,18 @@ namespace PleasantvilleGame
                possibleVictims.Add(mi);
             }
          }
+         possibleVictims = possibleVictims.Sort();
+         stuns = stuns.Sort();
+         unknownAliens = unknownAliens.Sort();
+         //----------------------------------------
          int alienCount = knownAliens.Count + unknownAliens.Count;
-         if ((0 == possibleVictims.Count) && (1 == alienCount)) // if no victims, then need to have two aliens
+         int possibleVictimCount = stuns.Count + possibleVictims.Count;
+         if ( (0==possibleVictimCount) && (1 == alienCount)) // if no victims, then need to have two aliens
          {
             Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): 1-v=" + possibleVictims.ToString() + " ua=" + unknownAliens.ToString() + " ka=" + knownAliens.ToString() + " in t=" + stack.Territory.ToString() + " stacks=\n" + gi.Stacks.ToString());
             return false;
          }
-         if ((possibleVictims.Count < 2) && (0 == alienCount)) // if no victims, then need to have two aliens
+         if ((possibleVictimCount < 2) && (0 == alienCount)) // if no aliens, then need to have two victims
          {
             Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): 2-v=" + possibleVictims.ToString() + " ua=" + unknownAliens.ToString() + " ka=" + knownAliens.ToString() + " in t=" + stack.Territory.ToString() + " stacks=\n" + gi.Stacks.ToString());
             return false;
@@ -250,98 +256,164 @@ namespace PleasantvilleGame
          //----------------------------------------
          IMapItem? leftMapItem = null;
          IMapItem? rightMapItem = null;
-         if (0 == possibleVictims.Count) // no possible takeover, but Townsperson does not know - so need to show
+         if (0 == possibleVictimCount) // no possible takeover, but Townsperson does not know - so need to show - can have up to three known and three unknown
          {
-            if (1 == unknownAliens.Count)
+            if( ( 0 < knownAliens.Count ) && (unknownAliens.Count < knownAliens.Count )) 
             {
-               int r1 = Utilities.RandomGenerator.Next(unknownAliens.Count);
-               leftMapItem = unknownAliens[0];
-               int r2 = Utilities.RandomGenerator.Next(knownAliens.Count);
-               rightMapItem = knownAliens[r2];
+               int unknownCount = 0;
+               foreach(IMapItem knownAlien in knownAliens )
+               {
+                  if (unknownCount == unknownAliens.Count)
+                     break;
+                  leftMapItem = knownAlien;
+                  rightMapItem = unknownAliens[unknownCount];
+                  if( null == rightMapItem )
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): rightMapItem=null for unknownCount=" + unknownCount.ToString());
+                     return false;
+                  }
+                  unknownCount++;
+                  gi.AlienTakeovers[leftMapItem] = rightMapItem;
+                  Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 1-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
+               }
             }
-            else if (1 == knownAliens.Count)
+            else if ((0 < knownAliens.Count) && (knownAliens.Count < unknownAliens.Count))
             {
-               int r1 = Utilities.RandomGenerator.Next(knownAliens.Count);
-               leftMapItem = knownAliens[0];
-               int r2 = Utilities.RandomGenerator.Next(unknownAliens.Count);
-               rightMapItem = unknownAliens[r2];
+               int knownCount = 0;
+               foreach (IMapItem unknownAlien in unknownAliens)
+               {
+                  if (knownCount == knownAliens.Count)
+                     break;
+                  leftMapItem = unknownAlien;
+                  rightMapItem = knownAliens[knownCount];
+                  if (null == rightMapItem)
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): rightMapItem=null for knownCount=" + knownCount.ToString());
+                     return false;
+                  }
+                  knownCount++;
+                  gi.AlienTakeovers[leftMapItem] = rightMapItem;
+                  Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 2-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
+               }
             }
-            else
+            else // can only have up to three unknown aliens in space - choose two random ones
             {
                int r1 = Utilities.RandomGenerator.Next(unknownAliens.Count);
                leftMapItem = unknownAliens[r1];
+               if (null == leftMapItem)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): 1-leftMapItem=null for r1=" + r1.ToString());
+                  return false;
+               }
                int r2 = r1;
-               while (r2 == r1) 
+               while (r2 == r1)
                   r2 = Utilities.RandomGenerator.Next(unknownAliens.Count);
                rightMapItem = unknownAliens[r2];
+               if (null == rightMapItem)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): 1-rightMapItem=null for r2=" + r2.ToString());
+                  return false;
+               }
+               gi.AlienTakeovers[leftMapItem] = rightMapItem;
+               Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 3-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
             }
          }
          else // possible victims
          {
             if (0 < knownAliens.Count) // show known aliens
             {
-               int r1 = Utilities.RandomGenerator.Next(knownAliens.Count);
-               leftMapItem = knownAliens[r1];
-               int r2 = Utilities.RandomGenerator.Next(possibleVictims.Count);
-               rightMapItem = possibleVictims[r2];
+               int victimCount = 0;
+               foreach (IMapItem knownAlien in knownAliens)
+               {
+                  leftMapItem = knownAlien;
+                  if (victimCount == possibleVictims.Count)
+                     break;
+                  if (victimCount < stuns.Count)
+                  {
+                     rightMapItem = stuns[victimCount];
+                     if (null == rightMapItem)
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): rightMapItem=null for stuns=" + victimCount.ToString());
+                        return false;
+                     }
+                     victimCount++;
+                     gi.AlienTakeovers[leftMapItem] = rightMapItem;
+                     Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 4-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
+                  }
+                  else 
+                  {
+                     int indexOffset = victimCount - stuns.Count;
+                     rightMapItem = possibleVictims[indexOffset];
+                     if (null == rightMapItem)
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): rightMapItem=null for indexOffset=" + indexOffset.ToString());
+                        return false;
+                     }
+                     victimCount++;
+                     gi.AlienTakeovers[leftMapItem] = rightMapItem;
+                     Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 5-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
+                  }
+               }
             }
-            else if (0 < unknownAliens.Count)
+            else if (0 < unknownAliens.Count) // shown unknown aliens
             {
-               int r1 = Utilities.RandomGenerator.Next(unknownAliens.Count);
-               leftMapItem = unknownAliens[r1];
-               int r2 = Utilities.RandomGenerator.Next(possibleVictims.Count);
-               rightMapItem = possibleVictims[r2];
+               int victimCount = 0;
+               foreach (IMapItem unknownAlien in unknownAliens)
+               {
+                  leftMapItem = unknownAlien;
+                  if (victimCount == possibleVictims.Count)
+                     break;
+                  if (victimCount < stuns.Count)
+                  {
+                     rightMapItem = stuns[victimCount];
+                     if (null == rightMapItem)
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): rightMapItem=null for stuns=" + victimCount.ToString());
+                        return false;
+                     }
+                     victimCount++;
+                     gi.AlienTakeovers[leftMapItem] = rightMapItem;
+                     Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover():Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
+                     gi.AddKnownAlien(leftMapItem); // unknown becomes known when taking over a Stunned TP
+                     Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Show_PossibleTakeover(): 6-AddKnownAlien() unknown becomes known when taking over stunned -- a=" + leftMapItem.ToString() );
+                  }
+                  else
+                  {
+                     int indexOffset = victimCount - stuns.Count;
+                     rightMapItem = possibleVictims[indexOffset];
+                     if (null == rightMapItem)
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): rightMapItem=null for indexOffset=" + indexOffset.ToString());
+                        return false;
+                     }
+                     victimCount++;
+                     gi.AlienTakeovers[leftMapItem] = rightMapItem;
+                     Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 7-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
+                  }
+               }
             }
-            else if (2 == possibleVictims.Count)
-            {
-               leftMapItem = possibleVictims[0];
-               rightMapItem = possibleVictims[1];
-            }
-            else
+            else // no aliens and no stuns counters in the space
             {
                int r1 = Utilities.RandomGenerator.Next(possibleVictims.Count);
                leftMapItem = possibleVictims[r1];
+               if (null == leftMapItem)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): 2-leftMapItem=null for r1=" + r1.ToString());
+                  return false;
+               }
                int r2 = r1;
                while (r2 == r1)
                   r2 = Utilities.RandomGenerator.Next(possibleVictims.Count);
                rightMapItem = possibleVictims[r2];
+               if (null == rightMapItem)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): 2-rightMapItem=null for r2=" + r2.ToString());
+                  return false;
+               }
+               gi.AlienTakeovers[leftMapItem] = rightMapItem;
+               Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 8-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
             }
          }
-         //----------------------------------------
-         if (null == leftMapItem)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Show_PossibleTakeover(): leftMapItem=null");
-            return false;
-         }
-         if (null == rightMapItem)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Show_PossibleTakeover(): rightMapItem=null");
-            return false;
-         }
-         leftMapItem.IsTakeoverThisTurn = true;
-         rightMapItem.IsTakeoverThisTurn = true;
-         //----------------------------------------------------
-         IMetricObservation metric = new MetricObservation(gi, leftMapItem, rightMapItem);
-         Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): t=" + stack.Territory.ToString() + " leftMapItem=" + leftMapItem.ToString() + " rightMapItem=" + rightMapItem.ToString() + " m=" + metric.Value.ToString());
-         if ((0 < possibleVictims.Count) && (0 < alienCount))
-         {
-            gi.SelectedTerritories.Add(stack.Territory);
-            gi.AlienTakeovers[leftMapItem] = rightMapItem;
-            action = GameAction.AlienTakeoversShow;
-         }
-         else if ((1 < alienCount) && (100 == metric.Value))
-         {
-            gi.SelectedTerritories.Add(stack.Territory);
-            gi.AlienTakeovers[leftMapItem] = rightMapItem;
-            action = GameAction.AlienTakeoversShow;
-         }
-         else if ((1 < possibleVictims.Count) && (100 == metric.Value))
-         {
-            gi.SelectedTerritories.Add(stack.Territory);
-            gi.AlienTakeovers[leftMapItem] = rightMapItem;
-            action = GameAction.AlienTakeoversShow;
-         }
-         Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover():Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
          return true;
       }
       private List<TakeoverMetric> GetTakeoverMetrics(IGameInstance gi)
