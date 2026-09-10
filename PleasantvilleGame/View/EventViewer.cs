@@ -851,7 +851,7 @@ namespace PleasantvilleGame
                      break;
                   case 5:
                      imgEndGameLost = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("Loser1"), Width = 260, Height = 300 };
-                     myTextBlock.Inlines.Add(new Run("                          "));
+                     myTextBlock.Inlines.Add(new Run("                    "));
                      break;
                   case 6:
                      imgEndGameLost = new Image { Name = "EndGameShowStats", Source = MapItem.theMapImages.GetBitmapImage("Loser2"), Width = 300, Height = 230 };

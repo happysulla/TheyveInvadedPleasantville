@@ -258,7 +258,7 @@ namespace PleasantvilleGame
          IMapItem? rightMapItem = null;
          if (0 == possibleVictimCount) // no possible takeover, but Townsperson does not know - so need to show - can have up to three known and three unknown
          {
-            if( ( 0 < knownAliens.Count ) && (unknownAliens.Count < knownAliens.Count )) 
+            if( ( 0 < knownAliens.Count ) && (unknownAliens.Count <= knownAliens.Count )) 
             {
                int unknownCount = 0;
                foreach(IMapItem knownAlien in knownAliens )
