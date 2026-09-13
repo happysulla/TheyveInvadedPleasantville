@@ -116,22 +116,33 @@ namespace PleasantvilleGame
                   }
                }
             }
+            //------------------------------------
             int totalInfluence = controlledInfluence + alienInfluence + uncontrolledInfluence;
-            int totalAlienInfluence = alienInfluence + unknownAlienInfluence;
-            StringBuilder sbInfluence = new StringBuilder("INFLUENCES: Total=");
-            sbInfluence.Append(totalInfluence.ToString());
-            sbInfluence.Append("   Uncontrolled=");
-            sbInfluence.Append(uncontrolledInfluence.ToString());
-            sbInfluence.Append("   Town=");
-            sbInfluence.Append(controlledInfluence.ToString());
-            sbInfluence.Append("   Known Alien=");
-            sbInfluence.Append(alienInfluence.ToString());
-            sbInfluence.Append("   Alien=");
-            sbInfluence.Append(totalAlienInfluence.ToString());
-            Label labelUncontrolled = new Label() { FontFamily = myFontFam, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Left, Content = sbInfluence.ToString() };
-            myStatusBar.Items.Add(labelUncontrolled);
+            Label labelTotal= new Label() { FontFamily = myFontFam, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Left, Content = "Total Influence=" + totalInfluence.ToString() };
+            myStatusBar.Items.Add(labelTotal);
+            myStatusBar.Items.Add(new Separator());
+            //------------------------------------
+            int halfTotal = (int)Math.Ceiling((double)totalInfluence*0.5);
+            Label labelGoal= new Label() { FontFamily = myFontFam, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Left, Content = "To Win=" + halfTotal.ToString() };
+            if (halfTotal < controlledInfluence)
+               labelGoal.Foreground = new SolidColorBrush(Colors.Green);
+            else
+               labelGoal.Foreground = new SolidColorBrush(Colors.Red);
+            myStatusBar.Items.Add(labelGoal); 
+            myStatusBar.Items.Add(new Separator());
+            //------------------------------------
+            Label labelControlledInfluence = new Label() { FontFamily = myFontFam, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Left, Content = "Town Influence=" + controlledInfluence.ToString() };
+            myStatusBar.Items.Add(labelControlledInfluence);
+            myStatusBar.Items.Add(new Separator());
+            //------------------------------------
+            Label labelAlienInfluence = new Label() { FontFamily = myFontFam, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Left, Content = "Known Alien Influence=" + alienInfluence.ToString() };
+            myStatusBar.Items.Add(labelAlienInfluence);
+            myStatusBar.Items.Add(new Separator());
+            //------------------------------------
+            Label labelUnknownAlienInfluence = new Label() { FontFamily = myFontFam, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Left, Content = "Unknown Alien Influence=" + unknownAlienInfluence.ToString() };
+            myStatusBar.Items.Add(labelUnknownAlienInfluence);
+            myStatusBar.Items.Add(new Separator());
          }
-
       }
       //--------------------------------------------------------------
       private void ButtonZoomOut_Click(object sender, RoutedEventArgs e)

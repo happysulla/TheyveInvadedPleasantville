@@ -549,9 +549,8 @@ namespace PleasantvilleGame
                      Logger.Log(LogEnum.LE_ERROR, "CheckFor_ImplantRemovals(): Reset_Phase() returned error");
                      return false;
                   }
-
                }
-               Logger.Log(LogEnum.LE_SHOW_REMOVALS, "CheckFor_ImplantRemovals(): adding stack=" + stack.ToString());
+               Logger.Log(LogEnum.LE_SHOW_REMOVALS, "CheckFor_ImplantRemovals(): adding stack=" + stack.ToString() + " controlled=" + controlled.ToString());
                gi.SelectedTerritories.Add(stack.Territory);
                gi.DieRollAction = GameAction.DieRollActionNone;
                gi.EventDisplayed = gi.EventActive = "e013t";
