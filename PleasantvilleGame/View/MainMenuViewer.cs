@@ -61,9 +61,10 @@ namespace PleasantvilleGame
                   myMenuItemTopLevel3.Visibility = Visibility.Visible;
                   MenuItem subItem35 = new MenuItem();
                   subItem35.Header = "_Game Feats...";
-                  subItem35.InputGestureText = "Ctrl+Shift+G";
+                  subItem35.InputGestureText = "Ctrl+V";
                   subItem35.Click += MenuItemViewFeats_Click;
                   myMenuItemTopLevel3.Items.Add(subItem35);
+                  //------------------------------
                   MenuItem subItem37 = new MenuItem();
                   subItem37.Header = "_Other Games...";
                   subItem37.InputGestureText = "Ctrl+Shift+O";
@@ -81,26 +82,37 @@ namespace PleasantvilleGame
                   subItem41.InputGestureText = "F1";
                   subItem41.Click += MenuItemHelpRules_Click;
                   myMenuItemTopLevel4.Items.Add(subItem41);
+                  //------------------------------
                   MenuItem subItem42 = new MenuItem();
                   subItem42.Header = "_Events...";
                   subItem42.InputGestureText = "F2";
                   subItem42.Click += MenuItemHelpEvents_Click;
                   myMenuItemTopLevel4.Items.Add(subItem42);
+                  //------------------------------
                   MenuItem subItem43 = new MenuItem();
                   subItem43.Header = "_Tables...";
                   subItem43.InputGestureText = "F3";
                   subItem43.Click += MenuItemHelpTables_Click;
                   myMenuItemTopLevel4.Items.Add(subItem43);
+                  //------------------------------
                   MenuItem subItem44 = new MenuItem();
-                  subItem44.Header = "_Icons...";
+                  subItem44.Header = "_Townpeople Description...";
                   subItem44.InputGestureText = "F4";
-                  subItem44.Click += MenuItemHelpIcons_Click;
+                  subItem44.Click += MenuItemHelpShowCharacter_Click;
                   myMenuItemTopLevel4.Items.Add(subItem44);
+                  //------------------------------
+                  MenuItem subItem45 = new MenuItem();
+                  subItem45.Header = "_Icons...";
+                  subItem45.InputGestureText = "F5";
+                  subItem45.Click += MenuItemHelpIcons_Click;
+                  myMenuItemTopLevel4.Items.Add(subItem45);
+                  //------------------------------
                   MenuItem subItem46 = new MenuItem();
                   subItem46.Header = "Report Error...";
                   subItem46.InputGestureText = "F6";
                   subItem46.Click += MenuItemHelpReportError_Click;
                   myMenuItemTopLevel4.Items.Add(subItem46);
+                  //------------------------------
                   MenuItem subItem47 = new MenuItem();
                   subItem47.Header = "_About...";
                   subItem47.InputGestureText = "Ctrl+A";
@@ -409,6 +421,11 @@ namespace PleasantvilleGame
       public void MenuItemHelpTables_Click(object sender, RoutedEventArgs e)
       {
          GameAction action = GameAction.ShowTableListing;
+         myGameEngine.PerformAction(ref myGameInstance, ref action);
+      }
+      public void MenuItemHelpShowCharacter_Click(object sender, RoutedEventArgs e)
+      {
+         GameAction action = GameAction.ShowCharacterDescription;
          myGameEngine.PerformAction(ref myGameInstance, ref action);
       }
       public void MenuItemHelpIcons_Click(object sender, RoutedEventArgs e)

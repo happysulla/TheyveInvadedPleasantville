@@ -315,19 +315,79 @@ namespace PleasantvilleGame
       {
          try
          {
-            //RoutedCommand command = new RoutedCommand();
-            //KeyGesture keyGesture = new KeyGesture(Key.N, ModifierKeys.Control);
-            //InputBindings.Add(new KeyBinding(command, keyGesture));
-            //CommandBindings.Add(new CommandBinding(command, mmv.MenuItemNew_Click));
-            ////------------------------------------------------
-            //command = new RoutedCommand();
-            //keyGesture = new KeyGesture(Key.O, ModifierKeys.Control);
-            //InputBindings.Add(new KeyBinding(command, keyGesture));
-            //CommandBindings.Add(new CommandBinding(command, mmv.MenuItemFileOpen_Click));
+            RoutedCommand command = new RoutedCommand();
+            KeyGesture keyGesture = new KeyGesture(Key.N, ModifierKeys.Control);
+            InputBindings.Add(new KeyBinding(command, keyGesture));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemNew_Click));
+            //------------------------------------------------
+            command = new RoutedCommand();
+            keyGesture = new KeyGesture(Key.O, ModifierKeys.Control);
+            InputBindings.Add(new KeyBinding(command, keyGesture));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemFileOpen_Click));
+            //------------------------------------------------
+            command = new RoutedCommand();
+            keyGesture = new KeyGesture(Key.C, ModifierKeys.Control);
+            InputBindings.Add(new KeyBinding(command, keyGesture));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemClose_Click));
+            //------------------------------------------------
+            command = new RoutedCommand();
+            keyGesture = new KeyGesture(Key.S, ModifierKeys.Control);
+            InputBindings.Add(new KeyBinding(command, keyGesture));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemSaveAs_Click));
+            //------------------------------------------------
+            command = new RoutedCommand();
+            keyGesture = new KeyGesture(Key.O, ModifierKeys.Control | ModifierKeys.Shift);
+            InputBindings.Add(new KeyBinding(command, keyGesture));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemFileOptions_Click));
+            //------------------------------------------------
+            command = new RoutedCommand();
+            keyGesture = new KeyGesture(Key.Z, ModifierKeys.Control);
+            InputBindings.Add(new KeyBinding(command, keyGesture));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemEditUndo_Click));
+            //------------------------------------------------
+            command = new RoutedCommand();
+            keyGesture = new KeyGesture(Key.V, ModifierKeys.Control | ModifierKeys.Shift);
+            InputBindings.Add(new KeyBinding(command, keyGesture));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemViewOtherGames_Click));
+            //------------------------------------------------
+            command = new RoutedCommand();
+            keyGesture = new KeyGesture(Key.F1, ModifierKeys.None);
+            InputBindings.Add(new KeyBinding(command, keyGesture));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemHelpRules_Click));
+            //------------------------------------------------
+            command = new RoutedCommand();
+            keyGesture = new KeyGesture(Key.F2, ModifierKeys.None);
+            InputBindings.Add(new KeyBinding(command, keyGesture));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemHelpEvents_Click));
+            //------------------------------------------------
+            command = new RoutedCommand();
+            keyGesture = new KeyGesture(Key.F3, ModifierKeys.None);
+            InputBindings.Add(new KeyBinding(command, keyGesture));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemHelpTables_Click));
+            //------------------------------------------------
+            command = new RoutedCommand();
+            keyGesture = new KeyGesture(Key.F4, ModifierKeys.None);
+            InputBindings.Add(new KeyBinding(command, keyGesture));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemHelpShowCharacter_Click));
+            //------------------------------------------------
+            command = new RoutedCommand();
+            keyGesture = new KeyGesture(Key.F5, ModifierKeys.None);
+            InputBindings.Add(new KeyBinding(command, keyGesture));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemHelpIcons_Click));
+            //------------------------------------------------
+            command = new RoutedCommand();
+            keyGesture = new KeyGesture(Key.F6, ModifierKeys.None);
+            InputBindings.Add(new KeyBinding(command, keyGesture));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemHelpReportError_Click));
+            //------------------------------------------------
+            command = new RoutedCommand();
+            keyGesture = new KeyGesture(Key.F7, ModifierKeys.None);
+            InputBindings.Add(new KeyBinding(command, keyGesture));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemHelpAbout_Click));
          }
          catch (Exception ex)
          {
-            Logger.Log(LogEnum.LE_ERROR, "AddHotKeys(): ex=" + ex.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "Add_HotKeys(): ex=" + ex.ToString());
             return false;
          }
          return true;
@@ -2229,7 +2289,7 @@ namespace PleasantvilleGame
                   return false;
                }
                IMapItem mi = mim.MapItem;
-               IMapPoint endPoint = Territory.GetRandomPoint(mim.NewTerritory, mi.Zoom * Utilities.theMapItemOffset);
+               IMapPoint endPoint = Territory.GetRandomPointBoundingRect(mim.NewTerritory, mi.Zoom * Utilities.theMapItemOffset);
                if (false == MovePathDisplay(mim, count, endPoint))
                {
                   Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMovement(): Move_PathDisplay() returned false t=" + mim.OldTerritory.ToString());

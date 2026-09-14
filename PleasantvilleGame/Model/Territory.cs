@@ -329,11 +329,11 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_SHOW_MIM_BEST_PATH, "Get_ShortestRandomPath(): moving from " + startT.ToString() + " to " + endT.ToString() + " using " + bestPath.ToString());
          return bestPath;
       }
-		public static IMapPoint GetRandomPoint(ITerritory t, double offset) // return the top left location of a MapItem, not the center point
+		public static IMapPoint GetRandomPointBoundingRect(ITerritory t, double offset) // return the top left location of a MapItem, not the center point
 		{
 			if (0 == t.Points.Count)
 			{
-				Logger.Log(LogEnum.LE_ERROR, "GetRandomPoint(): t.Points.Count=0 for t.Name=" + t.ToString());
+				Logger.Log(LogEnum.LE_ERROR, "Get_RandomPointBoundingRect(): t.Points.Count=0 for t.Name=" + t.ToString());
 				return t.CenterPoint;
 			}
 			//----------------------------------------------------
@@ -407,19 +407,19 @@ namespace PleasantvilleGame
 						return new MapPoint(p5.X, p5.Y);
 				}
 			}
-			Logger.Log(LogEnum.LE_ERROR, "GetRandomPoint(): Cannot find a random point in t.Name=" + t.Name + " rect=" + rect.ToString());
+			Logger.Log(LogEnum.LE_ERROR, "Get_RandomPointBoundingRect(): Cannot find a random point in t.Name=" + t.Name + " rect=" + rect.ToString());
 			return new MapPoint(t.CenterPoint.X - offset, t.CenterPoint.Y - offset);
 		}
-      public static IMapPoint GetClosestPointInTerritoryRegion(ITerritory t, Point pCenter, double offset)
+      public static IMapPoint GetRandomPointInTerritoryRegion(ITerritory t, Point pCenter, double offset)
 		{
 			if (0 == t.Points.Count)
 			{
-				Logger.Log(LogEnum.LE_ERROR, "Get_ClosestPointInTerritoryRegion(): t.Points.Count=0 for t.Name=" + t.Name);
+				Logger.Log(LogEnum.LE_ERROR, "Get_RandomPointInTerritoryRegion(): t.Points.Count=0 for t.Name=" + t.Name);
 				return t.CenterPoint;
 			}
 			//---------------------------------
 			int count = 20;
-			while (0 < --count) // offset is the difference between MapItem location on screen and the center of the  MapItem.
+			while (0 < --count) // offset is the difference between MapItem location on screen and the center of the MapItem.
 			{
 				double XCenter = pCenter.X + offset; // Get a random point in the bounding box
 				double YCenter = pCenter.Y + offset;
@@ -470,10 +470,10 @@ namespace PleasantvilleGame
 						return new MapPoint(p5.X, p5.Y);
 				}
 			}
-			Logger.Log(LogEnum.LE_ERROR, "Get_ClosestPointInTerritoryRegion(): Cannot find a random point in t.Name=" + t.Name);
+			Logger.Log(LogEnum.LE_ERROR, "Get_RandomPointInTerritoryRegion(): Cannot find a random point in t.Name=" + t.Name);
 			return new MapPoint(t.CenterPoint.X - offset, t.CenterPoint.Y - offset);
 		}
-      public static IMapPoint GetClosestPointFromTerritoryPoints(ITerritory t, Point p, double offset)
+      public static IMapPoint GetClosestPointFromTerritorySegmentPoints(ITerritory t, Point p, double offset)
       {
          if (0 == t.Points.Count)
          {

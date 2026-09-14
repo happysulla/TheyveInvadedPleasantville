@@ -205,7 +205,7 @@ namespace PleasantvilleGame
          {
             gi.SelectedStack.IsStacked = false;
             foreach (IMapItem mi in gi.SelectedStack.MapItems)
-               mi.Location = Territory.GetRandomPoint(gi.SelectedStack.Territory, mi.Zoom * Utilities.theMapItemOffset);
+               mi.Location = Territory.GetRandomPointBoundingRect(gi.SelectedStack.Territory, mi.Zoom * Utilities.theMapItemOffset);
          }
          else
          {
@@ -717,7 +717,7 @@ namespace PleasantvilleGame
          {
             gi.Stacks.Remove(mi);
             gi.DeadPeople.Add(mi);
-            mi.Location = Territory.GetRandomPoint(mi.TerritoryCurrent, 30);
+            mi.Location = Territory.GetRandomPointBoundingRect(mi.TerritoryCurrent, 30);
          }
          //-----------------------------------------------------------
          if (false == CheckForInfluenceError(gi)) // check for any errors
@@ -1064,7 +1064,7 @@ namespace PleasantvilleGame
                else
                {
                   gi.Zebulon.TerritoryCurrent = gi.Zebulon.TerritoryStarting = tZebutonStart;
-                  gi.Zebulon.Location = Territory.GetRandomPoint(tZebutonStart, gi.Zebulon.Zoom * Utilities.theMapItemOffset);
+                  gi.Zebulon.Location = Territory.GetRandomPointBoundingRect(tZebutonStart, gi.Zebulon.Zoom * Utilities.theMapItemOffset);
                }
                Option option = gi.Options.Find("AutoSetupTown");
                if (true == option.IsEnabled)

@@ -25,7 +25,7 @@ namespace PleasantvilleGame
          InitializeComponent();
          //--------------------------------------------------
          Thickness thickness = new Thickness(5);
-         Image imageTutorial = new Image() { Name = "Tutorial1", Width = 200, Height = 200, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = System.Windows.VerticalAlignment.Center, Source = MapItem.theMapImages.GetBitmapImage("Lawyer1"), Margin=thickness};
+         Image imageTutorial = new Image() { Name = "Lawyer1", Width = 200, Height = 200, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = System.Windows.VerticalAlignment.Center, Source = MapItem.theMapImages.GetBitmapImage("Lawyer1"), Margin=thickness};
          myGrid.Children.Add(imageTutorial);
          Grid.SetRow(imageTutorial, 1);
          Grid.SetColumn(imageTutorial, 1);

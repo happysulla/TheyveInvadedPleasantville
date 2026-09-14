@@ -99,6 +99,7 @@ namespace PleasantvilleGame
          newAlien.IsAlienKnown = false;
          newAlien.IsWary = false;
          newAlien.IsControlled = false;
+         newAlien.IsInterrogated = false;
       }
       public void AddKnownAlien(IMapItem newAlien)
       {
@@ -108,6 +109,7 @@ namespace PleasantvilleGame
          newAlien.IsWary = false;
          newAlien.IsControlled = false;
          newAlien.IsSkeptical = false;
+         newAlien.IsInterrogated = false;
       }
       public void AddControlled(IMapItem controlled)
       {
@@ -118,6 +120,8 @@ namespace PleasantvilleGame
          controlled.IsSurrendered = false;
          controlled.IsSkeptical = false;
          controlled.IsTiedUp = false;
+         controlled.IsImplantRemovalAttempt = false;
+         controlled.IsInterrogated = false;
       }
       public IMapItemMove? CreateMapItemMove(IMapItem mi, ITerritory newT)
       {

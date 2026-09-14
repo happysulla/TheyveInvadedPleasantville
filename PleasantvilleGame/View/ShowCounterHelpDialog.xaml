@@ -17,7 +17,8 @@
          <ColumnDefinition Width="*"/>
       </Grid.ColumnDefinitions>
       <TextBlock x:Name="myTextBlock" Grid.Row="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="10,10,10,10" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="16">
-         Each townsperson in the game has a starting location, movement, influence factor, and combat value. <InlineUIContainer><Button Content='r2.2' FontFamily='Courier New' FontSize='12' Click="ButtonRule_Click"></Button></InlineUIContainer>.
+         <InlineUIContainer><Button Content='r2.2' FontFamily='Courier New' FontSize='12' Click="ButtonRule_Click"></Button></InlineUIContainer>
+           Each townsperson in the game has a starting location, movement, influence factor, and combat value.
       </TextBlock>
       <StackPanel Name="myStackpanelLeft" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical">
          <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" Width="70" Height="30" Margin="0,0,0,50" FontSize="14" Click="ButtonRule_Click">r2.2.2</Button>
