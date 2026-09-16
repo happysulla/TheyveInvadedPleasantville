@@ -13,13 +13,16 @@ using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.Linq;
+using WpfAnimatedGif;
 using static System.Windows.Forms.LinkLabel;
 using Application = System.Windows.Application;
 using Brush = System.Windows.Media.Brush;
@@ -1316,6 +1319,10 @@ namespace PleasantvilleGame
                   return;
                }
                break;
+            case GameAction.EndGameShowStats:
+               if (false == UpdateCanvasShowStatistics(gi))
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasShowStatistics() returned error ");
+               break;
             case GameAction.UpdateRotateStack:
             case GameAction.UpdateScatterStack:
             case GameAction.UpdateMainCanvas:
@@ -2523,6 +2530,366 @@ namespace PleasantvilleGame
             b.BeginAnimation(Canvas.TopProperty, null);  // end animation offset
             Logger.Log(LogEnum.LE_ERROR, "Move_PathAnimate():  EXCEPTION THROWN e=\n" + e.ToString());
             return false;
+         }
+      }
+      //-------------END GAME HELPER FUNCTIONS---------------------------------
+      private bool UpdateCanvasShowFeats()
+      {
+         List<UIElement> elements = new List<UIElement>();
+         foreach (UIElement ui in myCanvasMain.Children)
+         {
+            if (ui is Image img)
+            {
+               if (true == img.Name.Contains("Canvas"))
+                  continue;
+               elements.Add(ui);
+            }
+            if (ui is Polygon polygon)
+               elements.Add(ui);
+            if (ui is TextBlock tb)
+               elements.Add(ui);
+            if (ui is Label label)
+               elements.Add(ui);
+            if (ui is Button b)
+            {
+               if (false == b.Name.Contains("Die"))
+                  elements.Add(ui);
+            }
+         }
+         foreach (UIElement ui1 in elements)
+            myCanvasMain.Children.Remove(ui1);
+         //------------------------------------
+         myCanvasMain.LayoutTransform = new ScaleTransform(1.0, 1.0);
+         double centerX = myCanvasMain.ActualWidth * 0.5;
+         double centerY = myCanvasMain.ActualHeight * 0.5;
+         //------------------------------------
+         GameFeat featChange;
+         Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "UpdateCanvas_ShowFeats(): Feats=" + GameEngine.theInGameFeats.ToString() + " \nSFeats=" + GameEngine.theStartingFeats.ToString());
+         if (false == GameEngine.theInGameFeats.GetFeatChange(GameEngine.theStartingFeats, out featChange)) // Update_CanvasShowFeats()
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Update_CanvasShowFeats(): Get_FeatChange() returned false");
+            return false;
+         }
+         if (true == String.IsNullOrEmpty(featChange.Key))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Update_CanvasShowFeats(): featChange=empty");
+            return false;
+         }
+         Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "UpdateCanvas_ShowFeats(): Change=" + featChange.ToString());
+         //------------------------------------
+         double sizeOfImage = Math.Min(myCanvasMain.ActualHeight, myCanvasMain.ActualWidth);
+         BitmapImage bmi1 = new BitmapImage();
+         bmi1.BeginInit();
+         bmi1.UriSource = new Uri(MapImage.theImageDirectory + "StarReward.gif", UriKind.Absolute);
+         bmi1.EndInit();
+         Image imgFeat = new Image { Source = bmi1, Height = sizeOfImage, Width = sizeOfImage, Name = "Feat" };
+         ImageBehavior.SetAnimatedSource(imgFeat, bmi1);
+         myCanvasMain.Children.Add(imgFeat);
+         double X = centerX - (sizeOfImage * 0.5);
+         double Y = centerY - (sizeOfImage * 0.5);
+         Canvas.SetLeft(imgFeat, X);
+         Canvas.SetTop(imgFeat, Y);
+         Canvas.SetZIndex(imgFeat, 99998);
+         myCanvasMain.MouseDown += MouseDownGameFeat;
+         //-------------------------------------
+         System.Windows.Controls.Label labelTitle = new System.Windows.Controls.Label() { Name = "FeatLabel1", Content = "Game Feat Completed!", FontStyle = FontStyles.Italic, FontSize = 24, FontWeight = FontWeights.Bold, FontFamily = myFontFam, VerticalContentAlignment = VerticalAlignment.Center, HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center };
+         myCanvasMain.Children.Add(labelTitle);
+         labelTitle.MouseDown += MouseDownGameFeat;
+         System.Windows.Controls.Label labelForFeat = new System.Windows.Controls.Label() { Name = "FeatLabel2", Content = GameFeats.GetFeatMessage(featChange), FontSize = 24, FontWeight = FontWeights.Bold, FontFamily = myFontFam, VerticalContentAlignment = VerticalAlignment.Center, HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center };
+         myCanvasMain.Children.Add(labelForFeat);
+         labelForFeat.MouseDown += MouseDownGameFeat;
+         System.Windows.Controls.Label labelClick = new System.Windows.Controls.Label() { Name = "FeatLabel3", Content = "Click to continue", FontStyle = FontStyles.Italic, FontSize = 24, FontWeight = FontWeights.Bold, FontFamily = myFontFam, VerticalContentAlignment = VerticalAlignment.Center, HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center };
+         myCanvasMain.Children.Add(labelClick);
+         labelClick.MouseDown += MouseDownGameFeat;
+         labelTitle.UpdateLayout();
+         labelForFeat.UpdateLayout();
+         labelClick.UpdateLayout();
+         //-------------------------------------
+         double X1 = centerX - labelTitle.ActualWidth * 0.5;
+         double Y1 = centerY - labelTitle.ActualHeight * 0.5;
+         double X2 = centerX - labelForFeat.ActualWidth * 0.5;
+         double Y2 = centerY + labelTitle.ActualHeight * 0.5;
+         double X3 = centerX - labelClick.ActualWidth * 0.5;
+         double Y3 = centerY + labelTitle.ActualHeight * 0.5 + labelForFeat.ActualHeight;
+         //-------------------------------------
+         Canvas.SetLeft(labelTitle, X1);
+         Canvas.SetTop(labelTitle, Y1);
+         Canvas.SetZIndex(labelTitle, 99999);
+         Canvas.SetLeft(labelForFeat, X2);
+         Canvas.SetTop(labelForFeat, Y2);
+         Canvas.SetZIndex(labelForFeat, 99999);
+         Canvas.SetLeft(labelClick, X3);
+         Canvas.SetTop(labelClick, Y3);
+         Canvas.SetZIndex(labelClick, 99999);
+         //-------------------------------------
+         GameFeat? startingFeat = GameEngine.theStartingFeats.Find(featChange.Key);
+         if (null == startingFeat)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Update_CanvasShowFeats(): startingFeat=null");
+            return false;
+         }
+         startingFeat.Value = featChange.Value;
+         return true;
+      }
+      private bool UpdateCanvasShowStatistics(IGameInstance gi)
+      {
+         if (null == myDieRoller)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Update_CanvasShowStatistics(): myDieRoller=null");
+            return false;
+         }
+         List<UIElement> elements = new List<UIElement>();
+         foreach (UIElement ui in myCanvasMain.Children)
+         {
+            if (ui is Image img)
+            {
+               if ("Map" == img.Name)
+                  continue;
+               elements.Add(ui);
+            }
+            if (ui is TextBlock tb)
+               elements.Add(ui);
+            if (ui is Label label)
+               elements.Add(ui);
+            if (ui is Button b)
+            {
+               if (false == b.Name.Contains("Die"))
+                  elements.Add(ui);
+            }
+         }
+         foreach (UIElement ui1 in elements)
+            myCanvasMain.Children.Remove(ui1);
+         myDieRoller.HideDie();
+         //-------------------------------
+         GameStatistic statNumGames = gi.Statistics.Find("NumGames"); // current game always set to one
+         statNumGames.Value = 1;
+         //-------------------------------
+         myTextBoxMarquee.Inlines.Clear();
+         myTextBoxMarquee.Inlines.Add(new Run("Current Game Statistics:") { FontWeight = FontWeights.Bold, FontStyle = FontStyles.Italic, TextDecorations = TextDecorations.Underline, Foreground = Brushes.Red });
+         if (false == UpdateCanvasShowStatsText(myTextBoxMarquee, gi.Statistics, Brushes.Red))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow.Update_CanvasShowStatistics(): UpdateCanvasShowStatsText() returned false");
+            return false;
+         }
+         //-------------------------------
+         Option optionTownSolo = gi.Options.Find("TownSolo");
+         Option optionAlienSolo = gi.Options.Find("AlienSolo");
+         Option optionTownHost = gi.Options.Find("TownHost");
+         Option optionAlienClient = gi.Options.Find("AlienClient");
+         if (true == optionTownSolo.IsEnabled)
+         {
+            Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): Before==>GameEngine.theTownsSoloStatistics=" + GameEngine.theTownsSoloStatistics.ToString());
+            UpdateCanvasShowStatsAdds(gi.Statistics, GameEngine.theTownsSoloStatistics);
+            Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): After==>GameEngine.theTownsSoloStatistics=" + GameEngine.theTownsSoloStatistics.ToString());
+            GameStatistic stat0NumGames = GameEngine.theTownsSoloStatistics.Find("NumGames");
+            if (1 < stat0NumGames.Value)
+            {
+               myTextBoxMarquee.Inlines.Add(new LineBreak());
+               myTextBoxMarquee.Inlines.Add(new LineBreak());
+               string title2 = "Town Solo Statistics:";
+               myTextBoxMarquee.Inlines.Add(new Run(title2) { FontWeight = FontWeights.Bold, FontStyle = FontStyles.Italic, TextDecorations = TextDecorations.Underline, Foreground = Brushes.Blue });
+               UpdateCanvasShowStatsText(myTextBoxMarquee, GameEngine.theTownsSoloStatistics, Brushes.Blue);
+            }
+         }
+         else if (true == optionAlienSolo.IsEnabled)
+         {
+            Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): Before==>GameEngine.theAlienSoloStatistics=" + GameEngine.theAlienSoloStatistics.ToString());
+            UpdateCanvasShowStatsAdds(gi.Statistics, GameEngine.theAlienSoloStatistics);
+            Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): After==>GameEngine.theAlienSoloStatistics=" + GameEngine.theAlienSoloStatistics.ToString());
+            GameStatistic stat1NumGames = GameEngine.theAlienSoloStatistics.Find("NumGames");
+            if (1 < stat1NumGames.Value)
+            {
+               myTextBoxMarquee.Inlines.Add(new LineBreak());
+               myTextBoxMarquee.Inlines.Add(new LineBreak());
+               string title2 = "Alien Solo Statistics:";
+               myTextBoxMarquee.Inlines.Add(new Run(title2) { FontWeight = FontWeights.Bold, FontStyle = FontStyles.Italic, TextDecorations = TextDecorations.Underline, Foreground = Brushes.Blue });
+               UpdateCanvasShowStatsText(myTextBoxMarquee, GameEngine.theAlienSoloStatistics, Brushes.Blue);
+            }
+         }
+         else if (true == optionTownHost.IsEnabled)
+         {
+            Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): Before==>GameEngine.theTownsVersusStatistics=" + GameEngine.theAlienSoloStatistics.ToString());
+            UpdateCanvasShowStatsAdds(gi.Statistics, GameEngine.theTownsVersusStatistics);
+            Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): After==>GameEngine.theTownsVersusStatistics=" + GameEngine.theAlienSoloStatistics.ToString());
+            GameStatistic stat1NumGames = GameEngine.theTownsVersusStatistics.Find("NumGames");
+            if (1 < stat1NumGames.Value)
+            {
+               myTextBoxMarquee.Inlines.Add(new LineBreak());
+               myTextBoxMarquee.Inlines.Add(new LineBreak());
+               string title2 = "Town Multiplayer Statistics:";
+               myTextBoxMarquee.Inlines.Add(new Run(title2) { FontWeight = FontWeights.Bold, FontStyle = FontStyles.Italic, TextDecorations = TextDecorations.Underline, Foreground = Brushes.Blue });
+               UpdateCanvasShowStatsText(myTextBoxMarquee, GameEngine.theTownsVersusStatistics, Brushes.Blue);
+            }
+         }
+         else if (true == optionAlienClient.IsEnabled)
+         {
+            Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): Before==>GameEngine.theAlienVersusStatistics=" + GameEngine.theAlienSoloStatistics.ToString());
+            UpdateCanvasShowStatsAdds(gi.Statistics, GameEngine.theAlienVersusStatistics);
+            Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): After==>GameEngine.theAlienVersusStatistics=" + GameEngine.theAlienSoloStatistics.ToString());
+            GameStatistic stat1NumGames = GameEngine.theTownsVersusStatistics.Find("NumGames");
+            if (1 < stat1NumGames.Value)
+            {
+               myTextBoxMarquee.Inlines.Add(new LineBreak());
+               myTextBoxMarquee.Inlines.Add(new LineBreak());
+               string title2 = "Alien Multiplayer Statistics:";
+               myTextBoxMarquee.Inlines.Add(new Run(title2) { FontWeight = FontWeights.Bold, FontStyle = FontStyles.Italic, TextDecorations = TextDecorations.Underline, Foreground = Brushes.Blue });
+               UpdateCanvasShowStatsText(myTextBoxMarquee, GameEngine.theAlienVersusStatistics, Brushes.Blue);
+            }
+         }
+         else
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow.Update_CanvasShowStatistics(): Reached Default with no option chosen");
+            return false;
+         }
+         //-------------------------------
+         Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): Before====>GameEngine.theTotalStatistics=" + GameEngine.theTotalStatistics.ToString());
+         UpdateCanvasShowStatsAdds(gi.Statistics, GameEngine.theTotalStatistics);
+         Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): After====>GameEngine.theTotalStatistics=" + GameEngine.theTotalStatistics.ToString());
+         GameStatistic stat0= GameEngine.theTownsSoloStatistics.Find("NumGames");
+         GameStatistic stat1= GameEngine.theAlienSoloStatistics.Find("NumGames");
+         GameStatistic stat2 = GameEngine.theTownsVersusStatistics.Find("NumGames");
+         GameStatistic stat3 = GameEngine.theAlienVersusStatistics.Find("NumGames");
+         int totalGamesPlayed = stat0.Value + stat1.Value + stat2.Value + stat3.Value;
+         GameStatistic stat4 = GameEngine.theTotalStatistics.Find("NumGames");
+         if (totalGamesPlayed != stat4.Value)
+         {
+            myTextBoxMarquee.Inlines.Add(new LineBreak());
+            myTextBoxMarquee.Inlines.Add(new LineBreak());
+            string title2 = "All Games Statistics:";
+            myTextBoxMarquee.Inlines.Add(new Run(title2) { FontWeight = FontWeights.Bold, FontStyle = FontStyles.Italic, TextDecorations = TextDecorations.Underline, Foreground = Brushes.Goldenrod });
+            UpdateCanvasShowStatsText(myTextBoxMarquee, GameEngine.theTotalStatistics, Brushes.Goldenrod);
+         }
+         //-------------------------------
+         myCanvasMain.ClipToBounds = true;
+         myCanvasMain.Children.Add(myTextBoxMarquee);
+         myTextBoxMarquee.UpdateLayout();
+         //-------------------------------
+         DoubleAnimation doubleAnimation = new DoubleAnimation();
+         doubleAnimation.From = -myTextBoxMarquee.ActualHeight;
+         doubleAnimation.To = myCanvasMain.ActualHeight;
+         doubleAnimation.RepeatBehavior = RepeatBehavior.Forever;
+         doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(MARQUEE_SCROLL_ANMINATION_TIME));
+         Storyboard.SetTargetName(doubleAnimation, "tbMarquee");
+         Storyboard.SetTargetProperty(doubleAnimation, new PropertyPath(Canvas.BottomProperty));
+         myStoryboardMarquee.Children.Add(doubleAnimation);
+         myStoryboardMarquee.Begin(this, true);
+         //-------------------------------
+         Logger.Log(LogEnum.LE_VIEW_SHOW_SETTINGS, "GameViewerWindow.Update_CanvasShowStatistics(): Called Save_DefaultsToSettings()");
+         SaveDefaultsToSettings();
+         return true;
+      }
+      private void UpdateCanvasShowStatsAdds(GameStatistics statistics, GameStatistics totalStatistics)
+      {
+         //-------------------------------------
+         foreach (GameStatistic stat in statistics)
+         {
+            if (true == stat.Key.Contains("Num"))
+            {
+               GameStatistic statAllNum = totalStatistics.Find(stat.Key);
+               statAllNum.Value += stat.Value;
+            }
+            else if (true == stat.Key.Contains("Max"))
+            {
+               GameStatistic statMax = totalStatistics.Find(stat.Key);
+               if (statMax.Value < stat.Value)
+                  statMax.Value = stat.Value;
+            }
+            else if (true == stat.Key.Contains("Min"))
+            {
+               GameStatistic statMin = totalStatistics.Find(stat.Key);
+               Logger.Log(LogEnum.LE_VIEW_SHOW_STATS_MIN, "Perform_EndCheck(): key=" + stat.Key + " statMin.Value=" + statMin.Value.ToString() + " stat.Value=" + stat.Value.ToString());
+               if ((stat.Value < statMin.Value) || (0 == statMin.Value))
+               {
+                  if (0 < stat.Value)
+                  {
+                     Logger.Log(LogEnum.LE_VIEW_SHOW_STATS_MIN, "Perform_EndCheck(): (stat.Value=" + stat.Value.ToString() + ") < (statMin.Value=" + statMin.Value.ToString() + ")");
+                     statMin.Value = stat.Value;
+                  }
+               }
+            }
+         }
+      }
+      private bool UpdateCanvasShowStatsText(TextBlock tb, GameStatistics statistics, Brush brushFont)
+      {
+         return true;
+      }
+      private void MouseDownGameFeat(object send, MouseEventArgs e)
+      {
+         System.Windows.Point p = e.GetPosition((UIElement)send);
+         HitTestResult result = VisualTreeHelper.HitTest(myCanvasMain, p);  // Get the Point where the hit test occurs
+         foreach (UIElement ui in myCanvasMain.Children)
+         {
+            if (ui is Image img1)
+            {
+               if (result.VisualHit == img1)
+               {
+                  if ("Feat" == img1.Name)
+                  {
+                     GameAction action = GameAction.Error;
+                     GameFeat featChange;
+                     Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): \n Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
+                     if (false == GameEngine.theInGameFeats.GetFeatChange(GameEngine.theStartingFeats, out featChange)) // MouseDownGameFeat - EventingDebriefing - Click star
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "Mouse_DownGameFeat(): Get_FeatChange() returned false");
+                        return;
+                     }
+                     //-------------------------------------
+                     if (GamePhase.GameEnd == myGameInstance.GamePhase)
+                     {
+                        if (false == String.IsNullOrEmpty(featChange.Key))
+                        {
+                           action = GameAction.EndGameShowFeats;
+                           Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): 1-Change=" + featChange.Key);
+                        }
+                        else
+                        {
+                           action = GameAction.EndGameShowStats;
+                           myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas);
+                        }
+                     }
+                     myCanvasMain.MouseDown -= MouseDownGameFeat;
+                     e.Handled = true;
+                     myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+                     return;
+                  }
+               }
+            }
+            else if (ui is Label label)
+            {
+               if (result.VisualHit == label)
+               {
+                  if (true == label.Name.Contains("Feat"))
+                  {
+                     GameAction action = GameAction.Error;
+                     GameFeat featChange;
+                     Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): \n Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
+                     if (false == GameEngine.theInGameFeats.GetFeatChange(GameEngine.theStartingFeats, out featChange)) // MouseDownGameFeat - EventingDebriefing - Click label
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "Mouse_DownGameFeat(): Get_FeatChange() returned false");
+                        return;
+                     }
+                     //-------------------------------------
+                     if (GamePhase.GameEnd == myGameInstance.GamePhase)
+                     {
+                        if (false == String.IsNullOrEmpty(featChange.Key))
+                        {
+                           action = GameAction.EndGameShowFeats;
+                           Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): 1-Change=" + featChange.Key);
+                        }
+                        else
+                        {
+                           action = GameAction.EndGameShowStats;
+                           myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas);
+                        }
+                     }
+                     label.MouseDown -= MouseDownGameFeat;
+                     myCanvasMain.MouseDown -= MouseDownGameFeat;
+                     e.Handled = true;
+                     myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+                     return;
+                  }
+               }
+            }
          }
       }
       //-------------HELPER FUNCTIONS---------------------------------

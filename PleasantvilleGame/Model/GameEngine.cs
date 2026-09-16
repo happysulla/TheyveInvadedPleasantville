@@ -10,15 +10,15 @@ namespace PleasantvilleGame
       public const int MAX_GAME_TYPE = 3;
       static public GameType theGameType = GameType.Error;
       static public MultiplayerSessionManager? theMultiplayerSessionManager = null;
+      //---------------------------------------------------------------------
       static public GameFeats theInGameFeats = new GameFeats();          // feats that change from starting as this session runs
       static public GameFeats theStartingFeats = new GameFeats();  // starting feats read in at app initialization
       //---------------------------------------------------------------------
-      static public GameStatistics theAlienVersusStatistics = new GameStatistics();
-      static public GameStatistics theTownsVersusStatistics = new GameStatistics();
+      static public GameStatistics theTotalStatistics = new GameStatistics();
       static public GameStatistics theTownsSoloStatistics = new GameStatistics();
       static public GameStatistics theAlienSoloStatistics = new GameStatistics();
-      //---------------------------------------------------------------------
-      TableMgr myTableMgr = new TableMgr();
+      static public GameStatistics theTownsVersusStatistics = new GameStatistics();
+      static public GameStatistics theAlienVersusStatistics = new GameStatistics();
       //---------------------------------------------------------------------
       private readonly MainWindow myMainWindow;
       private readonly List<IView> myViews = new List<IView>();

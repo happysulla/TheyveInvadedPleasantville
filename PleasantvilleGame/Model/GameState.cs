@@ -638,6 +638,16 @@ namespace PleasantvilleGame
       }
       protected bool CheckForEndOfGame(IGameInstance gi, ref GameAction action)
       {
+         if( true == gi.Zebulon.IsKilled )
+         {
+            Logger.Log(LogEnum.LE_GAME_END, "CheckFor_EndOfGame(): Zebulon is KIA");
+            gi.EndGameReason = "Zebulon is defeated";
+            gi.GamePhase = GamePhase.GameEnd;
+            action = GameAction.EndGameWin;
+            gi.EventDisplayed = gi.EventActive = "e501";
+            gi.Statistics.AddOne("NumAlienDefeats");
+            return true;
+         }
          IMapItems killedMapItems = new MapItems();
          foreach (Stack stack in gi.Stacks) //  Tied Up MapItems - Tied up players are freed if a friendly counter is in the same hex at the end of the turn.
          {
@@ -655,7 +665,7 @@ namespace PleasantvilleGame
                mi.IsKnockedoutThisTurn = false;
                mi.IsStunnedThisTurn = false;
                mi.IsImplantRemovalAttemptThisTurn = false;
-               if( true == mi.IsKilled)
+               if (true == mi.IsKilled)
                {
                   mi.IsTiedUp = false;
                   mi.IsKnockedout = false;
@@ -677,7 +687,7 @@ namespace PleasantvilleGame
                   else if (true == mi.IsControlled)
                   {
                      controlledTiedUpPersons.Add(mi);
-                     Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "CheckFor_EndOfGame(): adding to controlledTiedUpPersons mi=" + mi.ToString()+ " in t=" + stack.Territory.ToString());
+                     Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "CheckFor_EndOfGame(): adding to controlledTiedUpPersons mi=" + mi.ToString() + " in t=" + stack.Territory.ToString());
                   }
                }
                if ((false == mi.IsTiedUp) && (false == mi.IsKnockedout) && (false == mi.IsStunned))
@@ -713,7 +723,7 @@ namespace PleasantvilleGame
             }
          }
          //-----------------------------------------------------------
-         foreach(IMapItem mi in killedMapItems)
+         foreach (IMapItem mi in killedMapItems)
          {
             gi.Stacks.Remove(mi);
             gi.DeadPeople.Add(mi);
@@ -748,7 +758,7 @@ namespace PleasantvilleGame
          }
          int totalInfluence = uncontrolledInfluence + knownAlienInfluence + unknownAlienInfluence + controlledInfluence;
          //-----------------------------------------------------------
-         Logger.Log(LogEnum.LE_GAME_END_CHECK, "Check_ForEndOfGame(): z="+ gi.Zebulon.ToString() + " (uc=" + uncontrolledInfluence.ToString() + ") + (k=" + knownAlienInfluence.ToString() + ") + (uk=" + unknownAlienInfluence.ToString() + ") + (tp=" + controlledInfluence.ToString() + ") = (tot=" + totalInfluence.ToString() + ")");
+         Logger.Log(LogEnum.LE_GAME_END_CHECK, "Check_ForEndOfGame(): z=" + gi.Zebulon.ToString() + " (uc=" + uncontrolledInfluence.ToString() + ") + (k=" + knownAlienInfluence.ToString() + ") + (uk=" + unknownAlienInfluence.ToString() + ") + (tp=" + controlledInfluence.ToString() + ") = (tot=" + totalInfluence.ToString() + ")");
          int alienInfluenceTotal = unknownAlienInfluence + knownAlienInfluence;
          if (alienInfluenceTotal <= 0)   // If either the Alien controlled influcence reaches zero, game over
          {
@@ -774,7 +784,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_GAME_END, "Check_ForEndOfGame(): Turn=" + gi.GameTurn + " tot=" + totalInfluence.ToString() + " half=" + halfInfluence.ToString() + " tp=" + controlledInfluence.ToString() + " a=" + alienInfluenceTotal.ToString());
                gi.EndGameReason = "Game ends on turns";
                gi.GamePhase = GamePhase.GameEnd;
-               if(halfInfluence <= controlledInfluence)
+               if (halfInfluence <= controlledInfluence)
                {
                   action = GameAction.EndGameWin;
                   gi.EventDisplayed = gi.EventActive = "e501";
@@ -787,7 +797,7 @@ namespace PleasantvilleGame
             }
          }
          //-----------------------------------------------------------
-         if ( (GameAction.EndGameWin != action) && (GameAction.EndGameLose != action)  )
+         if ((GameAction.EndGameWin != action) && (GameAction.EndGameLose != action))
          {
             gi.GameTurn++;
             if (false == ResetPhase(gi, GamePhase.RandomMovement))
@@ -952,6 +962,8 @@ namespace PleasantvilleGame
                }
                else
                {
+                  Option optionTownHost = gi.Options.Find("TownHost");
+                  optionTownHost.IsEnabled = true;
                   if (true == hostDialog.ShowDialog())
                   {
                      if (null == GameEngine.theMultiplayerSessionManager)
@@ -999,6 +1011,8 @@ namespace PleasantvilleGame
                }
                else
                {
+                  Option optionAlienClient = gi.Options.Find("AlienClient");
+                  optionAlienClient.IsEnabled = true;
                   GameEngine.theGameType = GameType.MultiPlayerJoin;
                   joinDialog.Owner = MainWindow.theGameViewerWindow;
                   if (true == joinDialog.ShowDialog())
@@ -1042,6 +1056,8 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.GameSetupPlayAlien:
+               Option optionAlienSolo = gi.Options.Find("AlienSolo");
+               optionAlienSolo.IsEnabled = true;
                GameEngine.theGameType = GameType.SinglePlayerAlien;
                gi.PlayerAlien = new PlayerAlienHuman();
                gi.PlayerTown = new PlayerTownComputer();
@@ -1049,6 +1065,8 @@ namespace PleasantvilleGame
                gi.DieRollAction = GameAction.GameSetupStartingTownsplayerSetRoll;
                break;
             case GameAction.GameSetupPlayTownsperson:
+               Option optionTownSolo = gi.Options.Find("TownSolo");
+               optionTownSolo.IsEnabled = true;
                GameEngine.theGameType = GameType.SinglePlayerTown;
                gi.PlayerAlien = new PlayerAlienComputer();
                gi.PlayerTown = new PlayerTownHuman();
@@ -2068,9 +2086,10 @@ namespace PleasantvilleGame
                         isZebulonPartOfDefenders = true;
                   }
                   IMapItem? firstAttacker = gi.MapItemCombat.Attackers[0];
-                  if( null == firstAttacker )
+                  IMapItem? firstDefender = gi.MapItemCombat.Defenders[0];
+                  if ((null == firstAttacker) || (null == firstDefender)) 
                   {
-                     returnStatus = "firstAttacker=null";
+                     returnStatus = "firstAttacker=null or firstDefender=null";
                      Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
                   }
                   else
@@ -2098,45 +2117,26 @@ namespace PleasantvilleGame
                         }
                      }
                      //----------------------------------------------
+                     gi.Statistics.AddOne("NumCombats");
                      Logger.Log(LogEnum.LE_SHOW_COMBATS, "GameStateCombat.PerformAction(CombatsRoll): Combat=" + gi.MapItemCombat.ToString() + " action=" + action.ToString() + " dr=" + dieRoll.ToString() + " 1stA=" + firstAttacker.Name + " in " + firstAttacker.TerritoryCurrent.ToString());
                      switch (gi.MapItemCombat.Result)
                      {
                         case CombatResult.DefenderWins:
                            if( true == isZebulonPartOfAttackers)
-                           {
-                              Logger.Log(LogEnum.LE_GAME_END, "GameStateCombat.PerformAction(CombatsRoll): Zebulon is KIA");
-                              gi.EndGameReason = "Zebulon is defeated";
-                              gi.GamePhase = GamePhase.GameEnd;
-                              action = GameAction.EndGameWin;
-                              gi.EventDisplayed = gi.EventActive = "e501";
-                           }
+                              gi.Zebulon.IsKilled = true;
                            else
-                           {
                               action = GameAction.CombatDefenderWin;
-                           }
                            break;
                         case CombatResult.AttackerWins:
                            if (true == isZebulonPartOfDefenders)
-                           {
-                              Logger.Log(LogEnum.LE_GAME_END, "GameStateCombat.PerformAction(CombatsRoll): Zebulon is KIA");
-                              gi.EndGameReason = "Zebulon is defeated";
-                              gi.GamePhase = GamePhase.GameEnd;
-                              action = GameAction.EndGameWin;
-                              gi.EventDisplayed = gi.EventActive = "e501";
-                           }
+                              gi.Zebulon.IsKilled = true;
                            else
-                           {
                               action = GameAction.CombatAttackerWin;
-                           }
                            break;
                         case CombatResult.AttackerFlees:
                            if (true == isZebulonPartOfAttackers)
                            {
-                              Logger.Log(LogEnum.LE_GAME_END, "GameStateCombat.PerformAction(CombatsRoll): Zebulon is KIA");
-                              gi.EndGameReason = "Zebulon is defeated";
-                              gi.GamePhase = GamePhase.GameEnd;
-                              action = GameAction.EndGameWin;
-                              gi.EventDisplayed = gi.EventActive = "e501";
+                              gi.Zebulon.IsKilled = true;
                            }
                            else
                            {
@@ -2145,26 +2145,37 @@ namespace PleasantvilleGame
                                  returnStatus = "CreateMapItemFlee() returned false";
                                  Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
                               }
-                              if (true == firstAttacker.IsControlled)
+                              if ((true == firstAttacker.IsControlled) && (true == firstDefender.IsAlien()))
                               {
                                  gi.EventActive = gi.EventDisplayed = "e011tf";
                                  action = GameAction.CombatTownFlee;
+                                 gi.Statistics.AddOne("NumTownFlees");
                               }
-                              else
+                              else if ((false == firstDefender.IsControlled) && (true == firstAttacker.IsAlien()))
                               {
                                  gi.EventActive = gi.EventDisplayed = "e011af";
                                  action = GameAction.CombatAlienFlee;
+                                 gi.Statistics.AddOne("NumAlienFlees");
+                              }
+                              else if (true == firstAttacker.IsControlled)
+                              {
+                                 // Uncontrolled Townperson attacked
+                              }
+                              else if (true == firstDefender.IsControlled)
+                              {
+                                 // Uncontrolled Townperson attacked
+                              }
+                              else
+                              {
+                                 returnStatus = "invalid state reached ";
+                                 Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
                               }
                            }
                            break;
                         case CombatResult.DefenderFlees:
                            if (true == isZebulonPartOfDefenders)
                            {
-                              Logger.Log(LogEnum.LE_GAME_END, "GameStateCombat.PerformAction(CombatsRoll): Zebulon is KIA");
-                              gi.EndGameReason = "Zebulon is defeated";
-                              gi.GamePhase = GamePhase.GameEnd;
-                              action = GameAction.EndGameWin;
-                              gi.EventDisplayed = gi.EventActive = "e501";
+                              gi.Zebulon.IsKilled = true;
                            }
                            else
                            {
@@ -2177,11 +2188,17 @@ namespace PleasantvilleGame
                               {
                                  gi.EventActive = gi.EventDisplayed = "e011tf";
                                  action = GameAction.CombatTownFlee;
+                                 gi.Statistics.AddOne("NumTownFlees");
                               }
-                              else
+                              else if (true == firstDefender.IsAlien())
                               {
                                  gi.EventActive = gi.EventDisplayed = "e011af";
                                  action = GameAction.CombatAlienFlee;
+                                 gi.Statistics.AddOne("NumAlienFlees");
+                              }
+                              else
+                              {
+                                 // Uncontrolled Townperson attacked
                               }
                            }
                            break;                   
@@ -2189,6 +2206,15 @@ namespace PleasantvilleGame
                            returnStatus = "invalid CombatResult=" + gi.MapItemCombat.Result.ToString();
                            Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
                            break;
+                     }
+                     //---------------------------------------
+                     if( true == gi.Zebulon.IsKilled)
+                     {
+                        if( false == CheckForEndOfGame(gi, ref action) )
+                        {
+                           returnStatus = "Check_ForEndOfGame() returned false";
+                           Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
+                        }
                      }
                   }
                }
@@ -2731,6 +2757,9 @@ namespace PleasantvilleGame
                break;
             case GameAction.EndGameWin:
             case GameAction.EndGameLose:
+               break;
+            case GameAction.EndGameShowStats:
+               gi.EventDisplayed = gi.EventActive = "e503";
                break;
             case GameAction.EndGameExit:
                Application.Current.Shutdown();

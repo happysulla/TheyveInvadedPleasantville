@@ -52,7 +52,8 @@ namespace PleasantvilleGame
       [NonSerialized] public static string theGameFeatDirectory = "";
       [NonSerialized] public static string[] theDefaults =
       {
-
+         "EndTownSoloWinOnInfluence",
+         "EndTownSoloWinKillZebulon"
       };
       private readonly ArrayList myList;
       public static string GetFeatMessage(GameFeat feat, bool isThreshold = false)
@@ -199,7 +200,7 @@ namespace PleasantvilleGame
             int threshold = 0;
             switch (feat.Key)
             {
-               case "NumShermanExplodes": threshold = 3; break;
+               case "NumAlienKills": threshold = 3; break;
                default: threshold = 0; break;
             }
             feat.Threshold = threshold;

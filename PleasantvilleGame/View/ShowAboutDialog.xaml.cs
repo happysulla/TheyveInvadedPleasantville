@@ -29,20 +29,18 @@ namespace PleasantvilleGame
          myCallback = callback;
          InitializeComponent();
          //--------------------------------------
-         StringBuilder sb = new StringBuilder();
-         sb.Append("Verson: ");
-         Version? version = Assembly.GetExecutingAssembly().GetName().Version;
+         Assembly assembly = Assembly.GetExecutingAssembly();
+         Version? version = assembly.GetName().Version;
          if( null == version )
          {
             Logger.Log(LogEnum.LE_ERROR, "ShowAboutDialog(): version=null");
             CtorError = true;
             return;
          }
-         sb.Append(version.ToString());
-         sb.Append("_");
-         DateTime linkerTime = Utilities.GetBuildDate(Assembly.GetExecutingAssembly());
-         sb.Append(linkerTime.ToString());
-         myTextBox.Text = sb.ToString();  
+         DateTime linkerTime = Utilities.GetBuildDate(assembly);
+         if (linkerTime == default && !string.IsNullOrWhiteSpace(assembly.Location))
+            linkerTime = File.GetLastWriteTime(assembly.Location);
+         myTextBox.Text = $"Version: {version}_{linkerTime:yyyyMMdd_HHmmss}";
       }
 
       //-------------------------------------------------------------------------------

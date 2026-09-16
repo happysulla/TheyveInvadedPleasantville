@@ -36,6 +36,11 @@ namespace PleasantvilleGame
       [NonSerialized]
       public static string[] theDefaults = new string[] 
       {
+         "TownSolo",
+         "AlienSolo",
+         "TownHost",
+         "AlienClient",
+         //--------------------
          "AutoSetupTown"
       };
       private readonly ArrayList myList;

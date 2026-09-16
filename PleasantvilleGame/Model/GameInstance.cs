@@ -100,6 +100,18 @@ namespace PleasantvilleGame
          newAlien.IsWary = false;
          newAlien.IsControlled = false;
          newAlien.IsInterrogated = false;
+         int alienInfluence = 0;
+         foreach (Stack stack in this.Stacks) //  record the high water mark for influence
+         {
+            foreach (MapItem mi in stack.MapItems)
+            {
+               if (((true == mi.IsAlienKnown) || (true == mi.IsAlienUnknown)) && (false == mi.IsTiedUp) && (false == mi.IsKnockedout) && (false == mi.IsStunned) && (false == mi.IsKilled))
+                  alienInfluence += mi.Influence;
+            }
+         }
+         GameStatistic stat = this.Statistics.Find("MaxAlienInfluence");
+         if (stat.Value < alienInfluence)
+            stat.Value = alienInfluence;
       }
       public void AddKnownAlien(IMapItem newAlien)
       {
@@ -110,6 +122,18 @@ namespace PleasantvilleGame
          newAlien.IsControlled = false;
          newAlien.IsSkeptical = false;
          newAlien.IsInterrogated = false;
+         int alienInfluence = 0;
+         foreach (Stack stack in this.Stacks)  //  record the high water mark for influence
+         {
+            foreach (MapItem mi in stack.MapItems)
+            {
+               if( ((true == mi.IsAlienKnown) || (true == mi.IsAlienUnknown)) && (false == mi.IsTiedUp) && (false == mi.IsKnockedout) && (false == mi.IsStunned) && (false == mi.IsKilled))
+                     alienInfluence += mi.Influence;
+            }
+         }
+         GameStatistic stat = this.Statistics.Find("MaxAlienInfluence");
+         if (stat.Value < alienInfluence)
+            stat.Value = alienInfluence;
       }
       public void AddControlled(IMapItem controlled)
       {
@@ -122,6 +146,18 @@ namespace PleasantvilleGame
          controlled.IsTiedUp = false;
          controlled.IsImplantRemovalAttempt = false;
          controlled.IsInterrogated = false;
+         int townInfluence = 0;
+         foreach (Stack stack in this.Stacks)  //  record the high water mark for influence
+         {
+            foreach (MapItem mi in stack.MapItems)
+            {
+               if ( (true == mi.IsControlled)  && (false == mi.IsTiedUp) && (false == mi.IsKnockedout) && (false == mi.IsStunned) && (false == mi.IsKilled))
+                  townInfluence += mi.Influence;
+            }
+         }
+         GameStatistic stat = this.Statistics.Find("MaxTownInfluence");
+         if (stat.Value < townInfluence)
+            stat.Value = townInfluence;
       }
       public IMapItemMove? CreateMapItemMove(IMapItem mi, ITerritory newT)
       {
