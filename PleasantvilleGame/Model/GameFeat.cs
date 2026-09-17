@@ -53,7 +53,24 @@ namespace PleasantvilleGame
       [NonSerialized] public static string[] theDefaults =
       {
          "EndTownSoloWinOnInfluence",
-         "EndTownSoloWinKillZebulon"
+         "EndTownSoloWinKillZebulon",
+         "EndTownSoloWinAlienEliminated",
+         //------------------
+         "EndTownHostWinOnInfluence",
+         "EndTownHostWinKillZebulon",
+         "EndTownHostWinAlienEliminated",
+         //------------------
+         "EndAlienSoloWinOnInfluence",
+         "EndAlienSoloWinTownEliminated",
+         //------------------
+         "EndAlienClientWinOnInfluence",
+         "EndAlienClientWinTownEliminated",
+         //------------------
+         "BloodLustAsTown",
+         "BloodLustAsAlien",
+         //------------------
+         "ObtainImplant",
+         "ExplodeImplant"
       };
       private readonly ArrayList myList;
       public static string GetFeatMessage(GameFeat feat, bool isThreshold = false)
@@ -200,7 +217,7 @@ namespace PleasantvilleGame
             int threshold = 0;
             switch (feat.Key)
             {
-               case "NumAlienKills": threshold = 3; break;
+               case "NumAlienKilled": threshold = 3; break;
                default: threshold = 0; break;
             }
             feat.Threshold = threshold;

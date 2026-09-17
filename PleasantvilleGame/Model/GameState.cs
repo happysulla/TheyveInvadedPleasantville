@@ -1,6 +1,7 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using PleasantvilleGame.Networking;
 using System;
+using System.Diagnostics.Eventing.Reader;
 using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
 using System.Reflection;
@@ -307,6 +308,7 @@ namespace PleasantvilleGame
       }
       protected bool CheckForConversations(IGameInstance gi, ref GameAction action)
       {
+         //------------------------------------------
          gi.SelectedMapItems.Clear();
          gi.SelectedTerritories.Clear();
          action = GameAction.Error;
@@ -333,6 +335,22 @@ namespace PleasantvilleGame
                      return false;
                   }
                }
+               //---------------------------------------
+               GameFeat changedFeat1;
+               Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "CheckFor_Conversations():\n  Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
+               if (false == GameEngine.theInGameFeats.GetFeatChange(GameEngine.theStartingFeats, out changedFeat1)) // CheckFor_Conversations()
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "CheckFor_Conversations(): GameEngine.theInGameFeats.GetFeat_Change() returned false");
+                  return false;
+               }
+               if (false == String.IsNullOrEmpty(changedFeat1.Key))
+               {
+                  Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "CheckFor_Conversations(): Change=" + changedFeat1.ToString());
+                  action = GameAction.UpdateShowFeat; // CheckFor_Conversations()
+                  gi.EventDisplayed = gi.EventActive = "e503a";
+                  return true;
+               }
+               //---------------------------------------
                Logger.Log(LogEnum.LE_SHOW_CONVERSATIONS, "CheckFor_Conversations(): adding stack=" + stack.ToString());
                gi.SelectedTerritories.Add(stack.Territory);
                gi.DieRollAction = GameAction.DieRollActionNone;
@@ -378,6 +396,22 @@ namespace PleasantvilleGame
                      return false;
                   }
                }
+               //---------------------------------------
+               GameFeat changedFeat1;
+               Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "CheckFor_Influences():\n  Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
+               if (false == GameEngine.theInGameFeats.GetFeatChange(GameEngine.theStartingFeats, out changedFeat1)) // CheckFor_Conversations()
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "CheckFor_Influences(): GameEngine.theInGameFeats.GetFeat_Change() returned false");
+                  return false;
+               }
+               if (false == String.IsNullOrEmpty(changedFeat1.Key))
+               {
+                  Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "CheckFor_Influences(): Change=" + changedFeat1.ToString());
+                  action = GameAction.UpdateShowFeat; // CheckFor_Conversations()
+                  gi.EventDisplayed = gi.EventActive = "e503a";
+                  return true;
+               }
+               //---------------------------------------
                Logger.Log(LogEnum.LE_SHOW_INFLUENCES, "CheckFor_Influences(): adding stack=" + stack.ToString());
                gi.SelectedTerritories.Add(stack.Territory);
                gi.DieRollAction = GameAction.DieRollActionNone;
@@ -429,6 +463,22 @@ namespace PleasantvilleGame
                      return false;
                   }
                }
+               //---------------------------------------
+               GameFeat changedFeat1;
+               Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "CheckFor_Combats():\n  Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
+               if (false == GameEngine.theInGameFeats.GetFeatChange(GameEngine.theStartingFeats, out changedFeat1)) // CheckFor_Combats()
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "CheckFor_Combats(): GameEngine.theInGameFeats.GetFeat_Change() returned false");
+                  return false;
+               }
+               if (false == String.IsNullOrEmpty(changedFeat1.Key))
+               {
+                  Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "CheckFor_Combats(): Change=" + changedFeat1.ToString());
+                  action = GameAction.UpdateShowFeat; // CheckFor_Combats()
+                  gi.EventDisplayed = gi.EventActive = "e503a";
+                  return true;
+               }
+               //---------------------------------------
                Logger.Log(LogEnum.LE_SHOW_COMBATS, "CheckFor_Combats(): Adding t=" + stack.Territory.ToString() + " c=" + controlledPeps.Count.ToString() + " u=" + uncontrolledPeps.Count.ToString() + " ka=" + knownAliens.Count.ToString() + " ua=" + unknownAliens.Count.ToString());
                gi.SelectedTerritories.Add(stack.Territory);
                gi.DieRollAction = GameAction.DieRollActionNone;
@@ -504,6 +554,22 @@ namespace PleasantvilleGame
                      }
 
                   }
+                  //---------------------------------------
+                  GameFeat changedFeat1;
+                  Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "CheckFor_Iterogations():\n  Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
+                  if (false == GameEngine.theInGameFeats.GetFeatChange(GameEngine.theStartingFeats, out changedFeat1)) // CheckFor_Iterogations()
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "CheckFor_Iterogations(): GameEngine.theInGameFeats.GetFeat_Change() returned false");
+                     return false;
+                  }
+                  if (false == String.IsNullOrEmpty(changedFeat1.Key))
+                  {
+                     Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "CheckFor_Iterogations(): Change=" + changedFeat1.ToString());
+                     action = GameAction.UpdateShowFeat; // CheckFor_Iterogations()
+                     gi.EventDisplayed = gi.EventActive = "e503a";
+                     return true;
+                  }
+                  //---------------------------------------
                   Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "CheckFor_Iterogations(): adding stack=" + stack.ToString());
                   gi.SelectedTerritories.Add(stack.Territory);
                   gi.DieRollAction = GameAction.DieRollActionNone;
@@ -550,6 +616,22 @@ namespace PleasantvilleGame
                      return false;
                   }
                }
+               //---------------------------------------
+               GameFeat changedFeat1;
+               Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "CheckFor_ImplantRemovals():\n  Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
+               if (false == GameEngine.theInGameFeats.GetFeatChange(GameEngine.theStartingFeats, out changedFeat1)) // CheckFor_ImplantRemovals()
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "CheckFor_ImplantRemovals(): GameEngine.theInGameFeats.GetFeat_Change() returned false");
+                  return false;
+               }
+               if (false == String.IsNullOrEmpty(changedFeat1.Key))
+               {
+                  Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "CheckFor_ImplantRemovals(): Change=" + changedFeat1.ToString());
+                  action = GameAction.UpdateShowFeat; // CheckFor_ImplantRemovals()
+                  gi.EventDisplayed = gi.EventActive = "e503a";
+                  return true;
+               }
+               //---------------------------------------
                Logger.Log(LogEnum.LE_SHOW_REMOVALS, "CheckFor_ImplantRemovals(): adding stack=" + stack.ToString() + " controlled=" + controlled.ToString());
                gi.SelectedTerritories.Add(stack.Territory);
                gi.DieRollAction = GameAction.DieRollActionNone;
@@ -638,14 +720,59 @@ namespace PleasantvilleGame
       }
       protected bool CheckForEndOfGame(IGameInstance gi, ref GameAction action)
       {
-         if( true == gi.Zebulon.IsKilled )
+         //-----------------------------------------------------------
+         int uncontrolledInfluence = 0;
+         int controlledInfluence = 0;
+         int knownAlienInfluence = 0;
+         int unknownAlienInfluence = 0;
+         foreach (IStack stack1 in gi.Stacks)
+         {
+            foreach (MapItem mi in stack1.MapItems)
+            {
+               if ((true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
+                  continue;
+               else if (true == mi.IsControlled)
+                  controlledInfluence += mi.Influence;
+               else if (true == mi.IsAlienKnown)
+                  knownAlienInfluence += mi.Influence;
+               if (true == mi.IsAlienUnknown)
+                  unknownAlienInfluence += mi.Influence;
+               else
+                  uncontrolledInfluence += mi.Influence;
+            }
+         }
+         int totalInfluence = uncontrolledInfluence + knownAlienInfluence + unknownAlienInfluence + controlledInfluence;
+         int alienInfluenceTotal = unknownAlienInfluence + knownAlienInfluence;
+         Logger.Log(LogEnum.LE_GAME_END_CHECK, "Check_ForEndOfGame(): z=" + gi.Zebulon.ToString() + " (uc=" + uncontrolledInfluence.ToString() + ") + (k=" + knownAlienInfluence.ToString() + ") + (uk=" + unknownAlienInfluence.ToString() + ") + (tp=" + controlledInfluence.ToString() + ") = (tot=" + totalInfluence.ToString() + ")");
+         gi.Statistics.SetValue("TownInfluence", controlledInfluence);
+         gi.Statistics.SetValue("AlienInfluence", alienInfluenceTotal);
+         //-----------------------------------------------------------
+         Option optionTownSolo = gi.Options.Find("TownSolo");
+         Option optionAlienSolo = gi.Options.Find("AlienSolo");
+         Option optionTownHost = gi.Options.Find("TownHost");
+         Option optionAlienClient = gi.Options.Find("AlienClient");
+         if ( true == gi.Zebulon.IsKilled )
          {
             Logger.Log(LogEnum.LE_GAME_END, "CheckFor_EndOfGame(): Zebulon is KIA");
             gi.EndGameReason = "Zebulon is defeated";
             gi.GamePhase = GamePhase.GameEnd;
             action = GameAction.EndGameWin;
             gi.EventDisplayed = gi.EventActive = "e501";
-            gi.Statistics.AddOne("NumAlienDefeats");
+            if (true == optionTownSolo.IsEnabled )
+            {
+               GameEngine.theInGameFeats.AddOne("EndTownSoloWinKillZebulon");
+               gi.Statistics.AddOne("NumTownWin");
+               gi.Statistics.AddOne("NumWins");
+            }
+            else if (true == optionTownHost.IsEnabled)
+            {
+               GameEngine.theInGameFeats.AddOne("EndTownHostWinKillZebulon");
+               gi.Statistics.AddOne("NumWins");
+            }
+            else if ( (true == optionAlienSolo.IsEnabled) || (true == optionAlienClient.IsEnabled) )
+            {
+               gi.Statistics.AddOne("NumTownWin");
+            }
             return true;
          }
          IMapItems killedMapItems = new MapItems();
@@ -735,46 +862,65 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "CheckFor_EndOfGame(): CheckFor_InfluenceError() returned error");
             return false;
          }
-         //-----------------------------------------------------------
-         int uncontrolledInfluence = 0;
-         int controlledInfluence = 0;
-         int knownAlienInfluence = 0;
-         int unknownAlienInfluence = 0;
-         foreach (IStack stack1 in gi.Stacks)
-         {
-            foreach (MapItem mi in stack1.MapItems)
-            {
-               if ((true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
-                  continue;
-               else if (true == mi.IsControlled)
-                  controlledInfluence += mi.Influence;
-               else if (true == mi.IsAlienKnown)
-                  knownAlienInfluence += mi.Influence;
-               if (true == mi.IsAlienUnknown)
-                  unknownAlienInfluence += mi.Influence;
-               else
-                  uncontrolledInfluence += mi.Influence;
-            }
-         }
-         int totalInfluence = uncontrolledInfluence + knownAlienInfluence + unknownAlienInfluence + controlledInfluence;
-         //-----------------------------------------------------------
-         Logger.Log(LogEnum.LE_GAME_END_CHECK, "Check_ForEndOfGame(): z=" + gi.Zebulon.ToString() + " (uc=" + uncontrolledInfluence.ToString() + ") + (k=" + knownAlienInfluence.ToString() + ") + (uk=" + unknownAlienInfluence.ToString() + ") + (tp=" + controlledInfluence.ToString() + ") = (tot=" + totalInfluence.ToString() + ")");
-         int alienInfluenceTotal = unknownAlienInfluence + knownAlienInfluence;
-         if (alienInfluenceTotal <= 0)   // If either the Alien controlled influcence reaches zero, game over
+         if (alienInfluenceTotal <= 0)   // If the Alien controlled influcence reaches zero, game over
          {
             Logger.Log(LogEnum.LE_GAME_END, "Check_ForEndOfGame(): Alien Player eliminated uk=" + unknownAlienInfluence.ToString() + " k=" + knownAlienInfluence.ToString());
             gi.EndGameReason = "Alien Player Eliminated";
             gi.GamePhase = GamePhase.GameEnd;
-            action = GameAction.EndGameWin;
-            gi.EventDisplayed = gi.EventActive = "e501";
+            if (true == optionTownSolo.IsEnabled)
+            {
+               GameEngine.theInGameFeats.AddOne("EndTownSoloWinAlienEliminated");
+               gi.Statistics.AddOne("NumWins");
+               action = GameAction.EndGameWin;
+               gi.EventDisplayed = gi.EventActive = "e501";
+            }
+            else if (true == optionTownHost.IsEnabled)
+            {
+               GameEngine.theInGameFeats.AddOne("EndTownHostWinAlienEliminated");
+               gi.Statistics.AddOne("NumWins");
+               action = GameAction.EndGameWin;
+               gi.EventDisplayed = gi.EventActive = "e501";
+            }
+            else if (true == optionAlienSolo.IsEnabled)
+            {
+               action = GameAction.EndGameLose;
+               gi.EventDisplayed = gi.EventActive = "e502";
+            }
+            else if (true == optionAlienClient.IsEnabled)
+            {
+               action = GameAction.EndGameLose;
+               gi.EventDisplayed = gi.EventActive = "e502";
+            }
          }
-         else if (controlledInfluence <= 0)  // If either the Towns controlled influcence reaches zero, game over
+         else if (controlledInfluence <= 0)  // If the Towns controlled influcence reaches zero, game over
          {
             Logger.Log(LogEnum.LE_GAME_END, "Check_ForEndOfGame(): Town player is eliminated influence=" + controlledInfluence.ToString());
             gi.EndGameReason = "Town Player Eliminated";
             gi.GamePhase = GamePhase.GameEnd;
-            action = GameAction.EndGameLose;
-            gi.EventDisplayed = gi.EventActive = "e502";
+            if (true == optionTownSolo.IsEnabled)
+            {
+               action = GameAction.EndGameLose;
+               gi.EventDisplayed = gi.EventActive = "e502";
+            }
+            else if (true == optionTownHost.IsEnabled)
+            {
+               action = GameAction.EndGameLose;
+               gi.EventDisplayed = gi.EventActive = "e502";
+            }
+            else if (true == optionAlienSolo.IsEnabled)
+            {
+               GameEngine.theInGameFeats.AddOne("EndAlienSoloWinTownEliminated");
+               gi.Statistics.AddOne("NumWins");
+               action = GameAction.EndGameWin;
+               gi.EventDisplayed = gi.EventActive = "e501";
+            }
+            else if (true == optionAlienClient.IsEnabled)
+            {
+               GameEngine.theInGameFeats.AddOne("EndAlienClientWinTownEliminated");
+               gi.Statistics.AddOne("NumWins");
+               action = GameAction.EndGameWin;
+               gi.EventDisplayed = gi.EventActive = "e501";
+            }
          }
          else
          {
@@ -786,13 +932,53 @@ namespace PleasantvilleGame
                gi.GamePhase = GamePhase.GameEnd;
                if (halfInfluence <= controlledInfluence)
                {
-                  action = GameAction.EndGameWin;
-                  gi.EventDisplayed = gi.EventActive = "e501";
+                  if (true == optionTownSolo.IsEnabled)
+                  {
+                     GameEngine.theInGameFeats.AddOne("EndTownSoloWinOnInfluence");
+                     action = GameAction.EndGameWin;
+                     gi.EventDisplayed = gi.EventActive = "e501";
+                  }
+                  else if (true == optionTownHost.IsEnabled)
+                  {
+                     GameEngine.theInGameFeats.AddOne("EndTownHostWinOnInfluence");
+                     action = GameAction.EndGameWin;
+                     gi.EventDisplayed = gi.EventActive = "e501";
+                  }
+                  else if (true == optionAlienSolo.IsEnabled)
+                  {
+                     action = GameAction.EndGameLose;
+                     gi.EventDisplayed = gi.EventActive = "e502";
+                  }
+                  else if (true == optionAlienClient.IsEnabled)
+                  {
+                     action = GameAction.EndGameLose;
+                     gi.EventDisplayed = gi.EventActive = "e502";
+                  }
                }
                else
                {
-                  action = GameAction.EndGameLose;
-                  gi.EventDisplayed = gi.EventActive = "e502";
+                  if (true == optionTownSolo.IsEnabled)
+                  {
+                     action = GameAction.EndGameLose;
+                     gi.EventDisplayed = gi.EventActive = "e502";
+                  }
+                  else if (true == optionTownHost.IsEnabled)
+                  {
+                     action = GameAction.EndGameLose;
+                     gi.EventDisplayed = gi.EventActive = "e502";
+                  }
+                  else if (true == optionAlienSolo.IsEnabled)
+                  {
+                     GameEngine.theInGameFeats.AddOne("EndAlienSoloWinOnInfluence");
+                     action = GameAction.EndGameWin;
+                     gi.EventDisplayed = gi.EventActive = "e501";
+                  }
+                  else if (true == optionAlienClient.IsEnabled)
+                  {
+                     GameEngine.theInGameFeats.AddOne("EndAlienClientWinOnInfluence");
+                     action = GameAction.EndGameWin;
+                     gi.EventDisplayed = gi.EventActive = "e501";
+                  }
                }
             }
          }
@@ -915,6 +1101,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
@@ -1340,6 +1527,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
@@ -1370,6 +1558,8 @@ namespace PleasantvilleGame
                   returnStatus = "Scatter_Stack() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
                }
+               break;
+            case GameAction.UpdateShowFeatEnd:
                break;
             case GameAction.RandomMovementStartTowns:
                if (false == ChooseRandomMovePeopleAndDest(gi))
@@ -1520,6 +1710,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
@@ -1550,6 +1741,8 @@ namespace PleasantvilleGame
                   returnStatus = "Scatter_Stack() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateAlienPlayerMovement.PerformAction(): " + returnStatus);
                }
+               break;
+            case GameAction.UpdateShowFeatEnd:
                break;
             case GameAction.AlienMovementTownsShow:
                gi.EventDisplayed = gi.EventActive = "e007t";
@@ -1616,6 +1809,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
@@ -1654,6 +1848,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(RandomMovementConfirmed): " + returnStatus);
                }
                break;
+            case GameAction.UpdateShowFeatEnd:
             case GameAction.TownMovementTownCompletes:
                if (false == CheckForConversations(gi, ref action))
                {
@@ -1713,6 +1908,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
@@ -1745,6 +1941,13 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(ConversationsRoll): " + returnStatus);
                }
                break;
+            case GameAction.UpdateShowFeatEnd:
+               if (false == CheckForConversations(gi, ref action))
+               {
+                  returnStatus = "CheckFor_Conversations() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(ConversationsRoll): " + returnStatus);
+               }
+               break;
             case GameAction.ConversationsRoll:
                if(2 != gi.SelectedMapItems.Count)
                {
@@ -1762,6 +1965,7 @@ namespace PleasantvilleGame
                   }
                   else
                   {
+                     gi.Statistics.AddOne("NumConversations");
                      leftMapItem.IsConversedThisTurn = true;
                      int dieRollModifier = 0;
                      if (15 < rightMapItem.Influence)
@@ -1772,6 +1976,7 @@ namespace PleasantvilleGame
                         dieRollModifier = 1;
                      if (8 < dieRoll + dieRollModifier)
                      {
+                        gi.Statistics.AddOne("NumConversationsSuccess");
                         rightMapItem.IsConversedThisTurn = true; // if successful, no need to talk to in same turn
                         if (true == rightMapItem.IsAlienUnknown)
                         {
@@ -1848,6 +2053,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
@@ -1872,6 +2078,13 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateInfluences.PerformAction(): " + returnStatus);
                }
                break;
+            case GameAction.UpdateShowFeatEnd:
+               if (false == CheckForInfluences(gi, ref action))
+               {
+                  returnStatus = "CheckFor_Influences() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateInfluences.PerformAction(): " + returnStatus);
+               }
+               break;
             case GameAction.InfluencesRoll:
                if (gi.SelectedMapItems.Count < 2)
                {
@@ -1880,6 +2093,7 @@ namespace PleasantvilleGame
                }
                else
                {
+                  gi.Statistics.AddOne("NumInfluences");
                   int indexOfLast = gi.SelectedMapItems.Count - 1;
                   IMapItem? rightMapItem = gi.SelectedMapItems[indexOfLast];
                   if( null == rightMapItem )
@@ -1939,6 +2153,7 @@ namespace PleasantvilleGame
                      Logger.Log(LogEnum.LE_SHOW_INFLUENCES, "GameStateInfluences.PerformAction(): odds=" + odds.ToString("F1") + " r=" + rightMapItem.ToString() + " (dr=" + dieRoll.ToString() + ") + (m=" + dieRollModifier.ToString() + ") ??? (t=" + dieThreshold.ToString() + ")"); 
                      if (dieThreshold < dieRollWithMod) // Check for alien.  If alien, let user know it is discovered. Else, make the townsperson controlled.
                      {
+                        gi.Statistics.AddOne("NumInfluencesSuccess");
                         if (true == rightMapItem.IsAlienUnknown)
                         {
                            Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "GameStateInfluences.PerformAction(): CONVINCED - AddKnownAlien() rightMapItem=" + rightMapItem.ToString() + " (dr=" + dieRoll.ToString() + ") + (m=" + dieRollModifier.ToString()  + ") >= (t=" + dieThreshold.ToString() + ")");
@@ -2030,6 +2245,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
@@ -2054,6 +2270,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                }
                break;
+            case GameAction.UpdateShowFeatEnd:
             case GameAction.CombatsSelect: // handled in the GameViewWindow.xaml.cs file
                if (false == CheckForCombats(gi, ref action))
                {
@@ -2117,17 +2334,36 @@ namespace PleasantvilleGame
                         }
                      }
                      //----------------------------------------------
-                     gi.Statistics.AddOne("NumCombats");
                      Logger.Log(LogEnum.LE_SHOW_COMBATS, "GameStateCombat.PerformAction(CombatsRoll): Combat=" + gi.MapItemCombat.ToString() + " action=" + action.ToString() + " dr=" + dieRoll.ToString() + " 1stA=" + firstAttacker.Name + " in " + firstAttacker.TerritoryCurrent.ToString());
                      switch (gi.MapItemCombat.Result)
                      {
                         case CombatResult.DefenderWins:
-                           if( true == isZebulonPartOfAttackers)
+                           if ((true == firstAttacker.IsControlled) && (true == firstDefender.IsAlien()))
+                           {
+                              gi.Statistics.AddOne("NumCombats");
+                              gi.Statistics.AddOne("NumAlienWin");
+                           }   
+                           else if ((false == firstDefender.IsControlled) && (true == firstAttacker.IsAlien()))
+                           {
+                              gi.Statistics.AddOne("NumCombats");
+                              gi.Statistics.AddOne("NumTownWin");
+                           }
+                           if (true == isZebulonPartOfAttackers)
                               gi.Zebulon.IsKilled = true;
                            else
                               action = GameAction.CombatDefenderWin;
                            break;
                         case CombatResult.AttackerWins:
+                           if ((true == firstAttacker.IsControlled) && (true == firstDefender.IsAlien()))
+                           {
+                              gi.Statistics.AddOne("NumCombats");
+                              gi.Statistics.AddOne("NumTownWin");
+                           }
+                           else if ((false == firstDefender.IsControlled) && (true == firstAttacker.IsAlien()))
+                           {
+                              gi.Statistics.AddOne("NumCombats");
+                              gi.Statistics.AddOne("NumAlienWin");
+                           }
                            if (true == isZebulonPartOfDefenders)
                               gi.Zebulon.IsKilled = true;
                            else
@@ -2137,6 +2373,8 @@ namespace PleasantvilleGame
                            if (true == isZebulonPartOfAttackers)
                            {
                               gi.Zebulon.IsKilled = true;
+                              gi.Statistics.AddOne("NumCombats");
+                              gi.Statistics.AddOne("NumAlienFlee");
                            }
                            else
                            {
@@ -2149,25 +2387,19 @@ namespace PleasantvilleGame
                               {
                                  gi.EventActive = gi.EventDisplayed = "e011tf";
                                  action = GameAction.CombatTownFlee;
-                                 gi.Statistics.AddOne("NumTownFlees");
+                                 gi.Statistics.AddOne("NumCombats");
+                                 gi.Statistics.AddOne("NumTownFlee");
                               }
                               else if ((false == firstDefender.IsControlled) && (true == firstAttacker.IsAlien()))
                               {
                                  gi.EventActive = gi.EventDisplayed = "e011af";
                                  action = GameAction.CombatAlienFlee;
-                                 gi.Statistics.AddOne("NumAlienFlees");
+                                 gi.Statistics.AddOne("NumCombats");
+                                 gi.Statistics.AddOne("NumAlienFlee");
                               }
-                              else if (true == firstAttacker.IsControlled)
+                              else // when combat vs uncontrolled should be automatic win and no chance of fleeing
                               {
-                                 // Uncontrolled Townperson attacked
-                              }
-                              else if (true == firstDefender.IsControlled)
-                              {
-                                 // Uncontrolled Townperson attacked
-                              }
-                              else
-                              {
-                                 returnStatus = "invalid state reached ";
+                                 returnStatus = "1-invalid state reached ";
                                  Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
                               }
                            }
@@ -2176,6 +2408,8 @@ namespace PleasantvilleGame
                            if (true == isZebulonPartOfDefenders)
                            {
                               gi.Zebulon.IsKilled = true;
+                              gi.Statistics.AddOne("NumCombats");
+                              gi.Statistics.AddOne("NumAlienFlee");
                            }
                            else
                            {
@@ -2184,21 +2418,24 @@ namespace PleasantvilleGame
                                  returnStatus = "CreateMapItemFlee() returned false";
                                  Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
                               }
-                              if (true == firstAttacker.IsControlled)
-                              {
-                                 gi.EventActive = gi.EventDisplayed = "e011tf";
-                                 action = GameAction.CombatTownFlee;
-                                 gi.Statistics.AddOne("NumTownFlees");
-                              }
-                              else if (true == firstDefender.IsAlien())
+                              if ((true == firstAttacker.IsControlled) && (true == firstDefender.IsAlien()))
                               {
                                  gi.EventActive = gi.EventDisplayed = "e011af";
                                  action = GameAction.CombatAlienFlee;
-                                 gi.Statistics.AddOne("NumAlienFlees");
+                                 gi.Statistics.AddOne("NumCombats");
+                                 gi.Statistics.AddOne("NumAlienFlee");
                               }
-                              else
+                              else if ((false == firstDefender.IsControlled) && (true == firstAttacker.IsAlien()))
                               {
-                                 // Uncontrolled Townperson attacked
+                                 gi.EventActive = gi.EventDisplayed = "e011tf";
+                                 action = GameAction.CombatTownFlee;
+                                 gi.Statistics.AddOne("NumCombats");
+                                 gi.Statistics.AddOne("NumTownFlee");
+                              }
+                              else // when combat vs uncontrolled should be automatic win and no chance of fleeing
+                              {
+                                 returnStatus = "2-invalid state reached ";
+                                 Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
                               }
                            }
                            break;                   
@@ -2210,7 +2447,8 @@ namespace PleasantvilleGame
                      //---------------------------------------
                      if( true == gi.Zebulon.IsKilled)
                      {
-                        if( false == CheckForEndOfGame(gi, ref action) )
+                        gi.Statistics.AddOne("NumZebulonKills");
+                        if ( false == CheckForEndOfGame(gi, ref action) )
                         {
                            returnStatus = "Check_ForEndOfGame() returned false";
                            Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
@@ -2396,6 +2634,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
@@ -2418,6 +2657,13 @@ namespace PleasantvilleGame
                {
                   returnStatus = "Scatter_Stack() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateIterrogations.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateShowFeatEnd:
+               if (false == CheckForIterogations(gi, ref action))
+               {
+                  returnStatus = "CheckFor_Iterogations() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateIterrogations.PerformAction(InterrogationsGuess): " + returnStatus);
                }
                break;
             case GameAction.InterrogationsSelect:
@@ -2515,6 +2761,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
@@ -2539,6 +2786,13 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateImplantRemoval.PerformAction(): " + returnStatus);
                }
                break;
+            case GameAction.UpdateShowFeatEnd:
+               if (false == CheckForImplantRemovals(gi, ref action))
+               {
+                  returnStatus = "Check_ForImplantRemovals() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateImplantRemoval.PerformAction(): " + returnStatus);
+               }
+               break;
             case GameAction.ImplantRemovalsRoll:
                if (2 != gi.SelectedMapItems.Count)
                {
@@ -2547,6 +2801,7 @@ namespace PleasantvilleGame
                }
                else
                {
+                  gi.Statistics.AddOne("NumImplantRemovals");
                   IMapItem? leftMapItem = gi.SelectedMapItems[0];
                   IMapItem? rightMapItem = gi.SelectedMapItems[1];
                   if (null == leftMapItem || null == rightMapItem)
@@ -2560,6 +2815,7 @@ namespace PleasantvilleGame
                      switch (result)
                      {
                         case "Implant Explodes!":
+                           GameEngine.theInGameFeats.AddOne("ExplodeImplant");
                            rightMapItem.IsKilled = true;           // Kill the townsperson counter
                            leftMapItem.IsKilled = true;            // Kill the Alien counter
                            rightMapItem.IsImplantRemovalAttempt = true;
@@ -2568,10 +2824,13 @@ namespace PleasantvilleGame
                            rightMapItem.IsImplantRemovalAttemptThisTurn = true;
                            break;
                         case "Implant is removed but disintegrates.":
+                           gi.Statistics.AddOne("NumImplantRemovalsSuccess");
                            rightMapItem.IsImplantRemovalAttempt = true;
                            gi.AddControlled(rightMapItem);
                            break;
                         case "Implant is removed intact! Use as evidence.":
+                           GameEngine.theInGameFeats.AddOne("ObtainImplant");
+                           gi.Statistics.AddOne("NumImplantRemovalsSuccess");
                            rightMapItem.IsImplantRemovalAttempt = true;
                            leftMapItem.IsImplantHeld = true;
                            gi.AddControlled(rightMapItem);
@@ -2648,6 +2907,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
@@ -2731,6 +2991,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
@@ -2813,6 +3074,7 @@ namespace PleasantvilleGame
             case GameAction.ShowCharacterDescription:
             case GameAction.ShowAboutDialog:
             case GameAction.EndGameShowFeats:
+            case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:

@@ -459,12 +459,22 @@ namespace PleasantvilleGame
          IMapItem selectedMapItem = myGridRows[i].myMapItem;
          myGridRows[i].myDieRoll = dieRoll;
          //-------------------------------
-         if(true == myIsAlienLoss) 
+         Option optionTownSolo = myGameInstance.Options.Find("TownSolo");
+         Option optionAlienSolo = myGameInstance.Options.Find("AlienSolo");
+         Option optionTownHost = myGameInstance.Options.Find("TownHost");
+         Option optionAlienClient = myGameInstance.Options.Find("AlienClient");
+         //-------------------------------
+         if (true == myIsAlienLoss) 
          {
             if( dieRoll < 5 )
             {
                myGridRows[i].myResult = "KIA";
                selectedMapItem.IsKilled = true;
+               if( (true == optionTownSolo.IsEnabled) || (true == optionTownHost.IsEnabled) )
+               {
+                  myGameInstance.Statistics.AddOne("NumAlienKilled");
+                  GameEngine.theInGameFeats.AddOne("BloodLustAsTown");
+               }
             }
             else if (dieRoll < 7 )
             {
@@ -490,6 +500,11 @@ namespace PleasantvilleGame
             {
                myGridRows[i].myResult = "KIA";
                selectedMapItem.IsKilled = true;
+               if ((true == optionAlienSolo.IsEnabled) || (true == optionAlienClient.IsEnabled))
+               {
+                  myGameInstance.Statistics.AddOne("NumTownKilled");
+                  GameEngine.theInGameFeats.AddOne("BloodLustAsAlien");
+               }
             }
             else if (dieRoll < 7)
             {

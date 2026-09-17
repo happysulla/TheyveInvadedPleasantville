@@ -50,24 +50,28 @@ namespace PleasantvilleGame
       [NonSerialized]
       public static string[] theDefaults =
       {
-         "MaxAlienInfluence",
-         "MaxTownInfluence",
-         "MinAlienInfluenceAtGameEnd",
-         "MinTownInfluenceAtGameEnd",
+         "NumWins",
+         "TownInfluence",
+         "AlienInfluence",
          "NumConversations",
          "NumConversationsSuccess",
          "NumInfluences",
          "NumInfluencesSuccess",
          "NumCombats",
-         "NumAlienDefeats",
-         "NumTownDefeats",
-         "NumAlienFlees",
-         "NumTownFlees",
-         "NumAlienKills",
-         "NumZebulonKills",
-         "NumTownKills",
+         "NumTownWin",
+         "NumAlienWin",
+         "NumAlienFlee",
+         "NumTownFlee",
+         "NumAlienKilled",
+         "NumZebulonKill",
+         "NumTownKill",
          "NumImplantRemovals",
-         "NumImplantRemovalsSuccess"
+         "NumImplantRemovalsSuccess",
+         //-----------------
+         "MaxTownInfluence",
+         "MaxAlienInfluence",
+         "MinAlienInfluenceAtGameEnd",
+         "MinTownInfluenceAtGameEnd"
       };
       [NonSerialized] public static string theGameStatisticsDirectory = "";
       public static string GetStatisticMessage(GameStatistic stat)

@@ -2797,12 +2797,12 @@ namespace PleasantvilleGame
             else if (true == stat.Key.Contains("Min"))
             {
                GameStatistic statMin = totalStatistics.Find(stat.Key);
-               Logger.Log(LogEnum.LE_VIEW_SHOW_STATS_MIN, "Perform_EndCheck(): key=" + stat.Key + " statMin.Value=" + statMin.Value.ToString() + " stat.Value=" + stat.Value.ToString());
+               Logger.Log(LogEnum.LE_VIEW_SHOW_STATS_MIN, "UpdateCanvas_ShowStatsAdds(): key=" + stat.Key + " statMin.Value=" + statMin.Value.ToString() + " stat.Value=" + stat.Value.ToString());
                if ((stat.Value < statMin.Value) || (0 == statMin.Value))
                {
                   if (0 < stat.Value)
                   {
-                     Logger.Log(LogEnum.LE_VIEW_SHOW_STATS_MIN, "Perform_EndCheck(): (stat.Value=" + stat.Value.ToString() + ") < (statMin.Value=" + statMin.Value.ToString() + ")");
+                     Logger.Log(LogEnum.LE_VIEW_SHOW_STATS_MIN, "UpdateCanvas_ShowStatsAdds(): (stat.Value=" + stat.Value.ToString() + ") < (statMin.Value=" + statMin.Value.ToString() + ")");
                      statMin.Value = stat.Value;
                   }
                }
@@ -2811,86 +2811,162 @@ namespace PleasantvilleGame
       }
       private bool UpdateCanvasShowStatsText(TextBlock tb, GameStatistics statistics, Brush brushFont)
       {
-         return true;
-      }
-      private void MouseDownGameFeat(object send, MouseEventArgs e)
-      {
-         System.Windows.Point p = e.GetPosition((UIElement)send);
-         HitTestResult result = VisualTreeHelper.HitTest(myCanvasMain, p);  // Get the Point where the hit test occurs
-         foreach (UIElement ui in myCanvasMain.Children)
+         GameStatistic numGames = statistics.Find("NumGames"); // check that at least one
+         if (0 == numGames.Value)
          {
-            if (ui is Image img1)
-            {
-               if (result.VisualHit == img1)
-               {
-                  if ("Feat" == img1.Name)
-                  {
-                     GameAction action = GameAction.Error;
-                     GameFeat featChange;
-                     Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): \n Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
-                     if (false == GameEngine.theInGameFeats.GetFeatChange(GameEngine.theStartingFeats, out featChange)) // MouseDownGameFeat - EventingDebriefing - Click star
-                     {
-                        Logger.Log(LogEnum.LE_ERROR, "Mouse_DownGameFeat(): Get_FeatChange() returned false");
-                        return;
-                     }
-                     //-------------------------------------
-                     if (GamePhase.GameEnd == myGameInstance.GamePhase)
-                     {
-                        if (false == String.IsNullOrEmpty(featChange.Key))
-                        {
-                           action = GameAction.EndGameShowFeats;
-                           Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): 1-Change=" + featChange.Key);
-                        }
-                        else
-                        {
-                           action = GameAction.EndGameShowStats;
-                           myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas);
-                        }
-                     }
-                     myCanvasMain.MouseDown -= MouseDownGameFeat;
-                     e.Handled = true;
-                     myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
-                     return;
-                  }
-               }
-            }
-            else if (ui is Label label)
-            {
-               if (result.VisualHit == label)
-               {
-                  if (true == label.Name.Contains("Feat"))
-                  {
-                     GameAction action = GameAction.Error;
-                     GameFeat featChange;
-                     Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): \n Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
-                     if (false == GameEngine.theInGameFeats.GetFeatChange(GameEngine.theStartingFeats, out featChange)) // MouseDownGameFeat - EventingDebriefing - Click label
-                     {
-                        Logger.Log(LogEnum.LE_ERROR, "Mouse_DownGameFeat(): Get_FeatChange() returned false");
-                        return;
-                     }
-                     //-------------------------------------
-                     if (GamePhase.GameEnd == myGameInstance.GamePhase)
-                     {
-                        if (false == String.IsNullOrEmpty(featChange.Key))
-                        {
-                           action = GameAction.EndGameShowFeats;
-                           Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): 1-Change=" + featChange.Key);
-                        }
-                        else
-                        {
-                           action = GameAction.EndGameShowStats;
-                           myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas);
-                        }
-                     }
-                     label.MouseDown -= MouseDownGameFeat;
-                     myCanvasMain.MouseDown -= MouseDownGameFeat;
-                     e.Handled = true;
-                     myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
-                     return;
-                  }
-               }
-            }
+            Logger.Log(LogEnum.LE_ERROR, "UpdateCanvas_ShowStatsText(): numGames=0");
+            return false;
          }
+         Option optionTownSolo = myGameInstance.Options.Find("TownSolo");
+         Option optionAlienSolo = myGameInstance.Options.Find("AlienSolo");
+         Option optionTownHost = myGameInstance.Options.Find("TownHost");
+         Option optionAlienClient = myGameInstance.Options.Find("AlienClient");
+         GameStatistic numWins = statistics.Find("NumWins");
+         GameStatistic numZebulonKills = statistics.Find("NumZebulonKill");
+         GameStatistic townInfluence = statistics.Find("TownInfluence");
+         GameStatistic alienInfluence = statistics.Find("AlienInfluence");
+         GameStatistic townInflenceMax = statistics.Find("MaxTownInfluence");
+         GameStatistic townInflenceMin = statistics.Find("MinTownInfluenceAtGameEnd");
+         GameStatistic alienInfluenceMax = statistics.Find("MaxAlienInfluence");
+         GameStatistic alienInfluenceMin = statistics.Find("MinAlienInfluenceAtGameEnd");
+         GameStatistic numConversation = statistics.Find("NumConversations");
+         GameStatistic numConversationsSuccess = statistics.Find("NumConversationsSuccess");
+         int percentSuccessConversation = (int)(100.0 * numConversationsSuccess.Value / numConversation.Value);
+         GameStatistic numInfluence = statistics.Find("NumInfluences");
+         GameStatistic numInfluencesSuccess = statistics.Find("NumInfluencesSuccess");
+         int percentSuccessInfluence = (int)(100.0 * numInfluencesSuccess.Value / numInfluence.Value);
+         GameStatistic numCombat = statistics.Find("NumCombats"); // combat counted if AF, DF, A, D and it is Town Vs. Alien
+         GameStatistic numAlienKilled = statistics.Find("NumAlienKilled");
+         GameStatistic numTownKilled = statistics.Find("NumTownKilled");
+         GameStatistic numTownWin = statistics.Find("NumTownWin");
+         GameStatistic numAlienFlee = statistics.Find("NumAlienFlee");
+         int percentSuccessTownCombat = (int)(100.0 * (numTownWin.Value + numAlienFlee.Value) / (double)numCombat.Value);
+         GameStatistic numAlienWin = statistics.Find("NumAlienWin");
+         GameStatistic numTownFlee = statistics.Find("NumTownFlee");
+         int percentSuccessAlienCombat = (int)(100.0 * (double)(numAlienWin.Value + numTownFlee.Value) / (double)numCombat.Value);
+         GameStatistic numImplantRemoval = statistics.Find("NumImplantRemovals");
+         GameStatistic numImplantRemovalsSuccess = statistics.Find("NumImplantRemovalsSuccess");
+         int percentSuccessImplantRemoval = (int)(100.0 * numImplantRemovalsSuccess.Value / numInfluence.Value);
+         if (1 < numGames.Value)
+         {
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Games = " + numGames.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            int winRatio = (int)Math.Round(100.0 * ((double)numWins.Value) / (double)numGames.Value);
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("% Wins = " + winRatio.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            int average = townInfluence.Value / numGames.Value;
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Town Influence Avg= " + average.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Max Town Influence = " + townInflenceMax.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Min Town Influence = " + townInflenceMin.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            average = alienInfluence.Value / numGames.Value;
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Alien Influence = " + average.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Max Alien Influence = " + alienInfluenceMax.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Min Alien Influence = " + alienInfluenceMin.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Num of Conversations = " + numConversation.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("% Success Conversations = " + percentSuccessConversation.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Num of Influences = " + numInfluence.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("% Success Influences = " + percentSuccessInfluence.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Num of Implant Removals = " + numImplantRemoval.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("% Success Implant Removal = " + percentSuccessImplantRemoval.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("% Number of Combats = " + numCombat.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Number Alien Killed = " + numAlienKilled.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Number Town Killed = " + numTownKilled.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("% Success Alien Combat = " + percentSuccessAlienCombat.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("% Success Town Combat = " + percentSuccessTownCombat.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+         }
+         else // only one game
+         {
+            if (0 < numWins.Value)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("Game Won!") { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
+            else
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("Game Lost!") { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
+            //-------------------------
+            if (0 < numZebulonKills.Value)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("Zebulon Killed!" + numCombat.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Town Influence = " + townInfluence.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Max Town Influence = " + townInflenceMax.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Alien Influence = " + alienInfluence.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Max Alien Influence = " + alienInfluenceMax.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Num of Conversations = " + numConversation.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("% Success Conversations = " + percentSuccessConversation.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Num of Influences = " + numInfluence.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("% Success Influences = " + percentSuccessInfluence.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Num of Implant Removals = " + numImplantRemoval.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("% Success Implant Removal = " + percentSuccessImplantRemoval.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("% Number of Combats = " + numCombat.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Number Alien Killed = " + numAlienKilled.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("Number Town Killed = " + numTownKilled.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("% Success Alien Combat = " + percentSuccessAlienCombat.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Run("% Success Town Combat = " + percentSuccessTownCombat.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+         }
+         return true;
       }
       //-------------HELPER FUNCTIONS---------------------------------
       private bool IsMoveStoppedByAlienBeforeStarted(IGameInstance gi)
@@ -4189,6 +4265,102 @@ namespace PleasantvilleGame
          //      //myGameEngine.SendText(entry);
          //   }
          //}
+      }
+      private void MouseDownGameFeat(object send, MouseEventArgs e)
+      {
+         System.Windows.Point p = e.GetPosition((UIElement)send);
+         HitTestResult result = VisualTreeHelper.HitTest(myCanvasMain, p);  // Get the Point where the hit test occurs
+         foreach (UIElement ui in myCanvasMain.Children)
+         {
+            if (ui is Image img1)
+            {
+               if (result.VisualHit == img1)
+               {
+                  if ("Feat" == img1.Name)
+                  {
+                     GameAction action = GameAction.Error;
+                     GameFeat featChange;
+                     Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): \n Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
+                     if (false == GameEngine.theInGameFeats.GetFeatChange(GameEngine.theStartingFeats, out featChange)) // MouseDownGameFeat - EventingDebriefing - Click star
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "Mouse_DownGameFeat(): Get_FeatChange() returned false");
+                        return;
+                     }
+                     //-------------------------------------
+                     if (GamePhase.GameEnd == myGameInstance.GamePhase)
+                     {
+                        if (false == String.IsNullOrEmpty(featChange.Key))
+                        {
+                           action = GameAction.EndGameShowFeats;
+                           Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): 1-Change=" + featChange.Key);
+                        }
+                        else
+                        {
+                           action = GameAction.EndGameShowStats;
+                           myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas);
+                        }
+                     }
+                     else 
+                     {
+
+                     }
+                     myCanvasMain.MouseDown -= MouseDownGameFeat;
+                     e.Handled = true;
+                     myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+                     return;
+                  }
+               }
+            }
+            else if (ui is Label label)
+            {
+               if (result.VisualHit == label)
+               {
+                  if (true == label.Name.Contains("Feat"))
+                  {
+                     GameAction action = GameAction.Error;
+                     GameFeat featChange;
+                     Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): \n Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
+                     if (false == GameEngine.theInGameFeats.GetFeatChange(GameEngine.theStartingFeats, out featChange)) // MouseDownGameFeat - EventingDebriefing - Click label
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "Mouse_DownGameFeat(): Get_FeatChange() returned false");
+                        return;
+                     }
+                     //-------------------------------------
+                     if (GamePhase.GameEnd == myGameInstance.GamePhase)
+                     {
+                        if (false == String.IsNullOrEmpty(featChange.Key))
+                        {
+                           action = GameAction.EndGameShowFeats;
+                           Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): 1-Change=" + featChange.Key);
+                        }
+                        else
+                        {
+                           action = GameAction.EndGameShowStats;
+                           myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas);
+                        }
+                     }
+                     else 
+                     {
+                        if (false == String.IsNullOrEmpty(featChange.Key))
+                        {
+                           action = GameAction.UpdateShowFeat;
+                           Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): 2-Change=" + featChange.Key);
+                        }
+                        else
+                        {
+                           action = GameAction.UpdateShowFeatEnd;
+                           myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas);
+                        }
+                     }
+                     label.MouseDown -= MouseDownGameFeat;
+                     myCanvasMain.MouseDown -= MouseDownGameFeat;
+                     e.Handled = true;
+                     myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+                     return;
+                  }
+               }
+            }
+         }
       }
       private void MouseMoveGameViewerWindow(object sender, MouseEventArgs e)
       {

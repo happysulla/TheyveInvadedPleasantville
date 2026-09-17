@@ -49,6 +49,8 @@ namespace PleasantvilleGame
       UpdateUndo,
       UpdateScatterStack,
       UpdateRotateStack,
+      UpdateShowFeat,
+      UpdateShowFeatEnd,
 
       ShowRuleListingDialog,
       ShowEventListingDialog,
