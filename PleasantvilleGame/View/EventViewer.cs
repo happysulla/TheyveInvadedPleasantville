@@ -309,17 +309,17 @@ namespace PleasantvilleGame
                   myDialogAbout.Activate();
                }
                break;
-            //case GameAction.ShowGameFeatsDialog:
-            //   ShowFeatDisplayDialog dialogShowFeats = new ShowFeatDisplayDialog(myRulesMgr);
-            //   if (true == dialogShowFeats.CtorError)
-            //   {
-            //      Logger.Log(LogEnum.LE_ERROR, "UpdateView(): FeatDisplayDialog CtorError=true");
-            //      return;
-            //   }
-            //   if (true == dialogShowFeats.ShowDialog())
-            //   {
-            //   }
-            //   break;
+            case GameAction.ShowGameFeatsDialog:
+               ShowFeatDisplayDialog dialogShowFeats = new ShowFeatDisplayDialog(myRulesMgr);
+               if (true == dialogShowFeats.CtorError)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): FeatDisplayDialog CtorError=true");
+                  return;
+               }
+               if (true == dialogShowFeats.ShowDialog())
+               {
+               }
+               break;
             case GameAction.RandomMovementStartTowns:
                theIsEventViewerSubclassActive = true;
                EventViewerRandomMovement evRandomMovementMgr = new EventViewerRandomMovement(myGameEngine, myGameInstance, myCanvasMain, myScrollViewerTextBlock, myRulesMgr, myDieRoller);

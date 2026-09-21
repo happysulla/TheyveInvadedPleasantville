@@ -735,7 +735,7 @@ namespace PleasantvilleGame
                   controlledInfluence += mi.Influence;
                else if (true == mi.IsAlienKnown)
                   knownAlienInfluence += mi.Influence;
-               if (true == mi.IsAlienUnknown)
+               else if (true == mi.IsAlienUnknown)
                   unknownAlienInfluence += mi.Influence;
                else
                   uncontrolledInfluence += mi.Influence;
@@ -744,8 +744,8 @@ namespace PleasantvilleGame
          int totalInfluence = uncontrolledInfluence + knownAlienInfluence + unknownAlienInfluence + controlledInfluence;
          int alienInfluenceTotal = unknownAlienInfluence + knownAlienInfluence;
          Logger.Log(LogEnum.LE_GAME_END_CHECK, "Check_ForEndOfGame(): z=" + gi.Zebulon.ToString() + " (uc=" + uncontrolledInfluence.ToString() + ") + (k=" + knownAlienInfluence.ToString() + ") + (uk=" + unknownAlienInfluence.ToString() + ") + (tp=" + controlledInfluence.ToString() + ") = (tot=" + totalInfluence.ToString() + ")");
-         gi.Statistics.SetValue("TownInfluence", controlledInfluence);
-         gi.Statistics.SetValue("AlienInfluence", alienInfluenceTotal);
+         gi.Statistics.SetValue("NumTownInfluence", controlledInfluence);
+         gi.Statistics.SetValue("NumAlienInfluence", alienInfluenceTotal);
          //-----------------------------------------------------------
          Option optionTownSolo = gi.Options.Find("TownSolo");
          Option optionAlienSolo = gi.Options.Find("AlienSolo");
@@ -967,13 +967,14 @@ namespace PleasantvilleGame
             {
                int halfInfluence = (int)((double)totalInfluence * 0.5);
                Logger.Log(LogEnum.LE_GAME_END, "Check_ForEndOfGame(): Turn=" + gi.GameTurn + " tot=" + totalInfluence.ToString() + " half=" + halfInfluence.ToString() + " tp=" + controlledInfluence.ToString() + " a=" + alienInfluenceTotal.ToString());
-               gi.EndGameReason = "Game ends on turns";
+               gi.EndGameReason = "Last Turn";
                gi.GamePhase = GamePhase.GameEnd;
                if (halfInfluence <= controlledInfluence)
                {
                   if (true == optionTownSolo.IsEnabled)
                   {
                      GameEngine.theInGameFeats.AddOne("EndTownSoloWinOnInfluence");
+                     gi.Statistics.AddOne("NumWins");
                      action = GameAction.EndGameWin;
                      gi.EventDisplayed = gi.EventActive = "e501";
                      GameStatistic stat = gi.Statistics.Find("MaxTownInfluenceAtGameEnd");
@@ -986,6 +987,7 @@ namespace PleasantvilleGame
                   else if (true == optionTownHost.IsEnabled)
                   {
                      GameEngine.theInGameFeats.AddOne("EndTownHostWinOnInfluence");
+                     gi.Statistics.AddOne("NumWins");
                      action = GameAction.EndGameWin;
                      gi.EventDisplayed = gi.EventActive = "e501";
                      GameStatistic stat = gi.Statistics.Find("MaxTownInfluenceAtGameEnd");
@@ -1021,6 +1023,7 @@ namespace PleasantvilleGame
                   else if (true == optionAlienSolo.IsEnabled)
                   {
                      GameEngine.theInGameFeats.AddOne("EndAlienSoloWinOnInfluence");
+                     gi.Statistics.AddOne("NumWins");
                      action = GameAction.EndGameWin;
                      gi.EventDisplayed = gi.EventActive = "e501";
                      GameStatistic stat = gi.Statistics.Find("MaxAlienInfluenceAtGameEnd");
@@ -1033,6 +1036,7 @@ namespace PleasantvilleGame
                   else if (true == optionAlienClient.IsEnabled)
                   {
                      GameEngine.theInGameFeats.AddOne("EndAlienClientWinOnInfluence");
+                     gi.Statistics.AddOne("NumWins");
                      action = GameAction.EndGameWin;
                      gi.EventDisplayed = gi.EventActive = "e501";
                      GameStatistic stat = gi.Statistics.Find("MaxAlienInfluenceAtGameEnd");
@@ -1419,6 +1423,11 @@ namespace PleasantvilleGame
                   returnStatus = "Reset_Phase() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                }
+               if (false == ChooseRandomMovePeopleAndDest(gi))
+               {
+                  returnStatus = "Create_RandomMoves() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               }
                gi.EventActive = gi.EventDisplayed = "e005";
                action = GameAction.RandomMovementStartTowns;
                break;
@@ -1630,7 +1639,16 @@ namespace PleasantvilleGame
          }
          gi.AddControlled(mi);
          //----------------------------
-         name = Utilities.RemoveSpaces(TableMgr.WIFE);
+         //name = Utilities.RemoveSpaces(TableMgr.WIFE);
+         //mi = gi.Stacks.FindMapItem(name);
+         //if (null == mi)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+         //   return false;
+         //}
+         //gi.AddControlled(mi);
+         //----------------------------
+         name = Utilities.RemoveSpaces(TableMgr.STATION_ATTENDANT);
          mi = gi.Stacks.FindMapItem(name);
          if (null == mi)
          {
@@ -1639,7 +1657,70 @@ namespace PleasantvilleGame
          }
          gi.AddControlled(mi);
          //----------------------------
-         name = Utilities.RemoveSpaces(TableMgr.STATION_ATTENDANT);
+         name = Utilities.RemoveSpaces(TableMgr.BAR_OWNER);
+         mi = gi.Stacks.FindMapItem(name);
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+            return false;
+         }
+         gi.AddControlled(mi);
+         //----------------------------
+         name = Utilities.RemoveSpaces(TableMgr.FIRE_CHIEF);
+         mi = gi.Stacks.FindMapItem(name);
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+            return false;
+         }
+         gi.AddControlled(mi);
+         //----------------------------
+         name = Utilities.RemoveSpaces(TableMgr.MINSTER);
+         mi = gi.Stacks.FindMapItem(name);
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+            return false;
+         }
+         gi.AddControlled(mi);
+         //----------------------------
+         name = Utilities.RemoveSpaces(TableMgr.PLUMBER);
+         mi = gi.Stacks.FindMapItem(name);
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+            return false;
+         }
+         gi.AddControlled(mi);
+         //----------------------------
+         name = Utilities.RemoveSpaces(TableMgr.MAYOR);
+         mi = gi.Stacks.FindMapItem(name);
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+            return false;
+         }
+         gi.AddControlled(mi);
+         //----------------------------
+         name = Utilities.RemoveSpaces(TableMgr.WELDER);
+         mi = gi.Stacks.FindMapItem(name);
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+            return false;
+         }
+         gi.AddControlled(mi);
+         //----------------------------
+         name = Utilities.RemoveSpaces(TableMgr.TAILOR);
+         mi = gi.Stacks.FindMapItem(name);
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+            return false;
+         }
+         gi.AddControlled(mi);
+         //----------------------------
+         name = Utilities.RemoveSpaces(TableMgr.REPAIR_SHOP_OWNER);
          mi = gi.Stacks.FindMapItem(name);
          if (null == mi)
          {

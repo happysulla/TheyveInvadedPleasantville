@@ -51,8 +51,8 @@ namespace PleasantvilleGame
       public static string[] theDefaults =
       {
          "NumWins",
-         "TownInfluence",
-         "AlienInfluence",
+         "NumTownInfluence",
+         "NumAlienInfluence",
          "NumConversations",
          "NumConversationsSuccess",
          "NumInfluences",
@@ -109,7 +109,7 @@ namespace PleasantvilleGame
             if (key == stat1.Key)
                return stat1;
          }
-         Logger.Log(LogEnum.LE_ERROR, "GameStatistics.Find(): null for key=" + key + " in " + this.ToString());
+         Logger.Log(LogEnum.LE_VIEW_SHOW_STATS_ADD, "GameStatistics.Find(): adding key=" + key + " in " + this.ToString());
          GameStatistic stat = new GameStatistic(key);
          this.myList.Add(stat);
          return stat;

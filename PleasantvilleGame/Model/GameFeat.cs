@@ -78,11 +78,76 @@ namespace PleasantvilleGame
          StringBuilder sb = new StringBuilder();
          switch (feat.Key)
          {
-            case "StiffBack":
+            case "EndTownSoloWinOnInfluence":
                if (0 < feat.Value)
-                  return "Stiff Spine: Win a Combat with no controlled US sectors";
+                  return "Town Solo Win: Win on Influence!";
                else
-                  return "Stiff Spine";
+                  return "Town Solo Win 1";
+            case "EndTownSoloWinKillZebulon":
+               if (0 < feat.Value)
+                  return "Town Solo Win: Killed Zebulon!";
+               else
+                  return "Town Solo Win 2";
+            case "EndTownSoloWinAlienEliminated":
+               if (0 < feat.Value)
+                  return "Town Solo Win: Eliminate all Aliens!";
+               else
+                  return "Town Solo Win 3";
+            case "EndTownHostWinOnInfluence":
+               if (0 < feat.Value)
+                  return "Town Host Win: Win on Influence!";
+               else
+                  return "Town Host Win 1";
+            case "EndTownHostWinKillZebulon":
+               if (0 < feat.Value)
+                  return "Town Host Win: Killed Zebulon!";
+               else
+                  return "Town Host Win 2";
+            case "EndTownHostWinAlienEliminated":
+               if (0 < feat.Value)
+                  return "Town Host Win: Eliminated all Aliens!";
+               else
+                  return "Town Host Win 3";
+            case "EndAlienSoloWinOnInfluence":
+               if (0 < feat.Value)
+                  return "Alien Client Win: Win on Influence Count!";
+               else
+                  return "Alien Client Win 1";
+            case "EndAlienSoloWinTownEliminated":
+               if (0 < feat.Value)
+                  return "Alien Client Win: Eliminate all Town Persons!";
+               else
+                  return "Alien Client Win 2";
+            case "EndAlienClientWinOnInfluence":
+               if (0 < feat.Value)
+                  return "Alien Client Win: Win on Influence Count!";
+               else
+                  return "Alien Client Win 1";
+            case "EndAlienClientWinTownEliminated":
+               if (0 < feat.Value)
+                  return "Alien Client Win: Eliminate all Town Persons!";
+               else
+                  return "Alien Client Win 2";
+            case "BloodLustAsTown":
+               if (0 < feat.Value)
+                  return "Town Blood Lust: Town kills Alien Person";
+               else
+                  return "Town Blood Lust";
+            case "BloodLustAsAlien":
+               if (0 < feat.Value)
+                  return "Alien Blood Lust: Alien kills Towns Person";
+               else
+                  return "Alien Blood Lust";
+            case "ObtainImplant":
+               if (0 < feat.Value)
+                  return "Battlefield Surgeon: Able to remove Implant";
+               else
+                  return "Battlefield Surgeon";
+            case "ExplodeImplant":
+               if (0 < feat.Value)
+                  return "Unfortunate Event: Implant Explodes on Removal";
+               else
+                  return "Unfortunate Event";
             default:
                Logger.Log(LogEnum.LE_ERROR, "GetFeatMessage(): Unknown key=" + feat.Key);
                return "UNKNOWN: " + feat.Key;

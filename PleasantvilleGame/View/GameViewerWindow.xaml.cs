@@ -121,9 +121,6 @@ namespace PleasantvilleGame
          //---------------------------------------------------------------
          NameScope.SetNameScope(this, new NameScope()); // TextBox Marquee is end game condtion - display Game Statistics
          myTextBoxMarquee = new TextBlock() { Foreground = Brushes.Red, FontFamily = myFontFam, FontSize = 24 };
-         myTextBoxMarquee.MouseLeftButtonDown += MouseLeftButtonDownMarquee;
-         myTextBoxMarquee.MouseLeftButtonUp += MouseLeftButtonUpMarquee;
-         myTextBoxMarquee.MouseRightButtonDown += MouseRightButtonDownMarquee;
          this.RegisterName("tbMarquee", myTextBoxMarquee);
          //---------------------------------------------------------------
          myMainMenuViewer = new MainMenuViewer(ge, gi, myMainMenu);
@@ -156,34 +153,41 @@ namespace PleasantvilleGame
          GameEngine.theStartingFeats.SetGameFeatThreshold();
          Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "GameViewerWindow():\n  feats=" + GameEngine.theInGameFeats.ToString());
          //---------------------------------------------------------------
-         if (false == DeserializeGameStatistics(GameEngine.theAlienSoloStatistics, "stat0"))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): Deserialize_GameStatistics(theAlienSoloStatistics) returned false");
-            CtorError = true;
-            return;
-         }
-         Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "GameViewerWindow():\n  theAlienSoloStatistics stats=" + GameEngine.theAlienSoloStatistics.ToString());
-         if (false == DeserializeGameStatistics(GameEngine.theTownsSoloStatistics, "stat1"))
+         if (false == DeserializeGameStatistics(GameEngine.theTownsSoloStatistics, "stat0"))
          {
             Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): Deserialize_GameStatistics(theTownsSoloStatistics) returned false");
             CtorError = true;
             return;
          }
          Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "GameViewerWindow():\n  theTownsSoloStatistics stats=" + GameEngine.theTownsSoloStatistics.ToString());
-         if (false == DeserializeGameStatistics(GameEngine.theAlienVersusStatistics, "stat2"))
+         if (false == DeserializeGameStatistics(GameEngine.theAlienSoloStatistics, "stat1"))
          {
-            Logger.Log(LogEnum.LE_ERROR, "Update_CanvasShowStatsAdds(): Deserialize_GameStatistics(theAlienVersusStatistics) returned false");
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): Deserialize_GameStatistics(theAlienSoloStatistics) returned false");
             CtorError = true;
             return;
          }
-         Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "GameViewerWindow():\n  theTownsVersusStatistics stats=" + GameEngine.theTownsVersusStatistics.ToString());
-         if (false == DeserializeGameStatistics(GameEngine.theTownsVersusStatistics, "stat3"))
+         Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "GameViewerWindow():\n  theAlienSoloStatistics stats=" + GameEngine.theAlienSoloStatistics.ToString());
+         if (false == DeserializeGameStatistics(GameEngine.theTownsVersusStatistics, "stat2"))
          {
             Logger.Log(LogEnum.LE_ERROR, "Update_CanvasShowStatsAdds(): Deserialize_GameStatistics(theTownsVersusStatistics) returned false");
             CtorError = true;
             return;
          }
          Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "GameViewerWindow():\n  theTownsVersusStatistics stats=" + GameEngine.theTownsVersusStatistics.ToString());
+         if (false == DeserializeGameStatistics(GameEngine.theAlienVersusStatistics, "stat3"))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): Deserialize_GameStatistics(theAlienVersusStatistics) returned false");
+            CtorError = true;
+            return;
+         }
+         Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "GameViewerWindow():\n  theAlienVersusStatistics stats=" + GameEngine.theAlienVersusStatistics.ToString());
+         if (false == DeserializeGameStatistics(GameEngine.theTotalStatistics, "stat4"))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): Deserialize_GameStatistics(theTotalStatistics) returned false");
+            CtorError = true;
+            return;
+         }
+         Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "GameViewerWindow():\n  theTotalStatistics stats=" + GameEngine.theTotalStatistics.ToString());
          //---------------------------------------------------------------
          Utilities.ZoomCanvas = Properties.Settings.Default.ZoomCanvas;
          myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas); // Constructor - revert to save zoom
@@ -475,20 +479,50 @@ namespace PleasantvilleGame
                return false;
             }
             //-------------------------------------------
-            if (false == SerializeGameStatistics(GameEngine.theAlienSoloStatistics, "stat0"))
+            GameStatistic stat0NumGames = GameEngine.theTownsSoloStatistics.Find("NumGames");
+            GameStatistic stat1NumGames = GameEngine.theAlienSoloStatistics.Find("NumGames");
+            GameStatistic stat2NumGames = GameEngine.theTownsVersusStatistics.Find("NumGames");
+            GameStatistic stat3NumGames = GameEngine.theAlienVersusStatistics.Find("NumGames");
+            GameStatistic stat4NumGames = GameEngine.theTotalStatistics.Find("NumGames");
+            if( 0 < stat0NumGames.Value)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeGameStatistics() returned false");
-               return false;
+               if (false == SerializeGameStatistics(GameEngine.theTownsSoloStatistics, "stat0"))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeGameStatistics(theTownsSoloStatistics) returned false");
+                  return false;
+               }
             }
-            if (false == SerializeGameStatistics(GameEngine.theTownsSoloStatistics, "stat1"))
+            if (0 < stat1NumGames.Value)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeGameStatistics(theTownsSoloStatistics) returned false");
-               return false;
+               if (false == SerializeGameStatistics(GameEngine.theAlienSoloStatistics, "stat1"))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeGameStatistics(theAlienSoloStatistics) returned false");
+                  return false;
+               }
             }
-            if (false == SerializeGameStatistics(GameEngine.theAlienVersusStatistics, "stat2"))
+            if (0 < stat2NumGames.Value)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeGameStatistics(theAlienVersusStatistics) returned false");
-               return false;
+               if (false == SerializeGameStatistics(GameEngine.theTownsVersusStatistics, "stat2"))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeGameStatistics(theTownsVersusStatistics) returned false");
+                  return false;
+               }
+            }
+            if (0 < stat3NumGames.Value)
+            {
+               if (false == SerializeGameStatistics(GameEngine.theAlienVersusStatistics, "stat2"))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeGameStatistics(theAlienVersusStatistics) returned false");
+                  return false;
+               }
+            }
+            if (0 < stat4NumGames.Value)
+            {
+               if (false == SerializeGameStatistics(GameEngine.theTotalStatistics, "stat4"))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Save_DefaultsToSettings(): SerializeGameStatistics(theAlienVersusStatistics) returned false");
+                  return false;
+               }
             }
             return true;
          }
@@ -1055,6 +1089,10 @@ namespace PleasantvilleGame
             case GameAction.InterrogationsPerform:
             case GameAction.UpdateEventViewerDisplay:
             case GameAction.UpdateEventViewerActive:
+               break;
+            case GameAction.EndGameShowFeats:
+               if (false == UpdateCanvasShowFeats())
+                  Logger.Log(LogEnum.LE_ERROR, "Update_View(): UpdateCanvas_ShowFeats(" + action.ToString() + ") returned error ");
                break;
             case GameAction.RandomMovementStartTowns:
                UpdateActionPanelClear();
@@ -2589,8 +2627,8 @@ namespace PleasantvilleGame
          double Y = centerY - (sizeOfImage * 0.5);
          Canvas.SetLeft(imgFeat, X);
          Canvas.SetTop(imgFeat, Y);
-         Canvas.SetZIndex(imgFeat, 99998);
-         myCanvasMain.MouseDown += MouseDownGameFeat;
+         Canvas.SetZIndex(imgFeat, myZIndexLastUsed++);
+         imgFeat.MouseDown += MouseDownGameFeat;
          //-------------------------------------
          System.Windows.Controls.Label labelTitle = new System.Windows.Controls.Label() { Name = "FeatLabel1", Content = "Game Feat Completed!", FontStyle = FontStyles.Italic, FontSize = 24, FontWeight = FontWeights.Bold, FontFamily = myFontFam, VerticalContentAlignment = VerticalAlignment.Center, HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center };
          myCanvasMain.Children.Add(labelTitle);
@@ -2614,13 +2652,13 @@ namespace PleasantvilleGame
          //-------------------------------------
          Canvas.SetLeft(labelTitle, X1);
          Canvas.SetTop(labelTitle, Y1);
-         Canvas.SetZIndex(labelTitle, 99999);
+         Canvas.SetZIndex(labelTitle, myZIndexLastUsed);
          Canvas.SetLeft(labelForFeat, X2);
          Canvas.SetTop(labelForFeat, Y2);
-         Canvas.SetZIndex(labelForFeat, 99999);
+         Canvas.SetZIndex(labelForFeat, myZIndexLastUsed);
          Canvas.SetLeft(labelClick, X3);
          Canvas.SetTop(labelClick, Y3);
-         Canvas.SetZIndex(labelClick, 99999);
+         Canvas.SetZIndex(labelClick, myZIndexLastUsed);
          //-------------------------------------
          GameFeat? startingFeat = GameEngine.theStartingFeats.Find(featChange.Key);
          if (null == startingFeat)
@@ -2633,6 +2671,13 @@ namespace PleasantvilleGame
       }
       private bool UpdateCanvasShowStatistics(IGameInstance gi)
       {
+         Canvas.SetZIndex(myTextBoxMarquee, myZIndexLastUsed++);
+         myCanvasMain.MouseLeftButtonDown -= this.MouseLeftButtonDownCanvas;
+         myCanvasMain.MouseRightButtonDown -= this.MouseRightButtonDownCanvas;
+         myTextBoxMarquee.MouseLeftButtonDown += MouseLeftButtonDownMarquee;
+         myTextBoxMarquee.MouseLeftButtonUp += MouseLeftButtonUpMarquee;
+         myTextBoxMarquee.MouseRightButtonDown += MouseRightButtonDownMarquee;
+         //-----------------------------------
          if (null == myDieRoller)
          {
             Logger.Log(LogEnum.LE_ERROR, "Update_CanvasShowStatistics(): myDieRoller=null");
@@ -2680,6 +2725,7 @@ namespace PleasantvilleGame
          GameStatistic stat1NumGames = GameEngine.theAlienSoloStatistics.Find("NumGames");
          GameStatistic stat2NumGames = GameEngine.theTownsVersusStatistics.Find("NumGames");
          GameStatistic stat3NumGames = GameEngine.theAlienVersusStatistics.Find("NumGames");
+         GameStatistic stat4NumGames = GameEngine.theTotalStatistics.Find("NumGames");
          if (true == optionTownSolo.IsEnabled)
          {
             Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): Before==>GameEngine.theTownsSoloStatistics=" + GameEngine.theTownsSoloStatistics.ToString());
@@ -2699,7 +2745,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): Before==>GameEngine.theAlienSoloStatistics=" + GameEngine.theAlienSoloStatistics.ToString());
             UpdateCanvasShowStatsAdds(gi.Statistics, GameEngine.theAlienSoloStatistics);
             Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): After==>GameEngine.theAlienSoloStatistics=" + GameEngine.theAlienSoloStatistics.ToString());
-            if (1 < stat1NumGames.Value)
+            if (0 < stat1NumGames.Value)
             {
                myTextBoxMarquee.Inlines.Add(new LineBreak());
                myTextBoxMarquee.Inlines.Add(new LineBreak());
@@ -2745,15 +2791,17 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): Before====>GameEngine.theTotalStatistics=" + GameEngine.theTotalStatistics.ToString());
          UpdateCanvasShowStatsAdds(gi.Statistics, GameEngine.theTotalStatistics);
          Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): After====>GameEngine.theTotalStatistics=" + GameEngine.theTotalStatistics.ToString());
-         int totalGamesPlayed = stat0NumGames.Value + stat1NumGames.Value + stat2NumGames.Value + stat3NumGames.Value;
-         GameStatistic stat4 = GameEngine.theTotalStatistics.Find("NumGames");
-         if (totalGamesPlayed != stat4.Value)
+         if (1 < stat4NumGames.Value)
          {
-            myTextBoxMarquee.Inlines.Add(new LineBreak());
-            myTextBoxMarquee.Inlines.Add(new LineBreak());
-            string title2 = "All Games Statistics:";
-            myTextBoxMarquee.Inlines.Add(new Run(title2) { FontWeight = FontWeights.Bold, FontStyle = FontStyles.Italic, TextDecorations = TextDecorations.Underline, Foreground = Brushes.Goldenrod });
-            UpdateCanvasShowStatsText(myTextBoxMarquee, GameEngine.theTotalStatistics, Brushes.Goldenrod);
+            int totalGamesPlayed = stat0NumGames.Value + stat1NumGames.Value + stat2NumGames.Value + stat3NumGames.Value;
+            if (totalGamesPlayed != stat4NumGames.Value)
+            {
+               myTextBoxMarquee.Inlines.Add(new LineBreak());
+               myTextBoxMarquee.Inlines.Add(new LineBreak());
+               string title2 = "All Games Statistics:";
+               myTextBoxMarquee.Inlines.Add(new Run(title2) { FontWeight = FontWeights.Bold, FontStyle = FontStyles.Italic, TextDecorations = TextDecorations.Underline, Foreground = Brushes.Goldenrod });
+               UpdateCanvasShowStatsText(myTextBoxMarquee, GameEngine.theTotalStatistics, Brushes.Goldenrod);
+            }
          }
          //-------------------------------
          myCanvasMain.ClipToBounds = true;
@@ -2774,25 +2822,25 @@ namespace PleasantvilleGame
          SaveDefaultsToSettings();
          return true;
       }
-      private void UpdateCanvasShowStatsAdds(GameStatistics statistics, GameStatistics totalStatistics)
+      private void UpdateCanvasShowStatsAdds(GameStatistics currentGameStatistics, GameStatistics addToStatistics)
       {
          //-------------------------------------
-         foreach (GameStatistic stat in statistics)
+         foreach (GameStatistic stat in currentGameStatistics)
          {
             if (true == stat.Key.Contains("Num"))
             {
-               GameStatistic statAllNum = totalStatistics.Find(stat.Key);
+               GameStatistic statAllNum = addToStatistics.Find(stat.Key);
                statAllNum.Value += stat.Value;
             }
             else if (true == stat.Key.Contains("Max"))
             {
-               GameStatistic statMax = totalStatistics.Find(stat.Key);
+               GameStatistic statMax = addToStatistics.Find(stat.Key);
                if (statMax.Value < stat.Value)
                   statMax.Value = stat.Value;
             }
             else if (true == stat.Key.Contains("Min"))
             {
-               GameStatistic statMin = totalStatistics.Find(stat.Key);
+               GameStatistic statMin = addToStatistics.Find(stat.Key);
                Logger.Log(LogEnum.LE_VIEW_SHOW_STATS_MIN, "UpdateCanvas_ShowStatsAdds(): key=" + stat.Key + " statMin.Value=" + statMin.Value.ToString() + " stat.Value=" + stat.Value.ToString());
                if ((stat.Value < statMin.Value) || (0 == statMin.Value))
                {
@@ -2819,8 +2867,8 @@ namespace PleasantvilleGame
          Option optionAlienClient = myGameInstance.Options.Find("AlienClient");
          GameStatistic numWins = statistics.Find("NumWins");
          GameStatistic numZebulonKills = statistics.Find("NumZebulonKill");
-         GameStatistic townInfluence = statistics.Find("TownInfluence");
-         GameStatistic alienInfluence = statistics.Find("AlienInfluence");
+         GameStatistic townInfluence = statistics.Find("NumTownInfluence");
+         GameStatistic alienInfluence = statistics.Find("NumAlienInfluence");
          GameStatistic townInflenceMax = statistics.Find("MaxTownInfluenceAtGameEnd");
          GameStatistic townInflenceMin = statistics.Find("MinTownInfluenceAtGameEnd");
          GameStatistic alienInfluenceMax = statistics.Find("MaxAlienInfluenceAtGameEnd");
@@ -2862,20 +2910,38 @@ namespace PleasantvilleGame
             tb.Inlines.Add(new Run("% Wins = " + winRatio.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
             //-------------------------
             int average = townInfluence.Value / numGames.Value;
-            tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Run("Town Influence Avg= " + average.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
-            tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Run("Max Town Influence = " + townInflenceMax.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
-            tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Run("Min Town Influence = " + townInflenceMin.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            if (0 < average)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("Town Influence Avg = " + average.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
+            if (0 < townInflenceMax.Value)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("Max Town Influence = " + townInflenceMax.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
+            if (0 < townInflenceMax.Value)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("Min Town Influence = " + townInflenceMax.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
             //-------------------------
             average = alienInfluence.Value / numGames.Value;
-            tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Run("Alien Influence = " + average.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
-            tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Run("Max Alien Influence = " + alienInfluenceMax.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
-            tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Run("Min Alien Influence = " + alienInfluenceMin.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            if (0 < average)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("Alien Influence Avg = " + average.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
+            if( 0 < alienInfluenceMax.Value )
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("Max Alien Influence = " + alienInfluenceMax.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
+            if( 0 < alienInfluenceMin.Value)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("Min Alien Influence = " + alienInfluenceMin.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
             //-------------------------
             tb.Inlines.Add(new LineBreak());
             tb.Inlines.Add(new Run("Num of Conversations = " + numConversation.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
@@ -2904,11 +2970,17 @@ namespace PleasantvilleGame
             tb.Inlines.Add(new LineBreak());
             tb.Inlines.Add(new Run("Number Town Killed = " + numTownKilled.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
             //-------------------------
-            tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Run("% Success Alien Combat = " + percentSuccessAlienCombat.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            if( 0 < percentSuccessAlienCombat)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("% Success Alien Combat = " + percentSuccessAlienCombat.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
             //-------------------------
-            tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Run("% Success Town Combat = " + percentSuccessTownCombat.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            if (0 < percentSuccessTownCombat)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("% Success Town Combat = " + percentSuccessTownCombat.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
          }
          else // only one game
          {
@@ -2931,13 +3003,9 @@ namespace PleasantvilleGame
             //-------------------------
             tb.Inlines.Add(new LineBreak());
             tb.Inlines.Add(new Run("Town Influence = " + townInfluence.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
-            tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Run("Max Town Influence = " + townInflenceMax.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
             //-------------------------
             tb.Inlines.Add(new LineBreak());
             tb.Inlines.Add(new Run("Alien Influence = " + alienInfluence.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
-            tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Run("Max Alien Influence = " + alienInfluenceMax.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
             //-------------------------
             tb.Inlines.Add(new LineBreak());
             tb.Inlines.Add(new Run("Num of Conversations = " + numConversation.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
@@ -2966,11 +3034,16 @@ namespace PleasantvilleGame
             tb.Inlines.Add(new LineBreak());
             tb.Inlines.Add(new Run("Number Town Killed = " + numTownKilled.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
             //-------------------------
-            tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Run("% Success Alien Combat = " + percentSuccessAlienCombat.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
-            //-------------------------
-            tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Run("% Success Town Combat = " + percentSuccessTownCombat.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            if (0 < percentSuccessAlienCombat)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("% Success Alien Combat = " + percentSuccessAlienCombat.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
+            if (0 < percentSuccessTownCombat)
+            { 
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("% Success Town Combat = " + percentSuccessTownCombat.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
          }
          return true;
       }
@@ -4011,10 +4084,12 @@ namespace PleasantvilleGame
       private void MouseLeftButtonDownMarquee(object sender, MouseEventArgs e)
       {
          myStoryboardMarquee.Pause(this);
+         e.Handled = true;
       }
       private void MouseLeftButtonUpMarquee(object send, MouseEventArgs e)
       {
          myStoryboardMarquee.Resume(this);
+         e.Handled = true;
       }
       private void MouseRightButtonDownMarquee(object send, MouseEventArgs e)
       {
@@ -4029,6 +4104,7 @@ namespace PleasantvilleGame
          else
             mySpeedRatioMarquee = 0.5;
          myStoryboardMarquee.SetSpeedRatio(this, mySpeedRatioMarquee);
+         e.Handled = true;
       }
       //---------------
       private void PreviewMouseLeftButtonDownMapItem(object sender, System.Windows.Input.MouseEventArgs e)
@@ -4308,7 +4384,16 @@ namespace PleasantvilleGame
                      }
                      else 
                      {
-
+                        if (false == String.IsNullOrEmpty(featChange.Key))
+                        {
+                           action = GameAction.UpdateShowFeat;
+                           Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): 2-Change=" + featChange.Key);
+                        }
+                        else
+                        {
+                           action = GameAction.UpdateShowFeatEnd;
+                           myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas);
+                        }
                      }
                      myCanvasMain.MouseDown -= MouseDownGameFeat;
                      e.Handled = true;
@@ -4319,7 +4404,7 @@ namespace PleasantvilleGame
             }
             else if (ui is Label label)
             {
-               if (result.VisualHit == label)
+               if (result.VisualHit == label) // <cgs> This is never true so clicking labels does nothing
                {
                   if (true == label.Name.Contains("Feat"))
                   {
@@ -4452,13 +4537,11 @@ namespace PleasantvilleGame
             } 
             if (null != selectedTerritory)
                break;
-         }  
-         if (null == selectedTerritory)  // If no territory is selected, return
-            return;
+         }
+         e.Handled = true;
       }
       private void MouseRightButtonDownCanvas(object sender, MouseButtonEventArgs e)
       {
-
          Point p = e.GetPosition(myCanvasMain);  // not used but useful info
          //--------------------------------------------------
          ITerritory? selectedTerritory = null;  // Get the selected territory
@@ -4497,6 +4580,7 @@ namespace PleasantvilleGame
             return;
          GameAction outAction = GameAction.UpdateRotateStack;
          myGameEngine.PerformAction(ref myGameInstance, ref outAction);
+         e.Handled = true;
       }
       private void ContextMenuLoadedButton(object sender, RoutedEventArgs e)
       {
