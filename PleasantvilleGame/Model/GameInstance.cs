@@ -109,9 +109,6 @@ namespace PleasantvilleGame
                   alienInfluence += mi.Influence;
             }
          }
-         GameStatistic stat = this.Statistics.Find("MaxAlienInfluence");
-         if (stat.Value < alienInfluence)
-            stat.Value = alienInfluence;
       }
       public void AddKnownAlien(IMapItem newAlien)
       {
@@ -131,9 +128,6 @@ namespace PleasantvilleGame
                      alienInfluence += mi.Influence;
             }
          }
-         GameStatistic stat = this.Statistics.Find("MaxAlienInfluence");
-         if (stat.Value < alienInfluence)
-            stat.Value = alienInfluence;
       }
       public void AddControlled(IMapItem controlled)
       {
@@ -155,9 +149,6 @@ namespace PleasantvilleGame
                   townInfluence += mi.Influence;
             }
          }
-         GameStatistic stat = this.Statistics.Find("MaxTownInfluence");
-         if (stat.Value < townInfluence)
-            stat.Value = townInfluence;
       }
       public IMapItemMove? CreateMapItemMove(IMapItem mi, ITerritory newT)
       {

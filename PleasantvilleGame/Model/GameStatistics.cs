@@ -68,8 +68,8 @@ namespace PleasantvilleGame
          "NumImplantRemovals",
          "NumImplantRemovalsSuccess",
          //-----------------
-         "MaxTownInfluence",
-         "MaxAlienInfluence",
+         "MaxTownInfluenceAtGameEnd",
+         "MaxAlienInfluenceAtGameEnd",
          "MinAlienInfluenceAtGameEnd",
          "MinTownInfluenceAtGameEnd"
       };

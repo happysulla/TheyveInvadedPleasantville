@@ -866,28 +866,8 @@ namespace PleasantvilleGame
                myTextBlock.Inlines.Add(new LineBreak());
                myTextBlock.Inlines.Add(new LineBreak());
                myTextBlock.Inlines.Add(new Run("Click image to continue show game statistics and feats."));
-               gi.Statistics.AddOne("NumOfScenariosLost");
                break;
             case "e503":
-               Option optionSingleDayScenario = gi.Options.Find("SingleDayScenario");
-               if ((true == optionSingleDayScenario.IsEnabled) || (gi.Day < 172))
-               {
-                  myTextBlock.Inlines.Add(new Run("Receive a Europe Campaign medal for participating in Europe Campaign."));
-                  myTextBlock.Inlines.Add(new LineBreak());
-                  myTextBlock.Inlines.Add(new LineBreak());
-                  Image imgEndGame1 = new Image { Name = "EndGameExit", Source = MapItem.theMapImages.GetBitmapImage("DecorationEasternCampaign"), Width = 150, Height = 300 };
-                  myTextBlock.Inlines.Add(new Run("                                           "));
-                  myTextBlock.Inlines.Add(new InlineUIContainer(imgEndGame1));
-               }
-               else
-               {
-                  myTextBlock.Inlines.Add(new Run("Receive a Europe Campaign medal for participation and Victory medal since after Feb 1945."));
-                  myTextBlock.Inlines.Add(new LineBreak());
-                  myTextBlock.Inlines.Add(new LineBreak());
-                  Image imgEndGame2 = new Image { Name = "EndGameExit", Source = MapItem.theMapImages.GetBitmapImage("DecorationVictoryMedal"), Width = 300, Height = 300 };
-                  myTextBlock.Inlines.Add(new Run("                        "));
-                  myTextBlock.Inlines.Add(new InlineUIContainer(imgEndGame2));
-               }
                myTextBlock.Inlines.Add(new LineBreak());
                myTextBlock.Inlines.Add(new LineBreak());
                myTextBlock.Inlines.Add(new Run("Select "));
@@ -895,6 +875,11 @@ namespace PleasantvilleGame
                myTextBlock.Inlines.Add(new Run(" menu option to play again --or--"));
                myTextBlock.Inlines.Add(new LineBreak());
                myTextBlock.Inlines.Add(new Run("Click image to exit the game."));
+               myTextBlock.Inlines.Add(new LineBreak());
+               myTextBlock.Inlines.Add(new LineBreak());
+               Image imgEndGame2 = new Image { Name = "EndGameExit", Source = MapItem.theMapImages.GetBitmapImage("DoorClosing"), Width = 75, Height = 150 };
+               myTextBlock.Inlines.Add(new Run("                                        "));
+               myTextBlock.Inlines.Add(new InlineUIContainer(imgEndGame2));
                break;
             default:
                break;

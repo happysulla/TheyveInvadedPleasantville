@@ -2676,12 +2676,15 @@ namespace PleasantvilleGame
          Option optionAlienSolo = gi.Options.Find("AlienSolo");
          Option optionTownHost = gi.Options.Find("TownHost");
          Option optionAlienClient = gi.Options.Find("AlienClient");
+         GameStatistic stat0NumGames = GameEngine.theTownsSoloStatistics.Find("NumGames");
+         GameStatistic stat1NumGames = GameEngine.theAlienSoloStatistics.Find("NumGames");
+         GameStatistic stat2NumGames = GameEngine.theTownsVersusStatistics.Find("NumGames");
+         GameStatistic stat3NumGames = GameEngine.theAlienVersusStatistics.Find("NumGames");
          if (true == optionTownSolo.IsEnabled)
          {
             Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): Before==>GameEngine.theTownsSoloStatistics=" + GameEngine.theTownsSoloStatistics.ToString());
             UpdateCanvasShowStatsAdds(gi.Statistics, GameEngine.theTownsSoloStatistics);
             Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): After==>GameEngine.theTownsSoloStatistics=" + GameEngine.theTownsSoloStatistics.ToString());
-            GameStatistic stat0NumGames = GameEngine.theTownsSoloStatistics.Find("NumGames");
             if (1 < stat0NumGames.Value)
             {
                myTextBoxMarquee.Inlines.Add(new LineBreak());
@@ -2696,7 +2699,6 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): Before==>GameEngine.theAlienSoloStatistics=" + GameEngine.theAlienSoloStatistics.ToString());
             UpdateCanvasShowStatsAdds(gi.Statistics, GameEngine.theAlienSoloStatistics);
             Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): After==>GameEngine.theAlienSoloStatistics=" + GameEngine.theAlienSoloStatistics.ToString());
-            GameStatistic stat1NumGames = GameEngine.theAlienSoloStatistics.Find("NumGames");
             if (1 < stat1NumGames.Value)
             {
                myTextBoxMarquee.Inlines.Add(new LineBreak());
@@ -2711,8 +2713,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): Before==>GameEngine.theTownsVersusStatistics=" + GameEngine.theAlienSoloStatistics.ToString());
             UpdateCanvasShowStatsAdds(gi.Statistics, GameEngine.theTownsVersusStatistics);
             Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): After==>GameEngine.theTownsVersusStatistics=" + GameEngine.theAlienSoloStatistics.ToString());
-            GameStatistic stat1NumGames = GameEngine.theTownsVersusStatistics.Find("NumGames");
-            if (1 < stat1NumGames.Value)
+            if (1 < stat2NumGames.Value)
             {
                myTextBoxMarquee.Inlines.Add(new LineBreak());
                myTextBoxMarquee.Inlines.Add(new LineBreak());
@@ -2726,8 +2727,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): Before==>GameEngine.theAlienVersusStatistics=" + GameEngine.theAlienSoloStatistics.ToString());
             UpdateCanvasShowStatsAdds(gi.Statistics, GameEngine.theAlienVersusStatistics);
             Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): After==>GameEngine.theAlienVersusStatistics=" + GameEngine.theAlienSoloStatistics.ToString());
-            GameStatistic stat1NumGames = GameEngine.theTownsVersusStatistics.Find("NumGames");
-            if (1 < stat1NumGames.Value)
+            if (1 < stat3NumGames.Value)
             {
                myTextBoxMarquee.Inlines.Add(new LineBreak());
                myTextBoxMarquee.Inlines.Add(new LineBreak());
@@ -2745,11 +2745,7 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): Before====>GameEngine.theTotalStatistics=" + GameEngine.theTotalStatistics.ToString());
          UpdateCanvasShowStatsAdds(gi.Statistics, GameEngine.theTotalStatistics);
          Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): After====>GameEngine.theTotalStatistics=" + GameEngine.theTotalStatistics.ToString());
-         GameStatistic stat0= GameEngine.theTownsSoloStatistics.Find("NumGames");
-         GameStatistic stat1= GameEngine.theAlienSoloStatistics.Find("NumGames");
-         GameStatistic stat2 = GameEngine.theTownsVersusStatistics.Find("NumGames");
-         GameStatistic stat3 = GameEngine.theAlienVersusStatistics.Find("NumGames");
-         int totalGamesPlayed = stat0.Value + stat1.Value + stat2.Value + stat3.Value;
+         int totalGamesPlayed = stat0NumGames.Value + stat1NumGames.Value + stat2NumGames.Value + stat3NumGames.Value;
          GameStatistic stat4 = GameEngine.theTotalStatistics.Find("NumGames");
          if (totalGamesPlayed != stat4.Value)
          {
@@ -2825,28 +2821,38 @@ namespace PleasantvilleGame
          GameStatistic numZebulonKills = statistics.Find("NumZebulonKill");
          GameStatistic townInfluence = statistics.Find("TownInfluence");
          GameStatistic alienInfluence = statistics.Find("AlienInfluence");
-         GameStatistic townInflenceMax = statistics.Find("MaxTownInfluence");
+         GameStatistic townInflenceMax = statistics.Find("MaxTownInfluenceAtGameEnd");
          GameStatistic townInflenceMin = statistics.Find("MinTownInfluenceAtGameEnd");
-         GameStatistic alienInfluenceMax = statistics.Find("MaxAlienInfluence");
+         GameStatistic alienInfluenceMax = statistics.Find("MaxAlienInfluenceAtGameEnd");
          GameStatistic alienInfluenceMin = statistics.Find("MinAlienInfluenceAtGameEnd");
          GameStatistic numConversation = statistics.Find("NumConversations");
          GameStatistic numConversationsSuccess = statistics.Find("NumConversationsSuccess");
-         int percentSuccessConversation = (int)(100.0 * numConversationsSuccess.Value / numConversation.Value);
+         int percentSuccessConversation = 0;
+         if(0 < numConversation.Value)
+            percentSuccessConversation = (int)(100.0 * numConversationsSuccess.Value / numConversation.Value);
          GameStatistic numInfluence = statistics.Find("NumInfluences");
          GameStatistic numInfluencesSuccess = statistics.Find("NumInfluencesSuccess");
-         int percentSuccessInfluence = (int)(100.0 * numInfluencesSuccess.Value / numInfluence.Value);
+         int percentSuccessInfluence = 0;
+         if (0 < numInfluence.Value)
+            percentSuccessInfluence = (int)(100.0 * numInfluencesSuccess.Value / numInfluence.Value);
          GameStatistic numCombat = statistics.Find("NumCombats"); // combat counted if AF, DF, A, D and it is Town Vs. Alien
          GameStatistic numAlienKilled = statistics.Find("NumAlienKilled");
          GameStatistic numTownKilled = statistics.Find("NumTownKilled");
          GameStatistic numTownWin = statistics.Find("NumTownWin");
          GameStatistic numAlienFlee = statistics.Find("NumAlienFlee");
-         int percentSuccessTownCombat = (int)(100.0 * (numTownWin.Value + numAlienFlee.Value) / (double)numCombat.Value);
+         int percentSuccessTownCombat = 0;
+         if (0 < numCombat.Value)
+            percentSuccessTownCombat = (int)(100.0 * (numTownWin.Value + numAlienFlee.Value) / (double)numCombat.Value);
          GameStatistic numAlienWin = statistics.Find("NumAlienWin");
          GameStatistic numTownFlee = statistics.Find("NumTownFlee");
-         int percentSuccessAlienCombat = (int)(100.0 * (double)(numAlienWin.Value + numTownFlee.Value) / (double)numCombat.Value);
+         int percentSuccessAlienCombat = 0;
+         if (0 < numCombat.Value)
+            percentSuccessAlienCombat = (int)(100.0 * (double)(numAlienWin.Value + numTownFlee.Value) / (double)numCombat.Value);
          GameStatistic numImplantRemoval = statistics.Find("NumImplantRemovals");
          GameStatistic numImplantRemovalsSuccess = statistics.Find("NumImplantRemovalsSuccess");
-         int percentSuccessImplantRemoval = (int)(100.0 * numImplantRemovalsSuccess.Value / numInfluence.Value);
+         int percentSuccessImplantRemoval = 0;
+         if (0 < numImplantRemoval.Value)
+            percentSuccessImplantRemoval = (int)(100.0 * numImplantRemovalsSuccess.Value / numInfluence.Value);
          if (1 < numGames.Value)
          {
             tb.Inlines.Add(new LineBreak());
@@ -2924,12 +2930,12 @@ namespace PleasantvilleGame
             }
             //-------------------------
             tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Run("Town Influence = " + townInfluence.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            tb.Inlines.Add(new Run("Town Influence = " + townInfluence.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
             tb.Inlines.Add(new LineBreak());
             tb.Inlines.Add(new Run("Max Town Influence = " + townInflenceMax.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
             //-------------------------
             tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Run("Alien Influence = " + alienInfluence.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            tb.Inlines.Add(new Run("Alien Influence = " + alienInfluence.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
             tb.Inlines.Add(new LineBreak());
             tb.Inlines.Add(new Run("Max Alien Influence = " + alienInfluenceMax.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
             //-------------------------

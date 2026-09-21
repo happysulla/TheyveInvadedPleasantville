@@ -753,25 +753,40 @@ namespace PleasantvilleGame
          Option optionAlienClient = gi.Options.Find("AlienClient");
          if ( true == gi.Zebulon.IsKilled )
          {
+            gi.Statistics.AddOne("NumTownWin"); // Town won in combat
             Logger.Log(LogEnum.LE_GAME_END, "CheckFor_EndOfGame(): Zebulon is KIA");
             gi.EndGameReason = "Zebulon is defeated";
             gi.GamePhase = GamePhase.GameEnd;
-            action = GameAction.EndGameWin;
-            gi.EventDisplayed = gi.EventActive = "e501";
             if (true == optionTownSolo.IsEnabled )
             {
+               action = GameAction.EndGameWin;
+               gi.EventDisplayed = gi.EventActive = "e501";
                GameEngine.theInGameFeats.AddOne("EndTownSoloWinKillZebulon");
-               gi.Statistics.AddOne("NumTownWin");
                gi.Statistics.AddOne("NumWins");
+               GameStatistic stat = gi.Statistics.Find("MaxTownInfluenceAtGameEnd");
+               if (stat.Value < controlledInfluence)
+                  stat.Value = controlledInfluence;
+               GameStatistic stat1 = gi.Statistics.Find("MinTownInfluenceAtGameEnd");
+               if ((0 == stat1.Value) || (controlledInfluence < stat1.Value))
+                  stat1.Value = controlledInfluence;
             }
             else if (true == optionTownHost.IsEnabled)
             {
+               action = GameAction.EndGameWin;
+               gi.EventDisplayed = gi.EventActive = "e501";
                GameEngine.theInGameFeats.AddOne("EndTownHostWinKillZebulon");
                gi.Statistics.AddOne("NumWins");
+               GameStatistic stat = gi.Statistics.Find("MaxTownInfluenceAtGameEnd");
+               if (stat.Value < controlledInfluence)
+                  stat.Value = controlledInfluence;
+               GameStatistic stat1 = gi.Statistics.Find("MinTownInfluenceAtGameEnd");
+               if ((0 == stat1.Value) || (controlledInfluence < stat1.Value))
+                  stat1.Value = controlledInfluence;
             }
             else if ( (true == optionAlienSolo.IsEnabled) || (true == optionAlienClient.IsEnabled) )
             {
-               gi.Statistics.AddOne("NumTownWin");
+               action = GameAction.EndGameLose;
+               gi.EventDisplayed = gi.EventActive = "e502";
             }
             return true;
          }
@@ -873,6 +888,12 @@ namespace PleasantvilleGame
                gi.Statistics.AddOne("NumWins");
                action = GameAction.EndGameWin;
                gi.EventDisplayed = gi.EventActive = "e501";
+               GameStatistic stat = gi.Statistics.Find("MaxTownInfluenceAtGameEnd");
+               if (stat.Value < controlledInfluence)
+                  stat.Value = controlledInfluence;
+               GameStatistic stat1 = gi.Statistics.Find("MinTownInfluenceAtGameEnd");
+               if ((0 == stat1.Value) || (controlledInfluence < stat1.Value))
+                  stat1.Value = controlledInfluence;
             }
             else if (true == optionTownHost.IsEnabled)
             {
@@ -880,6 +901,12 @@ namespace PleasantvilleGame
                gi.Statistics.AddOne("NumWins");
                action = GameAction.EndGameWin;
                gi.EventDisplayed = gi.EventActive = "e501";
+               GameStatistic stat = gi.Statistics.Find("MaxTownInfluenceAtGameEnd");
+               if (stat.Value < controlledInfluence)
+                  stat.Value = controlledInfluence;
+               GameStatistic stat1 = gi.Statistics.Find("MinTownInfluenceAtGameEnd");
+               if ((0 == stat1.Value) || (controlledInfluence < stat1.Value))
+                  stat1.Value = controlledInfluence;
             }
             else if (true == optionAlienSolo.IsEnabled)
             {
@@ -913,6 +940,12 @@ namespace PleasantvilleGame
                gi.Statistics.AddOne("NumWins");
                action = GameAction.EndGameWin;
                gi.EventDisplayed = gi.EventActive = "e501";
+               GameStatistic stat = gi.Statistics.Find("MaxTownInfluenceAtGameEnd");
+               if (stat.Value < controlledInfluence)
+                  stat.Value = controlledInfluence;
+               GameStatistic stat1 = gi.Statistics.Find("MinTownInfluenceAtGameEnd");
+               if ((0 == stat1.Value) || (controlledInfluence < stat1.Value))
+                  stat1.Value = controlledInfluence;
             }
             else if (true == optionAlienClient.IsEnabled)
             {
@@ -920,6 +953,12 @@ namespace PleasantvilleGame
                gi.Statistics.AddOne("NumWins");
                action = GameAction.EndGameWin;
                gi.EventDisplayed = gi.EventActive = "e501";
+               GameStatistic stat = gi.Statistics.Find("MaxTownInfluenceAtGameEnd");
+               if (stat.Value < controlledInfluence)
+                  stat.Value = controlledInfluence;
+               GameStatistic stat1 = gi.Statistics.Find("MinTownInfluenceAtGameEnd");
+               if ((0 == stat1.Value) || (controlledInfluence<stat1.Value) )
+                  stat1.Value = controlledInfluence;
             }
          }
          else
@@ -937,12 +976,24 @@ namespace PleasantvilleGame
                      GameEngine.theInGameFeats.AddOne("EndTownSoloWinOnInfluence");
                      action = GameAction.EndGameWin;
                      gi.EventDisplayed = gi.EventActive = "e501";
+                     GameStatistic stat = gi.Statistics.Find("MaxTownInfluenceAtGameEnd");
+                     if (stat.Value < controlledInfluence)
+                        stat.Value = controlledInfluence;
+                     GameStatistic stat1 = gi.Statistics.Find("MinTownInfluenceAtGameEnd");
+                     if ((0 == stat1.Value) || (controlledInfluence < stat1.Value))
+                        stat1.Value = controlledInfluence;
                   }
                   else if (true == optionTownHost.IsEnabled)
                   {
                      GameEngine.theInGameFeats.AddOne("EndTownHostWinOnInfluence");
                      action = GameAction.EndGameWin;
                      gi.EventDisplayed = gi.EventActive = "e501";
+                     GameStatistic stat = gi.Statistics.Find("MaxTownInfluenceAtGameEnd");
+                     if (stat.Value < controlledInfluence)
+                        stat.Value = controlledInfluence;
+                     GameStatistic stat1 = gi.Statistics.Find("MinTownInfluenceAtGameEnd");
+                     if ((0 == stat1.Value) || (controlledInfluence < stat1.Value))
+                        stat1.Value = controlledInfluence;
                   }
                   else if (true == optionAlienSolo.IsEnabled)
                   {
@@ -972,12 +1023,24 @@ namespace PleasantvilleGame
                      GameEngine.theInGameFeats.AddOne("EndAlienSoloWinOnInfluence");
                      action = GameAction.EndGameWin;
                      gi.EventDisplayed = gi.EventActive = "e501";
+                     GameStatistic stat = gi.Statistics.Find("MaxAlienInfluenceAtGameEnd");
+                     if (stat.Value < alienInfluenceTotal)
+                        stat.Value = alienInfluenceTotal;
+                     GameStatistic stat1 = gi.Statistics.Find("MinAlienInfluenceAtGameEnd");
+                     if ((0 == stat1.Value) || (alienInfluenceTotal < stat1.Value))
+                        stat1.Value = alienInfluenceTotal;
                   }
                   else if (true == optionAlienClient.IsEnabled)
                   {
                      GameEngine.theInGameFeats.AddOne("EndAlienClientWinOnInfluence");
                      action = GameAction.EndGameWin;
                      gi.EventDisplayed = gi.EventActive = "e501";
+                     GameStatistic stat = gi.Statistics.Find("MaxAlienInfluenceAtGameEnd");
+                     if (stat.Value < alienInfluenceTotal)
+                        stat.Value = alienInfluenceTotal;
+                     GameStatistic stat1 = gi.Statistics.Find("MinAlienInfluenceAtGameEnd");
+                     if ((0 == stat1.Value) || (alienInfluenceTotal < stat1.Value))
+                        stat1.Value = alienInfluenceTotal;
                   }
                }
             }
@@ -1503,6 +1566,88 @@ namespace PleasantvilleGame
       }
       private bool AddStartingTestingState(IGameInstance gi)
       {
+         gi.GameTurn = 11;
+         string name = Utilities.RemoveSpaces(TableMgr.PAPERBOY);
+         IMapItem? mi = gi.Stacks.FindMapItem(name);
+         if( null == mi )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+            return false;
+         }
+         gi.AddControlled(mi);
+         //----------------------------
+         name = Utilities.RemoveSpaces(TableMgr.SUPERMARKET_MGR);
+         mi = gi.Stacks.FindMapItem(name);
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+            return false;
+         }
+         gi.AddControlled(mi);
+         //----------------------------
+         name = Utilities.RemoveSpaces(TableMgr.TELLER);
+         mi = gi.Stacks.FindMapItem(name);
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+            return false;
+         }
+         gi.AddControlled(mi);
+         //----------------------------
+         name = Utilities.RemoveSpaces(TableMgr.DEPUTY);
+         mi = gi.Stacks.FindMapItem(name);
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+            return false;
+         }
+         gi.AddControlled(mi);
+         //----------------------------
+         name = Utilities.RemoveSpaces(TableMgr.BANK_PRESIDENT);
+         mi = gi.Stacks.FindMapItem(name);
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+            return false;
+         }
+         gi.AddControlled(mi);
+         //----------------------------
+         name = Utilities.RemoveSpaces(TableMgr.CHECKOUTGIRL);
+         mi = gi.Stacks.FindMapItem(name);
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+            return false;
+         }
+         gi.AddControlled(mi);
+         //----------------------------
+         name = Utilities.RemoveSpaces(TableMgr.PLUMBER);
+         mi = gi.Stacks.FindMapItem(name);
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+            return false;
+         }
+         gi.AddControlled(mi);
+         //----------------------------
+         name = Utilities.RemoveSpaces(TableMgr.WIFE);
+         mi = gi.Stacks.FindMapItem(name);
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+            return false;
+         }
+         gi.AddControlled(mi);
+         //----------------------------
+         name = Utilities.RemoveSpaces(TableMgr.STATION_ATTENDANT);
+         mi = gi.Stacks.FindMapItem(name);
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+            return false;
+         }
+         gi.AddControlled(mi);
+         //----------------------------
          return true;
       }
    }
