@@ -2920,10 +2920,10 @@ namespace PleasantvilleGame
                tb.Inlines.Add(new LineBreak());
                tb.Inlines.Add(new Run("Max Town Influence = " + townInflenceMax.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
             }
-            if (0 < townInflenceMax.Value)
+            if (0 < townInflenceMin.Value)
             {
                tb.Inlines.Add(new LineBreak());
-               tb.Inlines.Add(new Run("Min Town Influence = " + townInflenceMax.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+               tb.Inlines.Add(new Run("Min Town Influence = " + townInflenceMin.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
             }
             //-------------------------
             average = alienInfluence.Value / numGames.Value;

@@ -58,19 +58,17 @@ namespace PleasantvilleGame
       IMapItemCombat MapItemCombat { set; get; } 
       IMapItemMove? PreviousMapItemMove { set; get; }
       //----------------------------------------------
-      string PlayerTurn { set; get; }
-      string NextAction { set; get; }
       int NumTownGuessesForZebulonLocation { set; get; }
-      bool IsAlienStarted { set; get; }
-      bool IsTownsStarted { set; get; }
-      bool IsAlienDisplayedRandomMovement { set; get; }
-      bool IsTownDisplayedRandomMovement { set; get; }
+      //string PlayerTurn { set; get; }
+      //string NextAction { set; get; }
+      //bool IsAlienStarted { set; get; }
+      //bool IsTownsStarted { set; get; }
       bool IsAlienAckedRandomMovement { set; get; }
-      bool IsTownsAckedRandomMovement { set; get; }
-      bool IsAlienInitiatedCombat { set; get; }
-      bool IsTownsInitiatedCombat { set; get; }
-      bool IsAlienCombatCompleted { set; get; }
-      bool IsTownsCombatCompleted { set; get; }
+      //bool IsTownsAckedRandomMovement { set; get; }
+      //bool IsAlienInitiatedCombat { set; get; }
+      //bool IsTownsInitiatedCombat { set; get; }
+      //bool IsAlienCombatCompleted { set; get; }
+      //bool IsTownsCombatCompleted { set; get; }
       //----------------------------------------------
       List<IUnitTest> UnitTests { get; }
       //=========================================================

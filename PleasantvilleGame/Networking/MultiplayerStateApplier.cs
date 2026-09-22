@@ -22,8 +22,6 @@ namespace PleasantvilleGame.Networking
          }
          gameInstance.EventActive = state.EventActive;
          gameInstance.EventDisplayed = state.EventDisplayed;
-         gameInstance.PlayerTurn = state.PlayerTurn;
-         gameInstance.NextAction = state.NextAction;
          gameInstance.GameTurn = state.GameTurn;
          gameInstance.Day = state.Day;
          gameInstance.DieRollAction = GameAction.DieRollActionNone;

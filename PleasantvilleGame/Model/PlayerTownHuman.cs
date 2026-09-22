@@ -49,8 +49,8 @@ namespace PleasantvilleGame
       }
       public bool BlockRandomMoves(IGameInstance gi)
       {
-         gi.IsTownsAckedRandomMovement = true;
-         return true;
+         Logger.Log(LogEnum.LE_ERROR, "PlayerTownHuman.Block_RandomMoves(): not implemented");
+         return false;
       }
       public bool PerformTownMove(IGameInstance gi, ref GameAction outAction)
       {

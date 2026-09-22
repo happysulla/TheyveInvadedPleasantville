@@ -47,11 +47,24 @@ namespace PleasantvilleGame
                   myMenuItemTopLevel2 = menuItem;
                   myMenuItemTopLevel2.Header = "_Edit";
                   myMenuItemTopLevel2.Visibility = Visibility.Visible;
+                  //------------------------------
                   myMenuItemTopLevel21.Header = "_Undo";
                   myMenuItemTopLevel21.InputGestureText = "Ctrl+Z";
                   myMenuItemTopLevel21.IsEnabled = false;
                   myMenuItemTopLevel21.Click += MenuItemEditUndo_Click;
                   myMenuItemTopLevel2.Items.Add(myMenuItemTopLevel21);
+                  //------------------------------
+                  MenuItem subItem22 = new MenuItem();
+                  subItem22.Header = "_Revert...";
+                  subItem22.InputGestureText = "Ctrl+R";
+                  subItem22.Click += MenuItemViewOtherGames_Click;
+                  myMenuItemTopLevel2.Items.Add(subItem22);
+                  //------------------------------
+                  MenuItem subItem23 = new MenuItem();
+                  subItem23.Header = "_Recover Checkpoint...";
+                  subItem23.InputGestureText = "Ctrl+Shift+R";
+                  subItem23.Click += MenuItemViewOtherGames_Click;
+                  myMenuItemTopLevel2.Items.Add(subItem23);
                }
                //------------------------------------------------
                if (menuItem.Name == "myMenuItemTopLevel3")

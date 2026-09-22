@@ -9,8 +9,6 @@ namespace PleasantvilleGame.Networking
             GameGuid = gameInstance.GameGuid.ToString(),
             EventActive = gameInstance.EventActive,
             EventDisplayed = gameInstance.EventDisplayed,
-            PlayerTurn = gameInstance.PlayerTurn,
-            NextAction = gameInstance.NextAction,
             GamePhase = gameInstance.GamePhase.ToString(),
             GameTurn = gameInstance.GameTurn,
             Day = gameInstance.Day,

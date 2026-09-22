@@ -69,7 +69,7 @@ namespace PleasantvilleGame
          for(int i=0; i < GameEngine.theInGameFeats.Count ; ++i)
          {
             int rowNum = i + 2 + numRect; // 2=header stuff to bypass
-            if ((8 == rowNum) || (26 == rowNum) || (44 == rowNum) || (50 == rowNum) || (58 == rowNum) || (64 == rowNum))
+            if ((5 == rowNum) || (9 == rowNum) || (12 == rowNum) || (15 == rowNum) )
             {
                Rectangle r = new Rectangle() { Width = 500, Height = 1, Fill = Brushes.Black, Stroke = Brushes.Black, HorizontalAlignment = System.Windows.HorizontalAlignment.Left, Margin = thickness };
                myGrid.Children.Add(r);

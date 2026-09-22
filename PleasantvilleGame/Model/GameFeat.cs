@@ -79,68 +79,32 @@ namespace PleasantvilleGame
          switch (feat.Key)
          {
             case "EndTownSoloWinOnInfluence":
-               if (0 < feat.Value)
-                  return "Town Solo Win: Win on Influence!";
-               else
-                  return "Town Solo Win 1";
+                  return "Town Solo Win 1: Win on Influence!";
             case "EndTownSoloWinKillZebulon":
-               if (0 < feat.Value)
-                  return "Town Solo Win: Killed Zebulon!";
-               else
-                  return "Town Solo Win 2";
+                  return "Town Solo Win 2: Killed Zebulon!";
             case "EndTownSoloWinAlienEliminated":
-               if (0 < feat.Value)
-                  return "Town Solo Win: Eliminate all Aliens!";
-               else
-                  return "Town Solo Win 3";
+                  return "Town Solo Win 3: Eliminate all Aliens!";
             case "EndTownHostWinOnInfluence":
-               if (0 < feat.Value)
-                  return "Town Host Win: Win on Influence!";
-               else
-                  return "Town Host Win 1";
+                  return "Town Host Win 1: Win on Influence!";
             case "EndTownHostWinKillZebulon":
-               if (0 < feat.Value)
-                  return "Town Host Win: Killed Zebulon!";
-               else
-                  return "Town Host Win 2";
+                  return "Town Host Win 2: Killed Zebulon!";
             case "EndTownHostWinAlienEliminated":
-               if (0 < feat.Value)
-                  return "Town Host Win: Eliminated all Aliens!";
-               else
-                  return "Town Host Win 3";
+                  return "Town Host Win 3: Eliminated all Aliens!";
             case "EndAlienSoloWinOnInfluence":
-               if (0 < feat.Value)
-                  return "Alien Client Win: Win on Influence Count!";
-               else
-                  return "Alien Client Win 1";
+                  return "Alien Solo Win 1: Win on Influence Count!";
             case "EndAlienSoloWinTownEliminated":
-               if (0 < feat.Value)
-                  return "Alien Client Win: Eliminate all Town Persons!";
-               else
-                  return "Alien Client Win 2";
+                  return "Alien Solo Win 2: Eliminate all Town Persons!";
             case "EndAlienClientWinOnInfluence":
-               if (0 < feat.Value)
-                  return "Alien Client Win: Win on Influence Count!";
-               else
-                  return "Alien Client Win 1";
+                  return "Alien Client Win 1: Win on Influence Count!";
             case "EndAlienClientWinTownEliminated":
-               if (0 < feat.Value)
-                  return "Alien Client Win: Eliminate all Town Persons!";
-               else
-                  return "Alien Client Win 2";
+               return "Alien Client Win 2: Eliminate all Town Persons!";
             case "BloodLustAsTown":
-               if (0 < feat.Value)
                   return "Town Blood Lust: Town kills Alien Person";
-               else
-                  return "Town Blood Lust";
             case "BloodLustAsAlien":
-               if (0 < feat.Value)
-                  return "Alien Blood Lust: Alien kills Towns Person";
-               else
-                  return "Alien Blood Lust";
+                  return "Alien Blood Lust: Alien kills Town Person";
             case "ObtainImplant":
                if (0 < feat.Value)
-                  return "Battlefield Surgeon: Able to remove Implant";
+                  return "Battlefield Surgeon: Remove Implant Intact";
                else
                   return "Battlefield Surgeon";
             case "ExplodeImplant":

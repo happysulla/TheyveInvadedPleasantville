@@ -124,10 +124,7 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_SHOW_RESET_PHASE, "Reset_Phase(): ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + phase.ToString());
          gi.GamePhase = phase;
          gi.DieRollAction = GameAction.DieRollActionNone;
-         gi.IsAlienDisplayedRandomMovement = false;
-         gi.IsTownDisplayedRandomMovement = false;
          gi.IsAlienAckedRandomMovement = false;
-         gi.IsTownsAckedRandomMovement = false;
          gi.NumTownGuessesForZebulonLocation = 0;
          gi.AlienTakeovers.Clear();
          Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "Reset_Phase()");
@@ -1575,69 +1572,150 @@ namespace PleasantvilleGame
       }
       private bool AddStartingTestingState(IGameInstance gi)
       {
-         gi.GameTurn = 11;
-         string name = Utilities.RemoveSpaces(TableMgr.PAPERBOY);
-         IMapItem? mi = gi.Stacks.FindMapItem(name);
-         if( null == mi )
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
-            return false;
-         }
-         gi.AddControlled(mi);
-         //----------------------------
-         name = Utilities.RemoveSpaces(TableMgr.SUPERMARKET_MGR);
-         mi = gi.Stacks.FindMapItem(name);
-         if (null == mi)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
-            return false;
-         }
-         gi.AddControlled(mi);
-         //----------------------------
-         name = Utilities.RemoveSpaces(TableMgr.TELLER);
-         mi = gi.Stacks.FindMapItem(name);
-         if (null == mi)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
-            return false;
-         }
-         gi.AddControlled(mi);
-         //----------------------------
-         name = Utilities.RemoveSpaces(TableMgr.DEPUTY);
-         mi = gi.Stacks.FindMapItem(name);
-         if (null == mi)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
-            return false;
-         }
-         gi.AddControlled(mi);
-         //----------------------------
-         name = Utilities.RemoveSpaces(TableMgr.BANK_PRESIDENT);
-         mi = gi.Stacks.FindMapItem(name);
-         if (null == mi)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
-            return false;
-         }
-         gi.AddControlled(mi);
-         //----------------------------
-         name = Utilities.RemoveSpaces(TableMgr.CHECKOUTGIRL);
-         mi = gi.Stacks.FindMapItem(name);
-         if (null == mi)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
-            return false;
-         }
-         gi.AddControlled(mi);
-         //----------------------------
-         name = Utilities.RemoveSpaces(TableMgr.PLUMBER);
-         mi = gi.Stacks.FindMapItem(name);
-         if (null == mi)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
-            return false;
-         }
-         gi.AddControlled(mi);
+         //gi.GameTurn = 11;
+         //string name = Utilities.RemoveSpaces(TableMgr.PAPERBOY);
+         //IMapItem? mi = gi.Stacks.FindMapItem(name);
+         //if( null == mi )
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+         //   return false;
+         //}
+         //gi.AddControlled(mi);
+         ////----------------------------
+         //name = Utilities.RemoveSpaces(TableMgr.SUPERMARKET_MGR);
+         //mi = gi.Stacks.FindMapItem(name);
+         //if (null == mi)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+         //   return false;
+         //}
+         //gi.AddControlled(mi);
+         ////----------------------------
+         //name = Utilities.RemoveSpaces(TableMgr.TELLER);
+         //mi = gi.Stacks.FindMapItem(name);
+         //if (null == mi)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+         //   return false;
+         //}
+         //gi.AddControlled(mi);
+         ////----------------------------
+         //name = Utilities.RemoveSpaces(TableMgr.DEPUTY);
+         //mi = gi.Stacks.FindMapItem(name);
+         //if (null == mi)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+         //   return false;
+         //}
+         //gi.AddControlled(mi);
+         ////----------------------------
+         //name = Utilities.RemoveSpaces(TableMgr.BANK_PRESIDENT);
+         //mi = gi.Stacks.FindMapItem(name);
+         //if (null == mi)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+         //   return false;
+         //}
+         //gi.AddControlled(mi);
+         ////----------------------------
+         //name = Utilities.RemoveSpaces(TableMgr.CHECKOUTGIRL);
+         //mi = gi.Stacks.FindMapItem(name);
+         //if (null == mi)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+         //   return false;
+         //}
+         //gi.AddControlled(mi);
+         ////----------------------------
+         //name = Utilities.RemoveSpaces(TableMgr.PLUMBER);
+         //mi = gi.Stacks.FindMapItem(name);
+         //if (null == mi)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+         //   return false;
+         //}
+         //gi.AddControlled(mi);
+         ////----------------------------
+         //name = Utilities.RemoveSpaces(TableMgr.STATION_ATTENDANT);
+         //mi = gi.Stacks.FindMapItem(name);
+         //if (null == mi)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+         //   return false;
+         //}
+         //gi.AddControlled(mi);
+         ////----------------------------
+         //name = Utilities.RemoveSpaces(TableMgr.BAR_OWNER);
+         //mi = gi.Stacks.FindMapItem(name);
+         //if (null == mi)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+         //   return false;
+         //}
+         //gi.AddControlled(mi);
+         ////----------------------------
+         //name = Utilities.RemoveSpaces(TableMgr.FIRE_CHIEF);
+         //mi = gi.Stacks.FindMapItem(name);
+         //if (null == mi)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+         //   return false;
+         //}
+         //gi.AddControlled(mi);
+         ////----------------------------
+         //name = Utilities.RemoveSpaces(TableMgr.MINSTER);
+         //mi = gi.Stacks.FindMapItem(name);
+         //if (null == mi)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+         //   return false;
+         //}
+         //gi.AddControlled(mi);
+         ////----------------------------
+         //name = Utilities.RemoveSpaces(TableMgr.PLUMBER);
+         //mi = gi.Stacks.FindMapItem(name);
+         //if (null == mi)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+         //   return false;
+         //}
+         //gi.AddControlled(mi);
+         ////----------------------------
+         //name = Utilities.RemoveSpaces(TableMgr.MAYOR);
+         //mi = gi.Stacks.FindMapItem(name);
+         //if (null == mi)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+         //   return false;
+         //}
+         //gi.AddControlled(mi);
+         ////----------------------------
+         //name = Utilities.RemoveSpaces(TableMgr.WELDER);
+         //mi = gi.Stacks.FindMapItem(name);
+         //if (null == mi)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+         //   return false;
+         //}
+         //gi.AddControlled(mi);
+         ////----------------------------
+         //name = Utilities.RemoveSpaces(TableMgr.TAILOR);
+         //mi = gi.Stacks.FindMapItem(name);
+         //if (null == mi)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+         //   return false;
+         //}
+         //gi.AddControlled(mi);
+         ////----------------------------
+         //name = Utilities.RemoveSpaces(TableMgr.REPAIR_SHOP_OWNER);  // 5, 9, 7
+         //mi = gi.Stacks.FindMapItem(name);
+         //if (null == mi)
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
+         //   return false;
+         //}
+         //gi.AddControlled(mi);
          //----------------------------
          //name = Utilities.RemoveSpaces(TableMgr.WIFE);
          //mi = gi.Stacks.FindMapItem(name);
@@ -1647,87 +1725,6 @@ namespace PleasantvilleGame
          //   return false;
          //}
          //gi.AddControlled(mi);
-         //----------------------------
-         name = Utilities.RemoveSpaces(TableMgr.STATION_ATTENDANT);
-         mi = gi.Stacks.FindMapItem(name);
-         if (null == mi)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
-            return false;
-         }
-         gi.AddControlled(mi);
-         //----------------------------
-         name = Utilities.RemoveSpaces(TableMgr.BAR_OWNER);
-         mi = gi.Stacks.FindMapItem(name);
-         if (null == mi)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
-            return false;
-         }
-         gi.AddControlled(mi);
-         //----------------------------
-         name = Utilities.RemoveSpaces(TableMgr.FIRE_CHIEF);
-         mi = gi.Stacks.FindMapItem(name);
-         if (null == mi)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
-            return false;
-         }
-         gi.AddControlled(mi);
-         //----------------------------
-         name = Utilities.RemoveSpaces(TableMgr.MINSTER);
-         mi = gi.Stacks.FindMapItem(name);
-         if (null == mi)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
-            return false;
-         }
-         gi.AddControlled(mi);
-         //----------------------------
-         name = Utilities.RemoveSpaces(TableMgr.PLUMBER);
-         mi = gi.Stacks.FindMapItem(name);
-         if (null == mi)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
-            return false;
-         }
-         gi.AddControlled(mi);
-         //----------------------------
-         name = Utilities.RemoveSpaces(TableMgr.MAYOR);
-         mi = gi.Stacks.FindMapItem(name);
-         if (null == mi)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
-            return false;
-         }
-         gi.AddControlled(mi);
-         //----------------------------
-         name = Utilities.RemoveSpaces(TableMgr.WELDER);
-         mi = gi.Stacks.FindMapItem(name);
-         if (null == mi)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
-            return false;
-         }
-         gi.AddControlled(mi);
-         //----------------------------
-         name = Utilities.RemoveSpaces(TableMgr.TAILOR);
-         mi = gi.Stacks.FindMapItem(name);
-         if (null == mi)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
-            return false;
-         }
-         gi.AddControlled(mi);
-         //----------------------------
-         name = Utilities.RemoveSpaces(TableMgr.REPAIR_SHOP_OWNER);
-         mi = gi.Stacks.FindMapItem(name);
-         if (null == mi)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Add_StartingTestingState(): unable to find mi=" + name + " Stacks=" + gi.Stacks.ToString());
-            return false;
-         }
-         gi.AddControlled(mi);
          //----------------------------
          return true;
       }
@@ -1809,7 +1806,6 @@ namespace PleasantvilleGame
                gi.DieRollAction = GameAction.DieRollActionNone;
                break;
             case GameAction.RandomMovementTownAck:
-               gi.IsTownsAckedRandomMovement = true;
                if (true == gi.IsAlienAckedRandomMovement)
                {
                   if( false == ResetPhase(gi, GamePhase.AlienMovement))

@@ -56,19 +56,17 @@ namespace PleasantvilleGame
       public IMapItemCombat MapItemCombat { set; get; } = new MapItemCombat();
       public IMapItemMove? PreviousMapItemMove { set; get; } = null;
       //---------------------------------------------------------------
-      public string PlayerTurn { set; get; } = "Alien";
-      public string NextAction { set; get; } = "";
       public int NumTownGuessesForZebulonLocation { set; get; } = 0;
-      public bool IsAlienStarted { set; get; } = false;
-      public bool IsTownsStarted { set; get; } = false;
-      public bool IsAlienDisplayedRandomMovement { set; get; } = false;
-      public bool IsTownDisplayedRandomMovement { set; get; } = false;
+      //public string NextAction { set; get; } = "";
+      //public string PlayerTurn { set; get; } = "Alien";
+      //public bool IsAlienStarted { set; get; } = false;
+      //public bool IsTownsStarted { set; get; } = false;
       public bool IsAlienAckedRandomMovement { set; get; } = false;
-      public bool IsTownsAckedRandomMovement { set; get; } = false;
-      public bool IsAlienInitiatedCombat { set; get; } = false;
-      public bool IsTownsInitiatedCombat { set; get; } = false;
-      public bool IsAlienCombatCompleted { set; get; } = false;
-      public bool IsTownsCombatCompleted { set; get; } = false;
+      //public bool IsTownsAckedRandomMovement { set; get; } = false;
+      //public bool IsAlienInitiatedCombat { set; get; } = false;
+      //public bool IsTownsInitiatedCombat { set; get; } = false;
+      //public bool IsAlienCombatCompleted { set; get; } = false;
+      //public bool IsTownsCombatCompleted { set; get; } = false;
       //---------------------------------------------------------------
       [NonSerialized] private List<IUnitTest> myUnitTests = new List<IUnitTest>();
       public List<IUnitTest> UnitTests { get => myUnitTests; }

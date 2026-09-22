@@ -47,6 +47,9 @@ namespace PleasantvilleGame
       UpdateGameOptions, 
       UpdateLoadingGame,
       UpdateUndo,
+      UpdateRecoverToFlashing,   // Repeat Flashing Spaces
+      UpdateRecoverToPhaseBeg,   // Reset the Phase to beginning of phase
+      UpdateRecoverToCheckPoint, // Reset to checkpoint saved at end of turn
       UpdateScatterStack,
       UpdateRotateStack,
       UpdateShowFeat,
