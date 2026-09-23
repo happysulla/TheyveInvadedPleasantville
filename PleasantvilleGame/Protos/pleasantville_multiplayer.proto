@@ -107,8 +107,7 @@ message VisibleGameState {
   string game_guid = 1;
   string event_active = 2;
   string event_displayed = 3;
-  string player_turn = 4;
-  string next_action = 5;
+  reserved 4, 5;
   string game_phase = 6;
   int32 game_turn = 7;
   int32 day = 8;

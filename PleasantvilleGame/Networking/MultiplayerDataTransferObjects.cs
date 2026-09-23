@@ -47,8 +47,6 @@ namespace PleasantvilleGame.Networking
       public string GameGuid { get; set; } = string.Empty;
       public string EventActive { get; set; } = string.Empty;
       public string EventDisplayed { get; set; } = string.Empty;
-      public string PlayerTurn { get; set; } = string.Empty;
-      public string NextAction { get; set; } = string.Empty;
       public string GamePhase { get; set; } = string.Empty;
       public int GameTurn { get; set; }
       public int Day { get; set; }

@@ -104,7 +104,7 @@ namespace PleasantvilleGame
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.InitialDirectory = theGamesDirectory;
             dlg.RestoreDirectory = true;
-            dlg.Filter = "Patton's Best Games|*.pbg";
+            dlg.Filter = "They've Invaded Pleasantville Games|*.tip";
             if (true == dlg.ShowDialog())
             {
                CultureInfo currentCulture = CultureInfo.CurrentCulture;
@@ -209,7 +209,7 @@ namespace PleasantvilleGame
          IGameCommand? command = gi.GameCommands.GetLast();
          if (null != command)
             sb.Append("-" + command.Action.ToString());
-         sb.Append(".pbg");
+         sb.Append(".tip");
          return sb.ToString();
       }
       //--------------------------------------------------

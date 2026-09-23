@@ -353,6 +353,16 @@ namespace PleasantvilleGame
             CommandBindings.Add(new CommandBinding(command, mmv.MenuItemEditUndo_Click));
             //------------------------------------------------
             command = new RoutedCommand();
+            keyGesture = new KeyGesture(Key.R, ModifierKeys.Control);
+            InputBindings.Add(new KeyBinding(command, keyGesture));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemEditRecoverPhase_Click));
+            //------------------------------------------------
+            command = new RoutedCommand();
+            keyGesture = new KeyGesture(Key.R, ModifierKeys.Control | ModifierKeys.Shift);
+            InputBindings.Add(new KeyBinding(command, keyGesture));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemEditRecoverCheckpoint_Click, mmv.MenuItemEditRecoverCheckpoint_ClickCanExecute));
+            //------------------------------------------------
+            command = new RoutedCommand();
             keyGesture = new KeyGesture(Key.V, ModifierKeys.Control | ModifierKeys.Shift);
             InputBindings.Add(new KeyBinding(command, keyGesture));
             CommandBindings.Add(new CommandBinding(command, mmv.MenuItemViewOtherGames_Click));
