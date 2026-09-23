@@ -1390,16 +1390,7 @@ namespace PleasantvilleGame
          GameAction nextAction = GameAction.Error;
          if (GameAction.UpdateLoadingGame == action)
          {
-            IGameCommand? cmd = gi.GameCommands.GetLast();
-            if (null == cmd)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "UpdateView_ForNewGame(): cmd=null");
-               return false;
-            }
-            nextAction = cmd.Action;
-            gi.GamePhase = cmd.Phase;
-            gi.DieRollAction = cmd.ActionDieRoll;
-            gi.EventDisplayed = gi.EventActive = cmd.EventActive;
+            gi.EventDisplayed = gi.EventActive;
          }
          else if (GameAction.UpdateNewGame == action)
          {

@@ -206,9 +206,6 @@ namespace PleasantvilleGame
          if (Day < 10)
             sb.Append("0");
          sb.Append(Day.ToString());
-         IGameCommand? command = gi.GameCommands.GetLast();
-         if (null != command)
-            sb.Append("-" + command.Action.ToString());
          sb.Append(".tip");
          return sb.ToString();
       }
@@ -984,12 +981,6 @@ namespace PleasantvilleGame
                return null;
             }
             //----------------------------------------------
-            if (false == ReadXmlGameCommands(reader, gi.GameCommands))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): ReadXmlGameCommands() returned false");
-               return null;
-            }
-            //----------------------------------------------
             if (false == ReadXmlOptions(reader, gi.Options))
             {
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): ReadXmlOptions() returned false");
@@ -999,12 +990,6 @@ namespace PleasantvilleGame
             if (false == ReadXmlGameStatistics(reader, gi.Statistics))
             {
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): ReadXmlGameStatistics() returned false");
-               return null;
-            }
-            //----------------------------------------------
-            if (false == ReadXmlEnteredHexes(reader, gi.EnteredHexes))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): ReadXmlEnteredHexes() returned false");
                return null;
             }
             return gi;
@@ -2249,12 +2234,6 @@ namespace PleasantvilleGame
             return null;
          }
          //------------------------------------------
-         if (false == CreateXmlGameCommands(aXmlDocument, gi.GameCommands))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): Create_XmlGameCommands() returned false");
-            return null;
-         }
-         //------------------------------------------
          if (false == CreateXmlGameOptions(aXmlDocument, gi.Options))
          {
             Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): Create_XmlOptions() returned false");
@@ -2276,12 +2255,6 @@ namespace PleasantvilleGame
          if (false == CreateXmlStacks(aXmlDocument, gi.Stacks, "Stacks"))
          {
             Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): CreateXmlStacks(Stacks) returned false");
-            return null;
-         }
-         //------------------------------------------
-         if (false == CreateXmlEnteredHexes(aXmlDocument, gi.EnteredHexes))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): CreateXmlEnteredHexes() returned false");
             return null;
          }
          return aXmlDocument;
@@ -2577,56 +2550,6 @@ namespace PleasantvilleGame
          {
             Logger.Log(LogEnum.LE_ERROR, "CreateXmlListingOfMapItemsAcquiredShots(): count=" + count.ToString() + " enemyAcquiredShots=" + enemyAcquiredShots.Count.ToString());
             return false;
-         }
-         return true;
-      }
-      private bool CreateXmlGameCommands(XmlDocument aXmlDocument, IGameCommands gameCommands)
-      {
-         XmlNode? root = aXmlDocument.DocumentElement;
-         if (null == root)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXmlGameInstance(): root is null");
-            return false;
-         }
-         XmlElement? gamecmdsElem = aXmlDocument.CreateElement("GameCommands");
-         if (null == gamecmdsElem)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXmlGameInstance(): CreateElement(GameCommands) returned null");
-            return false;
-         }
-         gamecmdsElem.SetAttribute("count", gameCommands.Count.ToString());
-         XmlNode? gameCmdsNode = root.AppendChild(gamecmdsElem);
-         if (null == gameCmdsNode)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXmlGameInstance(): AppendChild(gameCmdsNode) returned null");
-            return false;
-         }
-         //--------------------------------
-         for (int i = 0; i < gameCommands.Count; ++i)
-         {
-            IGameCommand? gameCmd = gameCommands[i];
-            if (null == gameCmd)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "CreateXmlGameInstance(): gameCmd=null");
-               return false;
-            }
-            XmlElement? gameCmdElem = aXmlDocument.CreateElement("GameCommand");
-            if (null == gameCmdElem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "CreateXmlGameInstance(): CreateElement(OptGameCommandion) returned null");
-               return false;
-            }
-            //---------------------------------------
-            gameCmdElem.SetAttribute("Action", gameCmd.Action.ToString());
-            gameCmdElem.SetAttribute("ActionDieRoll", gameCmd.ActionDieRoll.ToString());
-            gameCmdElem.SetAttribute("EventActive", gameCmd.EventActive.ToString());
-            gameCmdElem.SetAttribute("Phase", gameCmd.Phase.ToString());
-            XmlNode? gameCmdNode = gameCmdsNode.AppendChild(gameCmdElem);
-            if (null == gameCmdNode)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "CreateXmlGameInstance(): AppendChild(gameCmdNode) returned null");
-               return false;
-            }
          }
          return true;
       }

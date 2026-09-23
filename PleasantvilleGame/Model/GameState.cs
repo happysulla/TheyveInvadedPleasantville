@@ -149,17 +149,6 @@ namespace PleasantvilleGame
       }
       protected bool LoadGame(ref IGameInstance gi)
       {
-         //--------------------------------------------
-         IGameCommand? cmd = gi.GameCommands.GetLast();
-         if (null == cmd)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "UpdateViewForNewGame(): cmd=null");
-            return false;
-         }
-         GameAction action = cmd.Action;
-         gi.GamePhase = cmd.Phase;
-         gi.DieRollAction = cmd.ActionDieRoll;
-         Logger.Log(LogEnum.LE_SHOW_UPLOAD_GAME, " Load_Game(): p=" + cmd.Phase.ToString() + " a=" + action.ToString() + " dra=" + cmd.ActionDieRoll.ToString() + " e=" + gi.EventActive);
          return true;
       }
       //------------

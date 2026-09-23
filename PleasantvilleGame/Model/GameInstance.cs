@@ -15,7 +15,13 @@ namespace PleasantvilleGame
       public bool CtorError { get; } = false;
       private Dictionary<string, int[]> myDieResults = new Dictionary<string, int[]>();
       public Dictionary<string, int[]> DieResults { get => myDieResults; }
-      //----------------------------------------------
+      public bool IsMultipleSelectForDieResult { set; get; } = false;
+      public bool IsGridActive { set; get; } = false;
+      //------------------------------------------------
+      public Guid GameGuid { get; set; } = Guid.NewGuid();
+      public string EventActive { get; set; } = "e000";
+      public string EventDisplayed { set; get; } = "e000";
+      //------------------------------------------------
       public IPlayerTown PlayerTown { set; get; } = new PlayerTownHuman();
       public IPlayerAlien PlayerAlien { set; get; } = new PlayerAlienComputer();
       //------------------------------------------------
@@ -23,23 +29,15 @@ namespace PleasantvilleGame
       public List<RandomMoveData> RandomMoves { get; set; } = new List<RandomMoveData>();
       public Dictionary<IMapItem, IMapItem> AlienTakeovers { get; set; } = new Dictionary<IMapItem, IMapItem>();
       //------------------------------------------------
-      public IGameCommands GameCommands { set; get; } = new GameCommands();
       public Options Options { get; set; } = new Options();
       public GameStatistics Statistics { get; set; } = new GameStatistics();
       //---------------------------------------------------------------
       public IMapItemMoves MapItemMoves { get; set; } = new MapItemMoves();
       public IStacks Stacks { get; set; } = new Stacks();
       public IStack? SelectedStack { get; set; } = null;
-      private List<EnteredHex> myEnteredHexes = new List<EnteredHex>();
-      public List<EnteredHex> EnteredHexes { get => myEnteredHexes; }
+
       //------------------------------------------------
-      public bool IsMultipleSelectForDieResult { set; get; } = false;
-      public bool IsGridActive { set; get; } = false;
       public IUndo? UndoCmd { set; get; } = null;
-      //------------------------------------------------
-      public Guid GameGuid { get; set; } = Guid.NewGuid();
-      public string EventActive { get; set; } = "e000";
-      public string EventDisplayed { set; get; } = "e000";
       //------------------------------------------------
       public int Day { get; set; } = 0;
       public int GameTurn { get; set; } = 0; 
