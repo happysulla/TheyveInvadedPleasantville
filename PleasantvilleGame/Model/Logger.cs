@@ -123,7 +123,7 @@ namespace PleasantvilleGame
          }
          SetOn(LogEnum.LE_ERROR);
          //SetOn(LogEnum.LE_SHOW_UNIT_TEST);
-         SetOn(LogEnum.LE_GAME_INIT);
+         //SetOn(LogEnum.LE_GAME_INIT);
          //SetOn(LogEnum.LE_GAME_INIT_VERSION);
          //SetOn(LogEnum.LE_SHOW_SCREEN_SIZE);
          SetOn(LogEnum.LE_GAME_END);
@@ -166,12 +166,12 @@ namespace PleasantvilleGame
          //-------------
          //SetOn(LogEnum.LE_VIEW_SHOW_GAMESAVES);
          //SetOn(LogEnum.LE_VIEW_SHOW_SETTINGS);
-         SetOn(LogEnum.LE_VIEW_SHOW_OPTIONS);
+         //SetOn(LogEnum.LE_VIEW_SHOW_OPTIONS);
          //SetOn(LogEnum.LE_VIEW_SHOW_FEATS);
          //SetOn(LogEnum.LE_VIEW_SHOW_FEATS_ADD);
          SetOn(LogEnum.LE_VIEW_SHOW_STATS);
-         SetOn(LogEnum.LE_VIEW_SHOW_STATS_ADD);
-         SetOn(LogEnum.LE_VIEW_SHOW_STATS_MIN);
+         //SetOn(LogEnum.LE_VIEW_SHOW_STATS_ADD);
+         //SetOn(LogEnum.LE_VIEW_SHOW_STATS_MIN);
          //-------------
          //SetOn(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL_CLEAR);
          //SetOn(LogEnum.LE_VIEW_UPDATE_ACTION_PANEL);

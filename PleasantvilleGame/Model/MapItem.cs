@@ -33,8 +33,6 @@ namespace PleasantvilleGame
       public string TopImageName { get; set; } = string.Empty;
       public string BottomImageName { get; set; } = string.Empty;
       public string OverlayImageName { get; set; } = string.Empty;
-      public List<BloodSpot> myWoundSpots = new List<BloodSpot>();
-      public List<BloodSpot> WoundSpots { get => myWoundSpots; }
       public double Zoom { get; set; } = 1.0;
       public bool IsAnimated
       {
@@ -65,7 +63,6 @@ namespace PleasantvilleGame
       }
       public bool IsMoved { get; set; } = false;  
       public bool IsKilled { get; set; } = false;
-      public int Count { get; set; } = 0;
       //--------------------------------------------------
       private IMapPoint myLocation = new MapPoint();  // top left corner of MapItem
       public IMapPoint Location
@@ -189,12 +186,9 @@ namespace PleasantvilleGame
          this.TopImageName = mi.TopImageName;
          this.BottomImageName = mi.BottomImageName;
          this.OverlayImageName = mi.OverlayImageName;
-         foreach (BloodSpot bs in mi.WoundSpots)
-            this.WoundSpots.Add(bs);
          this.Zoom = mi.Zoom;
          this.IsMoved = mi.IsMoved;
          this.IsKilled = mi.IsKilled;
-         this.Count = mi.Count;
          this.Location.X = mi.Location.X;
          this.Location.Y = mi.Location.Y;
          //--------------------------------------
@@ -217,8 +211,6 @@ namespace PleasantvilleGame
          this.IsTiedUp = mi.IsTiedUp;
          this.IsWary = mi.IsWary;
          //--------------------------------------
-         this.IsMoveStoppedThisTurn = mi.IsMoveStoppedThisTurn;
-         this.IsMoveAllowedToResetThisTurn = mi.IsMoveAllowedToResetThisTurn;
          this.IsConversedThisTurn = mi.IsConversedThisTurn;
          this.IsInfluencedThisTurn = mi.IsInfluencedThisTurn;
          this.IsCombatThisTurn = mi.IsCombatThisTurn;
@@ -226,11 +218,8 @@ namespace PleasantvilleGame
       }
       public void Sync(IMapItem mi)
       {
-         foreach (BloodSpot bs in mi.WoundSpots)
-            this.WoundSpots.Add(bs);
          this.Zoom = mi.Zoom;
          this.IsMoved = mi.IsMoved;
-         this.Count = mi.Count;
          this.Location.X = mi.Location.X;
          this.Location.Y = mi.Location.Y;
          //--------------------------------------
@@ -254,27 +243,11 @@ namespace PleasantvilleGame
          this.IsTiedUp = mi.IsTiedUp;
          this.IsWary = mi.IsWary;
          //--------------------------------------
-         this.IsMoveStoppedThisTurn = mi.IsMoveStoppedThisTurn;
-         this.IsMoveAllowedToResetThisTurn = mi.IsMoveAllowedToResetThisTurn;
          this.IsConversedThisTurn = mi.IsConversedThisTurn;
          this.IsInfluencedThisTurn = mi.IsInfluencedThisTurn;
          this.IsCombatThisTurn = mi.IsCombatThisTurn;
          this.IsImplantRemovalAttempt = mi.IsImplantRemovalAttempt;
       } // sync this mapitem data with passed-in parameter during spotting
-      public void SetBloodSpots(int percent = 30)
-      {
-         if (0 == percent) // heal if set to zero
-         {
-            myWoundSpots.Clear();
-            return;
-         }
-         for (int spots = 0; spots < percent; ++spots) // splatter the MapItem with random blood spots
-         {
-            int range = (int)(Utilities.theMapItemSize);
-            BloodSpot spot = new BloodSpot(range, theRandom);
-            myWoundSpots.Add(spot);
-         }
-      }
       public bool IsUncontrolled()
       {
          if ((true == this.IsControlled) || (true == this.IsAlienUnknown) || (true == this.IsAlienKnown))

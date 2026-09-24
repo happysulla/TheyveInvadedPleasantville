@@ -13,7 +13,7 @@ using System.Xml.Linq;
 
 namespace PleasantvilleGame
 {
-   internal enum AlienStrategyEnum
+   public enum AlienStrategyEnum
    {
       DEFEND_ZEBULON,
       SURROUND_ZEBULON,
@@ -22,26 +22,17 @@ namespace PleasantvilleGame
       ATTACK_TOWNSPEOPLE,
       MAX_TAKEOVER
    }
-   internal class Behavior
+   public class Behavior
    {
       public AlienStrategyEnum StrategyPrimary { set; get; } = AlienStrategyEnum.KEEP_HIDDEN;
       public AlienStrategyEnum StrategySecondary { set; get; } = AlienStrategyEnum.MAX_TAKEOVER;
       public int Risky { set; get; }
       public int Stealthy { set; get; }
    }
-
-   internal class TakeoverMetric
-   {
-      public IMapItems myKnownAliens = new MapItems();
-      public IMapItems myUnknownAliens = new MapItems();
-      public IMapItems myUncontrolleds = new MapItems();
-      public IMapItems myControlledInRanges = new MapItems();
-   }
    //===============================================================
    public class PlayerAlienComputer : PlayerBase, IPlayerAlien
    {
-      public ITerritory ZebulonLocation { set; get; } = new Territory();
-      private Behavior myBehavior = new Behavior();
+      public Behavior myBehavior = new Behavior();
       //---------------------------------------------------------------
       public PlayerAlienComputer() : base(true)
       {
@@ -415,32 +406,6 @@ namespace PleasantvilleGame
             }
          }
          return true;
-      }
-      private List<TakeoverMetric> GetTakeoverMetrics(IGameInstance gi)
-      {
-         List<TakeoverMetric> metrics = new List<TakeoverMetric>();
-         foreach (IStack stack in gi.Stacks)
-         {
-            if (0 == stack.MapItems.Count)
-               continue;
-            TakeoverMetric metric = new TakeoverMetric();
-            foreach (IMapItem mi in stack.MapItems)
-            {
-               if (true == mi.IsAlienKnown)
-                  metric.myKnownAliens.Add(mi);
-               else if (true == mi.IsAlienUnknown)
-                  metric.myKnownAliens.Add(mi);
-               else if ((false == mi.IsAlienKnown) && (false == mi.IsAlienUnknown) && (false == mi.IsControlled))
-                  metric.myUncontrolleds.Add(mi);
-            }
-            metrics.Add(metric); // possible takeover
-         }
-         //--------------------------------------------
-         foreach (TakeoverMetric metric in metrics)
-         {
-
-         }
-         return metrics;
       }
    }
 }

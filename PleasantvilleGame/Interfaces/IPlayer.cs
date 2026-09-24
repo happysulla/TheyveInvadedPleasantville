@@ -19,7 +19,6 @@ namespace PleasantvilleGame
    }
    public interface IPlayerAlien : IPlayer
    {
-      ITerritory ZebulonLocation{ set; get; }
       abstract bool ChooseStartingHqArea();
       bool GetStartingAlienCounters(IGameInstance gi);   
       bool BlockRandomMoves(IGameInstance gi);

@@ -11,7 +11,6 @@ namespace PleasantvilleGame
 {
    internal class TableMgr
    {
-      static public CombatResult[,] theTable = new CombatResult[12, 5];
       public const int FN_ERROR = -1000;
       public const string TAVERN = "Tavern";
       public const string VET_OFFICE = "Vet Office";
@@ -74,6 +73,14 @@ namespace PleasantvilleGame
       public const string WAR_VET = "War Veteran";
       public const string WELDER = "Welder";
       public const string WIFE = "Wife";
+      public readonly static CombatResult[,] theTable = new CombatResult[5,11]
+      {
+         { CombatResult.DefenderWins, CombatResult.DefenderWins, CombatResult.DefenderWins, CombatResult.DefenderWins, CombatResult.DefenderFlees, CombatResult.AttackerFlees, CombatResult.DefenderFlees, CombatResult.AttackerWins, CombatResult.AttackerWins, CombatResult.AttackerWins, CombatResult.AttackerWins},
+         { CombatResult.AttackerFlees, CombatResult.AttackerWins, CombatResult.AttackerFlees, CombatResult.DefenderWins, CombatResult.AttackerFlees, CombatResult.AttackerWins, CombatResult.DefenderFlees, CombatResult.AttackerWins, CombatResult.DefenderWins, CombatResult.AttackerWins, CombatResult.DefenderFlees},
+         { CombatResult.DefenderFlees, CombatResult.DefenderWins, CombatResult.AttackerFlees, CombatResult.AttackerWins, CombatResult.AttackerWins, CombatResult.AttackerWins, CombatResult.DefenderWins, CombatResult.DefenderFlees, CombatResult.AttackerWins, CombatResult.DefenderWins, CombatResult.AttackerWins},
+         { CombatResult.DefenderWins, CombatResult.DefenderWins, CombatResult.AttackerWins, CombatResult.DefenderFlees, CombatResult.AttackerWins, CombatResult.AttackerWins, CombatResult.AttackerWins, CombatResult.AttackerWins, CombatResult.DefenderWins, CombatResult.AttackerFlees, CombatResult.AttackerWins},
+         { CombatResult.AttackerWins, CombatResult.AttackerFlees, CombatResult.AttackerWins, CombatResult.AttackerWins, CombatResult.AttackerWins, CombatResult.AttackerWins, CombatResult.AttackerWins, CombatResult.DefenderFlees, CombatResult.AttackerWins, CombatResult.DefenderWins, CombatResult.DefenderWins}
+      };
       public readonly static string[,] theTownpersonsTable = new string[5, 6]
       {
          {MAYOR,SHERIFF, PLUMBER, LAWYER, HOTEL_OWNER, JUDGE},
@@ -96,72 +103,6 @@ namespace PleasantvilleGame
       //---------------------------------------------------------------------
       public readonly static string[,] theBuildingSizes = new string[21, 2] { { TAVERN, "3" }, { VET_OFFICE, "2" }, { CLOTHING, "2" }, { GENERAL, "4" }, { PUMPS, "1" }, { MARKET, "5" }, { SCHOOL, "4" }, { BANK, "4" }, { DOC_OFFICE, "2" }, { VFW, "1" }, { BAR, "2" }, { SHOP, "4" }, { STATION, "4" }, { HALL, "3" }, { HOTEL, "5" }, { CHURCH, "5" }, { GRAVES, "1" }, { PEN, "1" }, { TRAIN, "2" }, { "House", "10" }, { LAWYER_OFFICE, "1" } };
       //=====================================================================
-      public TableMgr()
-      {
-         CreateCombatTable();
-      }
-      private void CreateCombatTable()
-      {
-         theTable[0, 0] = CombatResult.DefenderWins;
-         theTable[1, 0] = CombatResult.DefenderWins;
-         theTable[2, 0] = CombatResult.DefenderWins;
-         theTable[3, 0] = CombatResult.DefenderWins;
-         theTable[4, 0] = CombatResult.DefenderFlees;
-         theTable[5, 0] = CombatResult.AttackerFlees;
-         theTable[6, 0] = CombatResult.DefenderFlees;
-         theTable[7, 0] = CombatResult.AttackerWins;
-         theTable[8, 0] = CombatResult.AttackerWins;
-         theTable[9, 0] = CombatResult.AttackerWins;
-         theTable[10, 0] = CombatResult.AttackerWins;
-
-         theTable[0, 1] = CombatResult.AttackerFlees;
-         theTable[1, 1] = CombatResult.AttackerWins;
-         theTable[2, 1] = CombatResult.DefenderWins;
-         theTable[3, 1] = CombatResult.DefenderWins;
-         theTable[4, 1] = CombatResult.AttackerFlees;
-         theTable[5, 1] = CombatResult.AttackerWins;
-         theTable[6, 1] = CombatResult.DefenderFlees;
-         theTable[7, 1] = CombatResult.AttackerWins;
-         theTable[8, 1] = CombatResult.DefenderWins;
-         theTable[9, 1] = CombatResult.AttackerWins;
-         theTable[10, 1] = CombatResult.DefenderFlees;
-
-         theTable[0, 2] = CombatResult.DefenderFlees;
-         theTable[1, 2] = CombatResult.DefenderWins;
-         theTable[2, 2] = CombatResult.AttackerFlees;
-         theTable[3, 2] = CombatResult.AttackerWins;
-         theTable[4, 2] = CombatResult.AttackerWins;
-         theTable[5, 2] = CombatResult.AttackerWins;
-         theTable[6, 2] = CombatResult.DefenderWins;
-         theTable[7, 2] = CombatResult.DefenderFlees;
-         theTable[8, 2] = CombatResult.AttackerWins;
-         theTable[9, 2] = CombatResult.DefenderWins;
-         theTable[10, 2] = CombatResult.AttackerWins;
-
-         theTable[0, 3] = CombatResult.DefenderWins;
-         theTable[1, 3] = CombatResult.DefenderWins;
-         theTable[2, 3] = CombatResult.AttackerWins;
-         theTable[3, 3] = CombatResult.DefenderFlees;
-         theTable[4, 3] = CombatResult.AttackerWins;
-         theTable[5, 3] = CombatResult.AttackerWins;
-         theTable[6, 3] = CombatResult.AttackerWins;
-         theTable[7, 3] = CombatResult.AttackerWins;
-         theTable[8, 3] = CombatResult.DefenderWins;
-         theTable[9, 3] = CombatResult.AttackerFlees;
-         theTable[10, 3] = CombatResult.AttackerWins;
-
-         theTable[0, 4] = CombatResult.AttackerWins;
-         theTable[1, 4] = CombatResult.AttackerFlees;
-         theTable[2, 4] = CombatResult.AttackerWins;
-         theTable[3, 4] = CombatResult.AttackerWins;
-         theTable[4, 4] = CombatResult.AttackerWins;
-         theTable[5, 4] = CombatResult.AttackerWins;
-         theTable[6, 4] = CombatResult.AttackerWins;
-         theTable[7, 4] = CombatResult.DefenderFlees;
-         theTable[8, 4] = CombatResult.AttackerWins;
-         theTable[9, 4] = CombatResult.DefenderWins;
-         theTable[10, 4] = CombatResult.DefenderWins;
-      }
       static public bool GetCombatResult(int dieRoll, IMapItemCombat combat)
       {
          if (dieRoll < 2 || dieRoll > 12)
@@ -212,7 +153,7 @@ namespace PleasantvilleGame
          int differential = totalCombatForAttacker - totalCombatForDefender;
          if (differential < 0)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): 0 < (differential=" + differential.ToString() + ")");
+            Logger.Log(LogEnum.LE_ERROR, "Get_CombatResult(): 0 > (differential=" + differential.ToString() + ")");
             return false;
          }
          int tableFactor = 0;
@@ -240,7 +181,18 @@ namespace PleasantvilleGame
          { 
             if (true == firstAttacker.IsControlled)
             {
-               if (0 == differential) // shift column to right
+               if (1 == tableFactor)   // shift column to left
+                  tableFactor = 0;
+               else if (2 == tableFactor)
+                  tableFactor = 1;
+               else if (3 == tableFactor)
+                  tableFactor = 2;
+               else if (4 == tableFactor)
+                  tableFactor = 3;
+            }
+            else                                  
+            {
+               if (0 == tableFactor) // shift column to right
                   tableFactor = 1;
                else if (1 == tableFactor)
                   tableFactor = 2;
@@ -249,22 +201,25 @@ namespace PleasantvilleGame
                else if (3 == tableFactor)
                   tableFactor = 4;
             }
-            else                                  
-            {
-               if (1 == differential)   // shift column to left
-                  tableFactor = 0;
-               else if (2 == differential)
-                  tableFactor = 1;
-               else if (3 == differential)
-                  tableFactor = 2;
-               else if (4 == differential)
-                  tableFactor = 3;
-            }
          }
          //----------------------------------------
          int normalizedDieRoll = dieRoll - 2; // normalize to 0-10 for theTable array
-         combat.Result = theTable[normalizedDieRoll, tableFactor];
-         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Get_CombatResult():  diff=" + differential.ToString() + " dr=" + dieRoll.ToString() +  " tf=" + tableFactor.ToString() + " result=" + combat.Result.ToString() + " influnced?=" + isInfluencedThiSTurn.ToString());
+         combat.Result = theTable[tableFactor, normalizedDieRoll];
+         StringBuilder sb = new StringBuilder("Get_CombatResult(): Table={");
+         for(int i=0; i<5; i++)
+         {
+            sb.Append("\n{");
+            for (int k=0; k<11; k++)
+            {
+               sb.Append(theTable[i, k].ToString());
+               if( 10 != k )
+                  sb.Append(",");
+            }
+            sb.Append("}");
+         }
+         sb.Append("\n}");
+         Logger.Log(LogEnum.LE_SHOW_COMBATS, sb.ToString());
+         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Get_CombatResult():  diff=" + differential.ToString() + " influenced?=" + isInfluencedThiSTurn.ToString() + " result[" + tableFactor.ToString() + "," + normalizedDieRoll.ToString() + "]=" + combat.Result.ToString() );
          return true;
       }
       static public bool CreateTownspeople(IGameInstance gi)

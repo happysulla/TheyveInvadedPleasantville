@@ -739,7 +739,7 @@ namespace PleasantvilleGame
          Option optionAlienClient = gi.Options.Find("AlienClient");
          if ( true == gi.Zebulon.IsKilled )
          {
-            gi.Statistics.AddOne("NumTownWin"); // Town won in combat
+            gi.Statistics.AddOne("NumTownWin"); // CheckFor_EndOfGame() - Zebulon Killed - Town won in combat
             Logger.Log(LogEnum.LE_GAME_END, "CheckFor_EndOfGame(): Zebulon is KIA");
             gi.EndGameReason = "Zebulon is defeated";
             gi.GamePhase = GamePhase.GameEnd;
@@ -1043,6 +1043,21 @@ namespace PleasantvilleGame
             {
                Logger.Log(LogEnum.LE_ERROR, "CheckFor_EndOfGame(): Reset_Phase() returned error");
                return false;
+            }
+            //---------------------------------------
+            GameFeat changedFeat1;
+            Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "CheckFor_EndOfGame():\n  Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
+            if (false == GameEngine.theInGameFeats.GetFeatChange(GameEngine.theStartingFeats, out changedFeat1)) // CheckFor_EndOfGame()
+            {
+               Logger.Log(LogEnum.LE_ERROR, "CheckFor_EndOfGame(): GameEngine.theInGameFeats.GetFeat_Change() returned false");
+               return false;
+            }
+            if (false == String.IsNullOrEmpty(changedFeat1.Key))
+            {
+               Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "CheckFor_EndOfGame(): Change=" + changedFeat1.ToString());
+               action = GameAction.UpdateShowFeat; // CheckFor_EndOfGame()
+               gi.EventDisplayed = gi.EventActive = "e503a";
+               return true;
             }
             if (false == ChooseRandomMovePeopleAndDest(gi)) // setup for next Random Move Phase
             {
@@ -1772,6 +1787,13 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.UpdateShowFeatEnd:
+               if (false == ChooseRandomMovePeopleAndDest(gi)) // setup for next Random Move Phase
+               {
+                  returnStatus = "Choose_RandomMovePeopleAndDest() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
+               }
+               gi.EventActive = gi.EventDisplayed = "e005";
+               action = GameAction.RandomMovementStartTowns;
                break;
             case GameAction.RandomMovementStartTowns:
                if (false == ChooseRandomMovePeopleAndDest(gi))
@@ -2551,13 +2573,13 @@ namespace PleasantvilleGame
                         case CombatResult.DefenderWins:
                            if ((true == firstAttacker.IsControlled) && (true == firstDefender.IsAlien()))
                            {
-                              gi.Statistics.AddOne("NumCombats");
+                              gi.Statistics.AddOne("NumCombats");  // GameStateCombat.PerformAction(CombatsRoll) - DefenderWins
                               gi.Statistics.AddOne("NumAlienWin");
                            }   
                            else if ((false == firstDefender.IsControlled) && (true == firstAttacker.IsAlien()))
                            {
-                              gi.Statistics.AddOne("NumCombats");
-                              gi.Statistics.AddOne("NumTownWin");
+                              gi.Statistics.AddOne("NumCombats"); // GameStateCombat.PerformAction(CombatsRoll) - DefenderWins
+                              gi.Statistics.AddOne("NumTownWin"); // GameStateCombat.PerformAction(CombatsRoll) - DefenderWins
                            }
                            if (true == isZebulonPartOfAttackers)
                               gi.Zebulon.IsKilled = true;
@@ -2567,13 +2589,13 @@ namespace PleasantvilleGame
                         case CombatResult.AttackerWins:
                            if ((true == firstAttacker.IsControlled) && (true == firstDefender.IsAlien()))
                            {
-                              gi.Statistics.AddOne("NumCombats");
-                              gi.Statistics.AddOne("NumTownWin");
+                              gi.Statistics.AddOne("NumCombats"); // GameStateCombat.PerformAction(CombatsRoll) - AttackerWins
+                              gi.Statistics.AddOne("NumTownWin"); // GameStateCombat.PerformAction(AttackerWins) - AttackerWins
                            }
                            else if ((false == firstDefender.IsControlled) && (true == firstAttacker.IsAlien()))
                            {
-                              gi.Statistics.AddOne("NumCombats");
-                              gi.Statistics.AddOne("NumAlienWin");
+                              gi.Statistics.AddOne("NumCombats"); // GameStateCombat.PerformAction(CombatsRoll) - AttackerWins
+                              gi.Statistics.AddOne("NumAlienWin"); // GameStateCombat.PerformAction(CombatsRoll) - AttackerWins
                            }
                            if (true == isZebulonPartOfDefenders)
                               gi.Zebulon.IsKilled = true;
@@ -2584,7 +2606,7 @@ namespace PleasantvilleGame
                            if (true == isZebulonPartOfAttackers)
                            {
                               gi.Zebulon.IsKilled = true;
-                              gi.Statistics.AddOne("NumCombats");
+                              gi.Statistics.AddOne("NumCombats"); // GameStateCombat.PerformAction(CombatsRoll) - AttackerFlees
                               gi.Statistics.AddOne("NumAlienFlee");
                            }
                            else
@@ -2598,14 +2620,14 @@ namespace PleasantvilleGame
                               {
                                  gi.EventActive = gi.EventDisplayed = "e011tf";
                                  action = GameAction.CombatTownFlee;
-                                 gi.Statistics.AddOne("NumCombats");
+                                 gi.Statistics.AddOne("NumCombats"); // GameStateCombat.PerformAction(CombatsRoll) - AttackerFlees
                                  gi.Statistics.AddOne("NumTownFlee");
                               }
                               else if ((false == firstDefender.IsControlled) && (true == firstAttacker.IsAlien()))
                               {
                                  gi.EventActive = gi.EventDisplayed = "e011af";
                                  action = GameAction.CombatAlienFlee;
-                                 gi.Statistics.AddOne("NumCombats");
+                                 gi.Statistics.AddOne("NumCombats"); // GameStateCombat.PerformAction(CombatsRoll) - AttackerFlees
                                  gi.Statistics.AddOne("NumAlienFlee");
                               }
                               else // when combat vs uncontrolled should be automatic win and no chance of fleeing
@@ -2619,7 +2641,7 @@ namespace PleasantvilleGame
                            if (true == isZebulonPartOfDefenders)
                            {
                               gi.Zebulon.IsKilled = true;
-                              gi.Statistics.AddOne("NumCombats");
+                              gi.Statistics.AddOne("NumCombats"); // GameStateCombat.PerformAction(CombatsRoll) - DefenderFlees
                               gi.Statistics.AddOne("NumAlienFlee");
                            }
                            else
@@ -2633,14 +2655,14 @@ namespace PleasantvilleGame
                               {
                                  gi.EventActive = gi.EventDisplayed = "e011af";
                                  action = GameAction.CombatAlienFlee;
-                                 gi.Statistics.AddOne("NumCombats");
+                                 gi.Statistics.AddOne("NumCombats"); // GameStateCombat.PerformAction(CombatsRoll) - DefenderFlees
                                  gi.Statistics.AddOne("NumAlienFlee");
                               }
                               else if ((false == firstDefender.IsControlled) && (true == firstAttacker.IsAlien()))
                               {
                                  gi.EventActive = gi.EventDisplayed = "e011tf";
                                  action = GameAction.CombatTownFlee;
-                                 gi.Statistics.AddOne("NumCombats");
+                                 gi.Statistics.AddOne("NumCombats"); // GameStateCombat.PerformAction(CombatsRoll) - DefenderFlees
                                  gi.Statistics.AddOne("NumTownFlee");
                               }
                               else // when combat vs uncontrolled should be automatic win and no chance of fleeing

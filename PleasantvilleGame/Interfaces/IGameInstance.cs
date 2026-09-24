@@ -20,20 +20,20 @@ namespace PleasantvilleGame
       Dictionary<string, int[]> DieResults { get; }
       bool IsMultipleSelectForDieResult { set; get; } // In EventViewer, show buttons instead of die results for user to choose from
       bool IsGridActive { set; get; } // True if there is some EventViewer manager active
+      String[] StartingTownspeople { get; set; }
       //----------------------------------------------
       Guid GameGuid { get; set; }
       string EventActive { set; get; }
       string EventDisplayed { set; get; }
       //----------------------------------------------
+      Options Options { get; set; }
+      GameStatistics Statistics { get; set; }
+      //----------------------------------------------
       IPlayerTown PlayerTown { set; get; }
       IPlayerAlien PlayerAlien { set; get; }
       //----------------------------------------------
-      String[] StartingTownspeople { get; set; }
       List<RandomMoveData> RandomMoves { get; set; }
       Dictionary<IMapItem, IMapItem> AlienTakeovers { get; set; }
-      //----------------------------------------------
-      Options Options { get; set; }
-      GameStatistics Statistics { get; set; }
       //----------------------------------------------
       IMapItemMoves MapItemMoves { set; get; }
       IStacks Stacks { set; get; }

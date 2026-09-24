@@ -303,19 +303,6 @@ namespace PleasantvilleGame
          mi1.InputGestureText = "Ctrl+R";
          mi1.Click += this.ContextMenuClickRotate;
          myContextMenuButton.Items.Add(mi1);
-         MenuItem mi2 = new MenuItem();
-         mi2.Header = "_Return to Starting point";
-         mi2.InputGestureText = "Shift+S";
-         mi2.Click += this.ContextMenuClickReturnToStart;
-         myContextMenuButton.Items.Add(mi2);
-         if ((GameType.MultiPlayerJoin == GameEngine.theGameType) || (GameType.SinglePlayerAlien == GameEngine.theGameType))
-         {
-            MenuItem mi3 = new MenuItem();
-            mi3.Header = "_Stop Townsperson Move";
-            mi3.InputGestureText = "Ctrl+Shift+P";
-            mi3.Click += this.ContextMenuClickStopMove;
-            myContextMenuButton.Items.Add(mi3);
-         }
          myContextMenuButton.Loaded += this.ContextMenuLoadedButton;
       }
       private bool AddHotKeys(MainMenuViewer mmv)
@@ -1100,6 +1087,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateEventViewerDisplay:
             case GameAction.UpdateEventViewerActive:
                break;
+            case GameAction.UpdateShowFeat:
             case GameAction.EndGameShowFeats:
                if (false == UpdateCanvasShowFeats())
                   Logger.Log(LogEnum.LE_ERROR, "Update_View(): UpdateCanvas_ShowFeats(" + action.ToString() + ") returned error ");
@@ -2963,7 +2951,31 @@ namespace PleasantvilleGame
             tb.Inlines.Add(new Run("% Success Implant Removal = " + percentSuccessImplantRemoval.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
             //-------------------------
             tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Run("% Number of Combats = " + numCombat.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            tb.Inlines.Add(new Run("Number of Combats = " + numCombat.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            //-------------------------
+            if (0 < numTownWin.Value)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("Number Town Wins = " + numTownWin.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
+            //-------------------------
+            if (0 < numAlienWin.Value)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("Number Alien Wins = " + numAlienWin.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
+            //-------------------------
+            if (0 < numTownFlee.Value)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("Number Town Flees = " + numTownFlee.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
+            //-------------------------
+            if (0 < numAlienFlee.Value)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("Number Alien Flees = " + numAlienFlee.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
             //-------------------------
             tb.Inlines.Add(new LineBreak());
             tb.Inlines.Add(new Run("Number Alien Killed = " + numAlienKilled.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
@@ -3027,13 +3039,43 @@ namespace PleasantvilleGame
             tb.Inlines.Add(new Run("% Success Implant Removal = " + percentSuccessImplantRemoval.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
             //-------------------------
             tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Run("% Number of Combats = " + numCombat.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            tb.Inlines.Add(new Run("Number of Combats = " + numCombat.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
             //-------------------------
-            tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Run("Number Alien Killed = " + numAlienKilled.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            if (0 < numTownWin.Value)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("Number Town Wins = " + numTownWin.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
             //-------------------------
-            tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Run("Number Town Killed = " + numTownKilled.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            if (0 < numAlienWin.Value)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("Number Alien Wins = " + numAlienWin.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
+            //-------------------------
+            if (0 < numTownFlee.Value)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("Number Town Flees = " + numTownFlee.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
+            //-------------------------
+            if (0 < numAlienFlee.Value)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("Number Alien Flees = " + numAlienFlee.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
+            //-------------------------
+            if ( 0 < numAlienKilled.Value)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("Number Alien Killed = " + numAlienKilled.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
+            //-------------------------
+            if( 0 < numTownKilled.Value)
+            {
+               tb.Inlines.Add(new LineBreak());
+               tb.Inlines.Add(new Run("Number Town Killed = " + numTownKilled.Value.ToString()) { FontWeight = FontWeights.Bold, Foreground = brushFont });
+            }
             //-------------------------
             if (0 < percentSuccessAlienCombat)
             {
@@ -3049,42 +3091,6 @@ namespace PleasantvilleGame
          return true;
       }
       //-------------HELPER FUNCTIONS---------------------------------
-      private bool IsMoveStoppedByAlienBeforeStarted(IGameInstance gi)
-      {
-         //if (0 == gi.MapItemMoves.Count)
-         //   return false;
-         //IMapItemMove mim = gi.MapItemMoves[0];
-         ////List<Stack> stacks = new List<Stack>();
-         ////stacks.AssignPeople(gi.Persons, GameEngine.theIsAlien);
-         //IEnumerable<Stack> results = from stack in gi.Stacks
-         //                             where stack.Territory.Name == mim.OldTerritory.Name
-         //                             where stack.Territory.Subname == mim.OldTerritory.Subname
-         //                             select stack;
-         //if (0 == results.Count())
-         //   return false;
-         //Stack s = results.First();
-
-         //IMapItems aliens = new MapItems();
-         //foreach (IMapItem mi in s.MapItems)
-         //{
-         //   if ((false == mi.IsWary) && ("Zebulon" != mi.Name) && (true != mi.IsStunned) && (true != mi.IsTiedUp) &&
-         //       (true != mi.IsSurrendered) && (true != mi.IsKilled) && (false == mi.IsMoveStoppedThisTurn))
-         //   {
-         //      if ((true == mi.IsAlienKnown) || (true == mi.IsAlienUnknown))
-         //         aliens.Add(mi);
-         //   }
-         //}
-         //if (1 < s.MapItems.Count)
-         //   myTimer.Interval = ANIMATE_SPEED * 1000 + 3000;
-         //else
-         //   myTimer.Interval = ANIMATE_SPEED * 1000 + 5000;
-         //if (0 == aliens.Count)
-         //   return false;
-         //DialogStopMovement dlg = new DialogStopMovement(gi, mim.MapItem, aliens);
-         //dlg.ShowDialog();
-         //return dlg.IsMoveStopped;
-         return false;
-      }
       private bool DisplayFlashingRegions(IGameInstance gi, SolidColorBrush brush)
       {
          if (null != myStoryboardFlashing)
@@ -4261,6 +4267,111 @@ namespace PleasantvilleGame
          }
          e.Handled = true;
       }
+      private void MouseDownGameFeat(object send, MouseEventArgs e)
+      {
+         System.Windows.Point p = e.GetPosition((UIElement)send);
+         HitTestResult result = VisualTreeHelper.HitTest(myCanvasMain, p);  // Get the Point where the hit test occurs
+         foreach (UIElement ui in myCanvasMain.Children)
+         {
+            if (ui is Image img1)
+            {
+               if (result.VisualHit == img1)
+               {
+                  if ("Feat" == img1.Name)
+                  {
+                     GameAction action = GameAction.Error;
+                     GameFeat featChange;
+                     Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): \n Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
+                     if (false == GameEngine.theInGameFeats.GetFeatChange(GameEngine.theStartingFeats, out featChange)) // MouseDownGameFeat - EventingDebriefing - Click star
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "Mouse_DownGameFeat(): Get_FeatChange() returned false");
+                        return;
+                     }
+                     //-------------------------------------
+                     if (GamePhase.GameEnd == myGameInstance.GamePhase)
+                     {
+                        if (false == String.IsNullOrEmpty(featChange.Key))
+                        {
+                           action = GameAction.EndGameShowFeats;
+                           Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): 1-Change=" + featChange.Key);
+                        }
+                        else
+                        {
+                           action = GameAction.EndGameShowStats;
+                           myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas);
+                        }
+                     }
+                     else
+                     {
+                        if (false == String.IsNullOrEmpty(featChange.Key))
+                        {
+                           action = GameAction.UpdateShowFeat;
+                           Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): 2-Change=" + featChange.Key);
+                        }
+                        else
+                        {
+                           action = GameAction.UpdateShowFeatEnd;
+                           myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas);
+                        }
+                     }
+                     myCanvasMain.MouseDown -= MouseDownGameFeat;
+                     e.Handled = true;
+                     myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+                     return;
+                  }
+               }
+            }
+            else if (ui is Label label)
+            {
+               if (result.VisualHit == label) // <cgs> This is never true so clicking labels does nothing
+               {
+                  if (true == label.Name.Contains("Feat"))
+                  {
+                     GameAction action = GameAction.Error;
+                     GameFeat featChange;
+                     Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): \n Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
+                     if (false == GameEngine.theInGameFeats.GetFeatChange(GameEngine.theStartingFeats, out featChange)) // MouseDownGameFeat - EventingDebriefing - Click label
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "Mouse_DownGameFeat(): Get_FeatChange() returned false");
+                        return;
+                     }
+                     //-------------------------------------
+                     if (GamePhase.GameEnd == myGameInstance.GamePhase)
+                     {
+                        if (false == String.IsNullOrEmpty(featChange.Key))
+                        {
+                           action = GameAction.EndGameShowFeats;
+                           Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): 1-Change=" + featChange.Key);
+                        }
+                        else
+                        {
+                           action = GameAction.EndGameShowStats;
+                           myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas);
+                        }
+                     }
+                     else
+                     {
+                        if (false == String.IsNullOrEmpty(featChange.Key))
+                        {
+                           action = GameAction.UpdateShowFeat;
+                           Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): 2-Change=" + featChange.Key);
+                        }
+                        else
+                        {
+                           action = GameAction.UpdateShowFeatEnd;
+                           myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas);
+                        }
+                     }
+                     label.MouseDown -= MouseDownGameFeat;
+                     myCanvasMain.MouseDown -= MouseDownGameFeat;
+                     e.Handled = true;
+                     myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
+                     return;
+                  }
+               }
+            }
+         }
+      }
       private void ClickButtonMapItem(object sender, RoutedEventArgs e)
       {
          if (null == myGameInstance)
@@ -4316,20 +4427,6 @@ namespace PleasantvilleGame
          }
          e.Handled = true;
       }
-      private void DoubleClickMapItem(object sender, RoutedEventArgs e)
-      {
-         // There is already a moving button.  Do not do any actions until
-         // the alien player responds or there is a timeout on the alien response.
-         // When that happens, myIsAlienAbleToStopMove=false.
-         if (true == myIsAlienAbleToStopMove)
-            return;
-         if (sender is Button)
-         {
-            Button selectedButton = (Button)sender;
-            if (false == MapItemReturnToStart(selectedButton))
-               Logger.Log(LogEnum.LE_ERROR, "MouseDoubleClickMapItem() MapItemReturnToStart() returned error");
-         }
-      }
       private void TextBoxEntryTextChanged(object sender, TextChangedEventArgs e)
       {
          //if (null != myGameEngine)
@@ -4348,111 +4445,6 @@ namespace PleasantvilleGame
          //      //myGameEngine.SendText(entry);
          //   }
          //}
-      }
-      private void MouseDownGameFeat(object send, MouseEventArgs e)
-      {
-         System.Windows.Point p = e.GetPosition((UIElement)send);
-         HitTestResult result = VisualTreeHelper.HitTest(myCanvasMain, p);  // Get the Point where the hit test occurs
-         foreach (UIElement ui in myCanvasMain.Children)
-         {
-            if (ui is Image img1)
-            {
-               if (result.VisualHit == img1)
-               {
-                  if ("Feat" == img1.Name)
-                  {
-                     GameAction action = GameAction.Error;
-                     GameFeat featChange;
-                     Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): \n Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
-                     if (false == GameEngine.theInGameFeats.GetFeatChange(GameEngine.theStartingFeats, out featChange)) // MouseDownGameFeat - EventingDebriefing - Click star
-                     {
-                        Logger.Log(LogEnum.LE_ERROR, "Mouse_DownGameFeat(): Get_FeatChange() returned false");
-                        return;
-                     }
-                     //-------------------------------------
-                     if (GamePhase.GameEnd == myGameInstance.GamePhase)
-                     {
-                        if (false == String.IsNullOrEmpty(featChange.Key))
-                        {
-                           action = GameAction.EndGameShowFeats;
-                           Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): 1-Change=" + featChange.Key);
-                        }
-                        else
-                        {
-                           action = GameAction.EndGameShowStats;
-                           myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas);
-                        }
-                     }
-                     else 
-                     {
-                        if (false == String.IsNullOrEmpty(featChange.Key))
-                        {
-                           action = GameAction.UpdateShowFeat;
-                           Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): 2-Change=" + featChange.Key);
-                        }
-                        else
-                        {
-                           action = GameAction.UpdateShowFeatEnd;
-                           myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas);
-                        }
-                     }
-                     myCanvasMain.MouseDown -= MouseDownGameFeat;
-                     e.Handled = true;
-                     myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
-                     return;
-                  }
-               }
-            }
-            else if (ui is Label label)
-            {
-               if (result.VisualHit == label) // <cgs> This is never true so clicking labels does nothing
-               {
-                  if (true == label.Name.Contains("Feat"))
-                  {
-                     GameAction action = GameAction.Error;
-                     GameFeat featChange;
-                     Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): \n Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
-                     if (false == GameEngine.theInGameFeats.GetFeatChange(GameEngine.theStartingFeats, out featChange)) // MouseDownGameFeat - EventingDebriefing - Click label
-                     {
-                        Logger.Log(LogEnum.LE_ERROR, "Mouse_DownGameFeat(): Get_FeatChange() returned false");
-                        return;
-                     }
-                     //-------------------------------------
-                     if (GamePhase.GameEnd == myGameInstance.GamePhase)
-                     {
-                        if (false == String.IsNullOrEmpty(featChange.Key))
-                        {
-                           action = GameAction.EndGameShowFeats;
-                           Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): 1-Change=" + featChange.Key);
-                        }
-                        else
-                        {
-                           action = GameAction.EndGameShowStats;
-                           myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas);
-                        }
-                     }
-                     else 
-                     {
-                        if (false == String.IsNullOrEmpty(featChange.Key))
-                        {
-                           action = GameAction.UpdateShowFeat;
-                           Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Mouse_DownGameFeat(): 2-Change=" + featChange.Key);
-                        }
-                        else
-                        {
-                           action = GameAction.UpdateShowFeatEnd;
-                           myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas);
-                        }
-                     }
-                     label.MouseDown -= MouseDownGameFeat;
-                     myCanvasMain.MouseDown -= MouseDownGameFeat;
-                     e.Handled = true;
-                     myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
-                     return;
-                  }
-               }
-            }
-         }
       }
       private void MouseMoveGameViewerWindow(object sender, MouseEventArgs e)
       {
@@ -4652,18 +4644,6 @@ namespace PleasantvilleGame
                   }
                }
                //-----------------------------------
-               if ((2 < cm.Items.Count) && (true == mi.IsMoveAllowedToResetThisTurn)) // Gray out the "Retun to Starting Point" menu item
-               {
-                  if (cm.Items[2] is MenuItem)
-                  {
-                     MenuItem menuItem = (MenuItem)cm.Items[0];
-                     if (((GameType.MultiPlayerJoin == GameEngine.theGameType) || (GameType.SinglePlayerAlien == GameEngine.theGameType)) && (GamePhase.AlienMovement == myGameInstance.GamePhase) && (true == mi.IsMoved))
-                        menuItem.IsEnabled = true;
-                     else if (((GameType.MultiPlayerHost == GameEngine.theGameType) || (GameType.SinglePlayerTown == GameEngine.theGameType)) && (GamePhase.TownspersonMovement == myGameInstance.GamePhase) && (true == mi.IsMoved))
-                        menuItem.IsEnabled = true;
-                  }
-               }
-               //-----------------------------------
                // Gray out the "Expose" menu item
                if (3 < cm.Items.Count)
                {
@@ -4673,38 +4653,6 @@ namespace PleasantvilleGame
                      if ((true == mi.IsAlienUnknown) && (false == mi.IsAlienKnown) && ("Zebulon" != mi.Name))
                         menuItem.IsEnabled = true;
                   }
-               }
-               //-----------------------------------
-               if (4 < cm.Items.Count)  // Gray out the "Stop Movement" menu item
-               {
-                  if (cm.Items[3] is MenuItem)
-                  {
-                     MenuItem menuItem = (MenuItem)cm.Items[3];
-                     bool isMenuEnabled;
-                     if (false == IsAlienAbleToStopMove(myGameInstance, mi, out isMenuEnabled))
-                     {
-                        Logger.Log(LogEnum.LE_ERROR, "ContextMenuLoadedButton(): IsAlienAbleToStopMove() returned false");
-                        return;
-                     }
-                     menuItem.IsEnabled = isMenuEnabled;
-                  }
-               }
-            }
-         }
-      }
-      private void ContextMenuClickReturnToStart(object sender, RoutedEventArgs e)
-      {
-         if (sender is MenuItem)
-         {
-            MenuItem mi = (MenuItem)sender;
-            if (mi.Parent is ContextMenu)
-            {
-               ContextMenu cm = (ContextMenu)mi.Parent;
-               if (cm.PlacementTarget is Button)
-               {
-                  Button b = (Button)cm.PlacementTarget;
-                  if (false == MapItemReturnToStart(b))
-                     Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickReturnToStart(): MapItemReturnToStart() returned error");
                }
             }
          }
@@ -4746,72 +4694,6 @@ namespace PleasantvilleGame
             }
          }
       }
-      private void ContextMenuClickStopMove(object sender, RoutedEventArgs e)
-      {
-#pragma warning disable CA1416 // Validate platform compatibility
-         myTimer.Stop();
-#pragma warning restore CA1416 // Validate platform compatibility
-         if (sender is MenuItem)
-         {
-            MenuItem mi = (MenuItem)sender;
-            if (mi.Parent is ContextMenu)
-            {
-               ContextMenu cm = (ContextMenu)mi.Parent;
-               if (cm.PlacementTarget is Button)
-               {
-                  Button b = (Button)cm.PlacementTarget;
-                  IMapItem? selectedMapItem = myGameInstance.Stacks.FindMapItem(b.Name);
-                  if (null != selectedMapItem)
-                  {
-                     if (((true == selectedMapItem.IsAlienUnknown) || (true == selectedMapItem.IsAlienKnown)) && (true == myIsAlienAbleToStopMove) && (false == selectedMapItem.IsMoveStoppedThisTurn))
-                     {
-                        myGameInstance.AddKnownAlien(selectedMapItem);
-                        selectedMapItem.IsMoveStoppedThisTurn = true;
-                        if (0 < myGameInstance.MapItemMoves.Count) // Reset the moving MapItem
-                        {
-                           IMapItemMove? mim = myGameInstance.MapItemMoves[0];
-                           if( null == mim)
-                           {
-                              Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickStopMove() myGameInstance.MapItemMoves[0]=null");
-                              return;
-                           }
-                           if (null == mim.MapItem)
-                           {
-                              Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickStopMove() mim.MapItem=null");
-                              return;
-                           }
-                           if (null == mim.BestPath)
-                           {
-                              Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickStopMove() mim.BestPath=null");
-                              return;
-                           }
-                           mim.MapItem.TerritoryCurrent = mim.MapItem.TerritoryStarting;
-                           mim.MapItem.IsMoveStoppedThisTurn = true;
-                           mim.MapItem.MovementUsed -= mim.BestPath.Territories.Count;
-                           if (mim.MapItem.MovementUsed <= 0)
-                           {
-                              mim.MapItem.MovementUsed = 0;
-                              mim.MapItem.IsMoved = false;
-                           }
-                           //--------------------------------
-                           IMapItemMove modifiedMove = new MapItemMove(Territories.theTerritories, mim.MapItem, selectedMapItem.TerritoryCurrent); // Change to modified MapItemMove
-                           myGameInstance.MapItemMoves[0] = modifiedMove;
-                           mim.MapItem.MovementUsed = mim.MapItem.Movement; // ensure cannot move further
-                           //if( false == UpdateCanvasMain(myGameInstance, GameAction.AlienStopsTownspersonMovement, true))
-                           //{
-                           //   Logger.Log(LogEnum.LE_ERROR, "ContextMenuClickStopMove() Update_CanvasMain() returned false");
-                           //   return;
-                           //}
-                           ////--------------------------------
-                           //GameAction outAction = GameAction.AlienModifiesTownspersonMovement;
-                           //myGameEngine.PerformAction(ref myGameInstance, ref outAction);
-                        }
-                     }
-                  }
-               }
-            }
-         }
-      }
       private void TimerElasped(object? sender, EventArgs e)
       {
          Logger.Log(LogEnum.LE_TIMER_ELAPED, "TimerElasped() called");
@@ -4842,165 +4724,6 @@ namespace PleasantvilleGame
          //if (null != myPartyDisplayDialog)
          //   myPartyDisplayDialog.Close();
          //myPartyDisplayDialog = null;
-      }
-      //-------------CONTROLLER HELPER FUNCTIONS---------------------------------
-      private bool IsAlienAbleToStopMove(IGameInstance gi, IMapItem mi, out bool isAlienAbleToStopMove)
-      {
-         isAlienAbleToStopMove=false;
-         if (("Zebulon" != mi.Name) && (true != mi.IsStunned) && (true != mi.IsTiedUp) && (true != mi.IsSurrendered)
-          && (true != mi.IsStunned) && (true != mi.IsKilled) && ((true == mi.IsAlienUnknown) || (true == mi.IsAlienKnown))
-          && (false == mi.IsMoveStoppedThisTurn) && (GamePhase.TownspersonMovement == gi.GamePhase))
-         {
-            if (0 < gi.MapItemMoves.Count)
-            {
-               IMapItemMove? mim = gi.MapItemMoves[0];
-               if( null == mim)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "IsAlienAbleToStopMove() gi.MapItemMoves[0]=null");
-                  return false;
-               }
-               if (null == mim.OldTerritory)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "IsAlienAbleToStopMove() mim.OldTerritory=null");
-                  return false;
-               }
-               if (null == mim.BestPath)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "IsAlienAbleToStopMove() mim.BestPath=null");
-                  return false;
-               }
-               IMapItem? movingMI = gi.Stacks.FindMapItem(mim.MapItem.Name);
-               if( null == movingMI)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "IsAlienAbleToStopMove() gi.Stacks.FindMapItem() returned null for name=" + mim.MapItem.Name);
-                  return false;
-               }  
-               if ((mi.TerritoryCurrent.Name == mim.OldTerritory.Name) && (mi.TerritoryCurrent.Subname == mim.OldTerritory.Subname))
-               {
-                  if ((true == movingMI.IsControlled) && (false == movingMI.IsStunned) && (false == movingMI.IsTiedUp)
-                     && (false == movingMI.IsSurrendered) && (false == movingMI.IsStunned) && (false == movingMI.IsKilled))
-                  {
-                     isAlienAbleToStopMove = true;
-                     return true;
-                  }
-               }
-               else
-               {
-                  foreach (ITerritory t in mim.BestPath.Territories)
-                  {
-                     if ((mi.TerritoryCurrent.Name == t.Name) && (mi.TerritoryCurrent.Subname == t.Subname))
-                     {
-                        if ((true == movingMI.IsControlled) && (false == movingMI.IsStunned) && (false == movingMI.IsTiedUp)
-                             && (false == movingMI.IsSurrendered) && (false == movingMI.IsStunned) && (false == movingMI.IsKilled)
-                             && (false == movingMI.IsMoveStoppedThisTurn))
-                        {
-                           isAlienAbleToStopMove = true;
-                           return true;
-                        }
-                     }
-                  } 
-               }
-            } 
-         } 
-         return true;
-      }
-      private bool MapItemReturnToStart(Button selectedButton)
-      {
-         IMapItem? selectedMapItem = myGameInstance.Stacks.FindMapItem(selectedButton.Name);
-         if (null == selectedMapItem)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "MapItem_ReturnToStart(): myGameInstance.Stacks.FindMapItem() returned null for name=" + selectedButton.Name);
-            return false;
-         }
-         //------------------------------------------------------------
-         myGameInstance.SelectedStack = myGameInstance.Stacks.Find(selectedMapItem.TerritoryCurrent);
-         if (null == myGameInstance.SelectedStack)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "MapItem_ReturnToStart(): stack=null for t=" + selectedMapItem.TerritoryCurrent.ToString());
-            return false;
-         }
-         GameAction outAction = GameAction.UpdateRotateStack;
-         //------------------------------------------------------------
-         if (false == selectedMapItem.IsMoveAllowedToResetThisTurn) // if not allowed to reset, do nothing
-         {
-            if ((true == myIsFlagSetForMoveReset) && ((GameType.MultiPlayerHost == GameEngine.theGameType) || (GameType.SinglePlayerTown == GameEngine.theGameType)) && (GamePhase.AlienMovement == myGameInstance.GamePhase))
-               MessageBox.Show("Reset Not Allowed");
-            if ((true == myIsFlagSetForMoveReset) && ((GameType.MultiPlayerHost == GameEngine.theGameType) || (GameType.SinglePlayerTown == GameEngine.theGameType)) && (GamePhase.TownspersonMovement == myGameInstance.GamePhase))
-               MessageBox.Show("Reset Not Allowed");
-            myIsFlagSetForMoveReset = true;
-
-            myGameEngine.PerformAction(ref myGameInstance, ref outAction);
-            return true;  // do nothing
-         }
-         switch (myGameInstance.GamePhase)
-         {
-            case GamePhase.AlienMovement:
-               if ((true == selectedMapItem.IsControlled) || ((GameType.MultiPlayerHost == GameEngine.theGameType) || (GameType.SinglePlayerTown == GameEngine.theGameType)))
-               {
-                  myGameEngine.PerformAction(ref myGameInstance, ref outAction);
-                  return true;  // do nothing
-               }
-               break;
-            case GamePhase.TownspersonMovement:
-               if ((false == selectedMapItem.IsControlled) || ((GameType.MultiPlayerJoin == GameEngine.theGameType) || (GameType.SinglePlayerAlien == GameEngine.theGameType)))
-               {
-                  myGameEngine.PerformAction(ref myGameInstance, ref outAction);
-                  return true;  // do nothing
-               }
-               break;
-            default:
-               myGameEngine.PerformAction(ref myGameInstance, ref outAction);
-               return true;  // do nothing
-         } // end switch
-         //--------------------------------------------------
-         StringBuilder sb = new StringBuilder("MapItem_ReturnToStart(): t="); sb.Append(selectedMapItem.TerritoryCurrent.ToString()); sb.Append(" st="); sb.Append(selectedMapItem.TerritoryStarting.ToString());
-         Logger.Log(LogEnum.LE_MIM_RETURN_TO_START, sb.ToString());
-         if (selectedMapItem.TerritoryCurrent != selectedMapItem.TerritoryStarting)
-         {
-            foreach (var kvp in myRectangleMaps) // Turn off all animation for rectangles
-            {
-               kvp.Value.BeginAnimation(Canvas.LeftProperty, null);
-               kvp.Value.BeginAnimation(Canvas.TopProperty, null);
-            }
-            myMovingButton = null;
-            if (0 < myGameInstance.MapItemMoves.Count)
-            {
-               IMapItemMove? mim = myGameInstance.MapItemMoves[0];
-               if (null == mim)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "MapItem_ReturnToStart(): gi.MapItemMoves[0] = null");
-                  return false;
-               }
-               if (null == mim.BestPath)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "MapItem_ReturnToStart():  mim.BestPath = null");
-                  return false;
-               }
-               IMapItem? previousMovingMi1 = myGameInstance.Stacks.FindMapItem(mim.MapItem.Name);
-               if (null != previousMovingMi1)
-               {
-                  previousMovingMi1.TerritoryCurrent = previousMovingMi1.TerritoryStarting;
-                  previousMovingMi1.MovementUsed -= mim.BestPath.Territories.Count;
-                  if (previousMovingMi1.MovementUsed <= 0)
-                  {
-                     previousMovingMi1.MovementUsed = 0;
-                     previousMovingMi1.IsMoved = false;
-
-                     IMapItem? alreadyMovedMapItem = myMovingMapItems.Find(previousMovingMi1.Name);
-                     if (null != alreadyMovedMapItem)
-                     {
-                        StringBuilder sb1 = new StringBuilder("MapItem_ReturnToStart(): n="); sb1.Append(previousMovingMi1.Name); sb1.Append(" st="); sb1.Append(previousMovingMi1.TerritoryStarting.ToString());
-                        Logger.Log(LogEnum.LE_SHOW_MIM_MOVING_COUNT, sb1.ToString());
-                        myMovingMapItems.Remove(previousMovingMi1.Name);
-                     }
-                  }
-               }
-               myGameInstance.MapItemMoves.Clear();
-               //outAction = GameAction.ResetMovement;
-               //myGameEngine.PerformAction(ref myGameInstance, ref outAction); // Inform the user to return back
-            }
-         }
-         return true;
       }
    }
    //============================================================================

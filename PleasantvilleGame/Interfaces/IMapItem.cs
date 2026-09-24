@@ -30,12 +30,10 @@ namespace PleasantvilleGame
       string TopImageName { get; set; }
       string BottomImageName { get; set; }
       string OverlayImageName { get; set; }
-      List<BloodSpot> WoundSpots { get; }
       double Zoom { get; set; }
       bool IsAnimated { get; set; }
       bool IsMoved { get; set; }              
       bool IsKilled { get; set; }
-      int Count { get; set; }
       //----------------------------------------
       IMapPoint Location { get; set; }       // top left corner of MapItem
       ITerritory TerritoryCurrent { get; set; }
@@ -62,8 +60,6 @@ namespace PleasantvilleGame
       bool IsTiedUp { get; set; }
       bool IsWary { get; set; }
       bool IsMovingThisTurn { get; set; }
-      bool IsMoveStoppedThisTurn { get; set; }
-      bool IsMoveAllowedToResetThisTurn { get; set; }
       bool IsConversedThisTurn { get; set; }
       bool IsInfluencedThisTurn { get; set; }
       bool IsCombatThisTurn { get; set; }
@@ -71,7 +67,6 @@ namespace PleasantvilleGame
       //----------------------------------------
       void Copy(IMapItem mi);
       void Sync(IMapItem mi); // synchronize most of the data but not all
-      void SetBloodSpots(int percent);
       bool IsUncontrolled();
       bool IsAlien();
    }

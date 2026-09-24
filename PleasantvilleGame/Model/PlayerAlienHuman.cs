@@ -10,7 +10,6 @@ namespace PleasantvilleGame
 {
    public class PlayerAlienHuman : PlayerBase, IPlayerAlien
    {
-      public ITerritory ZebulonLocation { set; get; } = new Territory();
       //---------------------------------------------------------------
       public PlayerAlienHuman() : base(true)
       {

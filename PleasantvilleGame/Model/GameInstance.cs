@@ -17,25 +17,24 @@ namespace PleasantvilleGame
       public Dictionary<string, int[]> DieResults { get => myDieResults; }
       public bool IsMultipleSelectForDieResult { set; get; } = false;
       public bool IsGridActive { set; get; } = false;
+      public String[] StartingTownspeople { get; set; } = new String[3];
       //------------------------------------------------
       public Guid GameGuid { get; set; } = Guid.NewGuid();
       public string EventActive { get; set; } = "e000";
       public string EventDisplayed { set; get; } = "e000";
       //------------------------------------------------
+      public Options Options { get; set; } = new Options();
+      public GameStatistics Statistics { get; set; } = new GameStatistics();
+      //------------------------------------------------
       public IPlayerTown PlayerTown { set; get; } = new PlayerTownHuman();
       public IPlayerAlien PlayerAlien { set; get; } = new PlayerAlienComputer();
       //------------------------------------------------
-      public String[] StartingTownspeople { get; set; } = new String[3];
       public List<RandomMoveData> RandomMoves { get; set; } = new List<RandomMoveData>();
       public Dictionary<IMapItem, IMapItem> AlienTakeovers { get; set; } = new Dictionary<IMapItem, IMapItem>();
-      //------------------------------------------------
-      public Options Options { get; set; } = new Options();
-      public GameStatistics Statistics { get; set; } = new GameStatistics();
       //---------------------------------------------------------------
       public IMapItemMoves MapItemMoves { get; set; } = new MapItemMoves();
       public IStacks Stacks { get; set; } = new Stacks();
       public IStack? SelectedStack { get; set; } = null;
-
       //------------------------------------------------
       public IUndo? UndoCmd { set; get; } = null;
       //------------------------------------------------
