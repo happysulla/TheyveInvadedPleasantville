@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using static System.Windows.Forms.AxHost;
 
 namespace PleasantvilleGame
 {
@@ -1022,13 +1023,19 @@ namespace PleasantvilleGame
             //----------------------------------------------
             if (false == ReadXmlOptions(reader, gi.Options))
             {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): ReadXmlOptions() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): Read_XmlOptions() returned false");
                return null;
             }
             //----------------------------------------------
             if (false == ReadXmlGameStatistics(reader, gi.Statistics))
             {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): ReadXmlGameStatistics() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): Read_XmlGameStatistics() returned false");
+               return null;
+            }
+            //----------------------------------------------
+            if (false == ReadXmlRandomMoves(reader, gi.RandomMoves))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): Read_XmlRandomMoves() returned false");
                return null;
             }
             return gi;
@@ -1890,6 +1897,67 @@ namespace PleasantvilleGame
             reader.Read(); // get past </GameStatistics>
          return true;
       }
+      private bool ReadXmlRandomMoves(XmlReader reader, List<RandomMoveData> moves)
+      {
+         moves.Clear();
+         reader.Read();
+         if (false == reader.IsStartElement())
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlRandomMoves(): reader.IsStartElement(RandomMoves) = false");
+            return false;
+         }
+         if (reader.Name != "RandomMoves")
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlRandomMoves(): RandomMoves != (node=" + reader.Name + ")");
+            return false;
+         }
+         string? sCount = reader.GetAttribute("count");
+         if (null == sCount)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlRandomMoves(): Count=null");
+            return false;
+         }
+         //-------------------------------------
+         int count = int.Parse(sCount);
+         for (int i = 0; i < count; ++i)
+         {
+            reader.Read();
+            if (false == reader.IsStartElement())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlRandomMoves(): IsStartElement(RandomMove) returned false");
+               return false;
+            }
+            if (reader.Name != "RandomMove")
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlRandomMoves(): RandomMove != " + reader.Name);
+               return false;
+            }
+            string? name = reader.GetAttribute("Name");
+            if (name == null)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlRandomMoves(): name=null");
+               return false;
+            }
+            string? buildingName = reader.GetAttribute("BuildingName");
+            if (buildingName == null)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlRandomMoves(): buildingName=null");
+               return false;
+            }
+            string? sBrushIndex = reader.GetAttribute("BrushIndex");
+            if (sBrushIndex == null)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlRandomMoves(): BrushIndex=null");
+               return false;
+            }
+            int brushIndex = Int32.Parse(sBrushIndex);
+            RandomMoveData move = new RandomMoveData(name, buildingName, brushIndex);
+            moves.Add(move);
+         }
+         if (0 < count)
+            reader.Read(); // get past </RandomMoves>
+         return true;
+      }
       private bool ReadXmlMapItems(XmlReader reader, IMapItems mapItems, string attribute)
       {
          mapItems.Clear();
@@ -2571,6 +2639,12 @@ namespace PleasantvilleGame
             return null;
          }
          //------------------------------------------
+         if (false == CreateXmlRandomMoves(aXmlDocument, gi.RandomMoves))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): Create_XmlRandomMoves() returned false");
+            return null;
+         }
+         //------------------------------------------
          if (false == CreateXmlStacks(aXmlDocument, gi.Stacks, "Stacks"))
          {
             Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): CreateXmlStacks(Stacks) returned false");
@@ -3203,6 +3277,47 @@ namespace PleasantvilleGame
             if (null == statNode)
             {
                Logger.Log(LogEnum.LE_ERROR, "Create_XmlGameStatistics(): AppendChild(statNode) returned null");
+               return false;
+            }
+         }
+         return true;
+      }
+      private bool CreateXmlRandomMoves(XmlDocument aXmlDocument, List<RandomMoveData> moves)
+      {
+         XmlNode? root = aXmlDocument.DocumentElement;
+         if (null == root)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_RandomMoves(): root is null");
+            return false;
+         }
+         XmlElement? randomMovesElem = aXmlDocument.CreateElement("RandomMoves");
+         if (null == randomMovesElem)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_RandomMoves(): CreateElement(randomMovesElem) returned null");
+            return false;
+         }
+         randomMovesElem.SetAttribute("count", moves.Count.ToString());
+         XmlNode? statsNode = root.AppendChild(randomMovesElem);
+         if (null == statsNode)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_RandomMoves(): AppendChild(statsNode) returned null");
+            return false;
+         }
+         foreach(RandomMoveData data in moves)
+         {
+            XmlElement? elem = aXmlDocument.CreateElement("RandomMove");
+            if (null == elem)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "CreateXml_RandomMoves(): CreateElement(GameStatistic) returned null");
+               return false;
+            }
+            elem.SetAttribute("Name", data.myName);
+            elem.SetAttribute("BuildingName", data.myBuildingName);
+            elem.SetAttribute("BrushIndex", data.myBrushIndex.ToString());
+            XmlNode? node = statsNode.AppendChild(elem);
+            if (null == node)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "CreateXml_RandomMoves(): AppendChild(statNode) returned null");
                return false;
             }
          }

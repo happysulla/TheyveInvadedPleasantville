@@ -13,6 +13,12 @@ namespace PleasantvilleGame
          myName = name;
          myBuildingName = buildingName;
       }
+      public RandomMoveData(string name, string buildingName, int brushIndex)
+      {
+         myName = name;
+         myBuildingName = buildingName;
+         myBrushIndex = brushIndex;
+      }
    }
    public interface IGameInstance
    {
