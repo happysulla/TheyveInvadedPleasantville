@@ -26,11 +26,15 @@ namespace PleasantvilleGame
       Dictionary<string, int[]> DieResults { get; }
       bool IsMultipleSelectForDieResult { set; get; } // In EventViewer, show buttons instead of die results for user to choose from
       bool IsGridActive { set; get; } // True if there is some EventViewer manager active
+      GameAction DieRollAction { set; get; } // Used in EventViewerPanel when die roll happens to indicate next event for die roll
       String[] StartingTownspeople { get; set; }
       //----------------------------------------------
       Guid GameGuid { get; set; }
       string EventActive { set; get; }
       string EventDisplayed { set; get; }
+      int GameTurn { set; get; }
+      GamePhase GamePhase { set; get; }
+      String EndGameReason { set; get; }
       //----------------------------------------------
       Options Options { get; set; }
       GameStatistics Statistics { get; set; }
@@ -45,22 +49,13 @@ namespace PleasantvilleGame
       IStacks Stacks { set; get; }
       IStack? SelectedStack { get; set; }
       //----------------------------------------------
-      IUndo? UndoCmd { set; get; }
-      //----------------------------------------------
-      int Day { get; set; }
-      int GameTurn { set; get; }
-      GamePhase GamePhase { set; get; }
-      GameAction DieRollAction { set; get; } // Used in EventViewerPanel when die roll happens to indicate next event for die roll
-      String EndGameReason { set; get; }
-      //----------------------------------------------
       ITerritories ZebulonTerritories { set; get; }
       ITerritories SelectedTerritories { set; get; }
       ITerritory? SelectedTerritory { set; get; }
       IMapItems SelectedMapItems { set; get; }
       IMapItems DeadPeople { set; get; }
       IMapItem Zebulon { set; get; }
-      IMapItemCombat MapItemCombat { set; get; } 
-      IMapItemMove? PreviousMapItemMove { set; get; }
+      IMapItemCombat MapItemCombat { set; get; }
       //----------------------------------------------
       int NumTownGuessesForZebulonLocation { set; get; }
       //string PlayerTurn { set; get; }

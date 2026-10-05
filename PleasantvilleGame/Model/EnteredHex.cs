@@ -20,7 +20,6 @@ namespace PleasantvilleGame
       public static int theId = 0;
       public bool CtorError { get; } = false;
       public string Identifer { get; set; } = "";
-      public int Day { get; set; } = 0;
       public string Date { get; set; } = "";
       public string Time { get; set; } = "";
       public string TerritoryName { get; set; } = "";
@@ -32,7 +31,6 @@ namespace PleasantvilleGame
       {
          ++theId;
          Identifer = "Hex" + theId.ToString();
-         Day = gi.Day + 1; ;
          TerritoryName = t.Name;
          MapPoint = mp;
          ColorAction = colorAction;
@@ -42,8 +40,6 @@ namespace PleasantvilleGame
          StringBuilder sb = new StringBuilder();
          sb.Append("(Id=");
          sb.Append(this.Identifer.ToString());
-         sb.Append(",Day=");
-         sb.Append(Day.ToString());
          sb.Append(",t=");
          sb.Append(TerritoryName);
          sb.Append(",mp=");

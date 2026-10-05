@@ -17,11 +17,15 @@ namespace PleasantvilleGame
       public Dictionary<string, int[]> DieResults { get => myDieResults; }
       public bool IsMultipleSelectForDieResult { set; get; } = false;
       public bool IsGridActive { set; get; } = false;
+      public GameAction DieRollAction { get; set; } = GameAction.DieRollActionNone;
       public String[] StartingTownspeople { get; set; } = new String[3];
       //------------------------------------------------
       public Guid GameGuid { get; set; } = Guid.NewGuid();
       public string EventActive { get; set; } = "e000";
       public string EventDisplayed { set; get; } = "e000";
+      public int GameTurn { get; set; } = 0;
+      public GamePhase GamePhase { get; set; } = GamePhase.GameSetup;
+      public string EndGameReason { set; get; } = "";
       //------------------------------------------------
       public Options Options { get; set; } = new Options();
       public GameStatistics Statistics { get; set; } = new GameStatistics();
@@ -31,19 +35,11 @@ namespace PleasantvilleGame
       //------------------------------------------------
       public List<RandomMoveData> RandomMoves { get; set; } = new List<RandomMoveData>();
       public Dictionary<IMapItem, IMapItem> AlienTakeovers { get; set; } = new Dictionary<IMapItem, IMapItem>();
-      //---------------------------------------------------------------
+      //------------------------------------------------
       public IMapItemMoves MapItemMoves { get; set; } = new MapItemMoves();
       public IStacks Stacks { get; set; } = new Stacks();
       public IStack? SelectedStack { get; set; } = null;
       //------------------------------------------------
-      public IUndo? UndoCmd { set; get; } = null;
-      //------------------------------------------------
-      public int Day { get; set; } = 0;
-      public int GameTurn { get; set; } = 0; 
-      public GamePhase GamePhase { get; set; } = GamePhase.GameSetup;
-      public GameAction DieRollAction { get; set; } = GameAction.DieRollActionNone;
-      public string EndGameReason { set; get; } = "";
-      //----------------------------------------------
       public ITerritories ZebulonTerritories { set; get; } = new Territories();
       public ITerritories SelectedTerritories { set; get; } = new Territories();
       public ITerritory? SelectedTerritory { set; get; } = null;
@@ -51,8 +47,7 @@ namespace PleasantvilleGame
       public IMapItems DeadPeople { set; get; } = new MapItems();
       public IMapItem Zebulon { set; get; } = new MapItem("Zebulon", 0.8, "ZebulonBlack", new Territory(), 0, 0, 10);
       public IMapItemCombat MapItemCombat { set; get; } = new MapItemCombat();
-      public IMapItemMove? PreviousMapItemMove { set; get; } = null;
-      //---------------------------------------------------------------
+      //------------------------------------------------
       public int NumTownGuessesForZebulonLocation { set; get; } = 0;
       //public string NextAction { set; get; } = "";
       //public string PlayerTurn { set; get; } = "Alien";

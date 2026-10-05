@@ -37,7 +37,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "GameInstance(): reader=null");
                return;
             }
-            if (false == gameLoadMgr.ReadXmlTerritories(reader, Territories.theTerritories))
+            if (false == gameLoadMgr.ReadXmlTerritories(reader, Territories.theTerritories, "Main"))
                Logger.Log(LogEnum.LE_ERROR, "GameInstance(): ReadTerritoriesXml() returned false for filename=" + filename);
          }
          catch (Exception e)

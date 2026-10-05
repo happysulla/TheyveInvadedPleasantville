@@ -11,7 +11,6 @@ namespace PleasantvilleGame.Networking
             EventDisplayed = gameInstance.EventDisplayed,
             GamePhase = gameInstance.GamePhase.ToString(),
             GameTurn = gameInstance.GameTurn,
-            Day = gameInstance.Day,
          };
          return dto;
       }

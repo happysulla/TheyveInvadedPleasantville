@@ -208,16 +208,6 @@ namespace PleasantvilleGame
                   myMenuItemTopLevel23.IsEnabled = true;
                else
                   myMenuItemTopLevel23.IsEnabled = false;
-               //----------------------------------------
-               if (null == myGameInstance.UndoCmd)
-               {
-                  myMenuItemTopLevel21.IsEnabled = false;
-               }
-               else
-               {
-                  myMenuItemTopLevel21.IsEnabled = true;
-                  Logger.Log(LogEnum.LE_UNDO_COMMAND, "MainMenuViewer.UpdateView(): cmd=" + myGameInstance.UndoCmd.ToString());
-               }
                return;
          }
       }
@@ -314,10 +304,7 @@ namespace PleasantvilleGame
       }
       public void MenuItemEditUndo_ClickCanExecute(object sender, CanExecuteRoutedEventArgs e)
       {
-         if (null == myGameInstance.UndoCmd)
-            e.CanExecute = false;
-         else
-            e.CanExecute = true;
+         e.CanExecute = true;
       }
       public void MenuItemEditRecoverPhase_Click(object sender, RoutedEventArgs e)
       {

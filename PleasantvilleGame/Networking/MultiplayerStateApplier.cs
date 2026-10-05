@@ -13,7 +13,6 @@ namespace PleasantvilleGame.Networking
          }
          gameInstance.Stacks.Clear();
          gameInstance.SelectedStack = null;
-         gameInstance.PreviousMapItemMove = null;
          gameInstance.MapItemMoves.Clear();
          gameInstance.ZebulonTerritories.Clear();
          if (Guid.TryParse(state.GameGuid, out Guid parsedGuid))
@@ -23,7 +22,6 @@ namespace PleasantvilleGame.Networking
          gameInstance.EventActive = state.EventActive;
          gameInstance.EventDisplayed = state.EventDisplayed;
          gameInstance.GameTurn = state.GameTurn;
-         gameInstance.Day = state.Day;
          gameInstance.DieRollAction = GameAction.DieRollActionNone;
          if (Enum.TryParse(state.GamePhase, true, out GamePhase parsedPhase))
          {

@@ -593,7 +593,7 @@ namespace PleasantvilleGame
                return false;
             }
             GameLoadMgr loadMgr = new GameLoadMgr();
-            if (false == loadMgr.CreateXmlTerritories(aXmlDocument, territories))
+            if (false == loadMgr.CreateXmlTerritories(aXmlDocument, territories, "Main"))
             {
                Logger.Log(LogEnum.LE_ERROR, "CreateXml(): CreateXmlTerritories() returned false");
                System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
