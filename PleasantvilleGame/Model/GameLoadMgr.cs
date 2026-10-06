@@ -7,6 +7,7 @@ using System.Xml;
 using System.Xml.Linq;
 using Windows.Devices.Sensors;
 using Windows.Gaming.Input;
+using Windows.Networking;
 using static System.Windows.Forms.AxHost;
 
 namespace PleasantvilleGame
@@ -1128,6 +1129,81 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): Read_XmlTerritories(SelectedTerritories) returned false");
                return null;
             }
+            //----------------------------------------------
+            if (false == ReadXmlTerritory(reader, gi.SelectedTerritory))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): Read_XmlTerritory(SelectedTerritory) returned false");
+               return null;
+            }
+            //----------------------------------------------
+            if (false == ReadXmlMapItems(reader, gi.SelectedMapItems, "SelectedMapItems"))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): ReadXml_MapItems() returned false for SelectedMapItems");
+               return null;
+            }
+            //----------------------------------------------
+            if (false == ReadXmlMapItems(reader, gi.DeadPeople, "DeadPeople"))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): ReadXml_MapItems() returned false for DeadPeople");
+               return null;
+            }
+            //----------------------------------------------
+            IMapItem? mi = null;
+            if (false == ReadXmlMapItem(reader, ref mi))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): ReadXml_MapItem() returned false for gi.Zebulon");
+               return null;
+            }
+            if( null == mi )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): ReadXml_MapItem() returned null for gi.Zebulon");
+               return null;
+            }
+            gi.Zebulon = mi;
+            //----------------------------------------------
+            if (false == ReadXmlMapItemCombat(reader, gi.MapItemCombat))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): Read_XmlMapItemCombat() returned false");
+               return null;
+            }
+            //----------------------------------------------
+            reader.Read();
+            if (false == reader.IsStartElement())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItemCombat(): IsStartElement(NumTownGuessesForZebulonLocation) returned false");
+               return null;
+            }
+            if (reader.Name != "NumTownGuessesForZebulonLocation")
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItemCombat(): NumTownGuessesForZebulonLocation != (node=" + reader.Name + ")");
+               return null;
+            }
+            string? sNumTownGuessesForZebulonLocation = reader.GetAttribute("value");
+            if (null == sNumTownGuessesForZebulonLocation)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItemCombat(): sNumTownGuessesForZebulonLocation=null");
+               return null;
+            }
+            gi.NumTownGuessesForZebulonLocation = Int32.Parse(sNumTownGuessesForZebulonLocation);
+            //----------------------------------------------
+            reader.Read();
+            if (false == reader.IsStartElement())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItemCombat(): IsStartElement(IsAlienAckedRandomMovement) returned false");
+               return null;
+            }
+            if (reader.Name != "IsAlienAckedRandomMovement")
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItemCombat(): IsAlienAckedRandomMovement != (node=" + reader.Name + ")");
+               return null;
+            }
+            string? sIsAlienAckedRandomMovement = reader.GetAttribute("value");
+            if (null == sIsAlienAckedRandomMovement)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItemCombat(): sIsAlienAckedRandomMovement=null");
+               return null;
+            }
+            gi.IsAlienAckedRandomMovement = Boolean.Parse(sIsAlienAckedRandomMovement);
             return gi;
          } // try
          //==========================================
@@ -2360,7 +2436,7 @@ namespace PleasantvilleGame
             mapItems.Add(mapItem);
          }
          if (0 < count)
-            reader.Read();
+            reader.Read(); // get past </MapItems>
          return true;
       }
       private bool ReadXmlMapItem(XmlReader reader, ref IMapItem? mi)
@@ -2515,6 +2591,109 @@ namespace PleasantvilleGame
          stack.IsStacked = isStacked;
          stack.MapItems = mapItems;
          reader.Read(); // get past </Stack>
+         return true;
+      }
+      private bool ReadXmlTerritory(XmlReader reader, ITerritory? t)
+      {
+         reader.Read();
+         if (false == reader.IsStartElement())
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlTerritory(): IsStartElement(Territory)=false");
+            return false;
+         }
+         if (reader.Name != "Territory")
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlTerritory(): Territory != (node=" + reader.Name + ")");
+            return false;
+         }
+         string? tName = reader.GetAttribute("value");
+         if (null == tName)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlTerritory(): GetAttribute() returned false");
+            return false;
+         }
+         if ("Null" == tName)
+         {
+            t = null;
+         }
+         else
+         {
+            t = Territories.theTerritories.Find(tName);
+            if( null == t )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlTerritory(): Territories.theTerritories.Find() returned null for tName=" + tName);
+               return false;
+            }
+         }
+         return true;
+      }
+      private bool ReadXmlMapItemCombat(XmlReader reader, IMapItemCombat combat)
+      {
+         //----------------------------------------------
+         if (false == ReadXmlMapItems(reader, combat.Attackers, "Attackers"))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItemCombat(): ReadXml_MapItems() returned false for Attackers");
+            return false;
+         }
+         //----------------------------------------------
+         if (false == ReadXmlMapItems(reader, combat.Defenders, "Defenders"))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItemCombat(): ReadXml_MapItems() returned false for Defenders");
+            return false;
+         }
+         //----------------------------------------------
+         if (false == ReadXmlTerritory(reader, combat.Territory))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItemCombat(): Read_XmlTerritory(Territory) returned false");
+            return false;
+         }
+         //----------------------------------------------
+         reader.Read();
+         if (false == reader.IsStartElement())
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItemCombat(): IsStartElement(Result) returned false");
+            return false;
+         }
+         if (reader.Name != "Result")
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItemCombat(): GResultid != (node=" + reader.Name + ")");
+            return false;
+         }
+         string? sResult = reader.GetAttribute("value");
+         if (null == sResult)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItemCombat(): sResult=null");
+            return false;
+         }
+         switch (sResult)
+         {
+            case "DefenderWins": combat.Result = CombatResult.DefenderWins; break;
+            case "AttackerWins": combat.Result = CombatResult.AttackerWins; break;
+            case "DefenderFlees": combat.Result = CombatResult.DefenderFlees; break;
+            case "AttackerFlees": combat.Result = CombatResult.AttackerFlees; break;
+            default:
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItemCombat(): reached default with sResult=" + sResult);
+               return false;
+         }
+         //----------------------------------------------
+         reader.Read();
+         if (false == reader.IsStartElement())
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItemCombat(): IsStartElement(DieRoll) returned false");
+            return false;
+         }
+         if (reader.Name != "DieRoll")
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItemCombat(): DieRoll != (node=" + reader.Name + ")");
+            return false;
+         }
+         string? sDieRoll = reader.GetAttribute("value");
+         if (null == sDieRoll)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItemCombat(): sDieRoll=null");
+            return false;
+         }
+         combat.DieRoll = Int32.Parse(sDieRoll);
          return true;
       }
       private bool ReadXmlEnteredHexes(XmlReader reader, List<EnteredHex> hexes)
@@ -2887,6 +3066,64 @@ namespace PleasantvilleGame
          if (false == CreateXmlTerritories(aXmlDocument, gi.SelectedTerritories, "SelectedTerritories"))
          {
             Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): Create_XmlTerritories(SelectedTerritories) returned false");
+            return null;
+         }
+         //------------------------------------------
+         if (false == CreateXmlTerritory(aXmlDocument, gi.SelectedTerritory))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): Create_XmlTerritory() returned false");
+            return null;
+         }
+         //------------------------------------------
+         if (false == CreateXmlMapItems(aXmlDocument, root, gi.SelectedMapItems, "SelectedMapItems"))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): Create_XmlMapItems() returned false");
+            return null;
+         }
+         //------------------------------------------
+         if (false == CreateXmlMapItems(aXmlDocument, root, gi.DeadPeople, "DeadPeople"))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): Create_XmlMapItems() returned false");
+            return null;
+         }
+         //------------------------------------------
+         if (false == CreateXmlMapItem(aXmlDocument, root, gi.Zebulon))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): Create_XmlMapItem(Zebulon) returned false");
+            return null;
+         }
+         //------------------------------------------
+         if (false == CreateXmlMapItemCombat(aXmlDocument, gi.MapItemCombat))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): Create_XmlMapItemCombat() returned false");
+            return null;
+         }
+         //------------------------------------------
+         elem = aXmlDocument.CreateElement("NumTownGuessesForZebulonLocation");
+         if (null == elem)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): aXmlDocument.DocumentElement.LastChild=null for NumTownGuessesForZebulonLocation");
+            return null;
+         }
+         elem.SetAttribute("value", gi.NumTownGuessesForZebulonLocation.ToString());
+         node = root.AppendChild(elem);
+         if (null == node)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): AppendChild(NumTownGuessesForZebulonLocation) returned null");
+            return null;
+         }
+         //------------------------------------------
+         elem = aXmlDocument.CreateElement("IsAlienAckedRandomMovement");
+         if (null == elem)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): aXmlDocument.DocumentElement.LastChild=null for IsAlienAckedRandomMovement");
+            return null;
+         }
+         elem.SetAttribute("value", gi.IsAlienAckedRandomMovement.ToString());
+         node = root.AppendChild(elem);
+         if (null == node)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): AppendChild(IsAlienAckedRandomMovement) returned null");
             return null;
          }
          return aXmlDocument;
@@ -3696,20 +3933,20 @@ namespace PleasantvilleGame
          XmlNode? root = aXmlDocument.DocumentElement;
          if (null == root)
          {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXmlMapItemMoves(): root is null");
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemMoves(): root is null");
             return false;
          }
          XmlElement? mapItemMovesElem = aXmlDocument.CreateElement("MapItemMoves");
          if (null == mapItemMovesElem)
          {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXmlMapItemMoves(): CreateElement(MapItemMoves) returned null");
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemMoves(): CreateElement(MapItemMoves) returned null");
             return false;
          }
          mapItemMovesElem.SetAttribute("count", mapItemMoves.Count.ToString());
          XmlNode? mapItemMovesNode = root.AppendChild(mapItemMovesElem);
          if (null == mapItemMovesNode)
          {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXmlMapItemMoves(): AppendChild(MapItemMoves) returned null");
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemMoves(): AppendChild(MapItemMoves) returned null");
             return false;
          }
          for (int i = 0; i < mapItemMoves.Count; ++i)
@@ -3717,33 +3954,33 @@ namespace PleasantvilleGame
             IMapItemMove? mim = mapItemMoves[i];
             if (null == mim)
             {
-               Logger.Log(LogEnum.LE_ERROR, "CreateXmlMapItemMoves(): mim is null");
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemMoves(): mim is null");
                return false;
             }
             XmlElement? mimElem = aXmlDocument.CreateElement("MapItemMove");
             if (null == mimElem)
             {
-               Logger.Log(LogEnum.LE_ERROR, "CreateXmlMapItemMoves(): CreateElement(mimElem) returned null");
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemMoves(): CreateElement(mimElem) returned null");
                return false;
             }
             mimElem.SetAttribute("value", mim.MapItem.Name);
             XmlNode? mimNode = mapItemMovesNode.AppendChild(mimElem);
             if (null == mimNode)
             {
-               Logger.Log(LogEnum.LE_ERROR, "CreateXmlMapItemMoves(): AppendChild(MapItemMove) returned null");
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemMoves(): AppendChild(MapItemMove) returned null");
                return false;
             }
             //--------------------------------------------
             if (false == CreateXmlMapItem(aXmlDocument, mimNode, mim.MapItem))
             {
-               Logger.Log(LogEnum.LE_ERROR, "CreateXmlMapItemMoves(): CreateXmlMapItem() returned null");
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemMoves(): Create_XmlMapItem() returned null");
                return false;
             }
             //--------------------------------------------
             XmlElement? elem = aXmlDocument.CreateElement("OldTerritory");
             if (null == elem)
             {
-               Logger.Log(LogEnum.LE_ERROR, "CreateXmlStacks(): CreateElement(OldTerritory) returned false");
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemMoves(): CreateElement(OldTerritory) returned false");
                return false;
             }
             if (null == mim.OldTerritory)
@@ -3759,14 +3996,14 @@ namespace PleasantvilleGame
             XmlNode? node = mimNode.AppendChild(elem);
             if (null == node)
             {
-               Logger.Log(LogEnum.LE_ERROR, "CreateXmlStacks(): AppendChild(OldTerritory) returned false");
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemMoves(): AppendChild(OldTerritory) returned false");
                return false;
             }
             //--------------------------------------------
             elem = aXmlDocument.CreateElement("NewTerritory");
             if (null == elem)
             {
-               Logger.Log(LogEnum.LE_ERROR, "CreateXmlStacks(): CreateElement(NewTerritory) returned false");
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemMoves(): CreateElement(NewTerritory) returned false");
                return false;
             }
             if (null == mim.NewTerritory)
@@ -3782,13 +4019,13 @@ namespace PleasantvilleGame
             node = mimNode.AppendChild(elem);
             if (null == node)
             {
-               Logger.Log(LogEnum.LE_ERROR, "CreateXmlStacks(): AppendChild(NewTerritory) returned false");
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemMoves(): AppendChild(NewTerritory) returned false");
                return false;
             }
             //--------------------------------------------
             if (false == CreateXmlMapItemMovesBestPath(aXmlDocument, mimNode, mim.BestPath))
             {
-               Logger.Log(LogEnum.LE_ERROR, "CreateXmlMapItemMoves(): CreateXmlMapItemMoveBestPath() returned null");
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemMoves(): CreateXmlMapItemMoveBestPath() returned null");
                return false;
             }
          }
@@ -3861,29 +4098,28 @@ namespace PleasantvilleGame
          {
             if (false == CreateXmlMapItem(aXmlDocument, mapItemsNode, mi))
             {
-               Logger.Log(LogEnum.LE_ERROR, "CreateXml_MapItems(): CreateXmlMapItem() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "CreateXml_MapItems(): Create_XmlMapItem() returned false");
                return false;
             }
          }
          return true;
       }
-      private bool CreateXmlMapItem(XmlDocument aXmlDocument, XmlNode parent, IMapItem? mi, string attribute = "")
+      private bool CreateXmlMapItem(XmlDocument aXmlDocument, XmlNode parent, IMapItem? mi)
       {
          XmlElement? miElem = aXmlDocument.CreateElement("MapItem");
          if (null == miElem)
          {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXmlMapItem(): CreateElement(miElem) returned null");
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_MapItem(): CreateElement(miElem) returned null");
             return false;
          }
          XmlNode? miNode = parent.AppendChild(miElem);
          if (null == miNode)
          {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXmlMapItem(): AppendChild(miNode) returned null");
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_MapItem(): AppendChild(miNode) returned null");
             return false;
          }
-         miElem.SetAttribute("value", attribute);
          if (null == mi)
-            miElem.SetAttribute("name", "null");
+            miElem.SetAttribute("name", "Null");
          else
             miElem.SetAttribute("name", mi.Name);
          return true;
@@ -3964,6 +4200,100 @@ namespace PleasantvilleGame
          if (false == CreateXmlMapItems(aXmlDocument, stackNode, stack.MapItems, stack.Territory.Name))
          {
             Logger.Log(LogEnum.LE_ERROR, "CreateXml_Stack(): CreateXml_MapItems() returned false");
+            return false;
+         }
+         return true;
+      }
+      private bool CreateXmlTerritory(XmlDocument aXmlDocument, ITerritory? t)
+      {
+         XmlNode? root = aXmlDocument.DocumentElement;
+         if (null == root)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlTerritory(): root is null");
+            return false;
+         }
+         XmlElement? terrElem = aXmlDocument.CreateElement("Territory");  // name of territory
+         if (null == terrElem)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlTerritory(): CreateElement(terrElem) returned null");
+            return false;
+         }
+         XmlNode? territoryNode = root.AppendChild(terrElem);
+         if (null == territoryNode)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlTerritory(): AppendChild(territoryNode) returned null");
+            return false;
+         }
+         if ( null == t )
+            terrElem.SetAttribute("value", "Null");
+         else
+            terrElem.SetAttribute("value", t.Name);
+         return true;
+      }
+      private bool CreateXmlMapItemCombat(XmlDocument aXmlDocument, IMapItemCombat combat)
+      {
+         XmlNode? root = aXmlDocument.DocumentElement;
+         if (null == root)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemCombat(): root is null");
+            return false;
+         }
+         XmlElement? elemParent = aXmlDocument.CreateElement("MapItemCombat");
+         if (null == elemParent)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemCombat(): CreateElement(MapItemCombat) returned null");
+            return false;
+         }
+         XmlNode? parentNode = root.AppendChild(elemParent);
+         if (null == parentNode)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemCombat(): AppendChild(MapItemCombat) returned null");
+            return false;
+         }
+         //------------------------------------------
+         if (false == CreateXmlMapItems(aXmlDocument, parentNode, combat.Attackers, "Attackers"))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemCombat(): Create_XmlMapItems(Attackers) returned false");
+            return false;
+         }
+         //------------------------------------------
+         if (false == CreateXmlMapItems(aXmlDocument, parentNode, combat.Defenders, "Defenders"))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemCombat(): Create_XmlMapItems(Defenders) returned false");
+            return false;
+         }
+         //------------------------------------------
+         if (false == CreateXmlTerritory(aXmlDocument, combat.Territory))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemCombat(): Create_XmlTerritory(combat.Territory) returned false");
+            return false;
+         }
+         //------------------------------------------
+         XmlElement? elem = aXmlDocument.CreateElement("Result");
+         if (null == elem)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemCombat(): aXmlDocument.DocumentElement.LastChild=null for Result");
+            return false;
+         }
+         elem.SetAttribute("value", combat.Result.ToString());
+         XmlNode? node = parentNode.AppendChild(elem);
+         if (null == node)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemCombat(): AppendChild(combat.Result) returned null");
+            return false;
+         }
+         //------------------------------------------
+         elem = aXmlDocument.CreateElement("DieRoll");
+         if (null == elem)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemCombat(): aXmlDocument.DocumentElement.LastChild=null for DieRoll");
+            return false;
+         }
+         elem.SetAttribute("value", combat.DieRoll.ToString());
+         node = parentNode.AppendChild(elem);
+         if (null == node)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemCombat(): AppendChild(combat.DieRoll) returned null");
             return false;
          }
          return true;
@@ -4079,128 +4409,5 @@ namespace PleasantvilleGame
          }
          return true;
       }
-      //private bool ReadXmlDieRollResults(XmlReader reader, Dictionary<string, int[]> dieResults)
-      //{
-      //   try // resync the gi.DieResults[] to initial conditions
-      //   {
-      //      foreach (string key in myRulesMgr.Events.Keys)
-      //         dieResults[key] = new int[3] { Utilities.NO_RESULT, Utilities.NO_RESULT, Utilities.NO_RESULT };
-      //   }
-      //   catch (Exception e)
-      //   {
-      //      Logger.Log(LogEnum.LE_ERROR, "ReadXmlDieRollResults(): e=" + e.ToString());
-      //      return false;
-      //   }
-      //   //------------------------------------------
-      //   reader.Read();
-      //   if (false == reader.IsStartElement())
-      //   {
-      //      Logger.Log(LogEnum.LE_ERROR, "ReadXmlDieRollResults(): IsStartElement(EnemyAcquiredShots) returned false");
-      //      return false;
-      //   }
-      //   if (reader.Name != "DieRollResults")
-      //   {
-      //      Logger.Log(LogEnum.LE_ERROR, "ReadXmlDieRollResults(): DieRollResults != (node=" + reader.Name + ")");
-      //      return false;
-      //   }
-      //   string? sCount = reader.GetAttribute("count");
-      //   if (null == sCount)
-      //   {
-      //      Logger.Log(LogEnum.LE_ERROR, "ReadXmlDieRollResults(): Count=null");
-      //      return false;
-      //   }
-      //   int count = int.Parse(sCount);
-      //   for (int i = 0; i < count; i++)
-      //   {
-      //      reader.Read();
-      //      if (false == reader.IsStartElement())
-      //      {
-      //         Logger.Log(LogEnum.LE_ERROR, "ReadXmlDieRollResults(): reader.IsStartElement(EnemyAcqShot) = false");
-      //         return false;
-      //      }
-      //      if (reader.Name != "DieRollResult")
-      //      {
-      //         Logger.Log(LogEnum.LE_ERROR, "ReadXmlDieRollResults(): DieRollResult != (node=" + reader.Name + ")");
-      //         return false;
-      //      }
-      //      //-------------------------------
-      //      string? sKey = reader.GetAttribute("key");
-      //      if (null == sKey)
-      //      {
-      //         Logger.Log(LogEnum.LE_ERROR, "ReadXmlDieRollResults(): sKey=null");
-      //         return false;
-      //      }
-      //      //-------------------------------
-      //      string? sRoll0 = reader.GetAttribute("r0");
-      //      if (null == sRoll0)
-      //      {
-      //         Logger.Log(LogEnum.LE_ERROR, "ReadXmlDieRollResults(): sRoll0=null");
-      //         return false;
-      //      }
-      //      dieResults[sKey][0] = Convert.ToInt32(sRoll0);
-      //      //-------------------------------
-      //      string? sRoll1 = reader.GetAttribute("r1");
-      //      if (null == sRoll1)
-      //      {
-      //         Logger.Log(LogEnum.LE_ERROR, "ReadXmlDieRollResults(): sRoll1=null");
-      //         return false;
-      //      }
-      //      dieResults[sKey][1] = Convert.ToInt32(sRoll1);
-      //      //-------------------------------
-      //      string? sRoll2 = reader.GetAttribute("r2");
-      //      if (null == sRoll2)
-      //      {
-      //         Logger.Log(LogEnum.LE_ERROR, "ReadXmlDieRollResults(): sRoll2=null");
-      //         return false;
-      //      }
-      //      dieResults[sKey][2] = Convert.ToInt32(sRoll2);
-      //   }
-      //   reader.Read(); // get past </DieRollResults> tag
-      //   return true;
-      //}
-      //private bool CreateXmlDieRollResults(XmlDocument aXmlDocument, XmlNode topNode, Dictionary<string, int[]> dieResults)
-      //{
-      //   //------------------------------------------------------
-      //   XmlElement? dieRollResultsElem = aXmlDocument.CreateElement("DieRollResults");
-      //   if (null == dieRollResultsElem)
-      //   {
-      //      Logger.Log(LogEnum.LE_ERROR, "CreateXmlDieRollResults(): CreateElement(dieRollResultsElem) returned null");
-      //      return false;
-      //   }
-      //   dieRollResultsElem.SetAttribute("count", dieResults.Count.ToString());
-      //   XmlNode? dieRollResultsNode = topNode.AppendChild(dieRollResultsElem);
-      //   if (null == dieRollResultsNode)
-      //   {
-      //      Logger.Log(LogEnum.LE_ERROR, "CreateXmlDieRollResults(): AppendChild(dieRollResultsNode) returned null");
-      //      return false;
-      //   }
-      //   int count = 0;
-      //   foreach (var kvp in dieResults)
-      //   {
-      //      XmlElement? dieRollResultElem = aXmlDocument.CreateElement("DieRollResult");
-      //      if (null == dieRollResultElem)
-      //      {
-      //         Logger.Log(LogEnum.LE_ERROR, "CreateXmlDieRollResults(): CreateElement(dieRollResultElem) returned null");
-      //         return false;
-      //      }
-      //      dieRollResultElem.SetAttribute("key", kvp.Key);
-      //      dieRollResultElem.SetAttribute("r0", kvp.Value[0].ToString());
-      //      dieRollResultElem.SetAttribute("r1", kvp.Value[1].ToString());
-      //      dieRollResultElem.SetAttribute("r2", kvp.Value[2].ToString());
-      //      XmlNode? dieResultNode = dieRollResultsNode.AppendChild(dieRollResultElem);
-      //      if (null == dieResultNode)
-      //      {
-      //         Logger.Log(LogEnum.LE_ERROR, "CreateXmlDieRollResults(): AppendChild(dieResultNode) returned null");
-      //         return false;
-      //      }
-      //      count++;
-      //   }
-      //   if (count != dieResults.Count)
-      //   {
-      //      Logger.Log(LogEnum.LE_ERROR, "CreateXmlDieRollResults(): count=" + count.ToString() + " dieResults.Count=" + dieResults.Count.ToString());
-      //      return false;
-      //   }
-      //   return true;
-      //}
    }
 }

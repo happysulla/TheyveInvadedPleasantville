@@ -64,7 +64,6 @@ namespace PleasantvilleGame
       private readonly ScrollViewer? myScrollViewer;
       private RuleDialogViewer? myRulesMgr;
       private IDieRoller? myDieRoller;
-      private string myDieRollResult="";
       //---------------------------------------------------
       private readonly FontFamily myFontFam = new FontFamily("Tahoma");
       private readonly FontFamily myFontFam1 = new FontFamily("Courier New");

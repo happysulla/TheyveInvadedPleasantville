@@ -38,7 +38,7 @@ namespace PleasantvilleGame
       //------------------------------------------------
       public IMapItemMoves MapItemMoves { get; set; } = new MapItemMoves();
       public IStacks Stacks { get; set; } = new Stacks();
-      public IStack? SelectedStack { get; set; } = null;
+      public IStack?SelectedStack { get; set; } = null;
       //------------------------------------------------
       public ITerritories ZebulonTerritories { set; get; } = new Territories();
       public ITerritories SelectedTerritories { set; get; } = new Territories();

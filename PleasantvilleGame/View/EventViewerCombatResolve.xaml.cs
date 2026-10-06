@@ -44,7 +44,6 @@ namespace PleasantvilleGame
       private EndCombatResolve? myCallback = null;
       private E11Enum myState = E11Enum.ROLL_FOR_COMBAT;
       private bool myIsRollInProgress = false;
-      private int myMaxRowNum = 0;
       private int myRollResultRowNum = 0;
       //---------------------------------------------------
       public struct GridRow
@@ -67,7 +66,6 @@ namespace PleasantvilleGame
       private readonly ScrollViewer? myScrollViewer;
       private RuleDialogViewer? myRulesMgr;
       private IDieRoller? myDieRoller;
-      private string myDieRollResult="";
       //---------------------------------------------------
       private readonly FontFamily myFontFam = new FontFamily("Tahoma");
       private readonly FontFamily myFontFam1 = new FontFamily("Courier New");

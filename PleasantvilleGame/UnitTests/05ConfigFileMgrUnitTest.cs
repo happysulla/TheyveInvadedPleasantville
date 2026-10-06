@@ -14,7 +14,6 @@ namespace PleasantvilleGame
       private ScrollViewer? myScrollViewerCanvas = null;
       private ScrollViewer? myScrollViewerTextBlock = null;
       private Canvas? myCanvasMain = null;
-      private Canvas? myCanvasHelper = null;
       private EventViewer? myEventViewer = null;
       private int myKeyIndex = 1;
       //----------------------------------------------------------------------------

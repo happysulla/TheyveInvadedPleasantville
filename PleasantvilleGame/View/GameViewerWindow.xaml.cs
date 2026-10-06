@@ -75,10 +75,6 @@ namespace PleasantvilleGame
       private List<Button> myButtons = new List<Button>();
       private List<Polygon> myPolygons = new List<Polygon>();
       //--------------------------------------------------------------
-      private bool myIsFlagSetForAlienMoveCountExceeded = false;  // Alien only allowed to move 5 counters
-      private bool myIsFlagSetForMoveReset = false;               // Players cannot reset counter when selected
-      private bool myIsFlagSetForOverstack = false;               // MapItem cannot move into hex due to overstack
-      private bool myIsFlagSetForMaxMove = false;                 // MapItem cannot move into hex due to overstack
       private bool myIsAlienAbleToStopMove = false;               // The Alien player is allowed to stop Townspeople from moving if in the same hex
       //--------------------------------------------------------------
       private List<Brush> myBrushes = new List<Brush>();
@@ -90,9 +86,6 @@ namespace PleasantvilleGame
       private SolidColorBrush mySolidColorBrushRosyBrown = new SolidColorBrush() { Color = Colors.RosyBrown };     // Implant Removal
       //--------------------------------------------------------------
       private Dictionary<IMapItem, Rectangle> myRectangleMaps = new Dictionary<IMapItem, Rectangle>();
-      private Rectangle? myMovingRectangle = null;                // Rentangle that is moving with button
-      private MapItems myMovingMapItems = new MapItems();         // A list to track which MapItems have moved this turn
-      private Button? myMovingButton = null;                      // The manually selected button that will be moved
       //--------------------------------------------------------------
       private readonly SplashDialog mySplashScreen;
       //--------------------------------------------------------------
