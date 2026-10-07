@@ -432,6 +432,13 @@ namespace PleasantvilleGame
          gi.MapItemCombat.Defenders.Add(mi4);
          gi.MapItemCombat.Attackers.Add(mi5);
          gi.MapItemCombat.Defenders.Add(mi6);
+         ITerritory? tcombat = Territories.theTerritories[30];
+         if (null == tcombat)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "SaveLocalGame():tcombat=null");
+            return false;
+         }
+         gi.MapItemCombat.Territory = tcombat;
          gi.MapItemCombat.Result = CombatResult.DefenderWins;
          gi.MapItemCombat.DieRoll = 88;
          return true;
@@ -613,14 +620,21 @@ namespace PleasantvilleGame
          }
          foreach(KeyValuePair<IMapItem,IMapItem> kvp in left)
          {
-            if( false == right.ContainsKey(kvp.Key))
+            bool isMatch = false;
+            foreach (KeyValuePair<IMapItem, IMapItem> kvp1 in right)
             {
-               Logger.Log(LogEnum.LE_ERROR, "IsEqual(): Dictionary<IMapItem, IMapItem> right does not contain key=" + kvp.Key.Name);
-               return false;
+               if( kvp.Key.Name == kvp1.Key.Name )
+               {
+                  if (kvp.Value.Name == kvp1.Value.Name)
+                  {
+                     isMatch = true;
+                     break;
+                  }
+               }
             }
-            if(kvp.Value.Name != right[kvp.Key].Name)
+            if (false == isMatch)
             {
-               Logger.Log(LogEnum.LE_ERROR, "IsEqual(): Dictionary<IMapItem, IMapItem> right value does not match=" + kvp.Value.Name);
+               Logger.Log(LogEnum.LE_ERROR, "IsEqual(): Dictionary<IMapItem, IMapItem> did not match=" + kvp.Key.Name);
                return false;
             }
          }
@@ -661,9 +675,9 @@ namespace PleasantvilleGame
             }
             if (null != mimLeft.OldTerritory && null != mimRight.OldTerritory)
             {
-               if (mimLeft.OldTerritory != mimRight.OldTerritory)
+               if (mimLeft.OldTerritory.ToString() != mimRight.OldTerritory.ToString())
                {
-                  Logger.Log(LogEnum.LE_ERROR, "IsEqual(): mimLeft.OldTerritory != mimRight.OldTerritory");
+                  Logger.Log(LogEnum.LE_ERROR, "IsEqual(): (mimLeft.OldTerritory=" + mimLeft.OldTerritory.ToString() + ") != (mimRight.OldTerritory=" + mimRight.OldTerritory.ToString() + ")");
                   return false;
                }
             }
@@ -680,7 +694,7 @@ namespace PleasantvilleGame
             }
             if (null != mimLeft.NewTerritory && null != mimRight.NewTerritory)
             {
-               if (mimLeft.NewTerritory != mimRight.NewTerritory)
+               if (mimLeft.NewTerritory.ToString() != mimRight.NewTerritory.ToString())
                {
                   Logger.Log(LogEnum.LE_ERROR, "IsEqual(): mimLeft.NewTerritory != mimRight.NewTerritory");
                   return false;
@@ -711,7 +725,7 @@ namespace PleasantvilleGame
             {
                ITerritory tLeft = mimLeft.BestPath.Territories[i];
                ITerritory tRight = mimRight.BestPath.Territories[i];
-               if (tLeft.Name != tRight.Name)
+               if (tLeft.ToString() != tRight.ToString())
                {
                   Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItemMoves): tLeft.Name != tRight.Name");
                   return false;
@@ -842,12 +856,12 @@ namespace PleasantvilleGame
          }
          if (left.IsAlienKnown != right.IsAlienKnown)
          {
-            Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItem): Name left.IsAlienKnown != right.IsAlienKnown");
+            Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItem): left.IsAlienKnown != right.IsAlienKnown");
             return false;
          }
          if (left.IsControlled != right.IsControlled)
          {
-            Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItem): Name left.IsControlled != right.IsControlled");
+            Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItem): (left.IsControlled=" + left.IsControlled.ToString() + ") != (right.IsControlled=" + right.IsControlled.ToString() + ") for mi=" + left.Name);
             return false;
          }
          if (left.IsImplantHeld != right.IsImplantHeld)
@@ -982,7 +996,7 @@ namespace PleasantvilleGame
       {
          if (left.Count != right.Count)
          {
-            Logger.Log(LogEnum.LE_ERROR, "IsEqual(ITerritories): left.Count != right.COunt");
+            Logger.Log(LogEnum.LE_ERROR, "IsEqual(ITerritories): (left.Count=" + left.Count.ToString() + ") != (right.Count" + right.Count.ToString() + ")");
             return false;
          }
          for (int i = 0; i < left.Count; ++i)

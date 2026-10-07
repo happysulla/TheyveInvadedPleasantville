@@ -12,7 +12,7 @@ namespace PleasantvilleGame
       public static int MAX_PATH_COUNT = 30;
 		public string Name { get; set; } = "Offboard";
 		public string CanvasName { get; set; } = "Main";
-		public string Subname { get; set; } = "ERROR";
+		public string Subname { get; set; } = "";
 		public IMapPoint CenterPoint { get; set; } = new MapPoint();
 		public List<IMapPoint> Points { get; set; } = new List<IMapPoint>();
 		public List<String> Adjacents { get; set; } = new List<String>();

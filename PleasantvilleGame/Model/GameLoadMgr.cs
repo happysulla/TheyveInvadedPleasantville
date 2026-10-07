@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -9,6 +10,7 @@ using Windows.Devices.Sensors;
 using Windows.Gaming.Input;
 using Windows.Networking;
 using static System.Windows.Forms.AxHost;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace PleasantvilleGame
 {
@@ -240,7 +242,7 @@ namespace PleasantvilleGame
          }
          return versionRunning.Major;
       }
-      public bool ReadXmlTerritories(XmlReader reader, ITerritories territories, string listName) // initial loading of Territories.theTerritories
+      public bool ReadXmlTerritories(XmlReader reader, ITerritories territories) // initial loading of Territories.theTerritories
       {
          CultureInfo currentCulture = CultureInfo.CurrentCulture;
          System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
@@ -287,15 +289,6 @@ namespace PleasantvilleGame
                   return false;
                }
                territory.Name = tName;
-               string? sListName = reader.GetAttribute("listName");
-               if( null != sListName) // only perform this check if there is a list name
-               {
-                  if(sListName != listName )
-                  {
-                     Logger.Log(LogEnum.LE_ERROR, "ReadXml_Territories(): (sListName=" + sListName + ") != (listName=" + listName + ")");
-                     return false;
-                  }
-               }
                //--------------------------------------
                reader.Read();
                if (false == reader.IsStartElement())
@@ -515,7 +508,7 @@ namespace PleasantvilleGame
          System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
          return true;
       }
-      public bool CreateXmlTerritories(XmlDocument aXmlDocument, ITerritories territories, string listName) // initial creation of Territories.theTerritories during unit testing
+      public bool CreateXmlTerritories(XmlDocument aXmlDocument, ITerritories territories) // initial creation of Territories.theTerritories during unit testing
       {
          CultureInfo currentCulture = CultureInfo.CurrentCulture;
          System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
@@ -544,8 +537,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "CreateXml_Territories(): CreateElement(terrElem) returned null");
                   return false;
                }
-               terrElem.SetAttribute("value", t.Name);
-               terrElem.SetAttribute("ListName", listName);
+               terrElem.SetAttribute("value", t.ToString());
                XmlNode? territoryNode = root.AppendChild(terrElem);
                if (null == territoryNode)
                {
@@ -1110,6 +1102,25 @@ namespace PleasantvilleGame
                return null;
             }
             //----------------------------------------------
+            IPlayerAlien? player = null;
+            if (false == ReadXmlAlienPlayer(reader, ref player))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): Read_XmlAlienPlayer() returned false");
+               return null;
+            }
+            if( null == player )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): Read_XmlAlienPlayer() returned null for player");
+               return null;
+            }
+            gi.PlayerAlien = player;
+            //----------------------------------------------
+            if (false == ReadXmlTownPlayer(reader, gi.PlayerTown))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): Read_XmlTownPlayer() returned false");
+               return null;
+            }
+            //----------------------------------------------
             if (false == ReadXmlRandomMoves(reader, gi.RandomMoves))
             {
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): Read_XmlRandomMoves() returned false");
@@ -1146,11 +1157,13 @@ namespace PleasantvilleGame
                return null;
             }
             //----------------------------------------------
-            if (false == ReadXmlTerritory(reader, gi.SelectedTerritory))
+            ITerritory? t1 = null;
+            if (false == ReadXmlTerritory(reader, ref t1))
             {
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): Read_XmlTerritory(SelectedTerritory) returned false");
                return null;
             }
+            gi.SelectedTerritory = t1;
             //----------------------------------------------
             if (false == ReadXmlMapItems(reader, gi.SelectedMapItems, "SelectedMapItems"))
             {
@@ -1694,7 +1707,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): sIsControlled=null");
                return false;
             }
-            mi.IsControlled = Convert.ToBoolean(sIsAlienKnown);
+            mi.IsControlled = Convert.ToBoolean(sIsControlled);
             //---------------------------------------------
             reader.Read();
             if (false == reader.IsStartElement())
@@ -2079,6 +2092,142 @@ namespace PleasantvilleGame
             reader.Read(); // get past </GameStatistics>
          return true;
       }
+      private bool ReadXmlAlienPlayer(XmlReader reader, ref IPlayerAlien? player)
+      {
+         player = null;
+         reader.Read();
+         if (false == reader.IsStartElement())
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): reader.IsStartElement(PlayerAlien) = false");
+            return false;
+         }
+         if (reader.Name != "PlayerAlien")
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): PlayerAlien != (node=" + reader.Name + ")");
+            return false;
+         }
+         string? sValue = reader.GetAttribute("value");
+         if (null == sValue)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): sValue=null");
+            return false;
+         }
+         //-------------------------------------
+         if( "Computer" == sValue )
+         {
+            PlayerAlienComputer computer = new PlayerAlienComputer();
+            reader.Read();
+            if (false == reader.IsStartElement())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): reader.IsStartElement(StrategyPrimary) = false");
+               return false;
+            }
+            if (reader.Name != "StrategyPrimary")
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): StrategyPrimary != (node=" + reader.Name + ")");
+               return false;
+            }
+            string? sStrategyPrimary = reader.GetAttribute("value");
+            if (sStrategyPrimary == null)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): sStrategyPrimary=null");
+               return false;
+            }
+            switch(sStrategyPrimary)
+            {
+               case "DEFEND_ZEBULON": computer.myBehavior.StrategyPrimary = AlienStrategyEnum.DEFEND_ZEBULON; break;
+               case "SURROUND_ZEBULON": computer.myBehavior.StrategyPrimary = AlienStrategyEnum.SURROUND_ZEBULON; break;
+               case "FIENT_ZEBULON": computer.myBehavior.StrategyPrimary = AlienStrategyEnum.FIENT_ZEBULON; break;
+               case "KEEP_HIDDEN": computer.myBehavior.StrategyPrimary = AlienStrategyEnum.KEEP_HIDDEN; break;
+               case "ATTACK_TOWNSPEOPLE": computer.myBehavior.StrategyPrimary = AlienStrategyEnum.ATTACK_TOWNSPEOPLE; break;
+               case "MAX_TAKEOVER": computer.myBehavior.StrategyPrimary = AlienStrategyEnum.MAX_TAKEOVER; break;
+               default:
+                  Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): reached default sStrategyPrimary=" + sStrategyPrimary);
+                  return false;
+            }
+            //-----------------------------
+            reader.Read();
+            if (false == reader.IsStartElement())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): reader.IsStartElement(StrategySecondary) = false");
+               return false;
+            }
+            if (reader.Name != "StrategySecondary")
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): StrategySecondary != (node=" + reader.Name + ")");
+               return false;
+            }
+            string? sStrategySecondary = reader.GetAttribute("value");
+            if (sStrategySecondary == null)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): sStrategySecondary=null");
+               return false;
+            }
+            switch (sStrategySecondary)
+            {
+               case "DEFEND_ZEBULON": computer.myBehavior.StrategySecondary = AlienStrategyEnum.DEFEND_ZEBULON; break;
+               case "SURROUND_ZEBULON": computer.myBehavior.StrategySecondary = AlienStrategyEnum.SURROUND_ZEBULON; break;
+               case "FIENT_ZEBULON": computer.myBehavior.StrategySecondary = AlienStrategyEnum.FIENT_ZEBULON; break;
+               case "KEEP_HIDDEN": computer.myBehavior.StrategySecondary = AlienStrategyEnum.KEEP_HIDDEN; break;
+               case "ATTACK_TOWNSPEOPLE": computer.myBehavior.StrategySecondary = AlienStrategyEnum.ATTACK_TOWNSPEOPLE; break;
+               case "MAX_TAKEOVER": computer.myBehavior.StrategySecondary = AlienStrategyEnum.MAX_TAKEOVER; break;
+               default:
+                  Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): reached default sStrategySecondary=" + sStrategySecondary);
+                  return false;
+            }
+            //-----------------------------
+            reader.Read();
+            if (false == reader.IsStartElement())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): reader.IsStartElement(Risky) = false");
+               return false;
+            }
+            if (reader.Name != "Risky")
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): Risky != (node=" + reader.Name + ")");
+               return false;
+            }
+            string? sRisky = reader.GetAttribute("value");
+            if (sRisky == null)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): sRisky=null");
+               return false;
+            }
+            computer.myBehavior.Risky = Int32.Parse(sRisky);
+            //-----------------------------
+            reader.Read();
+            if (false == reader.IsStartElement())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): reader.IsStartElement(Stealthy) = false");
+               return false;
+            }
+            if (reader.Name != "Stealthy")
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): Stealthy != (node=" + reader.Name + ")");
+               return false;
+            }
+            string? sStealthy = reader.GetAttribute("value");
+            if (sStealthy == null)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): sStealthy=null");
+               return false;
+            }
+            computer.myBehavior.Stealthy = Int32.Parse(sStealthy);
+            //-----------------------------
+            player = computer;
+            reader.Read(); // get past </PlayerAlien>
+         }
+         else
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): reached default value=" + sValue);
+            return false;
+         }
+         return true;
+      }
+      private bool ReadXmlTownPlayer(XmlReader reader, IPlayerTown player)
+      {
+         return true;
+      }
       private bool ReadXmlRandomMoves(XmlReader reader, List<RandomMoveData> moves)
       {
          moves.Clear();
@@ -2260,63 +2409,21 @@ namespace PleasantvilleGame
             }
             mim.MapItem = mi;
             //----------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
+            ITerritory? oldT = null;
+            if( false == ReadXmlTerritory(reader,ref oldT))
             {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlMapItemMoves(): IsStartElement(OldTerritory) returned false");
+               Logger.Log(LogEnum.LE_ERROR, "ReadXmlMapItemMoves(): ReadXmlTerritory(oldT) returned false");
                return false;
             }
-            if (reader.Name != "OldTerritory")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlMapItemMoves(): OldTerritory != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sOldTerritory = reader.GetAttribute("value");
-            if ("null" == sOldTerritory)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlMapItemMoves(): sOldTerritory=*null*");
-               return false;
-            }
-            if (null == sOldTerritory)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlMapItemMoves(): sOldTerritory=null");
-               return false;
-            }
-            mim.OldTerritory = Territories.theTerritories.Find(sOldTerritory);
-            if (null == mim.OldTerritory)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlMapItemMoves(): sOldTerritory=null for name=" + sOldTerritory);
-               return false;
-            }
+            mim.OldTerritory = oldT;
             //----------------------------------------------
-            reader.Read();
-            if (false == reader.IsStartElement())
+            ITerritory? newT = null;
+            if (false == ReadXmlTerritory(reader, ref newT))
             {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlMapItemMoves(): IsStartElement(NewTerritory) returned false");
+               Logger.Log(LogEnum.LE_ERROR, "ReadXmlMapItemMoves(): ReadXmlTerritory(newT) returned false");
                return false;
             }
-            if (reader.Name != "NewTerritory")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlMapItemMoves(): NewTerritory != (node=" + reader.Name + ")");
-               return false;
-            }
-            string? sNewTerritory = reader.GetAttribute("value");
-            if ("null" == sNewTerritory)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlMapItemMoves(): sNewTerritory=*null*");
-               return false;
-            }
-            if (null == sNewTerritory)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlMapItemMoves(): sNewTerritory=null");
-               return false;
-            }
-            mim.NewTerritory = Territories.theTerritories.Find(sNewTerritory);
-            if (null == mim.NewTerritory)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlMapItemMoves(): sOldTerritory=null for name=" + sNewTerritory);
-               return false;
-            }
+            mim.NewTerritory = newT;
             //----------------------------------------------
             IMapPath? path = null;
             if (false == ReadXmlMapItemMoveBestPath(reader, ref path))
@@ -2460,24 +2567,18 @@ namespace PleasantvilleGame
          reader.Read();
          if (false == reader.IsStartElement())
          {
-            Logger.Log(LogEnum.LE_ERROR, "ReadXmlMapItem(): reader.IsStartElement(Name) = false");
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItem(): reader.IsStartElement(Name) = false");
             return false;
          }
          if (reader.Name != "MapItem")
          {
-            Logger.Log(LogEnum.LE_ERROR, "ReadXmlMapItem(): Name != (node=" + reader.Name + ")");
-            return false;
-         }
-         string? sValue = reader.GetAttribute("value");
-         if (null == sValue)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "ReadXmlMapItem(): sValue=null");
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItem(): Name != (node=" + reader.Name + ")");
             return false;
          }
          string? sName = reader.GetAttribute("name");
          if (null == sName)
          {
-            Logger.Log(LogEnum.LE_ERROR, "ReadXmlMapItem(): sName=null for sValue=" + sValue);
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItem(): sName=null");
             return false;
          }
          if ("null" == sName)
@@ -2489,7 +2590,7 @@ namespace PleasantvilleGame
             mi = theMapItems.Find(sName);
             if (null == mi)
             {
-               Logger.Log(LogEnum.LE_ERROR, "ReadXmlMapItem(): unable to find mapitem=" + sName);
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItem(): unable to find mapitem=" + sName);
                return false;
             }
          }
@@ -2531,7 +2632,7 @@ namespace PleasantvilleGame
          for (int i = 0; i < count; ++i)
          {
             IStack? stack = null;
-            if( false == ReadXmlStack(reader, stack))
+            if( false == ReadXmlStack(reader, ref stack))
             {
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_Stacks(): ReadXml_Stack() returned false");
                return false;
@@ -2547,7 +2648,7 @@ namespace PleasantvilleGame
             reader.Read(); // get past </Stacks>
          return true;
       }
-      private bool ReadXmlStack(XmlReader reader, IStack? stack)
+      private bool ReadXmlStack(XmlReader reader, ref IStack? stack)
       {
          reader.Read();
          if (false == reader.IsStartElement())
@@ -2609,7 +2710,46 @@ namespace PleasantvilleGame
          reader.Read(); // get past </Stack>
          return true;
       }
-      private bool ReadXmlTerritory(XmlReader reader, ITerritory? t)
+      private bool ReadXmlTerritories(XmlReader reader, ITerritories territories, string listName)
+      {
+         reader.Read();
+         if (false == reader.IsStartElement())
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlTerritories(): IsStartElement(listName) returned false");
+            return false;
+         }
+         if (reader.Name != listName)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlTerritories(): " + listName + " != (node=" + reader.Name + ")");
+            return false;
+         }
+         string? tCount = reader.GetAttribute("count");
+         if (null == tCount)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlTerritories(): tCount=null");
+            return false;
+         }
+         int count = Int32.Parse(tCount);
+         for(int i=0; i< count; i++)
+         {
+            ITerritory? t = null;
+            if( false == ReadXmlTerritory( reader, ref t))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlTerritories(): Read_XmlTerritory() returned false");
+               return false;
+            }
+            if( null == t )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlTerritories(): t=null");
+               return false;
+            }
+            territories.Add(t);
+         }
+         if( 0 < count )
+            reader.Read();
+         return true;
+      }
+      private bool ReadXmlTerritory(XmlReader reader, ref ITerritory? t)
       {
          reader.Read();
          if (false == reader.IsStartElement())
@@ -2632,6 +2772,10 @@ namespace PleasantvilleGame
          {
             t = null;
          }
+         else if ("Offboard_" == tName)
+         {
+            t = new Territory();
+         }
          else
          {
             t = Territories.theTerritories.Find(tName);
@@ -2645,6 +2789,17 @@ namespace PleasantvilleGame
       }
       private bool ReadXmlMapItemCombat(XmlReader reader, IMapItemCombat combat)
       {
+         reader.Read();
+         if (false == reader.IsStartElement())
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): reader.IsStartElement(MapItemCombat) = false");
+            return false;
+         }
+         if (reader.Name != "MapItemCombat")
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): MapItemCombat != (node=" + reader.Name + ")");
+            return false;
+         }
          //----------------------------------------------
          if (false == ReadXmlMapItems(reader, combat.Attackers, "Attackers"))
          {
@@ -2658,11 +2813,18 @@ namespace PleasantvilleGame
             return false;
          }
          //----------------------------------------------
-         if (false == ReadXmlTerritory(reader, combat.Territory))
+         ITerritory? t2 = null;
+         if (false == ReadXmlTerritory(reader, ref t2))
          {
             Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItemCombat(): Read_XmlTerritory(Territory) returned false");
             return false;
          }
+         if( null == t2 )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItemCombat(): Read_XmlTerritory(Territory) returned null for t2");
+            return false;
+         }
+         combat.Territory = t2;
          //----------------------------------------------
          reader.Read();
          if (false == reader.IsStartElement())
@@ -2710,6 +2872,7 @@ namespace PleasantvilleGame
             return false;
          }
          combat.DieRoll = Int32.Parse(sDieRoll);
+         reader.Read(); // get past </MapItemCombat>
          return true;
       }
       private bool ReadXmlEnteredHexes(XmlReader reader, List<EnteredHex> hexes)
@@ -3085,7 +3248,7 @@ namespace PleasantvilleGame
             return null;
          }
          //------------------------------------------
-         if (false == CreateXmlTerritory(aXmlDocument, gi.SelectedTerritory))
+         if (false == CreateXmlTerritory(aXmlDocument, root, gi.SelectedTerritory))
          {
             Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): Create_XmlTerritory() returned false");
             return null;
@@ -3147,6 +3310,8 @@ namespace PleasantvilleGame
       private bool CreateXmlListingOfMapItems(XmlDocument aXmlDocument, IGameInstance gi)
       {
          theMapItems.Clear();
+         //-----------------------------------
+         theMapItems.Add(gi.Zebulon);
          //-----------------------------------
          foreach (IMapItemMove mim in gi.MapItemMoves)
          {
@@ -3776,27 +3941,28 @@ namespace PleasantvilleGame
       }
       private bool CreateXmlAlienPlayer(XmlDocument aXmlDocument, IPlayerAlien player)
       {
+         XmlNode? root = aXmlDocument.DocumentElement;
+         if (null == root)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienPlayer(): root is null");
+            return false;
+         }
+         XmlElement? elem = aXmlDocument.CreateElement("PlayerAlien");
+         if (null == elem)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienPlayer(): aXmlDocument.DocumentElement.LastChild=null for PlayerAlien");
+            return false;
+         }
+         XmlNode? parentNode = root.AppendChild(elem);
+         if (null == parentNode)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienPlayer(): AppendChild(PlayerAlienComputer) returned null");
+            return false;
+         }
+         //-----------------------------------------
          if (player is PlayerAlienComputer computer)
          {
-            XmlNode? root = aXmlDocument.DocumentElement;
-            if (null == root)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienPlayer(): root is null");
-               return false;
-            }
-            XmlElement? elem = aXmlDocument.CreateElement("PlayerAlienComputer");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienPlayer(): aXmlDocument.DocumentElement.LastChild=null for PlayerAlienComputer");
-               return false;
-            }
-            XmlNode? parentNode = root.AppendChild(elem);
-            if (null == parentNode)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienPlayer(): AppendChild(PlayerAlienComputer) returned null");
-               return false;
-            }
-            //-----------------------------------------
+            elem.SetAttribute("value", "Computer");
             elem = aXmlDocument.CreateElement("StrategyPrimary");
             if (null == elem)
             {
@@ -3993,49 +4159,15 @@ namespace PleasantvilleGame
                return false;
             }
             //--------------------------------------------
-            XmlElement? elem = aXmlDocument.CreateElement("OldTerritory");
-            if (null == elem)
+            if (false == CreateXmlTerritory(aXmlDocument, mimNode, mim.OldTerritory))
             {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemMoves(): CreateElement(OldTerritory) returned false");
-               return false;
-            }
-            if (null == mim.OldTerritory)
-            {
-               elem.SetAttribute("value", "null");
-               elem.SetAttribute("type", "null");
-            }
-            else
-            {
-               elem.SetAttribute("value", mim.OldTerritory.Name);
-               elem.SetAttribute("type", mim.OldTerritory.Subname);
-            }
-            XmlNode? node = mimNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemMoves(): AppendChild(OldTerritory) returned false");
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemMoves(): Create_XmlTerritory(OldTerritory) returned false");
                return false;
             }
             //--------------------------------------------
-            elem = aXmlDocument.CreateElement("NewTerritory");
-            if (null == elem)
+            if (false == CreateXmlTerritory(aXmlDocument, mimNode, mim.NewTerritory))
             {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemMoves(): CreateElement(NewTerritory) returned false");
-               return false;
-            }
-            if (null == mim.NewTerritory)
-            {
-               elem.SetAttribute("value", "null");
-               elem.SetAttribute("type", "null");
-            }
-            else
-            {
-               elem.SetAttribute("value", mim.NewTerritory.Name);
-               elem.SetAttribute("type", mim.NewTerritory.Subname);
-            }
-            node = mimNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemMoves(): AppendChild(NewTerritory) returned false");
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemMoves(): Create_XmlTerritory(NewTerritory) returned false");
                return false;
             }
             //--------------------------------------------
@@ -4083,7 +4215,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "CreateXmlMapItemMovesBestPath(): CreateElement(Territory) returned null");
                return false;
             }
-            tElem.SetAttribute("name", t.Name);
+            tElem.SetAttribute("name", t.ToString());
             XmlNode? tNode = mapItemMovesNode.AppendChild(tElem);
             if (null == tNode)
             {
@@ -4191,7 +4323,7 @@ namespace PleasantvilleGame
             stackElem.SetAttribute("value", "Null");
             return true;
          }
-         stackElem.SetAttribute("value", stack.Territory.Name);
+         stackElem.SetAttribute("value", stack.Territory.ToString());
          XmlNode? stackNode = parent.AppendChild(stackElem);
          if (null == stackNode)
          {
@@ -4213,28 +4345,59 @@ namespace PleasantvilleGame
             return false;
          }
          //------------------------------------------
-         if (false == CreateXmlMapItems(aXmlDocument, stackNode, stack.MapItems, stack.Territory.Name))
+         string? tName = stack.Territory.ToString();
+         if( null == tName )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_Stack(): tName=null");
+            return false;
+         }
+         if (false == CreateXmlMapItems(aXmlDocument, stackNode, stack.MapItems, tName))
          {
             Logger.Log(LogEnum.LE_ERROR, "CreateXml_Stack(): CreateXml_MapItems() returned false");
             return false;
          }
          return true;
       }
-      private bool CreateXmlTerritory(XmlDocument aXmlDocument, ITerritory? t)
+      private bool CreateXmlTerritories(XmlDocument aXmlDocument, ITerritories territories, string listName)
       {
          XmlNode? root = aXmlDocument.DocumentElement;
          if (null == root)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_XmlTerritory(): root is null");
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlTerritories(): root is null");
             return false;
          }
+         XmlElement? elem = aXmlDocument.CreateElement(listName);
+         if (null == elem)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlTerritories(): CreateElement(Stacks) returned null");
+            return false;
+         }
+         elem.SetAttribute("count", territories.Count.ToString());
+         XmlNode? parentNode = root.AppendChild(elem);
+         if (null == parentNode)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlTerritories(): AppendChild(parentNode) returned null");
+            return false;
+         }
+         foreach (ITerritory t in territories)
+         {
+            if( false == CreateXmlTerritory(aXmlDocument, parentNode, t))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlTerritories(): Create_XmlTerritory() returned false");
+               return false;
+            }
+         }
+         return true;
+      }
+      private bool CreateXmlTerritory(XmlDocument aXmlDocument, XmlNode parent, ITerritory? t)
+      {
          XmlElement? terrElem = aXmlDocument.CreateElement("Territory");  // name of territory
          if (null == terrElem)
          {
             Logger.Log(LogEnum.LE_ERROR, "Create_XmlTerritory(): CreateElement(terrElem) returned null");
             return false;
          }
-         XmlNode? territoryNode = root.AppendChild(terrElem);
+         XmlNode? territoryNode = parent.AppendChild(terrElem);
          if (null == territoryNode)
          {
             Logger.Log(LogEnum.LE_ERROR, "Create_XmlTerritory(): AppendChild(territoryNode) returned null");
@@ -4243,7 +4406,7 @@ namespace PleasantvilleGame
          if ( null == t )
             terrElem.SetAttribute("value", "Null");
          else
-            terrElem.SetAttribute("value", t.Name);
+            terrElem.SetAttribute("value", t.ToString());
          return true;
       }
       private bool CreateXmlMapItemCombat(XmlDocument aXmlDocument, IMapItemCombat combat)
@@ -4279,7 +4442,7 @@ namespace PleasantvilleGame
             return false;
          }
          //------------------------------------------
-         if (false == CreateXmlTerritory(aXmlDocument, combat.Territory))
+         if (false == CreateXmlTerritory(aXmlDocument, parentNode, combat.Territory))
          {
             Logger.Log(LogEnum.LE_ERROR, "Create_XmlMapItemCombat(): Create_XmlTerritory(combat.Territory) returned false");
             return false;
