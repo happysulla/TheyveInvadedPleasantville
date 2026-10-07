@@ -202,8 +202,24 @@ namespace PleasantvilleGame
       //--------------------------------------------------
       private string GetFileName(IGameInstance gi)
       {
+         Option optionTownSolo = gi.Options.Find("TownSolo");
+         Option optionAlienSolo = gi.Options.Find("AlienSolo");
+         Option optionTownHost = gi.Options.Find("TownHost");
+         Option optionAlienClient = gi.Options.Find("AlienClient");
          StringBuilder sb = new StringBuilder();
-         sb.Append(DateTime.Now.ToString("yyyyMMdd-HHmmss"));
+         sb.Append(DateTime.Now.ToString("yyyyMMdd-HHmmss-T"));
+         if (gi.GameTurn < 10)
+            sb.Append("0");
+         sb.Append(gi.GameTurn.ToString());
+         sb.Append("-");
+         if( true == optionTownSolo.IsEnabled )
+            sb.Append("TownSolo");
+         else if (true == optionAlienSolo.IsEnabled)
+            sb.Append("AlienSolo");
+         else if (true == optionTownHost.IsEnabled)
+            sb.Append("TownHost");
+         else if (true == optionAlienClient.IsEnabled)
+            sb.Append("AlienClient");
          sb.Append(".tip");
          return sb.ToString();
       }
@@ -1610,7 +1626,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsKnockedoutThisTurn) = false");
                return false;
             }
-            if (reader.Name != "IsKnocIsKnockedoutThisTurnkedout")
+            if (reader.Name != "IsKnockedoutThisTurn")
             {
                Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsKnockedoutThisTurn != (node=" + reader.Name + ")");
                return false;

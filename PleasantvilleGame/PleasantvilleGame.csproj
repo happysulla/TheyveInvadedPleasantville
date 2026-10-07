@@ -17,7 +17,9 @@
     <RepositoryUrl>https://github.com/happysulla/TheyveInvadedPleasantville</RepositoryUrl>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants);UT1</DefineConstants>
+  </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Config\Alien Loss.xml" />

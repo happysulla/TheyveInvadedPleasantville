@@ -229,7 +229,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "SaveLocalGame(): CreateTownspeople() returned false");
             return false;
          }
-         IMapItem? mi1 = gi.Stacks.FindMapItem(TableMgr.FIRE_CHIEF);
+         IMapItem? mi1 = gi.Stacks.FindMapItem(Utilities.RemoveSpaces(TableMgr.FIRE_CHIEF));
          if (null == mi1)
          {
             Logger.Log(LogEnum.LE_ERROR, "SaveLocalGame(): gi.Stacks.FindMapItem(TableMgr.FIRE_CHIEF) returned null");
@@ -267,10 +267,10 @@ namespace PleasantvilleGame
          mi1.IsCombatThisTurn = true;
          mi1.IsImplantRemovalAttemptThisTurn = true;
          //---------------------------------------
-         IMapItem? mi2 = gi.Stacks.FindMapItem(TableMgr.BAR_TENDER);
+         IMapItem? mi2 = gi.Stacks.FindMapItem(Utilities.RemoveSpaces(TableMgr.BAR_TENDER));
          if (null == mi2)
          {
-            Logger.Log(LogEnum.LE_ERROR, "SaveLocalGame(): gi.Stacks.FindMapItem(TableMgr.FIRE_CHIEF) returned null");
+            Logger.Log(LogEnum.LE_ERROR, "SaveLocalGame(): gi.Stacks.FindMapItem(TableMgr.BAR_TENDER) returned null");
             return false;
          }
          mi2.TopImageName = "Alien";
@@ -317,6 +317,7 @@ namespace PleasantvilleGame
          gi.Options.Add(new Option("OptionTest1", false));
          gi.Options.Add(new Option("OptionTest2", true));
          gi.Options.Add(new Option("OptionTest3", false));
+         gi.Options.Add(new Option("TownSolo", true));
          gi.Statistics.Add(new GameStatistic("Alligator"));
          gi.Statistics.AddOne("Alligator");
          gi.Statistics.AddOne("Alligator");
@@ -355,7 +356,7 @@ namespace PleasantvilleGame
          ITerritory? tNew = Territories.theTerritories[200];
          if (null == tNew)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Command(): t=null");
+            Logger.Log(LogEnum.LE_ERROR, "Command(): tNew=null");
             return false;
          }
          MapItemMove mim = new MapItemMove();
@@ -371,6 +372,68 @@ namespace PleasantvilleGame
          mim.BestPath = Territory.GetBestPath(Territories.theTerritories, tNew, tOld, 12);
          gi.MapItemMoves.Add(mim);
          //---------------------------------------
+         gi.SelectedStack = null;
+         //---------------------------------------
+         for(int i=0; i<10; i++)
+         {
+            ITerritory? t = Territories.theTerritories[i];
+            if( null == t )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Command(): t=null");
+               return false;
+            }
+            gi.ZebulonTerritories.Add(t);
+         }
+         //---------------------------------------
+         for (int i = 8; i < 12; i++)
+         {
+            ITerritory? t = Territories.theTerritories[i];
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Command(): t=null");
+               return false;
+            }
+            gi.SelectedTerritories.Add(t);
+         }
+         //---------------------------------------
+         IMapItem? mi3 = gi.Stacks.FindMapItem(Utilities.RemoveSpaces(TableMgr.TEACHER));
+         if (null == mi3)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "SaveLocalGame(): gi.Stacks.FindMapItem(TableMgr.TEACHER) returned null");
+            return false;
+         }
+         gi.SelectedMapItems.Add(mi3);
+         IMapItem? mi4 = gi.Stacks.FindMapItem(Utilities.RemoveSpaces(TableMgr.PAPERBOY));
+         if (null == mi4)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "SaveLocalGame(): gi.Stacks.FindMapItem(TableMgr.PAPERBOY) returned null");
+            return false;
+         }
+         gi.SelectedMapItems.Add(mi4);
+         //---------------------------------------
+         IMapItem? mi5 = gi.Stacks.FindMapItem(Utilities.RemoveSpaces(TableMgr.BANK_PRESIDENT));
+         if (null == mi5)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "SaveLocalGame(): gi.Stacks.FindMapItem(TableMgr.BANK_PRESIDENT) returned null");
+            return false;
+         }
+         gi.DeadPeople.Add(mi5);
+         IMapItem? mi6 = gi.Stacks.FindMapItem(Utilities.RemoveSpaces(TableMgr.BANK_GUARD));
+         if (null == mi6)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "SaveLocalGame(): gi.Stacks.FindMapItem(TableMgr.BANK_GUARD) returned null");
+            return false;
+         }
+         gi.DeadPeople.Add(mi6);
+         //---------------------------------------
+         gi.Zebulon.IsAlienKnown = true;
+         //---------------------------------------
+         gi.MapItemCombat.Attackers.Add(mi3);
+         gi.MapItemCombat.Defenders.Add(mi4);
+         gi.MapItemCombat.Attackers.Add(mi5);
+         gi.MapItemCombat.Defenders.Add(mi6);
+         gi.MapItemCombat.Result = CombatResult.DefenderWins;
+         gi.MapItemCombat.DieRoll = 88;
          return true;
       }
       private bool IsEqual(IGameInstance? left, IGameInstance? right)
@@ -514,10 +577,53 @@ namespace PleasantvilleGame
       }
       private bool IsEqual(List<RandomMoveData> left, List<RandomMoveData> right)
       {
+         if( left.Count != right.Count)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "IsEqual(): List<RandomMoveData> left.Count != List<RandomMoveData> right.count");
+            return false;
+         }
+         for(int i=0; i< left.Count; i++)
+         {
+            RandomMoveData moveLeft = left[i];
+            RandomMoveData moveRight = right[i];
+            if( moveLeft.myName != moveRight.myName)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "IsEqual(): moveLeft.myName != moveRight.myName");
+               return false;
+            }
+            if (moveLeft.myBuildingName != moveRight.myBuildingName)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "IsEqual(): moveLeft.myBuildingName != moveRight.myBuildingName");
+               return false;
+            }
+            if (moveLeft.myBrushIndex != moveRight.myBrushIndex)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "IsEqual(): moveLeft.myBrushIndex != moveRight.myBrushIndex");
+               return false;
+            }
+         }
          return true;
       }
       private bool IsEqual(Dictionary<IMapItem, IMapItem> left, Dictionary<IMapItem, IMapItem> right)
       {
+         if (left.Count != right.Count)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "IsEqual(): Dictionary<IMapItem, IMapItem> left.Count != right.count");
+            return false;
+         }
+         foreach(KeyValuePair<IMapItem,IMapItem> kvp in left)
+         {
+            if( false == right.ContainsKey(kvp.Key))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "IsEqual(): Dictionary<IMapItem, IMapItem> right does not contain key=" + kvp.Key.Name);
+               return false;
+            }
+            if(kvp.Value.Name != right[kvp.Key].Name)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "IsEqual(): Dictionary<IMapItem, IMapItem> right value does not match=" + kvp.Value.Name);
+               return false;
+            }
+         }
          return true;
       }
       private bool IsEqual(IMapItemMoves left, IMapItemMoves right)
@@ -903,6 +1009,26 @@ namespace PleasantvilleGame
       }
       private bool IsEqual(IMapItemCombat left, IMapItemCombat right)
       {
+         if( left.Attackers.Count != right.Attackers.Count )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItemCombat): left.Attackers.Count != right.Attackers.Count");
+            return false;
+         }
+         if (left.Defenders.Count != right.Defenders.Count)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItemCombat): left.Defenders.Count != right.Defenders.Count");
+            return false;
+         }
+         if (left.Result != right.Result)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItemCombat): left.Result != right.Result");
+            return false;
+         }
+         if (left.DieRoll != right.DieRoll)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItemCombat): left.DieRoll != right.DieRoll");
+            return false;
+         }
          return true;
       }
    }
