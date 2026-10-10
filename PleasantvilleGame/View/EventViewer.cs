@@ -204,6 +204,21 @@ namespace PleasantvilleGame
             case GameAction.UpdateRotateStack:
             case GameAction.UpdateScatterStack:
                break;
+            case GameAction.UpdateNewGame:
+            case GameAction.UpdateLoadingGame:
+               myGameInstance = gi;
+               myRulesMgr.GameInstance = gi;
+               gi.IsGridActive = false;
+               myScrollViewerTextBlock.Cursor = Cursors.Arrow;
+               foreach (string key in myRulesMgr.Events.Keys) // For each event, create a dictionary entry. There can be no more than three die rolls per event
+                  gi.DieResults[key] = new int[3] { Utilities.NO_RESULT, Utilities.NO_RESULT, Utilities.NO_RESULT };
+               Logger.Log(LogEnum.LE_RESET_ROLL_STATE, "EventViewer.UpdateView(): resetting die rolls gi.DieResults.Count=" + gi.DieResults.Count.ToString());
+               if (false == OpenEvent(gi, gi.EventActive))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): OpenEvent() returned false ae=" + myGameInstance.EventActive + " a=" + action.ToString());
+                  return;
+               }
+               break;
             case GameAction.CombatsRetreatShow: // this action happens when user selects retreat space - need to myEventViewerCombatResolve 
                if ( null == myEventViewerCombatResolve )
                {

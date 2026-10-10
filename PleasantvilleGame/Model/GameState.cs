@@ -1772,6 +1772,8 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
                }
                break;
+            case GameAction.UpdateLoadingGameEnd:
+               break;
             case GameAction.UpdateRotateStack:
                if (false == RotateStack(gi))
                {
@@ -1954,13 +1956,6 @@ namespace PleasantvilleGame
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show
                break;
-            case GameAction.UpdateLoadingGame:
-               if (false == LoadGame(ref gi))
-               {
-                  returnStatus = "Load_Game() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateAlienPlayerMovement.PerformAction(): " + returnStatus);
-               }
-               break;
             case GameAction.UpdateRotateStack:
                if (false == RotateStack(gi))
                {
@@ -1974,6 +1969,15 @@ namespace PleasantvilleGame
                   returnStatus = "Scatter_Stack() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateAlienPlayerMovement.PerformAction(): " + returnStatus);
                }
+               break;
+            case GameAction.UpdateLoadingGame:
+               if (false == LoadGame(ref gi))
+               {
+                  returnStatus = "Load_Game() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateAlienPlayerMovement.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateLoadingGameEnd:
                break;
             case GameAction.UpdateShowFeatEnd:
                break;
@@ -2057,14 +2061,28 @@ namespace PleasantvilleGame
                if (false == RotateStack(gi))
                {
                   returnStatus = "Rotate_Stack() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
                }
                break;
             case GameAction.UpdateScatterStack:
                if (false == ScatterStack(gi))
                {
                   returnStatus = "Scatter_Stack() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateLoadingGame:
+               if (false == LoadGame(ref gi))
+               {
+                  returnStatus = "Load_Game() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateLoadingGameEnd:
+               if (false == CheckForTownMovement(gi))
+               {
+                  returnStatus = "CheckFor_TownOverstack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(RandomMovementConfirmed): " + returnStatus);
                }
                break;
             case GameAction.TownMovementTownPerforms:
@@ -2174,6 +2192,14 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(ConversationsRoll): " + returnStatus);
                }
                break;
+            case GameAction.UpdateLoadingGame:
+               if (false == LoadGame(ref gi))
+               {
+                  returnStatus = "Load_Game() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateLoadingGameEnd:
             case GameAction.UpdateShowFeatEnd:
                if (false == CheckForConversations(gi, ref action))
                {
@@ -2311,6 +2337,14 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateInfluences.PerformAction(): " + returnStatus);
                }
                break;
+            case GameAction.UpdateLoadingGame:
+               if (false == LoadGame(ref gi))
+               {
+                  returnStatus = "Load_Game() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateLoadingGameEnd:
             case GameAction.UpdateShowFeatEnd:
                if (false == CheckForInfluences(gi, ref action))
                {
@@ -2493,16 +2527,24 @@ namespace PleasantvilleGame
                if (false == RotateStack(gi))
                {
                   returnStatus = "Rotate_Stack() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(): " + returnStatus);
                }
                break;
             case GameAction.UpdateScatterStack:
                if (false == ScatterStack(gi))
                {
                   returnStatus = "Scatter_Stack() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(): " + returnStatus);
                }
                break;
+            case GameAction.UpdateLoadingGame:
+               if (false == LoadGame(ref gi))
+               {
+                  returnStatus = "Load_Game() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateLoadingGameEnd:
             case GameAction.UpdateShowFeatEnd:
             case GameAction.CombatsSelect: // handled in the GameViewWindow.xaml.cs file
                if (false == CheckForCombats(gi, ref action))
@@ -2892,6 +2934,14 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateIterrogations.PerformAction(): " + returnStatus);
                }
                break;
+            case GameAction.UpdateLoadingGame:
+               if (false == LoadGame(ref gi))
+               {
+                  returnStatus = "Load_Game() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateIterrogations.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateLoadingGameEnd:
             case GameAction.UpdateShowFeatEnd:
                if (false == CheckForIterogations(gi, ref action))
                {
@@ -3019,6 +3069,14 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateImplantRemoval.PerformAction(): " + returnStatus);
                }
                break;
+            case GameAction.UpdateLoadingGame:
+               if (false == LoadGame(ref gi))
+               {
+                  returnStatus = "Load_Game() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateIterrogations.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateLoadingGameEnd:
             case GameAction.UpdateShowFeatEnd:
                if (false == CheckForImplantRemovals(gi, ref action))
                {
@@ -3164,6 +3222,15 @@ namespace PleasantvilleGame
                   returnStatus = "Scatter_Stack() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                }
+               break;
+            case GameAction.UpdateLoadingGame:
+               if (false == LoadGame(ref gi))
+               {
+                  returnStatus = "Load_Game() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateIterrogations.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateLoadingGameEnd:
                break;
             case GameAction.AlienTakeoversShow: // Handled by EventViewer
                break;

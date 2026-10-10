@@ -16,6 +16,7 @@ namespace PleasantvilleGame
       LE_NEXT_ACTION,
       LE_VIEW_UPDATE_WINDOW,
       LE_SHOW_RESET_PHASE,
+      LE_RESET_ROLL_STATE,
       //-------------
       LE_SHOW_ALIEN_ADD,
       LE_SHOW_TOWNS_ADD,

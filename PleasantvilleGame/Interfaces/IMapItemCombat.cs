@@ -11,7 +11,7 @@ namespace PleasantvilleGame
       AttackerWins, 
       DefenderFlees, 
       AttackerFlees, 
-      Error
+      Uninitialized
    };
    public interface IMapItemCombat
    {

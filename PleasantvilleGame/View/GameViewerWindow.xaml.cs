@@ -320,7 +320,7 @@ namespace PleasantvilleGame
             command = new RoutedCommand();
             keyGesture = new KeyGesture(Key.S, ModifierKeys.Control);
             InputBindings.Add(new KeyBinding(command, keyGesture));
-            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemSaveAs_Click));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemSaveAs_Click, mmv.MenuItemSaveAs_ClickCanExecute));
             //------------------------------------------------
             command = new RoutedCommand();
             keyGesture = new KeyGesture(Key.O, ModifierKeys.Control | ModifierKeys.Shift);
@@ -1372,6 +1372,7 @@ namespace PleasantvilleGame
          if (GameAction.UpdateLoadingGame == action)
          {
             gi.EventDisplayed = gi.EventActive;
+            nextAction = GameAction.UpdateLoadingGameEnd;
          }
          else if (GameAction.UpdateNewGame == action)
          {
@@ -1381,6 +1382,11 @@ namespace PleasantvilleGame
          {
             mySplashScreen.Close();
             nextAction = GameAction.UpdateNewGameEnd;
+         }
+         else
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow.UpdateView_ForNewGame(): reached default nextAction=Error");
+            return false;
          }
          //----------------------------------
          if (false == UpdateCanvasMain(gi, action))

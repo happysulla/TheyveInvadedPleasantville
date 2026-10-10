@@ -21,6 +21,7 @@ namespace PleasantvilleGame
       private readonly MenuItem myMenuItemTopLevel2 = new MenuItem();
       private readonly MenuItem myMenuItemTopLevel3 = new MenuItem();
       private readonly MenuItem myMenuItemTopLevel4 = new MenuItem();
+      private readonly MenuItem myMenuItemTopLevel14 = new MenuItem();
       private readonly MenuItem myMenuItemTopLevel21 = new MenuItem();
       private readonly MenuItem myMenuItemTopLevel22 = new MenuItem();
       private readonly MenuItem myMenuItemTopLevel23 = new MenuItem();
@@ -171,11 +172,12 @@ namespace PleasantvilleGame
          subItem3.InputGestureText = "Ctrl+C";
          subItem3.Click += MenuItemClose_Click;
          myMenuItemTopLevel1.Items.Add(subItem3);
-         MenuItem subItem4 = new MenuItem();
-         subItem4.Header = "_Save As...";
-         subItem4.InputGestureText = "Ctrl+S";
-         subItem4.Click += MenuItemSaveAs_Click;
-         myMenuItemTopLevel1.Items.Add(subItem4);
+         myMenuItemTopLevel14 = new MenuItem();
+         myMenuItemTopLevel14.Header = "_Save As...";
+         myMenuItemTopLevel14.InputGestureText = "Ctrl+S";
+         myMenuItemTopLevel14.Click += MenuItemSaveAs_Click;
+         myMenuItemTopLevel14.IsEnabled = false;
+         myMenuItemTopLevel1.Items.Add(myMenuItemTopLevel14);
          MenuItem subItem5 = new MenuItem();
          subItem5.Header = "_Options...";
          subItem5.InputGestureText = "Ctrl+Shift+O";
@@ -190,8 +192,10 @@ namespace PleasantvilleGame
          switch (gi.GamePhase)
          {
             case GamePhase.GameSetup:
+               myMenuItemTopLevel14.IsEnabled = false; // do not allow saving game until out of setup phase
                return;
             case GamePhase.UnitTest:
+               myMenuItemTopLevel14.IsEnabled = false;
                IUnitTest ut = gi.UnitTests[gi.GameTurn];
                myMenuItemTopLevel1.Header = ut.HeaderName;
                if (0 < myMenuItemTopLevel1.Items.Count)
@@ -201,6 +205,7 @@ namespace PleasantvilleGame
                }
                break;
             default:
+               myMenuItemTopLevel14.IsEnabled = true;
                if (false == Directory.Exists(GameLoadMgr.theGamesDirectory)) // create directory if does not exists
                   Directory.CreateDirectory(GameLoadMgr.theGamesDirectory);
                string filepath = GameLoadMgr.theGamesDirectory + "CheckpointLastDay.pbg";
@@ -279,6 +284,21 @@ namespace PleasantvilleGame
          if (false == loadMgr.SaveGameAsToFile(myGameInstance))
             Logger.Log(LogEnum.LE_ERROR, "MenuItemSave_Click(): GameLoadMgr.SaveGameAs() returned false");
       }
+      public void MenuItemSaveAs_ClickCanExecute(object sender, CanExecuteRoutedEventArgs e)
+      {
+         try
+         {
+            if (GamePhase.GameSetup == myGameInstance.GamePhase)
+               e.CanExecute = false;
+            else
+               e.CanExecute = true;
+         }
+         catch (Exception ex)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MenuItemSaveAs_ClickCanExecute(): path=" + GameLoadMgr.theGamesDirectory + " ex=" + ex.ToString());
+            e.CanExecute = false;
+         }
+      }
       public void MenuItemFileOptions_Click(object sender, RoutedEventArgs e)
       {
          ShowOptionsSelectionDialog dialog = new ShowOptionsSelectionDialog(myGameInstance.Options); // Set Options in Game
@@ -336,7 +356,7 @@ namespace PleasantvilleGame
          }
          catch (Exception ex)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Save_Game(): path=" + GameLoadMgr.theGamesDirectory + " ex=" + ex.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "MenuItemEditRecoverCheckpoint_ClickCanExecute(): path=" + GameLoadMgr.theGamesDirectory + " ex=" + ex.ToString());
             e.CanExecute = false;
          }
       }

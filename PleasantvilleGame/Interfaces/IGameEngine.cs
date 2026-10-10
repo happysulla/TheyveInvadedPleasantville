@@ -46,6 +46,7 @@ namespace PleasantvilleGame
       UpdateNewGameEnd,           // finish setting up for new game
       UpdateGameOptions, 
       UpdateLoadingGame,
+      UpdateLoadingGameEnd,
       UpdateUndo,
       UpdateRecoverToFlashing,   // Repeat Flashing Spaces
       UpdateRecoverToPhaseBeg,   // Reset the Phase to beginning of phase

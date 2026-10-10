@@ -30,7 +30,7 @@ namespace PleasantvilleGame
          get { return myTerritory; }
          set { myTerritory = value; }
       }
-      private CombatResult myResult = CombatResult.Error;
+      private CombatResult myResult = CombatResult.Uninitialized;
       public CombatResult Result
       {
          get { return myResult; }
@@ -71,7 +71,7 @@ namespace PleasantvilleGame
          myAttackers.Clear();
          myDefenders.Clear();
          myTerritory = new Territory();
-         myResult = CombatResult.Error;
+         myResult = CombatResult.Uninitialized;
          myDieRoll = Utilities.NO_RESULT;
       }
       public override String ToString()

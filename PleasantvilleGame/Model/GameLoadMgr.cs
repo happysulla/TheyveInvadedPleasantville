@@ -209,19 +209,33 @@ namespace PleasantvilleGame
          Option optionTownHost = gi.Options.Find("TownHost");
          Option optionAlienClient = gi.Options.Find("AlienClient");
          StringBuilder sb = new StringBuilder();
-         sb.Append(DateTime.Now.ToString("yyyyMMdd-HHmmss-T"));
+         sb.Append(DateTime.Now.ToString("yyyyMMdd-HHmmss-"));
+         if (true == optionTownSolo.IsEnabled)
+            sb.Append("TownSolo-T");
+         else if (true == optionAlienSolo.IsEnabled)
+            sb.Append("AlienSolo-T");
+         else if (true == optionTownHost.IsEnabled)
+            sb.Append("TownHost-T");
+         else if (true == optionAlienClient.IsEnabled)
+            sb.Append("AlienClient-T");
          if (gi.GameTurn < 10)
             sb.Append("0");
          sb.Append(gi.GameTurn.ToString());
-         sb.Append("-");
-         if( true == optionTownSolo.IsEnabled )
-            sb.Append("TownSolo");
-         else if (true == optionAlienSolo.IsEnabled)
-            sb.Append("AlienSolo");
-         else if (true == optionTownHost.IsEnabled)
-            sb.Append("TownHost");
-         else if (true == optionAlienClient.IsEnabled)
-            sb.Append("AlienClient");
+         switch (gi.GamePhase)
+         {
+            case GamePhase.GameSetup: sb.Append("-SETUP"); break;
+            case GamePhase.RandomMovement: sb.Append("-RMOVE"); break;
+            case GamePhase.AlienMovement: sb.Append("-AMOVE"); break;
+            case GamePhase.TownspersonMovement: sb.Append("-TMOVE"); break;
+            case GamePhase.Conversations: sb.Append("-CONV"); break;
+            case GamePhase.Influences: sb.Append("-INF"); break;
+            case GamePhase.Combats: sb.Append("-COMBAT"); break;
+            case GamePhase.Iterrogations: sb.Append("-ITER"); break;
+            case GamePhase.ImplantRemovals: sb.Append("-REMOVE"); break;
+            case GamePhase.AlienTakeovers: sb.Append("-TAKEOVER"); break;
+            case GamePhase.GameEnd: sb.Append("-END"); break;
+            default: sb.Append("UNK"); break;
+         }
          sb.Append(".tip");
          return sb.ToString();
       }
@@ -2849,6 +2863,7 @@ namespace PleasantvilleGame
             case "AttackerWins": combat.Result = CombatResult.AttackerWins; break;
             case "DefenderFlees": combat.Result = CombatResult.DefenderFlees; break;
             case "AttackerFlees": combat.Result = CombatResult.AttackerFlees; break;
+            case "Uninitialized": combat.Result = CombatResult.Uninitialized; break; 
             default:
                Logger.Log(LogEnum.LE_ERROR, "Read_XmlMapItemCombat(): reached default with sResult=" + sResult);
                return false;
@@ -3347,6 +3362,7 @@ namespace PleasantvilleGame
             return false;
          }
          //--------------------------------
+         int i = 0;
          foreach (IMapItem mi in theMapItems)
          {
             XmlElement? miElem = aXmlDocument.CreateElement("MapItem");
@@ -3355,6 +3371,8 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(miElem) returned null");
                return false;
             }
+            mapItemsElem.SetAttribute("index", i.ToString());
+            i++;
             XmlNode? miNode = mapItemsNode.AppendChild(miElem);
             if (null == miNode)
             {
@@ -4302,7 +4320,8 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "CreateXml_Stacks(): stack is null");
                return false;
             }
-            if( false == CreateXmlStack(aXmlDocument, stacksNode, stack))
+            stacksElem.SetAttribute("index", i.ToString());
+            if ( false == CreateXmlStack(aXmlDocument, stacksNode, stack))
             {
                Logger.Log(LogEnum.LE_ERROR, "CreateXml_Stacks(): CreateXml_Stack returned null");
                return false;
