@@ -327,6 +327,8 @@ namespace PleasantvilleGame
          gi.Statistics.Add(new GameStatistic("Panda"));
          gi.Statistics.AddOne("Panda");
          gi.Statistics.AddOne("Panda");
+         gi.GameCommands.Add(new GameCommand(GamePhase.Conversations, GameAction.ConversationsRoll, "EventActive1", GameAction.ConversationsSelect));
+         gi.GameCommands.Add(new GameCommand(GamePhase.AlienMovement, GameAction.AlienMovementTownsShow, "EventActive2", GameAction.AlienMovementTownsShow));
          //---------------------------------------
          PlayerAlienComputer player = (PlayerAlienComputer)gi.PlayerAlien;
          if( null == player )
@@ -496,7 +498,13 @@ namespace PleasantvilleGame
             return false;
          }
          //---------------------------------------
-         if( false == IsEqual(left.RandomMoves, right.RandomMoves))
+         if (false == IsEqual(left.GameCommands, right.GameCommands))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "IsEqual(): left.GameCommands != right.GameCommands");
+            return false;
+         }
+         //---------------------------------------
+         if ( false == IsEqual(left.RandomMoves, right.RandomMoves))
          {
             Logger.Log(LogEnum.LE_ERROR, "IsEqual(): left.RandomMoves != right.RandomMoves");
             return false;
@@ -582,6 +590,49 @@ namespace PleasantvilleGame
          }
          return true;
       }
+      private bool IsEqual(IGameCommands left, IGameCommands right)
+      {
+         if (left.Count != right.Count)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "IsEqual(IGameCommands): (left.Count=" + left.Count.ToString() + ") != (right.Count=" + right.Count.ToString() + ")");
+            return false;
+         }
+         for (int i = 0; i < left.Count; ++i)
+         {
+            IGameCommand? cmdLeft = left[i];
+            IGameCommand? cmdRight = right[i];
+            if (null == cmdLeft || null == cmdRight)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "IsEqual(IGameCommands): cmdLeft=null or cmdRight=null");
+               return false;
+            }
+            //----------------------------------------
+            if (cmdLeft.Phase != cmdRight.Phase)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "IsEqual(IGameCommands): cmdLeft.Phase != cmdRight.Phase");
+               return false;
+            }
+            //----------------------------------------
+            if (cmdLeft.Action != cmdRight.Action)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "IsEqual(IGameCommands): cmdLeft.Action != cmdRight.Action");
+               return false;
+            }
+            //----------------------------------------
+            if (cmdLeft.ActionDieRoll != cmdRight.ActionDieRoll)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "IsEqual(IGameCommands): cmdLeft.ActionDieRoll != cmdRight.ActionDieRoll");
+               return false;
+            }
+            //----------------------------------------
+            if (cmdLeft.EventActive != cmdRight.EventActive)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "IsEqual(IGameCommands): cmdLeft.EventActive != cmdRight.EventActive");
+               return false;
+            }
+         }
+         return true;
+      }
       private bool IsEqual(List<RandomMoveData> left, List<RandomMoveData> right)
       {
          if( left.Count != right.Count)
@@ -653,13 +704,13 @@ namespace PleasantvilleGame
             IMapItemMove? mimRight = right[i];
             if (null == mimLeft || null == mimRight)
             {
-               Logger.Log(LogEnum.LE_ERROR, "IsEqual(IStacks): mimLeft=null or mimRight=null");
+               Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItemMoves): mimLeft=null or mimRight=null");
                return false;
             }
             //----------------------------------------
             if (false == IsEqual(mimLeft.MapItem, mimRight.MapItem))
             {
-               Logger.Log(LogEnum.LE_ERROR, "IsEqual(IStacks): IsEqual(mimLeft.MapItem, mimRight.MapItem) returned false");
+               Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItemMoves): IsEqual(mimLeft.MapItem, mimRight.MapItem) returned false");
                return false;
             }
             //----------------------------------------
@@ -708,7 +759,7 @@ namespace PleasantvilleGame
             }
             if (mimLeft.BestPath.Name != mimRight.BestPath.Name)
             {
-               Logger.Log(LogEnum.LE_ERROR, "IsEqual(BestPath): (mimLeft.BestPath.Name=" + mimLeft.BestPath.Name + ") != (mimRight.BestPath.Name=" + mimRight.BestPath.Name + ")");
+               Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItemMoves): (mimLeft.BestPath.Name=" + mimLeft.BestPath.Name + ") != (mimRight.BestPath.Name=" + mimRight.BestPath.Name + ")");
                return false;
             }
             if (Math.Round(mimLeft.BestPath.Metric, 2) != Math.Round(mimRight.BestPath.Metric, 2))

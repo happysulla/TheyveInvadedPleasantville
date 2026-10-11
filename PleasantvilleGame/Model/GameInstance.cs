@@ -29,6 +29,7 @@ namespace PleasantvilleGame
       //------------------------------------------------
       public Options Options { get; set; } = new Options();
       public GameStatistics Statistics { get; set; } = new GameStatistics();
+      public IGameCommands GameCommands { set; get; } = new GameCommands();
       //------------------------------------------------
       public IPlayerTown? PlayerTown { set; get; } = new PlayerTownHuman();
       public IPlayerAlien? PlayerAlien { set; get; } = new PlayerAlienComputer();

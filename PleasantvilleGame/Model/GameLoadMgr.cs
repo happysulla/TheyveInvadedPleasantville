@@ -48,7 +48,6 @@ namespace PleasantvilleGame
             return new GameInstance();
          }
       }
-      //--------------------------------------------------
       public bool SaveGame(IGameInstance gi, string filename)
       {
          try
@@ -92,7 +91,6 @@ namespace PleasantvilleGame
             return false;
          }
       }
-      //--------------------------------------------------
       public IGameInstance? OpenGameFromFile()
       {
          try
@@ -145,7 +143,6 @@ namespace PleasantvilleGame
          Directory.SetCurrentDirectory(MainWindow.theAssemblyDirectory);
          return null;
       }
-      //--------------------------------------------------
       public bool SaveGameAsToFile(IGameInstance gi)
       {
          try
@@ -200,61 +197,6 @@ namespace PleasantvilleGame
             return false;
          }
          return true;
-      }
-      //--------------------------------------------------
-      private string GetFileName(IGameInstance gi)
-      {
-         Option optionTownSolo = gi.Options.Find("TownSolo");
-         Option optionAlienSolo = gi.Options.Find("AlienSolo");
-         Option optionTownHost = gi.Options.Find("TownHost");
-         Option optionAlienClient = gi.Options.Find("AlienClient");
-         StringBuilder sb = new StringBuilder();
-         sb.Append(DateTime.Now.ToString("yyyyMMdd-HHmmss-"));
-         if (true == optionTownSolo.IsEnabled)
-            sb.Append("TownSolo-T");
-         else if (true == optionAlienSolo.IsEnabled)
-            sb.Append("AlienSolo-T");
-         else if (true == optionTownHost.IsEnabled)
-            sb.Append("TownHost-T");
-         else if (true == optionAlienClient.IsEnabled)
-            sb.Append("AlienClient-T");
-         if (gi.GameTurn < 10)
-            sb.Append("0");
-         sb.Append(gi.GameTurn.ToString());
-         switch (gi.GamePhase)
-         {
-            case GamePhase.GameSetup: sb.Append("-SETUP"); break;
-            case GamePhase.RandomMovement: sb.Append("-RMOVE"); break;
-            case GamePhase.AlienMovement: sb.Append("-AMOVE"); break;
-            case GamePhase.TownspersonMovement: sb.Append("-TMOVE"); break;
-            case GamePhase.Conversations: sb.Append("-CONV"); break;
-            case GamePhase.Influences: sb.Append("-INF"); break;
-            case GamePhase.Combats: sb.Append("-COMBAT"); break;
-            case GamePhase.Iterrogations: sb.Append("-ITER"); break;
-            case GamePhase.ImplantRemovals: sb.Append("-REMOVE"); break;
-            case GamePhase.AlienTakeovers: sb.Append("-TAKEOVER"); break;
-            case GamePhase.GameEnd: sb.Append("-END"); break;
-            default: sb.Append("UNK"); break;
-         }
-         sb.Append(".tip");
-         return sb.ToString();
-      }
-      //--------------------------------------------------
-      private int GetMajorVersion()
-      {
-         Assembly assembly = Assembly.GetExecutingAssembly();
-         if (null == assembly)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXmlGameInstance(): Assembly.GetExecutingAssembly()=null");
-            return -1;
-         }
-         Version? versionRunning = assembly.GetName().Version;
-         if (null == versionRunning)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXmlGameInstance():  assembly.GetName().Version=null");
-            return -1;
-         }
-         return versionRunning.Major;
       }
       public bool ReadXmlTerritories(XmlReader reader, ITerritories territories) // initial loading of Territories.theTerritories
       {
@@ -922,6 +864,164 @@ namespace PleasantvilleGame
          return true;
       }
       //--------------------------------------------------
+      private int GetMajorVersion()
+      {
+         Assembly assembly = Assembly.GetExecutingAssembly();
+         if (null == assembly)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXmlGameInstance(): Assembly.GetExecutingAssembly()=null");
+            return -1;
+         }
+         Version? versionRunning = assembly.GetName().Version;
+         if (null == versionRunning)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXmlGameInstance():  assembly.GetName().Version=null");
+            return -1;
+         }
+         return versionRunning.Major;
+      }
+      private string GetFileName(IGameInstance gi)
+      {
+         Option optionTownSolo = gi.Options.Find("TownSolo");
+         Option optionAlienSolo = gi.Options.Find("AlienSolo");
+         Option optionTownHost = gi.Options.Find("TownHost");
+         Option optionAlienClient = gi.Options.Find("AlienClient");
+         StringBuilder sb = new StringBuilder();
+         sb.Append(DateTime.Now.ToString("yyyyMMdd-HHmmss-"));
+         if (true == optionTownSolo.IsEnabled)
+            sb.Append("TownSolo-T");
+         else if (true == optionAlienSolo.IsEnabled)
+            sb.Append("AlienSolo-T");
+         else if (true == optionTownHost.IsEnabled)
+            sb.Append("TownHost-T");
+         else if (true == optionAlienClient.IsEnabled)
+            sb.Append("AlienClient-T");
+         if (gi.GameTurn < 10)
+            sb.Append("0");
+         sb.Append(gi.GameTurn.ToString());
+         switch (gi.GamePhase)
+         {
+            case GamePhase.GameSetup: sb.Append("-SETUP"); break;
+            case GamePhase.RandomMovement: sb.Append("-RMOVE"); break;
+            case GamePhase.AlienMovement: sb.Append("-AMOVE"); break;
+            case GamePhase.TownspersonMovement: sb.Append("-TMOVE"); break;
+            case GamePhase.Conversations: sb.Append("-CONV"); break;
+            case GamePhase.Influences: sb.Append("-INF"); break;
+            case GamePhase.Combats: sb.Append("-COMBAT"); break;
+            case GamePhase.Iterrogations: sb.Append("-ITER"); break;
+            case GamePhase.ImplantRemovals: sb.Append("-REMOVE"); break;
+            case GamePhase.AlienTakeovers: sb.Append("-TAKEOVER"); break;
+            case GamePhase.GameEnd: sb.Append("-END"); break;
+            default: sb.Append("UNK"); break;
+         }
+         sb.Append(".tip");
+         return sb.ToString();
+      }
+      private GameAction StringToGameAction(string sGameAction)
+      {
+         switch (sGameAction)
+         {
+            case "RemoveSplashScreen": return GameAction.RemoveSplashScreen;
+            case "UpdateMainCanvas": return GameAction.UpdateMainCanvas;
+            case "UpdateStatusBar": return GameAction.UpdateStatusBar;
+            case "UpdateShowRegion": return GameAction.UpdateShowRegion;
+            case "UpdateEventViewerDisplay": return GameAction.UpdateEventViewerDisplay;
+            case "UpdateEventViewerActive": return GameAction.UpdateEventViewerActive;
+            case "DieRollActionNone": return GameAction.DieRollActionNone;
+            case "SkipTerritory": return GameAction.SkipTerritory;
+
+            case "UpdateView": return GameAction.UpdateView;
+            case "UpdateNewGame": return GameAction.UpdateNewGame;
+            case "UpdateNewGameEnd": return GameAction.UpdateNewGameEnd;
+            case "UpdateGameOptions": return GameAction.UpdateGameOptions;
+            case "UpdateLoadingGame": return GameAction.UpdateLoadingGame;
+            case "UpdateLoadingGameEnd": return GameAction.UpdateLoadingGameEnd;
+            case "UpdateUndo": return GameAction.UpdateUndo;
+            case "UpdateRecoverToFlashing": return GameAction.UpdateRecoverToFlashing;
+            case "UpdateRecoverToPhaseBeg": return GameAction.UpdateRecoverToPhaseBeg;
+            case "UpdateRecoverToCheckPoint": return GameAction.UpdateRecoverToCheckPoint;
+            case "UpdateScatterStack": return GameAction.UpdateScatterStack;
+            case "UpdateRotateStack": return GameAction.UpdateRotateStack;
+            case "UpdateShowFeat": return GameAction.UpdateShowFeat;
+            case "UpdateShowFeatEnd": return GameAction.UpdateShowFeatEnd;
+
+            case "ShowRuleListingDialog": return GameAction.ShowRuleListingDialog;
+            case "ShowEventListingDialog": return GameAction.ShowEventListingDialog;
+            case "ShowTableListing": return GameAction.ShowTableListing;
+            case "ShowCharacterDescription": return GameAction.ShowCharacterDescription;
+            case "ShowGameFeatsDialog": return GameAction.ShowGameFeatsDialog;
+            case "ShowReportErrorDialog": return GameAction.ShowReportErrorDialog;
+            case "ShowAboutDialog": return GameAction.ShowAboutDialog;
+            case "ShowZebulonGuesses": return GameAction.ShowZebulonGuesses;
+
+            case "GameSetupHostGame": return GameAction.GameSetupHostGame;
+            case "GameSetupJoinGame": return GameAction.GameSetupJoinGame;
+            case "GameSetupPlayAlien": return GameAction.GameSetupPlayAlien;
+            case "GameSetupPlayTownsperson": return GameAction.GameSetupPlayTownsperson;
+            case "GameSetupStartingTownsplayerSetRoll": return GameAction.GameSetupStartingTownsplayerSetRoll;
+            case "GameSetupStartingTownsplayerSet": return GameAction.GameSetupStartingTownsplayerSet;
+            case "GameSetupStartingAlienSetRoll": return GameAction.GameSetupStartingAlienSetRoll;
+            case "GameSetupStartingAlienSet": return GameAction.GameSetupStartingAlienSet;
+            case "GameSetupShowMap": return GameAction.GameSetupShowMap;
+            case "GameSetupRandomMovementSetup": return GameAction.GameSetupRandomMovementSetup;
+
+            case "RandomMovementStartTowns": return GameAction.RandomMovementStartTowns;
+            case "RandomMovementTownsShow": return GameAction.RandomMovementTownsShow;
+            case "RandomMovementStartAlien": return GameAction.RandomMovementStartAlien;
+            case "RandomMovementConfirmAlien": return GameAction.RandomMovementConfirmAlien;
+            case "RandomMovementTownAck": return GameAction.RandomMovementTownAck;
+
+            case "AlienMovementTownsShow": return GameAction.AlienMovementTownsShow;
+            case "AlienMovementTownsAck": return GameAction.AlienMovementTownsAck;
+
+            case "TownMovementTownPerforms": return GameAction.TownMovementTownPerforms;
+            case "TownMovementOverstack": return GameAction.TownMovementOverstack;
+            case "TownMovementTownCompletes": return GameAction.TownMovementTownCompletes;
+
+            case "ConversationsSelect": return GameAction.ConversationsSelect;
+            case "ConversationsRoll": return GameAction.ConversationsRoll;
+            case "ConversationsFinish": return GameAction.ConversationsFinish;
+
+            case "InfluencesSelect": return GameAction.InfluencesSelect;
+            case "InfluencesRoll": return GameAction.InfluencesRoll;
+            case "InfluencesFinish": return GameAction.InfluencesFinish;
+
+            case "CombatsSelect": return GameAction.CombatsSelect;
+            case "CombatsRoll": return GameAction.CombatsRoll;
+            case "CombatAttackerWin": return GameAction.CombatAttackerWin;
+            case "CombatDefenderWin": return GameAction.CombatDefenderWin;
+            case "CombatAlienFlee": return GameAction.CombatAlienFlee;
+            case "CombatTownFlee": return GameAction.CombatTownFlee;
+            case "CombatShowFleeMove": return GameAction.CombatShowFleeMove;
+            case "CombatsRetreatStart": return GameAction.CombatsRetreatStart;
+            case "CombatsRetreatShow": return GameAction.CombatsRetreatShow;
+            case "CombatsFinish": return GameAction.CombatsFinish;
+
+            case "InterrogationsSelect": return GameAction.InterrogationsSelect;
+            case "InterrogationsPerform": return GameAction.InterrogationsPerform;
+            case "InterrogationsGuess": return GameAction.InterrogationsGuess;
+            case "InterrogationsFinish": return GameAction.InterrogationsFinish;
+
+            case "AlienTakeoversShow": return GameAction.AlienTakeoversShow;
+            case "AlienTakeoversFinish": return GameAction.AlienTakeoversFinish;
+
+            case "UnitTestStart": return GameAction.UnitTestStart;
+            case "UnitTestCommand": return GameAction.UnitTestCommand;
+            case "UnitTestNext": return GameAction.UnitTestNext;
+            case "UnitTestTest": return GameAction.UnitTestTest;
+            case "UnitTestCleanup": return GameAction.UnitTestCleanup;
+
+            case "EndGameWin": return GameAction.EndGameWin;
+            case "EndGameLose": return GameAction.EndGameLose;
+            case "EndGameShowFeats": return GameAction.EndGameShowFeats;
+            case "EndGameShowStats": return GameAction.EndGameShowStats;
+            case "EndGameClose": return GameAction.EndGameClose;
+            case "EndGameExit": return GameAction.EndGameExit;
+
+            default: Logger.Log(LogEnum.LE_ERROR, " String_ToGameAction(): reached default sGameAction=" + sGameAction); return GameAction.Error;
+         }
+      }
+      //--------------------------------------------------
       private IGameInstance? ReadXmlGameInstance(string filename)
       {
          IGameInstance gi = new GameInstance();
@@ -1116,6 +1216,12 @@ namespace PleasantvilleGame
                return null;
             }
             //----------------------------------------------
+            if (false == ReadXmlGameCommands(reader, gi.GameCommands))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): Read_XmlGameCommands() returned false");
+               return null;
+            }
+            //==============================================
             IPlayerAlien? player = null;
             if (false == ReadXmlAlienPlayer(reader, ref player))
             {
@@ -2104,6 +2210,106 @@ namespace PleasantvilleGame
          }
          if (0 < count)
             reader.Read(); // get past </GameStatistics>
+         return true;
+      }
+      private bool ReadXmlGameCommands(XmlReader reader, IGameCommands gameCmds)
+      {
+         gameCmds.Clear();
+         reader.Read();
+         if (false == reader.IsStartElement())
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlGameCommands(): reader.IsStartElement(GameCommands) = false");
+            return false;
+         }
+         if (reader.Name != "GameCommands")
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlGameCommands(): GameCommands != (node=" + reader.Name + ")");
+            return false;
+         }
+         string? sCount = reader.GetAttribute("count");
+         if (null == sCount)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlGameCommands(): Count=null");
+            return false;
+         }
+         //-------------------------------------
+         int count = int.Parse(sCount);
+         for (int i = 0; i < count; ++i)
+         {
+            reader.Read();
+            if (false == reader.IsStartElement())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlGameCommands(): reader.IsStartElement(GameCommand) = false");
+               return false;
+            }
+            if (reader.Name != "GameCommand")
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlGameCommands(): GameCommand != (node=" + reader.Name + ")");
+               return false;
+            }
+            string? sAction = reader.GetAttribute("Action");
+            if (sAction == null)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlGameCommands(): sAction=null");
+               return false;
+            }
+            GameAction action = StringToGameAction(sAction);
+            if (GameAction.Error == action)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlGameCommands(): String_ToGameAction() returned false");
+               return false;
+            }
+            //------------------------------------
+            string? sActionDieRoll = reader.GetAttribute("ActionDieRoll");
+            if (sActionDieRoll == null)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlGameCommands(): sActionDieRoll=null");
+               return false;
+            }
+            GameAction dieRollAction = StringToGameAction(sActionDieRoll);
+            if (GameAction.Error == dieRollAction)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlGameCommands(): String_ToGameAction() returned false");
+               return false;
+            }
+            //------------------------------------
+            string? sEventActive = reader.GetAttribute("EventActive");
+            if (sEventActive == null)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlGameCommands(): sEventActive=null");
+               return false;
+            }
+            //------------------------------------
+            string? sGamePhase = reader.GetAttribute("Phase");
+            if (null == sGamePhase)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlGameCommands(): sGamePhase=null");
+               return false;
+            }
+            GamePhase phase = GamePhase.Error;
+            switch (sGamePhase)
+            {
+               case "GameSetup": phase = GamePhase.GameSetup; break;
+               case "RandomMovement": phase = GamePhase.RandomMovement; break;
+               case "AlienMovement": phase = GamePhase.AlienMovement; break;
+               case "TownspersonMovement": phase = GamePhase.TownspersonMovement; break;
+               case "Conversations": phase = GamePhase.Conversations; break;
+               case "Influences": phase = GamePhase.Influences; break;
+               case "Combats": phase = GamePhase.Combats; break;
+               case "Iterrogations": phase = GamePhase.Iterrogations; break;
+               case "ImplantRemovals": phase = GamePhase.ImplantRemovals; break;
+               case "AlienTakeovers": phase = GamePhase.AlienTakeovers; break;
+               case "GameEnd": phase = GamePhase.GameEnd; break;
+               default:
+                  Logger.Log(LogEnum.LE_ERROR, "Read_XmlGameCommands(): reached default with sGamePhase=" + sGamePhase);
+                  return false;
+            }
+            //------------------------------------
+            IGameCommand gameCmd = new GameCommand(phase, dieRollAction, sEventActive, action);
+            gameCmds.Add(gameCmd);
+         }
+         if (0 < count)
+            reader.Read(); // get past </GameCommands>
          return true;
       }
       private bool ReadXmlAlienPlayer(XmlReader reader, ref IPlayerAlien? player)
@@ -3199,13 +3405,19 @@ namespace PleasantvilleGame
          //------------------------------------------
          if (false == CreateXmlGameOptions(aXmlDocument, gi.Options))
          {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): Create_XmlOptions() returned false");
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): Create_XmlGameOptions() returned false");
             return null;
          }
          //------------------------------------------
          if (false == CreateXmlGameStatistics(aXmlDocument, gi.Statistics))
          {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): Create_XmlGameStat() returned false");
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): Create_XmlGameStatistics() returned false");
+            return null;
+         }
+         //------------------------------------------
+         if (false == CreateXmlGameCommands(aXmlDocument, gi.GameCommands))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): Create_XmlGameCommands() returned false");
             return null;
          }
          //------------------------------------------
@@ -3952,6 +4164,56 @@ namespace PleasantvilleGame
             if (null == statNode)
             {
                Logger.Log(LogEnum.LE_ERROR, "Create_XmlGameStatistics(): AppendChild(statNode) returned null");
+               return false;
+            }
+         }
+         return true;
+      }
+      private bool CreateXmlGameCommands(XmlDocument aXmlDocument, IGameCommands gameCommands)
+      {
+         XmlNode? root = aXmlDocument.DocumentElement;
+         if (null == root)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlGameInstance(): root is null");
+            return false;
+         }
+         XmlElement? gamecmdsElem = aXmlDocument.CreateElement("GameCommands");
+         if (null == gamecmdsElem)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlGameInstance(): CreateElement(GameCommands) returned null");
+            return false;
+         }
+         gamecmdsElem.SetAttribute("count", gameCommands.Count.ToString());
+         XmlNode? gameCmdsNode = root.AppendChild(gamecmdsElem);
+         if (null == gameCmdsNode)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_XmlGameInstance(): AppendChild(gameCmdsNode) returned null");
+            return false;
+         }
+         //--------------------------------
+         for (int i = 0; i < gameCommands.Count; ++i)
+         {
+            IGameCommand? gameCmd = gameCommands[i];
+            if (null == gameCmd)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlGameInstance(): gameCmd=null");
+               return false;
+            }
+            XmlElement? gameCmdElem = aXmlDocument.CreateElement("GameCommand");
+            if (null == gameCmdElem)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlGameInstance(): CreateElement(OptGameCommandion) returned null");
+               return false;
+            }
+            //---------------------------------------
+            gameCmdElem.SetAttribute("Action", gameCmd.Action.ToString());
+            gameCmdElem.SetAttribute("ActionDieRoll", gameCmd.ActionDieRoll.ToString());
+            gameCmdElem.SetAttribute("EventActive", gameCmd.EventActive.ToString());
+            gameCmdElem.SetAttribute("Phase", gameCmd.Phase.ToString());
+            XmlNode? gameCmdNode = gameCmdsNode.AppendChild(gameCmdElem);
+            if (null == gameCmdNode)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlGameInstance(): AppendChild(gameCmdNode) returned null");
                return false;
             }
          }
