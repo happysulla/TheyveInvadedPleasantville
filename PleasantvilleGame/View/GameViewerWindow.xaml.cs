@@ -46,6 +46,7 @@ namespace PleasantvilleGame
       //--------------------------------------------------------------
       private const double RO = 1.5;  // rangtanble offset
       private const int MAX_RECTANGLES = 30; // There are thirty townspeople who can move
+      private const int BRUSH_INDEX_ALIEN = 6;
       private const int ANIMATE_TIME_SEC = 4; // For moving mapitems
       private const int ANIMATE_SPEED = 3;
       public bool CtorError { set; get; } = false;
@@ -197,7 +198,7 @@ namespace PleasantvilleGame
          myBrushes.Add(Brushes.Violet);
          myBrushes.Add(Brushes.Red);
          myBrushes.Add(Brushes.DeepPink);
-         myBrushes.Add(Utilities.theAlienControlledBrush);
+         myBrushes.Add(Utilities.theAlienControlledBrush); 
          myBrushes.Add(Utilities.theTownControlledBrush);
          myDashArray.Add(4);  // used for dotted lines
          myDashArray.Add(2);
@@ -1142,26 +1143,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
-               int index1 = 0;
-               foreach (Button b in myButtons)
-               {
-                  foreach (IMapItemMove mim in myGameInstance.MapItemMoves)
-                  {
-                     if (true == b.Name.Contains(mim.MapItem.Name))
-                     {
-                        Rectangle r = new Rectangle() { Width = b.Width + 2, Height = b.Height + 2, Visibility = Visibility.Visible, Stroke = myBrushes[6], StrokeThickness = 3.0, StrokeDashArray = myDashArray };
-                        myRectangleMaps[mim.MapItem] = r;
-                        index1++;
-                        myCanvasMain.Children.Add(r);
-                        double left = Canvas.GetLeft(b) - RO;
-                        double top = Canvas.GetTop(b) - RO;
-                        Canvas.SetLeft(r, left);
-                        Canvas.SetTop(r, top);
-                        Canvas.SetZIndex(r, myZIndexLastUsed);
-                        break;
-                     }
-                  }
-               }
+               UpdateCanvasRectangles(BRUSH_INDEX_ALIEN);  
                break;
             case GameAction.AlienMovementTownsShow:
                if (false == UpdateCanvasMovement(gi, action, gi.Stacks, myButtons))
@@ -1371,8 +1353,18 @@ namespace PleasantvilleGame
          GameAction nextAction = GameAction.Error;
          if (GameAction.UpdateLoadingGame == action)
          {
-            gi.EventDisplayed = gi.EventActive;
+            IGameCommand? cmd = gi.GameCommands.GetLast();
+            if (null == cmd)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "UpdateView_ForNewGame(): cmd=null");
+               return false;
+            }
+            gi.GamePhase = cmd.Phase;
+            gi.DieRollAction = cmd.ActionDieRoll;
+            gi.EventDisplayed = gi.EventActive = cmd.EventActive;
             nextAction = GameAction.UpdateLoadingGameEnd;
+            if( ("e006t" == gi.EventActive ) || ("e007t" == gi.EventActive) )
+               UpdateCanvasRectangles(BRUSH_INDEX_ALIEN);
          }
          else if (GameAction.UpdateNewGame == action)
          {
@@ -1810,6 +1802,27 @@ namespace PleasantvilleGame
          myRightMapItemsInActionPanel.Clear();
          myLeftMapItemsInActionPanelSelected.Clear();
          myRightMapItemsInActionPanelSelected.Clear();
+      }
+      private void UpdateCanvasRectangles(int brushIndex)
+      {
+         foreach (Button b in myButtons)
+         {
+            foreach (IMapItemMove mim in myGameInstance.MapItemMoves)
+            {
+               if (true == b.Name.Contains(mim.MapItem.Name))
+               {
+                  Rectangle r = new Rectangle() { Width = b.Width + 2, Height = b.Height + 2, Visibility = Visibility.Visible, Stroke = myBrushes[brushIndex], StrokeThickness = 3.0, StrokeDashArray = myDashArray };
+                  myRectangleMaps[mim.MapItem] = r;
+                  myCanvasMain.Children.Add(r);
+                  double left = Canvas.GetLeft(b) - RO;
+                  double top = Canvas.GetTop(b) - RO;
+                  Canvas.SetLeft(r, left);
+                  Canvas.SetTop(r, top);
+                  Canvas.SetZIndex(r, myZIndexLastUsed);
+                  break;
+               }
+            }
+         }
       }
       private bool UpdateActionPanelCombat(IGameInstance gi)
       {
