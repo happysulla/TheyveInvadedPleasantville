@@ -1204,18 +1204,21 @@ namespace PleasantvilleGame
             }
             gi.EndGameReason = sEndGameReason;
             //----------------------------------------------
+            gi.Options.Clear();
             if (false == ReadXmlOptions(reader, gi.Options))
             {
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): Read_XmlOptions() returned false");
                return null;
             }
             //----------------------------------------------
+            gi.Statistics.Clear();
             if (false == ReadXmlGameStatistics(reader, gi.Statistics))
             {
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): Read_XmlGameStatistics() returned false");
                return null;
             }
             //----------------------------------------------
+            gi.GameCommands.Clear();
             if (false == ReadXmlGameCommands(reader, gi.GameCommands))
             {
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): Read_XmlGameCommands() returned false");
@@ -1241,36 +1244,43 @@ namespace PleasantvilleGame
                return null;
             }
             //----------------------------------------------
+            gi.RandomMoves.Clear();
             if (false == ReadXmlRandomMoves(reader, gi.RandomMoves))
             {
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): Read_XmlRandomMoves() returned false");
                return null;
             }
             //----------------------------------------------
+            gi.AlienTakeovers.Clear();
             if (false == ReadXmlAlienTakeovers(reader, gi.AlienTakeovers))
             {
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): ReadXml_AlienTakeovers() returned false");
                return null;
             }
             //----------------------------------------------
+            gi.MapItemMoves.Clear();
             if (false == ReadXmlMapItemMoves(reader, gi.MapItemMoves))
             {
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): ReadXml_MapItemMoves() returned false");
                return null;
             }
             //----------------------------------------------
+            gi.Stacks.Clear();
             if (false == ReadXmlStacks(reader, gi.Stacks, "Stacks"))
             {
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): ReadXml_Stacks() returned false");
                return null;
             }
+            Logger.Log(LogEnum.LE_GAME_INIT, "ReadXml_GameInstance(): ReadXmlStacks() returned stacks=" + gi.Stacks.ToString());
             //----------------------------------------------
+            gi.ZebulonTerritories.Clear();
             if (false == ReadXmlTerritories(reader, gi.ZebulonTerritories, "ZebulonTerritories"))
             {
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): Read_XmlTerritories(ZebulonTerritories) returned false");
                return null;
             }
             //----------------------------------------------
+            gi.SelectedTerritories.Clear();
             if (false == ReadXmlTerritories(reader, gi.SelectedTerritories, "SelectedTerritories"))
             {
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): Read_XmlTerritories(SelectedTerritories) returned false");
@@ -1285,12 +1295,14 @@ namespace PleasantvilleGame
             }
             gi.SelectedTerritory = t1;
             //----------------------------------------------
+            gi.SelectedMapItems.Clear();
             if (false == ReadXmlMapItems(reader, gi.SelectedMapItems, "SelectedMapItems"))
             {
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): ReadXml_MapItems() returned false for SelectedMapItems");
                return null;
             }
             //----------------------------------------------
+            gi.DeadPeople.Clear();
             if (false == ReadXmlMapItems(reader, gi.DeadPeople, "DeadPeople"))
             {
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): ReadXml_MapItems() returned false for DeadPeople");
@@ -2818,7 +2830,6 @@ namespace PleasantvilleGame
       }
       private bool ReadXmlStacks(XmlReader reader, IStacks stacks, string attribute)
       {
-         stacks.Clear();
          reader.Read();
          if (false == reader.IsStartElement())
          {
@@ -2873,18 +2884,18 @@ namespace PleasantvilleGame
          reader.Read();
          if (false == reader.IsStartElement())
          {
-            Logger.Log(LogEnum.LE_ERROR, "ReadXmlStacks(): IsStartElement(Stack) returned false");
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlStacks(): IsStartElement(Stack) returned false");
             return false;
          }
          if (reader.Name != "Stack")
          {
-            Logger.Log(LogEnum.LE_ERROR, "ReadXmlStacks(): Stack != (node=" + reader.Name + ")");
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlStacks(): Stack != (node=" + reader.Name + ")");
             return false;
          }
          string? tName = reader.GetAttribute("value");
          if (null == tName)
          {
-            Logger.Log(LogEnum.LE_ERROR, "ReadXmlStacks(): tName=null");
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlStacks(): tName=null");
             return false;
          }
          if( "Null"  == tName )
@@ -2895,25 +2906,25 @@ namespace PleasantvilleGame
          ITerritory? t = Territories.theTerritories.Find(tName);
          if (null == t)
          {
-            Logger.Log(LogEnum.LE_ERROR, "ReadXmlStacks(): t=null for tName=" + tName);
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlStacks(): t=null for tName=" + tName);
             return false;
          }
          //---------------------------------------------
          reader.Read();
          if (false == reader.IsStartElement())
          {
-            Logger.Log(LogEnum.LE_ERROR, "ReadXmlStacks(): IsStartElement(IsStacked) returned false");
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlStacks(): IsStartElement(IsStacked) returned false");
             return false;
          }
          if (reader.Name != "IsStacked")
          {
-            Logger.Log(LogEnum.LE_ERROR, "ReadXmlStacks(): IsStacked != (node=" + reader.Name + ")");
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlStacks(): IsStacked != (node=" + reader.Name + ")");
             return false;
          }
          string? sIsStacked = reader.GetAttribute("value");
          if (null == sIsStacked)
          {
-            Logger.Log(LogEnum.LE_ERROR, "ReadXmlStacks(): sIsStacked=null");
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlStacks(): sIsStacked=null");
             return false;
          }
          bool isStacked = Convert.ToBoolean(sIsStacked);
@@ -2921,7 +2932,7 @@ namespace PleasantvilleGame
          IMapItems mapItems = new MapItems();
          if (false == ReadXmlMapItems(reader, mapItems, tName))
          {
-            Logger.Log(LogEnum.LE_ERROR, "ReadXmlStacks(): ReadXml_MapItems() returned false for tName=" + tName);
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlStacks(): ReadXml_MapItems() returned false for tName=" + tName);
             return false;
          }
          stack = new Stack(t);
@@ -3451,6 +3462,7 @@ namespace PleasantvilleGame
             return null;
          }
          //------------------------------------------
+         Logger.Log(LogEnum.LE_GAME_INIT, "CreateXml_GameInstance(): Create_XmlStacks() stacks=" + gi.Stacks.ToString());
          if (false == CreateXmlStacks(aXmlDocument, gi.Stacks, "Stacks"))
          {
             Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): CreateXml_Stacks(Stacks) returned false");

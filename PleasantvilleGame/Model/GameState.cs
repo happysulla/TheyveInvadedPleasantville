@@ -126,6 +126,7 @@ namespace PleasantvilleGame
          gi.DieRollAction = GameAction.DieRollActionNone;
          gi.IsAlienAckedRandomMovement = false;
          gi.NumTownGuessesForZebulonLocation = 0;
+         gi.RandomMoves.Clear();
          gi.AlienTakeovers.Clear();
          Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "Reset_Phase()");
          gi.MapItemMoves.Clear();
@@ -217,7 +218,12 @@ namespace PleasantvilleGame
       }
       protected bool ChooseRandomMovePeopleAndDest(IGameInstance gi)
       {
-         gi.RandomMoves.Clear();
+         if( 0 < gi.RandomMoves.Count ) // Loading existing game - need to reuse RandomMoves already saved off - cleared in ResetPhase() call
+         {
+            foreach (RandomMoveData rmd in gi.RandomMoves)
+               Logger.Log(LogEnum.LE_SHOW_RANDOM_MOVE, "Choose_RandomMovePeopleAndDest(): loading name=" + rmd.myName + " moving to building=" + rmd.myBuildingName );
+            return true;
+         }
          const int numPeopleToMove = 4;
          int numPeopleMoved = 0;
          int loopCount = 200;
@@ -1012,33 +1018,43 @@ namespace PleasantvilleGame
          //-----------------------------------------------------------
          if ((GameAction.EndGameWin != action) && (GameAction.EndGameLose != action))
          {
-            gi.GameTurn++;
-            if (false == ResetPhase(gi, GamePhase.RandomMovement))
+            if ( false == StartNewTurn(gi))
             {
-               Logger.Log(LogEnum.LE_ERROR, "CheckFor_EndOfGame(): Reset_Phase() returned error");
+               Logger.Log(LogEnum.LE_ERROR, "CheckFor_EndOfGame(): Start_NewTurn() returned false");
                return false;
             }
-            //---------------------------------------
-            GameFeat changedFeat1;
-            Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "CheckFor_EndOfGame():\n  Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
-            if (false == GameEngine.theInGameFeats.GetFeatChange(GameEngine.theStartingFeats, out changedFeat1)) // CheckFor_EndOfGame()
-            {
-               Logger.Log(LogEnum.LE_ERROR, "CheckFor_EndOfGame(): GameEngine.theInGameFeats.GetFeat_Change() returned false");
-               return false;
-            }
-            if (false == String.IsNullOrEmpty(changedFeat1.Key))
-            {
-               Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "CheckFor_EndOfGame(): Change=" + changedFeat1.ToString());
-               SetCommand(gi, GameAction.UpdateShowFeat, GameAction.DieRollActionNone, "e503a");
-               return true;
-            }
-            if (false == ChooseRandomMovePeopleAndDest(gi)) // setup for next Random Move Phase
-            {
-               Logger.Log(LogEnum.LE_ERROR, "CheckFor_EndOfGame(): Create_RandomMoves() returned false");
-               return false;
-            }
-            SetCommand(gi, GameAction.RandomMovementStartTowns, GameAction.DieRollActionNone, "e005");
          }
+         return true;
+      }
+      protected bool StartNewTurn(IGameInstance gi)
+      {
+         gi.GameTurn++;
+         if (false == ResetPhase(gi, GamePhase.RandomMovement))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Start_NewTurn(): Reset_Phase() returned error");
+            return false;
+         }
+         //---------------------------------------
+         GameFeat changedFeat1;
+         Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "CheckFor_EndOfGame():\n  Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
+         if (false == GameEngine.theInGameFeats.GetFeatChange(GameEngine.theStartingFeats, out changedFeat1)) // CheckFor_EndOfGame()
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Start_NewTurn(): GameEngine.theInGameFeats.GetFeat_Change() returned false");
+            return false;
+         }
+         if (false == String.IsNullOrEmpty(changedFeat1.Key))
+         {
+            Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "Start_NewTurn(): Change=" + changedFeat1.ToString());
+            SetCommand(gi, GameAction.UpdateShowFeat, GameAction.DieRollActionNone, "e503a");
+            return true;
+         }
+         if (false == ChooseRandomMovePeopleAndDest(gi)) // setup for next Random Move Phase
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Start_NewTurn(): Create_RandomMoves() returned false");
+            return false;
+         }
+         //---------------------------------------
+         SetCommand(gi, GameAction.RandomMovementStartTowns, GameAction.DieRollActionNone, "e005");
          return true;
       }
       protected bool CheckForInfluenceError(IGameInstance gi)
@@ -1386,18 +1402,11 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.GameSetupRandomMovementSetup:
-               gi.GameTurn++;
-               if (false == ResetPhase(gi, GamePhase.RandomMovement))
+               if( false == StartNewTurn(gi))
                {
-                  returnStatus = "Reset_Phase() returned false";
+                  returnStatus = "Start_NewTurn() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
                }
-               if (false == ChooseRandomMovePeopleAndDest(gi))
-               {
-                  returnStatus = "Create_RandomMoves() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
-               }
-               SetCommand(gi, GameAction.RandomMovementStartTowns, GameAction.DieRollActionNone, "e005");
                break;
             default:
                returnStatus = "reached default action=" + action.ToString();

@@ -1052,7 +1052,10 @@ namespace PleasantvilleGame
       {
          if ((GameAction.UpdateLoadingGame == action) || (GameAction.UpdateNewGame == action) || (GameAction.RemoveSplashScreen == action))
          {
+            Logger.Log(LogEnum.LE_SHOW_MAIN_CLEAR, "UpdateViewForNewGame(): Clearing action=" + action.ToString());
+            UpdateCanvasMainClear(myButtons, gi.Stacks);
             UpdateActionPanelClear();
+            myGameInstance = gi;
             if (false == UpdateViewForNewGame(ref gi, action)) // This calls PerformAction() to get to proper event
                Logger.Log(LogEnum.LE_ERROR, "Update_View(): UpdateViewForNewGame() returned false");
             return;
@@ -1363,9 +1366,6 @@ namespace PleasantvilleGame
       }
       private bool UpdateViewForNewGame(ref IGameInstance gi, GameAction action) // GameAction.UpdateLoadingGame  GameAction.UpdateNewGame
       {
-         Logger.Log(LogEnum.LE_SHOW_MAIN_CLEAR, "UpdateViewForNewGame(): Clearing action=" + action.ToString());
-         myGameInstance = gi;
-         myButtons.Clear();
          myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas); // UploadNewGame - Return to previous saved zoom level
          ////----------------------------------
          GameAction nextAction = GameAction.Error;
