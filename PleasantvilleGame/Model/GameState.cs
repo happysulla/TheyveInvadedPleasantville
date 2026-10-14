@@ -1963,7 +1963,7 @@ namespace PleasantvilleGame
                   returnStatus = "Reset_Phase() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateAlienPlayerMovement.PerformAction(RandomMovementConfirmed): " + returnStatus);
                }
-               else if( false == CheckForTownMovement(gi, ref action))
+               else if( false == CheckForTownMovement(gi, ref action)) // GameStateAlienPlayerMovement.PerformAction(RandomMovementConfirmed)
                {
                   returnStatus = "CheckFor_TownOverstack() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateAlienPlayerMovement.PerformAction(RandomMovementConfirmed): " + returnStatus);
@@ -2052,10 +2052,11 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.UpdateLoadingGameEnd:
-               if (false == CheckForTownMovement(gi, ref action))
+               action = GameAction.AlienMovementTownsAck; // need to display flashing regions
+               if (false == CheckForTownMovement(gi, ref action)) // GameStateTownPlayerMovement.PerformAction(UpdateLoadingGameEnd)
                {
                   returnStatus = "CheckFor_TownOverstack() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(RandomMovementConfirmed): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(UpdateLoadingGameEnd): " + returnStatus);
                }
                break;
             case GameAction.TownMovementTownPerforms:
@@ -2066,7 +2067,7 @@ namespace PleasantvilleGame
                   returnStatus = "Perform_TownMove() returned false for " + action.ToString();
                   Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(TownMovementTownPerforms): " + returnStatus);
                }
-               else if (false == CheckForTownMovement(gi, ref action))
+               else if (false == CheckForTownMovement(gi, ref action)) // GameStateTownPlayerMovement.PerformAction(TownMovementTownPerforms)
                {
                   returnStatus = "CheckFor_TownOverstack() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(RandomMovementConfirmed): " + returnStatus);

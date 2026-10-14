@@ -31,8 +31,8 @@ namespace PleasantvilleGame
       public GameStatistics Statistics { get; set; } = new GameStatistics();
       public IGameCommands GameCommands { set; get; } = new GameCommands();
       //------------------------------------------------
-      public IPlayerTown? PlayerTown { set; get; } = new PlayerTownHuman();
-      public IPlayerAlien? PlayerAlien { set; get; } = new PlayerAlienComputer();
+      public IPlayerTown PlayerTown { set; get; } = new PlayerTownHuman();
+      public IPlayerAlien PlayerAlien { set; get; } = new PlayerAlienComputer();
       //------------------------------------------------
       public List<RandomMoveData> RandomMoves { get; set; } = new List<RandomMoveData>();
       public Dictionary<IMapItem, IMapItem> AlienTakeovers { get; set; } = new Dictionary<IMapItem, IMapItem>();

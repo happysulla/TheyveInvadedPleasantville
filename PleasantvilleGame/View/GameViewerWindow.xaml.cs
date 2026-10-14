@@ -81,10 +81,6 @@ namespace PleasantvilleGame
       private List<Brush> myBrushes = new List<Brush>();
       private int myBrushIndex = 0;
       private DoubleCollection myDashArray = new DoubleCollection();
-      private SolidColorBrush mySolidColorBrushBlack = new SolidColorBrush() { Color = Colors.Black };
-      private SolidColorBrush mySolidColorBrushPink = new SolidColorBrush()      { Color = Colors.Pink };     // Conversations
-      private SolidColorBrush mySolidColorBrushPurple = new SolidColorBrush()    { Color = Colors.Purple };     // Interogations
-      private SolidColorBrush mySolidColorBrushRosyBrown = new SolidColorBrush() { Color = Colors.RosyBrown };     // Implant Removal
       //--------------------------------------------------------------
       private Dictionary<IMapItem, Rectangle> myRectangleMaps = new Dictionary<IMapItem, Rectangle>();
       //--------------------------------------------------------------
@@ -244,29 +240,6 @@ namespace PleasantvilleGame
          this.PreviewMouseMove += MouseMoveGameViewerWindow;
          //----------------------------------------------------------
          UpdateActionPanelClear();
-         //----------------------------------------------------------
-         foreach (ITerritory t in Territories.theTerritories) // Create the regions associated with the territories. All the information of Territories is static and does not change.
-         {
-            if (null == t)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): null territory in Territories.theTerritories");
-               CtorError = true;
-               return;
-            }
-            if (0 < t.Points.Count)
-            {
-               List<Point> points = new List<Point>();
-               foreach (IMapPoint mp in t.Points)
-                  points.Add(new Point(mp.X, mp.Y));
-               PointCollection pointCollection = new PointCollection(points);
-               Polygon aPolygon = new Polygon() { Name = t.ToString(), Fill = Utilities.theBrushRegionClear, Points = pointCollection };
-               myCanvasMain.RegisterName(t.ToString(), aPolygon);
-               myCanvasMain.Children.Add(aPolygon);
-               myPolygons.Add(aPolygon);
-               aPolygon.MouseDown += MouseDownPolygon;
-               Canvas.SetZIndex(aPolygon, myZIndexLastUsed++);
-            }
-         }
          //----------------------------------------------------------
          ge.RegisterForUpdates(civ); // Implement the Model View Controller (MVC) pattern by registering views with  the game engine such that when the model data is changed, the views are updated.
          ge.RegisterForUpdates(myMainMenuViewer);
@@ -1091,7 +1064,7 @@ namespace PleasantvilleGame
                break;
             case GameAction.RandomMovementStartTowns:
                UpdateActionPanelClear();
-               if (false == UpdateCanvasMain(gi, action))
+               if (false == UpdateCanvasMain(gi))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
@@ -1138,7 +1111,7 @@ namespace PleasantvilleGame
                myRectangleMaps.Clear();
                break;
             case GameAction.RandomMovementTownAck:
-               if (false == UpdateCanvasMain(gi, action))
+               if (false == UpdateCanvasMain(gi))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
@@ -1155,12 +1128,12 @@ namespace PleasantvilleGame
             case GameAction.AlienMovementTownsAck:
                UpdateActionPanelClear();
                myRectangleMaps.Clear();
-               if (false == UpdateCanvasMain(gi, action))
+               if (false == UpdateCanvasMain(gi))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
-               if (false == DisplayFlashingRegions(gi, Utilities.theTownControlledBrush))
+               if (false == DisplayFlashingRegions(gi, Utilities.theTownControlledColor)) // UpdateView(AlienMovementTownsAck)
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(AlienMovementTownsAck): Display_FlashingRegion() returned error ");
                   return;
@@ -1177,7 +1150,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(TownMovementTownPerforms): Update_AfterTownMove() returned error ");
                   return;
                }
-               if (false == DisplayFlashingRegions(gi, Utilities.theTownControlledBrush))
+               if (false == DisplayFlashingRegions(gi, Utilities.theTownControlledColor)) // UpdateView(TownMovementTownPerforms)
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(TownMovementTownPerforms): Display_FlashingRegion() returned error ");
                   return;
@@ -1185,46 +1158,43 @@ namespace PleasantvilleGame
                break;
             case GameAction.ConversationsSelect:
                myRectangleMaps.Clear();
-               UpdateCanvasMainClear(myButtons, gi.Stacks);
-               if (false == UpdateCanvasMain(gi, action))
+               if (false == UpdateCanvasMain(gi))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
                Logger.Log(LogEnum.LE_SHOW_CONVERSATIONS, "UpdateView(): calling Display_FlashingRegions() territories=" + gi.SelectedTerritories.ToString());
-               if ( false == DisplayFlashingRegions(gi, mySolidColorBrushPink))
+               if ( false == DisplayFlashingRegions(gi, Utilities.thePinkColor))  // UpdateView(ConversationsSelect)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(ConversationsSelect): Display_FlashingRegion() returned error ");
                   return;
                }
                break;
             case GameAction.InfluencesSelect:
                myRectangleMaps.Clear();
-               UpdateCanvasMainClear(myButtons, gi.Stacks);
-               if (false == UpdateCanvasMain(gi, action))
+               if (false == UpdateCanvasMain(gi))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
                Logger.Log(LogEnum.LE_SHOW_INFLUENCES, "UpdateView(): calling Display_FlashingRegions() territories=" + gi.SelectedTerritories.ToString());
-               if (false == DisplayFlashingRegions(gi, Utilities.theTownControlledBrush))
+               if (false == DisplayFlashingRegions(gi, Utilities.theTownControlledColor)) // UpdateView(InfluencesSelect)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(InfluencesSelect): Display_FlashingRegion() returned error ");
                   return;
                }
                break;
             case GameAction.CombatsSelect:
                myRectangleMaps.Clear();
-               UpdateCanvasMainClear(myButtons, gi.Stacks);
-               if (false == UpdateCanvasMain(gi, action))
+               if (false == UpdateCanvasMain(gi))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
                Logger.Log(LogEnum.LE_SHOW_COMBATS, "UpdateView(): calling Display_FlashingRegions() territories=" + gi.SelectedTerritories.ToString());
-               if (false == DisplayFlashingRegions(gi, Utilities.theBrushBlood))
+               if (false == DisplayFlashingRegions(gi, Utilities.theBloodColor)) // UpdateView(CombatsSelect)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(CombatsSelect): Display_FlashingRegion() returned error ");
                   return;
                }
                break;
@@ -1239,7 +1209,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.CombatsRetreatStart: // initiated by EventViewerCombatResolve - Show Retreat spaces
-               if (false == UpdateCanvasMain(gi, action))
+               if (false == UpdateCanvasMain(gi))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
@@ -1264,24 +1234,28 @@ namespace PleasantvilleGame
                break;
             case GameAction.ImplantRemovalsSelect:
                myRectangleMaps.Clear();
-               UpdateCanvasMainClear(myButtons, gi.Stacks);
-               if (false == UpdateCanvasMain(gi, action))
+               if (false == UpdateCanvasMain(gi))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
                Logger.Log(LogEnum.LE_SHOW_REMOVALS, "UpdateView(): calling Display_FlashingRegions() territories=" + gi.SelectedTerritories.ToString());
-               if (false == DisplayFlashingRegions(gi, mySolidColorBrushRosyBrown))
+               if (false == DisplayFlashingRegions(gi, Utilities.theRosyBrownColor)) // UpdateView(ImplantRemovalsSelect)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(ImplantRemovalsSelect): Display_FlashingRegion() returned error ");
                   return;
                }
                break;
             case GameAction.InterrogationsSelect:
-               Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "UpdateView(): calling Display_FlashingRegions() territories=" + gi.SelectedTerritories.ToString());
-               if (false == DisplayFlashingRegions(gi, mySolidColorBrushPurple))
+               if (false == UpdateCanvasMain(gi))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
+                  return;
+               }
+               Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "UpdateView(): calling Display_FlashingRegions() territories=" + gi.SelectedTerritories.ToString());
+               if (false == DisplayFlashingRegions(gi, Utilities.thePurpleColor)) // UpdateView(InterrogationsSelect)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(InterrogationsSelect): Display_FlashingRegion() returned error ");
                   return;
                }
                break;
@@ -1293,7 +1267,7 @@ namespace PleasantvilleGame
                {
                   Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "UpdateView(): Zebulon?=" + gi.Zebulon.IsAlienKnown.ToString() + " CLEAR polygons due to guesses for territories=" + gi.ZebulonTerritories.ToString());
                   UpdateCanvasMainClear(myButtons, gi.Stacks);
-                  if (false == UpdateCanvasMain(gi, action))
+                  if (false == UpdateCanvasMain(gi))
                   {
                      Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                      return;
@@ -1311,15 +1285,14 @@ namespace PleasantvilleGame
                break;
             case GameAction.AlienTakeoversShow:
                myRectangleMaps.Clear();
-               UpdateCanvasMainClear(myButtons, gi.Stacks);
-               if (false == UpdateCanvasMain(gi, action))
+               if (false == UpdateCanvasMain(gi))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
                }
-               if (false == DisplayFlashingRegions(gi, Utilities.theAlienControlledBrush))
+               if (false == DisplayFlashingRegions(gi, Utilities.theAlienControlledColor)) // UpdateView(AlienTakeoversShow)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Display_FlashingRegion() returned error ");
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(AlienTakeoversShow): Display_FlashingRegion() returned error ");
                   return;
                }
                break;
@@ -1327,7 +1300,7 @@ namespace PleasantvilleGame
                UpdateActionPanelClear();
                myRectangleMaps.Clear();
                UpdateCanvasMainClear(myButtons, gi.Stacks);
-               if (false == UpdateCanvasMain(gi, action))
+               if (false == UpdateCanvasMain(gi))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                   return;
@@ -1341,7 +1314,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateScatterStack:
             case GameAction.UpdateMainCanvas:
             default:
-               if (false == UpdateCanvasMain(gi, action))
+               if (false == UpdateCanvasMain(gi))
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMain() returned error ");
                break;
          }
@@ -1381,9 +1354,9 @@ namespace PleasantvilleGame
             return false;
          }
          //----------------------------------
-         if (false == UpdateCanvasMain(gi, action))
+         if (false == UpdateCanvasMain(gi))
          {
-            Logger.Log(LogEnum.LE_ERROR, "UpdateView_ForNewGame(): UpdateCanvasMain() returned error ");
+            Logger.Log(LogEnum.LE_ERROR, "UpdateView_ForNewGame(): Update_CanvasMain() returned error ");
             return false;
          }
          myGameEngine.PerformAction(ref gi, ref nextAction, Utilities.NO_RESULT);
@@ -2160,11 +2133,32 @@ namespace PleasantvilleGame
          myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
       }
       //-------------UPDATE HELPER FUNCTIONS---------------------------------
-      private bool UpdateCanvasMain(IGameInstance gi, GameAction action, bool isOnlyLastLineRemoved = false)
+      private bool UpdateCanvasMain(IGameInstance gi, bool isOnlyLastLineRemoved = false)
       {
          UpdateCanvasMainClear(myButtons, gi.Stacks);
          //---------------------------------------------------------------
-         foreach(IMapItem killed in gi.DeadPeople)
+         foreach (ITerritory t in Territories.theTerritories) // Create the regions associated with the territories. All the information of Territories is static and does not change.
+         {
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): null territory in Territories.theTerritories");
+               return false;
+            }
+            if (0 < t.Points.Count)
+            {
+               List<Point> points = new List<Point>();
+               foreach (IMapPoint mp in t.Points)
+                  points.Add(new Point(mp.X, mp.Y));
+               PointCollection pointCollection = new PointCollection(points);
+               Polygon aPolygon = new Polygon() { Name = t.ToString(), Fill = Utilities.theBrushRegionClear, Points = pointCollection };
+               aPolygon.MouseDown += MouseDownPolygon;
+               myCanvasMain.Children.Add(aPolygon);
+               myPolygons.Add(aPolygon);
+               Canvas.SetZIndex(aPolygon, myZIndexLastUsed++);
+            }
+         }
+         //---------------------------------------------------------------
+         foreach (IMapItem killed in gi.DeadPeople)
          {
             Image img = new Image() { Height = 30, Width = 35, IsEnabled = false, Source = MapItem.theMapImages.GetBitmapImage("DeadPerson") };
             myCanvasMain.Children.Add(img);
@@ -2240,7 +2234,7 @@ namespace PleasantvilleGame
                count++;
             }
          }
-         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMain_MapItems(): action=" + action.ToString() + " stacks=" + gi.Stacks.ToString());
+         Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMain_MapItems(): stacks=" + gi.Stacks.ToString());
          return true;
       }
       private void UpdateCanvasMainClear(List<Button> buttons, IStacks stacks)
@@ -2250,8 +2244,6 @@ namespace PleasantvilleGame
          if (null != myStoryboardFlashing)
             myStoryboardFlashing.Stop();
          myStoryboardFlashing = null; // UpdateCanvasMainClear()
-         foreach (Polygon polygon in myPolygons)
-            polygon.Fill = Utilities.theBrushRegionClear;
          //-------------------------------------------
          Logger.Log(LogEnum.LE_SHOW_MAIN_CLEAR, "Update_CanvasMainClear(): Clearing stacks=" + stacks.ToString());
          List<UIElement> elementRemovals = new List<UIElement>();
@@ -2302,6 +2294,8 @@ namespace PleasantvilleGame
             else if (ui is TextBlock tb)
                elementRemovals.Add(ui);
             else if (ui is Polyline polyline)
+               elementRemovals.Add(ui);
+            else if (ui is Polygon polygon)
                elementRemovals.Add(ui);
          }
          foreach (UIElement ui1 in elementRemovals)
@@ -3103,40 +3097,32 @@ namespace PleasantvilleGame
          return true;
       }
       //-------------HELPER FUNCTIONS---------------------------------
-      private bool DisplayFlashingRegions(IGameInstance gi, SolidColorBrush brush)
+      private bool DisplayFlashingRegions(IGameInstance gi, System.Windows.Media.Color color)
       {
-         if (null != myStoryboardFlashing)
-            myStoryboardFlashing.Stop();
-         myStoryboardFlashing = new Storyboard(); // Clear any previous flashing regions
-         foreach (Polygon polygon in myPolygons) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
-            polygon.Fill = Utilities.theBrushRegionClear;
+         ColorAnimation colorAnimation = new ColorAnimation
+         {
+            From = color,
+            To = Colors.Transparent,
+            Duration = new Duration(TimeSpan.FromSeconds(1)),
+            AutoReverse = true,
+            RepeatBehavior = RepeatBehavior.Forever
+         };
+         SolidColorBrush brush = new SolidColorBrush(color);
+         brush.BeginAnimation(SolidColorBrush.ColorProperty, colorAnimation);
          foreach (ITerritory t in gi.SelectedTerritories) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
          {
             foreach (Polygon polygon in myPolygons) 
             {
                if (polygon.Name == t.ToString())
                {
+                  polygon.Stroke = Brushes.Red;
+                  polygon.StrokeThickness = 3;
+                  polygon.StrokeDashArray = myDashArray;
                   polygon.Fill = brush;
                   Canvas.SetZIndex(polygon, 999);
-                  DoubleAnimation anim = new DoubleAnimation();  // Perform animiation on the region
-                  anim.From = 1.0;
-                  anim.To = 0.1;
-                  anim.Duration = new Duration(TimeSpan.FromSeconds(0.7));
-                  anim.AutoReverse = true;
-                  anim.RepeatBehavior = RepeatBehavior.Forever;
-                  myStoryboardFlashing.Children.Add(anim);
-                  Storyboard.SetTargetProperty(anim, new PropertyPath(OpacityProperty));
-                  Storyboard.SetTargetName(anim, polygon.Name); // Start flashing the region where the user can select
                }
             }
          }
-         //-------------------------------------------
-         if (0 == myStoryboardFlashing.Children.Count)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Display_FlashingRegion(): myStoryboardFlashing.Children.Count=0");
-            return false;
-         }
-         myStoryboardFlashing.Begin(this);
          return true;
       }
       private bool DisplayConversation(IGameInstance gi, ITerritory selectedTerritory)
@@ -3951,12 +3937,12 @@ namespace PleasantvilleGame
             }
             if (false == t1.IsBuilding())
             {
-               polygon.Fill = mySolidColorBrushBlack;
+               polygon.Fill = Utilities.theSolidColorBrushBlack;
             }
             else
             {
                if (true == gi.ZebulonTerritories.Contains(t1))
-                  polygon.Fill = mySolidColorBrushBlack;
+                  polygon.Fill = Utilities.theSolidColorBrushBlack;
             }
          }
          return true;
@@ -4255,7 +4241,7 @@ namespace PleasantvilleGame
                   }
                   if ((true == tSelected.IsBuilding()) && (false == isAlreadySelected)) // if not a building or territory already selected, do nothing
                   {
-                     p.Fill = mySolidColorBrushBlack;
+                     p.Fill = Utilities.theSolidColorBrushBlack;
                      myGameInstance.SelectedTerritory = tSelected;
                      GameAction action = GameAction.InterrogationsGuess;
                      myGameEngine.PerformAction(ref myGameInstance, ref action, 0);
@@ -4415,8 +4401,8 @@ namespace PleasantvilleGame
          myGameInstance.SelectedMapItems.Add(selectedMapItem); // ClickButton_MapItem()
          if( GamePhase.TownspersonMovement == myGameInstance.GamePhase )
          {
-            UpdateCanvasMainClear(myButtons, myGameInstance.Stacks);
-            myRectangleMaps.Clear();
+            //UpdateCanvasMainClear(myButtons, myGameInstance.Stacks);
+            //myRectangleMaps.Clear();
             int moveLeft = selectedMapItem.Movement - selectedMapItem.MovementUsed;
             if ((true == selectedMapItem.IsControlled) && (0 < moveLeft) )
             {

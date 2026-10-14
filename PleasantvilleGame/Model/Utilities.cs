@@ -22,13 +22,28 @@ namespace PleasantvilleGame
       private const int NUM_RANDOM_GEN = 13;
       public readonly static int STD_WAIT = 10;
       //--------------------------------------------
-      public readonly static SolidColorBrush theBrushBlood = new SolidColorBrush() { Color = System.Windows.Media.Colors.Red};
+      public readonly static System.Windows.Media.Color theBlackColor = System.Windows.Media.Colors.Black; 
+      public readonly static System.Windows.Media.Color thePinkColor = System.Windows.Media.Colors.Pink;           // Conversations
+      public readonly static System.Windows.Media.Color thePurpleColor = System.Windows.Media.Colors.Purple;       // Interogations
+      public readonly static System.Windows.Media.Color theRosyBrownColor = System.Windows.Media.Colors.RosyBrown; // Implant Removal
+      public readonly static System.Windows.Media.Color theBloodColor = System.Windows.Media.Colors.Red;
+      public readonly static System.Windows.Media.Color theTownControlledColor = System.Windows.Media.Color.FromArgb(0xFF, 0x33, 0xAA, 0x33);
+      public readonly static System.Windows.Media.Color theAlienControlledColor = System.Windows.Media.Color.FromArgb(0xFF, 0xFF, 0xD5, 0x00);
+      public readonly static System.Windows.Media.Color theSkepticalColor = System.Windows.Media.Color.FromArgb(0xFF, 0xF2, 0xDE, 0x9B);
+      public readonly static System.Windows.Media.Color theWaryColor = System.Windows.Media.Color.FromArgb(0xFF, 0x87, 0xE5, 0x87);
+      public readonly static System.Windows.Media.Color theNeutralColor = System.Windows.Media.Color.FromArgb(0xFF, 0x87, 0xE5, 0x87);
+      //--------------------------------------------
+      public readonly static SolidColorBrush theSolidColorBrushBlack = new SolidColorBrush() { Color = theBlackColor };
+      public readonly static SolidColorBrush theSolidColorBrushPink = new SolidColorBrush() { Color = thePinkColor };     // Conversations
+      public readonly static SolidColorBrush theSolidColorBrushPurple = new SolidColorBrush() { Color = thePurpleColor };     // Interogations
+      public readonly static SolidColorBrush theSolidColorBrushRosyBrown = new SolidColorBrush() { Color = theRosyBrownColor };     // Implant Removal
+      public readonly static SolidColorBrush theBrushBlood = new SolidColorBrush() { Color = theBloodColor };
       public readonly static SolidColorBrush theBrushRegionClear = new SolidColorBrush() { Color = System.Windows.Media.Color.FromArgb(0, 0, 1, 0) };
-      public readonly static SolidColorBrush theTownControlledBrush = new SolidColorBrush() { Color = System.Windows.Media.Color.FromArgb(0xFF, 0x33, 0xAA, 0x33) };
-      public readonly static SolidColorBrush theAlienControlledBrush = new SolidColorBrush() { Color = System.Windows.Media.Color.FromArgb(0xFF, 0xFF, 0xD5, 0x00) };
-      public readonly static SolidColorBrush theSkepticalBrush = new SolidColorBrush() { Color = System.Windows.Media.Color.FromArgb(0xFF, 0xF2, 0xDE, 0x9B) };
-      public readonly static SolidColorBrush theWaryBrush = new SolidColorBrush() { Color = System.Windows.Media.Color.FromArgb(0xFF, 0x87, 0xE5, 0x87) };
-      public readonly static SolidColorBrush theNeutralBrush = new SolidColorBrush() { Color = System.Windows.Media.Colors.Gray };
+      public readonly static SolidColorBrush theTownControlledBrush = new SolidColorBrush() { Color = theTownControlledColor };
+      public readonly static SolidColorBrush theAlienControlledBrush = new SolidColorBrush() { Color = theAlienControlledColor };
+      public readonly static SolidColorBrush theSkepticalBrush = new SolidColorBrush() { Color = theSkepticalColor };
+      public readonly static SolidColorBrush theWaryBrush = new SolidColorBrush() { Color = theWaryColor };
+      public readonly static SolidColorBrush theNeutralBrush = new SolidColorBrush() { Color = theNeutralColor };
       //--------------------------------------------
       public static int MapItemNum { set; get; } = 1000;
       //--------------------------------------------

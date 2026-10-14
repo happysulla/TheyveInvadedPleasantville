@@ -1273,6 +1273,27 @@ namespace PleasantvilleGame
             }
             Logger.Log(LogEnum.LE_GAME_INIT, "ReadXml_GameInstance(): ReadXmlStacks() returned stacks=" + gi.Stacks.ToString());
             //----------------------------------------------
+            gi.SelectedStack = null;
+            reader.Read();
+            if (false == reader.IsStartElement())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): IsStartElement(SelectedStack) returned false");
+               return null;
+            }
+            if (reader.Name != "SelectedStack")
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): SelectedStack != (node=" + reader.Name + ")");
+               return null;
+            }
+            string? sTerritory = reader.GetAttribute("value");
+            if (null == sTerritory)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): sTerritory=null");
+               return null;
+            }
+            if( "Null" != sTerritory )
+               gi.SelectedStack = gi.Stacks.Find(sTerritory); // This might be null if there is no stack -- MapItem moved
+            //----------------------------------------------
             gi.ZebulonTerritories.Clear();
             if (false == ReadXmlTerritories(reader, gi.ZebulonTerritories, "ZebulonTerritories"))
             {
@@ -3469,9 +3490,20 @@ namespace PleasantvilleGame
             return null;
          }
          //------------------------------------------
-         if (false == CreateXmlStack(aXmlDocument, root, gi.SelectedStack))
+         elem = aXmlDocument.CreateElement("SelectedStack");
+         if (null == elem)
          {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): CreateXml_Stack() returned false");
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): aXmlDocument.DocumentElement.LastChild=null for SelectedStack");
+            return null;
+         }
+         if( null == gi.SelectedStack )
+            elem.SetAttribute("value", "Null");
+         else
+            elem.SetAttribute("value", gi.SelectedStack.Territory.ToString());
+         node = root.AppendChild(elem);
+         if (null == node)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): AppendChild(NumTownGuessesForZebulonLocation) returned null");
             return null;
          }
          //------------------------------------------
