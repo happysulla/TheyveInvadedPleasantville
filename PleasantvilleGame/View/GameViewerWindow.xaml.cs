@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -87,7 +88,6 @@ namespace PleasantvilleGame
       private readonly SplashDialog mySplashScreen;
       //--------------------------------------------------------------
       private readonly FontFamily myFontFam = new FontFamily("Tahofma");
-      private Storyboard? myStoryboardFlashing = null;
 #pragma warning disable CA1416 // Validate platform compatibility
       private System.Windows.Forms.Timer myTimer = new System.Windows.Forms.Timer();
 #pragma warning restore CA1416 // Validate platform compatibility
@@ -240,6 +240,28 @@ namespace PleasantvilleGame
          this.PreviewMouseMove += MouseMoveGameViewerWindow;
          //----------------------------------------------------------
          UpdateActionPanelClear();
+         //---------------------------------------------------------------
+         foreach (ITerritory t in Territories.theTerritories) // Create the regions associated with the territories. All the information of Territories is static and does not change.
+         {
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): null territory in Territories.theTerritories");
+               CtorError = true;
+               return;
+            }
+            if (0 < t.Points.Count)
+            {
+               List<Point> points = new List<Point>();
+               foreach (IMapPoint mp in t.Points)
+                  points.Add(new Point(mp.X, mp.Y));
+               PointCollection pointCollection = new PointCollection(points);
+               Polygon aPolygon = new Polygon() { Name = t.ToString(), Fill = Utilities.theBrushRegionClear, Points = pointCollection };
+               aPolygon.MouseDown += MouseDownPolygon;
+               myCanvasMain.Children.Add(aPolygon);
+               myPolygons.Add(aPolygon);
+               Canvas.SetZIndex(aPolygon, myZIndexLastUsed++);
+            }
+         }
          //----------------------------------------------------------
          ge.RegisterForUpdates(civ); // Implement the Model View Controller (MVC) pattern by registering views with  the game engine such that when the model data is changed, the views are updated.
          ge.RegisterForUpdates(myMainMenuViewer);
@@ -1145,11 +1167,6 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasMovement() returned error ");
                   return;
                }
-               if (false == UpdateRectanglesAfterMove(gi))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(TownMovementTownPerforms): Update_AfterTownMove() returned error ");
-                  return;
-               }
                if (false == DisplayFlashingRegions(gi, Utilities.theTownControlledColor)) // UpdateView(TownMovementTownPerforms)
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(TownMovementTownPerforms): Display_FlashingRegion() returned error ");
@@ -1221,11 +1238,13 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.CombatsRetreatShow: // initiated by MouseDownPolygon() when user clicks space - setup MapItemMove in GameState
-               if (null != myStoryboardFlashing)
-                  myStoryboardFlashing.Stop();
-               myStoryboardFlashing = null; // UpdateView(CombatsRetreatShow)
                foreach (Polygon polygon in myPolygons)
+               {
+                  polygon.Stroke = Utilities.theBrushRegionClear;
+                  polygon.StrokeThickness = 1;
+                  polygon.StrokeDashArray = null;
                   polygon.Fill = Utilities.theBrushRegionClear;
+               }
                if (false == UpdateCanvasMovement(gi, action, gi.Stacks, myButtons))
                {
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(CombatsRetreatShow): Update_CanvasMovement() returned error ");
@@ -1260,9 +1279,6 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.InterrogationsGuess:
-               if (null != myStoryboardFlashing)
-                  myStoryboardFlashing.Stop();
-               myStoryboardFlashing = null; // InterrogationsGuess
                if ( true == gi.Zebulon.IsAlienKnown )
                {
                   Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "UpdateView(): Zebulon?=" + gi.Zebulon.IsAlienKnown.ToString() + " CLEAR polygons due to guesses for territories=" + gi.ZebulonTerritories.ToString());
@@ -2137,27 +2153,6 @@ namespace PleasantvilleGame
       {
          UpdateCanvasMainClear(myButtons, gi.Stacks);
          //---------------------------------------------------------------
-         foreach (ITerritory t in Territories.theTerritories) // Create the regions associated with the territories. All the information of Territories is static and does not change.
-         {
-            if (null == t)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): null territory in Territories.theTerritories");
-               return false;
-            }
-            if (0 < t.Points.Count)
-            {
-               List<Point> points = new List<Point>();
-               foreach (IMapPoint mp in t.Points)
-                  points.Add(new Point(mp.X, mp.Y));
-               PointCollection pointCollection = new PointCollection(points);
-               Polygon aPolygon = new Polygon() { Name = t.ToString(), Fill = Utilities.theBrushRegionClear, Points = pointCollection };
-               aPolygon.MouseDown += MouseDownPolygon;
-               myCanvasMain.Children.Add(aPolygon);
-               myPolygons.Add(aPolygon);
-               Canvas.SetZIndex(aPolygon, myZIndexLastUsed++);
-            }
-         }
-         //---------------------------------------------------------------
          foreach (IMapItem killed in gi.DeadPeople)
          {
             Image img = new Image() { Height = 30, Width = 35, IsEnabled = false, Source = MapItem.theMapImages.GetBitmapImage("DeadPerson") };
@@ -2241,9 +2236,6 @@ namespace PleasantvilleGame
       {
          if (GamePhase.UnitTest == myGameInstance.GamePhase)
             return;
-         if (null != myStoryboardFlashing)
-            myStoryboardFlashing.Stop();
-         myStoryboardFlashing = null; // UpdateCanvasMainClear()
          //-------------------------------------------
          Logger.Log(LogEnum.LE_SHOW_MAIN_CLEAR, "Update_CanvasMainClear(): Clearing stacks=" + stacks.ToString());
          List<UIElement> elementRemovals = new List<UIElement>();
@@ -2295,8 +2287,6 @@ namespace PleasantvilleGame
                elementRemovals.Add(ui);
             else if (ui is Polyline polyline)
                elementRemovals.Add(ui);
-            else if (ui is Polygon polygon)
-               elementRemovals.Add(ui);
          }
          foreach (UIElement ui1 in elementRemovals)
             myCanvasMain.Children.Remove(ui1);
@@ -2330,26 +2320,31 @@ namespace PleasantvilleGame
                }
                IMapItem mi = mim.MapItem;
                IMapPoint endPoint = Territory.GetRandomPointBoundingRect(mim.NewTerritory, mi.Zoom * Utilities.theMapItemOffset);
-               if (false == MovePathDisplay(mim, count, endPoint))
+               if (false == UpdateCanvasMovementAddPolyline(mim, count, endPoint))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMovement(): Move_PathDisplay() returned false t=" + mim.OldTerritory.ToString());
+                  Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMovement(): Update_CanvasMovementAddPolyline() returned false t=" + mim.OldTerritory.ToString());
                   gi.MapItemMoves.Clear();
                   return false;
                }
-               if (false == MovePathAnimate(gi, mim, buttons, count, endPoint))
+               if (false == UpdateCanvasMovementAnimate(gi, mim, buttons, count, endPoint))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMovement(): Move_PathAnimate() returned false t=" + mim.OldTerritory.ToString());
+                  Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMovement(): Update_CanvasMovementAnimate() returned false t=" + mim.OldTerritory.ToString());
                   gi.MapItemMoves.Clear();
+                  return false;
+               }
+               Logger.Log(LogEnum.LE_SHOW_MIM, "Update_CanvasMovement(): a=" + action.ToString() + " mi=" + mim.MapItem.Name + " t=" + mim.OldTerritory.ToString() + "==>" + mim.NewTerritory.ToString());
+               mi.MovementUsed += mim.BestPath.Territories.Count;
+               if (false == UpdateCanvasMovementAfterManualMove(gi, action, mim))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMovement(): Update_CanvasMovementAfterManualMove() returned false t=" );
                   return false;
                }
                //------------------------------------------
-               Logger.Log(LogEnum.LE_SHOW_STACK_DEL, "Update_CanvasMovement(): Remove mi=" + mi.Name + " from stacls=" + stacks.ToString());
+               Logger.Log(LogEnum.LE_SHOW_STACK_DEL, "Update_CanvasMovement(): Remove mi=" + mi.Name + " from stackss=" + stacks.ToString());
                stacks.Remove(mi); // remove from existing stack
-               Logger.Log(LogEnum.LE_SHOW_MIM, "Update_CanvasMovement(): a=" + action.ToString() + " mi=" + mim.MapItem.Name + " t=" + mim.MapItem.TerritoryCurrent.ToString() + "==>" + mim.NewTerritory.ToString());
                mi.TerritoryCurrent = mi.TerritoryStarting = mim.NewTerritory;
                mi.Location.X = endPoint.X;
                mi.Location.Y = endPoint.Y;
-               mi.MovementUsed += mim.BestPath.Territories.Count;
                Logger.Log(LogEnum.LE_SHOW_STACK_ADD, "Update_CanvasMovement(): adding mi=" + mi.Name + " from stacls=" + stacks.ToString());
                stacks.Add(mi); // add to new stack
                count++;
@@ -2363,68 +2358,21 @@ namespace PleasantvilleGame
          }
          return true;
       }
-      private bool UpdateRectanglesAfterMove(IGameInstance gi)
-      {
-         foreach(IMapItem mi in gi.SelectedMapItems)
-         {
-            int moveLeft = mi.Movement - mi.MovementUsed;
-            if (moveLeft < 1)
-            {
-               if (true == myRectangleMaps.ContainsKey(mi))
-               {
-                  Rectangle r = myRectangleMaps[mi];
-                  myCanvasMain.Children.Remove(r);
-               }
-            }
-         }
-         return true;
-      }
-      private bool UpdateCanvasCombatRetreat(IGameInstance gi, GameAction action)
-      {
-         if (null != myStoryboardFlashing)
-            myStoryboardFlashing.Stop();
-         myStoryboardFlashing = null; // UpdateCanvas_CombatRetreat()
-         foreach (Polygon polygon in myPolygons)
-            polygon.Fill = Utilities.theBrushRegionClear;
-         if ( null == gi.MapItemCombat)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "UpdateCanvas_CombatRetreat(): gi.MapItemCombat=null");
-            return false;
-         }
-         foreach(string adjacent in gi.MapItemCombat.Territory.Adjacents)
-         {
-            ITerritory? t = Territories.theTerritories.Find(adjacent);
-            if( null == t )
-            {
-               Logger.Log(LogEnum.LE_ERROR, "UpdateCanvas_CombatRetreat(): t=null for adjacent=" + adjacent);
-               return false;
-            }
-            foreach(Polygon p in myPolygons)
-            {
-               if( t.ToString() == p.Name )
-               {
-                  p.Fill = Brushes.LightBlue;
-                  break;
-               }
-            }
-         }
-         return true;
-      }
-      private bool MovePathDisplay(IMapItemMove mim, int mapItemCount, IMapPoint endPoint)
+      private bool UpdateCanvasMovementAddPolyline(IMapItemMove mim, int mapItemCount, IMapPoint endPoint)
       {
          if (null == mim.OldTerritory)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Move_PathDisplay(): mim.OldTerritory=null");
+            Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMovementAddPolyline(): mim.OldTerritory=null");
             return false;
          }
          if (null == mim.NewTerritory)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Move_PathDisplay(): mim.NewTerritory=null");
+            Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMovementAddPolyline(): mim.NewTerritory=null");
             return false;
          }
          if (null == mim.BestPath)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Move_PathDisplay(): mim.BestPath=null");
+            Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMovementAddPolyline(): mim.BestPath=null");
             return false;
          }
          //-----------------------------------------
@@ -2469,27 +2417,27 @@ namespace PleasantvilleGame
          myCanvasMain.Children.Add(aPolyline);
          return true;
       }
-      private bool MovePathAnimate(IGameInstance gi, IMapItemMove mim, List<Button> buttons, int mapItemCount, IMapPoint endPoint)
+      private bool UpdateCanvasMovementAnimate(IGameInstance gi, IMapItemMove mim, List<Button> buttons, int mapItemCount, IMapPoint endPoint)
       {
          if (null == myGameInstance)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Move_PathAnimate(): myGameInstance=null for n=" + mim.MapItem.Name);
+            Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMovementAnimate(): myGameInstance=null for n=" + mim.MapItem.Name);
             return false;
          }
          if (null == mim.NewTerritory)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Move_PathAnimate(): mim.NewTerritory=null n=" + mim.MapItem.Name);
+            Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMovementAnimate(): mim.NewTerritory=null n=" + mim.MapItem.Name);
             return false;
          }
          if (null == mim.BestPath)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Move_PathAnimate(): mim.BestPath=null for mi=" + mim.MapItem.Name);
+            Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMovementAnimate(): mim.BestPath=null for mi=" + mim.MapItem.Name);
             return false;
          }
          Button? b = buttons.Find(mim.MapItem.Name);
          if (null == b)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Move_PathAnimate(): b=null for mi=" + mim.MapItem.Name + " mim=" + mim.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMovementAnimate(): b=null for mi=" + mim.MapItem.Name + " mim=" + mim.ToString());
             return false;
          }
          try
@@ -2561,9 +2509,95 @@ namespace PleasantvilleGame
          {
             b.BeginAnimation(Canvas.LeftProperty, null); // end animation offset
             b.BeginAnimation(Canvas.TopProperty, null);  // end animation offset
-            Logger.Log(LogEnum.LE_ERROR, "Move_PathAnimate():  EXCEPTION THROWN e=\n" + e.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMovementAnimate():  EXCEPTION THROWN e=\n" + e.ToString());
             return false;
          }
+      }
+      private bool UpdateCanvasMovementAfterManualMove(IGameInstance gi, GameAction action, IMapItemMove mim)
+      {
+         if (null == mim.OldTerritory)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMovementAfterManualMove(): mim.OldTerritory=null for mim=" + mim.ToString());
+            return false;
+         }
+         if (null == mim.NewTerritory)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMovementAfterManualMove(): mim.NewTerritory=null for mim=" + mim.ToString());
+            return false;
+         }
+         switch (action)
+         {
+            case GameAction.TownMovementTownPerforms:
+               //----------------------------------------
+               int moveLeft = mim.MapItem.Movement - mim.MapItem.MovementUsed; // If no more movement left, remove enclosing rectangle
+               if (moveLeft < 1)
+               {
+                  if (true == myRectangleMaps.ContainsKey(mim.MapItem))
+                  {
+                     Rectangle r = myRectangleMaps[mim.MapItem];
+                     myCanvasMain.Children.Remove(r);
+                  }
+               }
+               else
+               {
+                  gi.SelectedTerritories.Add(mim.NewTerritory); // If movement left, add the new territory to flashing spaces
+               }
+               //----------------------------------------
+               IStack? stack = gi.Stacks.Find(mim.MapItem); // determine if any other mapitems exist in the selected territory that can still move - if not remove from flashing terriritories
+               if ( null == stack )
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Update_CanvasMovementAfterManualMove(): gi.Stacks.Find(mim.MapItem) returned null mi=" + mim.MapItem.ToString());
+                  return false;
+               }
+               bool isStackStillFlashing = false; 
+               foreach(IMapItem mi in stack.MapItems)
+               {
+                  if (mi.Name == mim.MapItem.Name) // skip the mapitem that just moved
+                     continue;
+                  if (mi.MovementUsed < mi.Movement)
+                     isStackStillFlashing = true;
+               }
+               if( false == isStackStillFlashing )
+                  gi.SelectedTerritories.Remove(mim.OldTerritory);
+               //----------------------------------------
+               break;
+            default:
+               break;
+         }
+         return true;
+      }
+      private bool UpdateCanvasCombatRetreat(IGameInstance gi, GameAction action)
+      {
+         foreach (Polygon polygon in myPolygons)
+         {
+            polygon.Stroke = Utilities.theBrushRegionClear;
+            polygon.StrokeThickness = 1;
+            polygon.StrokeDashArray = null;
+            polygon.Fill = Utilities.theBrushRegionClear;
+         }
+         if (null == gi.MapItemCombat)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "UpdateCanvas_CombatRetreat(): gi.MapItemCombat=null");
+            return false;
+         }
+         foreach (string adjacent in gi.MapItemCombat.Territory.Adjacents)
+         {
+            ITerritory? t = Territories.theTerritories.Find(adjacent);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "UpdateCanvas_CombatRetreat(): t=null for adjacent=" + adjacent);
+               return false;
+            }
+            foreach (Polygon p in myPolygons)
+            {
+               if (t.ToString() == p.Name)
+               {
+                  p.Fill = Brushes.LightBlue;
+                  break;
+               }
+            }
+         }
+         return true;
       }
       //-------------END GAME HELPER FUNCTIONS---------------------------------
       private bool UpdateCanvasShowFeats()
@@ -3109,9 +3143,13 @@ namespace PleasantvilleGame
          };
          SolidColorBrush brush = new SolidColorBrush(color);
          brush.BeginAnimation(SolidColorBrush.ColorProperty, colorAnimation);
-         foreach (ITerritory t in gi.SelectedTerritories) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
+         foreach (Polygon polygon in myPolygons) 
          {
-            foreach (Polygon polygon in myPolygons) 
+            polygon.Stroke = Utilities.theBrushRegionClear;
+            polygon.StrokeThickness = 1;
+            polygon.StrokeDashArray = null;
+            polygon.Fill = Utilities.theBrushRegionClear;
+            foreach (ITerritory t in gi.SelectedTerritories) // Display flashing regions where conversations can happen. Iterate through the stacks looking for multiple counters per stack.
             {
                if (polygon.Name == t.ToString())
                {
@@ -3925,23 +3963,27 @@ namespace PleasantvilleGame
       }
       private bool PerformInterrogationFillPoloygons(IGameInstance gi)
       {
-         foreach (Polygon polygon in myPolygons)
-            polygon.Fill = Utilities.theBrushRegionClear;
          foreach (Polygon polygon in myPolygons) // Fill in spaces as black - all other spaces can be selected by user when searching for Zebulon
          {
-            ITerritory? t1 = Territories.theTerritories.Find(polygon.Name);
-            if (null == t1)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Perform_InterrogationFillPoloygons(): t1=null for polygon=" + polygon.Name);
-               return false;
-            }
-            if (false == t1.IsBuilding())
+            polygon.Stroke = Utilities.theBrushRegionClear;
+            polygon.StrokeThickness = 1;
+            polygon.StrokeDashArray = null;
+            polygon.Fill = Utilities.theBrushRegionClear;
+            ITerritory? t0 = gi.ZebulonTerritories.Find(polygon.Name);
+            if (null != t0)
             {
                polygon.Fill = Utilities.theSolidColorBrushBlack;
+               continue;
             }
             else
             {
-               if (true == gi.ZebulonTerritories.Contains(t1))
+               ITerritory? t1 = Territories.theTerritories.Find(polygon.Name);
+               if (null == t1)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Perform_InterrogationFillPoloygons(): t1=null for polygon=" + polygon.Name);
+                  return false;
+               }
+               if( false == t1.IsBuilding() )
                   polygon.Fill = Utilities.theSolidColorBrushBlack;
             }
          }
@@ -4224,11 +4266,13 @@ namespace PleasantvilleGame
             case GamePhase.Iterrogations:
                if (0 < myGameInstance.NumTownGuessesForZebulonLocation)
                {
-                  if (null != myStoryboardFlashing)
-                     myStoryboardFlashing.Stop();
-                  myStoryboardFlashing = null; // Iterrogations - stop all flashing
                   foreach (Polygon polygon in myPolygons)
+                  {
+                     polygon.Stroke = Utilities.theBrushRegionClear;
+                     polygon.StrokeThickness = 1;
+                     polygon.StrokeDashArray = null;
                      polygon.Fill = Utilities.theBrushRegionClear;
+                  }
                   Logger.Log(LogEnum.LE_SHOW_ITEROGATIONS, "MouseDown_Polygon(): tSelected=" + tSelected.ToString() + " guesses=" + myGameInstance.NumTownGuessesForZebulonLocation.ToString());
                   bool isAlreadySelected = false;
                   foreach (ITerritory t in myGameInstance.ZebulonTerritories)
