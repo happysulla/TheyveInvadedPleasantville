@@ -122,6 +122,12 @@ namespace PleasantvilleGame
       protected bool ResetPhase(IGameInstance gi, GamePhase phase)
       {
          Logger.Log(LogEnum.LE_SHOW_RESET_PHASE, "Reset_Phase(): ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + phase.ToString());
+         GameLoadMgr loadMgr = new GameLoadMgr();
+         if (false == loadMgr.SaveGame(gi, MainMenuViewer.RECOVER_FILENAME_PHASE))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Reset_Phase(): loadMgr.SaveGame() return false");
+            return false;
+         }
          gi.GamePhase = phase;
          gi.DieRollAction = GameAction.DieRollActionNone;
          gi.IsAlienAckedRandomMovement = false;
@@ -1047,6 +1053,12 @@ namespace PleasantvilleGame
          //-----------------------------------------------------------
          if ((GameAction.EndGameWin != action) && (GameAction.EndGameLose != action))
          {
+            GameLoadMgr loadMgr = new GameLoadMgr();
+            if (false == loadMgr.SaveGame(gi, MainMenuViewer.RECOVER_FILENAME_TURN))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "CheckFor_EndOfGame(): loadMgr.SaveGame() return false");
+               return false;
+            }
             if ( false == StartNewTurn(gi, ref action))
             {
                Logger.Log(LogEnum.LE_ERROR, "CheckFor_EndOfGame(): Start_NewTurn() returned false");
@@ -2077,6 +2089,13 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(): " + returnStatus);
                }
                break;
+            case GameAction.UpdateRecoverToFlashing:
+               if (false == CheckForTownMovement(gi, ref action)) // GameStateTownPlayerMovement.PerformAction(UpdateLoadingGameEnd)
+               {
+                  returnStatus = "CheckFor_TownOverstack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(UpdateLoadingGameEnd): " + returnStatus);
+               }
+               break;
             case GameAction.UpdateLoadingGame:
                if (false == LoadGame(ref gi))
                {
@@ -2197,6 +2216,13 @@ namespace PleasantvilleGame
                {
                   returnStatus = "CheckFor_Conversations() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateConversations.PerformAction(ConversationsRoll): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateRecoverToFlashing:
+               if (false == CheckForConversations(gi, ref action)) // GameStateTownPlayerMovement.PerformAction(UpdateLoadingGameEnd)
+               {
+                  returnStatus = "CheckFor_TownOverstack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(UpdateLoadingGameEnd): " + returnStatus);
                }
                break;
             case GameAction.UpdateLoadingGame:
@@ -2342,6 +2368,13 @@ namespace PleasantvilleGame
                {
                   returnStatus = "Scatter_Stack() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateInfluences.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateRecoverToFlashing:
+               if (false == CheckForInfluences(gi, ref action)) // GameStateTownPlayerMovement.PerformAction(UpdateLoadingGameEnd)
+               {
+                  returnStatus = "CheckFor_TownOverstack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(UpdateLoadingGameEnd): " + returnStatus);
                }
                break;
             case GameAction.UpdateLoadingGame:
@@ -2542,6 +2575,13 @@ namespace PleasantvilleGame
                {
                   returnStatus = "Scatter_Stack() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateRecoverToFlashing:
+               if (false == CheckForCombats(gi, ref action)) // GameStateTownPlayerMovement.PerformAction(UpdateLoadingGameEnd)
+               {
+                  returnStatus = "CheckFor_TownOverstack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(UpdateLoadingGameEnd): " + returnStatus);
                }
                break;
             case GameAction.UpdateLoadingGame:
@@ -2940,6 +2980,13 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateIterrogations.PerformAction(): " + returnStatus);
                }
                break;
+            case GameAction.UpdateRecoverToFlashing:
+               if (false == CheckForIterogations(gi, ref action)) // GameStateTownPlayerMovement.PerformAction(UpdateLoadingGameEnd)
+               {
+                  returnStatus = "CheckFor_TownOverstack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(UpdateLoadingGameEnd): " + returnStatus);
+               }
+               break;
             case GameAction.UpdateLoadingGame:
                if (false == LoadGame(ref gi))
                {
@@ -3080,6 +3127,13 @@ namespace PleasantvilleGame
                {
                   returnStatus = "Load_Game() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "GameStateIterrogations.PerformAction(): " + returnStatus);
+               }
+               break;
+            case GameAction.UpdateRecoverToFlashing:
+               if (false == CheckForImplantRemovals(gi, ref action)) // GameStateTownPlayerMovement.PerformAction(UpdateLoadingGameEnd)
+               {
+                  returnStatus = "CheckFor_TownOverstack() returned false";
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateTownPlayerMovement.PerformAction(UpdateLoadingGameEnd): " + returnStatus);
                }
                break;
             case GameAction.UpdateLoadingGameEnd:

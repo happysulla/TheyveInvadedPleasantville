@@ -116,7 +116,7 @@ namespace PleasantvilleGame
          myMainMenuViewer = new MainMenuViewer(ge, gi, myMainMenu);
          if (false == AddHotKeys(myMainMenuViewer))
          {
-            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): AddHotKeys() returned false");
+            Logger.Log(LogEnum.LE_ERROR, "GameViewerWindow(): Add_HotKeys() returned false");
             CtorError = true;
             return;
          }
@@ -331,12 +331,17 @@ namespace PleasantvilleGame
             command = new RoutedCommand();
             keyGesture = new KeyGesture(Key.R, ModifierKeys.Control);
             InputBindings.Add(new KeyBinding(command, keyGesture));
-            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemEditRecoverPhase_Click));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemEditRecover_Click, mmv.MenuItemEditRecover_ClickCanExecute));
+            //------------------------------------------------
+            command = new RoutedCommand();
+            keyGesture = new KeyGesture(Key.R, ModifierKeys.Alt);
+            InputBindings.Add(new KeyBinding(command, keyGesture));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemEditRecoverPhase_Click, mmv.MenuItemEditRecoverPhase_ClickCanExecute));
             //------------------------------------------------
             command = new RoutedCommand();
             keyGesture = new KeyGesture(Key.R, ModifierKeys.Control | ModifierKeys.Shift);
             InputBindings.Add(new KeyBinding(command, keyGesture));
-            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemEditRecoverCheckpoint_Click, mmv.MenuItemEditRecoverCheckpoint_ClickCanExecute));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemEditRecoverTurn_Click, mmv.MenuItemEditRecoverTurn_ClickCanExecute));
             //------------------------------------------------
             command = new RoutedCommand();
             keyGesture = new KeyGesture(Key.V, ModifierKeys.Control | ModifierKeys.Shift);

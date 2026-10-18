@@ -529,7 +529,10 @@ namespace PleasantvilleGame
                if (null != gr.myObserver )
                {
                   if (false == gr.myObserver.IsControlled) // controlled units do not become Wary
+                  {
                      gr.myObserver.IsWary = true;
+                     gr.myObserver.IsSkeptical = false;
+                  }
                }
             }
             else
@@ -549,7 +552,10 @@ namespace PleasantvilleGame
                if (null != gr.myObserver)
                {
                   if (false == gr.myObserver.IsControlled) // controlled units do not become Wary
+                  {
                      gr.myObserver.IsWary = true;
+                     gr.myObserver.IsSkeptical = false;
+                  }
                }
             }
             else
@@ -568,7 +574,10 @@ namespace PleasantvilleGame
                if (null != gr.myObserver)
                {
                   if (false == gr.myObserver.IsControlled) // controlled units do not become Wary
+                  {
                      gr.myObserver.IsWary = true;
+                     gr.myObserver.IsSkeptical = false;
+                  }
                }
             }
          }
@@ -582,7 +591,10 @@ namespace PleasantvilleGame
                if (null != gr.myObserver)
                {
                   if (false == gr.myObserver.IsControlled) // controlled units do not become Wary
+                  {
                      gr.myObserver.IsWary = true;
+                     gr.myObserver.IsSkeptical = false;
+                  }
                }
             }
          }
@@ -598,7 +610,10 @@ namespace PleasantvilleGame
                if (null != gr.myObserver)
                {
                   if (false == gr.myObserver.IsControlled) // controlled units do not become Wary
+                  {
                      gr.myObserver.IsWary = true;
+                     gr.myObserver.IsSkeptical = false;
+                  }
                }
             }
          }
@@ -614,7 +629,10 @@ namespace PleasantvilleGame
                if (null != gr.myObserver)
                {
                   if (false == gr.myObserver.IsControlled) // controlled units do not become Wary
+                  {
                      gr.myObserver.IsWary = true;
+                     gr.myObserver.IsSkeptical = false;
+                  }
                }
             }
          }

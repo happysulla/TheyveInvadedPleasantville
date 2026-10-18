@@ -13,7 +13,8 @@ namespace PleasantvilleGame
    class MainMenuViewer : IView
    {
       public Options? NewGameOptions { get; set; } = null;  // These options take affect when new game menu item is selected
-      private readonly string RECOVER_FILENAME = "CheckpointLastTurn.tip";
+      public static readonly string RECOVER_FILENAME_PHASE = "CheckpointLastPhase.tip";
+      public static readonly string RECOVER_FILENAME_TURN = "CheckpointLastTurn.tip";
       private readonly IGameEngine myGameEngine;
       private IGameInstance myGameInstance;
       private readonly Menu myMainMenu;                     // Top level menu items: File | View | Options | Help
@@ -23,8 +24,9 @@ namespace PleasantvilleGame
       private readonly MenuItem myMenuItemTopLevel4 = new MenuItem();
       private readonly MenuItem myMenuItemTopLevel14 = new MenuItem();
       private readonly MenuItem myMenuItemTopLevel21 = new MenuItem();
-      private readonly MenuItem myMenuItemTopLevel22 = new MenuItem();
-      private readonly MenuItem myMenuItemTopLevel23 = new MenuItem();
+      private readonly MenuItem myMenuItemTopLevel22 = new MenuItem(); // Recover 
+      private readonly MenuItem myMenuItemTopLevel23 = new MenuItem(); // Recover Last Round
+      private readonly MenuItem myMenuItemTopLevel24 = new MenuItem(); // Recover Last Turn
       //=======================================================
       public MainMenuViewer(IGameEngine ge, IGameInstance gi, Menu mi)
       {
@@ -33,7 +35,8 @@ namespace PleasantvilleGame
          myMainMenu = mi;
          if (false == Directory.Exists(GameLoadMgr.theGamesDirectory)) // create directory if does not exists
             Directory.CreateDirectory(GameLoadMgr.theGamesDirectory);
-         string filepath1 = GameLoadMgr.theGamesDirectory + RECOVER_FILENAME;
+         string filepath1 = GameLoadMgr.theGamesDirectory + RECOVER_FILENAME_PHASE;
+         string filepath2 = GameLoadMgr.theGamesDirectory + RECOVER_FILENAME_TURN;
          //------------------------------------------
          foreach (Control item in myMainMenu.Items) // Initialize all the menu items
          {
@@ -57,20 +60,29 @@ namespace PleasantvilleGame
                   myMenuItemTopLevel21.Click += MenuItemEditUndo_Click;
                   myMenuItemTopLevel2.Items.Add(myMenuItemTopLevel21);
                   //------------------------------
-                  MenuItem subItem22 = new MenuItem();
-                  subItem22.Header = "_Recover...";
-                  subItem22.InputGestureText = "Ctrl+R";
-                  subItem22.Click += MenuItemEditRecoverPhase_Click;
-                  myMenuItemTopLevel2.Items.Add(subItem22);
+                  myMenuItemTopLevel22.IsEnabled = false;
+                  myMenuItemTopLevel22.Header = "_Recover...";
+                  myMenuItemTopLevel22.InputGestureText = "Ctrl+R";
+                  myMenuItemTopLevel22.Click += MenuItemEditRecover_Click;
+                  myMenuItemTopLevel2.Items.Add(myMenuItemTopLevel22);
                   //------------------------------
-                  myMenuItemTopLevel23.Header = "_Recover Checkpoint...";
-                  myMenuItemTopLevel23.InputGestureText = "Ctrl+Shift+R";
-                  myMenuItemTopLevel23.Click += MenuItemEditRecoverCheckpoint_Click;
+                  myMenuItemTopLevel23.Header = "_Recover Last Phase...";
+                  myMenuItemTopLevel23.InputGestureText = "Alt+R";
+                  myMenuItemTopLevel23.Click += MenuItemEditRecoverPhase_Click;
                   if (true == File.Exists(filepath1))
                      myMenuItemTopLevel23.IsEnabled = true;
                   else
                      myMenuItemTopLevel23.IsEnabled = false;
                   myMenuItemTopLevel2.Items.Add(myMenuItemTopLevel23);
+                  //------------------------------
+                  myMenuItemTopLevel24.Header = "_Recover Last Turn...";
+                  myMenuItemTopLevel24.InputGestureText = "Ctrl+Shift+R";
+                  myMenuItemTopLevel24.Click += MenuItemEditRecoverTurn_Click;
+                  if (true == File.Exists(filepath2))
+                     myMenuItemTopLevel24.IsEnabled = true;
+                  else
+                     myMenuItemTopLevel24.IsEnabled = false;
+                  myMenuItemTopLevel2.Items.Add(myMenuItemTopLevel24);
                }
                //------------------------------------------------
                if (menuItem.Name == "myMenuItemTopLevel3")
@@ -187,6 +199,8 @@ namespace PleasantvilleGame
       }
       public void UpdateView(ref IGameInstance gi, GameAction action)
       {
+         if (false == Directory.Exists(GameLoadMgr.theGamesDirectory)) // create directory if does not exists
+            Directory.CreateDirectory(GameLoadMgr.theGamesDirectory);
          Logger.Log(LogEnum.LE_VIEW_UPDATE_MENU, "-----------------MainMenuViewer::Update_View() => action=" + action.ToString());
          myGameInstance = gi;
          switch (gi.GamePhase)
@@ -206,13 +220,33 @@ namespace PleasantvilleGame
                break;
             default:
                myMenuItemTopLevel14.IsEnabled = true;
-               if (false == Directory.Exists(GameLoadMgr.theGamesDirectory)) // create directory if does not exists
-                  Directory.CreateDirectory(GameLoadMgr.theGamesDirectory);
-               string filepath = GameLoadMgr.theGamesDirectory + "CheckpointLastDay.pbg";
+               //--------------------------
+               switch (myGameInstance.GamePhase)
+               {
+                  case GamePhase.TownspersonMovement:
+                  case GamePhase.Conversations:
+                  case GamePhase.Influences:
+                  case GamePhase.Combats:
+                  case GamePhase.Iterrogations:
+                  case GamePhase.ImplantRemovals:
+                     myMenuItemTopLevel22.IsEnabled = true;
+                     break;
+                  default:
+                     myMenuItemTopLevel22.IsEnabled = false;
+                     break;
+               }
+               //--------------------------
+               string filepath = GameLoadMgr.theGamesDirectory + RECOVER_FILENAME_PHASE;
                if (true == File.Exists(filepath))
                   myMenuItemTopLevel23.IsEnabled = true;
                else
                   myMenuItemTopLevel23.IsEnabled = false;
+               //--------------------------
+               filepath = GameLoadMgr.theGamesDirectory + RECOVER_FILENAME_TURN;
+               if (true == File.Exists(filepath))
+                  myMenuItemTopLevel24.IsEnabled = true;
+               else
+                  myMenuItemTopLevel24.IsEnabled = false;
                return;
          }
       }
@@ -326,15 +360,32 @@ namespace PleasantvilleGame
       {
          e.CanExecute = true;
       }
-      public void MenuItemEditRecoverPhase_Click(object sender, RoutedEventArgs e)
+      public void MenuItemEditRecover_Click(object sender, RoutedEventArgs e)
       {
-         GameAction action = GameAction.UpdateLoadingGame;
+         GameAction action = GameAction.UpdateRecoverToFlashing;
          myGameEngine.PerformAction(ref myGameInstance, ref action);
       }
-      public void MenuItemEditRecoverCheckpoint_Click(object sender, RoutedEventArgs e)
+      public void MenuItemEditRecover_ClickCanExecute(object sender, CanExecuteRoutedEventArgs e)
+      {
+         switch(myGameInstance.GamePhase)
+         {
+            case GamePhase.TownspersonMovement:
+            case GamePhase.Conversations:
+            case GamePhase.Influences:
+            case GamePhase.Combats:
+            case GamePhase.Iterrogations:
+            case GamePhase.ImplantRemovals:
+               e.CanExecute = true;
+               break;
+            default:
+               e.CanExecute = false;
+               break;
+         }
+      }
+      public void MenuItemEditRecoverPhase_Click(object sender, RoutedEventArgs e)
       {
          GameLoadMgr loadMgr = new GameLoadMgr();
-         IGameInstance? gi = loadMgr.OpenGame(RECOVER_FILENAME);
+         IGameInstance? gi = loadMgr.OpenGame(RECOVER_FILENAME_PHASE);
          if (null != gi)
          {
             myGameInstance = gi;
@@ -342,13 +393,13 @@ namespace PleasantvilleGame
             myGameEngine.PerformAction(ref gi, ref action);
          }
       }
-      public void MenuItemEditRecoverCheckpoint_ClickCanExecute(object sender, CanExecuteRoutedEventArgs e)
+      public void MenuItemEditRecoverPhase_ClickCanExecute(object sender, CanExecuteRoutedEventArgs e)
       {
          try
          {
             if (false == Directory.Exists(GameLoadMgr.theGamesDirectory)) // create directory if does not exists
                Directory.CreateDirectory(GameLoadMgr.theGamesDirectory);
-            string filepath = GameLoadMgr.theGamesDirectory + RECOVER_FILENAME;
+            string filepath = GameLoadMgr.theGamesDirectory + RECOVER_FILENAME_PHASE;
             if (true == File.Exists(filepath))
                e.CanExecute = true;
             else
@@ -356,7 +407,36 @@ namespace PleasantvilleGame
          }
          catch (Exception ex)
          {
-            Logger.Log(LogEnum.LE_ERROR, "MenuItemEditRecoverCheckpoint_ClickCanExecute(): path=" + GameLoadMgr.theGamesDirectory + " ex=" + ex.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "MenuItemEditRecoverPhase_ClickCanExecute(): path=" + GameLoadMgr.theGamesDirectory + " ex=" + ex.ToString());
+            e.CanExecute = false;
+         }
+      }
+      public void MenuItemEditRecoverTurn_Click(object sender, RoutedEventArgs e)
+      {
+         GameLoadMgr loadMgr = new GameLoadMgr();
+         IGameInstance? gi = loadMgr.OpenGame(RECOVER_FILENAME_TURN);
+         if (null != gi)
+         {
+            myGameInstance = gi;
+            GameAction action = GameAction.UpdateLoadingGame;
+            myGameEngine.PerformAction(ref gi, ref action);
+         }
+      }
+      public void MenuItemEditRecoverTurn_ClickCanExecute(object sender, CanExecuteRoutedEventArgs e)
+      {
+         try
+         {
+            if (false == Directory.Exists(GameLoadMgr.theGamesDirectory)) // create directory if does not exists
+               Directory.CreateDirectory(GameLoadMgr.theGamesDirectory);
+            string filepath = GameLoadMgr.theGamesDirectory + RECOVER_FILENAME_TURN;
+            if (true == File.Exists(filepath))
+               e.CanExecute = true;
+            else
+               e.CanExecute = false;
+         }
+         catch (Exception ex)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "MenuItemEditRecoverPhase_ClickCanExecute(): path=" + GameLoadMgr.theGamesDirectory + " ex=" + ex.ToString());
             e.CanExecute = false;
          }
       }

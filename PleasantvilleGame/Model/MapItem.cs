@@ -189,15 +189,16 @@ namespace PleasantvilleGame
          this.Zoom = mi.Zoom;
          this.IsMoved = mi.IsMoved;
          this.IsKilled = mi.IsKilled;
+         //--------------------------------------
          this.Location.X = mi.Location.X;
          this.Location.Y = mi.Location.Y;
-         //--------------------------------------
          this.TerritoryCurrent = mi.TerritoryCurrent;
          this.TerritoryStarting = mi.TerritoryStarting;
          //--------------------------------------
          this.Combat = mi.Combat;
          this.Influence = mi.Influence;
          this.Movement = mi.Movement;
+         this.MovementOriginal = mi.MovementOriginal;
          this.MovementUsed = mi.MovementUsed;
          //--------------------------------------
          this.IsKnockedout = mi.IsKnockedout;
@@ -205,31 +206,37 @@ namespace PleasantvilleGame
          this.IsAlienKnown = mi.IsAlienKnown;
          this.IsControlled = mi.IsControlled;
          this.IsImplantHeld = mi.IsImplantHeld;
+         this.IsImplantRemovalAttempt = mi.IsImplantRemovalAttempt;
+         this.IsInterrogated = mi.IsInterrogated;
          this.IsSkeptical = mi.IsSkeptical;
          this.IsStunned = mi.IsStunned;
          this.IsSurrendered = mi.IsSurrendered;
          this.IsTiedUp = mi.IsTiedUp;
          this.IsWary = mi.IsWary;
          //--------------------------------------
+         this.IsKnockedoutThisTurn = mi.IsKnockedoutThisTurn;
+         this.IsMovingThisTurn = mi.IsMovingThisTurn;
          this.IsConversedThisTurn = mi.IsConversedThisTurn;
          this.IsInfluencedThisTurn = mi.IsInfluencedThisTurn;
          this.IsCombatThisTurn = mi.IsCombatThisTurn;
-         this.IsImplantRemovalAttempt = mi.IsImplantRemovalAttempt;
+         this.IsImplantRemovalAttemptThisTurn = mi.IsImplantRemovalAttemptThisTurn;
       }
       public void Sync(IMapItem mi)
       {
          this.Zoom = mi.Zoom;
          this.IsMoved = mi.IsMoved;
+         this.IsMoved = mi.IsMoved;
+         this.IsKilled = mi.IsKilled;
+         //--------------------------------------
          this.Location.X = mi.Location.X;
          this.Location.Y = mi.Location.Y;
-         //--------------------------------------
-         //--------------------------------------
          this.TerritoryCurrent = mi.TerritoryCurrent;
          this.TerritoryStarting = mi.TerritoryStarting;
          //--------------------------------------
          this.Combat = mi.Combat;
          this.Influence = mi.Influence;
          this.Movement = mi.Movement;
+         this.MovementOriginal = mi.MovementOriginal;
          this.MovementUsed = mi.MovementUsed;
          //--------------------------------------
          this.IsKnockedout = mi.IsKnockedout;
@@ -237,17 +244,22 @@ namespace PleasantvilleGame
          this.IsAlienKnown = mi.IsAlienKnown;
          this.IsControlled = mi.IsControlled;
          this.IsImplantHeld = mi.IsImplantHeld;
+         this.IsImplantRemovalAttempt = mi.IsImplantRemovalAttempt;
+         this.IsInterrogated = mi.IsInterrogated;
          this.IsSkeptical = mi.IsSkeptical;
          this.IsStunned = mi.IsStunned;
          this.IsSurrendered = mi.IsSurrendered;
          this.IsTiedUp = mi.IsTiedUp;
          this.IsWary = mi.IsWary;
          //--------------------------------------
+         this.IsKnockedoutThisTurn = mi.IsKnockedoutThisTurn;
+         this.IsMovingThisTurn = mi.IsMovingThisTurn;
          this.IsConversedThisTurn = mi.IsConversedThisTurn;
          this.IsInfluencedThisTurn = mi.IsInfluencedThisTurn;
          this.IsCombatThisTurn = mi.IsCombatThisTurn;
-         this.IsImplantRemovalAttempt = mi.IsImplantRemovalAttempt;
-      } // sync this mapitem data with passed-in parameter during spotting
+         this.IsImplantRemovalAttemptThisTurn = mi.IsImplantRemovalAttemptThisTurn;
+
+      } 
       public bool IsUncontrolled()
       {
          if ((true == this.IsControlled) || (true == this.IsAlienUnknown) || (true == this.IsAlienKnown))
