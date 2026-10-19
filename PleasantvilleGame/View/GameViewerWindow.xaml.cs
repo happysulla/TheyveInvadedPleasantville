@@ -1344,6 +1344,7 @@ namespace PleasantvilleGame
       {
          myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas); // UploadNewGame - Return to previous saved zoom level
          ////----------------------------------
+         UpdateActionPanelClear(true);
          GameAction nextAction = GameAction.Error;
          if (GameAction.UpdateLoadingGame == action)
          {
@@ -1750,14 +1751,13 @@ namespace PleasantvilleGame
       {
          const int button1Left = 30;
          const int button2Left = 97;
-
          Canvas.SetLeft(myButton1, button1Left);
          Canvas.SetLeft(myRectangle1, button1Left);
          Canvas.SetLeft(myLabelButton1, button1Left);
          Canvas.SetLeft(myButton2, button2Left);
          Canvas.SetLeft(myRectangle2, button2Left);
          Canvas.SetLeft(myLabelButton2, button2Left);
-
+         //-----------------------------
          if( true == isTotalReset )
          {
             myLabelHeading.Visibility = Visibility.Hidden;
@@ -1768,14 +1768,14 @@ namespace PleasantvilleGame
             myTextBoxResults.Clear();
             myTextBoxResults.Visibility = Visibility.Hidden;
          }
-
+         //-----------------------------
          myLabelButton1.Visibility = Visibility.Hidden;
          myLabelButton2.Visibility = Visibility.Hidden;
          myLabelButton3.Visibility = Visibility.Hidden;
          myLabelButton4.Visibility = Visibility.Hidden;
          myLabelButton5.Visibility = Visibility.Hidden;
          myLabelButton6.Visibility = Visibility.Hidden;
-
+         //-----------------------------
          myButton1.Visibility = Visibility.Hidden;
          myButton2.Visibility = Visibility.Hidden;
          myButton3.Visibility = Visibility.Hidden;
@@ -1784,14 +1784,14 @@ namespace PleasantvilleGame
          myButton6.Visibility = Visibility.Hidden;
          myButtonHelperOK.Visibility = Visibility.Hidden;
          myButtonHelperCancel.Visibility = Visibility.Hidden;
-
+         //-----------------------------
          myRectangle1.Visibility = Visibility.Hidden;
          myRectangle2.Visibility = Visibility.Hidden;
          myRectangle3.Visibility = Visibility.Hidden;
          myRectangle4.Visibility = Visibility.Hidden;
          myRectangle5.Visibility = Visibility.Hidden;
          myRectangle6.Visibility = Visibility.Hidden;
-
+         //-----------------------------
          myLeftMapItemsInActionPanel.Clear();
          myRightMapItemsInActionPanel.Clear();
          myLeftMapItemsInActionPanelSelected.Clear();
@@ -1843,7 +1843,7 @@ namespace PleasantvilleGame
                foreach (IMapItem mi in myRightMapItemsInActionPanelSelected)
                   rightSelectedMapItems.Add(mi);
                //--------------------------------------
-               UpdateActionPanelClear(false);
+               UpdateActionPanelClear(false); 
                myLeftMapItemsInActionPanel = rightMapItems;
                myRightMapItemsInActionPanel = leftMapItems;
                myLeftMapItemsInActionPanelSelected = rightSelectedMapItems;
@@ -2189,14 +2189,11 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMain_MapItems(): Updating mi=" + mi.Name + " X=" + mi.Location.X.ToString("F2") + " Y=" + mi.Location.Y.ToString("F2"));
                   if (true == stack.IsStacked)
                   {
-                     Canvas.SetLeft(b, t.CenterPoint.X - offset);
-                     Canvas.SetTop(b, t.CenterPoint.Y - offset);
+                     mi.Location.X = t.CenterPoint.X - offset;
+                     mi.Location.Y = t.CenterPoint.Y - offset;
                   }
-                  else
-                  {
-                     Canvas.SetLeft(b, mi.Location.X);
-                     Canvas.SetTop(b, mi.Location.Y);
-                  }
+                  Canvas.SetLeft(b, mi.Location.X);
+                  Canvas.SetTop(b, mi.Location.Y);
                   Canvas.SetZIndex(b, myZIndexLastUsed++);
                }
                else
@@ -2207,14 +2204,11 @@ namespace PleasantvilleGame
                   myButtons.Add(newButton);
                   if (true == stack.IsStacked)
                   {
-                     Canvas.SetLeft(newButton, t.CenterPoint.X - offset);
-                     Canvas.SetTop(newButton, t.CenterPoint.Y - offset);
+                     mi.Location.X = t.CenterPoint.X - offset;
+                     mi.Location.Y = t.CenterPoint.Y - offset;
                   }
-                  else
-                  {
-                     Canvas.SetLeft(newButton, mi.Location.X);
-                     Canvas.SetTop(newButton, mi.Location.Y);
-                  }
+                  Canvas.SetLeft(newButton, mi.Location.X);
+                  Canvas.SetTop(newButton, mi.Location.Y);
                   Canvas.SetZIndex(newButton, myZIndexLastUsed++);
                   myCanvasMain.Children.Add(newButton);
                   newButton.ContextMenu = myContextMenuButton;

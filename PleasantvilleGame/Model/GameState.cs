@@ -133,6 +133,7 @@ namespace PleasantvilleGame
          gi.IsAlienAckedRandomMovement = false;
          gi.NumTownGuessesForZebulonLocation = 0;
          gi.RandomMoves.Clear();
+         gi.MapItemCombat.Clear();
          gi.AlienTakeovers.Clear();
          Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "Reset_Phase()");
          gi.MapItemMoves.Clear();
@@ -455,8 +456,8 @@ namespace PleasantvilleGame
                else if (true == mi.IsAlienUnknown)
                   unknownAliens.Add(mi);
                else
-                  uncontrolledPeps.Add(mi)
-; }
+                  uncontrolledPeps.Add(mi); 
+            }
             if ((0 < controlledPeps.Count) && ((0 < uncontrolledPeps.Count) || (0 < knownAliens.Count) || (0 < unknownAliens.Count)))
             {
                if (GamePhase.Combats != gi.GamePhase)
@@ -2674,6 +2675,7 @@ namespace PleasantvilleGame
                               gi.Zebulon.IsKilled = true;
                            else
                               action = GameAction.CombatDefenderWin;
+                           Logger.Log(LogEnum.LE_SHOW_COMBATS, "GameStateCombat.PerformAction(CombatsRoll): DEFENDER_WINS Combat=" + gi.MapItemCombat.ToString() );
                            break;
                         case CombatResult.AttackerWins:
                            if ((true == firstAttacker.IsControlled) && (true == firstDefender.IsAlien()))
@@ -2690,6 +2692,7 @@ namespace PleasantvilleGame
                               gi.Zebulon.IsKilled = true;
                            else
                               action = GameAction.CombatAttackerWin;
+                           Logger.Log(LogEnum.LE_SHOW_COMBATS, "GameStateCombat.PerformAction(CombatsRoll): ATTACKER_WINS Combat=" + gi.MapItemCombat.ToString());
                            break;
                         case CombatResult.AttackerFlees:
                            if (true == isZebulonPartOfAttackers)

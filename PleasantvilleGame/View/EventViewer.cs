@@ -208,6 +208,12 @@ namespace PleasantvilleGame
             case GameAction.UpdateLoadingGame:
                myGameInstance = gi;
                myRulesMgr.GameInstance = gi;
+               myEventViewerCombatResolve = new EventViewerCombatResolve(myGameEngine, myGameInstance, myCanvasMain, myScrollViewerTextBlock, myRulesMgr, myDieRoller);
+               if (true == myEventViewerCombatResolve.CtorError)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "EventViewer(): EventViewerCombatResolve.CtorError=true");
+                  return;
+               }
                gi.IsGridActive = false;
                myScrollViewerTextBlock.Cursor = Cursors.Arrow;
                foreach (string key in myRulesMgr.Events.Keys) // For each event, create a dictionary entry. There can be no more than three die rolls per event
@@ -215,7 +221,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_RESET_ROLL_STATE, "EventViewer.UpdateView(): resetting die rolls gi.DieResults.Count=" + gi.DieResults.Count.ToString());
                if (false == OpenEvent(gi, gi.EventActive))
                {
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): OpenEvent() returned false ae=" + myGameInstance.EventActive + " a=" + action.ToString());
+                  Logger.Log(LogEnum.LE_ERROR, "EventViewer.UpdateView(): OpenEvent() returned false ae=" + myGameInstance.EventActive + " a=" + action.ToString());
                   return;
                }
                break;
@@ -345,11 +351,12 @@ namespace PleasantvilleGame
                break;
             case GameAction.CombatAttackerWin:
             case GameAction.CombatDefenderWin:
+               Logger.Log(LogEnum.LE_SHOW_COMBATS, "EventViewer.UpdateView(" + action.ToString() + "): Combat=" + gi.MapItemCombat.ToString());
                theIsEventViewerSubclassActive = true;
                if( null == myEventViewerCombatResolve)
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): myEventViewerCombatResolve=null");
+                  Logger.Log(LogEnum.LE_ERROR, "EventViewer.UpdateView(): myEventViewerCombatResolve=null");
                else if (false == myEventViewerCombatResolve.ResolveCombat(ShowCombatResults))
-                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Resolve_Combat() returned false");
+                  Logger.Log(LogEnum.LE_ERROR, "EventViewer.UpdateView(): Resolve_Combat() returned false");
                break;
             case GameAction.AlienTakeoversShow:
                theIsEventViewerSubclassActive = true;

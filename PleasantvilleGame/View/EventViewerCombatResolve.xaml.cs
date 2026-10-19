@@ -162,6 +162,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Resolve_Combat(): myGameInstance.MapItemCombat=null");
             return false;
          }
+         Logger.Log(LogEnum.LE_SHOW_COMBATS, "Resolve_Combat(): Combat=" + myGameInstance.MapItemCombat.ToString());
          myCallback = callback;
          myState = E11Enum.ROLL_FOR_COMBAT;
          myIsRollInProgress = false;
