@@ -214,6 +214,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "EventViewer(): EventViewerCombatResolve.CtorError=true");
                   return;
                }
+               theIsEventViewerSubclassActive = false;
                gi.IsGridActive = false;
                myScrollViewerTextBlock.Cursor = Cursors.Arrow;
                foreach (string key in myRulesMgr.Events.Keys) // For each event, create a dictionary entry. There can be no more than three die rolls per event
