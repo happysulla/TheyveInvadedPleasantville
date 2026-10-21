@@ -140,7 +140,7 @@ namespace PleasantvilleGame
             Object? o = myList[index];
             if (null == o)
             {
-               Logger.Log(LogEnum.LE_ERROR, "MapItemCombats.RemoveAt(): null object at index " + index.ToString());
+               Logger.Log(LogEnum.LE_ERROR, "MapItemCombats.this(): null object at index " + index.ToString());
                return null;
             }
             IMapItemCombat cr = (IMapItemCombat)o;

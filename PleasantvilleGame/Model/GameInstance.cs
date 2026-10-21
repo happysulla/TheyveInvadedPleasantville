@@ -36,6 +36,7 @@ namespace PleasantvilleGame
       //------------------------------------------------
       public List<RandomMoveData> RandomMoves { get; set; } = new List<RandomMoveData>();
       public Dictionary<IMapItem, IMapItem> AlienTakeovers { get; set; } = new Dictionary<IMapItem, IMapItem>();
+      public IMapItemTakeovers Takeovers { get; set; } = new MapItemTakeovers();
       //------------------------------------------------
       public IMapItemMoves MapItemMoves { get; set; } = new MapItemMoves();
       public IStacks Stacks { get; set; } = new Stacks();

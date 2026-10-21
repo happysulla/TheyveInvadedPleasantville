@@ -127,24 +127,23 @@ Once in this phase, each alien controlled counter may halt all movement of one t
 <LineBreak/><LineBreak/>"
 e009t	"<Bold>e009t Conversations</Bold>  <InlineUIContainer><Button Content='r7.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
-Conversation is how the Town player discovers if a townsperson is Alien controlled.
+Conversation is how the Town player discovers if a townsperson is Alien controlled. Click a flashing space to start a conversation.
 <LineBreak/><LineBreak/>
-Click a flashing space to start a conversation.<LineBreak/><LineBreak/>
 On a roll of nine or better including modifiers from the <InlineUIContainer><Button Content='Conversation Modifiers' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table, the Town player deteremines if it is Alien controlled counter.
 <LineBreak/><LineBreak/>
-After completion of all possible conversations, the game automatically moves to the Influence phase."
+After completion of all possible conversations, the game automatically moves to the Influence phase. All flashing spaces must be chosen. Select <Bold>Cancel</Bold> button if want to skip conversation attempt."
 e010t	"<Bold>e010t Influences</Bold>  <InlineUIContainer><Button Content='r7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
-Influencing is how the Town player convinces other uncontrolled townspeople to join their side. Click a flashing space to start a influence process.
+Influencing is how the Town player convinces other uncontrolled townspeople to join their side. Click a flashing space to start an influence attempt. 
 <LineBreak/><LineBreak/>
-To influence another uncontrolled counter, the Town player compares the Influence Factors (bottom right per <InlineUIContainer><Button Content='r2.2.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>) and compares the odds ration to the 
+To influence another uncontrolled counter, the Town player compares the Influence Factors (bottom right per <InlineUIContainer><Button Content='r2.2.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>) and compares the odds ratio to the 
 <InlineUIContainer><Button Content='Influence Results' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table adjusting with the 
 <InlineUIContainer><Button Content='Influence Modifiers' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>.
 <LineBreak/><LineBreak/>
-After completion of all possible infleunces have occurred, the game automatically moves to the Combat phase."
+After completion of all possible infleunces have occurred, the game automatically moves to the Combat phase. All flashing spaces must be chosen. Select <Bold>Cancel</Bold> button if want to skip influence attempt."
 e011t	"<Bold>e011t Combats</Bold>  <InlineUIContainer><Button Content='r8.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
-All combat is voluntary. Combat is started by clicking a flashing red space. If the Town player attacks one or more uncontrolled counters thinking them to be Alien controlled, the result is automatically 'Attacker Wins' for the Town player, regardless of the number of uncontrolled townspeople. 
+All combat is voluntary. Combat is started by clicking a flashing red space. If the Town player attacks one or more uncontrolled counters thinking them to be Alien controlled, the result is automatically 'Win' for the Town player, regardless of the number of uncontrolled townspeople. 
 <LineBreak/><LineBreak/>
 The Combat Factors <InlineUIContainer><Button Content='r2.2.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> are compared to arriving at a postive difference (attacker is always greater number). The <InlineUIContainer><Button Content='Combat Results' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table determines the outcome.
 <LineBreak/><LineBreak/>Combat can be skipped by clicking the following image.
@@ -166,7 +165,7 @@ Stunned town people retreat one space. Click on one of the blue colored spaces t
 <LineBreak/><LineBreak/>"
 e012t	"<Bold>e012t Interrogations</Bold>  <InlineUIContainer><Button Content='r8.7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
-Any conscious, defeated, Alien controlled counter may be interrogated by a Town controlled piece. Click on flashing space. Select OK button in the helper panel.
+Any conscious, defeated, Alien controlled counter may be interrogated by a Town controlled piece. Click on flashing space to begin. Select OK button in helper panel.
 <LineBreak/><LineBreak/>
 Choose a building area that is not colored black. If Zebulon is found, the counter is placed on the board and can be defeated in combat to win the game. 
 <LineBreak/><LineBreak/>
@@ -188,7 +187,7 @@ e013t	"<Bold>e013t Implant Removals</Bold>  <InlineUIContainer><Button Content='
 <LineBreak/><LineBreak/>
 The Town player may try to remove this implant from a defeated Alien controlled townsperson, thus breaking the Alien player's control.
 <LineBreak/><LineBreak/>
- Removing the implant generates an electric shock may erases all memory of the Alien HQ from the victim's memory, a unique safegard which is built into the implant's circuits.
+Removing the implant generates an electric shock may erases all memory of the Alien HQ from the victim's memory, a unique safegard which is built into the implant's circuits.
 <LineBreak/><LineBreak/>
 Click a flashing space to begin."
 e501	"<Bold>e501 Game Won!!!</Bold>

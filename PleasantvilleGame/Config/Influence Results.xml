@@ -13,7 +13,14 @@
 	<TableRowGroup>
 		<TableRow  FontSize='18' >
 			<TableCell ColumnSpan='9' BorderBrush='Black' TextAlignment='Center'  BorderThickness='1'>
-				<Paragraph><LineBreak/>INFLUENCE RESULTS TABLE<LineBreak/></Paragraph>
+				<Paragraph>
+					<LineBreak/>
+					INFLUENCE RESULTS TABLE 
+					<InlineUIContainer>
+						<Button Content='Influence Modifiers' FontFamily='Courier New'  FontSize='10'></Button>
+					</InlineUIContainer>
+					<LineBreak/>
+				</Paragraph>
 			</TableCell>
 		</TableRow>
 	</TableRowGroup>

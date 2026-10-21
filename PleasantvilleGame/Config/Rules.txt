@@ -257,7 +257,7 @@ r7.0	"<Bold>r7.0 Conversation and Influence (Town player only)</Bold><LineBreak/
 Conversation and Influence are methods where the Town player interacts with uncontrolled counters to either determine if townsperson is Alien controlled or a way for Town player to recruit additional Town controlled counters.
 <LineBreak/><LineBreak/>
 <InlineUIContainer><Button Content='r7.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Conversation<LineBreak/>
-<InlineUIContainer><Button Content='r7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Influence<LineBreak/>"
+<InlineUIContainer><Button Content='r7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Influencing and Becoming Skeptical<LineBreak/>"
 r7.1	"<Bold>r7.1 Conversation</Bold><LineBreak/><LineBreak/>
 Conversation is how the Town player discovers if a townsperson is Alien controlled.
 <LineBreak/><LineBreak/>
@@ -266,7 +266,7 @@ In this phase, each Town controlled counter can talk to one suspected townsperso
 On a roll of nine or better including modifiers from the <InlineUIContainer><Button Content='Conversation Modifiers' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table, the Town player deteremines if it is Alien controlled counter.
 <LineBreak/><LineBreak/>
 A townsperson may be talked to more than once a turn if there is a more than one Town controlled piece in that space, provided each Town controlled piece only makes one attempt at conversation each turn. "
-r7.2	"<Bold>r7.2 Influence</Bold><LineBreak/><LineBreak/>
+r7.2	"<Bold>r7.2 Influencing and Becoming Skeptical</Bold><LineBreak/><LineBreak/>
 The Town player may also try to influence uncontrolled townsperson counters during this phase. 
 <LineBreak/><LineBreak/>
 Influencing is trying to convince other townspeople that there is an alien plot afoot to take-over Pleasantville. 
@@ -277,7 +277,7 @@ This is how the Town player can gain control of additional townspeople. Alien co
 <InlineUIContainer><Button Content='r7.2.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Process<LineBreak/>
 <InlineUIContainer><Button Content='r7.2.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Mutliple Town Controlled Counters<LineBreak/>
 <InlineUIContainer><Button Content='r7.2.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Rolling<LineBreak/>
-<InlineUIContainer><Button Content='r7.2.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> No Effect Result<LineBreak/>
+<InlineUIContainer><Button Content='r7.2.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> No Effect Result  - Becoming Skeptical<LineBreak/>
 <InlineUIContainer><Button Content='r7.2.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Convinced Result<LineBreak/>
 <InlineUIContainer><Button Content='r7.2.6' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Alien Controlled Counters"
 r7.2.1	"<Bold>r7.2.1 Influence - Process</Bold><LineBreak/><LineBreak/>
@@ -319,7 +319,7 @@ involving Alien controlled counters upon which an influence attempt was made tha
 <InlineUIContainer><Button Content='Combat Results' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table in favor of the Alien player. The shift occurs whether or not the Town player discovered the Alien counter's true identity before combat. 
 <LineBreak/><LineBreak/>
 For example, an Alien attack that normally would be rolled on the +1-3 column would shift to the +4-6 column instead. If the Town player made the attack on the +4-6 column, it would shift to the +1-3 column shifting one column in favor of the Alien player."
-r8.0	"<Bold>r8.0 Combat</Bold><LineBreak/><LineBreak/>
+r8.0	"<Bold>r8.0 Combat (Tie Up, Interrogation, and Implant Removal)</Bold><LineBreak/><LineBreak/>
 All combat is resolved in this phase including combat with the Alien controlled counters upon which an influence attempt was made per 
 <InlineUIContainer><Button Content='r7.2.6' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. Both players will resolve combat during this phase of the turn.
 <LineBreak/><LineBreak/>
@@ -329,7 +329,7 @@ All combat is resolved in this phase including combat with the Alien controlled 
 <InlineUIContainer><Button Content='r8.4' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Example<LineBreak/>
 <InlineUIContainer><Button Content='r8.5' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Stacking<LineBreak/>
 <InlineUIContainer><Button Content='r8.6' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Results<LineBreak/>
-<InlineUIContainer><Button Content='r8.7' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Post Combat Activity (Town player only)<LineBreak/>"
+<InlineUIContainer><Button Content='r8.7' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Post Combat Activity (Tie Up, Interrogation, and Implant Removal)<LineBreak/>"
 r8.1	"<Bold>r8.1 Combat - General Rules</Bold><LineBreak/><LineBreak/>
 Combat takes place only between counters sharing the same space. It is not permitted to attack a counter in an adjacent space.
 <LineBreak/><LineBreak/>
@@ -411,11 +411,11 @@ The Town player may try to remove this implant from a defeated Alien controlled 
 Successfully removing the implant causes the victim to come under control of the Town player. If an implant is removed intact, it can be carried as evidence. Such evidence adds +1 to the influence roll when the townsperson carrying the implant tries to influence another townsperson per <InlineUIContainer><Button Content='r7.2.3' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. 
 <LineBreak/><LineBreak/>
 As only Alien controlled counters may be interrogated, it is wise to interrogate per <InlineUIContainer><Button Content='r8.7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>  before attempting to remove an implant. Removing the implant generates an electric shock which erases all memory of the Alien HQ from the victim's memory, a unique safegard which is built into the implant's circuits."
-r9.0	"<Bold>r9.0 Alien Take-Over And Observation</Bold><LineBreak/><LineBreak/>
+r9.0	"<Bold>r9.0 Alien Take-Over, Observation, Wary</Bold><LineBreak/><LineBreak/>
 During this phase, the Alien player may 'take-over' uncontrolled townspeople or stunned controlled Town pieces (but not unconscious), thus bringing them under Alien control. This is handled secretly so the Town player does know know which counters are Alien controlled.
 <LineBreak/><LineBreak/>
 <InlineUIContainer><Button Content='r9.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Take-Over<LineBreak/>
-<InlineUIContainer><Button Content='r9.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Observation<LineBreak/>"
+<InlineUIContainer><Button Content='r9.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Observation and Becoming Wary<LineBreak/>"
 r9.1	"<Bold>r9.1 Take-Over</Bold><LineBreak/><LineBreak/>
 At the beginning of this phase, the Alien player may remove from the map any group of two counters in the same space neither which is controlled by the Town player.
 <LineBreak/><LineBreak/>
@@ -435,16 +435,16 @@ Take-over can occur in any space on the board. One of the two counters must be a
 An Alien controlled counter may only take-over one townsperson per turn. If there is more than one Alien controlled counter in the same space and more than one uncontrolled counter, each Alien controlled counter may take-over an uncontrolled counter. 
 <LineBreak/><LineBreak/>
 An uncontrolled townsperson who has successfully observed an Alien takeover is not subject to take-over as explained in Observation section per <InlineUIContainer><Button Content='r9.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>. Observation only applies if the uncontrolled counter is also not being taken-over in the same turn in the same area. Observation roll occurs whenever the take-over chance (when counters are removed from board) to do a possible take-over."
-r9.2	"<Bold>r9.2 Take-over Observation</Bold><LineBreak/><LineBreak/>
+r9.2	"<Bold>r9.2 Take-over Observation (Becoming Wary)</Bold><LineBreak/><LineBreak/>
 There is a chance that a nearby townsperson will watch closely enough to detect an Alien take-over if one occurs. 
 <LineBreak/><LineBreak/>
 Any time the Alien player removes counters from the mapboard during a take-over, a townsperson might notice or observe the take-over. 
 <LineBreak/><LineBreak/>
 Refer to the <InlineUIContainer><Button Content='Observation' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table which gives the number that must be rolled on one die for a townsperson to successfully observe a take-over based on the townsperson location to the observation space.
 <LineBreak/><LineBreak/>
-<InlineUIContainer><Button Content='r9.2.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Observation Example<LineBreak/>
+<InlineUIContainer><Button Content='r9.2.1' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Becoming Wary<LineBreak/>
 <InlineUIContainer><Button Content='r9.2.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Observation Restrictions<LineBreak/>"
-r9.2.1	"<Bold>r9.2.1 Observation Example</Bold><LineBreak/><LineBreak/>
+r9.2.1	"<Bold>r9.2.1 Becoming Wary</Bold><LineBreak/><LineBreak/>
 If the observation attempt is successful, the Town player may flip over one of the observed counters to see if it is Alien controlled. If an Alien controlled counter is discovered, and the observing townsperson is currently uncontrolled, the counter has observed a take-over. 
 <LineBreak/><LineBreak/>
 The observing counter is still uncontrolled but wary.

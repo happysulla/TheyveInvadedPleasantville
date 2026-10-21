@@ -78,11 +78,11 @@ namespace PleasantvilleGame
             case "Influence Modifiers":
                this.Title = "Modifiers to Influence Attempts";
                this.Background = theBrushTan;
-               heightOfConcern = 210.0;
-               widthOfConcern = 290.0;
+               heightOfConcern = 200.0;
+               widthOfConcern = 340.0;
                break;
             case "Influence Results":
-               this.Title = "Implant Removal";
+               this.Title = "Influence Results";
                this.Background = theBrushTan;
                heightOfConcern = 350.0;
                widthOfConcern = 605.0;

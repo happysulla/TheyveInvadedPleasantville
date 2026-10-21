@@ -1,7 +1,7 @@
 ﻿<Table CellSpacing="2" BorderBrush="Black" BorderThickness="3">
 	<Table.Columns>
-		<TableColumn Width='120'/>
-		<TableColumn Width='120'/>
+		<TableColumn Width='220'/>
+		<TableColumn Width='70'/>
 	</Table.Columns>
 	<TableRowGroup>
 		<TableRow  FontSize='18' >
@@ -31,7 +31,12 @@
 	<TableRowGroup>
 		<TableRow  FontSize='12' >
 			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph><Run Text='Townsperson is skeptical'></Run></Paragraph>
+				<Paragraph TextAlignment='Left'>
+					<Run Text='Townsperson is skeptical '></Run>
+					<InlineUIContainer>
+						<Button Content='r7.2.4' FontFamily='Courier New'  FontSize='10'></Button>
+					</InlineUIContainer>
+				</Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' BorderThickness='1'>
 				<Paragraph><Run Text='-1'></Run></Paragraph>
@@ -39,7 +44,12 @@
 		</TableRow>
 	    <TableRow  FontSize='12' Background='BurlyWood'>
 			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph><Run Text='Townsperson is wary'></Run></Paragraph>
+				<Paragraph TextAlignment='Left'>
+					<Run Text='Townsperson is wary '></Run>
+					<InlineUIContainer>
+						<Button Content='r9.2.1' FontFamily='Courier New'  FontSize='10'></Button>
+					</InlineUIContainer>
+				</Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' BorderThickness='1'>
 				<Paragraph><Run Text='+1'></Run></Paragraph>
@@ -47,7 +57,12 @@
 		</TableRow>
 		<TableRow  FontSize='12' >
 			<TableCell BorderBrush='Black' BorderThickness='1'>
-				<Paragraph><Run Text='Influence counter has implant as evidence'></Run></Paragraph>
+				<Paragraph TextAlignment='Left'>
+					<Run Text='Influence counter has implant as evidence'></Run>
+					<InlineUIContainer>
+						<Button Content='r8.7.3' FontFamily='Courier New'  FontSize='10'></Button>
+					</InlineUIContainer>
+				</Paragraph>
 			</TableCell>
 			<TableCell BorderBrush='Black' BorderThickness='1'>
 				<Paragraph><Run Text='+2'></Run></Paragraph>
