@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.VisualBasic.Devices;
 using System;
 using System.Globalization;
 using System.IO;
@@ -1251,8 +1252,8 @@ namespace PleasantvilleGame
                return null;
             }
             //----------------------------------------------
-            gi.AlienTakeovers.Clear();
-            if (false == ReadXmlAlienTakeovers(reader, gi.AlienTakeovers))
+            gi.Takeovers.Clear();
+            if (false == ReadXmlAlienTakeovers(reader, gi.Takeovers))
             {
                Logger.Log(LogEnum.LE_ERROR, "ReadXml_GameInstance(): ReadXml_AlienTakeovers() returned false");
                return null;
@@ -2128,6 +2129,63 @@ namespace PleasantvilleGame
             }
             mi.IsImplantRemovalAttemptThisTurn = Convert.ToBoolean(sIsImplantRemovalAttemptThisTurn);
             //---------------------------------------------
+            reader.Read();
+            if (false == reader.IsStartElement())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsObserveThisTurn) = false");
+               return false;
+            }
+            if (reader.Name != "IsObserveThisTurn")
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsObserveThisTurn != (node=" + reader.Name + ")");
+               return false;
+            }
+            string? sIsObserveThisTurn = reader.GetAttribute("value");
+            if (null == sIsObserveThisTurn)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): sIsObservedThisTurn=null");
+               return false;
+            }
+            mi.IsObserveThisTurn = Convert.ToBoolean(sIsObserveThisTurn);
+            //---------------------------------------------
+            reader.Read();
+            if (false == reader.IsStartElement())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsObservedThisTurn) = false");
+               return false;
+            }
+            if (reader.Name != "IsObservedThisTurn")
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsObservedThisTurn != (node=" + reader.Name + ")");
+               return false;
+            }
+            string? sIsObservedThisTurn = reader.GetAttribute("value");
+            if (null == sIsObservedThisTurn)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): sIsObservedThisTurn=null");
+               return false;
+            }
+            mi.IsObservedThisTurn = Convert.ToBoolean(sIsObservedThisTurn);
+            //---------------------------------------------
+            reader.Read();
+            if (false == reader.IsStartElement())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsTakenOverThisTurn) = false");
+               return false;
+            }
+            if (reader.Name != "IsTakenOverThisTurn")
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsTakenOverThisTurn != (node=" + reader.Name + ")");
+               return false;
+            }
+            string? sIsTakenOverThisTurn = reader.GetAttribute("value");
+            if (null == sIsTakenOverThisTurn)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsTakenOverThisTurn=null");
+               return false;
+            }
+            mi.IsTakenOverThisTurn = Convert.ToBoolean(sIsTakenOverThisTurn);
+            //---------------------------------------------
             reader.Read(); // get past </MapItem>
             theMapItems.Add(mi);
          }
@@ -2602,6 +2660,130 @@ namespace PleasantvilleGame
                return false;
             }
             takeovers[mi1] = mi2;
+         }
+         if (0 < count)
+            reader.Read(); // get past </AlienTakeovers>
+         return true;
+      }
+      private bool ReadXmlAlienTakeovers(XmlReader reader, IMapItemTakeovers takeovers)
+      {
+         takeovers.Clear();
+         reader.Read();
+         if (false == reader.IsStartElement())
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): reader.IsStartElement(AlienTakeovers) = false");
+            return false;
+         }
+         if (reader.Name != "AlienTakeovers")
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): AlienTakeovers != (node=" + reader.Name + ")");
+            return false;
+         }
+         string? sCount = reader.GetAttribute("count");
+         if (null == sCount)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): Count=null");
+            return false;
+         }
+         //-------------------------------------
+         int count = int.Parse(sCount);
+         for (int i = 0; i < count; ++i)
+         {
+            IMapItemTakeover takeover = new MapItemTakeover();
+            reader.Read();
+            if (false == reader.IsStartElement())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): IsStartElement(Takeover) returned false");
+               return false;
+            }
+            if (reader.Name != "Takeover")
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): Takeover != " + reader.Name);
+               return false;
+            }
+            //-------------------------------------
+            IMapItem? alien = null;
+            if (false == ReadXmlMapItem(reader, ref alien))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): Read_XmlMapItem(alien) returned false");
+               return false;
+            }
+            if (null == alien)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): Read_XmlMapItem(alien) returned null");
+               return false;
+            }
+            takeover.Alien = alien;
+            //-------------------------------------
+            IMapItem? victim = null;
+            if (false == ReadXmlMapItem(reader, ref victim))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): Read_XmlMapItem(victim) returned false");
+               return false;
+            }
+            if (null == victim)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): Read_XmlMapItem(victim) returned null");
+               return false;
+            }
+            takeover.Victim = victim;
+            //-------------------------------------
+            reader.Read();
+            if (false == reader.IsStartElement())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): IsStartElement(Observers) returned false");
+               return false;
+            }
+            if (reader.Name != "Observers")
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): Observers != " + reader.Name);
+               return false;
+            }
+            //-------------------------------------
+            string? sCount1 = reader.GetAttribute("count");
+            if (null == sCount1)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): Count1=null");
+               return false;
+            }
+            int count1 = Int32.Parse(sCount1);
+            for (int i1 = 0; i1 < count1; ++i1)
+            {
+               //------------------------------------
+               reader.Read();
+               if (false == reader.IsStartElement())
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): reader.IsStartElement(Observer) = false");
+                  return false;
+               }
+               if (reader.Name != "Observer")
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): Observer != (node=" + reader.Name + ")");
+                  return false;
+               }
+               string? sObsereverName = reader.GetAttribute("name");
+               if (sObsereverName == null)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): sObsereverName=null");
+                  return false;
+               }
+               IMapItem? observer = theMapItems.Find(sObsereverName);
+               if( null == observer)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): observer=null for name=" + sObsereverName);
+                  return false;
+               }
+               string? sIsObserved = reader.GetAttribute("IsObserved");
+               if (sIsObserved == null)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): sIsObserved=null");
+                  return false;
+               }
+               bool isObserved = Boolean.Parse(sIsObserved);
+               takeover.Observers.Add(observer);
+            }
+            if (0 < count1)
+               reader.Read(); // get past </Observers>
          }
          if (0 < count)
             reader.Read(); // get past </AlienTakeovers>
@@ -3471,9 +3653,9 @@ namespace PleasantvilleGame
             return null;
          }
          //------------------------------------------
-         if (false == CreateXmlAlienTakeovers(aXmlDocument, gi.AlienTakeovers))
+         if (false == CreateXmlAlienTakeovers(aXmlDocument, gi.Takeovers))
          {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): Create_XmlRandomMoves() returned false");
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_GameInstance(): Create_XmlAlienTakeovers() returned false");
             return null;
          }
          //------------------------------------------
@@ -3584,6 +3766,8 @@ namespace PleasantvilleGame
          //-----------------------------------
          theMapItems.Add(gi.Zebulon);
          //-----------------------------------
+         foreach (IMapItem mi in gi.DeadPeople)
+            theMapItems.Add(mi);
          foreach (IMapItemMove mim in gi.MapItemMoves)
          {
             if (null == theMapItems.Find(mim.MapItem.Name))
@@ -4128,6 +4312,48 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsImplantRemovalAttemptThisTurn) returned null");
                return false;
             }
+            //--------------------------------
+            elem = aXmlDocument.CreateElement("IsObserveThisTurn");
+            if (null == elem)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsObserveThisTurn) returned null");
+               return false;
+            }
+            elem.SetAttribute("value", mi.IsObserveThisTurn.ToString());
+            node = miNode.AppendChild(elem);
+            if (null == node)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsObserveThisTurn) returned null");
+               return false;
+            }
+            //--------------------------------
+            elem = aXmlDocument.CreateElement("IsObservedThisTurn");
+            if (null == elem)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsObservedThisTurn) returned null");
+               return false;
+            }
+            elem.SetAttribute("value", mi.IsObservedThisTurn.ToString());
+            node = miNode.AppendChild(elem);
+            if (null == node)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsObservedThisTurn) returned null");
+               return false;
+            }
+            //--------------------------------
+            elem = aXmlDocument.CreateElement("IsTakenOverThisTurn");
+            if (null == elem)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsTakenOverThisTurn) returned null");
+               return false;
+            }
+            elem.SetAttribute("value", mi.IsTakenOverThisTurn.ToString());
+            node = miNode.AppendChild(elem);
+            if (null == node)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsTakenOverThisTurn) returned null");
+               return false;
+            }
          }
          return true;
       }
@@ -4430,6 +4656,91 @@ namespace PleasantvilleGame
             {
                Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): AppendChild(takeoversNode) returned null");
                return false;
+            }
+         }
+         return true;
+      }
+      private bool CreateXmlAlienTakeovers(XmlDocument aXmlDocument, IMapItemTakeovers takeovers)
+      {
+         XmlNode? root = aXmlDocument.DocumentElement;
+         if (null == root)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): root is null");
+            return false;
+         }
+         XmlElement? alienTakeoversElem = aXmlDocument.CreateElement("AlienTakeovers");
+         if (null == alienTakeoversElem)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): CreateElement(alienTakeoversElem) returned null");
+            return false;
+         }
+         alienTakeoversElem.SetAttribute("count", takeovers.Count.ToString());
+         XmlNode? takeoversNode = root.AppendChild(alienTakeoversElem);
+         if (null == takeoversNode)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): AppendChild(statsNode) returned null");
+            return false;
+         }
+         foreach (IMapItemTakeover takeover in takeovers)
+         {
+            XmlElement? takeoverElem = aXmlDocument.CreateElement("Takeover");
+            if (null == takeoverElem)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): CreateElement(Takeover) returned null");
+               return false;
+            }
+            XmlNode? takeoverNode = takeoversNode.AppendChild(takeoverElem);
+            if (null == takeoverNode)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): AppendChild(takeoverNode) returned null");
+               return false;
+            }
+            //--------------------------------------------
+            if( false == CreateXmlMapItem(aXmlDocument, takeoverNode, takeover.Alien))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): Create_XmlMapItem(Alien) returned false");
+               return false;
+            }
+            if (false == CreateXmlMapItem(aXmlDocument, takeoverNode, takeover.Victim))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): Create_XmlMapItem(Victim) returned false");
+               return false;
+            }
+            //--------------------------------------------
+            XmlElement? observationElem = aXmlDocument.CreateElement("Observation");
+            if (null == observationElem)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): CreateElement(observationElem) returned null");
+               return false;
+            }
+            observationElem.SetAttribute("count", takeover.Observers.Count.ToString());
+            XmlNode? observationNode = root.AppendChild(observationElem);
+            if (null == observationNode)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): AppendChild(observationNode) returned null");
+               return false;
+            }
+            for (int i=0; i < takeover.Observers.Count; i++)
+            {
+               IMapItem? observer = takeover.Observers[i];
+               if( null == observer )
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): observer is null");
+                  return false;
+               }
+               XmlElement? elem = aXmlDocument.CreateElement("Observer");
+               if (null == elem)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): CreateElement(Observer) returned null");
+                  return false;
+               }
+               elem.SetAttribute("name", observer.Name);
+               XmlNode? node = observationNode.AppendChild(elem);
+               if (null == node)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): AppendChild(takeoverNode) returned null");
+                  return false;
+               }
             }
          }
          return true;

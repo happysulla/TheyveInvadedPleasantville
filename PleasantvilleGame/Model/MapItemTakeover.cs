@@ -13,16 +13,41 @@ namespace PleasantvilleGame
    [Serializable]
    class MapItemTakeover : IMapItemTakeover
    {
+      public bool CtorError { get; } = false;
       public IMapItem Alien { get; set; } = new MapItem();
       public IMapItem Victim { get; set; } = new MapItem();
-      public IMapItem? Observer { get; set; } = null;
-      public bool IsConverted { get; set; } = false;
-      public bool IsObserved { get; set; } = false;
+      public IMapItems Observers { get; set; } = new MapItems();
       //--------------------------------------------------------
       public MapItemTakeover() { }
-      public MapItemTakeover(IMapItemTakeover takeover)
-      { 
-      
+      public MapItemTakeover(IGameInstance gi, IMapItem alien, IMapItem victim) 
+      {
+         Alien = alien;
+         Victim = victim;
+         ITerritory t = alien.TerritoryCurrent;
+         foreach (KeyValuePair<String, double> kvp1 in t.Observations) // look thru all territories that can observe this takeover
+         {
+            ITerritory? t1 = Territories.theTerritories.Find(kvp1.Key); // kvp1.Key=Territory_Name, kvp1.Value=Observe_Probability
+            if (null == t1)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "MapItemTakeover(): t1=null for " + kvp1.Key);
+               CtorError = true;
+               return;
+            }
+            IStack? stackObs = gi.Stacks.Find(t1); // could be nobody in this observation territory
+            if (null == stackObs)
+               continue;
+            foreach (IMapItem possibleObserver in stackObs.MapItems)
+            {
+               if ((true == possibleObserver.Name.Contains(alien.Name)) || (true == possibleObserver.Name.Contains(victim.Name)))
+                  continue;
+               if (true == possibleObserver.IsAlienKnown) // known aliens do not observer. Unknown aliens need to be listed so that town person does not suspect them as alien, but they will not find anything
+                  continue;
+               if ((true == possibleObserver.IsKilled) || (true == possibleObserver.IsKnockedout)) // stunned or killed people cannot observe
+                  continue;
+               Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS, "MapItemTakeover(): t1=" + t1.ToString() + " obs=" + possibleObserver.ToString() + " l=" + alien.ToString() + " r=" + victim.ToString());
+               Observers.Add(possibleObserver);
+            }
+         }
       }
       public override String ToString()
       {
@@ -31,15 +56,18 @@ namespace PleasantvilleGame
          sb.Append(Alien.ToString());
          sb.Append(" Victim=");
          sb.Append(Victim.ToString());
-         sb.Append(" Observer=");
-         if( null == Observer )
-            sb.Append("null");
-         else
-            sb.Append(Observer.ToString());
-         sb.Append(" IsConverted=");
-         sb.Append(IsConverted.ToString());
-         sb.Append(" IsObserved=");
-         sb.Append(IsObserved.ToString());
+         sb.Append(" Observers={");
+         for (int i=0; i<Observers.Count; ++i)
+         {
+            IMapItem? o = Observers[i];
+            if( null != o )
+            {
+               sb.Append(o.ToString());
+               if( i != Observers.Count-1)
+                  sb.Append(",");
+            }
+         }
+         sb.Append("}");
          return sb.ToString();
       }
    }

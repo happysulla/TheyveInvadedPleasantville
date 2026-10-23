@@ -163,16 +163,16 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): myDieRoller=null");
             return false;
          }
-         Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Consumate_AlienTakeovers(): takeover count=" + myGameInstance.AlienTakeovers.Count.ToString());
+         Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Consumate_AlienTakeovers(): takeover count=" + myGameInstance.Takeovers.Count.ToString());
          //--------------------------------------------------
          myCallback = callback;
          myState = E091Enum.ROLL_FOR_OBSERVE;
          myIsRollInProgress = false;
          int gridRowNum = 0;
-         foreach(KeyValuePair<IMapItem,IMapItem> kvp in myGameInstance.AlienTakeovers) 
+         foreach(IMapItemTakeover to in myGameInstance.Takeovers) 
          {
-            IMapItem leftMapItem = kvp.Key;
-            IMapItem rightMapItem = kvp.Value;
+            IMapItem leftMapItem = to.Alien;
+            IMapItem rightMapItem = to.Victim;
             ITerritory t = leftMapItem.TerritoryCurrent;
             IStack? stack = myGameInstance.Stacks.Find(t);
             if( null == stack )
@@ -184,44 +184,49 @@ namespace PleasantvilleGame
             int randNum = Utilities.RandomGenerator.Next(2); // randomize which unit is displayed to user on left hand side
             if( 0 == randNum )
             {
-               IMapItem temp = leftMapItem;
-               leftMapItem = rightMapItem;
-               rightMapItem = temp;
-            }
-            //-----------------------------------------
-            bool isObservation = false;
-            foreach(KeyValuePair<String, double> kvp1 in t.Observations) // look thru all territories that can observe this takeover
-            {
-               ITerritory? t1 = Territories.theTerritories.Find(kvp1.Key); // kvp1.Key=Territory_Name, kvp1.Value=Observe_Probability
-               if( null == t1 )
+               if( 0 == to.Observers.Count)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): t1=null for " + kvp1.Key);
-                  return false;
-               }
-               IStack? stackObs = myGameInstance.Stacks.Find(t1); // could be nobody in this observation territory
-               if (null == stackObs)
-                  continue;
-               foreach(IMapItem mi in stackObs.MapItems )
-               {
-                  if ((true == mi.Name.Contains(leftMapItem.Name)) || (true == mi.Name.Contains(rightMapItem.Name)))
-                     continue;
-                  if (true == mi.IsAlienKnown) // known aliens do not observer. Unknown aliens need to be listed so that town person does not suspect them as alien, but they will not find anything
-                     continue;
-                  if ((true == mi.IsKilled) || (true == mi.IsKnockedout)) // stuned, killed people cannot observe
-                     continue;
-                  Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS, "Consumate_AlienTakeovers(): t1=" + t1.ToString() + " obs=" + mi.ToString() + " l=" + leftMapItem.ToString() + " r=" + rightMapItem.ToString());
-                  myGridRows[gridRowNum] = new GridRow(mi, leftMapItem, rightMapItem, kvp1.Value);
+                  myGridRows[gridRowNum] = new GridRow(null, leftMapItem, rightMapItem, 0.0);
+                  myGridRows[gridRowNum].myDieRoll = NO_OBSERVER;
                   gridRowNum++;
-                  isObservation = true;
-                  Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Consumate_AlienTakeovers(): Adding Key=" + leftMapItem.Name + " Value=" + rightMapItem.Name + " w/ obs?=" + isObservation.ToString());
+               }
+               else
+               {
+                  foreach(IMapItem observer in to.Observers)
+                  {
+                     string? obsTerritoryName = observer.TerritoryCurrent.ToString();
+                     if( null == obsTerritoryName)
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): obsTerritoryName=null");
+                        return false;
+                     }
+                     myGridRows[gridRowNum] = new GridRow(observer, leftMapItem, rightMapItem, t.Observations[obsTerritoryName]);
+                     gridRowNum++;
+                  }
                }
             }
-            if (false == isObservation) // If there is no observations, indicate to user that zero probability of detection
+            else
             {
-               myGridRows[gridRowNum] = new GridRow(null, leftMapItem, rightMapItem, 0.0);
-               myGridRows[gridRowNum].myDieRoll = NO_OBSERVER;
-               gridRowNum++;
-               Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Consumate_AlienTakeovers(): Adding Key=" + leftMapItem.Name + " Value=" + rightMapItem.Name + " w/ obs?=NA" );
+               if (0 == to.Observers.Count)
+               {
+                  myGridRows[gridRowNum] = new GridRow(null, rightMapItem, leftMapItem, 0.0);
+                  myGridRows[gridRowNum].myDieRoll = NO_OBSERVER;
+                  gridRowNum++;
+               }
+               else
+               {
+                  foreach (IMapItem observer in to.Observers)
+                  {
+                     string? obsTerritoryName = observer.TerritoryCurrent.ToString();
+                     if (null == obsTerritoryName)
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): obsTerritoryName=null");
+                        return false;
+                     }
+                     myGridRows[gridRowNum] = new GridRow(observer, rightMapItem, leftMapItem, t.Observations[obsTerritoryName]);
+                     gridRowNum++;
+                  }
+               }
             }
          }
          myMaxRowCount = gridRowNum;
@@ -526,10 +531,13 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 1-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem1.Name + " taking over " + gr.myMapItem2.Name);
                myGameInstance.AddKnownAlien(gr.myMapItem1); // Perform_Observation()
                myGameInstance.AddKnownAlien(gr.myMapItem2); // Perform_Observation()
+               gr.myMapItem1.IsObserveThisTurn = true;
+               gr.myMapItem2.IsTakenOverThisTurn = true;
                if (null != gr.myObserver )
                {
-                  if (false == gr.myObserver.IsControlled) // controlled units do not become Wary
+                  if ((false == gr.myObserver.IsControlled) && (false == gr.myObserver.IsWary) ) // controlled units do not become Wary
                   {
+                     gr.myObserver.IsObserveThisTurn = true;
                      gr.myObserver.IsWary = true;
                      gr.myObserver.IsSkeptical = false;
                   }
@@ -549,10 +557,13 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 2-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem2.Name + " taking over " + gr.myMapItem1.Name);
                myGameInstance.AddKnownAlien(gr.myMapItem1);  // Perform_Observation()
                myGameInstance.AddKnownAlien(gr.myMapItem2);  // Perform_Observation()
+               gr.myMapItem1.IsTakenOverThisTurn = true;
+               gr.myMapItem2.IsObservedThisTurn = true;
                if (null != gr.myObserver)
                {
-                  if (false == gr.myObserver.IsControlled) // controlled units do not become Wary
+                  if ((false == gr.myObserver.IsControlled) && (false == gr.myObserver.IsWary)) // controlled units do not become Wary
                   {
+                     gr.myObserver.IsObserveThisTurn = true;
                      gr.myObserver.IsWary = true;
                      gr.myObserver.IsSkeptical = false;
                   }
@@ -569,12 +580,14 @@ namespace PleasantvilleGame
             isMapUpdateNeeded = true;
             Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 3-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem1.Name + " taking over " + gr.myMapItem2.Name);
             myGameInstance.AddKnownAlien(gr.myMapItem2); // Perform_Observation()
+            gr.myMapItem2.IsTakenOverThisTurn = true;
             if (true == gr.myIsResult) // true when observed doing takeover
             {
                if (null != gr.myObserver)
                {
-                  if (false == gr.myObserver.IsControlled) // controlled units do not become Wary
+                  if ((false == gr.myObserver.IsControlled) && (false == gr.myObserver.IsWary) )// controlled units do not become Wary
                   {
+                     gr.myObserver.IsObserveThisTurn = true;
                      gr.myObserver.IsWary = true;
                      gr.myObserver.IsSkeptical = false;
                   }
@@ -586,12 +599,14 @@ namespace PleasantvilleGame
             isMapUpdateNeeded = true;
             Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 4-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem2.Name + " taking over " + gr.myMapItem1.Name);
             myGameInstance.AddKnownAlien(gr.myMapItem1);  // Perform_Observation()
+            gr.myMapItem1.IsTakenOverThisTurn = true;
             if (true == gr.myIsResult) // true when observed doing takeover
             {
                if (null != gr.myObserver)
                {
-                  if (false == gr.myObserver.IsControlled) // controlled units do not become Wary
+                  if ((false == gr.myObserver.IsControlled) && (false == gr.myObserver.IsWary)) // controlled units do not become Wary
                   {
+                     gr.myObserver.IsObserveThisTurn = true;
                      gr.myObserver.IsWary = true;
                      gr.myObserver.IsSkeptical = false;
                   }
@@ -602,15 +617,20 @@ namespace PleasantvilleGame
          {
             isMapUpdateNeeded = true;
             Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 5-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem2.Name + " taking over " + gr.myMapItem1.Name);
-            myGameInstance.AddKnownAlien(gr.myMapItem2);  // Perform_Observation()
             if (true == gr.myMapItem1.IsAlienUnknown)
+            {
                myGameInstance.AddKnownAlien(gr.myMapItem1);  // Perform_Observation() - unknown becomes known
+               gr.myMapItem1.IsObservedThisTurn = true;
+            }
+            gr.myMapItem2.IsTakenOverThisTurn = true;
+            myGameInstance.AddKnownAlien(gr.myMapItem2);   // This only happens if the controlled unit is stunned
             if (true == gr.myIsResult) // true when observed doing takeover
             {
                if (null != gr.myObserver)
                {
-                  if (false == gr.myObserver.IsControlled) // controlled units do not become Wary
+                  if ((false == gr.myObserver.IsControlled) && (false == gr.myObserver.IsWary)) // controlled units do not become Wary
                   {
+                     gr.myObserver.IsObserveThisTurn = true;
                      gr.myObserver.IsWary = true;
                      gr.myObserver.IsSkeptical = false;
                   }
@@ -621,15 +641,20 @@ namespace PleasantvilleGame
          {
             isMapUpdateNeeded = true;
             Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 6-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem2.Name + " taking over " + gr.myMapItem1.Name);
-            myGameInstance.AddKnownAlien(gr.myMapItem1);  // Perform_Observation()
             if (true == gr.myMapItem2.IsAlienUnknown)
+            {
                myGameInstance.AddKnownAlien(gr.myMapItem2);  // Perform_Observation() - unknown becomes known
+               gr.myMapItem2.IsObservedThisTurn = true;
+            }
+            gr.myMapItem1.IsTakenOverThisTurn = true; 
+            myGameInstance.AddKnownAlien(gr.myMapItem1); // This only happens if the controlled unit is stunned
             if (true == gr.myIsResult) // true when observed doing takeover
             {
                if (null != gr.myObserver)
                {
                   if (false == gr.myObserver.IsControlled) // controlled units do not become Wary
                   {
+                     gr.myObserver.IsObserveThisTurn = true;
                      gr.myObserver.IsWary = true;
                      gr.myObserver.IsSkeptical = false;
                   }

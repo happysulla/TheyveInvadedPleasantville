@@ -44,7 +44,6 @@ namespace PleasantvilleGame
       IPlayerAlien PlayerAlien { set; get; }
       //----------------------------------------------
       List<RandomMoveData> RandomMoves { get; set; }
-      Dictionary<IMapItem, IMapItem> AlienTakeovers { get; set; }
       IMapItemTakeovers Takeovers { get; set; }
       //----------------------------------------------
       IMapItemMoves MapItemMoves { set; get; }

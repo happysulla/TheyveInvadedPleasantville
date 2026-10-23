@@ -263,8 +263,14 @@ namespace PleasantvilleGame
                      Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): rightMapItem=null for unknownCount=" + unknownCount.ToString());
                      return false;
                   }
+                  IMapItemTakeover to = new MapItemTakeover(gi, leftMapItem, rightMapItem);
+                  if (true == to.CtorError)
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): CtorError= true for l=" + leftMapItem.ToString());
+                     return false;
+                  }
+                  gi.Takeovers.Add(to);
                   unknownCount++;
-                  gi.AlienTakeovers[leftMapItem] = rightMapItem;
                   Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 1-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
                }
             }
@@ -282,8 +288,14 @@ namespace PleasantvilleGame
                      Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): rightMapItem=null for knownCount=" + knownCount.ToString());
                      return false;
                   }
+                  IMapItemTakeover to = new MapItemTakeover(gi, leftMapItem, rightMapItem);
+                  if (true == to.CtorError)
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): CtorError= true for l=" + leftMapItem.ToString());
+                     return false;
+                  }
+                  gi.Takeovers.Add(to);
                   knownCount++;
-                  gi.AlienTakeovers[leftMapItem] = rightMapItem;
                   Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 2-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
                }
             }
@@ -305,7 +317,13 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): 1-rightMapItem=null for r2=" + r2.ToString());
                   return false;
                }
-               gi.AlienTakeovers[leftMapItem] = rightMapItem;
+               IMapItemTakeover to = new MapItemTakeover(gi, leftMapItem, rightMapItem);
+               if (true == to.CtorError)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): CtorError= true for l=" + leftMapItem.ToString());
+                  return false;
+               }
+               gi.Takeovers.Add(to);
                Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 3-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
             }
          }
@@ -327,8 +345,14 @@ namespace PleasantvilleGame
                         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): rightMapItem=null for stuns=" + victimCount.ToString());
                         return false;
                      }
+                     IMapItemTakeover to = new MapItemTakeover(gi, leftMapItem, rightMapItem);
+                     if (true == to.CtorError)
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): CtorError= true for l=" + leftMapItem.ToString());
+                        return false;
+                     }
+                     gi.Takeovers.Add(to);
                      victimCount++;
-                     gi.AlienTakeovers[leftMapItem] = rightMapItem;
                      Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 4-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
                   }
                   else 
@@ -340,8 +364,14 @@ namespace PleasantvilleGame
                         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): rightMapItem=null for indexOffset=" + indexOffset.ToString());
                         return false;
                      }
+                     IMapItemTakeover to = new MapItemTakeover(gi, leftMapItem, rightMapItem);
+                     if (true == to.CtorError)
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): CtorError= true for l=" + leftMapItem.ToString());
+                        return false;
+                     }
+                     gi.Takeovers.Add(to);
                      victimCount++;
-                     gi.AlienTakeovers[leftMapItem] = rightMapItem;
                      Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 5-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
                   }
                }
@@ -362,8 +392,14 @@ namespace PleasantvilleGame
                         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): rightMapItem=null for stuns=" + victimCount.ToString());
                         return false;
                      }
+                     IMapItemTakeover to = new MapItemTakeover(gi, leftMapItem, rightMapItem);
+                     if (true == to.CtorError)
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): CtorError= true for l=" + leftMapItem.ToString());
+                        return false;
+                     }
+                     gi.Takeovers.Add(to);
                      victimCount++;
-                     gi.AlienTakeovers[leftMapItem] = rightMapItem;
                      Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover():Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
                      gi.AddKnownAlien(leftMapItem); // unknown becomes known when taking over a Stunned TP
                      Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Show_PossibleTakeover(): 6-AddKnownAlien() unknown becomes known when taking over stunned -- a=" + leftMapItem.ToString() );
@@ -377,8 +413,14 @@ namespace PleasantvilleGame
                         Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): rightMapItem=null for indexOffset=" + indexOffset.ToString());
                         return false;
                      }
+                     IMapItemTakeover to = new MapItemTakeover(gi, leftMapItem, rightMapItem);
+                     if (true == to.CtorError)
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): CtorError= true for l=" + leftMapItem.ToString());
+                        return false;
+                     }
+                     gi.Takeovers.Add(to);
                      victimCount++;
-                     gi.AlienTakeovers[leftMapItem] = rightMapItem;
                      Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 7-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
                   }
                }
@@ -401,7 +443,13 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): 2-rightMapItem=null for r2=" + r2.ToString());
                   return false;
                }
-               gi.AlienTakeovers[leftMapItem] = rightMapItem;
+               IMapItemTakeover to = new MapItemTakeover(gi, leftMapItem, rightMapItem);
+               if (true == to.CtorError)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): CtorError= true for l=" + leftMapItem.ToString());
+                  return false;
+               }
+               gi.Takeovers.Add(to);
                Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 8-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
             }
          }

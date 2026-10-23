@@ -266,6 +266,8 @@ namespace PleasantvilleGame
          mi1.IsInfluencedThisTurn = true;
          mi1.IsCombatThisTurn = true;
          mi1.IsImplantRemovalAttemptThisTurn = true;
+         mi1.IsObserveThisTurn = true;
+         mi1.IsTakenOverThisTurn = true;
          //---------------------------------------
          IMapItem? mi2 = gi.Stacks.FindMapItem(Utilities.RemoveSpaces(TableMgr.BAR_TENDER));
          if (null == mi2)
@@ -304,6 +306,8 @@ namespace PleasantvilleGame
          mi2.IsInfluencedThisTurn = false;
          mi2.IsCombatThisTurn = true;
          mi2.IsImplantRemovalAttemptThisTurn = true;
+         mi2.IsObserveThisTurn = true;
+         mi2.IsTakenOverThisTurn = true;
          //---------------------------------------
          gi.GameGuid = Guid.NewGuid();
          gi.EventActive = "111";
@@ -346,8 +350,13 @@ namespace PleasantvilleGame
          move = new RandomMoveData(TableMgr.BAR_TENDER, TableMgr.HOUSE6, 101);
          gi.RandomMoves.Add(move);
          //---------------------------------------
-         gi.AlienTakeovers[mi1] = mi2;
-         gi.AlienTakeovers[mi2] = mi1;
+         IMapItemTakeover to = new MapItemTakeover(gi, mi1, mi2);
+         if (true == to.CtorError)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Show_PossibleTakeover(): CtorError= true for l=" + mi1.ToString());
+            return false;
+         }
+         gi.Takeovers.Add(to);
          //---------------------------------------
          ITerritory? tOld = Territories.theTerritories[1];
          if (null == tOld)
@@ -510,9 +519,9 @@ namespace PleasantvilleGame
             return false;
          }
          //---------------------------------------
-         if (false == IsEqual(left.AlienTakeovers, right.AlienTakeovers))
+         if (false == IsEqual(left.Takeovers, right.Takeovers))
          {
-            Logger.Log(LogEnum.LE_ERROR, "IsEqual(): left.AlienTakeovers != right.AlienTakeovers");
+            Logger.Log(LogEnum.LE_ERROR, "IsEqual(): left.Takeovers != right.Takeovers");
             return false;
          }
          //---------------------------------------
@@ -686,6 +695,45 @@ namespace PleasantvilleGame
             if (false == isMatch)
             {
                Logger.Log(LogEnum.LE_ERROR, "IsEqual(): Dictionary<IMapItem, IMapItem> did not match=" + kvp.Key.Name);
+               return false;
+            }
+         }
+         return true;
+      }
+      private bool IsEqual(IMapItemTakeovers left, IMapItemTakeovers right)
+      {
+         if (left.Count != right.Count)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItemTakeovers left, IMapItemTakeovers right):left.Count != right.count");
+            return false;
+         }
+         for(int i=0; i<left.Count; ++i)
+         {
+            IMapItemTakeover? leftTakeover = left[i];
+            if( null == leftTakeover)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItemTakeovers left, IMapItemTakeovers right): leftTakeover=null");
+               return false;
+            }
+            IMapItemTakeover? rightTakeover = right[i];
+            if (null == rightTakeover)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItemTakeovers left, IMapItemTakeovers right): rightTakeover=null");
+               return false;
+            }
+            if(leftTakeover.Alien.Name != rightTakeover.Alien.Name)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItemTakeovers left, IMapItemTakeovers right): left.Alien != right.Alien");
+               return false;
+            }
+            if (leftTakeover.Victim.Name != rightTakeover.Victim.Name)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItemTakeovers left, IMapItemTakeovers right): left.Victim != right.Victim");
+               return false;
+            }
+            if( leftTakeover.Observers.Count != leftTakeover.Observers.Count )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItemTakeovers left, IMapItemTakeovers right): left.Observers.Count != right.Observers.Count");
                return false;
             }
          }
@@ -983,6 +1031,16 @@ namespace PleasantvilleGame
          if (left.IsImplantRemovalAttemptThisTurn != right.IsImplantRemovalAttemptThisTurn)
          {
             Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItem): Name left.IsImplantRemovalAttemptThisTurn != right.IsImplantRemovalAttemptThisTurn");
+            return false;
+         }
+         if (left.IsObserveThisTurn != right.IsObserveThisTurn)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItem): Name left.IsObserveThisTurn != right.IsObserveThisTurn");
+            return false;
+         }
+         if (left.IsTakenOverThisTurn != right.IsTakenOverThisTurn)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "IsEqual(IMapItem): Name left.IsTakenOverThisTurn != right.IsTakenOverThisTurn");
             return false;
          }
          return true;

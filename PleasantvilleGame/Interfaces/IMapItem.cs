@@ -65,11 +65,15 @@ namespace PleasantvilleGame
       bool IsInfluencedThisTurn { get; set; }
       bool IsCombatThisTurn { get; set; }
       bool IsImplantRemovalAttemptThisTurn { get; set; }
+      bool IsObserveThisTurn { get; set; }
+      bool IsObservedThisTurn { get; set; }
+      bool IsTakenOverThisTurn { get; set; }
       //----------------------------------------
       void Copy(IMapItem mi);
       void Sync(IMapItem mi); // synchronize most of the data but not all
       bool IsUncontrolled();
       bool IsAlien();
+      void BackoutTakeover();
    }
    //==========================================
    public interface IMapItems : System.Collections.IEnumerable

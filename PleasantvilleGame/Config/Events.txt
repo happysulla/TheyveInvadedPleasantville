@@ -131,7 +131,7 @@ Conversation is how the Town player discovers if a townsperson is Alien controll
 <LineBreak/><LineBreak/>
 On a roll of nine or better including modifiers from the <InlineUIContainer><Button Content='Conversation Modifiers' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table, the Town player deteremines if it is Alien controlled counter.
 <LineBreak/><LineBreak/>
-After completion of all possible conversations, the game automatically moves to the Influence phase. All flashing spaces must be chosen. Select <Bold>Cancel</Bold> button if want to skip conversation attempt."
+After completion of all possible conversations, the game automatically moves to the Influence phase. All flashing spaces must be chosen. Each flashing space must be visited. If you want to skip the space, select <Bold>Cancel</Bold> button when it appears after clicking the flashing space.."
 e010t	"<Bold>e010t Influences</Bold>  <InlineUIContainer><Button Content='r7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
 Influencing is how the Town player convinces other uncontrolled townspeople to join their side. Click a flashing space to start an influence attempt. 
@@ -140,7 +140,7 @@ To influence another uncontrolled counter, the Town player compares the Influenc
 <InlineUIContainer><Button Content='Influence Results' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer> Table adjusting with the 
 <InlineUIContainer><Button Content='Influence Modifiers' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>.
 <LineBreak/><LineBreak/>
-After completion of all possible infleunces have occurred, the game automatically moves to the Combat phase. All flashing spaces must be chosen. Select <Bold>Cancel</Bold> button if want to skip influence attempt."
+After completion of all possible infleunces have occurred, the game automatically moves to the Combat phase. All flashing spaces must be chosen. Each flashing space must be visited. If you want to skip the space, select <Bold>Cancel</Bold> button when it appears after clicking the flashing space.."
 e011t	"<Bold>e011t Combats</Bold>  <InlineUIContainer><Button Content='r8.0' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
 <LineBreak/><LineBreak/>
 All combat is voluntary. Combat is started by clicking a flashing red space. If the Town player attacks one or more uncontrolled counters thinking them to be Alien controlled, the result is automatically 'Win' for the Town player, regardless of the number of uncontrolled townspeople. 
@@ -169,7 +169,7 @@ Any conscious, defeated, Alien controlled counter may be interrogated by a Town 
 <LineBreak/><LineBreak/>
 Choose a building area that is not colored black. If Zebulon is found, the counter is placed on the board and can be defeated in combat to win the game. 
 <LineBreak/><LineBreak/>
-Click a flashing space to begin.
+Click a flashing space to begin. Each flashing space must be visited. If you want to skip the space, select <Bold>Cancel</Bold> button when it appears after clicking the flashing space.
 <LineBreak/><LineBreak/>
                 <InlineUIContainer><Image Name='Interrogation' Height='180' Width='300'></Image></InlineUIContainer>"
 e012t1	"<Bold>e012t1 Interrogations</Bold>  <InlineUIContainer><Button Content='r8.7.2' FontFamily='Courier New'  FontSize='12'></Button></InlineUIContainer>
@@ -187,7 +187,7 @@ e013t	"<Bold>e013t Implant Removals</Bold>  <InlineUIContainer><Button Content='
 <LineBreak/><LineBreak/>
 The Town player may try to remove this implant from a defeated Alien controlled townsperson, thus breaking the Alien player's control.
 <LineBreak/><LineBreak/>
-Removing the implant generates an electric shock may erases all memory of the Alien HQ from the victim's memory, a unique safegard which is built into the implant's circuits.
+Removing the implant generates an electric shock may erases all memory of the Alien HQ from the victim's memory, a unique safegard which is built into the implant's circuits. Each flashing space must be visited. If you want to skip the space (for example to allow interrogation to happen prior to implant removal), select <Bold>Cancel</Bold> button when it appears after clicking the flashing space.
 <LineBreak/><LineBreak/>
 Click a flashing space to begin."
 e501	"<Bold>e501 Game Won!!!</Bold>

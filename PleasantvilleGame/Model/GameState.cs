@@ -134,7 +134,7 @@ namespace PleasantvilleGame
          gi.NumTownGuessesForZebulonLocation = 0;
          gi.RandomMoves.Clear();
          gi.MapItemCombat.Clear();
-         gi.AlienTakeovers.Clear();
+         gi.Takeovers.Clear();
          Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "Reset_Phase()");
          gi.MapItemMoves.Clear();
          gi.SelectedMapItems.Clear();
@@ -809,6 +809,8 @@ namespace PleasantvilleGame
                mi.IsKnockedoutThisTurn = false;
                mi.IsStunnedThisTurn = false;
                mi.IsImplantRemovalAttemptThisTurn = false;
+               mi.IsObserveThisTurn = false;
+               mi.IsTakenOverThisTurn = false;
                if (true == mi.IsKilled)
                {
                   mi.IsTiedUp = false;

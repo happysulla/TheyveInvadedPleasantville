@@ -8,11 +8,10 @@ namespace PleasantvilleGame
 {
    public interface IMapItemTakeover
    {
+      bool CtorError { get; }
       IMapItem Alien { get; set; }
       IMapItem Victim { get; set; }
-      IMapItem? Observer { get; set; }
-      bool IsConverted { get; set; }
-      bool IsObserved { get; set; }
+      IMapItems Observers { get; set; }
    }
    public interface IMapItemTakeovers : System.Collections.IEnumerable
    {
