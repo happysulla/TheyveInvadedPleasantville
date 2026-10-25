@@ -2242,6 +2242,13 @@ namespace PleasantvilleGame
       {
          if (GamePhase.UnitTest == myGameInstance.GamePhase)
             return;
+         foreach (Polygon polygon in myPolygons)
+         {
+            polygon.Stroke = Utilities.theBrushRegionClear;
+            polygon.StrokeThickness = 1;
+            polygon.StrokeDashArray = null;
+            polygon.Fill = Utilities.theBrushRegionClear;
+         }
          //-------------------------------------------
          Logger.Log(LogEnum.LE_SHOW_MAIN_CLEAR, "Update_CanvasMainClear(): Clearing stacks=" + stacks.ToString());
          List<UIElement> elementRemovals = new List<UIElement>();
@@ -2826,7 +2833,7 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): Before====>GameEngine.theTotalStatistics=" + GameEngine.theTotalStatistics.ToString());
          UpdateCanvasShowStatsAdds(gi.Statistics, GameEngine.theTotalStatistics);
          Logger.Log(LogEnum.LE_VIEW_SHOW_STATS, "Update_CanvasShowStatsAdds(): After====>GameEngine.theTotalStatistics=" + GameEngine.theTotalStatistics.ToString());
-         if (1 < stat4NumGames.Value)
+         if ((0 != stat1NumGames.Value && 0 != stat2NumGames.Value ) || (0 != stat1NumGames.Value && 0 != stat3NumGames.Value) || (0 != stat2NumGames.Value && 0 != stat3NumGames.Value))
          {
             int totalGamesPlayed = stat0NumGames.Value + stat1NumGames.Value + stat2NumGames.Value + stat3NumGames.Value;
             if (totalGamesPlayed != stat4NumGames.Value)

@@ -1013,6 +1013,10 @@ namespace PleasantvilleGame
             case "InterrogationsGuess": return GameAction.InterrogationsGuess;
             case "InterrogationsFinish": return GameAction.InterrogationsFinish;
 
+            case "ImplantRemovalsSelect": return GameAction.ImplantRemovalsSelect;
+            case "ImplantRemovalsRoll": return GameAction.ImplantRemovalsRoll;
+            case "ImplantRemovalsFinish": return GameAction.ImplantRemovalsFinish;
+
             case "AlienTakeoversShow": return GameAction.AlienTakeoversShow;
             case "AlienTakeoversFinish": return GameAction.AlienTakeoversFinish;
 
@@ -1946,7 +1950,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): sIsSkeptical=null");
                return false;
             }
-            mi.IsSkeptical = Convert.ToBoolean(sIsInterrogated);
+            mi.IsSkeptical = Convert.ToBoolean(sIsSkeptical);
             //---------------------------------------------
             reader.Read();
             if (false == reader.IsStartElement())
