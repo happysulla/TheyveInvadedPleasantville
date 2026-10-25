@@ -130,7 +130,6 @@ namespace PleasantvilleGame
       EndGameLose,
       EndGameShowFeats,
       EndGameShowStats,
-      EndGameClose,
       EndGameExit,
       Error
    };

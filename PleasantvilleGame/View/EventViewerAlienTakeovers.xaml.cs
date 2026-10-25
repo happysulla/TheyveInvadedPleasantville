@@ -281,14 +281,14 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "EventViewerAlienTakeovers.UpdateEndState(): myGameInstance=null");
                return false;
             }
-            foreach (GridRow gr1 in myGridRows)
+            for (int i=0; i<myMaxRowCount; ++i)
             {
-               if (NO_OBSERVER == gr1.myDieRoll)
+               GridRow gr1 = myGridRows[i];
+               if (false == gr1.myIsResult)
                {
-                  bool isMapUpdateNeeded = false;
-                  if (false == PerformObservation(gr1, out isMapUpdateNeeded))
+                  if (false == PerformWithoutObservation(gr1))
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "EventViewerAlienTakeovers.UpdateEndState()(): Perform_Observation(() returned false");
+                     Logger.Log(LogEnum.LE_ERROR, "EventViewerAlienTakeovers.UpdateEndState()(): Perform_WithoutObservation(() returned false");
                      return false;
                   }
                }
@@ -539,7 +539,11 @@ namespace PleasantvilleGame
                   {
                      gr.myObserver.IsObserveThisTurn = true;
                      gr.myObserver.IsWary = true;
-                     gr.myObserver.IsSkeptical = false;
+                     if (true == gr.myObserver.IsSkeptical)
+                     {
+                        gr.myObserver.IsSkepticalWhenTurningWaryThisTurn = true;
+                        gr.myObserver.IsSkeptical = false;
+                     }
                   }
                }
             }
@@ -565,7 +569,11 @@ namespace PleasantvilleGame
                   {
                      gr.myObserver.IsObserveThisTurn = true;
                      gr.myObserver.IsWary = true;
-                     gr.myObserver.IsSkeptical = false;
+                     if (true == gr.myObserver.IsSkeptical)
+                     {
+                        gr.myObserver.IsSkepticalWhenTurningWaryThisTurn = true;
+                        gr.myObserver.IsSkeptical = false;
+                     }
                   }
                }
             }
@@ -589,7 +597,11 @@ namespace PleasantvilleGame
                   {
                      gr.myObserver.IsObserveThisTurn = true;
                      gr.myObserver.IsWary = true;
-                     gr.myObserver.IsSkeptical = false;
+                     if (true == gr.myObserver.IsSkeptical)
+                     {
+                        gr.myObserver.IsSkepticalWhenTurningWaryThisTurn = true;
+                        gr.myObserver.IsSkeptical = false;
+                     }
                   }
                }
             }
@@ -608,7 +620,11 @@ namespace PleasantvilleGame
                   {
                      gr.myObserver.IsObserveThisTurn = true;
                      gr.myObserver.IsWary = true;
-                     gr.myObserver.IsSkeptical = false;
+                     if (true == gr.myObserver.IsSkeptical)
+                     {
+                        gr.myObserver.IsSkepticalWhenTurningWaryThisTurn = true;
+                        gr.myObserver.IsSkeptical = false;
+                     }
                   }
                }
             }
@@ -632,7 +648,11 @@ namespace PleasantvilleGame
                   {
                      gr.myObserver.IsObserveThisTurn = true;
                      gr.myObserver.IsWary = true;
-                     gr.myObserver.IsSkeptical = false;
+                     if (true == gr.myObserver.IsSkeptical)
+                     {
+                        gr.myObserver.IsSkepticalWhenTurningWaryThisTurn = true;
+                        gr.myObserver.IsSkeptical = false;
+                     }
                   }
                }
             }
@@ -656,7 +676,11 @@ namespace PleasantvilleGame
                   {
                      gr.myObserver.IsObserveThisTurn = true;
                      gr.myObserver.IsWary = true;
-                     gr.myObserver.IsSkeptical = false;
+                     if (true == gr.myObserver.IsSkeptical)
+                     {
+                        gr.myObserver.IsSkepticalWhenTurningWaryThisTurn = true;
+                        gr.myObserver.IsSkeptical = false;
+                     }
                   }
                }
             }
@@ -699,6 +723,82 @@ namespace PleasantvilleGame
                   row.myObserver = null;
                }
             }
+         }
+         return true;
+      }
+      private bool PerformWithoutObservation(GridRow gr)
+      {
+         if (null == myGameInstance)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_WithoutObservation(): myGameInstance=null");
+            return false;
+         }
+         if ((true == gr.myMapItem1.IsAlienUnknown) && (true == gr.myMapItem2.IsUncontrolled())) // Alien can be in either of these positions.
+         {
+            myGameInstance.AddUnknownAlien(gr.myMapItem2); // Perform_WithoutObservation()
+            gr.myMapItem2.IsTakenOverThisTurn = true;
+         }
+         else if ((true == gr.myMapItem1.IsUncontrolled()) && (true == gr.myMapItem2.IsAlienUnknown)) // Alien can be in either of these positions.
+         {
+            myGameInstance.AddUnknownAlien(gr.myMapItem1); // Perform_WithoutObservation()
+            gr.myMapItem1.IsTakenOverThisTurn = true;
+         }
+         else if ((true == gr.myMapItem1.IsAlienKnown) && (true == gr.myMapItem2.IsUncontrolled()))  // Alien can be in either of these positions.
+         {
+            myGameInstance.AddKnownAlien(gr.myMapItem2); // Perform_WithoutObservation()
+            gr.myMapItem2.IsTakenOverThisTurn = true;
+         }
+         else if ((true == gr.myMapItem1.IsUncontrolled()) && (true == gr.myMapItem2.IsAlienKnown)) // Alien can be in either of these positions.
+         {
+            myGameInstance.AddKnownAlien(gr.myMapItem1); // Perform_WithoutObservation()
+            gr.myMapItem1.IsTakenOverThisTurn = true;
+         }
+         else if (((true == gr.myMapItem1.IsAlienKnown) || (true == gr.myMapItem1.IsAlienUnknown)) && (true == gr.myMapItem2.IsControlled)) // alien can takeover controlled stunned units
+         {
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_WithoutObservation(): 5-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem2.Name + " taking over " + gr.myMapItem1.Name);
+            if (true == gr.myMapItem1.IsAlienUnknown)
+            {
+               myGameInstance.AddKnownAlien(gr.myMapItem1);  // Perform_WithoutObservation() - unknown becomes known
+               gr.myMapItem1.IsObservedThisTurn = true;
+            }
+            myGameInstance.AddKnownAlien(gr.myMapItem2);   // This only happens if the controlled unit is stunned
+            gr.myMapItem2.IsTakenOverThisTurn = true;
+         }
+         else if ((true == gr.myMapItem1.IsControlled) && ((true == gr.myMapItem2.IsAlienKnown) || (true == gr.myMapItem2.IsAlienUnknown))) // alien can takeover controlled stunned units
+         {
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_WithoutObservation(): 6-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem2.Name + " taking over " + gr.myMapItem1.Name);
+            if (true == gr.myMapItem2.IsAlienUnknown)
+            {
+               myGameInstance.AddKnownAlien(gr.myMapItem2);  // Perform_WithoutObservation() - unknown becomes known
+               gr.myMapItem2.IsObservedThisTurn = true;
+            }
+            myGameInstance.AddKnownAlien(gr.myMapItem1); // This only happens if the controlled unit is stunned
+            gr.myMapItem1.IsTakenOverThisTurn = true;
+         }
+         else if ((true == gr.myMapItem1.IsUncontrolled()) && (true == gr.myMapItem2.IsUncontrolled()))
+         {
+            // if both uncontrolled, do nothing
+         }
+         else if ((true == gr.myMapItem1.IsAlienKnown) && (true == gr.myMapItem2.IsAlienUnknown))
+         {
+            // if one unknown and one known aliens, do nothing
+         }
+         else if ((true == gr.myMapItem1.IsAlienUnknown) && (true == gr.myMapItem2.IsAlienKnown))
+         {
+            // if one unknown and one known aliens, do nothing
+         }
+         else if ((true == gr.myMapItem1.IsAlienKnown) && (true == gr.myMapItem2.IsAlienKnown))
+         {
+            // if both known aliens, do nothing
+         }
+         else if ((true == gr.myMapItem1.IsAlienUnknown) && (true == gr.myMapItem2.IsAlienUnknown))
+         {
+            // if both unknown aliens, do nothing
+         }
+         else
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_WithoutObservation(): Invalid State - mi1=" + gr.myMapItem1.ToString() + " mi2=" + gr.myMapItem2.ToString());
+            return false;
          }
          return true;
       }

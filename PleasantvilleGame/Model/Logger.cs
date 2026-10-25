@@ -10,6 +10,7 @@ namespace PleasantvilleGame
       LE_SHOW_UNIT_TEST,
       LE_GAME_INIT,
       LE_GAME_INIT_VERSION,
+      LE_GAME_INIT_LOAD,
       LE_SHOW_SCREEN_SIZE,
       LE_GAME_END,
       LE_GAME_END_CHECK,
@@ -126,6 +127,7 @@ namespace PleasantvilleGame
          //SetOn(LogEnum.LE_SHOW_UNIT_TEST);
          //SetOn(LogEnum.LE_GAME_INIT);
          //SetOn(LogEnum.LE_GAME_INIT_VERSION);
+         SetOn(LogEnum.LE_GAME_INIT_LOAD);
          //SetOn(LogEnum.LE_SHOW_SCREEN_SIZE);
          SetOn(LogEnum.LE_GAME_END);
          SetOn(LogEnum.LE_GAME_END_CHECK);

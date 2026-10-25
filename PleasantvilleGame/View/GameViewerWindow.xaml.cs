@@ -1331,6 +1331,10 @@ namespace PleasantvilleGame
                if (false == UpdateCanvasShowStatistics(gi))
                   Logger.Log(LogEnum.LE_ERROR, "UpdateView(): Update_CanvasShowStatistics() returned error ");
                break;
+            case GameAction.EndGameExit:
+               if (null != System.Windows.Application.Current)
+                  System.Windows.Application.Current.Shutdown();
+               break;
             case GameAction.UpdateRotateStack:
             case GameAction.UpdateScatterStack:
             case GameAction.UpdateMainCanvas:
@@ -1345,6 +1349,13 @@ namespace PleasantvilleGame
          myCanvasMain.LayoutTransform = new ScaleTransform(Utilities.ZoomCanvas, Utilities.ZoomCanvas); // UploadNewGame - Return to previous saved zoom level
          ////----------------------------------
          UpdateActionPanelClear(true);
+         foreach (Polygon polygon in myPolygons)
+         {
+            polygon.Stroke = Utilities.theBrushRegionClear;
+            polygon.StrokeThickness = 1;
+            polygon.StrokeDashArray = null;
+            polygon.Fill = Utilities.theBrushRegionClear;
+         }
          GameAction nextAction = GameAction.Error;
          if (GameAction.UpdateLoadingGame == action)
          {
@@ -1358,7 +1369,8 @@ namespace PleasantvilleGame
             gi.DieRollAction = cmd.ActionDieRoll;
             gi.EventDisplayed = gi.EventActive = cmd.EventActive;
             nextAction = GameAction.UpdateLoadingGameEnd;
-            if( ("e006t" == gi.EventActive ) || ("e007t" == gi.EventActive) )
+            Logger.Log(LogEnum.LE_GAME_INIT_LOAD, "GameViewerWindow.UpdateView_ForNewGame(): gp=" + gi.GamePhase.ToString() + " dra=" + gi.DieRollAction.ToString() + " na=" + nextAction.ToString() + " ae=" + gi.EventActive);
+            if (("e006t" == gi.EventActive) || ("e007t" == gi.EventActive))
                UpdateCanvasRectangles(BRUSH_INDEX_ALIEN);
          }
          else if (GameAction.UpdateNewGame == action)
@@ -1450,12 +1462,7 @@ namespace PleasantvilleGame
       {
          base.OnClosing(e);
          if( false == SaveDefaultsToSettings())
-            Logger.Log(LogEnum.LE_ERROR, "OnClosing() SaveDefaultsToSettings() returned false");
-      }
-      private void GameViewerWindowClosed(object sender, EventArgs e)
-      {
-         Application app = Application.Current;
-         app.Shutdown();
+            System.Diagnostics.Debug.WriteLine("GameViewerWindow.OnClosing(): Called Save_DefaultsToSettings()");
       }
       //-------------HELPER PANEL--------------------------------------------
       private bool UpdateActionPanel(IGameInstance gi)

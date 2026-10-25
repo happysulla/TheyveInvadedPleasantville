@@ -65,9 +65,10 @@ namespace PleasantvilleGame
       bool IsInfluencedThisTurn { get; set; }
       bool IsCombatThisTurn { get; set; }
       bool IsImplantRemovalAttemptThisTurn { get; set; }
-      bool IsObserveThisTurn { get; set; }
-      bool IsObservedThisTurn { get; set; }
-      bool IsTakenOverThisTurn { get; set; }
+      bool IsObserveThisTurn { get; set; } // this mapitem observed an alien takeover
+      bool IsObservedThisTurn { get; set; } // this unknown alien was observed in takeover resulting in it becoming known
+      bool IsTakenOverThisTurn { get; set; } // this victim was taken over this turn
+      bool IsSkepticalWhenTurningWaryThisTurn { get; set; } // this skeptical mapitem observed an alient takeover
       //----------------------------------------
       void Copy(IMapItem mi);
       void Sync(IMapItem mi); // synchronize most of the data but not all

@@ -110,6 +110,7 @@ namespace PleasantvilleGame
       public bool IsObserveThisTurn { get; set; } = false;
       public bool IsObservedThisTurn { get; set; } = false;
       public bool IsTakenOverThisTurn { get; set; } = false;
+      public bool IsSkepticalWhenTurningWaryThisTurn { get; set; } = false;
       //----------------------------------------
       public MapItem(string name)
       {
@@ -226,6 +227,7 @@ namespace PleasantvilleGame
          this.IsObserveThisTurn = mi.IsObserveThisTurn;
          this.IsObservedThisTurn = mi.IsObservedThisTurn;
          this.IsTakenOverThisTurn = mi.IsTakenOverThisTurn;
+         this.IsSkepticalWhenTurningWaryThisTurn = mi.IsSkepticalWhenTurningWaryThisTurn;
       }
       public void Sync(IMapItem mi)
       {
@@ -267,6 +269,7 @@ namespace PleasantvilleGame
          this.IsObserveThisTurn = mi.IsObserveThisTurn;
          this.IsObservedThisTurn = mi.IsObservedThisTurn;
          this.IsTakenOverThisTurn = mi.IsTakenOverThisTurn;
+         this.IsSkepticalWhenTurningWaryThisTurn = mi.IsSkepticalWhenTurningWaryThisTurn;
       } 
       public bool IsUncontrolled()
       {
@@ -287,17 +290,26 @@ namespace PleasantvilleGame
             this.IsAlienKnown = false;
             this.IsAlienUnknown = true;
          }
-         if( true == this.IsTakenOverThisTurn )
+         //---------------------------
+         if ( true == this.IsTakenOverThisTurn )
          {
             this.IsAlienKnown = false;
             this.IsAlienUnknown = false;
             if ( true == this.IsStunned )
                this.IsControlled = true;
          }
-         if( true == this.IsObserveThisTurn )
+         //---------------------------
+         if ( true == this.IsObserveThisTurn )
          {
             this.IsWary = false;
+            if( true == this.IsSkepticalWhenTurningWaryThisTurn )
+               this.IsSkeptical = true;
          }
+         //---------------------------
+         this.IsObservedThisTurn = false;
+         this.IsTakenOverThisTurn = false;
+         this.IsObservedThisTurn = false;
+         this.IsSkepticalWhenTurningWaryThisTurn = false;
       }
       public override string ToString()
       {

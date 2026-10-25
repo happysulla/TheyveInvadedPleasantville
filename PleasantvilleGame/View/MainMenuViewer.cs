@@ -297,7 +297,7 @@ namespace PleasantvilleGame
          }
          else
          {
-            GameAction action = GameAction.EndGameClose;
+            GameAction action = GameAction.EndGameExit;
             myGameEngine.PerformAction(ref myGameInstance, ref action);
          }
       }

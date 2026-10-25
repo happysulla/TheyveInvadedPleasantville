@@ -157,6 +157,13 @@ namespace PleasantvilleGame
       }
       protected bool LoadGame(ref IGameInstance gi)
       {
+         foreach(IMapItemTakeover to in gi.Takeovers)
+         {
+            to.Alien.BackoutTakeover();
+            to.Victim.BackoutTakeover();
+            foreach (IMapItem observer in to.Observers)
+               observer.BackoutTakeover();
+         }
          return true;
       }
       protected void SetCommand(IGameInstance gi, GameAction action, GameAction drAction, string evt)
@@ -708,11 +715,12 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): Perform_AlienTakeover() returned error");
                   return false;
                }
+               SetCommand(gi, GameAction.AlienTakeoversShow, GameAction.DieRollActionNone, gi.EventActive);
             }
          }
          if( false == isAlienTakeover )
          {
-            if (false == CheckForEndOfGame(gi, ref action))
+            if (false == CheckForEndOfGame(gi, ref action)) // CheckFor_AlienTakeovers() - no alient takeover places
             {
                Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): CheckFor_EndOfGame() returned error");
                return false;
@@ -722,6 +730,12 @@ namespace PleasantvilleGame
       }
       protected bool CheckForEndOfGame(IGameInstance gi, ref GameAction action)
       {
+         GameLoadMgr loadMgr = new GameLoadMgr();
+         if (false == loadMgr.SaveGame(gi, MainMenuViewer.RECOVER_FILENAME_PHASE)) // Save off results of the Alien Takeover phase
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Check_ForEndOfGame(): loadMgr.SaveGame() return false");
+            return false;
+         }
          //-----------------------------------------------------------
          int uncontrolledInfluence = 0;
          int controlledInfluence = 0;
@@ -801,6 +815,10 @@ namespace PleasantvilleGame
             bool isFriendlyControlledHelping = false;
             foreach (MapItem mi in stack.MapItems)
             {
+               mi.MovementUsed = 0;
+               mi.Movement = mi.MovementOriginal;
+               mi.IsMoved = false;
+               //-----------------------------
                mi.IsMoveStoppedThisTurn = false;
                mi.IsMoveAllowedToResetThisTurn = true;
                mi.IsConversedThisTurn = false;
@@ -811,6 +829,7 @@ namespace PleasantvilleGame
                mi.IsImplantRemovalAttemptThisTurn = false;
                mi.IsObserveThisTurn = false;
                mi.IsTakenOverThisTurn = false;
+               mi.IsSkepticalWhenTurningWaryThisTurn = false;
                if (true == mi.IsKilled)
                {
                   mi.IsTiedUp = false;
@@ -867,6 +886,22 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_GAMESTATE_TIED_UP, "CheckFor_EndOfGame(): untieing controlled=" + controlled.ToString());
                }
             }
+         }
+         //-----------------------------------------------------------
+         gi.DieRollAction = GameAction.DieRollActionNone;
+         gi.IsAlienAckedRandomMovement = false;
+         gi.NumTownGuessesForZebulonLocation = 0;
+         gi.RandomMoves.Clear();
+         gi.MapItemCombat.Clear();
+         gi.Takeovers.Clear();
+         Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "Reset_Phase()");
+         gi.MapItemMoves.Clear();
+         gi.SelectedMapItems.Clear();
+         gi.SelectedTerritories.Clear();
+         if (false == ResetDieResults(gi))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Reset_Phase(): Reset_DieResults() returned false");
+            return false;
          }
          //-----------------------------------------------------------
          foreach (IMapItem mi in killedMapItems)
@@ -1056,15 +1091,14 @@ namespace PleasantvilleGame
          //-----------------------------------------------------------
          if ((GameAction.EndGameWin != action) && (GameAction.EndGameLose != action))
          {
-            GameLoadMgr loadMgr = new GameLoadMgr();
-            if (false == loadMgr.SaveGame(gi, MainMenuViewer.RECOVER_FILENAME_TURN))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "CheckFor_EndOfGame(): loadMgr.SaveGame() return false");
-               return false;
-            }
             if ( false == StartNewTurn(gi, ref action))
             {
                Logger.Log(LogEnum.LE_ERROR, "CheckFor_EndOfGame(): Start_NewTurn() returned false");
+               return false;
+            }
+            if (false == loadMgr.SaveGame(gi, MainMenuViewer.RECOVER_FILENAME_TURN))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "CheckFor_EndOfGame(): loadMgr.SaveGame() return false");
                return false;
             }
          }
@@ -1073,11 +1107,7 @@ namespace PleasantvilleGame
       protected bool StartNewTurn(IGameInstance gi, ref GameAction action)
       {
          gi.GameTurn++;
-         if (false == ResetPhase(gi, GamePhase.RandomMovement))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Start_NewTurn(): Reset_Phase() returned error");
-            return false;
-         }
+         gi.GamePhase = GamePhase.RandomMovement;
          //---------------------------------------
          GameFeat changedFeat1;
          Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "CheckFor_EndOfGame():\n  Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
@@ -1210,6 +1240,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
+            case GameAction.EndGameExit:
                break;
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show
@@ -1784,6 +1815,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
+            case GameAction.EndGameExit:
                break;
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show
@@ -1973,6 +2005,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
+            case GameAction.EndGameExit:
                break;
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show
@@ -2074,6 +2107,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
+            case GameAction.EndGameExit:
                break;
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show
@@ -2193,6 +2227,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
+            case GameAction.EndGameExit:
                break;
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show
@@ -2355,6 +2390,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
+            case GameAction.EndGameExit:
                break;
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show
@@ -2562,6 +2598,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
+            case GameAction.EndGameExit:
                break;
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show
@@ -2775,7 +2812,7 @@ namespace PleasantvilleGame
                      if( true == gi.Zebulon.IsKilled)
                      {
                         gi.Statistics.AddOne("NumZebulonKills");
-                        if ( false == CheckForEndOfGame(gi, ref action) )
+                        if ( false == CheckForEndOfGame(gi, ref action)) // GameStateCombat.PerformAction(CombatsRoll) - Zebulon killed in combat
                         {
                            returnStatus = "Check_ForEndOfGame() returned false";
                            Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
@@ -2967,6 +3004,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
+            case GameAction.EndGameExit:
                break;
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show
@@ -3109,6 +3147,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
+            case GameAction.EndGameExit:
                break;
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show
@@ -3270,6 +3309,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
+            case GameAction.EndGameExit:
                break;
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show
@@ -3278,29 +3318,30 @@ namespace PleasantvilleGame
                if (false == RotateStack(gi))
                {
                   returnStatus = "Rotate_Stack() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateAlienTakeover.PerformAction(): " + returnStatus);
                }
                break;
             case GameAction.UpdateScatterStack:
                if (false == ScatterStack(gi))
                {
                   returnStatus = "Scatter_Stack() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateAlienTakeover.PerformAction(): " + returnStatus);
                }
                break;
             case GameAction.UpdateLoadingGame:
                if (false == LoadGame(ref gi))
                {
                   returnStatus = "Load_Game() returned false";
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateIterrogations.PerformAction(): " + returnStatus);
+                  Logger.Log(LogEnum.LE_ERROR, "GameStateAlienTakeover.PerformAction(): " + returnStatus);
                }
                break;
             case GameAction.UpdateLoadingGameEnd:
+               action = GameAction.AlienTakeoversShow; // Show the alien takeovers
                break;
             case GameAction.AlienTakeoversShow: // Handled by EventViewer
                break;
             case GameAction.AlienTakeoversFinish:
-               if (false == CheckForEndOfGame(gi, ref action))
+               if (false == CheckForEndOfGame(gi, ref action)) // GameStateAlienTakeover.PerformAction(AlienTakeoversFinish) - user selection continue butoom on EventViewerAlienTakeovers panel
                {
                   returnStatus = "CheckFor_EndOfGame() returned false";
                   Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): " + returnStatus);
@@ -3308,7 +3349,7 @@ namespace PleasantvilleGame
                break;
             default:
                returnStatus = "reached default action=" + action.ToString();
-               Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(): " + returnStatus);
+               Logger.Log(LogEnum.LE_ERROR, "GameStateAlienTakeover.PerformAction(): " + returnStatus);
                break;
          }
          StringBuilder sb12 = new StringBuilder();
@@ -3363,6 +3404,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
+            case GameAction.EndGameExit:
                break;
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show
@@ -3386,9 +3428,6 @@ namespace PleasantvilleGame
                break;
             case GameAction.EndGameShowStats:
                SetCommand(gi, action, GameAction.DieRollActionNone, "e503");
-               break;
-            case GameAction.EndGameExit:
-               Application.Current.Shutdown();
                break;
             default:
                returnStatus = "reached default action=" + action.ToString();
@@ -3446,6 +3485,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateEventViewerDisplay: // Only change active event
             case GameAction.UpdateNewGameEnd:
+            case GameAction.EndGameExit:
                break;
             case GameAction.UpdateEventViewerActive: // Only change active event
                gi.EventDisplayed = gi.EventActive; // next screen to show

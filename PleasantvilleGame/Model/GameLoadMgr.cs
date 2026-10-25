@@ -61,6 +61,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Save_Game(): path=" + theGamesDirectory + " e=" + e.ToString());
             return false;
          }
+         FileStream? writer = null;
          try
          {
             //--------------------------------------
@@ -75,15 +76,15 @@ namespace PleasantvilleGame
                return false;
             }
             string filenamePlusPath = theGamesDirectory + filename;
-            using (FileStream writer = new FileStream(filenamePlusPath, FileMode.OpenOrCreate, FileAccess.Write))
+            if (true == File.Exists(filenamePlusPath))
+               writer = new FileStream(filenamePlusPath, FileMode.Truncate, FileAccess.Write);
+            else
+               writer = new FileStream(filenamePlusPath, FileMode.OpenOrCreate, FileAccess.Write);
+            XmlWriterSettings settings = new XmlWriterSettings { Indent = true, OmitXmlDeclaration = true, NewLineOnAttributes = false };
+            using (XmlWriter xmlWriter = XmlWriter.Create(writer, settings)) // For XmlWriter, it uses the stream that was created: writer.
             {
-               XmlWriterSettings settings = new XmlWriterSettings { Indent = true, OmitXmlDeclaration = true, NewLineOnAttributes = false };
-               using (XmlWriter xmlWriter = XmlWriter.Create(writer, settings)) // For XmlWriter, it uses the stream that was created: writer.
-               {
-                  aXmlDocument.Save(xmlWriter);
-               }
+               aXmlDocument.Save(xmlWriter);
             }
-            return true;
          }
          catch (Exception ex)
          {
@@ -91,6 +92,15 @@ namespace PleasantvilleGame
             System.Diagnostics.Debug.WriteLine(ex.ToString());
             return false;
          }
+         finally
+         {
+            if( null != writer )
+            {
+               writer.Close();
+               writer.Dispose();
+            }
+         }
+         return true;
       }
       public IGameInstance? OpenGameFromFile()
       {
@@ -1016,7 +1026,6 @@ namespace PleasantvilleGame
             case "EndGameLose": return GameAction.EndGameLose;
             case "EndGameShowFeats": return GameAction.EndGameShowFeats;
             case "EndGameShowStats": return GameAction.EndGameShowStats;
-            case "EndGameClose": return GameAction.EndGameClose;
             case "EndGameExit": return GameAction.EndGameExit;
 
             default: Logger.Log(LogEnum.LE_ERROR, " String_ToGameAction(): reached default sGameAction=" + sGameAction); return GameAction.Error;
@@ -2186,6 +2195,25 @@ namespace PleasantvilleGame
             }
             mi.IsTakenOverThisTurn = Convert.ToBoolean(sIsTakenOverThisTurn);
             //---------------------------------------------
+            reader.Read();
+            if (false == reader.IsStartElement())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): reader.IsStartElement(IsSkepticalWhenTurningWaryThisTurn) = false");
+               return false;
+            }
+            if (reader.Name != "IsSkepticalWhenTurningWaryThisTurn")
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsSkepticalWhenTurningWaryThisTurn != (node=" + reader.Name + ")");
+               return false;
+            }
+            string? sIsSkepticalWhenTurningWaryThisTurn = reader.GetAttribute("value");
+            if (null == sIsSkepticalWhenTurningWaryThisTurn)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "ReadXmlListingMapItems(): IsSkepticalWhenTurningWaryThisTurn=null");
+               return false;
+            }
+            mi.IsSkepticalWhenTurningWaryThisTurn = Convert.ToBoolean(sIsSkepticalWhenTurningWaryThisTurn);
+            //---------------------------------------------
             reader.Read(); // get past </MapItem>
             theMapItems.Add(mi);
          }
@@ -2600,83 +2628,18 @@ namespace PleasantvilleGame
             reader.Read(); // get past </RandomMoves>
          return true;
       }
-      private bool ReadXmlAlienTakeovers(XmlReader reader, Dictionary<IMapItem, IMapItem> takeovers)
-      {
-         takeovers.Clear();
-         reader.Read();
-         if (false == reader.IsStartElement())
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): reader.IsStartElement(AlienTakeovers) = false");
-            return false;
-         }
-         if (reader.Name != "AlienTakeovers")
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): AlienTakeovers != (node=" + reader.Name + ")");
-            return false;
-         }
-         string? sCount = reader.GetAttribute("count");
-         if (null == sCount)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): Count=null");
-            return false;
-         }
-         //-------------------------------------
-         int count = int.Parse(sCount);
-         for (int i = 0; i < count; ++i)
-         {
-            reader.Read();
-            if (false == reader.IsStartElement())
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): IsStartElement(RandomMove) returned false");
-               return false;
-            }
-            if (reader.Name != "Takeover")
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): Takeover != " + reader.Name);
-               return false;
-            }
-            string? key = reader.GetAttribute("Key");
-            if (key == null)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): key=null");
-               return false;
-            }
-            string? value = reader.GetAttribute("Value");
-            if (value == null)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): value=null");
-               return false;
-            }
-            IMapItem? mi1 = theMapItems.Find(key);
-            if( null == mi1 )
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): theMapItems.Find(key) returned null for key=" + key);
-               return false;
-            }
-            IMapItem? mi2 = theMapItems.Find(value);
-            if (null == mi2)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): theMapItems.Find(value) returned null for key=" + value);
-               return false;
-            }
-            takeovers[mi1] = mi2;
-         }
-         if (0 < count)
-            reader.Read(); // get past </AlienTakeovers>
-         return true;
-      }
       private bool ReadXmlAlienTakeovers(XmlReader reader, IMapItemTakeovers takeovers)
       {
          takeovers.Clear();
          reader.Read();
          if (false == reader.IsStartElement())
          {
-            Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): reader.IsStartElement(AlienTakeovers) = false");
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): reader.IsStartElement(Takeovers) = false");
             return false;
          }
-         if (reader.Name != "AlienTakeovers")
+         if (reader.Name != "Takeovers")
          {
-            Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): AlienTakeovers != (node=" + reader.Name + ")");
+            Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): Takeovers != (node=" + reader.Name + ")");
             return false;
          }
          string? sCount = reader.GetAttribute("count");
@@ -2764,29 +2727,24 @@ namespace PleasantvilleGame
                string? sObsereverName = reader.GetAttribute("name");
                if (sObsereverName == null)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): sObsereverName=null");
+                  Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): sObsereverName=null");
                   return false;
                }
                IMapItem? observer = theMapItems.Find(sObsereverName);
-               if( null == observer)
+               if( null == observer )
                {
-                  Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): observer=null for name=" + sObsereverName);
+                  Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienTakeovers(): observer=null");
                   return false;
                }
-               string? sIsObserved = reader.GetAttribute("IsObserved");
-               if (sIsObserved == null)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "Read_XmlAlienPlayer(): sIsObserved=null");
-                  return false;
-               }
-               bool isObserved = Boolean.Parse(sIsObserved);
                takeover.Observers.Add(observer);
             }
             if (0 < count1)
                reader.Read(); // get past </Observers>
+            reader.Read(); // get past </Takeover>
+            takeovers.Add(takeover);
          }
          if (0 < count)
-            reader.Read(); // get past </AlienTakeovers>
+            reader.Read(); // get past </Takeovers>
          return true;
       }
       private bool ReadXmlMapItemMoves(XmlReader reader, IMapItemMoves mapItemMoves)
@@ -4354,6 +4312,20 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsTakenOverThisTurn) returned null");
                return false;
             }
+            //--------------------------------
+            elem = aXmlDocument.CreateElement("IsSkepticalWhenTurningWaryThisTurn");
+            if (null == elem)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): CreateElement(IsSkepticalWhenTurningWaryThisTurn) returned null");
+               return false;
+            }
+            elem.SetAttribute("value", mi.IsSkepticalWhenTurningWaryThisTurn.ToString());
+            node = miNode.AppendChild(elem);
+            if (null == node)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Create_XmlListingOfMapItems(): AppendChild(IsSkepticalWhenTurningWaryThisTurn) returned null");
+               return false;
+            }
          }
          return true;
       }
@@ -4620,46 +4592,6 @@ namespace PleasantvilleGame
          }
          return true;
       }
-      private bool CreateXmlAlienTakeovers(XmlDocument aXmlDocument, Dictionary<IMapItem, IMapItem> takeovers)
-      {
-         XmlNode? root = aXmlDocument.DocumentElement;
-         if (null == root)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): root is null");
-            return false;
-         }
-         XmlElement? alienTakeoversElem = aXmlDocument.CreateElement("AlienTakeovers");
-         if (null == alienTakeoversElem)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): CreateElement(alienTakeoversElem) returned null");
-            return false;
-         }
-         alienTakeoversElem.SetAttribute("count", takeovers.Count.ToString());
-         XmlNode? takeoversNode = root.AppendChild(alienTakeoversElem);
-         if (null == takeoversNode)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): AppendChild(statsNode) returned null");
-            return false;
-         }
-         foreach (KeyValuePair<IMapItem, IMapItem> kvp in takeovers)
-         {
-            XmlElement? elem = aXmlDocument.CreateElement("Takeover");
-            if (null == elem)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): CreateElement(Takeover) returned null");
-               return false;
-            }
-            elem.SetAttribute("Key", kvp.Key.Name);
-            elem.SetAttribute("Value", kvp.Value.Name);
-            XmlNode? node = takeoversNode.AppendChild(elem);
-            if (null == node)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): AppendChild(takeoversNode) returned null");
-               return false;
-            }
-         }
-         return true;
-      }
       private bool CreateXmlAlienTakeovers(XmlDocument aXmlDocument, IMapItemTakeovers takeovers)
       {
          XmlNode? root = aXmlDocument.DocumentElement;
@@ -4668,7 +4600,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): root is null");
             return false;
          }
-         XmlElement? alienTakeoversElem = aXmlDocument.CreateElement("AlienTakeovers");
+         XmlElement? alienTakeoversElem = aXmlDocument.CreateElement("Takeovers");
          if (null == alienTakeoversElem)
          {
             Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): CreateElement(alienTakeoversElem) returned null");
@@ -4678,7 +4610,7 @@ namespace PleasantvilleGame
          XmlNode? takeoversNode = root.AppendChild(alienTakeoversElem);
          if (null == takeoversNode)
          {
-            Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): AppendChild(statsNode) returned null");
+            Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): AppendChild(Takeovers) returned null");
             return false;
          }
          foreach (IMapItemTakeover takeover in takeovers)
@@ -4707,14 +4639,14 @@ namespace PleasantvilleGame
                return false;
             }
             //--------------------------------------------
-            XmlElement? observationElem = aXmlDocument.CreateElement("Observation");
+            XmlElement? observationElem = aXmlDocument.CreateElement("Observers");
             if (null == observationElem)
             {
                Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): CreateElement(observationElem) returned null");
                return false;
             }
             observationElem.SetAttribute("count", takeover.Observers.Count.ToString());
-            XmlNode? observationNode = root.AppendChild(observationElem);
+            XmlNode? observationNode = takeoverNode.AppendChild(observationElem);
             if (null == observationNode)
             {
                Logger.Log(LogEnum.LE_ERROR, "CreateXml_AlienTakeovers(): AppendChild(observationNode) returned null");
