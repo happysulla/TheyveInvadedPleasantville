@@ -124,69 +124,12 @@ namespace PleasantvilleGame
       {
          Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "Perform_AlienMoves(): gi.MapItemMoves.Clear()");
          gi.MapItemMoves.Clear();
-         // Choose 5 counters to be moved.
-         // Need to get the aliens to comingle with other uncontrolled townspeople
-         // If strategy is FIENT_ZEBULON, move away from ZEBULON
-         // If strategy is MAX_TAKEOVER, get aliens to other uncontrolled locations 
-         // Create a metric for each Uncontrolled Townsperson:
-         //    --- Isolated from Observations
-         //    --- Away from Controlled Townspeople
-         //    --- Closer to Zebulon
-         //    --- Closer to Alien Center
-         //    --- Greater Influence
-         //    --- Greater Combat
-         // Identify who Aliens move to or what uncontrolled move to Aliens
-         // Should move away observing units?
-         // Pick remaining uncontrolled townspeople to move.
-         //    --- Move away from Town controlled units
-         //    --- Add deception on what is being taken over
-         // NOTES:
-         //    --- Do not move an uncontrolled away from an Alien Takeover
-         //    --- If an alien cannot get to an area, consider moving the uncontrolled to it
-         //    --- Move units away from controlled townsperson
-         IMapItemMoves alienMoves = new MapItemMoves();
-         IMapItems knownAliens = new MapItems();
-         IMapItems unknownAliens = new MapItems();
-         IMapItems townControlledPeoples = new MapItems();
-         IMapItems uncontrolledPeoples = new MapItems();
-         foreach (IStack stack in gi.Stacks)
-         {
-            foreach (IMapItem mi in stack.MapItems)
-            {
-               mi.IsMovingThisTurn = false;
-               if (true == mi.IsAlienKnown)
-                  knownAliens.Add(mi);
-               else if (true == mi.IsAlienUnknown)
-                  unknownAliens.Add(mi);
-               else if (true == mi.IsControlled)
-                  townControlledPeoples.Add(mi);
-               else if ((false == mi.IsWary) && (false == mi.IsKnockedout) && (false == mi.IsKilled) && (false == mi.IsTiedUp) && (false == mi.IsStunned))
-                  uncontrolledPeoples.Add(mi);
-            }
-         }
-         Logger.Log(LogEnum.LE_SHOW_UNCONTROLLED, "Perform_AlienMoves(): MoveUnknownAliens() uncontrolledPeoples=" + uncontrolledPeoples.ToString());
-         //----------------------------------------------------------------
          PlayerAlienComputerMoveMgr moveMgr = new PlayerAlienComputerMoveMgr();
-         if (false == moveMgr.MoveUnknownAliens(gi, unknownAliens, alienMoves))
+         if( false == moveMgr.PerformAlienMovement(gi, myBehavior))
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): MoveUnknownAliens() returned error");
+            Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Perform_AlienMoves() returned false");
             return false;
          }
-         Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMoves(): mims=" + alienMoves.ToString());
-         if (false == moveMgr.IntersectAlienUncontrolled(gi, unknownAliens, uncontrolledPeoples, alienMoves))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): IntersectAlienUncontrolled() returned error");
-            return false;
-         }
-         Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMoves(): mims=" + alienMoves.ToString());
-         if (false == moveMgr.MoveUncontrolled(gi, uncontrolledPeoples, alienMoves))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): MoveUncontrolled() returned error");
-            return false;
-         }
-         Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMoves(): mims=" + alienMoves.ToString());
-         //----------------------------------------------------------------
-         gi.MapItemMoves = alienMoves.Shuffle();
          return true;
       }
       public bool BlockTownMove(ref IMapItemMove mim)

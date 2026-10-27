@@ -12,11 +12,103 @@ namespace PleasantvilleGame
    {
       public IMapItems Targets { get; set; } = new MapItems();
       public PlayerAlienComputerMoveMgr(){}
-      public bool MoveKnownAliens()
+      public bool PerformAlienMovement(IGameInstance gi, Behavior behavior)
+      {
+         // BEHAVIOR STRATEGIES:
+         // --------------------
+         // SURROUND_ZEBULON - Zebulon is discovered - Surrond and protect at all costs
+         // DEFEND_ZEBULON - tend to move toward Zebulon location to form a protective ring - more likely when Zebulon is discovered
+         // FIENT_ZEBULON - Move away from Zebulon to cause Human player to move wrong direction
+         // FIND_FRIENDS - Town Person is attacking... Find Friends to form groups
+         // ATTACK_TOWNSPEOPLE - Losing on influence. Need to win over controlled townspeople
+         // MAX_TAKEOVER - attempt to maximize takeover of uncontrolled
+         // =================================
+         // Choose 5 counters to be moved.
+         // Create a metric for each Uncontrolled Townsperson:
+         //    --- Takeover Stunned Controlled
+         //    --- Free Tied-up Aliens 
+         //    --- Isolated from Observations
+         //    --- Away from Controlled Townspeople
+         //    --- Closer to Zebulon
+         //    --- Closer to Alien Center
+         //    --- Greater Influence
+         //    --- Greater Combat
+         // Identify who Aliens move to or what uncontrolled move to Aliens
+         // Should move away observing units?
+         // Pick remaining uncontrolled townspeople to move.
+         //    --- Move away from Town controlled units
+         //    --- Add deception on what is being taken over
+         // NOTES:
+         //    --- Do not move an uncontrolled away from an Alien Takeover
+         //    --- If an alien cannot get to an area, consider moving the uncontrolled to it
+         //    --- Move units away from controlled townsperson
+         //----------------------------------------------------------------
+         IMapItemMoves alienMoves = new MapItemMoves();
+         IMapItems knownAliens = new MapItems();
+         IMapItems unknownAliens = new MapItems();
+         IMapItems townControlledPeoples = new MapItems();
+         IMapItems uncontrolledPeoples = new MapItems();
+         IMapItems stunnedPeoples = new MapItems();
+         IMapItems waryPeoples = new MapItems();
+         foreach (IStack stack in gi.Stacks)
+         {
+            foreach (IMapItem mi in stack.MapItems)
+            {
+               mi.IsMovingThisTurn = false;
+               if ((false == mi.IsKnockedout) && (false == mi.IsKilled))
+                  continue;
+               else if ((true == mi.IsStunned) && (false == mi.IsAlien()))
+                  stunnedPeoples.Add(mi);
+               else if ((true == mi.IsWary) && (false == mi.IsAlien()))
+                  waryPeoples.Add(mi);
+               else if (true == mi.IsAlienKnown)
+                  knownAliens.Add(mi);
+               else if (true == mi.IsAlienUnknown)
+                  unknownAliens.Add(mi);
+               else if (true == mi.IsControlled)
+                  townControlledPeoples.Add(mi);
+               else if (false == mi.IsTiedUp) // tied up uncontrolled people are ignored
+                  uncontrolledPeoples.Add(mi);
+            }
+         }
+         //============================================
+         foreach (IStack stack in gi.Stacks)
+         {
+            foreach (IMapItem mi in stack.MapItems)
+            {
+            }
+         }
+         //============================================
+         Logger.Log(LogEnum.LE_SHOW_UNCONTROLLED, "Perform_AlienMovement(): MoveUnknownAliens() uncontrolledPeoples=" + uncontrolledPeoples.ToString());
+         //-------------------------------------------------------
+
+         //-------------------------------------------------------
+         if (false == MoveUnknownAliens(gi, unknownAliens, alienMoves))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMovement(): MoveUnknownAliens() returned error");
+            return false;
+         }
+         Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMovement(): mims=" + alienMoves.ToString());
+         if (false == IntersectAlienUncontrolled(gi, unknownAliens, uncontrolledPeoples, alienMoves))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMovement(): IntersectAlienUncontrolled() returned error");
+            return false;
+         }
+         Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMovement(): mims=" + alienMoves.ToString());
+         if (false == MoveUncontrolled(gi, uncontrolledPeoples, alienMoves))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMovement(): MoveUncontrolled() returned error");
+            return false;
+         }
+         Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMovement(): mims=" + alienMoves.ToString());
+         gi.MapItemMoves = alienMoves.Shuffle();
+         return true;
+      }
+      private bool MoveKnownAliens()
       {
          return true;
       }
-      public bool MoveUnknownAliens(IGameInstance gi, IMapItems unknownAliens, IMapItemMoves alienMoves )
+      private bool MoveUnknownAliens(IGameInstance gi, IMapItems unknownAliens, IMapItemMoves alienMoves )
       {
          foreach (IMapItem unknownAlien in unknownAliens)
          {
@@ -112,7 +204,7 @@ namespace PleasantvilleGame
          }
          return true;
       }
-      public bool IntersectAlienUncontrolled(IGameInstance gi, IMapItems unknownAliens, IMapItems uncontrolledPeoples, IMapItemMoves alienMoves)
+      private bool IntersectAlienUncontrolled(IGameInstance gi, IMapItems unknownAliens, IMapItems uncontrolledPeoples, IMapItemMoves alienMoves)
       {
          foreach (IMapItem unknownAlien in unknownAliens)
          {
@@ -123,7 +215,7 @@ namespace PleasantvilleGame
          }
          return true;
       }
-      public bool MoveUncontrolled(IGameInstance gi, IMapItems uncontrolledPeoples, IMapItemMoves alienMoves)
+      private bool MoveUncontrolled(IGameInstance gi, IMapItems uncontrolledPeoples, IMapItemMoves alienMoves)
       {
          IMetricObservations uncontrolledMetrics = new MetricObservations();
          foreach (IMapItem uncontrolled in uncontrolledPeoples) // need to find the best territory to move units to that will not be observed
