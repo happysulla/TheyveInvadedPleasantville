@@ -28,7 +28,20 @@ namespace PleasantvilleGame
          }
 			return false;
 		}
-      //---------------------------------------------------------------
+		//---------------------------------------------------------------
+      public static bool IsMapItemWithingRange(IMapItem target, IMapItem moving)
+      {
+			IMapPath? bestPath = GetBestPath(Territories.theTerritories, moving.TerritoryCurrent, target.TerritoryCurrent, moving.Movement);
+			if( null == bestPath )
+			{
+				Logger.Log(LogEnum.LE_ERROR, "IsMapItemWithingRange(): returned error for mi=" + moving.Name + " from=" + moving.TerritoryCurrent.ToString() + " to target=" + target.TerritoryCurrent.ToString());
+				return false;
+			}
+			if (moving.Movement < bestPath.Territories.Count)
+				return false;
+			else
+				return true;
+      }
       public static IMapItems? GetMapItemsWithinRange(IGameInstance gi, ITerritory t, int range)
       {
          string? tName = t.ToString();
@@ -636,6 +649,46 @@ namespace PleasantvilleGame
 				}
          }
          return count;
+      }
+		public static IMapPoint GetCenterPointControlled(IGameInstance gi)
+		{
+			double xTotal = 0.0;
+			double yTotal = 0.0;
+			int count = 0;
+			foreach(IStack stack in gi.Stacks)
+			{
+				foreach(IMapItem mi in stack.MapItems)
+				{
+                if ((true == mi.IsControlled) && (false == mi.IsStunned) && (false==mi.IsKnockedout) )
+                {
+						count++;
+						xTotal += mi.TerritoryCurrent.CenterPoint.X;
+						yTotal += mi.TerritoryCurrent.CenterPoint.Y;
+					 }
+            }
+			}
+			IMapPoint centerPoint = new MapPoint(xTotal/(double)count, yTotal/(double)count);
+			return centerPoint;
+		}
+      public static IMapPoint GetCenterPointAlien(IGameInstance gi)
+      {
+         double xTotal = 0.0;
+         double yTotal = 0.0;
+         int count = 0;
+         foreach (IStack stack in gi.Stacks)
+         {
+            foreach (IMapItem mi in stack.MapItems)
+            {
+               if ((true == mi.IsAlien()) && (false == mi.IsStunned) && (false == mi.IsKnockedout) && (false == mi.IsTiedUp) && (false == mi.IsSurrendered))
+               {
+                  count++;
+                  xTotal += mi.TerritoryCurrent.CenterPoint.X;
+                  yTotal += mi.TerritoryCurrent.CenterPoint.Y;
+               }
+            }
+         }
+         IMapPoint centerPoint = new MapPoint(xTotal / (double)count, yTotal / (double)count);
+         return centerPoint;
       }
       //---------------------------------------------------------------
       private static double DistanceToSegment(Point p, Point a, Point b, out Point closestPoint)

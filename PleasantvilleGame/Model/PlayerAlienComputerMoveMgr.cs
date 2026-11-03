@@ -24,7 +24,7 @@ namespace PleasantvilleGame
          // MAX_TAKEOVER - attempt to maximize takeover of uncontrolled
          // =================================
          // Choose 5 counters to be moved.
-         // Create a metric for each Uncontrolled Townsperson:
+         // Create a metric:
          //    --- Takeover Stunned Controlled
          //    --- Free Tied-up Aliens 
          //    --- Isolated from Observations
@@ -43,7 +43,12 @@ namespace PleasantvilleGame
          //    --- If an alien cannot get to an area, consider moving the uncontrolled to it
          //    --- Move units away from controlled townsperson
          //----------------------------------------------------------------
+         IMapPoint mpCenterControlled = Territory.GetCenterPointControlled(gi);
+         IMapPoint mpCenterAlien = Territory.GetCenterPointAlien(gi);
+         //----------------------------------------------------------------
+         List<CandidateMove> myMoves = new List<CandidateMove>();
          IMapItemMoves alienMoves = new MapItemMoves();
+         IMapItems aliens = new MapItems();
          IMapItems knownAliens = new MapItems();
          IMapItems unknownAliens = new MapItems();
          IMapItems townControlledPeoples = new MapItems();
@@ -62,9 +67,15 @@ namespace PleasantvilleGame
                else if ((true == mi.IsWary) && (false == mi.IsAlien()))
                   waryPeoples.Add(mi);
                else if (true == mi.IsAlienKnown)
+               {
                   knownAliens.Add(mi);
+                  aliens.Add(mi);
+               }
                else if (true == mi.IsAlienUnknown)
+               {
                   unknownAliens.Add(mi);
+                  aliens.Add(mi);
+               }
                else if (true == mi.IsControlled)
                   townControlledPeoples.Add(mi);
                else if (false == mi.IsTiedUp) // tied up uncontrolled people are ignored
@@ -72,16 +83,19 @@ namespace PleasantvilleGame
             }
          }
          //============================================
-         foreach (IStack stack in gi.Stacks)
-         {
-            foreach (IMapItem mi in stack.MapItems)
-            {
-            }
-         }
-         //============================================
          Logger.Log(LogEnum.LE_SHOW_UNCONTROLLED, "Perform_AlienMovement(): MoveUnknownAliens() uncontrolledPeoples=" + uncontrolledPeoples.ToString());
+         List<CandidateMove> candidateMoves = new List<CandidateMove>();
          //-------------------------------------------------------
-
+         if (false == AddCandidatesMovesToStunned(gi, stunnedPeoples, aliens, candidateMoves))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Add_andidatesMovesToStunned(): MoveUnknownAliens() returned error");
+            return false;
+         }
+         if (false == AddCandidatesMovesToStunned(gi, stunnedPeoples, uncontrolledPeoples, candidateMoves))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Add_andidatesMovesToStunned(): MoveUnknownAliens() returned error");
+            return false;
+         }
          //-------------------------------------------------------
          if (false == MoveUnknownAliens(gi, unknownAliens, alienMoves))
          {
@@ -104,8 +118,28 @@ namespace PleasantvilleGame
          gi.MapItemMoves = alienMoves.Shuffle();
          return true;
       }
-      private bool MoveKnownAliens()
+      //================================================================
+      private bool AddCandidatesMovesToStunned(IGameInstance gi, IMapItems stunnedMapItems, IMapItems mapItems, List<CandidateMove> candidateMoves)
       {
+         foreach (IMapItem stunnedMapItem in stunnedMapItems)
+         {
+            foreach (IMapItem mi in mapItems)
+            {
+               bool isWithinRange = Territory.IsMapItemWithingRange(stunnedMapItem, mi);
+               if( true == isWithinRange )
+               {
+                  CandidateMove cm = new CandidateMove(mi, stunnedMapItem.TerritoryCurrent);
+
+                  if (true == mi.IsAlienKnown)
+                     cm.myMetric = 50;
+                  else if (true == mi.IsAlienUnknown)
+                     cm.myMetric = 45;
+                  else
+                     cm.myMetric = 10; // not an alien but can deceive Town player
+                  candidateMoves.Add(cm);
+               }
+            }
+         }
          return true;
       }
       private bool MoveUnknownAliens(IGameInstance gi, IMapItems unknownAliens, IMapItemMoves alienMoves )

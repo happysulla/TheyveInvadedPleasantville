@@ -6,6 +6,18 @@ using System.Threading.Tasks;
 
 namespace PleasantvilleGame
 {
+   public struct CandidateMove
+   {
+      public IMapItem myMapItem;
+      public ITerritory myDest;
+      public int myMetric;
+      public CandidateMove(IMapItem mi, ITerritory t)
+      {
+         myMapItem = mi;
+         myDest = t;
+         myMetric = 0;
+      }
+   }
    public interface IPlayer
    {
       bool IsComputer { set; get; }
