@@ -504,7 +504,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "CreateXml_Territories(): CreateElement(terrElem) returned null");
                   return false;
                }
-               terrElem.SetAttribute("value", t.ToString());
+               terrElem.SetAttribute("value", t.Name);
                XmlNode? territoryNode = root.AppendChild(terrElem);
                if (null == territoryNode)
                {
@@ -532,7 +532,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "CreateXml_Territories(): CreateElement(terrElem) returned null");
                   return false;
                }
-               elem.SetAttribute("value", t.Subname.ToString());
+               elem.SetAttribute("value", t.Subname);
                node = territoryNode.AppendChild(elem);
                if (null == node)
                {

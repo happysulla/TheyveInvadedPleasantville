@@ -42,24 +42,13 @@ namespace PleasantvilleGame
 			else
 				return true;
       }
-      public static IMapItems? GetMapItemsWithinRange(IGameInstance gi, ITerritory t, int range)
+      public static IMapItems? GetMapItemsWithinRange(IStacks stacks, ITerritories sTerritories, ITerritory sTerritory, int range)
       {
-         string? tName = t.ToString();
-         if (null == tName)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Get_MapItemsWithinRange(): tName=null");
-            return null;
-         }
-         List<string>? tNames = Territory.GetTerritoriesWithinRange(gi, tName, range);
-         if (null == tNames)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Get_MapItemsWithinRange(): Get_TerritoriesWithinRange() returned null for anchorT=" + tName);
-            return null;
-         }
+         ITerritories territories1 = Territory.GetTerritoriesWithinRange(sTerritories, sTerritory, range);
          IMapItems mapItemCandidates = new MapItems();
-         foreach (string territoryName in tNames)
+         foreach (ITerritory t in territories1)
          {
-            IStack? stack = gi.Stacks.Find(territoryName);
+            IStack? stack = stacks.Find(t);
             if (null == stack)
                continue;
             foreach (IMapItem mapItem in stack.MapItems)
@@ -69,41 +58,19 @@ namespace PleasantvilleGame
          IMapItems mapItems = new MapItems();
          foreach (IMapItem mi in mapItemCandidates) // Verify that mapitem can get to the target territory
 			{
-				string? tName1 = mi.TerritoryCurrent.ToString();
-				if( null == tName1 )
-				{
-               Logger.Log(LogEnum.LE_ERROR, "Get_MapItemsWithinRange(): tName1=null");
-               return null;
-            }
-            List<string>? tNames1 = Territory.GetTerritoriesWithinRange(gi, tName1, mi.Movement);
-            if (null == tNames1)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Get_MapItemsWithinRange(): tNames=null for anchorT=" + t.ToString());
-               return null;
-            }
-				if (true == tNames1.Contains(tName))
+            ITerritories territories2 = Territory.GetTerritoriesWithinRange(territories1, mi.TerritoryCurrent, mi.Movement);
+				if (true == territories2.Contains(sTerritory))
 					mapItems.Add(mi);
          }
          return mapItems;
       }
-      public static IMapItems? GetMapItemsWithinRange(IGameInstance gi, IMapItem mi)
+      public static IMapItems? GetMapItemsWithinRange(IStacks stacks, ITerritories sTerritories, IMapItem mi)
       {
-         string? tName = mi.TerritoryCurrent.ToString();
-         if (null == tName)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Get_MapItemsWithinRange(): tName=null");
-            return null;
-         }
-         List<string>? tNames = Territory.GetTerritoriesWithinRange(gi, tName, mi.Movement);
-         if (null == tNames)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Get_MapItemsWithinRange(): Get_TerritoriesWithinRange() returned null for anchorT=" + tName);
-            return null;
-         }
+         ITerritories territories1 = Territory.GetTerritoriesWithinRange(sTerritories, mi.TerritoryCurrent, mi.Movement);
          IMapItems mapItemCandidates = new MapItems();
-         foreach (string territoryName in tNames)
+         foreach (ITerritory t in territories1)
          {
-            IStack? stack = gi.Stacks.Find(territoryName);
+            IStack? stack = stacks.Find(t);
             if (null == stack)
                continue;
             foreach (IMapItem mapItem in stack.MapItems)
@@ -111,45 +78,70 @@ namespace PleasantvilleGame
          }
          return mapItemCandidates;
       }
-      public static List<string>? GetOverlappingTerritories(IGameInstance gi, IMapItem mi1, IMapItem mi2)
+      public static ITerritories GetTerritoriesWithinRange(ITerritories territories, ITerritory tStart, int range)
       {
-			List<string> returnList = new List<string>();
-         string? tName1 = mi1.TerritoryCurrent.ToString();
-         if (null == tName1)
+         ITerritories masterList = new Territories();
+         Queue<string> tQueue = new Queue<string>();
+         Queue<int> depthQueue = new Queue<int>();
+         Dictionary<string, bool> visited = new Dictionary<string, bool>();
+			string tName = tStart.Name + "_" + tStart.Subname;
+         tQueue.Enqueue(tName);
+         depthQueue.Enqueue(0);
+         visited[tName] = false;
+         masterList.Add(tStart);
+         while (0 < tQueue.Count)
          {
-            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): tName1=null");
-            return null;
-         }
-         List<string>? tNames1 = Territory.GetTerritoriesWithinRange(gi, tName1, mi1.Movement);
-         if (null == tNames1)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): tNames=null for tName1=" + tName1);
-            return null;
-         }
-         //--------------------------------------
-         string? tName2 = mi2.TerritoryCurrent.ToString();
-         if (null == tName2)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): tName2=null");
-            return null;
-         }
-         List<string>? tNames2 = Territory.GetTerritoriesWithinRange(gi, tName2, mi2.Movement);
-         if (null == tNames2)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "GetMapItemsWithinRange(): tNames=null for tNames2=" + tNames2);
-            return null;
-         }
-         //--------------------------------------
-         foreach (string tName in tNames2)
-			{
-            Logger.Log(LogEnum.LE_SHOW_UNIT_TEST, "TerritoryCreateUnitTest.Command(): tName=" + tName);
-            if (true == tNames1.Contains(tName))
-				{
-               Logger.Log(LogEnum.LE_SHOW_UNIT_TEST, "TerritoryCreateUnitTest.Command(): \t ==> COMMON tName=" + tName);
-               returnList.Add(tName);
+            String name = tQueue.Dequeue();
+            int depth = depthQueue.Dequeue();
+            if (true == visited[name])
+               continue;
+            if (range <= depth)
+               continue;
+            visited[name] = true;
+            ITerritory? t = territories.Find(name);
+            if (null == t)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "GetTerritoriesWithinRange(): t=null for " + name);
+               return masterList;
             }
-			}
-         return returnList;
+            foreach (string adj in t.Adjacents)
+            {
+               ITerritory? adjT = territories.Find(adj);
+               if (null == adjT)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "GetTerritoriesWithinRange(): adjT=null for " + adj);
+                  return masterList;
+               }
+               tQueue.Enqueue(adj);
+               depthQueue.Enqueue(depth + 1);
+               if (false == masterList.Contains(adjT))
+               {
+                  masterList.Add(adjT);
+                  visited[adj] = false;
+               }
+            }
+         }
+         return masterList;
+      }
+      public static ITerritories GetTerritoriesOfInterest(ITerritories sTerritories, IMapItem mi1, IMapItem mi2, bool isOverlapping=true)
+      {
+         ITerritories returnValue;
+         ITerritories t1 = Territory.GetTerritoriesWithinRange(sTerritories, mi1.TerritoryCurrent, mi1.Movement);
+			if( true == isOverlapping )
+			{
+            returnValue = Territory.GetTerritoriesWithinRange(t1, mi2.TerritoryCurrent, mi2.Movement);
+         }
+			else
+			{
+				returnValue = new Territories();
+            ITerritories t2 = Territory.GetTerritoriesWithinRange(sTerritories, mi2.TerritoryCurrent, mi2.Movement);
+				foreach(ITerritory t in t2)
+				{
+					if (false == t1.Contains(t))
+						returnValue.Add(t);
+            }
+         }
+         return returnValue;
       }
       public static IMapPath? GetBestPath(ITerritories territories, ITerritory startT, ITerritory endT, int moveFactor)
 		{
@@ -537,50 +529,7 @@ namespace PleasantvilleGame
 			}
 			return (intersections % 2) != 0; // Odd number of intersections means the point is inside
 		}
-      public static List<String>? GetTerritoriesWithinRange(IGameInstance gi, string tName, int range)
-      {
-         List<string> masterList = new List<string>();
-         Queue<string> tQueue = new Queue<string>();
-         Queue<int> depthQueue = new Queue<int>();
-         Dictionary<string, bool> visited = new Dictionary<string, bool>();
-         tQueue.Enqueue(tName);
-         depthQueue.Enqueue(0);
-         visited[tName] = false;
-         masterList.Add(tName);
-         while (0 < tQueue.Count)
-         {
-            String name = tQueue.Dequeue();
-            int depth = depthQueue.Dequeue();
-            if (true == visited[name])
-               continue;
-            if (range <= depth)
-               continue;
-            visited[name] = true;
-            ITerritory? t = Territories.theTerritories.Find(name);
-            if (null == t)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "GetTerritoriesWithinRange(): t=null for " + name);
-               return null;
-            }
-            foreach (string adj in t.Adjacents)
-            {
-               ITerritory? adjT = Territories.theTerritories.Find(adj);
-               if (null == adjT)
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "GetTerritoriesWithinRange(): adjT=null for " + adj);
-                  return null;
-               }
-               tQueue.Enqueue(adj);
-               depthQueue.Enqueue(depth + 1);
-               if (false == masterList.Contains(adj))
-               {
-                  masterList.Add(adj);
-                  visited[adj] = false;
-               }
-            }
-         }
-         return masterList;
-      }
+
 		public static int GetStackingCountUncontrolled(IGameInstance gi, ITerritory t, IMapItemMoves pendingMoves)
 		{
          int count = 0;
@@ -840,7 +789,10 @@ namespace PleasantvilleGame
 		[NonSerialized] static public ITerritories theTerritories = new Territories();
 		private readonly ArrayList myList;
 		public Territories() { myList = new ArrayList(); }
-		public void Add(ITerritory t) { myList.Add(t); }
+		public void Add(ITerritory t) 
+		{ 
+			myList.Add(t);
+		}
 		public void Insert(int index, ITerritory t) { myList.Insert(index, t); }
 		public int Count { get { return myList.Count; } }
 		public void Clear() { myList.Clear(); }

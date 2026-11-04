@@ -6,13 +6,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Xml;
-using Point = System.Windows.Point;
+using System.Xml.Linq;
+using Brushes=System.Windows.Media.Brushes;
+using Color=System.Windows.Media.Color;
 using FontFamily=System.Windows.Media.FontFamily;
 using Image = System.Windows.Controls.Image;
-using MessageBox=System.Windows.MessageBox;
-using Color=System.Windows.Media.Color;
-using Brushes=System.Windows.Media.Brushes;
 using Label=System.Windows.Controls.Label;
+using MessageBox=System.Windows.MessageBox;
+using Point = System.Windows.Point;
 using Rectangle=System.Windows.Shapes.Rectangle;
 
 namespace PleasantvilleGame
@@ -150,7 +151,7 @@ namespace PleasantvilleGame
             
             if( false == DeleteEllipsesAndPolygons()) // Remove all Ellipse and Polygons
             {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryRegionUnitTest.Command(): DeleteEllipsesAndPolygons() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryRegionUnitTest.Command(): Delete_EllipsesAndPolygons() returned false");
                return false;
             }
             foreach (ITerritory t in Territories.theTerritories)
@@ -172,11 +173,11 @@ namespace PleasantvilleGame
 
          }
          //-----------------------------------------------------------------
-         else if (CommandName == myCommandNames[3])
+         else if (CommandName == myCommandNames[3]) // Ranged Calculation
          {
             if (false == DeleteEllipsesAndPolygons())
             {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): DeleteEllipsesAndPolygons() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): Delete_EllipsesAndPolygons() returned false");
                return false;
             }
             if (false == CreatePathPolygons())
@@ -186,7 +187,7 @@ namespace PleasantvilleGame
             }
          }
          //-----------------------------------------------------------------
-         else if (CommandName == myCommandNames[4])
+         else if (CommandName == myCommandNames[4]) // Path Calculations
          {
 
          }
@@ -233,7 +234,7 @@ namespace PleasantvilleGame
             ++myIndexName;
             if (false == DeleteEllipsesAndPolygons())
             {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): DeleteEllipsesAndPolygons() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): Delete_EllipsesAndPolygons() returned false");
                return false;
             }
             if (false == CreateEllipses(true))
@@ -247,7 +248,7 @@ namespace PleasantvilleGame
             ++myIndexName;
             if (false == DeleteEllipsesAndPolygons())
             {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): DeleteEllipsesAndPolygons() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): Delete_EllipsesAndPolygons() returned false");
                return false;
             }
             if (false == CreateRangedPolygons())
@@ -261,7 +262,7 @@ namespace PleasantvilleGame
             ++myIndexName;
             if (false == DeleteEllipsesAndPolygons())
             {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): DeleteEllipsesAndPolygons() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): Delete_EllipsesAndPolygons() returned false");
                return false;
             }
             if (false == CreatePathPolygons())
@@ -294,7 +295,7 @@ namespace PleasantvilleGame
          //--------------------------------------------------
          if( false == DeleteEllipsesAndPolygons())
          {
-            Logger.Log(LogEnum.LE_ERROR, "Cleanup(): DeleteEllipsesAndPolygons() returned false");
+            Logger.Log(LogEnum.LE_ERROR, "Cleanup(): Delete_EllipsesAndPolygons() returned false");
             return false;
          }
          //--------------------------------------------------
@@ -407,13 +408,40 @@ namespace PleasantvilleGame
          }
          return true;
       }
+      private bool CreateEllipse(ITerritory territory, IMapPoint mp, System.Windows.Media.Color color)
+      {
+         if (null == myCanvasMain)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Creat_eEllipse(): myCanvasMain=null");
+            return false;
+         }
+         SolidColorBrush aSolidColorBrush1 = new SolidColorBrush { Color = color };
+         Ellipse aEllipse = new Ellipse
+         {
+            Name = territory.ToString(),
+            Fill = aSolidColorBrush1,
+            StrokeThickness = 1,
+            Stroke = Brushes.Red,
+            Width = theEllipseDiameter,
+            Height = theEllipseDiameter
+         };
+         System.Windows.Point p = new System.Windows.Point(territory.CenterPoint.X, territory.CenterPoint.Y);
+         p.X -= theEllipseOffset;
+         p.Y -= theEllipseOffset;
+         myCanvasMain.Children.Add(aEllipse);
+         Canvas.SetLeft(aEllipse, mp.X);
+         Canvas.SetTop(aEllipse, mp.Y);
+         Canvas.SetZIndex(aEllipse, 99999);
+         myEllipses.Add(aEllipse);
+         return true;
+      }
       private bool DeleteEllipsesAndPolygons()
       {
          myAnchorTerritory = null;
          myTargetTerritory = null;
          if (null == myCanvasMain)
          {
-            Logger.Log(LogEnum.LE_ERROR, "DeleteEllipsesAndPolygons(): myCanvasMain=null");
+            Logger.Log(LogEnum.LE_ERROR, "Delete_EllipsesAndPolygons(): myCanvasMain=null");
             return false;
          }
          //-------------------------------------------
@@ -478,7 +506,7 @@ namespace PleasantvilleGame
          myPoints.Clear();
          if (null == myCanvasMain)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Polygons(): myCanvasMain=null");
+            Logger.Log(LogEnum.LE_ERROR, "Create_CreationPolygons(): myCanvasMain=null");
             return false;
          }
          foreach (Territory t in Territories.theTerritories)
@@ -487,7 +515,9 @@ namespace PleasantvilleGame
             {
                PointCollection points = new PointCollection();
                foreach (IMapPoint mp1 in t.Points)
-               points.Add(new System.Windows.Point(mp1.X, mp1.Y));
+                   points.Add(new System.Windows.Point(mp1.X, mp1.Y));
+               string name = t.ToString();
+               Logger.Log(LogEnum.LE_ERROR, "Create_CreationPolygons(): creating polygon=" + name);
                Polygon aPolygon = new Polygon { Points = points, Name = t.ToString()};
                aPolygon.MouseDown += this.MouseDownPolygon1;
                aPolygon.Fill = Brushes.Black;
@@ -503,7 +533,7 @@ namespace PleasantvilleGame
          myPoints.Clear();
          if (null == myCanvasMain)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Create_Polygons(): myCanvasMain=null");
+            Logger.Log(LogEnum.LE_ERROR, "Create_RangedPolygons(): myCanvasMain=null");
             return false;
          }
          foreach (Territory t in Territories.theTerritories)
@@ -513,7 +543,9 @@ namespace PleasantvilleGame
                PointCollection points = new PointCollection();
                foreach (IMapPoint mp1 in t.Points)
                   points.Add(new System.Windows.Point(mp1.X, mp1.Y));
-               Polygon aPolygon = new Polygon { Points = points, Name = t.ToString() };
+               string name = t.ToString();
+               Logger.Log(LogEnum.LE_ERROR, "Create_RangedPolygons(): creating polygon=" + name);
+               Polygon aPolygon = new Polygon { Points = points, Name = name };
                aPolygon.MouseDown += this.MouseDownPolygon2;
                aPolygon.Fill = Utilities.theBrushRegionClear;
                Canvas.SetZIndex(aPolygon, 10000);
@@ -837,17 +869,18 @@ namespace PleasantvilleGame
             else
             {
                myAnchorTerritory = matchingTerritory; // If there is no anchor territory. Set it.  
-               List<String>? tNames = Territory.GetTerritoriesWithinRange(myGameInstance, aPolygon.Name, myRange);
-               if( null == tNames )
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "MouseDownPolygon2(): GetTerritoriesWithinRange() returned null");
-                  return;
-               }
+               ITerritories territoriesToDisplay = Territory.GetTerritoriesWithinRange(Territories.theTerritories, matchingTerritory, myRange);
                myRange++;
                if (7 == myRange)
                   myRange = 3;
-               foreach(string tName in tNames)
+               foreach(ITerritory t in territoriesToDisplay)
                {
+                  string? tName = t.ToString();
+                  if( null == tName )
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "MouseDownPolygon2(): tName=null;");
+                     return;
+                  }
                   foreach(UIElement element in myCanvasMain.Children)
                   {
                      if (element is Polygon polygon)
@@ -863,12 +896,12 @@ namespace PleasantvilleGame
          {
             if (false == DeleteEllipsesAndPolygons())
             {
-               Logger.Log(LogEnum.LE_ERROR, "MouseDownPolygon2(): DeleteEllipsesAndPolygons() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "MouseDownPolygon2(): Delete_EllipsesAndPolygons() returned false");
                return;
             }
             if (false == CreateRangedPolygons())
             {
-               Logger.Log(LogEnum.LE_ERROR, "MouseDownPolygon2(): CreateRangedPolygons() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "MouseDownPolygon2(): Create_RangedPolygons() returned false");
                return;
             }
          }
@@ -898,7 +931,13 @@ namespace PleasantvilleGame
          IMapPoint mp = new MapPoint(p.X, p.Y);
          if (null == myAnchorTerritory) // This function removes an existing polygon when it is clicked if no anchor territory exists
          {
-             myAnchorTerritory = matchingTerritory; // If there is no anchor territory. Set it.  
+            myAnchorTerritory = matchingTerritory; // If there is no anchor territory. Set it
+            if (false == CreateEllipse(matchingTerritory, matchingTerritory.CenterPoint, Colors.Black))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "MouseDownPolygon3(): Create_Ellipse() returned false");
+               return;
+            }
+
          }
          else if( null == myTargetTerritory )
          {
@@ -925,12 +964,12 @@ namespace PleasantvilleGame
          {
             if (false == DeleteEllipsesAndPolygons())
             {
-               Logger.Log(LogEnum.LE_ERROR, "MouseDownPolygon2(): DeleteEllipsesAndPolygons() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "MouseDownPolygon2(): Delete_EllipsesAndPolygons() returned false");
                return;
             }
             if (false == CreatePathPolygons())
             {
-               Logger.Log(LogEnum.LE_ERROR, "MouseDownPolygon2(): CreatePathPolygons() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "MouseDownPolygon2(): Create_PathPolygons() returned false");
                return;
             }
          }

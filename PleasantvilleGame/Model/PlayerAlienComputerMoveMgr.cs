@@ -25,14 +25,29 @@ namespace PleasantvilleGame
          // =================================
          // Choose 5 counters to be moved.
          // Create a metric:
-         //    --- Takeover Stunned Controlled
-         //    --- Free Tied-up Aliens 
-         //    --- Isolated from Observations
-         //    --- Away from Controlled Townspeople
-         //    --- Closer to Zebulon
-         //    --- Closer to Alien Center
-         //    --- Greater Influence
-         //    --- Greater Combat
+         //    --- Early Game
+         //        *** Isolated from Observations 
+         //        *** Away from Controlled Townspeople
+         //        *** Greater Influence
+         //        *** Greater Combat
+         //        *** Closer to Zebulon
+         //        *** Closer to Alien Center
+         //    --- Middle Game
+         //        *** Takeover Stunned Controlled
+         //        *** Free Tied-up Aliens
+         //        *** Defensive Stacking
+         //        *** Advantage Combats
+         //        *** Closer to Zebulon
+         //        *** Away from Controlled Townspeople
+         //        *** Isolated from Observations 
+         //    --- End Game
+         //        *** Protect to Zebulon
+         //        *** Combats to Win
+         //        *** Takeover Stunned Controlled
+         //        *** Free Tied-up Aliens
+         //        *** Defensive Stacking
+         //        *** Advantage Combats
+         //        *** Closer to Zebulon
          // Identify who Aliens move to or what uncontrolled move to Aliens
          // Should move away observing units?
          // Pick remaining uncontrolled townspeople to move.
@@ -51,6 +66,7 @@ namespace PleasantvilleGame
          IMapItems aliens = new MapItems();
          IMapItems knownAliens = new MapItems();
          IMapItems unknownAliens = new MapItems();
+         IMapItems unknowns = new MapItems();
          IMapItems townControlledPeoples = new MapItems();
          IMapItems uncontrolledPeoples = new MapItems();
          IMapItems stunnedPeoples = new MapItems();
@@ -75,18 +91,23 @@ namespace PleasantvilleGame
                {
                   unknownAliens.Add(mi);
                   aliens.Add(mi);
+                  unknowns.Add(mi);
+
                }
                else if (true == mi.IsControlled)
                   townControlledPeoples.Add(mi);
                else if (false == mi.IsTiedUp) // tied up uncontrolled people are ignored
+               {
                   uncontrolledPeoples.Add(mi);
+                  unknowns.Add(mi);
+               }
             }
          }
          //============================================
          Logger.Log(LogEnum.LE_SHOW_UNCONTROLLED, "Perform_AlienMovement(): MoveUnknownAliens() uncontrolledPeoples=" + uncontrolledPeoples.ToString());
          List<CandidateMove> candidateMoves = new List<CandidateMove>();
          //-------------------------------------------------------
-         if (false == AddCandidatesMovesToStunned(gi, stunnedPeoples, aliens, candidateMoves))
+         if (false == AddCandidatesMovesAwayFromControlled(gi, townControlledPeoples, unknowns, candidateMoves))
          {
             Logger.Log(LogEnum.LE_ERROR, "Add_andidatesMovesToStunned(): MoveUnknownAliens() returned error");
             return false;
@@ -119,6 +140,24 @@ namespace PleasantvilleGame
          return true;
       }
       //================================================================
+      private bool AddCandidatesMovesAwayFromControlled(IGameInstance gi, IMapItems townPeoples, IMapItems mapItems, List<CandidateMove> candidateMoves)
+      {
+         foreach (IMapItem mi0 in townPeoples)
+         {
+            ITerritories t0 = Territory.GetTerritoriesWithinRange(Territories.theTerritories, mi0.TerritoryCurrent, mi0.Movement);
+            IMapItems? closeMapItems = Territory.GetMapItemsWithinRange(gi.Stacks, t0, mi0);
+            if (null == closeMapItems)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): Get_MapItemsWithinRange() returned error");
+               return false;
+            }
+            foreach (IMapItem mi1 in closeMapItems)
+            {
+               ITerritories t1 = Territory.GetTerritoriesOfInterest(t0, mi0, mi1, false);
+            }
+         }
+         return true;
+      }
       private bool AddCandidatesMovesToStunned(IGameInstance gi, IMapItems stunnedMapItems, IMapItems mapItems, List<CandidateMove> candidateMoves)
       {
          foreach (IMapItem stunnedMapItem in stunnedMapItems)
@@ -129,7 +168,6 @@ namespace PleasantvilleGame
                if( true == isWithinRange )
                {
                   CandidateMove cm = new CandidateMove(mi, stunnedMapItem.TerritoryCurrent);
-
                   if (true == mi.IsAlienKnown)
                      cm.myMetric = 50;
                   else if (true == mi.IsAlienUnknown)
@@ -148,15 +186,10 @@ namespace PleasantvilleGame
          {
             if (4 < alienMoves.Count) // only move five units
                break;
-            IMapItems? closeMapItems = Territory.GetMapItemsWithinRange(gi, unknownAlien.TerritoryCurrent, unknownAlien.Movement);
+            IMapItems? closeMapItems = Territory.GetMapItemsWithinRange(gi.Stacks, Territories.theTerritories, unknownAlien.TerritoryCurrent, unknownAlien.Movement);
             if (null == closeMapItems)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): GetMapItemsWithinRange() returned error");
-               return false;
-            }
-            if (null == closeMapItems)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): GetMapItemsWithinRange() returned error");
+               Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): Get_MapItemsWithinRange() returned error");
                return false;
             }
             //-----------------------------------------
@@ -294,10 +327,10 @@ namespace PleasantvilleGame
                continue;
             }
             //-----------------------------------------
-            IMapItems? closeMapItems = Territory.GetMapItemsWithinRange(gi, metric.Target.TerritoryCurrent, metric.Target.Movement); // Find mapitems that can be moved to the targets location
+            IMapItems? closeMapItems = Territory.GetMapItemsWithinRange(gi.Stacks, Territories.theTerritories, metric.Target.TerritoryCurrent, metric.Target.Movement); // Find mapitems that can be moved to the targets location
             if (null == closeMapItems)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Move_Uncontrolled(): GetMapItemsWithinRange() returned error");
+               Logger.Log(LogEnum.LE_ERROR, "Move_Uncontrolled(): Get_MapItemsWithinRange() returned error");
                return false;
             }
             Logger.Log(LogEnum.LE_SHOW_OBSERVATIONS_METRIC, "Move_Uncontrolled(): for target=" + metric.Target.ToString() + " has closeMapItems=" + closeMapItems.ToString());

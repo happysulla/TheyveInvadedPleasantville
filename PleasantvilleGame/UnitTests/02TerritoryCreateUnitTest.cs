@@ -1,6 +1,7 @@
 ﻿using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -56,7 +57,8 @@ namespace PleasantvilleGame
          myHeaderNames.Add("02-Set Adjacents");
          myHeaderNames.Add("02-Set Observations");
          myHeaderNames.Add("02-GetMapItemsWithinRange");
-         myHeaderNames.Add("02-GetOverlappingTerritories");
+         myHeaderNames.Add("02-GetTerritoriesOfInterest-T");
+         myHeaderNames.Add("02-GetTerritoriesOfInterest-F");
          myHeaderNames.Add("02-Final");
          //------------------------------------
          myCommandNames.Add("00-Delete File");
@@ -67,8 +69,9 @@ namespace PleasantvilleGame
          myCommandNames.Add("05-Verify Adjacents");
          myCommandNames.Add("06-Verify Observations");
          myCommandNames.Add("07-Verify GetMapItemsWithinRange");
-         myCommandNames.Add("08-Verify GetOverlappingTerritories");
-         myCommandNames.Add("09-Cleanup");
+         myCommandNames.Add("08-Verify GetTerritoriesOfInterest-T");
+         myCommandNames.Add("09-Verify GetTerritoriesOfInterest-F");
+         myCommandNames.Add("10-Cleanup");
          //------------------------------------
          myDockPanelTop = dp;
          //------------------------------------
@@ -198,7 +201,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): t1=null for ");
                return false;
             }
-            IMapItems? closeMapItems = Territory.GetMapItemsWithinRange(gi, t1, 5); // Find mapitems that can be moved to the targets location
+            IMapItems? closeMapItems = Territory.GetMapItemsWithinRange(gi.Stacks, Territories.theTerritories, t1, 5); // Find mapitems that can be moved to the targets location
             if (null == closeMapItems)
             {
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): GetMapItemsWithinRange() returned error");
@@ -223,7 +226,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): stationAttend=null");
                return false;
             }
-            closeMapItems = Territory.GetMapItemsWithinRange(gi, stationAttend); // Find mapitems that stationAttend can move to
+            closeMapItems = Territory.GetMapItemsWithinRange(gi.Stacks, Territories.theTerritories, stationAttend); // Find mapitems that stationAttend can move to
             if (null == closeMapItems)
             {
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): GetMapItemsWithinRange() returned error");
@@ -236,7 +239,7 @@ namespace PleasantvilleGame
                return false;
             }
          }
-         else if (CommandName == myCommandNames[8]) // GetOverlappingTerritories
+         else if (CommandName == myCommandNames[8]) // GetTerritoriesOfInterest - overlapping
          {
             IMapItems townspeople = new MapItems();
             foreach(IStack stack in gi.Stacks)
@@ -255,9 +258,9 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): mi1=null ");
                return false;
             }
-            if (false == CreateEllipse(mi1.TerritoryCurrent, mi1.TerritoryCurrent.CenterPoint))
+            if (false == CreateEllipse(mi1.TerritoryCurrent, mi1.TerritoryCurrent.CenterPoint, Colors.Black))
             {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipse() returned false for mi1");
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): Create_Ellipse() returned false for mi1");
                return false;
             }
             IMapItem? mi2 = townspeople[r2];
@@ -266,33 +269,82 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): mi2=null");
                return false;
             }
-            if (false == CreateEllipse(mi2.TerritoryCurrent, mi2.TerritoryCurrent.CenterPoint))
+            if (false == CreateEllipse(mi2.TerritoryCurrent, mi2.TerritoryCurrent.CenterPoint, Colors.Red))
             {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipse() returned false for mi2");
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): Create_Ellipse() returned false for mi2");
                return false;
             }
             //----------------------------------------------------
-            List<string>? tNames = Territory.GetOverlappingTerritories(gi, mi1, mi2);
-            if( null == tNames)
+            ITerritories territories = Territory.GetTerritoriesOfInterest(Territories.theTerritories, mi1, mi2, true);
+            Logger.Log(LogEnum.LE_SHOW_UNIT_TEST, "TerritoryCreateUnitTest.Command(): mi1=" + mi1.Name + " mi2=" + mi2.Name + " overlap=" + territories.ToString());
+            //----------------------------------------------------
+            if ( false == CreateEllipsesForDisplay(territories))
             {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): tNames=null");
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipsesForDisplay() returned false");
                return false;
             }
-            //----------------------------------------------------
-            ITerritories territoriesToDisplay = new Territories();
-            foreach(string tName in tNames)
+         }
+         else if (CommandName == myCommandNames[9]) // GetTerritoriesOfInterest - non-overlapping
+         {
+            IMapItems townspeople = new MapItems();
+            foreach (IStack stack in gi.Stacks)
             {
-               ITerritory? t = Territories.theTerritories.Find(tName);
-               if( null == t )
+               foreach (IMapItem mi in stack.MapItems)
+                  townspeople.Add(mi);
+            }
+            DeleteEllipses();
+            //----------------------------------------------------
+            IMapItem? mi1 = null;
+            IMapItem? mi2 = null;
+            int count = 30;
+            while (0 < count--)
+            {
+               int r1 = Utilities.RandomGenerator.Next(townspeople.Count);
+               mi1 = townspeople[r1];
+               if (null == mi1)
                {
-                  Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): t=null");
+                  Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): mi1=null ");
                   return false;
                }
-               territoriesToDisplay.Add(t);
+               IMapItems? closeMapItems = Territory.GetMapItemsWithinRange(gi.Stacks, Territories.theTerritories, mi1);
+               if ( (null != closeMapItems) && (0 < closeMapItems.Count) )
+               {
+                  IMapItems shuffled = closeMapItems.Shuffle();
+                  mi2 = shuffled[0];
+                  break;
+               }
             }
-            Logger.Log(LogEnum.LE_SHOW_UNIT_TEST, "TerritoryCreateUnitTest.Command(): mi1=" + mi1.Name + " mi2=" + mi2.Name + " overlap=" + territoriesToDisplay.ToString());
+            if(count < 0)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): Create_Ellipse() returned false for mi2");
+               return false;
+            }
             //----------------------------------------------------
-            if ( false == CreateEllipsesForDisplay(territoriesToDisplay))
+            if (null == mi1)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): mi1=null ");
+               return false;
+            }
+            if (false == CreateEllipse(mi1.TerritoryCurrent, mi1.TerritoryCurrent.CenterPoint, Colors.Black))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): Create_Ellipse() returned false for mi1");
+               return false;
+            }
+            if (null == mi2)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): mi2=null ");
+               return false;
+            }
+            if (false == CreateEllipse(mi2.TerritoryCurrent, mi2.TerritoryCurrent.CenterPoint, Colors.Red))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): Create_Ellipse() returned false for mi2");
+               return false;
+            }
+            //----------------------------------------------------
+            ITerritories tNonOverlap = Territory.GetTerritoriesOfInterest(Territories.theTerritories, mi1, mi2, false);
+            Logger.Log(LogEnum.LE_SHOW_UNIT_TEST, "TerritoryCreateUnitTest.Command(): mi1=" + mi1.Name + " mi2=" + mi2.Name + " overlap=" + tNonOverlap.ToString());
+            //----------------------------------------------------
+            if (false == CreateEllipsesForDisplay(tNonOverlap))
             {
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipsesForDisplay() returned false");
                return false;
@@ -382,11 +434,15 @@ namespace PleasantvilleGame
                return false;
             }
          }
-         else if (HeaderName == myHeaderNames[7]) // start cleanup
+         else if (HeaderName == myHeaderNames[7]) 
          {
             ++myIndexName;
          }
-         else if (HeaderName == myHeaderNames[8]) // start cleanup
+         else if (HeaderName == myHeaderNames[8]) 
+         {
+            ++myIndexName;
+         }
+         else if (HeaderName == myHeaderNames[9]) // start cleanup
          {
             ++myIndexName;
          }
@@ -489,14 +545,14 @@ namespace PleasantvilleGame
          myFileName = dirInfo.FullName + "\\Config\\" + Territories.FILENAME;
          return true;
       }
-      private bool CreateEllipse(ITerritory territory, IMapPoint mp)
+      private bool CreateEllipse(ITerritory territory, IMapPoint mp, System.Windows.Media.Color color)
       {
          if( null == myCanvasMain)
          {
-            Logger.Log(LogEnum.LE_ERROR, "CreateEllipse(): myCanvasMain=null");
+            Logger.Log(LogEnum.LE_ERROR, "Creat_eEllipse(): myCanvasMain=null");
             return false;
          }
-         SolidColorBrush aSolidColorBrush1 = new SolidColorBrush{ Color = Colors.Black };
+         SolidColorBrush aSolidColorBrush1 = new SolidColorBrush { Color = color };
          Ellipse aEllipse = new Ellipse
          {
             Name = territory.ToString(),
@@ -897,9 +953,9 @@ namespace PleasantvilleGame
             territory.Subname = dialog.myTextBoxSubname.Text;
             territory.CanvasName = TerritoryCreateDialog.theLastEnteredCanvasName;
             Territories.theTerritories.Add(territory);
-            if ( false == CreateEllipse(territory, territory.CenterPoint))
+            if ( false == CreateEllipse(territory, territory.CenterPoint, Colors.Black))
             {
-               Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownCreateTerritory(): CreateEllipse() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownCreateTerritory(): Create_Ellipse() returned false");
                return;
             }
          }
