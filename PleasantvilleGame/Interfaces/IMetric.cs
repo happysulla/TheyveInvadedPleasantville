@@ -8,7 +8,8 @@ namespace PleasantvilleGame
 {
    public interface IMetricObservation
    {
-      IMapItem Target { get; set; }
+      IMapItem? MapItem1 { get; set; }
+      IMapItem? Target { get; set; }
       int Value { get; set; }
    }
    public interface IMetricObservations : System.Collections.IEnumerable
@@ -20,7 +21,6 @@ namespace PleasantvilleGame
       bool Contains(IMetricObservation metric);
       int IndexOf(IMetricObservation metric);
       void Remove(IMetricObservation metric);
-      IMetricObservation? Find(ITerritory t);
       IMetricObservation? RemoveAt(int index);
       IMetricObservation? this[int index] { get; set; }
       IMetricObservations Shuffle();
@@ -29,7 +29,8 @@ namespace PleasantvilleGame
    //=================================================================
    public interface IMetricAlienMove
    {
-      ITerritory Territory { get; set; }
+      IMapItem MovingMapItem { get; set; }
+      ITerritory TargetTerritory { get; set; }
       int Value { get; set; }
    }
    public interface IMetricAlienMoves : System.Collections.IEnumerable
@@ -41,7 +42,6 @@ namespace PleasantvilleGame
       bool Contains(IMetricAlienMove metric);
       int IndexOf(IMetricAlienMove metric);
       void Remove(IMetricAlienMove metric);
-      IMetricAlienMove? Find(ITerritory t);
       IMetricAlienMove? RemoveAt(int index);
       IMetricAlienMove? this[int index] { get; set; }
       IMetricAlienMoves Shuffle();

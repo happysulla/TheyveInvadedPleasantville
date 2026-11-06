@@ -26,12 +26,13 @@ namespace PleasantvilleGame
          // Choose 5 counters to be moved.
          // Create a metric:
          //    --- Early Game
-         //        *** Isolated from Observations 
-         //        *** Away from Controlled Townspeople
+         //        *** Out of Range of Controlled
+         //        *** Lower Observation Chance
          //        *** Greater Influence
          //        *** Greater Combat
          //        *** Closer to Zebulon
          //        *** Closer to Alien Center
+         //        *** Away from Controlled Center
          //    --- Middle Game
          //        *** Takeover Stunned Controlled
          //        *** Free Tied-up Aliens
@@ -142,18 +143,42 @@ namespace PleasantvilleGame
       //================================================================
       private bool AddCandidatesMovesAwayFromControlled(IGameInstance gi, IMapItems townPeoples, IMapItems mapItems, List<CandidateMove> candidateMoves)
       {
-         foreach (IMapItem mi0 in townPeoples)
+         IMapItems? totalMapItems = new MapItems();
+         foreach (IMapItem controlled in townPeoples)
          {
-            ITerritories t0 = Territory.GetTerritoriesWithinRange(Territories.theTerritories, mi0.TerritoryCurrent, mi0.Movement);
-            IMapItems? closeMapItems = Territory.GetMapItemsWithinRange(gi.Stacks, t0, mi0);
+            IMapItems? closeMapItems = Territory.GetMapItemsWithinRange(gi.Stacks, Territories.theTerritories, controlled.TerritoryCurrent, controlled.Movement);
             if (null == closeMapItems)
             {
                Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): Get_MapItemsWithinRange() returned error");
                return false;
             }
-            foreach (IMapItem mi1 in closeMapItems)
+            foreach (IMapItem mi in closeMapItems)
             {
-               ITerritories t1 = Territory.GetTerritoriesOfInterest(t0, mi0, mi1, false);
+               if( false == totalMapItems.Contains(mi))
+                  totalMapItems.Add(mi);
+            }
+            if (4 < totalMapItems.Count) // too many mapitems to move away - alien only gets to move 5 people
+               return true;
+         }
+         //------------------------------------
+         foreach (IMapItem candidate in totalMapItems) // iterate through territories that mapitem can move to that are outside of all controlled movement
+         {
+            ITerritories territories = new Territories();
+            foreach (ITerritory t in Territories.theTerritories)
+               territories.Add(t);
+            foreach (IMapItem controlled in townPeoples)
+            {
+               territories = Territory.GetTerritoriesOfInterest(territories, controlled, candidate, false);
+               if (0 == territories.Count) // if there are no territories that candidate can move to that are outside of controlled movement radius, skip
+                  break;
+            }
+            if (0 < territories.Count) // for each territory, create a metric with the best move
+            {
+               //        *** Isolated from Observations 
+               //        *** Greater Influence
+               //        *** Greater Combat
+               //        *** Closer to Zebulon
+               //        *** Closer to Alien Center
             }
          }
          return true;

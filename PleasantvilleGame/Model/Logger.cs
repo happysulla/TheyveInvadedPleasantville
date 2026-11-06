@@ -79,6 +79,7 @@ namespace PleasantvilleGame
       LE_SHOW_TAKEOVERS,
       LE_SHOW_OBSERVATIONS,
       LE_SHOW_OBSERVATIONS_METRIC,
+      LE_SHOW_ALIEN_MOVE_METRIC,
       //-------------
       LE_TIMER_ELAPED,
       SHOW_SHUFFLE_STACK,
@@ -193,6 +194,7 @@ namespace PleasantvilleGame
          SetOn(LogEnum.LE_SHOW_TAKEOVERS);
          SetOn(LogEnum.LE_SHOW_OBSERVATIONS);
          //SetOn(LogEnum.LE_SHOW_OBSERVATIONS_METRIC);
+         SetOn(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC);
          //-------------
          //SetOn(LogEnum.LE_TIMER_ELAPED);
          //SetOn(LogEnum.SHOW_SHUFFLE_STACK);

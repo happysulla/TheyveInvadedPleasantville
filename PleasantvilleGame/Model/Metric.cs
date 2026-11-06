@@ -4,16 +4,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Documents;
 using Windows.ApplicationModel.Chat;
 
 namespace PleasantvilleGame
 {
+   public class MetricUtility
+   {
+      public static int GetCenterMetric(IMapPoint center, ITerritory t)
+      {
+         double xdiff = Math.Abs(center.X - t.CenterPoint.X);
+         double ydiff = Math.Abs(center.Y - t.CenterPoint.Y);
+         int metric = (int) Math.Sqrt(xdiff*xdiff + ydiff*ydiff);
+         // Normalize from 0 to 100
+         // normalizedValue = (value - min(distance)) / ( maxValue - min(distance) ) * 100;
+         // min(distance) = 0
+         // Assume Map Hieght = 950 pixels
+         // Assume Map Width = height * 0.86 = 818
+         // maxDistance(x) = sqrt( (mapWidth)^2 + (mapHeight)^2 ) = 1253
+         return (int)(100.0 * metric / 1253);
+      }
+   }
+   //===============================================================
    public class MetricObservation : IMetricObservation
    {
-      public IMapItem? Alien { get; set; } = null;
-      public IMapItem Target { get; set; }
-      public int Value { get; set; }
+      public IMapItem? MapItem1 { get; set; } = null;
+      public IMapItem? Target { get; set; } = null;
+      public int Value { get; set; } = 0;
+      public MetricObservation()
+      {
+
+      }
       public MetricObservation(IGameInstance gi, IMapItem target)
       {
          Target = target;
@@ -21,12 +43,14 @@ namespace PleasantvilleGame
       }
       public MetricObservation(IGameInstance gi, IMapItem target, IMapItem alien)
       {
-         Alien = alien;
+         MapItem1 = alien;
          Target = target;
          Value = GetObservationMetric(gi);
       }
-      private int GetObservationMetric(IGameInstance gi)
+      public int GetObservationMetric(IGameInstance gi)
       {
+         if (null == Target)
+            return 1; // probability of not being observed since there is no target
          double pTotal = 1.0; // probability of observation = 1 - (1-p0)(1-p1)(1-p3).... where p is the probability of observation from that hex
          foreach (var kvp in Target.TerritoryCurrent.Observations)
          {
@@ -35,13 +59,16 @@ namespace PleasantvilleGame
                continue;
             foreach (IMapItem mi in stack.MapItems)
             {
-               if (null != Alien)  // do not count the target and alien
+               if (null != MapItem1)  // do not count the target and alien
                {
-                  if (this.Alien.Name == mi.Name)
+                  if (this.MapItem1.Name == mi.Name)
                      continue;
                }
-               if (this.Target.Name == mi.Name)   // do not count the target 
-                  continue;
+               if (null != Target)  // do not count the target and alien
+               {
+                  if (this.Target.Name == mi.Name)
+                     continue;
+               }
                if ((true == mi.IsAlienUnknown) || (true == mi.IsAlienKnown)) // Aliens do not observe
                   continue;
                pTotal *= (1 - kvp.Value);
@@ -53,11 +80,18 @@ namespace PleasantvilleGame
       public override String ToString()
       {
          StringBuilder sb = new StringBuilder();
-         sb.Append("<");
-         sb.Append(this.Target.Name);
-         sb.Append(",");
-         sb.Append(this.Value.ToString());
-         sb.Append(">");
+         if (null != MapItem1)
+         {
+            sb.Append("mi1=");
+            sb.Append(this.MapItem1.Name);
+            sb.Append("->");
+         }
+         if (null != Target)
+         {
+            sb.Append(this.Target.Name);
+            sb.Append("=>");
+         }
+         sb.Append(this.Value.ToString());;
          return sb.ToString();
       }
    }
@@ -73,15 +107,6 @@ namespace PleasantvilleGame
       public IEnumerator GetEnumerator() { return myList.GetEnumerator(); }
       public int IndexOf(IMetricObservation metric) { return myList.IndexOf(metric); }
       public void Remove(IMetricObservation metric) { myList.Remove(metric); }
-      public IMetricObservation? Find(ITerritory t)
-      {
-         foreach (IMetricObservation metric in myList)
-         {
-            if (metric.Target.ToString() == t.ToString())
-               return metric;
-         }
-         return null;
-      }
       public IMetricObservation? RemoveAt(int index)
       {
          if (index < 0 || index >= myList.Count) return null;
@@ -150,11 +175,41 @@ namespace PleasantvilleGame
    //===============================================================
    public class MetricAlienMove : IMetricAlienMove
    {
-      public ITerritory Territory { get; set; }
+      public IMapItem MovingMapItem { get; set; }
+      public ITerritory TargetTerritory { get; set; }
       public int Value { get; set; }
-      public MetricAlienMove(ITerritory t)
+      public MetricAlienMove(IGameInstance gi, IMapItem movingMi, ITerritory targetT, IMapPoint centerAlien, IMapPoint centerControlled )
       {
-         Territory = t;
+         // Lower Observations Chance
+         // Greater Influence + Combat if allowed to move to multiple counters
+         // Closer to Zebulon
+         // Closer to Alien Center
+         // Away from Controlled Center
+         MovingMapItem = movingMi;
+         TargetTerritory = targetT;
+         //---------------------------
+         IMetricObservation? obsMetric = new MetricObservation(gi, movingMi); // return metric value = 100 ==> 100% of not being observed
+         IStack? stack = gi.Stacks.Find(targetT);
+         if( null != stack )
+         {
+            IMapItems mapItems = stack.MapItems.Sort();
+            IMapItem? targetMi = mapItems[0];
+            if( null == targetMi )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "MetricAlienMove(): targetMi=null");
+               return;
+            }
+            if( true == movingMi.IsAlien())
+               obsMetric = new MetricObservation(gi, movingMi, targetMi);
+            obsMetric.Value += targetMi.Combat + targetMi.Influence;
+         }
+         //---------------------------
+         int zebulonMetric = (MetricUtility.GetCenterMetric(gi.Zebulon.TerritoryCurrent.CenterPoint, targetT));
+         int centerAlienMetric = MetricUtility.GetCenterMetric(centerAlien, targetT);
+         int centerControlledMetric = MetricUtility.GetCenterMetric(centerControlled, targetT);
+         //---------------------------
+         Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, )
+         int totalMetric = obsMetric.Value + zebulonMetric + centerAlienMetric + centerControlledMetric;
       }
    }
    public class MetricAlienMoves : IMetricAlienMoves
@@ -172,7 +227,7 @@ namespace PleasantvilleGame
       public IMetricAlienMove? Find(ITerritory t)
       {
          foreach (IMetricAlienMove metric in myList)
-            if (metric.Territory.ToString() == t.ToString()) return metric;
+            if (metric.TargetTerritory.ToString() == t.ToString()) return metric;
          return null;
       }
       public IMetricAlienMove? RemoveAt(int index)
@@ -234,7 +289,7 @@ namespace PleasantvilleGame
          {
             IMetricAlienMove m = (IMetricAlienMove)o;
             sb.Append("<");
-            sb.Append(m.Territory.ToString());
+            sb.Append(m.TargetTerritory.ToString());
             sb.Append(">");
          }
          return sb.ToString();

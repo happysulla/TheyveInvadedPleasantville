@@ -125,23 +125,23 @@ namespace PleasantvilleGame
       }
       public static ITerritories GetTerritoriesOfInterest(ITerritories sTerritories, IMapItem mi1, IMapItem mi2, bool isOverlapping=true)
       {
-         ITerritories returnValue;
-         ITerritories t1 = Territory.GetTerritoriesWithinRange(sTerritories, mi1.TerritoryCurrent, mi1.Movement);
+         ITerritories returnTerritories;
+         ITerritories mi1Territories = Territory.GetTerritoriesWithinRange(sTerritories, mi1.TerritoryCurrent, mi1.Movement);
 			if( true == isOverlapping )
 			{
-            returnValue = Territory.GetTerritoriesWithinRange(t1, mi2.TerritoryCurrent, mi2.Movement);
+            returnTerritories = Territory.GetTerritoriesWithinRange(mi1Territories, mi2.TerritoryCurrent, mi2.Movement); // return overlapping territories between 
          }
 			else
 			{
-				returnValue = new Territories();
-            ITerritories t2 = Territory.GetTerritoriesWithinRange(sTerritories, mi2.TerritoryCurrent, mi2.Movement);
-				foreach(ITerritory t in t2)
+            returnTerritories = new Territories();
+            ITerritories mi2Territories = Territory.GetTerritoriesWithinRange(mi1Territories, mi2.TerritoryCurrent, mi2.Movement);
+				foreach(ITerritory t in mi2Territories)
 				{
-					if (false == t1.Contains(t))
-						returnValue.Add(t);
+					if (false == mi1Territories.Contains(t))
+                  returnTerritories.Add(t); // add territory that doesnt overlap mi1 and mi2
             }
          }
-         return returnValue;
+         return returnTerritories;
       }
       public static IMapPath? GetBestPath(ITerritories territories, ITerritory startT, ITerritory endT, int moveFactor)
 		{
