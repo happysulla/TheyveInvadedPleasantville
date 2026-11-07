@@ -5,10 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms.Design.Behavior;
+using System.Windows.Media;
 using System.Windows.Shapes;
-using Image = System.Windows.Controls.Image;
-using FontFamily = System.Windows.Media.FontFamily;
+using System.Xml.Linq;
 using Brushes = System.Windows.Media.Brushes;
+using FontFamily = System.Windows.Media.FontFamily;
+using Image = System.Windows.Controls.Image;
 
 
 namespace PleasantvilleGame
@@ -34,12 +37,16 @@ namespace PleasantvilleGame
       {
          //------------------------------------
          myIndexName = 0;
+         myHeaderNames.Add("09-Centers");
+         myHeaderNames.Add("09-Create Moves1");
+         myHeaderNames.Add("09-Create Moves2");
          myHeaderNames.Add("09-Player");
-         myHeaderNames.Add("09-GetAlienCount");
-         myHeaderNames.Add("09-GetTownCount");
          myHeaderNames.Add("09-Player");
-         myHeaderNames.Add("09-Player");
-         myCommandNames.Add("Player");
+
+         myCommandNames.Add("00-Show Centers");
+         myCommandNames.Add("01-Move Away From Controlled");
+         myCommandNames.Add("02-Move Away From Controlled");
+         myCommandNames.Add("03-InitializePlayer");
          //------------------------------------
          if (null == gi)
          {
@@ -47,21 +54,45 @@ namespace PleasantvilleGame
             CtorError = true;
             return;
          }
+         myGameInstance = gi;
+         //------------------------------------
          if (null == civ)
          {
             Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest(): civ=null");
             CtorError = true;
             return;
          }
+         myCanvasImageViewer = civ;
+         //------------------------------------
          if (null == dp)
          {
             Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest(): dp=null");
             CtorError = true;
             return;
          }
-         myGameInstance = gi;
-         myCanvasImageViewer = civ;
          myDockPanelTop = dp;
+         //------------------------------------
+         foreach (UIElement ui0 in dp.Children)
+         {
+            if (ui0 is DockPanel dockPanelInside) // DockPanel showing main play area
+            {
+               foreach (UIElement ui1 in dockPanelInside.Children)
+               {
+                  if (ui1 is ScrollViewer)
+                  {
+                     myScrollViewerCanvas = (ScrollViewer)ui1;
+                     if (myScrollViewerCanvas.Content is Canvas)
+                        myCanvasMain = (Canvas)myScrollViewerCanvas.Content;  // Find the Canvas in the visual tree
+                  }
+               }
+            }
+         }
+         if (null == myCanvasMain) // log error and return if canvas not found
+         {
+            Logger.Log(LogEnum.LE_ERROR, "TableMgrUnitTest(): myCanvas=null");
+            CtorError = true;
+            return;
+         }
       }
       public bool Command(ref IGameInstance gi) // Performs function based on CommandName string
       {
@@ -80,19 +111,14 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Command(): myDockPanelTop=null");
             return false;
          }
-         if (null == myCanvasMain)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Command(): myCanvas=null");
-            return false;
-         }
-         if (null == myCanvasHelper)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Command(): myCanvasHelper=null");
-            return false;
-         }
          if (null == myScrollViewerCanvas)
          {
             Logger.Log(LogEnum.LE_ERROR, "Command(): myScrollViewerCanvas=null");
+            return false;
+         }
+         if (null == myCanvasMain)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Command(): myCanvas=null");
             return false;
          }
          //-----------------------------------------------------
@@ -100,6 +126,52 @@ namespace PleasantvilleGame
          {
             gi.PlayerAlien = new PlayerAlienComputer();
             gi.PlayerTown = new PlayerTownHuman();
+            if (false == TableMgr.CreateTownspeople(myGameInstance)) // Create in known locations
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Command(): CreateTownspeople() returned false");
+               return false;
+            }
+            IMapItem? mi = gi.Stacks.FindMapItem(TableMgr.WIFE); 
+            if (null == mi)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Command(): unable to find mi=" + TableMgr.WIFE);
+               return false;
+            }
+            gi.AddUnknownAlien(mi);
+            mi = gi.Stacks.FindMapItem(TableMgr.SHERIFF); 
+            if (null == mi)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Command(): unable to find mi=" + TableMgr.SHERIFF);
+               return false;
+            }
+            gi.AddUnknownAlien(mi);
+            mi = gi.Stacks.FindMapItem(TableMgr.MINSTER);
+            if (null == mi)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Command(): unable to find mi=" + TableMgr.MINSTER);
+               return false;
+            }
+            gi.AddControlled(mi);
+            IMapPoint mpCenterControlled = Territory.GetCenterPointControlled(gi);
+            CreateEllipse(mpCenterControlled, Utilities.theTownControlledBrush);
+            IMapPoint mpCenterAlien = Territory.GetCenterPointAlien(gi);
+            CreateEllipse(mpCenterAlien, Utilities.theAlienControlledBrush);
+            myIndexName++;
+         }
+         else if (CommandName == myCommandNames[1])
+         {
+            Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "Perform_AlienMoves(): gi.MapItemMoves.Clear()");
+            gi.MapItemMoves.Clear();
+            PlayerAlienComputerMoveMgr moveMgr = new PlayerAlienComputerMoveMgr();
+            if (false == moveMgr.CreateMoves(gi))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Perform_AlienMoves() returned false");
+               return false;
+            }
+         }
+         else if (CommandName == myCommandNames[2])
+         {
+
          }
          return true;
       }
@@ -111,6 +183,10 @@ namespace PleasantvilleGame
             return false;
          }
          if (HeaderName == myHeaderNames[0])
+         {
+            ++myIndexName;
+         }
+         else if (HeaderName == myHeaderNames[1])
          {
             ++myIndexName;
          }
@@ -157,6 +233,27 @@ namespace PleasantvilleGame
          ++gi.GameTurn;
          System.Windows.Application.Current.Shutdown();
          return true;
+      }
+      //--------------------------------------------------------------------
+      private void CreateEllipse(IMapPoint mp, System.Windows.Media.Brush brush)
+      {
+         if (null == myCanvasMain)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateEllipse(): myCanvas=null");
+            return;
+         }
+         Ellipse aEllipse = new Ellipse
+         {
+            Fill = brush,
+            StrokeThickness = 1,
+            Stroke = brush,
+            Width = 20,
+            Height = 20
+         };
+         Canvas.SetLeft(aEllipse, mp.X-10);
+         Canvas.SetTop(aEllipse, mp.Y-10);
+         Canvas.SetZIndex(aEllipse, 10000);
+         myCanvasMain.Children.Add(aEllipse);
       }
    }
 }

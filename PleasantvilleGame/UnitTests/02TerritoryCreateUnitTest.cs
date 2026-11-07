@@ -226,10 +226,10 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): stationAttend=null");
                return false;
             }
-            closeMapItems = Territory.GetMapItemsWithinRange(gi.Stacks, Territories.theTerritories, stationAttend); // Find mapitems that stationAttend can move to
+            closeMapItems = Territory.GetMapItemsThatCanMoveToThisMapItem(gi.Stacks, Territories.theTerritories, stationAttend); // Find mapitems that stationAttend can move to
             if (null == closeMapItems)
             {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): GetMapItemsWithinRange() returned error");
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): GetMapItemsThatCanMoveToThisMapItem() returned error");
                return false;
             }
             Logger.Log(LogEnum.LE_SHOW_UNIT_TEST, "TerritoryCreateUnitTest.Command(): closeMapItems=" + closeMapItems.ToString());
@@ -306,7 +306,7 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): mi1=null ");
                   return false;
                }
-               IMapItems? closeMapItems = Territory.GetMapItemsWithinRange(gi.Stacks, Territories.theTerritories, mi1);
+               IMapItems? closeMapItems = Territory.GetMapItemsThatCanMoveToThisMapItem(gi.Stacks, Territories.theTerritories, mi1);
                if ( (null != closeMapItems) && (0 < closeMapItems.Count) )
                {
                   IMapItems shuffled = closeMapItems.Shuffle();

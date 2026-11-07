@@ -1881,9 +1881,9 @@ namespace PleasantvilleGame
                      Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(RandomMovementConfirmed): " + returnStatus);
                   }
                   SetCommand(gi, action, GameAction.DieRollActionNone, "e006t");
-                  if (false == gi.PlayerAlien.PerformAlienMoves(gi))
+                  if (false == gi.PlayerAlien.PerformMoves(gi))
                   {
-                     returnStatus = "Perform_AlienMoves() returned false";
+                     returnStatus = "Create_Moves() returned false";
                      Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(): " + returnStatus);
                   }
                }

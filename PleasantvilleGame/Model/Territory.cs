@@ -42,9 +42,9 @@ namespace PleasantvilleGame
 			else
 				return true;
       }
-      public static IMapItems? GetMapItemsWithinRange(IStacks stacks, ITerritories sTerritories, ITerritory sTerritory, int range)
+      public static IMapItems? GetMapItemsWithinRange(IStacks stacks, ITerritories sTerritories, ITerritory targetT, int range)
       {
-         ITerritories territories1 = Territory.GetTerritoriesWithinRange(sTerritories, sTerritory, range);
+         ITerritories territories1 = Territory.GetTerritoriesWithinRange(sTerritories, targetT, range);
          IMapItems mapItemCandidates = new MapItems();
          foreach (ITerritory t in territories1)
          {
@@ -53,20 +53,37 @@ namespace PleasantvilleGame
                continue;
             foreach (IMapItem mapItem in stack.MapItems)
                mapItemCandidates.Add(mapItem);
+         }
+         return mapItemCandidates;
+      }
+      public static IMapItems? GetMapItemsThatCanMoveToThisMapItem(IStacks stacks, ITerritories sTerritories, IMapItem target)
+      {
+         ITerritories territories1 = Territory.GetTerritoriesWithinRange(sTerritories, target.TerritoryCurrent, target.Movement);
+         IMapItems mapItemCandidates = new MapItems();
+         foreach (ITerritory t in territories1)
+         {
+            IStack? stack = stacks.Find(t);
+            if (null == stack)
+               continue;
+            foreach (IMapItem mapItem in stack.MapItems)
+				{
+					if( target.Name != mapItem.Name)
+					   mapItemCandidates.Add(mapItem);
+				}
          }
          //--------------------------------------
          IMapItems mapItems = new MapItems();
          foreach (IMapItem mi in mapItemCandidates) // Verify that mapitem can get to the target territory
 			{
             ITerritories territories2 = Territory.GetTerritoriesWithinRange(territories1, mi.TerritoryCurrent, mi.Movement);
-				if (true == territories2.Contains(sTerritory))
+				if (true == territories2.Contains(target.TerritoryCurrent))
 					mapItems.Add(mi);
          }
          return mapItems;
       }
-      public static IMapItems? GetMapItemsWithinRange(IStacks stacks, ITerritories sTerritories, IMapItem mi)
+      public static IMapItems? GetMapItemsThatThisMapItemCanMoveTo(IStacks stacks, ITerritories sTerritories, IMapItem target)
       {
-         ITerritories territories1 = Territory.GetTerritoriesWithinRange(sTerritories, mi.TerritoryCurrent, mi.Movement);
+         ITerritories territories1 = Territory.GetTerritoriesWithinRange(sTerritories, target.TerritoryCurrent, target.Movement);
          IMapItems mapItemCandidates = new MapItems();
          foreach (ITerritory t in territories1)
          {
@@ -74,7 +91,10 @@ namespace PleasantvilleGame
             if (null == stack)
                continue;
             foreach (IMapItem mapItem in stack.MapItems)
-               mapItemCandidates.Add(mapItem);
+            {
+               if (target.Name != mapItem.Name)
+                  mapItemCandidates.Add(mapItem);
+            }
          }
          return mapItemCandidates;
       }

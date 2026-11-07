@@ -229,6 +229,9 @@ namespace PleasantvilleGame
          ITerritory? t = null;
          int maxNum = 4;
          int randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 0;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -260,6 +263,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 4;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 1;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -283,6 +289,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 2;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 0;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -306,6 +315,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 3;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 0;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -329,6 +341,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 5;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 0;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -352,6 +367,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 4;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 0;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -375,6 +393,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 2;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 0;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -398,6 +419,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 4;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 1;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -421,6 +445,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 5;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 0;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -444,6 +471,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 3;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 0;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -467,6 +497,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 1;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 0;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -490,6 +523,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 5;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 1;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -513,6 +549,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 5;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 2;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -536,6 +575,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 4;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 0;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -559,6 +601,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 5;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 0;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -605,6 +650,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 4;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 0;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -628,6 +676,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 4;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 1;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -651,6 +702,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 4;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 2;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -697,6 +751,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 5;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 1;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -743,6 +800,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 4;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 0;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -766,6 +826,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 4;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 2;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -789,6 +852,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 3;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 1;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -812,6 +878,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 2;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 0;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -835,6 +904,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 5;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 3;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -858,6 +930,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 2;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 0;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -881,6 +956,9 @@ namespace PleasantvilleGame
          //------------------------------------
          maxNum = 4;
          randomNum = Utilities.RandomGenerator.Next(maxNum);
+#if UT1
+         randomNum = 2;
+#endif
          for (int i = 0; i < maxNum; i++)
          {
             int tNum = (randomNum + i) % maxNum;
@@ -925,6 +1003,27 @@ namespace PleasantvilleGame
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
+         return true;
+      }
+      static public bool MovePerson(IGameInstance gi, string miName, string tName)
+      {
+         IMapItem? mi = gi.Stacks.FindMapItem(miName); // move wife to House_K
+         if (null == mi)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Move_Person(): unable to find mi=" + miName);
+            return false;
+         }
+         ITerritory? t = Territories.theTerritories.Find(tName);
+         if (null == t)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Move_Person(): unable to find tName=" + tName);
+            return false;
+         }
+         gi.Stacks.Remove(mi); // remove from existing stack
+         mi.TerritoryCurrent = mi.TerritoryStarting = t;
+         mi.Location.X = t.CenterPoint.X;
+         mi.Location.Y = t.CenterPoint.Y;
+         gi.Stacks.Add(mi); // add to new stack
          return true;
       }
       static public string GetTownspersonName(int die1, int die2)

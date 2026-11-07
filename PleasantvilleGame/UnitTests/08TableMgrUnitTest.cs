@@ -130,47 +130,25 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Command(): CreateTownspeople() returned false");
                return false;
             }
-            string tName = "House_K";
-            ITerritory? t = Territories.theTerritories.Find(tName);
-            if (null == t)
+            if( false == TableMgr.MovePerson(myGameInstance, TableMgr.WIFE, TableMgr.HOUSEK))
             {
-               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + TableMgr.HOUSEK);
                return false;
             }
-            //-----------------
-            IMapItem? wife = myGameInstance.Stacks.FindMapItem("Wife"); // move wife to House_K
-            if (null == wife)
+            if (false == TableMgr.MovePerson(myGameInstance, TableMgr.SHERIFF, TableMgr.HOUSEK))
             {
-               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find wife");
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + TableMgr.HOUSEK);
                return false;
             }
-            myGameInstance.Stacks.Remove(wife); // remove from existing stack
-            wife.TerritoryCurrent = wife.TerritoryStarting = t;
-            wife.Location.X = t.CenterPoint.X;
-            wife.Location.Y = t.CenterPoint.Y;
-            myGameInstance.Stacks.Add(wife); // add to new stack
-            //-----------------
-            IMapItem? sheriff = myGameInstance.Stacks.FindMapItem("Sheriff");  // move sheriff to House_K
-            if (null == sheriff)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find sheriff" );
-               return false;
-            }
-            myGameInstance.Stacks.Remove(sheriff); // remove from existing stack
-            sheriff.TerritoryCurrent = sheriff.TerritoryStarting = t;
-            sheriff.Location.X = t.CenterPoint.X;
-            sheriff.Location.Y = t.CenterPoint.Y;
-            myGameInstance.Stacks.Add(sheriff); // add to new stack
             ++myIndexName;
          } 
          //-----------------------------------------
          else if (CommandName == myCommandNames[1])
          {
-            string tName = "House_K";
-            ITerritory? t = Territories.theTerritories.Find(tName);
+            ITerritory? t = Territories.theTerritories.Find(TableMgr.HOUSEK);
             if (null == t)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
+               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + TableMgr.HOUSEK);
                return false;
             }
             IStack? stack = myGameInstance.Stacks.Find(t);

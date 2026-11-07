@@ -12,7 +12,7 @@ namespace PleasantvilleGame
    {
       public IMapItems Targets { get; set; } = new MapItems();
       public PlayerAlienComputerMoveMgr(){}
-      public bool PerformAlienMovement(IGameInstance gi, Behavior behavior)
+      public bool CreateMoves(IGameInstance gi)
       {
          // BEHAVIOR STRATEGIES:
          // --------------------
@@ -59,9 +59,6 @@ namespace PleasantvilleGame
          //    --- If an alien cannot get to an area, consider moving the uncontrolled to it
          //    --- Move units away from controlled townsperson
          //----------------------------------------------------------------
-         IMapPoint mpCenterControlled = Territory.GetCenterPointControlled(gi);
-         IMapPoint mpCenterAlien = Territory.GetCenterPointAlien(gi);
-         //----------------------------------------------------------------
          List<CandidateMove> myMoves = new List<CandidateMove>();
          IMapItemMoves alienMoves = new MapItemMoves();
          IMapItems aliens = new MapItems();
@@ -77,7 +74,7 @@ namespace PleasantvilleGame
             foreach (IMapItem mi in stack.MapItems)
             {
                mi.IsMovingThisTurn = false;
-               if ((false == mi.IsKnockedout) && (false == mi.IsKilled))
+               if ((true == mi.IsKnockedout) ||  (true == mi.IsKilled))
                   continue;
                else if ((true == mi.IsStunned) && (false == mi.IsAlien()))
                   stunnedPeoples.Add(mi);
@@ -93,7 +90,6 @@ namespace PleasantvilleGame
                   unknownAliens.Add(mi);
                   aliens.Add(mi);
                   unknowns.Add(mi);
-
                }
                else if (true == mi.IsControlled)
                   townControlledPeoples.Add(mi);
@@ -105,36 +101,47 @@ namespace PleasantvilleGame
             }
          }
          //============================================
-         Logger.Log(LogEnum.LE_SHOW_UNCONTROLLED, "Perform_AlienMovement(): MoveUnknownAliens() uncontrolledPeoples=" + uncontrolledPeoples.ToString());
-         List<CandidateMove> candidateMoves = new List<CandidateMove>();
+         Logger.Log(LogEnum.LE_SHOW_CONTROLLED, "Perform_AlienMovement(): townControlledPeoples=" + townControlledPeoples.ToString());
+         Logger.Log(LogEnum.LE_SHOW_UNCONTROLLED, "Perform_AlienMovement(): unknowns=" + unknowns.ToString());
          //-------------------------------------------------------
-         if (false == AddCandidatesMovesAwayFromControlled(gi, townControlledPeoples, unknowns, candidateMoves))
+         if (false == AddCandidatesMovesAwayFromControlled(gi, townControlledPeoples, unknowns, myMoves))
          {
-            Logger.Log(LogEnum.LE_ERROR, "Add_andidatesMovesToStunned(): MoveUnknownAliens() returned error");
-            return false;
-         }
-         if (false == AddCandidatesMovesToStunned(gi, stunnedPeoples, uncontrolledPeoples, candidateMoves))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Add_andidatesMovesToStunned(): MoveUnknownAliens() returned error");
+            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMovement(): Add_CandidatesMovesAwayFromControlled() returned error");
             return false;
          }
          //-------------------------------------------------------
-         if (false == MoveUnknownAliens(gi, unknownAliens, alienMoves))
+         //if (false == AddCandidatesMovesToStunned(gi, stunnedPeoples, uncontrolledPeoples, myMoves))
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Add_andidatesMovesToStunned(): MoveUnknownAliens() returned error");
+         //   return false;
+         //}
+         ////-------------------------------------------------------
+         //if (false == MoveUnknownAliens(gi, unknownAliens, alienMoves))
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMovement(): MoveUnknownAliens() returned error");
+         //   return false;
+         //}
+         //Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMovement(): mims=" + alienMoves.ToString());
+         //if (false == IntersectAlienUncontrolled(gi, unknownAliens, uncontrolledPeoples, alienMoves))
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMovement(): IntersectAlienUncontrolled() returned error");
+         //   return false;
+         //}
+         //Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMovement(): mims=" + alienMoves.ToString());
+         //if (false == MoveUncontrolled(gi, uncontrolledPeoples, alienMoves))
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMovement(): MoveUncontrolled() returned error");
+         //   return false;
+         //}
+         foreach(CandidateMove cm in myMoves)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMovement(): MoveUnknownAliens() returned error");
-            return false;
-         }
-         Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMovement(): mims=" + alienMoves.ToString());
-         if (false == IntersectAlienUncontrolled(gi, unknownAliens, uncontrolledPeoples, alienMoves))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMovement(): IntersectAlienUncontrolled() returned error");
-            return false;
-         }
-         Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMovement(): mims=" + alienMoves.ToString());
-         if (false == MoveUncontrolled(gi, uncontrolledPeoples, alienMoves))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMovement(): MoveUncontrolled() returned error");
-            return false;
+            IMapItemMove? mim = gi.CreateMapItemMove(cm.myMapItem, cm.myDest);
+            if( null == mim )
+            {
+               Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMovement(): mim=" + null);
+               return false;
+            }
+            alienMoves.Add(mim);
          }
          Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMovement(): mims=" + alienMoves.ToString());
          gi.MapItemMoves = alienMoves.Shuffle();
@@ -146,12 +153,13 @@ namespace PleasantvilleGame
          IMapItems? totalMapItems = new MapItems();
          foreach (IMapItem controlled in townPeoples)
          {
-            IMapItems? closeMapItems = Territory.GetMapItemsWithinRange(gi.Stacks, Territories.theTerritories, controlled.TerritoryCurrent, controlled.Movement);
+            IMapItems? closeMapItems = Territory.GetMapItemsThatThisMapItemCanMoveTo(gi.Stacks, Territories.theTerritories, controlled);
             if (null == closeMapItems)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): Get_MapItemsWithinRange() returned error");
+               Logger.Log(LogEnum.LE_ERROR, "Add_CandidatesMovesAwayFromControlled(): Get_MapItemsWithinRange() returned error");
                return false;
             }
+            closeMapItems.Remove(controlled); // not interested in the controlled counter
             foreach (IMapItem mi in closeMapItems)
             {
                if( false == totalMapItems.Contains(mi))
@@ -161,6 +169,8 @@ namespace PleasantvilleGame
                return true;
          }
          //------------------------------------
+         IMapPoint mpCenterControlled = Territory.GetCenterPointControlled(gi);
+         IMapPoint mpCenterAlien = Territory.GetCenterPointAlien(gi);
          foreach (IMapItem candidate in totalMapItems) // iterate through territories that mapitem can move to that are outside of all controlled movement
          {
             ITerritories territories = new Territories();
@@ -172,13 +182,26 @@ namespace PleasantvilleGame
                if (0 == territories.Count) // if there are no territories that candidate can move to that are outside of controlled movement radius, skip
                   break;
             }
+            IMetricAlienMoves alienMoveMetrics = new MetricAlienMoves();
             if (0 < territories.Count) // for each territory, create a metric with the best move
             {
-               //        *** Isolated from Observations 
-               //        *** Greater Influence
-               //        *** Greater Combat
-               //        *** Closer to Zebulon
-               //        *** Closer to Alien Center
+               foreach(Territory t in territories)
+               {
+                  IMetricAlienMove mam = new MetricAlienMove(gi, candidate, t, mpCenterAlien, mpCenterControlled);
+                  alienMoveMetrics.Add(mam);
+               }
+            }
+            if( 0 < alienMoveMetrics.Count )
+            {
+               alienMoveMetrics.Sort();
+               IMetricAlienMove? mam1 = alienMoveMetrics[0];
+               if (null == mam1)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Add_CandidatesMovesAwayFromControlled(): mam1=null");
+                  return false;
+               }
+               CandidateMove cm = new CandidateMove(candidate, mam1.TargetTerritory);
+               candidateMoves.Add(cm);
             }
          }
          return true;
@@ -211,7 +234,7 @@ namespace PleasantvilleGame
          {
             if (4 < alienMoves.Count) // only move five units
                break;
-            IMapItems? closeMapItems = Territory.GetMapItemsWithinRange(gi.Stacks, Territories.theTerritories, unknownAlien.TerritoryCurrent, unknownAlien.Movement);
+            IMapItems? closeMapItems = Territory.GetMapItemsThatThisMapItemCanMoveTo(gi.Stacks, Territories.theTerritories, unknownAlien);
             if (null == closeMapItems)
             {
                Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): Get_MapItemsWithinRange() returned error");
@@ -352,7 +375,7 @@ namespace PleasantvilleGame
                continue;
             }
             //-----------------------------------------
-            IMapItems? closeMapItems = Territory.GetMapItemsWithinRange(gi.Stacks, Territories.theTerritories, metric.Target.TerritoryCurrent, metric.Target.Movement); // Find mapitems that can be moved to the targets location
+            IMapItems? closeMapItems = Territory.GetMapItemsThatCanMoveToThisMapItem(gi.Stacks, Territories.theTerritories, metric.Target); // Find mapitems that can be moved to this target's location
             if (null == closeMapItems)
             {
                Logger.Log(LogEnum.LE_ERROR, "Move_Uncontrolled(): Get_MapItemsWithinRange() returned error");

@@ -79,7 +79,7 @@ namespace PleasantvilleGame
                      if (myScrollViewerCanvas.Content is Canvas)
                         myCanvasMain = (Canvas)myScrollViewerCanvas.Content;  // Find the Canvas in the visual tree
                   }
-                  if (ui1 is DockPanel dockPanelControl) // DockPanel that holds the Map Image
+                  if (ui1 is DockPanel dockPanelControl) // DockPanel that holds the action panel
                   {
                      foreach (UIElement ui2 in dockPanelControl.Children)
                      {

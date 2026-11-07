@@ -51,7 +51,7 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.GetStartingAlienCounters(): not implemented");
          return false;
       }
-      public bool PerformAlienMoves(IGameInstance gi)
+      public bool PerformMoves(IGameInstance gi)
       {
          Logger.Log(LogEnum.LE_ERROR, "Perform_AlienMoves(): not implemented");
          return false;

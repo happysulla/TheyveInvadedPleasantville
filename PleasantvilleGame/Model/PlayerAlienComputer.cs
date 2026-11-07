@@ -120,12 +120,12 @@ namespace PleasantvilleGame
          gi.EventDisplayed = gi.EventActive = "e006t";          // Set next state.
          return true;
       }
-      public bool PerformAlienMoves(IGameInstance gi)
+      public bool PerformMoves(IGameInstance gi)
       {
          Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "Perform_AlienMoves(): gi.MapItemMoves.Clear()");
          gi.MapItemMoves.Clear();
          PlayerAlienComputerMoveMgr moveMgr = new PlayerAlienComputerMoveMgr();
-         if( false == moveMgr.PerformAlienMovement(gi, myBehavior))
+         if( false == moveMgr.CreateMoves(gi))
          {
             Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Perform_AlienMoves() returned false");
             return false;

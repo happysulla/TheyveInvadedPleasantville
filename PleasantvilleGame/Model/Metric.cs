@@ -12,7 +12,7 @@ namespace PleasantvilleGame
 {
    public class MetricUtility
    {
-      public static int GetCenterMetric(IMapPoint center, ITerritory t)
+      public static int GetNormalizedDistanceMetric(IMapPoint center, ITerritory t)
       {
          double xdiff = Math.Abs(center.X - t.CenterPoint.X);
          double ydiff = Math.Abs(center.Y - t.CenterPoint.Y);
@@ -204,11 +204,11 @@ namespace PleasantvilleGame
             obsMetric.Value += targetMi.Combat + targetMi.Influence;
          }
          //---------------------------
-         int zebulonMetric = (MetricUtility.GetCenterMetric(gi.Zebulon.TerritoryCurrent.CenterPoint, targetT));
-         int centerAlienMetric = MetricUtility.GetCenterMetric(centerAlien, targetT);
-         int centerControlledMetric = MetricUtility.GetCenterMetric(centerControlled, targetT);
+         int zebulonMetric = (MetricUtility.GetNormalizedDistanceMetric(gi.Zebulon.TerritoryCurrent.CenterPoint, targetT));
+         int centerAlienMetric = MetricUtility.GetNormalizedDistanceMetric(centerAlien, targetT);
+         int centerControlledMetric = MetricUtility.GetNormalizedDistanceMetric(centerControlled, targetT);
          //---------------------------
-         Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, )
+         Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "MetricAlienMove(): mi=" + movingMi.Name + " t=" + targetT.ToString() + "o=" + obsMetric.Value.ToString() + " z=" + zebulonMetric.ToString() + " a=" + centerAlienMetric.ToString() + " c=" + centerControlledMetric.ToString());
          int totalMetric = obsMetric.Value + zebulonMetric + centerAlienMetric + centerControlledMetric;
       }
    }
