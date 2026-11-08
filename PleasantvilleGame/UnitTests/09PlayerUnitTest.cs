@@ -23,8 +23,6 @@ namespace PleasantvilleGame
       private Canvas? myCanvasMain = null;
       private DockPanel? myDockPanelTop = null;
       private ScrollViewer? myScrollViewerCanvas = null;
-      private Canvas? myCanvasHelper = null;
-      private readonly FontFamily myFontFam = new FontFamily("Tahoma");
       //--------------------------------------------------------------------
       private int myIndexName = 0;
       private List<string> myHeaderNames = new List<string>();

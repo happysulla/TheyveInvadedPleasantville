@@ -43,6 +43,8 @@ namespace PleasantvilleGame
       LE_SHOW_DICE_MOVING,
       LE_SHOW_UPLOAD_GAME,
       LE_SHOW_VP_TOTAL,
+      LE_SHOW_TERRITORIES,
+      LE_SHOW_TERRITORY_ITERATION,
       //-------------
       LE_SHOW_MIM,
       LE_SHOW_MIM_ADD,
@@ -163,6 +165,8 @@ namespace PleasantvilleGame
          //SetOn(LogEnum.LE_SHOW_DICE_MOVING);
          //SetOn(LogEnum.LE_SHOW_UPLOAD_GAME);
          //SetOn(LogEnum.LE_SHOW_VP_TOTAL);
+         SetOn(LogEnum.LE_SHOW_TERRITORIES);
+         //SetOn(LogEnum.LE_SHOW_TERRITORY_ITERATION);
          //-------------
          //SetOn(LogEnum.LE_SHOW_MIM);
          //SetOn(LogEnum.LE_SHOW_MIM_ADD);

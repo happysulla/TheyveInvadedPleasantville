@@ -114,7 +114,7 @@ namespace PleasantvilleGame
             IStack stack = (IStack)o;
             foreach (MapItem mapItem in stack.MapItems)
             {
-               if (true == mapItem.Name.Contains(name))
+               if (true == mapItem.Name.Contains(Utilities.RemoveSpaces(name)))
                   return mapItem;
             }
          }
