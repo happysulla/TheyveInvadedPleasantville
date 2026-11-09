@@ -49,7 +49,6 @@ namespace PleasantvilleGame
       //-----------------------------------------
       public TerritoryCreateUnitTest(DockPanel dp, IGameInstance gi, CanvasImageViewer civ)
       {
-         myIndexName = 7;
          myHeaderNames.Add("02-Delete File");
          myHeaderNames.Add("02-Delete Territory");
          myHeaderNames.Add("02-New Territories");
@@ -58,11 +57,11 @@ namespace PleasantvilleGame
          myHeaderNames.Add("02-Set Adjacents");
          myHeaderNames.Add("02-Set Observations");
          myHeaderNames.Add("02-GetTerritoriesWithinRange");
-         myHeaderNames.Add("02-GetMapItemsWithinRange");
          myHeaderNames.Add("02-GetTerritoriesOfInterest-T");
          myHeaderNames.Add("02-GetTerritoriesOfInterest-F");
          myHeaderNames.Add("02-GetMapItemsOfInterest-T");
          myHeaderNames.Add("02-GetMapItemsOfInterest-F");
+         myHeaderNames.Add("02-GetMapItemsThatThisMapItemCanMoveTo");
          myHeaderNames.Add("02-Final");
          //------------------------------------
          myCommandNames.Add("00-Delete File");
@@ -73,11 +72,11 @@ namespace PleasantvilleGame
          myCommandNames.Add("05-Verify Adjacents");
          myCommandNames.Add("06-Verify Observations");
          myCommandNames.Add("07-Verify GetTerritoriesWithinRange");
-         myCommandNames.Add("08-Verify GetMapItemsWithinRange");
-         myCommandNames.Add("09-Verify GetTerritoriesOfInterest-T");
-         myCommandNames.Add("10-Verify GetTerritoriesOfInterest-F");
-         myCommandNames.Add("11-Verify GetMapItemsOfInterest-T");
-         myCommandNames.Add("12-Verify GetMapItemsOfInterest-F");
+         myCommandNames.Add("08-Verify GetTerritoriesOfInterest-T");
+         myCommandNames.Add("09-Verify GetTerritoriesOfInterest-F");
+         myCommandNames.Add("10-Verify GetMapItemsOfInterest-T");
+         myCommandNames.Add("11-Verify GetMapItemsOfInterest-F");
+         myCommandNames.Add("12-Verify GetMapItemsThatCanMoveToThisMapItem");
          myCommandNames.Add("13-Cleanup");
          //------------------------------------
          myDockPanelTop = dp;
@@ -207,11 +206,6 @@ namespace PleasantvilleGame
          //==================================================================
          else if (CommandName == myCommandNames[7]) // GetTerritoriesWithinRange()
          {
-            if (false == TableMgr.CreateTownspeople(gi))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Next_Test(): Create_Townspeople() returned false");
-               return false;
-            }
             DeleteEllipses();
             ITerritory? tStart = Territories.theTerritories.Find("House_7");
             if (null == tStart)
@@ -227,35 +221,7 @@ namespace PleasantvilleGame
             }
          }
          //==================================================================
-         else if (CommandName == myCommandNames[8]) // GetMapItemsWithinRange()
-         {
-            DeleteEllipses();
-            string name = "GasPumps_0";
-            ITerritory? t1 = Territories.theTerritories.Find(name);
-            if (null == t1)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): t1=null for ");
-               return false;
-            }
-            //---------------------------------
-            IMapItems? closeMapItems = Territory.GetMapItemsWithinRange(gi.Stacks, Territories.theTerritories, t1, 5); // Find mapitems that can be moved to the targets location
-            if (null == closeMapItems)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): GetMapItemsWithinRange() returned error");
-               return false;
-            }
-            //----------------------------------------------------
-            ITerritories territories = new Territories();
-            foreach (IMapItem mi in closeMapItems)
-               territories.Add(mi.TerritoryCurrent);
-            if (false == CreateEllipsesForDisplay(territories))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipsesForDisplay() returned false");
-               return false;
-            }
-         }
-         //==================================================================
-         else if (CommandName == myCommandNames[9]) // GetTerritoriesOfInterest() - overlapping
+         else if (CommandName == myCommandNames[8]) // GetTerritoriesOfInterest() - overlapping
          {
             DeleteEllipses();
             IMapItem? mi1 = gi.Stacks.FindMapItem(TableMgr.BANK_GUARD);
@@ -289,7 +255,7 @@ namespace PleasantvilleGame
             }
          }
          //==================================================================
-         else if (CommandName == myCommandNames[10]) // GetTerritoriesOfInterest() - non-overlapping
+         else if (CommandName == myCommandNames[9]) // GetTerritoriesOfInterest() - non-overlapping
          {
             DeleteEllipses();
             IMapItem? mi1 = gi.Stacks.FindMapItem(TableMgr.BANK_GUARD);
@@ -324,7 +290,7 @@ namespace PleasantvilleGame
             }
          }
          //==================================================================
-         else if (CommandName == myCommandNames[11]) // GetMapItemsOfInterest() - overlapping
+         else if (CommandName == myCommandNames[10]) // GetMapItemsOfInterest() - overlapping
          {
             DeleteEllipses();
             IMapItem? mi1 = gi.Stacks.FindMapItem(TableMgr.SHERIFF);
@@ -338,15 +304,15 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): Create_Ellipse() returned false for mi1");
                return false;
             }
-            IMapItems? closeMapItems = Territory.GetMapItemsOfInterest(gi.Stacks, Territories.theTerritories, mi1, true); 
-            if (null == closeMapItems)
+            IMapItems? mapItems = Territory.GetMapItemsOfInterest(gi.Stacks, Territories.theTerritories, mi1, true); 
+            if (null == mapItems)
             {
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): GetMapItemsOfInterest() returned error");
                return false;
             }
             //----------------------------------------------------
             ITerritories territories = new Territories();
-            foreach (IMapItem mi in closeMapItems)
+            foreach (IMapItem mi in mapItems)
                territories.Add(mi.TerritoryCurrent);
             if (false == CreateEllipsesForDisplay(territories))
             {
@@ -354,7 +320,8 @@ namespace PleasantvilleGame
                return false;
             }
          }
-         else if (CommandName == myCommandNames[12]) // GetMapItemsOfInterest() - non-overlapping
+         //==================================================================
+         else if (CommandName == myCommandNames[11]) // GetMapItemsThatCanMoveToThisMapItem() 
          {
             DeleteEllipses();
             IMapItem? mi1 = gi.Stacks.FindMapItem(TableMgr.SHERIFF);
@@ -363,15 +330,51 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): mi1=null ");
                return false;
             }
-            IMapItems? nonOverlappingMapItems = Territory.GetMapItemsOfInterest(gi.Stacks, Territories.theTerritories, mi1, false);
-            if (null == nonOverlappingMapItems)
+            if (false == CreateEllipse(mi1.TerritoryCurrent, mi1.TerritoryCurrent.CenterPoint, Colors.Black))
             {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): GetMapItemsOfInterest() returned error");
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): Create_Ellipse() returned false for mi1");
+               return false;
+            }
+            IMapItems? mapItems = Territory.GetMapItemsOfInterest(gi.Stacks, Territories.theTerritories, mi1, false);
+            if (null == mapItems)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): GetMapItemsThatCanMoveToThisMapItem() returned error");
                return false;
             }
             //----------------------------------------------------
             ITerritories territories = new Territories();
-            foreach (IMapItem mi in nonOverlappingMapItems)
+            foreach (IMapItem mi in mapItems)
+               territories.Add(mi.TerritoryCurrent);
+            if (false == CreateEllipsesForDisplay(territories))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipsesForDisplay() returned false");
+               return false;
+            }
+         }
+         //==================================================================
+         else if (CommandName == myCommandNames[12]) // GetMapItemsThatThisMapItemCanMoveTo()
+         {
+            DeleteEllipses();
+            IMapItem? mi1 = gi.Stacks.FindMapItem(TableMgr.SHERIFF);
+            if (null == mi1)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): mi1=null ");
+               return false;
+            }
+            if (false == CreateEllipse(mi1.TerritoryCurrent, mi1.TerritoryCurrent.CenterPoint, Colors.Black))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): Create_Ellipse() returned false for mi1");
+               return false;
+            }
+            IMapItems? mapItems = Territory.GetMapItemsThatCanMoveToThisMapItem(gi.Stacks, Territories.theTerritories, mi1);
+            if (null == mapItems)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): GetMapItemsThatCanMoveToThisMapItem() returned error");
+               return false;
+            }
+            //----------------------------------------------------
+            ITerritories territories = new Territories();
+            foreach (IMapItem mi in mapItems)
                territories.Add(mi.TerritoryCurrent);
             if (false == CreateEllipsesForDisplay(territories))
             {
@@ -471,7 +474,7 @@ namespace PleasantvilleGame
          {
             ++myIndexName;
          }
-         else if (HeaderName == myHeaderNames[9]) // start cleanup
+         else if (HeaderName == myHeaderNames[9]) 
          {
             ++myIndexName;
          }

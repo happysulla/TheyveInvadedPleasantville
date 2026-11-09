@@ -116,7 +116,7 @@ namespace PleasantvilleGame
          }
          if (null == myCanvasMain)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Command(): myCanvas=null");
+            Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): myCanvas=null");
             return false;
          }
          //-----------------------------------------------------
@@ -129,6 +129,19 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "Command(): CreateTownspeople() returned false");
                return false;
             }
+            //--------------------------------------------
+            string startingHq = StartingHqMgr.GetStartingHqTerritory();
+            ITerritory? tZebutonStart = Territories.theTerritories.Find(startingHq);
+            if (null == tZebutonStart)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Command(): zTerritory=null");
+               return false;
+            }
+            gi.Zebulon.TerritoryCurrent = gi.Zebulon.TerritoryStarting = tZebutonStart;
+            gi.Zebulon.Location = Territory.GetRandomPointBoundingRect(tZebutonStart, gi.Zebulon.Zoom * Utilities.theMapItemOffset);
+            gi.Zebulon.IsAlienKnown = true;
+            gi.Stacks.Add(gi.Zebulon);
+            //--------------------------------------------
             IMapItem? mi = gi.Stacks.FindMapItem(TableMgr.WIFE); 
             if (null == mi)
             {
@@ -158,18 +171,22 @@ namespace PleasantvilleGame
          }
          else if (CommandName == myCommandNames[1])
          {
-            Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "Perform_AlienMoves(): gi.MapItemMoves.Clear()");
+            Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "PlayerUnitTest.Command(): gi.MapItemMoves.Clear()");
             gi.MapItemMoves.Clear();
             PlayerAlienComputerMoveMgr moveMgr = new PlayerAlienComputerMoveMgr();
             if (false == moveMgr.CreateMoves(gi))
             {
-               Logger.Log(LogEnum.LE_ERROR, "PlayerAlienComputer.Perform_AlienMoves() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command():  CreateMoves() returned false");
                return false;
             }
          }
-         else if (CommandName == myCommandNames[2])
+         else
          {
-
+            if (false == Cleanup(ref gi))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): Cleanup() returned false");
+               return false;
+            }
          }
          return true;
       }

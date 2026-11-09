@@ -12,30 +12,30 @@ namespace PleasantvilleGame
 {
    public class MetricUtility
    {
-      public static int GetNormalizedDistanceMetric(IMapPoint center, ITerritory t)
+      public static int GetClosestDistanceMetric(IMapPoint center, ITerritory t, bool isInverse=false)
       {
          double xdiff = Math.Abs(center.X - t.CenterPoint.X);
          double ydiff = Math.Abs(center.Y - t.CenterPoint.Y);
-         int metric = (int) Math.Sqrt(xdiff*xdiff + ydiff*ydiff);
+         int rawDiff = (int) Math.Sqrt(xdiff*xdiff + ydiff*ydiff);
          // Normalize from 0 to 100
          // normalizedValue = (value - min(distance)) / ( maxValue - min(distance) ) * 100;
          // min(distance) = 0
          // Assume Map Hieght = 950 pixels
          // Assume Map Width = height * 0.86 = 818
          // maxDistance(x) = sqrt( (mapWidth)^2 + (mapHeight)^2 ) = 1253
-         return (int)(100.0 * metric / 1253);
+         int normalized = (int)(100.0 * rawDiff / 1253); // = 100 if distance is larget and 0 if distance is small
+         if (false == isInverse)
+            return 100 - normalized; // 0=>distance is large and 100=>distance is small
+         else
+            return normalized;       // 100=>distance is large and 0=>distance is small
       }
    }
    //===============================================================
    public class MetricObservation : IMetricObservation
    {
       public IMapItem? MapItem1 { get; set; } = null;
-      public IMapItem? Target { get; set; } = null;
+      public IMapItem Target { get; set; }
       public int Value { get; set; } = 0;
-      public MetricObservation()
-      {
-
-      }
       public MetricObservation(IGameInstance gi, IMapItem target)
       {
          Target = target;
@@ -49,8 +49,8 @@ namespace PleasantvilleGame
       }
       public int GetObservationMetric(IGameInstance gi)
       {
-         if (null == Target)
-            return 1; // probability of not being observed since there is no target
+         if (null == MapItem1)
+            return 15; // would prefer to move to territory with other map items to fool townsperson
          double pTotal = 1.0; // probability of observation = 1 - (1-p0)(1-p1)(1-p3).... where p is the probability of observation from that hex
          foreach (var kvp in Target.TerritoryCurrent.Observations)
          {
@@ -192,8 +192,7 @@ namespace PleasantvilleGame
          IStack? stack = gi.Stacks.Find(targetT);
          if( null != stack )
          {
-            IMapItems mapItems = stack.MapItems.Sort();
-            IMapItem? targetMi = mapItems[0];
+            IMapItem? targetMi = stack.MapItems[0];
             if( null == targetMi )
             {
                Logger.Log(LogEnum.LE_ERROR, "MetricAlienMove(): targetMi=null");
@@ -201,15 +200,13 @@ namespace PleasantvilleGame
             }
             if( true == movingMi.IsAlien())
                obsMetric = new MetricObservation(gi, movingMi, targetMi);
-            obsMetric.Value += targetMi.Combat + targetMi.Influence;
          }
          //---------------------------
-         int zebulonMetric = (MetricUtility.GetNormalizedDistanceMetric(gi.Zebulon.TerritoryCurrent.CenterPoint, targetT));
-         int centerAlienMetric = MetricUtility.GetNormalizedDistanceMetric(centerAlien, targetT);
-         int centerControlledMetric = MetricUtility.GetNormalizedDistanceMetric(centerControlled, targetT);
-         //---------------------------
-         Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "MetricAlienMove(): mi=" + movingMi.Name + " t=" + targetT.ToString() + "o=" + obsMetric.Value.ToString() + " z=" + zebulonMetric.ToString() + " a=" + centerAlienMetric.ToString() + " c=" + centerControlledMetric.ToString());
+         int zebulonMetric = (MetricUtility.GetClosestDistanceMetric(gi.Zebulon.TerritoryCurrent.CenterPoint, targetT));
+         int centerAlienMetric = MetricUtility.GetClosestDistanceMetric(centerAlien, targetT);
+         int centerControlledMetric = MetricUtility.GetClosestDistanceMetric(centerControlled, targetT, true);
          int totalMetric = obsMetric.Value + zebulonMetric + centerAlienMetric + centerControlledMetric;
+         Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "MetricAlienMove(): mi=" + movingMi.Name + " (t=" + totalMetric.ToString() + ")\t=(o=" + obsMetric.Value.ToString() + ")+(z=" + zebulonMetric.ToString() + ")+(a=" + centerAlienMetric.ToString() + ")+(c=" + centerControlledMetric.ToString() + ") to t=" + targetT.ToString());
       }
    }
    public class MetricAlienMoves : IMetricAlienMoves

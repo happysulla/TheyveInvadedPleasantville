@@ -45,24 +45,6 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "GameInstance(): ReadTerritoriesXml() exception=\n" + e.ToString());
             return;
          }
-         //try
-         //{
-         //   GameLoadMgr gameLoadMgr = new GameLoadMgr();
-         //   string filename = ConfigFileReader.theConfigDirectory + "People.xml";
-         //   XmlTextReader? reader = new XmlTextReader(filename) { WhitespaceHandling = WhitespaceHandling.None };
-         //   if (null == reader)
-         //   {
-         //      Logger.Log(LogEnum.LE_ERROR, "GameInstance(): reader=null");
-         //      return;
-         //   }
-         //   if (false == gameLoadMgr.ReadXmlTownspeople(reader, MapItems.theMapItems))
-         //      Logger.Log(LogEnum.LE_ERROR, "GameInstance(): ReadXmlTownspeople() returned false for filename=" + filename);
-         //}
-         //catch (Exception e)
-         //{
-         //   Logger.Log(LogEnum.LE_ERROR, "GameInstance(): ReadXmlTownspeople() exception=\n" + e.ToString());
-         //   return;
-         //}
       }
       public void RegisterForUpdates(IView view)
       {
@@ -96,6 +78,14 @@ namespace PleasantvilleGame
       public bool CreateUnitTests(IGameInstance gi, DockPanel dp, GameViewerWindow gvw, EventViewer ev, IDieRoller dr, CanvasImageViewer civ)
       {
          //-----------------------------------------------------------------------------
+         IUnitTest ut9 = new PlayerUnitTest(dp, gi, civ, gvw);
+         if (true == ut9.CtorError)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): PlayerUnitTest() ctor error");
+            return false;
+         }
+         gi.UnitTests.Add(ut9);
+         //-----------------------------------------------------------------------------
          IUnitTest ut1 = new GameViewerCreateUnitTest(dp, gi, civ);
          if (true == ut1.CtorError)
          {
@@ -119,14 +109,6 @@ namespace PleasantvilleGame
             return false;
          }
          gi.UnitTests.Add(ut3);
-         //-----------------------------------------------------------------------------
-         IUnitTest ut9 = new PlayerUnitTest(dp, gi, civ, gvw);
-         if (true == ut9.CtorError)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): PlayerUnitTest() ctor error");
-            return false;
-         }
-         gi.UnitTests.Add(ut9);
          //-----------------------------------------------------------------------------
          //IUnitTest ut4 = new PolylineCreateUnitTest(dp, gi, civ);
          //if (true == ut4.CtorError)

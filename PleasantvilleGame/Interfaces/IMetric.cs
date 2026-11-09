@@ -9,7 +9,7 @@ namespace PleasantvilleGame
    public interface IMetricObservation
    {
       IMapItem? MapItem1 { get; set; }
-      IMapItem? Target { get; set; }
+      IMapItem Target { get; set; }
       int Value { get; set; }
    }
    public interface IMetricObservations : System.Collections.IEnumerable

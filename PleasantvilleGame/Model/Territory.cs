@@ -501,16 +501,30 @@ namespace PleasantvilleGame
       }
       public static ITerritories GetTerritoriesOfInterest(ITerritories sTerritories, IMapItem mi1, IMapItem mi2, bool isOverlapping = true)
       {
-         ITerritories returnTerritories;
+         ITerritories returnTerritories = new Territories();
          ITerritories mi1Territories = Territory.GetTerritoriesWithinRange(sTerritories, mi1.TerritoryCurrent, mi1.Movement);
-         if (true == isOverlapping)
+         ITerritories mi2Territories = Territory.GetTerritoriesWithinRange(sTerritories, mi2.TerritoryCurrent, mi2.Movement);
+         if( true == isOverlapping )
          {
-            returnTerritories = Territory.GetTerritoriesWithinRange(mi1Territories, mi2.TerritoryCurrent, mi2.Movement); // return overlapping territories between 
+            if (mi1Territories.Count < mi2Territories.Count)
+            {
+               foreach (ITerritory t in mi1Territories)
+               {
+                  if (true == mi2Territories.Contains(t))
+                     returnTerritories.Add(t); // add territory that doesnt overlap mi1 and mi2
+               }
+            }
+            else
+            {
+               foreach (ITerritory t in mi2Territories)
+               {
+                  if (true == mi1Territories.Contains(t))
+                     returnTerritories.Add(t); // add territory that doesnt overlap mi1 and mi2
+               }
+            }
          }
          else
          {
-            returnTerritories = new Territories();
-            ITerritories mi2Territories = Territory.GetTerritoriesWithinRange(sTerritories, mi2.TerritoryCurrent, mi2.Movement);
             if (mi1Territories.Count < mi2Territories.Count)
             {
                foreach (ITerritory t in mi2Territories)
@@ -530,67 +544,31 @@ namespace PleasantvilleGame
          }
          return returnTerritories;
       }
-      public static IMapItems GetMapItemsOfInterest(IStacks stacks, ITerritories sTerritories, IMapItem mi1, bool isOverlapping = true)
+      public static IMapItems GetMapItemsOfInterest(IStacks stacks, ITerritories sTerritories, IMapItem mi1, bool isAbleToMoveTo = true)
       {
-         IMapItems overlappingMapItemCandidates = new MapItems();
-         IMapItems nonoverlappingMapItemCandidates = new MapItems();
-         foreach (IStack stack in stacks)
+         ITerritories territories1 = GetTerritoriesWithinRange(sTerritories, mi1.TerritoryCurrent, mi1.Movement);
+         IMapItems mapItemCandidates = new MapItems();
+         foreach(IStack stack in stacks)
          {
-            foreach (IMapItem mi2 in stack.MapItems)
+            if (isAbleToMoveTo == territories1.Contains(stack.Territory))
             {
-               if (mi1.Name != mi2.Name)
-               {
-                  ITerritories territories2 = GetTerritoriesOfInterest(sTerritories, mi1, mi2, true);
-                  if (0 < territories2.Count)
-                     overlappingMapItemCandidates.Add(mi2); // if overlapping territories that map items can move to, add mapitem
-                  else
-                     nonoverlappingMapItemCandidates.Add(mi2); // if overlapping territories that map items can move to, add mapitem
-               }
+               foreach (IMapItem mi2 in stack.MapItems)
+                  mapItemCandidates.Add(mi2);
             }
          }
-         if( true == isOverlapping )
-           return overlappingMapItemCandidates;
-         else
-            return nonoverlappingMapItemCandidates;
+         mapItemCandidates.Remove(mi1); // do not return the target MapItem
+         return mapItemCandidates;
       }
       public static IMapItems? GetMapItemsThatCanMoveToThisMapItem(IStacks stacks, ITerritories sTerritories, IMapItem target)
       {
-         ITerritories territories1 = Territory.GetTerritoriesWithinRange(sTerritories, target.TerritoryCurrent, target.Movement);
          IMapItems mapItemCandidates = new MapItems();
-         foreach (ITerritory t in territories1)
+         foreach (IStack stack in stacks)
          {
-            IStack? stack = stacks.Find(t);
-            if (null == stack)
-               continue;
-            foreach (IMapItem mapItem in stack.MapItems)
-				{
-					if( target.Name != mapItem.Name)
-					   mapItemCandidates.Add(mapItem);
-				}
-         }
-         //--------------------------------------
-         IMapItems mapItems = new MapItems();
-         foreach (IMapItem mi in mapItemCandidates) // Verify that mapitem can get to the target territory
-			{
-            ITerritories territories2 = Territory.GetTerritoriesWithinRange(territories1, mi.TerritoryCurrent, mi.Movement);
-				if (true == territories2.Contains(target.TerritoryCurrent))
-					mapItems.Add(mi);
-         }
-         return mapItems;
-      }
-      public static IMapItems? GetMapItemsThatThisMapItemCanMoveTo(IStacks stacks, ITerritories sTerritories, IMapItem target)
-      {
-         ITerritories territories1 = Territory.GetTerritoriesWithinRange(sTerritories, target.TerritoryCurrent, target.Movement);
-         IMapItems mapItemCandidates = new MapItems();
-         foreach (ITerritory t in territories1)
-         {
-            IStack? stack = stacks.Find(t);
-            if (null == stack)
-               continue;
-            foreach (IMapItem mapItem in stack.MapItems)
+            foreach (IMapItem mi in stack.MapItems)
             {
-               if (target.Name != mapItem.Name)
-                  mapItemCandidates.Add(mapItem);
+               ITerritories territories2 = Territory.GetTerritoriesWithinRange(sTerritories, mi.TerritoryCurrent, mi.Movement);
+               if ((true == territories2.Contains(target.TerritoryCurrent)) && (mi.Name != target.Name) )
+                  mapItemCandidates.Add(mi);
             }
          }
          return mapItemCandidates;
@@ -694,7 +672,7 @@ namespace PleasantvilleGame
          {
             foreach (IMapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsAlien()) && (false == mi.IsStunned) && (false == mi.IsKnockedout) && (false == mi.IsTiedUp) && (false == mi.IsSurrendered))
+               if ((true == mi.IsAlien()) && (false == mi.IsStunned) && (false == mi.IsKnockedout) && (false == mi.IsTiedUp) && (false == mi.IsSurrendered) && ("Zebulon" != mi.Name) )
                {
                   count++;
                   xTotal += mi.TerritoryCurrent.CenterPoint.X;

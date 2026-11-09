@@ -74,7 +74,7 @@ namespace PleasantvilleGame
             foreach (IMapItem mi in stack.MapItems)
             {
                mi.IsMovingThisTurn = false;
-               if ((true == mi.IsKnockedout) ||  (true == mi.IsKilled))
+               if ((true == mi.IsKnockedout) ||  (true == mi.IsKilled) || ("Zebulon" == mi.Name))
                   continue;
                else if ((true == mi.IsStunned) && (false == mi.IsAlien()))
                   stunnedPeoples.Add(mi);
@@ -153,13 +153,12 @@ namespace PleasantvilleGame
          IMapItems? totalMapItems = new MapItems();
          foreach (IMapItem controlled in townPeoples)
          {
-            IMapItems? closeMapItems = Territory.GetMapItemsThatThisMapItemCanMoveTo(gi.Stacks, Territories.theTerritories, controlled);
+            IMapItems? closeMapItems = Territory.GetMapItemsOfInterest(gi.Stacks, Territories.theTerritories, controlled); // MapItems this mapitem can move to
             if (null == closeMapItems)
             {
                Logger.Log(LogEnum.LE_ERROR, "Add_CandidatesMovesAwayFromControlled(): Get_MapItemsWithinRange() returned error");
                return false;
             }
-            closeMapItems.Remove(controlled); // not interested in the controlled counter
             foreach (IMapItem mi in closeMapItems)
             {
                if( false == totalMapItems.Contains(mi))
@@ -234,7 +233,7 @@ namespace PleasantvilleGame
          {
             if (4 < alienMoves.Count) // only move five units
                break;
-            IMapItems? closeMapItems = Territory.GetMapItemsThatThisMapItemCanMoveTo(gi.Stacks, Territories.theTerritories, unknownAlien);
+            IMapItems? closeMapItems = Territory.GetMapItemsOfInterest(gi.Stacks, Territories.theTerritories, unknownAlien);
             if (null == closeMapItems)
             {
                Logger.Log(LogEnum.LE_ERROR, "Move_UnknownAliens(): Get_MapItemsWithinRange() returned error");
