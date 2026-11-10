@@ -8,9 +8,10 @@ namespace PleasantvilleGame
 {
    public interface IMetricObservation
    {
-      IMapItem? MapItem1 { get; set; }
-      IMapItem Target { get; set; }
-      int Value { get; set; }
+      IMapItem TargetMapItem { get; set; }
+      ITerritory TargetTerritory { get; set; }
+      int Metric1 { get; set; }
+      int Metric2 { get; set; }
    }
    public interface IMetricObservations : System.Collections.IEnumerable
    {

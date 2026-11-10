@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Shapes;
 using Windows.ApplicationModel.Chat;
 
 namespace PleasantvilleGame
@@ -33,65 +34,68 @@ namespace PleasantvilleGame
    //===============================================================
    public class MetricObservation : IMetricObservation
    {
-      public IMapItem? MapItem1 { get; set; } = null;
-      public IMapItem Target { get; set; }
-      public int Value { get; set; } = 0;
-      public MetricObservation(IGameInstance gi, IMapItem target)
+      public IMapItem TargetMapItem { get; set; }
+      public ITerritory TargetTerritory { get; set; }
+      public int Metric1 { get; set; } = 0; // chance of observation at this target territory
+      public int Metric2 { get; set; } = 0; // chance of takeover at this target territory
+      public MetricObservation(IGameInstance gi, IMapItem mapItemT, ITerritory targetT)
       {
-         Target = target;
-         Value = GetObservationMetric(gi);
+         TargetMapItem = mapItemT;
+         TargetTerritory = targetT;
+         if( false == GetObservationMetric(gi))
+            Logger.Log(LogEnum.LE_ERROR, "MetricObservation(): GetObservationMetric() returned false");
       }
-      public MetricObservation(IGameInstance gi, IMapItem target, IMapItem alien)
+      public bool GetObservationMetric(IGameInstance gi)
       {
-         MapItem1 = alien;
-         Target = target;
-         Value = GetObservationMetric(gi);
-      }
-      public int GetObservationMetric(IGameInstance gi)
-      {
-         if (null == MapItem1)
-            return 15; // would prefer to move to territory with other map items to fool townsperson
+         string? targetTName = TargetTerritory.ToString();
+         if( null == targetTName)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GetObservationMetric(): targetTName=null");
+            return false;
+         }
          double pTotal = 1.0; // probability of observation = 1 - (1-p0)(1-p1)(1-p3).... where p is the probability of observation from that hex
-         foreach (var kvp in Target.TerritoryCurrent.Observations)
+         foreach (var kvp in TargetTerritory.Observations)
          {
             IStack? stack = gi.Stacks.Find(kvp.Key); 
             if (null == stack) // might not be a stack in this Territory
                continue;
+            string? stackTName = stack.Territory.ToString();
+            if (null == stackTName)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "GetObservationMetric(): stackTName=null");
+               return false;
+            }
             foreach (IMapItem mi in stack.MapItems)
             {
-               if (null != MapItem1)  // do not count the target and alien
+               if (null != TargetMapItem)  // do not count the target and alien
                {
-                  if (this.MapItem1.Name == mi.Name)
-                     continue;
-               }
-               if (null != Target)  // do not count the target and alien
-               {
-                  if (this.Target.Name == mi.Name)
+                  if (this.TargetMapItem.Name == mi.Name)
                      continue;
                }
                if ((true == mi.IsAlienUnknown) || (true == mi.IsAlienKnown)) // Aliens do not observe
                   continue;
+               if ((1 == stack.MapItems.Count) && (targetTName == stackTName) ) // if target stack only has one map item, it cannot observe if being taken over
+               {
+                  Metric2 = 100;
+                  continue;
+               }
                pTotal *= (1 - kvp.Value);
             }
          }
-         int probability = (int)((100.0) * (pTotal));  // probability of not being observed
-         return probability;
+         Metric1 = (int)((100.0) * (pTotal));  // probability of not being observed
+         return true;
       }
       public override String ToString()
       {
          StringBuilder sb = new StringBuilder();
-         if (null != MapItem1)
-         {
-            sb.Append("mi1=");
-            sb.Append(this.MapItem1.Name);
-            sb.Append("->");
-         }
-         if (null != Target)
-         {
-            sb.Append(this.Target.Name);
-            sb.Append("=>");
-         }
-         sb.Append(this.Value.ToString());;
+         sb.Append(this.TargetMapItem.Name);
+         sb.Append("(");
+         sb.Append(this.TargetTerritory.ToString());
+         sb.Append(")=>(");
+         sb.Append(this.Metric1.ToString());
+         sb.Append(",");
+         sb.Append(this.Metric2.ToString());
+         sb.Append(")");
          return sb.ToString();
       }
    }
@@ -146,7 +150,7 @@ namespace PleasantvilleGame
             int index = 0;
             foreach (IMetricObservation metric2 in sortedMetrics)
             {
-               if (metric2.Value < metric1.Value)
+               if (metric2.Metric1 < metric1.Metric1)
                {
                   sortedMetrics.Insert(index, metric1);
                   isInserted = true;
@@ -187,26 +191,12 @@ namespace PleasantvilleGame
          // Away from Controlled Center
          MovingMapItem = movingMi;
          TargetTerritory = targetT;
-         //---------------------------
-         IMetricObservation? obsMetric = new MetricObservation(gi, movingMi); // return metric value = 100 ==> 100% of not being observed
-         IStack? stack = gi.Stacks.Find(targetT);
-         if( null != stack )
-         {
-            IMapItem? targetMi = stack.MapItems[0];
-            if( null == targetMi )
-            {
-               Logger.Log(LogEnum.LE_ERROR, "MetricAlienMove(): targetMi=null");
-               return;
-            }
-            if( true == movingMi.IsAlien())
-               obsMetric = new MetricObservation(gi, movingMi, targetMi);
-         }
-         //---------------------------
+         IMetricObservation obsMetric = new MetricObservation(gi, movingMi, targetT); // return metric value = 100 ==> 100% of not being observed
          int zebulonMetric = (MetricUtility.GetClosestDistanceMetric(gi.Zebulon.TerritoryCurrent.CenterPoint, targetT));
          int centerAlienMetric = MetricUtility.GetClosestDistanceMetric(centerAlien, targetT);
          int centerControlledMetric = MetricUtility.GetClosestDistanceMetric(centerControlled, targetT, true);
-         int totalMetric = obsMetric.Value + zebulonMetric + centerAlienMetric + centerControlledMetric;
-         Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "MetricAlienMove(): mi=" + movingMi.Name + " (t=" + totalMetric.ToString() + ")\t=(o=" + obsMetric.Value.ToString() + ")+(z=" + zebulonMetric.ToString() + ")+(a=" + centerAlienMetric.ToString() + ")+(c=" + centerControlledMetric.ToString() + ") to t=" + targetT.ToString());
+         Value = obsMetric.Metric1 + obsMetric.Metric2 + zebulonMetric + centerAlienMetric + centerControlledMetric;
+         Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "MetricAlienMove(): mi=" + movingMi.Name + " (t=" + Value.ToString() + ")\t=(o1=" + obsMetric.Metric1.ToString() + ")+(o2=" + obsMetric.Metric2.ToString()+ ")+(z=" + zebulonMetric.ToString() + ")+(a=" + centerAlienMetric.ToString() + ")+(c=" + centerControlledMetric.ToString() + ") to t=" + targetT.ToString());
       }
    }
    public class MetricAlienMoves : IMetricAlienMoves

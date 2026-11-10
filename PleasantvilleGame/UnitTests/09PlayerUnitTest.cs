@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,19 +11,26 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Xml.Linq;
 using Brushes = System.Windows.Media.Brushes;
+using Color = System.Windows.Media.Color;
 using FontFamily = System.Windows.Media.FontFamily;
 using Image = System.Windows.Controls.Image;
+using Label = System.Windows.Controls.Label;
+using MessageBox = System.Windows.MessageBox;
+using Point = System.Windows.Point;
 
 
 namespace PleasantvilleGame
 {
    public class PlayerUnitTest : IUnitTest
    {
+      private static Double theEllipseDiameter = 20;
+      private static Double theEllipseOffset = theEllipseDiameter / 2.0;
       private IGameInstance? myGameInstance = null;
       private CanvasImageViewer? myCanvasImageViewer = null;
       private Canvas? myCanvasMain = null;
       private DockPanel? myDockPanelTop = null;
       private ScrollViewer? myScrollViewerCanvas = null;
+      private readonly FontFamily myFontFam = new FontFamily("Tahoma");
       //--------------------------------------------------------------------
       private int myIndexName = 0;
       private List<string> myHeaderNames = new List<string>();
@@ -119,7 +127,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): myCanvas=null");
             return false;
          }
-         //-----------------------------------------------------
+         //=========================================================
          if (CommandName == myCommandNames[0])
          {
             gi.PlayerAlien = new PlayerAlienComputer();
@@ -169,8 +177,39 @@ namespace PleasantvilleGame
             CreateEllipse(mpCenterAlien, Utilities.theAlienControlledBrush);
             myIndexName++;
          }
+         //=========================================================
          else if (CommandName == myCommandNames[1])
          {
+            DeleteEllipses();
+            IMapItem? mi1 = gi.Stacks.FindMapItem(TableMgr.HOTEL_OWNER);
+            if (null == mi1)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): mi1=null ");
+               return false;
+            }
+            if (false == CreateEllipse(mi1.TerritoryCurrent, mi1.TerritoryCurrent.CenterPoint, Colors.Black))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): Create_Ellipse() returned false for mi1");
+               return false;
+            }
+            IMapItem? mi2 = gi.Stacks.FindMapItem(TableMgr.MINSTER);
+            if (null == mi2)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): mi1=null ");
+               return false;
+            }
+            if (false == CreateEllipse(mi1.TerritoryCurrent, mi2.TerritoryCurrent.CenterPoint, Colors.Red))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): Create_Ellipse() returned false for mi1");
+               return false;
+            }
+            ITerritories territoriesToDisplay = Territory.GetTerritoriesOfInterest(Territories.theTerritories, mi2, mi1, false);
+            if (false == CreateEllipsesForDisplay(territoriesToDisplay))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipsesForDisplay() returned false");
+               return false;
+            }
+            //-------------------------
             Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "PlayerUnitTest.Command(): gi.MapItemMoves.Clear()");
             gi.MapItemMoves.Clear();
             PlayerAlienComputerMoveMgr moveMgr = new PlayerAlienComputerMoveMgr();
@@ -269,6 +308,85 @@ namespace PleasantvilleGame
          Canvas.SetTop(aEllipse, mp.Y-10);
          Canvas.SetZIndex(aEllipse, 10000);
          myCanvasMain.Children.Add(aEllipse);
+      }
+      private bool CreateEllipse(ITerritory territory, IMapPoint mp, System.Windows.Media.Color color)
+      {
+         if (null == myCanvasMain)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Creat_eEllipse(): myCanvasMain=null");
+            return false;
+         }
+         SolidColorBrush aSolidColorBrush1 = new SolidColorBrush { Color = color };
+         Ellipse aEllipse = new Ellipse
+         {
+            Name = territory.ToString(),
+            Fill = aSolidColorBrush1,
+            StrokeThickness = 1,
+            Stroke = Brushes.Red,
+            Width = theEllipseDiameter,
+            Height = theEllipseDiameter
+         };
+         System.Windows.Point p = new System.Windows.Point(territory.CenterPoint.X, territory.CenterPoint.Y);
+         p.X -= theEllipseOffset;
+         p.Y -= theEllipseOffset;
+         myCanvasMain.Children.Add(aEllipse);
+         Canvas.SetLeft(aEllipse, mp.X);
+         Canvas.SetTop(aEllipse, mp.Y);
+         Canvas.SetZIndex(aEllipse, 99999);
+         return true;
+      }
+      private bool CreateEllipsesForDisplay(ITerritories territories)
+      {
+         if (null == myCanvasMain)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_EllipsesForDisplay(): myCanvasMain=null");
+            return false;
+         }
+         SolidColorBrush aSolidColorBrush0 = new SolidColorBrush { Color = System.Windows.Media.Color.FromArgb(100, 100, 100, 0) }; // nearly transparent but slightly colored
+         foreach (Territory t in territories)
+         {
+            Ellipse aEllipse = new Ellipse() { Name = t.ToString() };
+            aEllipse.Fill = aSolidColorBrush0;
+            aEllipse.StrokeThickness = 1;
+            aEllipse.Stroke = Brushes.Red;
+            aEllipse.Width = theEllipseDiameter;
+            aEllipse.Height = theEllipseDiameter;
+            System.Windows.Point p = new System.Windows.Point(t.CenterPoint.X, t.CenterPoint.Y);
+            p.X -= theEllipseOffset;
+            p.Y -= theEllipseOffset;
+            myCanvasMain.Children.Add(aEllipse);
+            Canvas.SetLeft(aEllipse, p.X);
+            Canvas.SetTop(aEllipse, p.Y);
+            Canvas.SetZIndex(aEllipse, 10000);
+            //-------------------------
+            Label aLabel = new Label() { Foreground = Brushes.Red, FontFamily = myFontFam, FontWeight = FontWeights.Bold, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = t.ToString() };
+            p.X -= theEllipseOffset;
+            p.Y -= 2 * theEllipseOffset;
+            myCanvasMain.Children.Add(aLabel);
+            Canvas.SetLeft(aLabel, p.X);
+            Canvas.SetTop(aLabel, p.Y);
+            Canvas.SetZIndex(aLabel, 10000);
+         }
+         return true;
+      }
+      private bool DeleteEllipses()
+      {
+         if (null == myCanvasMain)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "DeleteEllipses(): myCanvasMain=null");
+            return false;
+         }
+         List<UIElement> results1 = new List<UIElement>();
+         foreach (UIElement ui in myCanvasMain.Children)
+         {
+            if (ui is Ellipse)
+               results1.Add(ui);
+            if (ui is Label)
+               results1.Add(ui);
+         }
+         foreach (UIElement ui1 in results1)
+            myCanvasMain.Children.Remove(ui1);
+         return true;
       }
    }
 }
