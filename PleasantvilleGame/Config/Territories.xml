@@ -863,11 +863,11 @@
       <regionPoint X="0534.03" Y="0372.20" />
     </Points>
     <Adjacents count="5">
-      <adjacent value="Grass_35" />
       <adjacent value="Grass_43" />
-      <adjacent value="Grass_42" />
-      <adjacent value="Road_5" />
+      <adjacent value="Grass_35" />
       <adjacent value="Road_4" />
+      <adjacent value="Road_5" />
+      <adjacent value="Grass_42" />
     </Adjacents>
     <Observations count="15">
       <observation key="Grass_35" value="0.5000" />
@@ -900,10 +900,10 @@
     </Points>
     <Adjacents count="5">
       <adjacent value="DocOffice_1" />
-      <adjacent value="Grass_43" />
-      <adjacent value="Grass_34" />
       <adjacent value="Grass_36" />
       <adjacent value="Road_33" />
+      <adjacent value="Grass_43" />
+      <adjacent value="Grass_34" />
     </Adjacents>
     <Observations count="14">
       <observation key="Road_33" value="0.5000" />
@@ -1118,9 +1118,9 @@
     <Adjacents count="5">
       <adjacent value="Grass_34" />
       <adjacent value="Grass_43" />
-      <adjacent value="Road_5" />
-      <adjacent value="Road_6" />
       <adjacent value="Grass_54" />
+      <adjacent value="Road_6" />
+      <adjacent value="Road_5" />
     </Adjacents>
     <Observations count="16">
       <observation key="Grass_34" value="0.5000" />
@@ -1369,8 +1369,8 @@
       <regionPoint X="0507.98" Y="0484.87" />
     </Points>
     <Adjacents count="5">
-      <adjacent value="Road_6" />
       <adjacent value="Grass_42" />
+      <adjacent value="Road_6" />
       <adjacent value="Road_7" />
       <adjacent value="Road_62" />
       <adjacent value="Road_63" />

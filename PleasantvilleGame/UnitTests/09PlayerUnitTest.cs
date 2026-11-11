@@ -171,9 +171,9 @@ namespace PleasantvilleGame
                return false;
             }
             gi.AddControlled(mi);
-            IMapPoint mpCenterControlled = Territory.GetCenterPointControlled(gi);
+            IMapPoint mpCenterControlled = Territory.GetCenterPointControlled(gi.Stacks);
             CreateEllipse(mpCenterControlled, Utilities.theTownControlledBrush);
-            IMapPoint mpCenterAlien = Territory.GetCenterPointAlien(gi);
+            IMapPoint mpCenterAlien = Territory.GetCenterPointAlien(gi.Stacks );
             CreateEllipse(mpCenterAlien, Utilities.theAlienControlledBrush);
             myIndexName++;
          }

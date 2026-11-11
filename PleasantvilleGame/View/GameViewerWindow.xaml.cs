@@ -235,9 +235,11 @@ namespace PleasantvilleGame
 #pragma warning restore CA1416 // Validate platform compatibility
          //----------------------------------------------------------
          UpdateWindowTitle();
+#if !UT1
          myCanvasMain.MouseLeftButtonDown += this.MouseLeftButtonDownCanvas;
          myCanvasMain.MouseRightButtonDown += this.MouseRightButtonDownCanvas;
          this.PreviewMouseMove += MouseMoveGameViewerWindow;
+#endif
          //----------------------------------------------------------
          UpdateActionPanelClear();
          //---------------------------------------------------------------
@@ -256,7 +258,9 @@ namespace PleasantvilleGame
                   points.Add(new Point(mp.X, mp.Y));
                PointCollection pointCollection = new PointCollection(points);
                Polygon aPolygon = new Polygon() { Name = t.ToString(), Fill = Utilities.theBrushRegionClear, Points = pointCollection };
+#if !UT1
                aPolygon.MouseDown += MouseDownPolygon;
+#endif
                myCanvasMain.Children.Add(aPolygon);
                myPolygons.Add(aPolygon);
                Canvas.SetZIndex(aPolygon, myZIndexLastUsed++);

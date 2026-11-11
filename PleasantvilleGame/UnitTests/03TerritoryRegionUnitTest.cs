@@ -815,13 +815,13 @@ namespace PleasantvilleGame
       {
          if (null == myCanvasMain)
          {
-            Logger.Log(LogEnum.LE_ERROR, "MouseDownPolygon(): myCanvasMain=null");
+            Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon1(): myCanvasMain=null");
             return;
          }
          //------------------------------------------------
          System.Windows.Point p = e.GetPosition(myCanvasMain);
          IMapPoint mp = new MapPoint(p.X, p.Y);
-         System.Diagnostics.Debug.WriteLine("TerritoryRegionUnitTest.MouseDownPolygon(): {0}", mp.ToString());
+         System.Diagnostics.Debug.WriteLine("TerritoryRegionUnitTest.MouseDown_Polygon1(): {0}", mp.ToString());
          if (null == myAnchorTerritory) // This function removes an existing polygon when it is clicked if no anchor territory exists
          {
             Polygon aPolygon = (Polygon)sender; 
@@ -839,7 +839,7 @@ namespace PleasantvilleGame
          else
          {
             if (false == CreatePoint(mp))
-               Logger.Log(LogEnum.LE_ERROR, "MouseDownPolygon->CreatePoint()");
+               Logger.Log(LogEnum.LE_ERROR, "MouseDown_Polygon(): CreatePoint()");
          }
          e.Handled = true;
       }

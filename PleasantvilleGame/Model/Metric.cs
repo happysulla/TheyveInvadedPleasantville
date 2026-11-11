@@ -38,14 +38,14 @@ namespace PleasantvilleGame
       public ITerritory TargetTerritory { get; set; }
       public int Metric1 { get; set; } = 0; // chance of observation at this target territory
       public int Metric2 { get; set; } = 0; // chance of takeover at this target territory
-      public MetricObservation(IGameInstance gi, IMapItem mapItemT, ITerritory targetT)
+      public MetricObservation(IStacks stacks, IMapItem mapItemT, ITerritory targetT)
       {
          TargetMapItem = mapItemT;
          TargetTerritory = targetT;
-         if( false == GetObservationMetric(gi))
+         if( false == GetObservationMetric(stacks))
             Logger.Log(LogEnum.LE_ERROR, "MetricObservation(): GetObservationMetric() returned false");
       }
-      public bool GetObservationMetric(IGameInstance gi)
+      public bool GetObservationMetric(IStacks stacks)
       {
          string? targetTName = TargetTerritory.ToString();
          if( null == targetTName)
@@ -56,7 +56,7 @@ namespace PleasantvilleGame
          double pTotal = 1.0; // probability of observation = 1 - (1-p0)(1-p1)(1-p3).... where p is the probability of observation from that hex
          foreach (var kvp in TargetTerritory.Observations)
          {
-            IStack? stack = gi.Stacks.Find(kvp.Key); 
+            IStack? stack = stacks.Find(kvp.Key); 
             if (null == stack) // might not be a stack in this Territory
                continue;
             string? stackTName = stack.Territory.ToString();
@@ -76,6 +76,10 @@ namespace PleasantvilleGame
                   continue;
                if ((1 == stack.MapItems.Count) && (targetTName == stackTName) ) // if target stack only has one map item, it cannot observe if being taken over
                {
+                  // stack with known alien is desired
+                  // stack with unknown alien is desired
+                  // stack with controlled is undesired
+                  // stacking restrictions
                   Metric2 = 100;
                   continue;
                }
@@ -182,7 +186,7 @@ namespace PleasantvilleGame
       public IMapItem MovingMapItem { get; set; }
       public ITerritory TargetTerritory { get; set; }
       public int Value { get; set; }
-      public MetricAlienMove(IGameInstance gi, IMapItem movingMi, ITerritory targetT, IMapPoint centerAlien, IMapPoint centerControlled )
+      public MetricAlienMove(IStacks stacks, IMapItem movingMi, ITerritory targetT, IMapPoint centerZebulon, IMapPoint centerAlien, IMapPoint centerControlled )
       {
          // Lower Observations Chance
          // Greater Influence + Combat if allowed to move to multiple counters
@@ -191,8 +195,8 @@ namespace PleasantvilleGame
          // Away from Controlled Center
          MovingMapItem = movingMi;
          TargetTerritory = targetT;
-         IMetricObservation obsMetric = new MetricObservation(gi, movingMi, targetT); // return metric value = 100 ==> 100% of not being observed
-         int zebulonMetric = (MetricUtility.GetClosestDistanceMetric(gi.Zebulon.TerritoryCurrent.CenterPoint, targetT));
+         IMetricObservation obsMetric = new MetricObservation(stacks, movingMi, targetT); // return metric value = 100 ==> 100% of not being observed
+         int zebulonMetric = (MetricUtility.GetClosestDistanceMetric(centerZebulon, targetT));
          int centerAlienMetric = MetricUtility.GetClosestDistanceMetric(centerAlien, targetT);
          int centerControlledMetric = MetricUtility.GetClosestDistanceMetric(centerControlled, targetT, true);
          Value = obsMetric.Metric1 + obsMetric.Metric2 + zebulonMetric + centerAlienMetric + centerControlledMetric;

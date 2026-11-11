@@ -61,7 +61,7 @@ namespace PleasantvilleGame
          myHeaderNames.Add("02-GetTerritoriesOfInterest-F");
          myHeaderNames.Add("02-GetMapItemsOfInterest-T");
          myHeaderNames.Add("02-GetMapItemsOfInterest-F");
-         myHeaderNames.Add("02-GetMapItemsThatThisMapItemCanMoveTo");
+         myHeaderNames.Add("02-GetMapItemsThatCanMoveToThisMapItem");
          myHeaderNames.Add("02-Final");
          //------------------------------------
          myCommandNames.Add("00-Delete File");

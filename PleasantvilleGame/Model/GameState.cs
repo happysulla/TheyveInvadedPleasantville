@@ -1957,16 +1957,15 @@ namespace PleasantvilleGame
                if (0 == mim.BestPath.Territories.Count) // do not move
                   break;
                ITerritory t = mim.BestPath.Territories.Last();
-               int uncontrolledStackingCount = Territory.GetStackingCountUncontrolled(gi, t, gi.MapItemMoves);
-               if (uncontrolledStackingCount < 3) // cannot move to this territory because of stacking limits
+               IStack? stack = gi.Stacks.Find(t);
+               if( null != stack )
                {
-                  gi.MapItemMoves.Add(mim);
-                  break;
+                  int uncontrolledStackingCount = Territory.GetStackingCount(stack, mim.MapItem);
+                  if (2 < uncontrolledStackingCount) // cannot move to this territory because of stacking limits
+                     mim.BestPath.Territories.RemoveAt(mim.BestPath.Territories.Count - 1);
                }
-               else
-               {
-                  mim.BestPath.Territories.RemoveAt(mim.BestPath.Territories.Count - 1);
-               }
+               gi.MapItemMoves.Add(mim);
+               break;
             }
             if( count < 0 )
             {

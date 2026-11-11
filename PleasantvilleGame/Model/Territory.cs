@@ -431,7 +431,7 @@ namespace PleasantvilleGame
             return true;
       }
       //---------------------------------------------------------------
-      public static ITerritories GetTerritoriesWithinRange(ITerritories territories, ITerritory tStart, int range)
+      public static ITerritories GetTerritoriesWithinRange(ITerritory tStart, int range)
       {
          ITerritories masterList = new Territories();
          Queue<string> tQueue = new Queue<string>();
@@ -441,8 +441,7 @@ namespace PleasantvilleGame
          tQueue.Enqueue(tName);
          depthQueue.Enqueue(0);
          visited[tName] = false;
-         if( true == territories.Contains(tStart))  // only add the tStart territory if it is within territories
-            masterList.Add(tStart);
+         masterList.Add(tStart);
          while (0 < tQueue.Count)
          {
             String name = tQueue.Dequeue();
@@ -452,7 +451,7 @@ namespace PleasantvilleGame
             if (range <= depth)
                continue;
             visited[name] = true;
-            ITerritory? t = territories.Find(name);
+            ITerritory? t = Territories.theTerritories.Find(name);
             if (null == t) // If list is not full list of territories, might hit end of existing territories - do not return error
                t = Territories.theTerritories.Find(name);
             if (null == t) 
@@ -462,11 +461,7 @@ namespace PleasantvilleGame
             }
             foreach (string adj in t.Adjacents)
             {
-               ITerritory? adjT = territories.Find(adj);
-               if (null == adjT) // If list is not full list of territories, might hit end of existing territories - do not return error
-                  adjT = territories.Find(name);
-               if (null == adjT) // If list is not full list of territories, might hit end of existing territories - do not return error
-                  adjT = Territories.theTerritories.Find(name);
+               ITerritory? adjT = Territories.theTerritories.Find(adj);
                if (null == adjT)
                {
                   Logger.Log(LogEnum.LE_ERROR, "GetTerritoriesWithinRange() adjT=null");
@@ -483,9 +478,9 @@ namespace PleasantvilleGame
          }
          return masterList;
       }
-      public static IMapItems? GetMapItemsWithinRange(IStacks stacks, ITerritories sTerritories, ITerritory targetT, int range)
+      public static IMapItems GetMapItemsWithinRange(IStacks stacks, ITerritory targetT, int range)
       {
-         ITerritories territories1 = Territory.GetTerritoriesWithinRange(sTerritories, targetT, range);
+         ITerritories territories1 = Territory.GetTerritoriesWithinRange(targetT, range);
          Logger.Log(LogEnum.LE_SHOW_TERRITORIES, "Get_MapItemsWithinRange(): territories=" + territories1.ToString());
          IMapItems mapItemCandidates = new MapItems();
          foreach (ITerritory t in territories1)
@@ -499,11 +494,11 @@ namespace PleasantvilleGame
          }
          return mapItemCandidates;
       }
-      public static ITerritories GetTerritoriesOfInterest(ITerritories sTerritories, IMapItem mi1, IMapItem mi2, bool isOverlapping = true)
+      public static ITerritories GetTerritoriesOfInterest(IMapItem mi1, IMapItem mi2, bool isOverlapping = true)
       {
          ITerritories returnTerritories = new Territories();
-         ITerritories mi1Territories = Territory.GetTerritoriesWithinRange(sTerritories, mi1.TerritoryCurrent, mi1.Movement);
-         ITerritories mi2Territories = Territory.GetTerritoriesWithinRange(sTerritories, mi2.TerritoryCurrent, mi2.Movement);
+         ITerritories mi1Territories = Territory.GetTerritoriesWithinRange(mi1.TerritoryCurrent, mi1.Movement);
+         ITerritories mi2Territories = Territory.GetTerritoriesWithinRange(mi2.TerritoryCurrent, mi2.Movement);
          if( true == isOverlapping )
          {
             if (mi1Territories.Count < mi2Territories.Count)
@@ -574,81 +569,26 @@ namespace PleasantvilleGame
          return mapItemCandidates;
       }
       //---------------------------------------------------------------
-      public static int GetStackingCountUncontrolled(IGameInstance gi, ITerritory t, IMapItemMoves pendingMoves)
-		{
+      public static int GetStackingCount(IStack stack, IMapItem movingMi)
+      {
          int count = 0;
-         IStack? stack = gi.Stacks.Find(t);
-			if (null != stack)
-			{
-            foreach (IMapItem mi in stack.MapItems)
-            {
-               if ((false == mi.IsAlienKnown) && (false == mi.IsControlled)) //
-                  ++count;
-            }
-         }
-         foreach (IMapItemMove mim in pendingMoves)
+         foreach (IMapItem mi in stack.MapItems)
          {
-            ITerritory? newT = mim.NewTerritory;
-            if (null != newT)
-            {
-               if ((false == mim.MapItem.IsAlienKnown) && (false == mim.MapItem.IsControlled) && (t.ToString() == newT.ToString()))
-                  ++count;
-            }
+            if ((true == movingMi.IsControlled) && (true == mi.IsControlled))
+               ++count;
+            else if ((true == movingMi.IsAlienKnown) && (true == mi.IsAlienKnown) && (false == mi.IsTiedUp))
+               ++count;
+            else
+               ++count;
          }
          return count;
 		}
-      public static int GetStackingCountAlien(IGameInstance gi, ITerritory t, IMapItemMoves pendingMoves)
-      {
-         int count = 0;
-         IStack? stack = gi.Stacks.Find(t);
-         if (null != stack)
-         {
-            foreach (IMapItem mi in stack.MapItems)
-            {
-               if ((true == mi.IsAlienKnown) && (false == mi.IsTiedUp)) // tied up people do not count against stacking limits
-                  ++count;
-            }
-         }
-         foreach (IMapItemMove mim in pendingMoves) 
-         {
-            ITerritory? newT = mim.NewTerritory;
-				if (null != newT)
-				{
-					if ((true == mim.MapItem.IsAlienKnown) && (t.ToString() == newT.ToString()))
-						++count;
-				}
-         }
-         return count;
-      }
-      public static int GetStackingCountControlled(IGameInstance gi, ITerritory t, IMapItemMoves pendingMoves)
-      {
-         int count = 0;
-         IStack? stack = gi.Stacks.Find(t);
-         if (null != stack)
-         {
-            foreach (IMapItem mi in stack.MapItems)
-            {
-               if ((true == mi.IsControlled) && (false == mi.IsTiedUp)) // tied up people do not count against stacking limits - very rare to have tied up Town Player counter if at all
-                  ++count;
-            }
-         }
-         foreach (IMapItemMove mim in pendingMoves)
-         {
-            ITerritory? newT = mim.NewTerritory;
-				if (null != newT)
-				{
-					if ((true == mim.MapItem.IsControlled) && (t.ToString() == newT.ToString()))
-						++count;
-				}
-         }
-         return count;
-      }
-		public static IMapPoint GetCenterPointControlled(IGameInstance gi)
+		public static IMapPoint GetCenterPointControlled(IStacks stacks)
 		{
 			double xTotal = 0.0;
 			double yTotal = 0.0;
 			int count = 0;
-			foreach(IStack stack in gi.Stacks)
+			foreach(IStack stack in stacks)
 			{
 				foreach(IMapItem mi in stack.MapItems)
 				{
@@ -663,12 +603,12 @@ namespace PleasantvilleGame
 			IMapPoint centerPoint = new MapPoint(xTotal/(double)count, yTotal/(double)count);
 			return centerPoint;
 		}
-      public static IMapPoint GetCenterPointAlien(IGameInstance gi)
+      public static IMapPoint GetCenterPointAlien(IStacks stacks)
       {
          double xTotal = 0.0;
          double yTotal = 0.0;
          int count = 0;
-         foreach (IStack stack in gi.Stacks)
+         foreach (IStack stack in stacks)
          {
             foreach (IMapItem mi in stack.MapItems)
             {
