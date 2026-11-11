@@ -203,7 +203,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): Create_Ellipse() returned false for mi1");
                return false;
             }
-            ITerritories territoriesToDisplay = Territory.GetTerritoriesOfInterest(Territories.theTerritories, mi2, mi1, false);
+            ITerritories territoriesToDisplay = Territory.GetTerritoriesOfInterest(mi2, mi1, false);
             if (false == CreateEllipsesForDisplay(territoriesToDisplay))
             {
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipsesForDisplay() returned false");

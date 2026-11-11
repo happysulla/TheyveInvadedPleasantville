@@ -869,7 +869,7 @@ namespace PleasantvilleGame
             else
             {
                myAnchorTerritory = matchingTerritory; // If there is no anchor territory. Set it.  
-               ITerritories territoriesToDisplay = Territory.GetTerritoriesWithinRange(Territories.theTerritories, matchingTerritory, myRange);
+               ITerritories territoriesToDisplay = Territory.GetTerritoriesWithinRange(matchingTerritory, myRange);
                myRange++;
                if (7 == myRange)
                   myRange = 3;

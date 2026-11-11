@@ -213,7 +213,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): t=null for House_7");
                return false;
             }
-            ITerritories territoriesToDisplay = Territory.GetTerritoriesWithinRange(Territories.theTerritories, tStart, 5);
+            ITerritories territoriesToDisplay = Territory.GetTerritoriesWithinRange(tStart, 5);
             if (false == CreateEllipsesForDisplay(territoriesToDisplay))
             {
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipsesForDisplay() returned false");
@@ -247,7 +247,7 @@ namespace PleasantvilleGame
                return false;
             }
             //----------------------------------------------------
-            ITerritories territories = Territory.GetTerritoriesOfInterest(Territories.theTerritories, mi2, mi1, true);
+            ITerritories territories = Territory.GetTerritoriesOfInterest(mi2, mi1, true);
             if (false == CreateEllipsesForDisplay(territories))
             {
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipsesForDisplay() returned false");
@@ -282,7 +282,7 @@ namespace PleasantvilleGame
                return false;
             }
             //----------------------------------------------------
-            ITerritories tNonOverlaps = Territory.GetTerritoriesOfInterest(Territories.theTerritories, mi2, mi1, false);
+            ITerritories tNonOverlaps = Territory.GetTerritoriesOfInterest(mi2, mi1, false);
             if (false == CreateEllipsesForDisplay(tNonOverlaps))
             {
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipsesForDisplay() returned false");
