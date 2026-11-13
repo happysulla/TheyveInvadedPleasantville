@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,6 +27,7 @@ namespace PleasantvilleGame
       private static Double theEllipseDiameter = 20;
       private static Double theEllipseOffset = theEllipseDiameter / 2.0;
       private IGameInstance? myGameInstance = null;
+      private IGameEngine? myGameEngine = null;
       private CanvasImageViewer? myCanvasImageViewer = null;
       private Canvas? myCanvasMain = null;
       private DockPanel? myDockPanelTop = null;
@@ -39,20 +41,19 @@ namespace PleasantvilleGame
       public string HeaderName { get { return myHeaderNames[myIndexName]; } }
       public string CommandName { get { return myCommandNames[myIndexName]; } }
       //--------------------------------------------------------------------
-      public PlayerUnitTest(DockPanel dp, IGameInstance gi, CanvasImageViewer civ, GameViewerWindow gvw)
+      public PlayerUnitTest(DockPanel dp, IGameInstance gi, CanvasImageViewer civ, GameViewerWindow gvw, IGameEngine? ge)
       {
          //------------------------------------
          myIndexName = 0;
          myHeaderNames.Add("09-Centers");
-         myHeaderNames.Add("09-Create Moves1");
-         myHeaderNames.Add("09-Create Moves2");
-         myHeaderNames.Add("09-Player");
-         myHeaderNames.Add("09-Player");
+         myHeaderNames.Add("09-GetTerritoriesOfInterest");
+         myHeaderNames.Add("09-AddMoveAwayFromControlled");
+         myHeaderNames.Add("09-Finalize");
 
          myCommandNames.Add("00-Show Centers");
-         myCommandNames.Add("01-Move Away From Controlled");
-         myCommandNames.Add("02-Move Away From Controlled");
-         myCommandNames.Add("03-InitializePlayer");
+         myCommandNames.Add("01-GetTerritoriesOfInterest");
+         myCommandNames.Add("02-AddMoveAwayFromControlled");
+         myCommandNames.Add("03-Cleanup");
          //------------------------------------
          if (null == gi)
          {
@@ -61,6 +62,14 @@ namespace PleasantvilleGame
             return;
          }
          myGameInstance = gi;
+         //------------------------------------
+         if (null == ge)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest(): ge=null");
+            CtorError = true;
+            return;
+         }
+         myGameEngine = ge;
          //------------------------------------
          if (null == civ)
          {
@@ -102,6 +111,11 @@ namespace PleasantvilleGame
       }
       public bool Command(ref IGameInstance gi) // Performs function based on CommandName string
       {
+         if( null == myGameEngine )
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Command(): myGameEngine=null");
+            return false;
+         }
          if (null == myGameInstance)
          {
             Logger.Log(LogEnum.LE_ERROR, "Command(): myGameInstance=null");
@@ -130,47 +144,50 @@ namespace PleasantvilleGame
          //=========================================================
          if (CommandName == myCommandNames[0])
          {
-            gi.PlayerAlien = new PlayerAlienComputer();
-            gi.PlayerTown = new PlayerTownHuman();
-            if (false == TableMgr.CreateTownspeople(myGameInstance)) // Create in known locations
+            if (false == Reset(gi))
             {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): CreateTownspeople() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): Reset() returned false");
                return false;
             }
-            //--------------------------------------------
-            string startingHq = StartingHqMgr.GetStartingHqTerritory();
-            ITerritory? tZebutonStart = Territories.theTerritories.Find(startingHq);
-            if (null == tZebutonStart)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): zTerritory=null");
-               return false;
-            }
-            gi.Zebulon.TerritoryCurrent = gi.Zebulon.TerritoryStarting = tZebutonStart;
-            gi.Zebulon.Location = Territory.GetRandomPointBoundingRect(tZebutonStart, gi.Zebulon.Zoom * Utilities.theMapItemOffset);
-            gi.Zebulon.IsAlienKnown = true;
-            gi.Stacks.Add(gi.Zebulon);
-            //--------------------------------------------
-            IMapItem? mi = gi.Stacks.FindMapItem(TableMgr.WIFE); 
-            if (null == mi)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): unable to find mi=" + TableMgr.WIFE);
-               return false;
-            }
-            gi.AddUnknownAlien(mi);
-            mi = gi.Stacks.FindMapItem(TableMgr.SHERIFF); 
-            if (null == mi)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "Command(): unable to find mi=" + TableMgr.SHERIFF);
-               return false;
-            }
-            gi.AddUnknownAlien(mi);
-            mi = gi.Stacks.FindMapItem(TableMgr.MINSTER);
-            if (null == mi)
+            IMapItem? mi2 = gi.Stacks.FindMapItem(TableMgr.MINSTER);
+            if (null == mi2)
             {
                Logger.Log(LogEnum.LE_ERROR, "Command(): unable to find mi=" + TableMgr.MINSTER);
                return false;
             }
-            gi.AddControlled(mi);
+            ITerritories territoriesToDisplay2 = Territory.GetTerritoriesWithinRange(mi2.TerritoryCurrent, mi2.Movement);
+            if (false == CreateEllipsesForDisplay(territoriesToDisplay2, 1))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipsesForDisplay() returned false");
+               return false;
+            }
+            //--------------------------------------------
+            IMapItem? mi3 = gi.Stacks.FindMapItem(TableMgr.WAR_VET);
+            if (null == mi3)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Command(): unable to find mi=" + TableMgr.WAR_VET);
+               return false;
+            }
+            ITerritories territoriesToDisplay3 = Territory.GetTerritoriesWithinRange(mi3.TerritoryCurrent, mi3.Movement);
+            if (false == CreateEllipsesForDisplay(territoriesToDisplay3, 2))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipsesForDisplay() returned false");
+               return false;
+            }
+            //--------------------------------------------
+            IMapItem? mi4 = gi.Stacks.FindMapItem(TableMgr.HOTEL_OWNER);
+            if (null == mi4)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Command(): unable to find mi=" + TableMgr.WAR_VET);
+               return false;
+            }
+            ITerritories territoriesToDisplay4 = Territory.GetTerritoriesWithinRange(mi4.TerritoryCurrent, mi4.Movement);
+            if (false == CreateEllipsesForDisplay(territoriesToDisplay4, 3))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipsesForDisplay() returned false");
+               return false;
+            }
+            //--------------------------------------------
             IMapPoint mpCenterControlled = Territory.GetCenterPointControlled(gi.Stacks);
             CreateEllipse(mpCenterControlled, Utilities.theTownControlledBrush);
             IMapPoint mpCenterAlien = Territory.GetCenterPointAlien(gi.Stacks );
@@ -180,50 +197,74 @@ namespace PleasantvilleGame
          //=========================================================
          else if (CommandName == myCommandNames[1])
          {
-            DeleteEllipses();
-            IMapItem? mi1 = gi.Stacks.FindMapItem(TableMgr.HOTEL_OWNER);
+            if (false == DeleteEllipses())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Reset(): DeleteEllipses() returned false");
+               return false;
+            }
+            IMapItem? mi0 = gi.Stacks.FindMapItem(TableMgr.HOTEL_OWNER);
+            if (null == mi0)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): mi0=null ");
+               return false;
+            }
+            //-------------------------
+            IMapItem? mi1 = gi.Stacks.FindMapItem(TableMgr.MINSTER);
             if (null == mi1)
             {
                Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): mi1=null ");
                return false;
             }
-            if (false == CreateEllipse(mi1.TerritoryCurrent, mi1.TerritoryCurrent.CenterPoint, Colors.Black))
+            ITerritories territoriesToDisplay1 = Territory.GetTerritoriesOfInterest(mi0, mi1, false);
+            if (false == CreateEllipsesForDisplay(territoriesToDisplay1, 1))
             {
-               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): Create_Ellipse() returned false for mi1");
-               return false;
-            }
-            IMapItem? mi2 = gi.Stacks.FindMapItem(TableMgr.MINSTER);
-            if (null == mi2)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): mi1=null ");
-               return false;
-            }
-            if (false == CreateEllipse(mi1.TerritoryCurrent, mi2.TerritoryCurrent.CenterPoint, Colors.Red))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): Create_Ellipse() returned false for mi1");
-               return false;
-            }
-            ITerritories territoriesToDisplay = Territory.GetTerritoriesOfInterest(mi2, mi1, false);
-            if (false == CreateEllipsesForDisplay(territoriesToDisplay))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipsesForDisplay() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): CreateEllipsesForDisplay() returned false");
                return false;
             }
             //-------------------------
-            Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "PlayerUnitTest.Command(): gi.MapItemMoves.Clear()");
-            gi.MapItemMoves.Clear();
+            IMapItem? mi2 = gi.Stacks.FindMapItem(TableMgr.WAR_VET);
+            if (null == mi2)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): mi1=null ");
+               return false;
+            }
+            ITerritories territoriesToDisplay2 = Territory.GetTerritoriesOfInterest(mi0, mi2, false);
+            if (false == CreateEllipsesForDisplay(territoriesToDisplay2, 2))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): CreateEllipsesForDisplay() returned false");
+               return false;
+            }
+            //-------------------------
+            ITerritories territoriesToDisplay3 = territoriesToDisplay1.And(territoriesToDisplay2);
+            if (false == CreateEllipsesForDisplay(territoriesToDisplay3, 3))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): CreateEllipsesForDisplay() returned false");
+               return false;
+            }
+         }
+         //=========================================================
+         else if (CommandName == myCommandNames[2])
+         {
+            if (false == DeleteEllipses())
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Reset(): DeleteEllipses() returned false");
+               return false;
+            }
+            //-------------------------
             PlayerAlienComputerMoveMgr moveMgr = new PlayerAlienComputerMoveMgr();
             if (false == moveMgr.CreateMoves(gi))
             {
                Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command():  CreateMoves() returned false");
                return false;
             }
+            GameAction outAction = GameAction.AlienMovementTownsShow;
+            myGameEngine.PerformAction(ref gi, ref outAction);         
          }
          else
          {
             if (false == Cleanup(ref gi))
             {
-               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): Cleanup() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): Cleanup() returned false");
                return false;
             }
          }
@@ -241,6 +282,10 @@ namespace PleasantvilleGame
             ++myIndexName;
          }
          else if (HeaderName == myHeaderNames[1])
+         {
+            ++myIndexName;
+         }
+         else if (HeaderName == myHeaderNames[2])
          {
             ++myIndexName;
          }
@@ -304,8 +349,8 @@ namespace PleasantvilleGame
             Width = 20,
             Height = 20
          };
-         Canvas.SetLeft(aEllipse, mp.X-10);
-         Canvas.SetTop(aEllipse, mp.Y-10);
+         Canvas.SetLeft(aEllipse, mp.X- theEllipseOffset);
+         Canvas.SetTop(aEllipse, mp.Y- theEllipseOffset);
          Canvas.SetZIndex(aEllipse, 10000);
          myCanvasMain.Children.Add(aEllipse);
       }
@@ -335,37 +380,120 @@ namespace PleasantvilleGame
          Canvas.SetZIndex(aEllipse, 99999);
          return true;
       }
-      private bool CreateEllipsesForDisplay(ITerritories territories)
+      private bool CreateEllipsesForDisplay(ITerritories territories, int colorIndex)
       {
          if (null == myCanvasMain)
          {
             Logger.Log(LogEnum.LE_ERROR, "Create_EllipsesForDisplay(): myCanvasMain=null");
             return false;
          }
-         SolidColorBrush aSolidColorBrush0 = new SolidColorBrush { Color = System.Windows.Media.Color.FromArgb(100, 100, 100, 0) }; // nearly transparent but slightly colored
+         System.Windows.Media.Color color;
+         switch (colorIndex)
+         {
+            case 0:
+               color = System.Windows.Media.Color.FromArgb(100, 100, 100, 0);
+               break;
+            case 1:
+               color = Colors.DeepPink;
+               break;
+            case 2:
+               color = Colors.Purple;
+               break;
+            case 3:
+               color = Colors.White;
+               break;
+            default:
+               Logger.Log(LogEnum.LE_ERROR, "Create_EllipsesForDisplay(): Reach Default colorindex=" + colorIndex.ToString());
+               return false;
+         }
+         SolidColorBrush aSolidColorBrush0 = new SolidColorBrush { Color = color }; // nearly transparent but slightly colored
          foreach (Territory t in territories)
          {
             Ellipse aEllipse = new Ellipse() { Name = t.ToString() };
             aEllipse.Fill = aSolidColorBrush0;
             aEllipse.StrokeThickness = 1;
-            aEllipse.Stroke = Brushes.Red;
+            aEllipse.Stroke = aSolidColorBrush0;
             aEllipse.Width = theEllipseDiameter;
             aEllipse.Height = theEllipseDiameter;
             System.Windows.Point p = new System.Windows.Point(t.CenterPoint.X, t.CenterPoint.Y);
-            p.X -= theEllipseOffset;
-            p.Y -= theEllipseOffset;
+            p.X -= (theEllipseOffset + colorIndex * 3);
+            p.Y -= (theEllipseOffset + colorIndex * 3);
             myCanvasMain.Children.Add(aEllipse);
             Canvas.SetLeft(aEllipse, p.X);
             Canvas.SetTop(aEllipse, p.Y);
             Canvas.SetZIndex(aEllipse, 10000);
             //-------------------------
-            Label aLabel = new Label() { Foreground = Brushes.Red, FontFamily = myFontFam, FontWeight = FontWeights.Bold, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = t.ToString() };
-            p.X -= theEllipseOffset;
-            p.Y -= 2 * theEllipseOffset;
+            Label aLabel = new Label() { Foreground = aSolidColorBrush0, FontFamily = myFontFam, FontWeight = FontWeights.Bold, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = t.ToString() };
+            p.X -= (theEllipseOffset + colorIndex * 3);
+            p.Y -= (theEllipseOffset + colorIndex * 3);
             myCanvasMain.Children.Add(aLabel);
             Canvas.SetLeft(aLabel, p.X);
             Canvas.SetTop(aLabel, p.Y);
             Canvas.SetZIndex(aLabel, 10000);
+         }
+         return true;
+      }
+      private bool Reset(IGameInstance gi)
+      {
+         if (false == DeleteEllipses())
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Reset(): DeleteEllipses() returned false");
+            return false;
+         }
+         gi.PlayerAlien = new PlayerAlienComputer();
+         gi.PlayerTown = new PlayerTownHuman();
+         gi.Stacks.Clear();
+         if (false == TableMgr.CreateTownspeople(gi)) // Create in known locations
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Reset(): CreateTownspeople() returned false");
+            return false;
+         }
+         //--------------------------------------------
+         string startingHq = StartingHqMgr.GetStartingHqTerritory();
+         ITerritory? tZebutonStart = Territories.theTerritories.Find(startingHq);
+         if (null == tZebutonStart)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Reset(): zTerritory=null");
+            return false;
+         }
+         gi.Zebulon.TerritoryCurrent = gi.Zebulon.TerritoryStarting = tZebutonStart;
+         gi.Zebulon.Location = Territory.GetRandomPointBoundingRect(tZebutonStart, gi.Zebulon.Zoom * Utilities.theMapItemOffset);
+         gi.Zebulon.IsAlienKnown = true;
+         gi.Stacks.Add(gi.Zebulon);
+         //--------------------------------------------
+         IMapItem? mi0 = gi.Stacks.FindMapItem(TableMgr.WIFE);
+         if (null == mi0)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Reset(): unable to find mi=" + TableMgr.WIFE);
+            return false;
+         }
+         gi.AddUnknownAlien(mi0);
+         IMapItem? mi1 = gi.Stacks.FindMapItem(TableMgr.SHERIFF);
+         if (null == mi1)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Reset(): unable to find mi=" + TableMgr.SHERIFF);
+            return false;
+         }
+         gi.AddUnknownAlien(mi1);
+         //--------------------------------------------
+         IMapItem? mi2 = gi.Stacks.FindMapItem(TableMgr.MINSTER);
+         if (null == mi2)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Reset(): unable to find mi=" + TableMgr.MINSTER);
+            return false;
+         }
+         gi.AddControlled(mi2);
+         IMapItem? mi3 = gi.Stacks.FindMapItem(TableMgr.WAR_VET);
+         if (null == mi3)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Reset(): unable to find mi=" + TableMgr.WAR_VET);
+            return false;
+         }
+         gi.AddControlled(mi3);
+         if( false == TableMgr.MovePerson(gi, TableMgr.WAR_VET, "Grass_86"))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Reset(): MovePerson() failed for mi=" + TableMgr.WAR_VET);
+            return false;
          }
          return true;
       }

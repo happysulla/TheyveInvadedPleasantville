@@ -13,7 +13,7 @@ namespace PleasantvilleGame
 {
    public class MetricUtility
    {
-      public static int GetClosestDistanceMetric(IMapPoint center, ITerritory t, bool isInverse=false)
+      public static int GetClosestDistanceMetric(IMapPoint center, ITerritory t)
       {
          double xdiff = Math.Abs(center.X - t.CenterPoint.X);
          double ydiff = Math.Abs(center.Y - t.CenterPoint.Y);
@@ -25,10 +25,21 @@ namespace PleasantvilleGame
          // Assume Map Width = height * 0.86 = 818
          // maxDistance(x) = sqrt( (mapWidth)^2 + (mapHeight)^2 ) = 1253
          int normalized = (int)(100.0 * rawDiff / 1253); // = 100 if distance is larget and 0 if distance is small
-         if (false == isInverse)
             return 100 - normalized; // 0=>distance is large and 100=>distance is small
-         else
-            return normalized;       // 100=>distance is large and 0=>distance is small
+      }
+      public static int GetFarthestDistanceMetric(IMapPoint center, ITerritory t)
+      {
+         double xdiff = Math.Abs(center.X - t.CenterPoint.X);
+         double ydiff = Math.Abs(center.Y - t.CenterPoint.Y);
+         int rawDiff = (int)Math.Sqrt(xdiff * xdiff + ydiff * ydiff);
+         // Normalize from 0 to 100
+         // normalizedValue = (value - min(distance)) / ( maxValue - min(distance) ) * 100;
+         // min(distance) = 0
+         // Assume Map Hieght = 950 pixels
+         // Assume Map Width = height * 0.86 = 818
+         // maxDistance(x) = sqrt( (mapWidth)^2 + (mapHeight)^2 ) = 1253
+         int normalized = (int)(100.0 * rawDiff / 1253); // = 100 if distance is larget and 0 if distance is small
+         return normalized;       // 100=>distance is large and 0=>distance is small
       }
    }
    //===============================================================
@@ -198,7 +209,7 @@ namespace PleasantvilleGame
          IMetricObservation obsMetric = new MetricObservation(stacks, movingMi, targetT); // return metric value = 100 ==> 100% of not being observed
          int zebulonMetric = (MetricUtility.GetClosestDistanceMetric(centerZebulon, targetT));
          int centerAlienMetric = MetricUtility.GetClosestDistanceMetric(centerAlien, targetT);
-         int centerControlledMetric = MetricUtility.GetClosestDistanceMetric(centerControlled, targetT, true);
+         int centerControlledMetric = MetricUtility.GetFarthestDistanceMetric(centerControlled, targetT);
          Value = obsMetric.Metric1 + obsMetric.Metric2 + zebulonMetric + centerAlienMetric + centerControlledMetric;
          Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "MetricAlienMove(): mi=" + movingMi.Name + " (t=" + Value.ToString() + ")\t=(o1=" + obsMetric.Metric1.ToString() + ")+(o2=" + obsMetric.Metric2.ToString()+ ")+(z=" + zebulonMetric.ToString() + ")+(a=" + centerAlienMetric.ToString() + ")+(c=" + centerControlledMetric.ToString() + ") to t=" + targetT.ToString());
       }

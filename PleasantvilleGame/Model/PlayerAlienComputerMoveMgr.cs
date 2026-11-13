@@ -62,53 +62,47 @@ namespace PleasantvilleGame
          //    --- Move units away from controlled townsperson
          //----------------------------------------------------------------
          IMetricAlienMoves moves = new MetricAlienMoves();
-         IStacks newStacks = new Stacks(); // new stack is stack as proposed moves occurs
-         foreach(IStack stack in gi.Stacks) 
-            newStacks.Add(stack);
+         IStacks newStacks = gi.Stacks.Clone();
          //----------------------------------------------------------------
-
-         IMapItems aliens = new MapItems();
-         IMapItems knownAliens = new MapItems();
-         IMapItems unknownAliens = new MapItems();
-         IMapItems unknowns = new MapItems();
-         IMapItems townControlledPeoples = new MapItems();
-         IMapItems uncontrolledPeoples = new MapItems();
-         IMapItems stunnedPeoples = new MapItems();
-         IMapItems waryPeoples = new MapItems();
-         foreach (IStack stack in newStacks)
-         {
-            foreach (IMapItem mi in stack.MapItems)
-            {
-               mi.IsMovingThisTurn = false;
-               if ((true == mi.IsKnockedout) ||  (true == mi.IsKilled) || ("Zebulon" == mi.Name))
-                  continue;
-               else if ((true == mi.IsStunned) && (false == mi.IsAlien()))
-                  stunnedPeoples.Add(mi);
-               else if ((true == mi.IsWary) && (false == mi.IsAlien()))
-                  waryPeoples.Add(mi);
-               else if (true == mi.IsAlienKnown)
-               {
-                  knownAliens.Add(mi);
-                  aliens.Add(mi);
-               }
-               else if (true == mi.IsAlienUnknown)
-               {
-                  unknownAliens.Add(mi);
-                  aliens.Add(mi);
-                  unknowns.Add(mi);
-               }
-               else if (true == mi.IsControlled)
-                  townControlledPeoples.Add(mi);
-               else if (false == mi.IsTiedUp) // tied up uncontrolled people are ignored
-               {
-                  uncontrolledPeoples.Add(mi);
-                  unknowns.Add(mi);
-               }
-            }
-         }
-         //============================================
-         Logger.Log(LogEnum.LE_SHOW_CONTROLLED, "Perform_AlienMovement(): townControlledPeoples=" + townControlledPeoples.ToString());
-         Logger.Log(LogEnum.LE_SHOW_UNCONTROLLED, "Perform_AlienMovement(): unknowns=" + unknowns.ToString());
+         //IMapItems aliens = new MapItems();
+         //IMapItems knownAliens = new MapItems();
+         //IMapItems unknownAliens = new MapItems();
+         //IMapItems unknowns = new MapItems();
+         //IMapItems townControlledPeoples = new MapItems();
+         //IMapItems uncontrolledPeoples = new MapItems();
+         //IMapItems stunnedPeoples = new MapItems();
+         //IMapItems waryPeoples = new MapItems();
+         //foreach (IStack stack in newStacks)
+         //{
+         //   foreach (IMapItem mi in stack.MapItems)
+         //   {
+         //      mi.IsMovingThisTurn = false;
+         //      if ((true == mi.IsKnockedout) ||  (true == mi.IsKilled) || ("Zebulon" == mi.Name))
+         //         continue;
+         //      else if ((true == mi.IsStunned) && (false == mi.IsAlien()))
+         //         stunnedPeoples.Add(mi);
+         //      else if ((true == mi.IsWary) && (false == mi.IsAlien()))
+         //         waryPeoples.Add(mi);
+         //      else if (true == mi.IsAlienKnown)
+         //      {
+         //         knownAliens.Add(mi);
+         //         aliens.Add(mi);
+         //      }
+         //      else if (true == mi.IsAlienUnknown)
+         //      {
+         //         unknownAliens.Add(mi);
+         //         aliens.Add(mi);
+         //         unknowns.Add(mi);
+         //      }
+         //      else if (true == mi.IsControlled)
+         //         townControlledPeoples.Add(mi);
+         //      else if (false == mi.IsTiedUp) // tied up uncontrolled people are ignored
+         //      {
+         //         uncontrolledPeoples.Add(mi);
+         //         unknowns.Add(mi);
+         //      }
+         //   }
+         //}
          //-------------------------------------------------------
          if (false == AddMoveAwayFromControlled(newStacks, gi.Zebulon.TerritoryCurrent.CenterPoint, moves))
          {
@@ -153,14 +147,13 @@ namespace PleasantvilleGame
             alienMoves.Add(mim);
          }
          Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMovement(): mims=" + alienMoves.ToString());
-         gi.MapItemMoves = alienMoves.Shuffle();
+         gi.MapItemMoves = alienMoves;
          return true;
       }
       //================================================================
       private bool AddMoveAwayFromControlled(IStacks stacks, IMapPoint mpZebulon, IMetricAlienMoves candidateMoves)
       {
          IMapItems townPeoples = new MapItems();
-
          IMapItems unknowns = new MapItems();
          foreach (IStack stack in stacks)
          {
@@ -177,45 +170,54 @@ namespace PleasantvilleGame
          }
          if ((0 == townPeoples.Count) || (0==unknowns.Count) ) // do nothing
             return true;
+         townPeoples = townPeoples.Shuffle();
+         unknowns = unknowns.Shuffle();
+         //------------------------------------
          IMapItems totalMapItems = new MapItems();
-         foreach (IMapItem controlled in townPeoples)
+         foreach (IMapItem controlled in townPeoples) 
          {
             IMapItems closeMapItems = Territory.GetMapItemsOfInterest(stacks, Territories.theTerritories, controlled); // MapItems this mapitem can move to
             foreach (IMapItem mi in closeMapItems)
             {
-               if( false == closeMapItems.Contains(mi))
+               if( false == totalMapItems.Contains(mi))
                   totalMapItems.Add(mi);
             }
+            totalMapItems.Remove("Zebulon"); // remove if part of stack
             if (4 < (totalMapItems.Count + candidateMoves.Count) ) // too many mapitems to move away - alien only gets to move 5 people
                return true;
          }
-         //------------------------------------
+         if (0 == totalMapItems.Count)
+            return true;
          IMapPoint mpCenterControlled = Territory.GetCenterPointControlled(stacks);
          IMapPoint mpCenterAlien = Territory.GetCenterPointAlien(stacks);
-         foreach (IMapItem candidate in totalMapItems) // iterate through territories that mapitem can move to that are outside of all controlled movement
+         foreach (IMapItem candidate in totalMapItems)
          {
             ITerritories nonOverlappingTerritories = new Territories();
+            bool isInitialized = false;
             foreach (IMapItem controlled in townPeoples)
             {
                ITerritories territories = Territory.GetTerritoriesOfInterest(candidate, controlled, false);
-               foreach(ITerritory t in territories)
+               if (false == isInitialized)
                {
-                  if (false == nonOverlappingTerritories.Contains(t)) // NEED TO DO INTERSECTION OF TERRITORIES
-                     nonOverlappingTerritories.Add(t);
+                  isInitialized = true;
+                  nonOverlappingTerritories = territories;
+                  continue;
                }
+               nonOverlappingTerritories = territories.And(nonOverlappingTerritories);
             }
+            //------------------------------------
             IMetricAlienMoves alienMoveMetrics = new MetricAlienMoves();
-            foreach(Territory t in nonOverlappingTerritories)
+            foreach (Territory t in nonOverlappingTerritories)
             {
                IMetricAlienMove mam = new MetricAlienMove(stacks, candidate, t, mpZebulon, mpCenterAlien, mpCenterControlled);
                alienMoveMetrics.Add(mam);
             }
-            if( 0 < alienMoveMetrics.Count )
+            if (0 < alienMoveMetrics.Count)
             {
                IMetricAlienMoves sortedMetrics = alienMoveMetrics.Sort();
                foreach (IMetricAlienMove mam in sortedMetrics)
-                  Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_CandidatesMovesAwayFromControlled(): m=" + mam.Value + " t=" + mam.TargetTerritory.ToString());
-               if( 0 < sortedMetrics.Count)
+                  Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_CandidatesMovesAwayFromControlled(): mi=" + mam.MovingMapItem + " m=" + mam.Value + " t=" + mam.TargetTerritory.ToString());
+               if (0 < sortedMetrics.Count)
                {
                   IMetricAlienMove? mam1 = sortedMetrics[0];
                   if (null == mam1)
@@ -223,7 +225,11 @@ namespace PleasantvilleGame
                      Logger.Log(LogEnum.LE_ERROR, "Add_CandidatesMovesAwayFromControlled(): mam1=null");
                      return false;
                   }
+                  Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_CandidatesMovesAwayFromControlled(): ++++++++++++++++++++++++++++++++++++ mi=" + mam1.MovingMapItem.Name + " m=" + mam1.Value + " t=" + mam1.TargetTerritory.ToString());
                   candidateMoves.Add(mam1);
+                  //-------------------------------
+                  stacks.Remove(mam1.MovingMapItem); // reset stacks to show change
+                  stacks.Add(mam1.MovingMapItem, mam1.TargetTerritory);
                }
             }
          }

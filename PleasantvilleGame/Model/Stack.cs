@@ -50,6 +50,18 @@ namespace PleasantvilleGame
    {
       private readonly ArrayList myList;
       public Stacks() { myList = new ArrayList(); }
+      public IStacks Clone()
+      {
+         IStacks newStacks = new Stacks();
+         foreach(IStack stack in this)
+         {
+            IStack newStack = new Stack(stack.Territory);
+            newStacks.Add(newStack);
+            foreach (IMapItem mi in stack.MapItems)
+               newStack.MapItems.Add(mi);
+         }
+         return newStacks;
+      }
       public void Add(IStack stack) { myList.Add(stack); }
       public void Add(IMapItem mi)
       {
@@ -57,6 +69,19 @@ namespace PleasantvilleGame
          if (null == stack)
          {
             stack = new Stack(mi.TerritoryCurrent, mi);
+            myList.Add(stack);
+         }
+         else // add to top of stack
+         {
+            stack.MapItems.Add(mi);
+         }
+      }
+      public void Add(IMapItem mi, ITerritory t)
+      {
+         IStack? stack = Find(t);
+         if (null == stack)
+         {
+            stack = new Stack(t, mi);
             myList.Add(stack);
          }
          else // add to top of stack

@@ -227,6 +227,9 @@ namespace PleasantvilleGame
          //------------------------------------
          string tName = "";
          ITerritory? t = null;
+         string name;
+         string miName;
+         IMapItem mi;
          int maxNum = 4;
          int randomNum = Utilities.RandomGenerator.Next(maxNum);
 #if UT1
@@ -254,10 +257,10 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + tName);
             return false;
          }
-         string name = Utilities.RemoveSpaces(BANK_GUARD);
-         string miName = name + Utilities.MapItemNum.ToString();
+         name = Utilities.RemoveSpaces(BANK_GUARD);
+         miName = name + Utilities.MapItemNum.ToString();
          Utilities.MapItemNum++;
-         IMapItem mi = new MapItem(miName, 0.8, name, t, 5, 10, 8);
+         mi = new MapItem(miName, 0.8, name, t, 5, 10, 8);
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------

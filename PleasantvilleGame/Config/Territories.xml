@@ -2964,12 +2964,13 @@
       <regionPoint X="0542.38" Y="0811.68" />
       <regionPoint X="0494.60" Y="0819.35" />
     </Points>
-    <Adjacents count="5">
+    <Adjacents count="6">
+      <adjacent value="Grass_87" />
+      <adjacent value="StockPen_0" />
+      <adjacent value="RR_14" />
       <adjacent value="RR_15" />
       <adjacent value="RR_16" />
       <adjacent value="Road_40" />
-      <adjacent value="Grass_87" />
-      <adjacent value="StockPen_0" />
     </Adjacents>
     <Observations count="27">
       <observation key="RR_16" value="0.5000" />
@@ -5714,10 +5715,11 @@
       <regionPoint X="0506.74" Y="0849.01" />
       <regionPoint X="0471.30" Y="0854.35" />
     </Points>
-    <Adjacents count="4">
-      <adjacent value="RR_13" />
-      <adjacent value="Grass_105" />
+    <Adjacents count="5">
+      <adjacent value="Grass_97" />
       <adjacent value="RR_15" />
+      <adjacent value="Grass_105" />
+      <adjacent value="RR_13" />
       <adjacent value="StockPen_0" />
     </Adjacents>
     <Observations count="22">

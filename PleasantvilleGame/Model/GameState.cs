@@ -3530,6 +3530,8 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "GameStateUnitTest.PerformAction(): " + returnStatus);
                }
                break;
+            case GameAction.AlienMovementTownsShow:
+               break;
             default:
                returnStatus = "reached default action=" + action.ToString();
                Logger.Log(LogEnum.LE_ERROR, "GameStateUnitTest.PerformAction(): " + returnStatus);

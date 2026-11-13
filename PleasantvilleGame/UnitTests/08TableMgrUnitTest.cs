@@ -132,12 +132,12 @@ namespace PleasantvilleGame
             }
             if( false == TableMgr.MovePerson(myGameInstance, TableMgr.WIFE, TableMgr.HOUSEK))
             {
-               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + TableMgr.HOUSEK);
+               Logger.Log(LogEnum.LE_ERROR, "Command(): unable to find tName=" + TableMgr.HOUSEK);
                return false;
             }
             if (false == TableMgr.MovePerson(myGameInstance, TableMgr.SHERIFF, TableMgr.HOUSEK))
             {
-               Logger.Log(LogEnum.LE_ERROR, "Create_Townspeople(): unable to find tName=" + TableMgr.HOUSEK);
+               Logger.Log(LogEnum.LE_ERROR, "Command(): unable to find tName=" + TableMgr.HOUSEK);
                return false;
             }
             ++myIndexName;

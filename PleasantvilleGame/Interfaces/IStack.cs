@@ -12,9 +12,11 @@ namespace PleasantvilleGame
    }
    public interface IStacks : System.Collections.IEnumerable
    {
+      IStacks Clone();
       int Count { get; }
       void Add(IStack stack);
       void Add(IMapItem mi);
+      void Add(IMapItem mi, ITerritory t);
       void Insert(int index, IStack stack);
       void Clear();
       bool Contains(IStack stack);

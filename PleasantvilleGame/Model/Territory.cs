@@ -499,43 +499,32 @@ namespace PleasantvilleGame
          ITerritories returnTerritories = new Territories();
          ITerritories mi1Territories = Territory.GetTerritoriesWithinRange(mi1.TerritoryCurrent, mi1.Movement);
          ITerritories mi2Territories = Territory.GetTerritoriesWithinRange(mi2.TerritoryCurrent, mi2.Movement);
-         if( true == isOverlapping )
+         if ( true == isOverlapping )
          {
             if (mi1Territories.Count < mi2Territories.Count)
             {
                foreach (ITerritory t in mi1Territories)
                {
-                  if (true == mi2Territories.Contains(t))
-                     returnTerritories.Add(t); // add territory that doesnt overlap mi1 and mi2
+                  if(true == mi2Territories.Contains(t))
+                     returnTerritories.Add(t); // add territory that does overlap mi1 and mi2
                }
             }
             else
             {
                foreach (ITerritory t in mi2Territories)
                {
-                  if (true == mi1Territories.Contains(t))
-                     returnTerritories.Add(t); // add territory that doesnt overlap mi1 and mi2
+                  if(true == mi1Territories.Contains(t) )
+                     returnTerritories.Add(t); // add territory that does overlap mi1 and mi2
                }
             }
          }
          else
          {
-            if (mi1Territories.Count < mi2Territories.Count)
-            {
-               foreach (ITerritory t in mi2Territories)
-               {
-                  if (false == mi1Territories.Contains(t))
-                     returnTerritories.Add(t); // add territory that doesnt overlap mi1 and mi2
-               }
-            }
-            else
-            {
                foreach (ITerritory t in mi1Territories)
                {
-                  if (false == mi2Territories.Contains(t))
-                     returnTerritories.Add(t); // add territory that doesnt overlap mi1 and mi2
+                  if(false == mi2Territories.Contains(t))
+                     returnTerritories.Add(t); // add territory that does not overlap mi1 and mi2
                }
-            }
          }
          return returnTerritories;
       }
@@ -808,7 +797,27 @@ namespace PleasantvilleGame
 		public IEnumerator GetEnumerator() { return myList.GetEnumerator(); }
 		public int IndexOf(ITerritory t) { return myList.IndexOf(t); }
 		public void Remove(ITerritory t) { myList.Remove(t); }
-		public ITerritory? Find(string tName)
+      public void ExclusiveOr(ITerritories territories)
+      {
+         foreach (ITerritory t in territories)
+         {
+            if (true == this.Contains(t))
+               Remove(t);
+            else
+               this.Add(t);
+         }
+      }
+      public ITerritories And(ITerritories territories)
+      {
+         ITerritories newSet = new Territories();
+         foreach (ITerritory t in territories)
+         {
+            if (true == this.Contains(t))
+               newSet.Add(t);
+         }
+         return newSet;
+      }
+      public ITerritory? Find(string tName)
 		{
 			foreach (object o in myList)
 			{
@@ -858,7 +867,7 @@ namespace PleasantvilleGame
 			}
 			set { myList[index] = value; }
 		}
-		public override string ToString()
+      public override string ToString()
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.Append("[ ");

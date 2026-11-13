@@ -26,10 +26,10 @@ namespace PleasantvilleGame
       private static Double theEllipseDiameter = 20;
       private static Double theEllipseOffset = theEllipseDiameter / 2.0;
       //-----------------------------------------
+      private IGameInstance? myGameInstance = null;
       private DockPanel myDockPanelTop;
       private Canvas? myCanvasMain = null;
       private Canvas? myCanvasHelper = null;
-      private IGameInstance? myGameInstance = null;
       private CanvasImageViewer? myCanvasImageViewer = null;
       private UIElement? myEllipseSelected = null;
       private ITerritory? myAnchorTerritory = null;
@@ -247,7 +247,7 @@ namespace PleasantvilleGame
                return false;
             }
             //----------------------------------------------------
-            ITerritories territories = Territory.GetTerritoriesOfInterest(mi2, mi1, true);
+            ITerritories territories = Territory.GetTerritoriesOfInterest(mi2, mi1);
             if (false == CreateEllipsesForDisplay(territories))
             {
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateEllipsesForDisplay() returned false");

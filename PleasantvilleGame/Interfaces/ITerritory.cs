@@ -23,10 +23,13 @@ namespace PleasantvilleGame
       bool Contains(ITerritory t);
       int IndexOf(ITerritory t);
       void Remove(ITerritory tName);
+      void ExclusiveOr(ITerritories input);
+      ITerritories And(ITerritories territories);
       ITerritory? Find(string tName);
       ITerritory? Find(string tName, string tSubname);
       ITerritory? Remove(string tName);
       ITerritory? RemoveAt(int index);
       ITerritory? this[int index] { get; set; }
+
    }
 }

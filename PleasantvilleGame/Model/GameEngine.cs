@@ -78,7 +78,7 @@ namespace PleasantvilleGame
       public bool CreateUnitTests(IGameInstance gi, DockPanel dp, GameViewerWindow gvw, EventViewer ev, IDieRoller dr, CanvasImageViewer civ)
       {
          //-----------------------------------------------------------------------------
-         IUnitTest ut9 = new PlayerUnitTest(dp, gi, civ, gvw);
+         IUnitTest ut9 = new PlayerUnitTest(dp, gi, civ, gvw, this);
          if (true == ut9.CtorError)
          {
             Logger.Log(LogEnum.LE_ERROR, "Create_UnitTests(): PlayerUnitTest() ctor error");
