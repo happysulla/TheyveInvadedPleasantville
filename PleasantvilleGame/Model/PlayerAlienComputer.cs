@@ -122,8 +122,6 @@ namespace PleasantvilleGame
       }
       public bool PerformMoves(IGameInstance gi)
       {
-         Logger.Log(LogEnum.LE_SHOW_MIM_CLEAR, "Perform_AlienMoves(): gi.MapItemMoves.Clear()");
-         gi.MapItemMoves.Clear();
          PlayerAlienComputerMoveMgr moveMgr = new PlayerAlienComputerMoveMgr();
          if( false == moveMgr.CreateMoves(gi))
          {

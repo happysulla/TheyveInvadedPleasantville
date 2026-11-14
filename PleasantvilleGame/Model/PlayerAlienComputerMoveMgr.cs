@@ -138,6 +138,7 @@ namespace PleasantvilleGame
          moves = moves.Sort();
          foreach (IMetricAlienMove mam in moves)
          {
+            mam.MovingMapItem.TerritoryCurrent = mam.MovingMapItem.TerritoryStarting;
             IMapItemMove? mim = gi.CreateMapItemMove(mam.MovingMapItem, mam.TargetTerritory);
             if (null == mim)
             {
@@ -160,7 +161,7 @@ namespace PleasantvilleGame
             foreach (IMapItem mi in stack.MapItems)
             {
                bool isAlien = mi.IsAlien();
-               if ((true == mi.IsMovingThisTurn) && (true == mi.IsKnockedout) || (true == mi.IsKilled) || ("Zebulon" == mi.Name) || (((true == mi.IsStunned) || (true == mi.IsWary)) && (false == isAlien)))
+               if ((true == mi.IsMovingThisTurn) || (true == mi.IsKnockedout) || (true == mi.IsTiedUp) || (true == mi.IsKilled) || ("Zebulon" == mi.Name) || (((true == mi.IsStunned) || (true == mi.IsWary)) && (false == isAlien)))
                   continue;
                else if (true == mi.IsControlled)
                   townPeoples.Add(mi);
@@ -209,14 +210,17 @@ namespace PleasantvilleGame
             IMetricAlienMoves alienMoveMetrics = new MetricAlienMoves();
             foreach (Territory t in nonOverlappingTerritories)
             {
-               IMetricAlienMove mam = new MetricAlienMove(stacks, candidate, t, mpZebulon, mpCenterAlien, mpCenterControlled);
+               IMetricAlienMove mam = new MetricAlienMove(candidate, t);
+               if( false == mam.SetTotalMetric(stacks, mpZebulon, mpCenterAlien, mpCenterControlled))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Add_CandidatesMovesAwayFromControlled(): GetTotalMetric() returned false");
+                  return false;
+               }
                alienMoveMetrics.Add(mam);
             }
             if (0 < alienMoveMetrics.Count)
             {
                IMetricAlienMoves sortedMetrics = alienMoveMetrics.Sort();
-               foreach (IMetricAlienMove mam in sortedMetrics)
-                  Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_CandidatesMovesAwayFromControlled(): mi=" + mam.MovingMapItem + " m=" + mam.Value + " t=" + mam.TargetTerritory.ToString());
                if (0 < sortedMetrics.Count)
                {
                   IMetricAlienMove? mam1 = sortedMetrics[0];
@@ -225,7 +229,6 @@ namespace PleasantvilleGame
                      Logger.Log(LogEnum.LE_ERROR, "Add_CandidatesMovesAwayFromControlled(): mam1=null");
                      return false;
                   }
-                  Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_CandidatesMovesAwayFromControlled(): ++++++++++++++++++++++++++++++++++++ mi=" + mam1.MovingMapItem.Name + " m=" + mam1.Value + " t=" + mam1.TargetTerritory.ToString());
                   candidateMoves.Add(mam1);
                   //-------------------------------
                   stacks.Remove(mam1.MovingMapItem); // reset stacks to show change
@@ -233,6 +236,14 @@ namespace PleasantvilleGame
                }
             }
          }
+         //-------------------------------------
+         if (false == candidateMoves.UpdateMetrics(stacks))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Add_CandidatesMovesAwayFromControlled(): SetObservationMetrics() returned false");
+            return false;
+         }
+         foreach (IMetricAlienMove mam in candidateMoves)
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_CandidatesMovesAwayFromControlled(): " + mam.ToString());
          return true;
       }
       private bool AddCandidatesMovesToStunned(IGameInstance gi, IMapItems stunnedMapItems, IMapItems mapItems, List<CandidateMove> candidateMoves)

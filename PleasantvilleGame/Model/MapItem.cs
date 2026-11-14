@@ -279,7 +279,7 @@ namespace PleasantvilleGame
       }
       public bool IsAlien()
       {
-         if ((true == this.IsAlienUnknown) || (true == this.IsAlienKnown))
+         if ((true == this.IsAlienUnknown) || (true == this.IsAlienKnown) || ("Zebulon" == this.Name) )
             return true;
          return false;
       }

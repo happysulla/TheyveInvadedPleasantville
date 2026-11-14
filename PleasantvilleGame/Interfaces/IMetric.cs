@@ -6,33 +6,23 @@ using System.Threading.Tasks;
 
 namespace PleasantvilleGame
 {
-   public interface IMetricObservation
-   {
-      IMapItem TargetMapItem { get; set; }
-      ITerritory TargetTerritory { get; set; }
-      int Metric1 { get; set; }
-      int Metric2 { get; set; }
-   }
-   public interface IMetricObservations : System.Collections.IEnumerable
-   {
-      int Count { get; }
-      void Add(IMetricObservation metric);
-      void Insert(int index, IMetricObservation metric);
-      void Clear();
-      bool Contains(IMetricObservation metric);
-      int IndexOf(IMetricObservation metric);
-      void Remove(IMetricObservation metric);
-      IMetricObservation? RemoveAt(int index);
-      IMetricObservation? this[int index] { get; set; }
-      IMetricObservations Shuffle();
-      public IMetricObservations Sort();
-   }
    //=================================================================
    public interface IMetricAlienMove
    {
       IMapItem MovingMapItem { get; set; }
       ITerritory TargetTerritory { get; set; }
-      int Value { get; set; }
+      int MetricTotal { get; set; }
+      int MetricDenyTown { get; set; } // Deny Town Person access for Controlling
+      int MetricObs { get; set; }
+      int MetricZebulon { get; set; }
+      int MetricAlienCenter { get; set; }
+      int MetricTownCenter { get; set; }
+      int MetricTakeover { get; set; }
+      int MetricGuard { get; set; }
+      bool SetObservationMetric(IStacks stacks);
+      void SetTownDenyMetric(IStack? stack);
+      void SetTakeoverMetric(IStack? stack);
+      bool SetTotalMetric(IStacks stacks, IMapPoint centerZebulon, IMapPoint centerAlien, IMapPoint centerControlled);
    }
    public interface IMetricAlienMoves : System.Collections.IEnumerable
    {
@@ -46,6 +36,7 @@ namespace PleasantvilleGame
       IMetricAlienMove? RemoveAt(int index);
       IMetricAlienMove? this[int index] { get; set; }
       IMetricAlienMoves Shuffle();
-      public IMetricAlienMoves Sort();
+      IMetricAlienMoves Sort();
+      bool UpdateMetrics(IStacks stacks);
    }
 }

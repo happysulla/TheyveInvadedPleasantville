@@ -168,7 +168,7 @@ namespace PleasantvilleGame
          SetOn(LogEnum.LE_SHOW_TERRITORIES);
          //SetOn(LogEnum.LE_SHOW_TERRITORY_ITERATION);
          //-------------
-         //SetOn(LogEnum.LE_SHOW_MIM);
+         SetOn(LogEnum.LE_SHOW_MIM);
          //SetOn(LogEnum.LE_SHOW_MIM_ADD);
          //SetOn(LogEnum.LE_SHOW_MIM_CLEAR);
          //SetOn(LogEnum.LE_SHOW_MIM_BEST_PATH);
