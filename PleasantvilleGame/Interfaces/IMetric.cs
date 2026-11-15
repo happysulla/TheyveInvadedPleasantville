@@ -19,9 +19,9 @@ namespace PleasantvilleGame
       int MetricTownCenter { get; set; }
       int MetricTakeover { get; set; }
       int MetricGuard { get; set; }
-      bool SetObservationMetric(IStacks stacks);
+      bool SetObservationMetric(IStack? stack, IStacks stacks, bool isPremove);
       void SetTownDenyMetric(IStack? stack);
-      void SetTakeoverMetric(IStack? stack);
+      void SetTakeoverMetric(IStack? stack, bool isPremove);
       bool SetTotalMetric(IStacks stacks, IMapPoint centerZebulon, IMapPoint centerAlien, IMapPoint centerControlled);
    }
    public interface IMetricAlienMoves : System.Collections.IEnumerable

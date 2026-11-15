@@ -257,6 +257,11 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command():  CreateMoves() returned false");
                return false;
             }
+            if (false == CreateLabelsForDisplay(Territories.theTerritories, 1))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): CreateEllipsesForDisplay() returned false");
+               return false;
+            }
             GameAction outAction = GameAction.AlienMovementTownsShow;
             myGameEngine.PerformAction(ref gi, ref outAction);         
          }
@@ -426,6 +431,47 @@ namespace PleasantvilleGame
             Label aLabel = new Label() { Foreground = aSolidColorBrush0, FontFamily = myFontFam, FontWeight = FontWeights.Bold, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = t.ToString() };
             p.X -= (theEllipseOffset + colorIndex * 3);
             p.Y -= (theEllipseOffset + colorIndex * 3);
+            myCanvasMain.Children.Add(aLabel);
+            Canvas.SetLeft(aLabel, p.X);
+            Canvas.SetTop(aLabel, p.Y);
+            Canvas.SetZIndex(aLabel, 10000);
+         }
+         return true;
+      }
+      private bool CreateLabelsForDisplay(ITerritories territories, int colorIndex)
+      {
+         if (null == myCanvasMain)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_EllipsesForDisplay(): myCanvasMain=null");
+            return false;
+         }
+         System.Windows.Media.Color color;
+         switch (colorIndex)
+         {
+            case 0:
+               color = System.Windows.Media.Color.FromArgb(100, 100, 100, 0);
+               break;
+            case 1:
+               color = Colors.DeepPink;
+               break;
+            case 2:
+               color = Colors.Purple;
+               break;
+            case 3:
+               color = Colors.White;
+               break;
+            default:
+               Logger.Log(LogEnum.LE_ERROR, "Create_EllipsesForDisplay(): Reach Default colorindex=" + colorIndex.ToString());
+               return false;
+         }
+         SolidColorBrush aSolidColorBrush0 = new SolidColorBrush { Color = color }; // nearly transparent but slightly colored
+         int randomNum = Utilities.RandomGenerator.Next(12);
+         foreach (Territory t in territories)
+         {
+            System.Windows.Point p = new System.Windows.Point(t.CenterPoint.X, t.CenterPoint.Y);
+            Label aLabel = new Label() { Foreground = aSolidColorBrush0, FontFamily = myFontFam, FontWeight = FontWeights.Bold, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = t.ToString() };
+            p.X -= (theEllipseOffset + randomNum);
+            p.Y -= (theEllipseOffset + randomNum);
             myCanvasMain.Children.Add(aLabel);
             Canvas.SetLeft(aLabel, p.X);
             Canvas.SetTop(aLabel, p.Y);

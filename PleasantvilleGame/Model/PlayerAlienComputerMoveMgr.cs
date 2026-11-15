@@ -172,7 +172,6 @@ namespace PleasantvilleGame
          if ((0 == townPeoples.Count) || (0==unknowns.Count) ) // do nothing
             return true;
          townPeoples = townPeoples.Shuffle();
-         unknowns = unknowns.Shuffle();
          //------------------------------------
          IMapItems totalMapItems = new MapItems();
          foreach (IMapItem controlled in townPeoples) 
@@ -189,6 +188,8 @@ namespace PleasantvilleGame
          }
          if (0 == totalMapItems.Count)
             return true;
+         totalMapItems = totalMapItems.Shuffle();
+         //------------------------------------
          IMapPoint mpCenterControlled = Territory.GetCenterPointControlled(stacks);
          IMapPoint mpCenterAlien = Territory.GetCenterPointAlien(stacks);
          foreach (IMapItem candidate in totalMapItems)
@@ -218,9 +219,13 @@ namespace PleasantvilleGame
                }
                alienMoveMetrics.Add(mam);
             }
+            //------------------------------------
             if (0 < alienMoveMetrics.Count)
             {
                IMetricAlienMoves sortedMetrics = alienMoveMetrics.Sort();
+               foreach(IMetricAlienMove mam in sortedMetrics)
+                  Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_CandidatesMovesAwayFromControlled(): " + mam.ToString());
+               Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_CandidatesMovesAwayFromControlled(): --------------------------------------------");
                if (0 < sortedMetrics.Count)
                {
                   IMetricAlienMove? mam1 = sortedMetrics[0];
