@@ -224,6 +224,7 @@ namespace PleasantvilleGame
       }
       static public bool CreateTownspeople(IGameInstance gi)
       {
+         gi.Stacks.Clear();
          //------------------------------------
          string tName = "";
          ITerritory? t = null;

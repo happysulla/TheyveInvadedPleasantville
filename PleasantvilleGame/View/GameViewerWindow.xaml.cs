@@ -1339,6 +1339,40 @@ namespace PleasantvilleGame
                if (null != System.Windows.Application.Current)
                   System.Windows.Application.Current.Shutdown();
                break;
+            case GameAction.UpdateMainCanvasClear:
+               myButtons.Clear();
+               //-------------------------------------------
+               List<UIElement> elementRemovals = new List<UIElement>();
+               foreach (UIElement ui in myCanvasMain.Children) // Clean the Canvas of all marks
+               {
+                  if (ui is Button button)
+                  {
+                     if (true == button.Name.Contains("Die"))  // die buttons never disappear - only one copy of them
+                        continue;
+                     elementRemovals.Add(ui);
+                  }
+                  else if (ui is Ellipse ellipse)
+                  {
+                     elementRemovals.Add(ui);
+                  }
+                  else if (ui is Image img)
+                  {
+                     if (true == img.Name.Contains("Canvas"))
+                        continue;
+                     elementRemovals.Add(ui);
+                  }
+                  else if (ui is Rectangle rectangle)
+                     elementRemovals.Add(ui);
+                  else if (ui is Label label)  
+                     elementRemovals.Add(ui);
+                  else if (ui is TextBlock tb)
+                     elementRemovals.Add(ui);
+                  else if (ui is Polyline polyline)
+                     elementRemovals.Add(ui);
+               }
+               foreach (UIElement ui1 in elementRemovals)
+                  myCanvasMain.Children.Remove(ui1);
+               break;
             case GameAction.UpdateRotateStack:
             case GameAction.UpdateScatterStack:
             case GameAction.UpdateMainCanvas:

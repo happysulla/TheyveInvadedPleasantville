@@ -34,6 +34,7 @@ namespace PleasantvilleGame
    {
       RemoveSplashScreen,
       UpdateMainCanvas,
+      UpdateMainCanvasClear,
       UpdateStatusBar,
       UpdateShowRegion,
       UpdateEventViewerDisplay,

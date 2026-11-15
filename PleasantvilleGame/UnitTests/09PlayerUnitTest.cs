@@ -48,12 +48,14 @@ namespace PleasantvilleGame
          myHeaderNames.Add("09-Centers");
          myHeaderNames.Add("09-GetTerritoriesOfInterest");
          myHeaderNames.Add("09-AddMoveAwayFromControlled");
+         myHeaderNames.Add("09-AddAlienTakeoverMoves");
          myHeaderNames.Add("09-Finalize");
 
          myCommandNames.Add("00-Show Centers");
          myCommandNames.Add("01-GetTerritoriesOfInterest");
          myCommandNames.Add("02-AddMoveAwayFromControlled");
-         myCommandNames.Add("03-Cleanup");
+         myCommandNames.Add("03-AddAlienTakeoverMoves");
+         myCommandNames.Add("04-Cleanup");
          //------------------------------------
          if (null == gi)
          {
@@ -192,14 +194,13 @@ namespace PleasantvilleGame
             CreateEllipse(mpCenterControlled, Utilities.theTownControlledBrush);
             IMapPoint mpCenterAlien = Territory.GetCenterPointAlien(gi.Stacks );
             CreateEllipse(mpCenterAlien, Utilities.theAlienControlledBrush);
-            myIndexName++;
          }
          //=========================================================
          else if (CommandName == myCommandNames[1])
          {
-            if (false == DeleteEllipses())
+            if (false == Reset(gi))
             {
-               Logger.Log(LogEnum.LE_ERROR, "Reset(): DeleteEllipses() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): Reset() returned false");
                return false;
             }
             IMapItem? mi0 = gi.Stacks.FindMapItem(TableMgr.HOTEL_OWNER);
@@ -245,9 +246,44 @@ namespace PleasantvilleGame
          //=========================================================
          else if (CommandName == myCommandNames[2])
          {
-            if (false == DeleteEllipses())
+            if (false == Reset(gi))
             {
-               Logger.Log(LogEnum.LE_ERROR, "Reset(): DeleteEllipses() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): Reset() returned false");
+               return false;
+            }
+            //-------------------------
+            IMetricAlienMoves moves = new MetricAlienMoves();
+            IStacks newStacks = gi.Stacks.Clone();
+            PlayerAlienComputerMoveMgr moveMgr = new PlayerAlienComputerMoveMgr();
+            if (false == moveMgr.AddMoveAwayFromControlledMoves(newStacks, gi.Zebulon.TerritoryCurrent.CenterPoint, moves))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command():  AddMoveAwayFromControlledMoves() returned false");
+               return false;
+            }
+            //-------------------------
+            IMapItemMoves mapItemMoves = new MapItemMoves();
+            moves = moves.Sort();
+            foreach (IMetricAlienMove mam in moves)
+            {
+               mam.MovingMapItem.TerritoryCurrent = mam.MovingMapItem.TerritoryStarting;
+               IMapItemMove? mim = gi.CreateMapItemMove(mam.MovingMapItem, mam.TargetTerritory);
+               if (null == mim)
+               {
+                  Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMovement(): mim=" + null);
+                  return false;
+               }
+               mapItemMoves.Add(mim);
+            }
+            gi.MapItemMoves = mapItemMoves;
+            GameAction outAction = GameAction.AlienMovementTownsShow;
+            myGameEngine.PerformAction(ref gi, ref outAction);         
+         }
+         //=========================================================
+         else if (CommandName == myCommandNames[3])
+         {
+            if (false == Reset(gi))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): Reset() returned false");
                return false;
             }
             //-------------------------
@@ -257,13 +293,8 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command():  CreateMoves() returned false");
                return false;
             }
-            if (false == CreateLabelsForDisplay(Territories.theTerritories, 1))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): CreateEllipsesForDisplay() returned false");
-               return false;
-            }
             GameAction outAction = GameAction.AlienMovementTownsShow;
-            myGameEngine.PerformAction(ref gi, ref outAction);         
+            myGameEngine.PerformAction(ref gi, ref outAction);
          }
          else
          {
@@ -291,6 +322,10 @@ namespace PleasantvilleGame
             ++myIndexName;
          }
          else if (HeaderName == myHeaderNames[2])
+         {
+            ++myIndexName;
+         }
+         else if (HeaderName == myHeaderNames[3])
          {
             ++myIndexName;
          }
@@ -339,6 +374,25 @@ namespace PleasantvilleGame
          return true;
       }
       //--------------------------------------------------------------------
+      private bool DeleteEllipsesAndLabels()
+      {
+         if (null == myCanvasMain)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "DeleteEllipses(): myCanvasMain=null");
+            return false;
+         }
+         List<UIElement> results1 = new List<UIElement>();
+         foreach (UIElement ui in myCanvasMain.Children)
+         {
+            if (ui is Ellipse)
+               results1.Add(ui);
+            if (ui is Label)
+               results1.Add(ui);
+         }
+         foreach (UIElement ui1 in results1)
+            myCanvasMain.Children.Remove(ui1);
+         return true;
+      }
       private void CreateEllipse(IMapPoint mp, System.Windows.Media.Brush brush)
       {
          if (null == myCanvasMain)
@@ -358,32 +412,6 @@ namespace PleasantvilleGame
          Canvas.SetTop(aEllipse, mp.Y- theEllipseOffset);
          Canvas.SetZIndex(aEllipse, 10000);
          myCanvasMain.Children.Add(aEllipse);
-      }
-      private bool CreateEllipse(ITerritory territory, IMapPoint mp, System.Windows.Media.Color color)
-      {
-         if (null == myCanvasMain)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Creat_eEllipse(): myCanvasMain=null");
-            return false;
-         }
-         SolidColorBrush aSolidColorBrush1 = new SolidColorBrush { Color = color };
-         Ellipse aEllipse = new Ellipse
-         {
-            Name = territory.ToString(),
-            Fill = aSolidColorBrush1,
-            StrokeThickness = 1,
-            Stroke = Brushes.Red,
-            Width = theEllipseDiameter,
-            Height = theEllipseDiameter
-         };
-         System.Windows.Point p = new System.Windows.Point(territory.CenterPoint.X, territory.CenterPoint.Y);
-         p.X -= theEllipseOffset;
-         p.Y -= theEllipseOffset;
-         myCanvasMain.Children.Add(aEllipse);
-         Canvas.SetLeft(aEllipse, mp.X);
-         Canvas.SetTop(aEllipse, mp.Y);
-         Canvas.SetZIndex(aEllipse, 99999);
-         return true;
       }
       private bool CreateEllipsesForDisplay(ITerritories territories, int colorIndex)
       {
@@ -427,14 +455,6 @@ namespace PleasantvilleGame
             Canvas.SetLeft(aEllipse, p.X);
             Canvas.SetTop(aEllipse, p.Y);
             Canvas.SetZIndex(aEllipse, 10000);
-            //-------------------------
-            Label aLabel = new Label() { Foreground = aSolidColorBrush0, FontFamily = myFontFam, FontWeight = FontWeights.Bold, FontSize = 12, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = t.ToString() };
-            p.X -= (theEllipseOffset + colorIndex * 3);
-            p.Y -= (theEllipseOffset + colorIndex * 3);
-            myCanvasMain.Children.Add(aLabel);
-            Canvas.SetLeft(aLabel, p.X);
-            Canvas.SetTop(aLabel, p.Y);
-            Canvas.SetZIndex(aLabel, 10000);
          }
          return true;
       }
@@ -481,13 +501,21 @@ namespace PleasantvilleGame
       }
       private bool Reset(IGameInstance gi)
       {
-         if (false == DeleteEllipses())
+         if (null == myGameEngine)
          {
-            Logger.Log(LogEnum.LE_ERROR, "Reset(): DeleteEllipses() returned false");
+            Logger.Log(LogEnum.LE_ERROR, "Reset(): myGameEngine=null");
             return false;
          }
-         gi.PlayerAlien = new PlayerAlienComputer();
-         gi.PlayerTown = new PlayerTownHuman();
+         GameAction outAction = GameAction.UpdateMainCanvasClear;
+         myGameEngine.PerformAction(ref gi, ref outAction);
+         //--------------------------------------------
+         if (false == CreateLabelsForDisplay(Territories.theTerritories, 1))
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Reset(): CreateLabelsForDisplay() returned false");
+            return false;
+         }
+         //--------------------------------------------
+         gi.MapItemMoves.Clear();
          gi.Stacks.Clear();
          if (false == TableMgr.CreateTownspeople(gi)) // Create in known locations
          {
@@ -541,25 +569,8 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Reset(): MovePerson() failed for mi=" + TableMgr.WAR_VET);
             return false;
          }
-         return true;
-      }
-      private bool DeleteEllipses()
-      {
-         if (null == myCanvasMain)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "DeleteEllipses(): myCanvasMain=null");
-            return false;
-         }
-         List<UIElement> results1 = new List<UIElement>();
-         foreach (UIElement ui in myCanvasMain.Children)
-         {
-            if (ui is Ellipse)
-               results1.Add(ui);
-            if (ui is Label)
-               results1.Add(ui);
-         }
-         foreach (UIElement ui1 in results1)
-            myCanvasMain.Children.Remove(ui1);
+         outAction = GameAction.UpdateMainCanvas;
+         myGameEngine.PerformAction(ref gi, ref outAction);
          return true;
       }
    }
