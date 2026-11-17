@@ -823,6 +823,7 @@ namespace PleasantvilleGame
                mi.IsMoveAllowedToResetThisTurn = true;
                mi.IsConversedThisTurn = false;
                mi.IsInfluencedThisTurn = false;
+               mi.IsMovingThisTurn = false;
                mi.IsCombatThisTurn = false;
                mi.IsKnockedoutThisTurn = false;
                mi.IsStunnedThisTurn = false;
@@ -3479,6 +3480,7 @@ namespace PleasantvilleGame
             case GameAction.EndGameShowFeats:
             case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
+            case GameAction.UpdateMainCanvasClear:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:

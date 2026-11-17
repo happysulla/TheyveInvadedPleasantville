@@ -22,7 +22,7 @@ namespace PleasantvilleGame
       bool SetObservationMetric(IStack? stack, IStacks stacks, bool isPremove);
       void SetTownDenyMetric(IStack? stack);
       void SetTakeoverMetric(IStack? stack, bool isPremove);
-      bool SetTotalMetric(IStacks stacks, IMapPoint centerZebulon, IMapPoint centerAlien, IMapPoint centerControlled);
+      bool SetTotalMetric(IStacks stacks, IMapPoint centerZebulon, IMapPoint centerAlien, IMapPoint centerControlled, bool isMoveAway=false);
    }
    public interface IMetricAlienMoves : System.Collections.IEnumerable
    {
@@ -37,6 +37,6 @@ namespace PleasantvilleGame
       IMetricAlienMove? this[int index] { get; set; }
       IMetricAlienMoves Shuffle();
       IMetricAlienMoves Sort();
-      bool UpdateMetrics(IStacks stacks);
+      bool UpdateMetrics(IStacks stacks, bool isMoveAway=false);
    }
 }

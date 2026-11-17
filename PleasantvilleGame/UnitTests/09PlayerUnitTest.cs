@@ -287,12 +287,29 @@ namespace PleasantvilleGame
                return false;
             }
             //-------------------------
+            IMetricAlienMoves moves = new MetricAlienMoves();
+            IStacks newStacks = gi.Stacks.Clone();
             PlayerAlienComputerMoveMgr moveMgr = new PlayerAlienComputerMoveMgr();
-            if (false == moveMgr.CreateMoves(gi))
+            if (false == moveMgr.AddAlienTakeoverMoves(newStacks, gi.Zebulon.TerritoryCurrent.CenterPoint, moves))
             {
-               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command():  CreateMoves() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command():  AddMoveAwayFromControlledMoves() returned false");
                return false;
             }
+            //-------------------------
+            IMapItemMoves mapItemMoves = new MapItemMoves();
+            moves = moves.Sort();
+            foreach (IMetricAlienMove mam in moves)
+            {
+               mam.MovingMapItem.TerritoryCurrent = mam.MovingMapItem.TerritoryStarting;
+               IMapItemMove? mim = gi.CreateMapItemMove(mam.MovingMapItem, mam.TargetTerritory);
+               if (null == mim)
+               {
+                  Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMovement(): mim=" + null);
+                  return false;
+               }
+               mapItemMoves.Add(mim);
+            }
+            gi.MapItemMoves = mapItemMoves;
             GameAction outAction = GameAction.AlienMovementTownsShow;
             myGameEngine.PerformAction(ref gi, ref outAction);
          }

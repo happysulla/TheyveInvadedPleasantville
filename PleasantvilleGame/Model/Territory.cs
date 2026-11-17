@@ -558,16 +558,18 @@ namespace PleasantvilleGame
          return mapItemCandidates;
       }
       //---------------------------------------------------------------
-      public static int GetStackingCount(IStack stack, IMapItem movingMi)
+      public static int GetStackingCount(IStack? stack, IMapItem movingMi)
       {
-         int count = 0;
+         if (null == stack)
+            return 1;
+         int count = 1;
          foreach (IMapItem mi in stack.MapItems)
          {
-            if ((true == movingMi.IsControlled) && (true == mi.IsControlled))
+            if ((true == movingMi.IsControlled) && (true == mi.IsControlled) && (false == mi.IsTiedUp))
                ++count;
             else if ((true == movingMi.IsAlienKnown) && (true == mi.IsAlienKnown) && (false == mi.IsTiedUp))
                ++count;
-            else
+            else if (false == mi.IsTiedUp)
                ++count;
          }
          return count;
