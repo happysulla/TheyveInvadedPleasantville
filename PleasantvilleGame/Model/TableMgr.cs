@@ -1007,6 +1007,17 @@ namespace PleasantvilleGame
          gi.Stacks.Add(mi);
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "Create_Townspeople(): miName=" + miName + " t=" + t.ToString() + " stacks=" + gi.Stacks.ToString());
          //------------------------------------
+         string startingHq = StartingHqMgr.GetStartingHqTerritory();
+         ITerritory? tZebutonStart = Territories.theTerritories.Find(startingHq);
+         if (null == tZebutonStart)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(GameSetupPlayTownsperson): zTerritory=null for " + startingHq);
+            return false;
+         }
+         gi.Zebulon.TerritoryCurrent = gi.Zebulon.TerritoryStarting = tZebutonStart;
+         gi.Zebulon.Location = Territory.GetRandomPointBoundingRect(tZebutonStart, gi.Zebulon.Zoom * Utilities.theMapItemOffset);
+         gi.Stacks.Add(gi.Zebulon);
+         //------------------------------------
          return true;
       }
       static public bool MovePerson(IGameInstance gi, string miName, string tName)

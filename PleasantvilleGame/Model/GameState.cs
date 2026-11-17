@@ -1390,18 +1390,6 @@ namespace PleasantvilleGame
                gi.PlayerAlien = new PlayerAlienComputer();
                gi.PlayerTown = new PlayerTownHuman();
                SetCommand(gi, action, GameAction.GameSetupStartingTownsplayerSetRoll, "e002");
-               string startingHq = StartingHqMgr.GetStartingHqTerritory();
-               ITerritory? tZebutonStart = Territories.theTerritories.Find(startingHq);
-               if( null  == tZebutonStart)
-               {
-                  returnStatus = "zTerritory=null for " + startingHq;
-                  Logger.Log(LogEnum.LE_ERROR, "GameStateSetup.PerformAction(GameSetupPlayTownsperson): " + returnStatus);
-               }
-               else
-               {
-                  gi.Zebulon.TerritoryCurrent = gi.Zebulon.TerritoryStarting = tZebutonStart;
-                  gi.Zebulon.Location = Territory.GetRandomPointBoundingRect(tZebutonStart, gi.Zebulon.Zoom * Utilities.theMapItemOffset);
-               }
                Option option = gi.Options.Find("AutoSetupTown");
                if (true == option.IsEnabled)
                {
@@ -3064,7 +3052,6 @@ namespace PleasantvilleGame
                   {
                      gi.NumTownGuessesForZebulonLocation = 0;
                      gi.Zebulon.IsAlienKnown = true;
-                     gi.Stacks.Add(gi.Zebulon);
                   }
                   else
                   {

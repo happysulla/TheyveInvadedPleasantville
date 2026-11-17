@@ -2224,6 +2224,11 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMain_MapItems(): mi=null");
                   return false;
                }
+               if (("Zebulon" == mi.Name) && (false == gi.Zebulon.IsAlienKnown)) // <cgs> - TEST 
+               {
+                  CreateEllipse(gi.Zebulon.TerritoryCurrent.CenterPoint);
+                  continue;
+               }
                //---------------------------------------------
                Button? b = myButtons.Find(mi.Name);
                if (null != b)
@@ -4177,6 +4182,26 @@ namespace PleasantvilleGame
          myGameInstance.EventActive = myGameInstance.EventDisplayed; // As soon as you roll the die, the current event becomes the active event
          GameAction action = myGameInstance.DieRollAction;
          myGameEngine.PerformAction(ref myGameInstance, ref action, dieRoll);
+      }
+      private void CreateEllipse(IMapPoint mp)
+      {
+         if (null == myCanvasMain)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "CreateEllipse(): myCanvas=null");
+            return;
+         }
+         Ellipse aEllipse = new Ellipse
+         {
+            Fill = Brushes.Black,
+            StrokeThickness = 1,
+            Stroke = Brushes.Black,
+            Width = 20,
+            Height = 20
+         };
+         Canvas.SetLeft(aEllipse, mp.X - 10);
+         Canvas.SetTop(aEllipse, mp.Y - 10);
+         Canvas.SetZIndex(aEllipse, 10000);
+         myCanvasMain.Children.Add(aEllipse);
       }
       //-------------CONTROLLER FUNCTIONS---------------------------------
       private void MouseLeftButtonDownMarquee(object sender, MouseEventArgs e)

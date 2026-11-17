@@ -207,9 +207,14 @@ namespace PleasantvilleGame
       {
          StringBuilder sb = new StringBuilder();
          sb.Append(this.MovingMapItem.Name);
-         sb.Append("->");
-         sb.Append(this.TargetTerritory.ToString());
-         sb.Append("=>");
+         if( this.MovingMapItem.Name.Length < 11 )
+            sb.Append("\t\t\t\t=>");
+         else if (this.MovingMapItem.Name.Length < 15)
+            sb.Append("\t\t\t=>");
+         else if (this.MovingMapItem.Name.Length < 18)
+            sb.Append("\t\t=>");
+         else 
+            sb.Append("\t=>");
          sb.Append(this.MetricTotal.ToString());
          sb.Append("=(");
          sb.Append(this.MetricDenyTown.ToString());
@@ -225,6 +230,10 @@ namespace PleasantvilleGame
          sb.Append(this.MetricTownCenter.ToString());
          sb.Append("+");
          sb.Append(this.MetricGuard.ToString());
+         sb.Append(")->(");
+         sb.Append(this.MovingMapItem.TerritoryCurrent.ToString());
+         sb.Append("->");
+         sb.Append(this.TargetTerritory.ToString());
          sb.Append(")");
          return sb.ToString();
       }

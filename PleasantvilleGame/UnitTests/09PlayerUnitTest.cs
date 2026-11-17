@@ -49,13 +49,15 @@ namespace PleasantvilleGame
          myHeaderNames.Add("09-GetTerritoriesOfInterest");
          myHeaderNames.Add("09-AddMoveAwayFromControlled");
          myHeaderNames.Add("09-AddAlienTakeoverMoves");
+         myHeaderNames.Add("09-AddUncontrolledMoves");
          myHeaderNames.Add("09-Finalize");
 
          myCommandNames.Add("00-Show Centers");
          myCommandNames.Add("01-GetTerritoriesOfInterest");
          myCommandNames.Add("02-AddMoveAwayFromControlled");
          myCommandNames.Add("03-AddAlienTakeoverMoves");
-         myCommandNames.Add("04-Cleanup");
+         myCommandNames.Add("04-AddUncontrolledMoves");
+         myCommandNames.Add("05-Cleanup");
          //------------------------------------
          if (null == gi)
          {
@@ -299,6 +301,47 @@ namespace PleasantvilleGame
             IMapItemMoves mapItemMoves = new MapItemMoves();
             moves = moves.Sort();
             foreach (IMetricAlienMove mam in moves)
+               Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "PlayerUnitTest.Command(3): " + mam.ToString());
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "PlayerUnitTest.Command(3): --------------------------------------------");
+            foreach (IMetricAlienMove mam in moves)
+            {
+               mam.MovingMapItem.TerritoryCurrent = mam.MovingMapItem.TerritoryStarting;
+               IMapItemMove? mim = gi.CreateMapItemMove(mam.MovingMapItem, mam.TargetTerritory);
+               if (null == mim)
+               {
+                  Logger.Log(LogEnum.LE_SHOW_MIM, "PlayerUnitTest.Command(): mim=" + null);
+                  return false;
+               }
+               mapItemMoves.Add(mim);
+            }
+            gi.MapItemMoves = mapItemMoves.Shuffle(); ;
+            GameAction outAction = GameAction.AlienMovementTownsShow;
+            myGameEngine.PerformAction(ref gi, ref outAction);
+         }
+         //=========================================================
+         else if (CommandName == myCommandNames[4])
+         {
+            if (false == Reset(gi))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): Reset() returned false");
+               return false;
+            }
+            //-------------------------
+            IMetricAlienMoves moves = new MetricAlienMoves();
+            IStacks newStacks = gi.Stacks.Clone();
+            PlayerAlienComputerMoveMgr moveMgr = new PlayerAlienComputerMoveMgr();
+            if (false == moveMgr.AddUncontrolledMoves(newStacks, gi.Zebulon.TerritoryCurrent.CenterPoint, moves))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command():  AddMoveAwayFromControlledMoves() returned false");
+               return false;
+            }
+            //-------------------------
+            IMapItemMoves mapItemMoves = new MapItemMoves();
+            moves = moves.Sort();
+            foreach (IMetricAlienMove mam in moves)
+               Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "PlayerUnitTest.Command(4): " + mam.ToString());
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "PlayerUnitTest.Command(4): --------------------------------------------");
+            foreach (IMetricAlienMove mam in moves)
             {
                mam.MovingMapItem.TerritoryCurrent = mam.MovingMapItem.TerritoryStarting;
                IMapItemMove? mim = gi.CreateMapItemMove(mam.MovingMapItem, mam.TargetTerritory);
@@ -308,8 +351,10 @@ namespace PleasantvilleGame
                   return false;
                }
                mapItemMoves.Add(mim);
+               if (5 < mapItemMoves.Count)
+                  break;
             }
-            gi.MapItemMoves = mapItemMoves;
+            gi.MapItemMoves = mapItemMoves.Shuffle();
             GameAction outAction = GameAction.AlienMovementTownsShow;
             myGameEngine.PerformAction(ref gi, ref outAction);
          }
@@ -343,6 +388,10 @@ namespace PleasantvilleGame
             ++myIndexName;
          }
          else if (HeaderName == myHeaderNames[3])
+         {
+            ++myIndexName;
+         }
+         else if (HeaderName == myHeaderNames[4])
          {
             ++myIndexName;
          }
@@ -550,7 +599,6 @@ namespace PleasantvilleGame
          gi.Zebulon.TerritoryCurrent = gi.Zebulon.TerritoryStarting = tZebutonStart;
          gi.Zebulon.Location = Territory.GetRandomPointBoundingRect(tZebutonStart, gi.Zebulon.Zoom * Utilities.theMapItemOffset);
          gi.Zebulon.IsAlienKnown = true;
-         gi.Stacks.Add(gi.Zebulon);
          //--------------------------------------------
          IMapItem? mi0 = gi.Stacks.FindMapItem(TableMgr.WIFE);
          if (null == mi0)
