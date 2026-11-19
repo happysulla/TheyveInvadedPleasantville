@@ -50,6 +50,7 @@ namespace PleasantvilleGame
          myHeaderNames.Add("09-AddMoveAwayFromControlled");
          myHeaderNames.Add("09-AddAlienTakeoverMoves");
          myHeaderNames.Add("09-AddUncontrolledMoves");
+         myHeaderNames.Add("09-AlienTakeover+Uncontrolled");
          myHeaderNames.Add("09-Finalize");
 
          myCommandNames.Add("00-Show Centers");
@@ -57,7 +58,8 @@ namespace PleasantvilleGame
          myCommandNames.Add("02-AddMoveAwayFromControlled");
          myCommandNames.Add("03-AddAlienTakeoverMoves");
          myCommandNames.Add("04-AddUncontrolledMoves");
-         myCommandNames.Add("05-Cleanup");
+         myCommandNames.Add("05-AlienTakeover+Uncontrolled");
+         myCommandNames.Add("06-Cleanup");
          //------------------------------------
          if (null == gi)
          {
@@ -257,7 +259,7 @@ namespace PleasantvilleGame
             IMetricAlienMoves moves = new MetricAlienMoves();
             IStacks newStacks = gi.Stacks.Clone();
             PlayerAlienComputerMoveMgr moveMgr = new PlayerAlienComputerMoveMgr();
-            if (false == moveMgr.AddMoveAwayFromControlledMoves(newStacks, gi.Zebulon.TerritoryCurrent.CenterPoint, moves))
+            if (false == moveMgr.AddMoveAwayFromControlledMoves(newStacks, gi.Zebulon.TerritoryCurrent.CenterPoint, ref moves))
             {
                Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command():  AddMoveAwayFromControlledMoves() returned false");
                return false;
@@ -292,7 +294,7 @@ namespace PleasantvilleGame
             IMetricAlienMoves moves = new MetricAlienMoves();
             IStacks newStacks = gi.Stacks.Clone();
             PlayerAlienComputerMoveMgr moveMgr = new PlayerAlienComputerMoveMgr();
-            if (false == moveMgr.AddAlienTakeoverMoves(newStacks, gi.Zebulon.TerritoryCurrent.CenterPoint, moves))
+            if (false == moveMgr.AddAlienTakeoverMoves(newStacks, gi.Zebulon.TerritoryCurrent.CenterPoint, ref moves))
             {
                Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command():  AddMoveAwayFromControlledMoves() returned false");
                return false;
@@ -330,7 +332,7 @@ namespace PleasantvilleGame
             IMetricAlienMoves moves = new MetricAlienMoves();
             IStacks newStacks = gi.Stacks.Clone();
             PlayerAlienComputerMoveMgr moveMgr = new PlayerAlienComputerMoveMgr();
-            if (false == moveMgr.AddUncontrolledMoves(newStacks, gi.Zebulon.TerritoryCurrent.CenterPoint, moves))
+            if (false == moveMgr.AddUncontrolledMoves(newStacks, gi.Zebulon.TerritoryCurrent.CenterPoint, ref moves))
             {
                Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command():  AddMoveAwayFromControlledMoves() returned false");
                return false;
@@ -359,6 +361,57 @@ namespace PleasantvilleGame
             GameAction outAction = GameAction.AlienMovementTownsShow;
             myGameEngine.PerformAction(ref gi, ref outAction);
          }
+         //=========================================================
+         else if (CommandName == myCommandNames[5])
+         {
+            if (false == Reset(gi))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): Reset() returned false");
+               return false;
+            }
+            //-------------------------
+            IMetricAlienMoves moves = new MetricAlienMoves();
+            IStacks newStacks = gi.Stacks.Clone();
+            PlayerAlienComputerMoveMgr moveMgr = new PlayerAlienComputerMoveMgr();
+            //-------------------------
+            if (false == moveMgr.AddMoveAwayFromControlledMoves(newStacks, gi.Zebulon.TerritoryCurrent.CenterPoint, ref moves))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command():  AddMoveAwayFromControlledMoves() returned false");
+               return false;
+            }
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "PlayerUnitTest.Command(5):\n*****************************************************************************\n*****************************************************************************\n" + moves.ToString());
+            if (false == moveMgr.AddAlienTakeoverMoves(newStacks, gi.Zebulon.TerritoryCurrent.CenterPoint, ref moves))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command():  AddMoveAwayFromControlledMoves() returned false");
+               return false;
+            }
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "PlayerUnitTest.Command(5):\n*****************************************************************************\n*****************************************************************************\n" + moves.ToString());
+            if (false == moveMgr.AddUncontrolledMoves(newStacks, gi.Zebulon.TerritoryCurrent.CenterPoint, ref moves))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command():  AddMoveAwayFromControlledMoves() returned false");
+               return false;
+            }
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "PlayerUnitTest.Command(5):\n*****************************************************************************\n*****************************************************************************");
+            foreach (IMetricAlienMove mam in moves)
+               Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "PlayerUnitTest.Command(5): " + mam.ToString());
+            //-------------------------
+            IMapItemMoves mapItemMoves = new MapItemMoves();
+            foreach (IMetricAlienMove mam in moves)
+            {
+               mam.MovingMapItem.TerritoryCurrent = mam.MovingMapItem.TerritoryStarting;
+               IMapItemMove? mim = gi.CreateMapItemMove(mam.MovingMapItem, mam.TargetTerritory);
+               if (null == mim)
+               {
+                  Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMovement(): mim=" + null);
+                  return false;
+               }
+               mapItemMoves.Add(mim);
+            }
+            gi.MapItemMoves = mapItemMoves.Shuffle();
+            GameAction outAction = GameAction.AlienMovementTownsShow;
+            myGameEngine.PerformAction(ref gi, ref outAction);
+         }
+         //=========================================================
          else
          {
             if (false == Cleanup(ref gi))
@@ -393,6 +446,10 @@ namespace PleasantvilleGame
             ++myIndexName;
          }
          else if (HeaderName == myHeaderNames[4])
+         {
+            ++myIndexName;
+         }
+         else if (HeaderName == myHeaderNames[5])
          {
             ++myIndexName;
          }
@@ -599,7 +656,6 @@ namespace PleasantvilleGame
          }
          gi.Zebulon.TerritoryCurrent = gi.Zebulon.TerritoryStarting = tZebutonStart;
          gi.Zebulon.Location = Territory.GetRandomPointBoundingRect(tZebutonStart, gi.Zebulon.Zoom * Utilities.theMapItemOffset);
-         gi.Zebulon.IsAlienKnown = true;
          //--------------------------------------------
          IMapItem? mi0 = gi.Stacks.FindMapItem(TableMgr.WIFE);
          if (null == mi0)

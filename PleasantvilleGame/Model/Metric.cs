@@ -62,25 +62,6 @@ namespace PleasantvilleGame
          return normalized;       // 100=>distance is large and 0=>distance is small
       }
       //-----------------------------------------------------------
-      public void SetTownDenyMetric(IStack? stack)
-      {
-         if (null == stack)
-         {
-            this.MetricDenyTown = 80;
-            return;
-         }
-         //-------------------------
-         bool isAlienInStack = false;
-         foreach (IMapItem mi in stack.MapItems)
-         {
-            if ((true == mi.IsAlien()) && ("Zebulon" != mi.Name))
-               isAlienInStack = true;
-         }
-         if (true == isAlienInStack)
-            this.MetricDenyTown = 100;
-         else
-            this.MetricDenyTown = 80;
-      }
       public void SetLeavingMetric(IStack? currentStack)
       {
          if (null == currentStack)
@@ -147,7 +128,7 @@ namespace PleasantvilleGame
          if (0 < townPeoples.Count)
             MetricTakeover = Math.Max(100, MetricTakeover+50);
       }
-      public bool SetObservationMetric(IStack? stack, IStacks stacks, bool isPremove)
+      public void SetObservationMetric(IStack? stack, IStacks stacks, bool isPremove)
       {
          int stackCount = 3;
          if (true == isPremove)
@@ -164,7 +145,6 @@ namespace PleasantvilleGame
                if (stackCount == stack1.MapItems.Count)
                {
                   pTotal *= 0.33334;
-                  Logger.Log(LogEnum.LE_ERROR, "SetObservationMetric(): stack=" + stack.ToString() + " sc=" + stackCount.ToString() + " pt=" + pTotal.ToString());
                }
                continue;
             }
@@ -176,7 +156,6 @@ namespace PleasantvilleGame
             }
          }
          MetricObs = (int)((100.0) * (pTotal));  // probability of not being observed
-         return true;
       }
       public void SetTakeoverMetric(IStack? targetStack, bool isPremove)
       {
@@ -231,7 +210,7 @@ namespace PleasantvilleGame
                      this.MetricTakeover = 50;
                      break;
                   case 1:
-                     this.MetricTakeover = 100;
+                     this.MetricTakeover = 30;
                      break;
                   default:
                      this.MetricTakeover = 95;
@@ -256,18 +235,12 @@ namespace PleasantvilleGame
          if (0 < townPeoples.Count)
             MetricTakeover -= 50;
       }
-      public bool SetTotalMetric(IStacks stacks, IMapPoint centerZebulon, IMapPoint centerAlien, IMapPoint centerControlled, bool isMoveAway)
+      public bool SetTotalMetric(IStacks stacks, IMapPoint centerZebulon, IMapPoint centerAlien, IMapPoint centerControlled)
       {
          IStack? targetStack = stacks.Find(this.TargetTerritory);
-         if (true == isMoveAway)
-            SetTownDenyMetric(targetStack);
          IStack? currentStack = stacks.Find(this.MovingMapItem.TerritoryCurrent);
          SetLeavingMetric(currentStack);
-         if (false == SetObservationMetric(targetStack, stacks, true))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "SetTotalMetric(): GetObservationMetric() returned error");
-            return false;
-         }
+         SetObservationMetric(targetStack, stacks, true);
          SetTakeoverMetric(targetStack, true);
          MetricZebulon = GetClosestDistanceMetric(centerZebulon, TargetTerritory);
          MetricAlienCenter = GetClosestDistanceMetric(centerAlien, TargetTerritory);
@@ -279,12 +252,9 @@ namespace PleasantvilleGame
       {
          StringBuilder sb = new StringBuilder();
          sb.Append(this.MovingMapItem.Name);
-         if( this.MovingMapItem.Name.Length < 12 )
-            sb.Append("\t\t\t\t=>");
-         else if (this.MovingMapItem.Name.Length < 20)
-            sb.Append("\t\t\t=>");
-         else 
-            sb.Append("\t=>");
+         int count = 25 - this.MovingMapItem.Name.Count();
+         for (int i = 0; i < count; i++)
+            sb.Append(' ');
          sb.Append(this.MetricTotal.ToString());
          sb.Append("=(D");
          sb.Append(this.MetricDenyTown.ToString());
@@ -303,7 +273,7 @@ namespace PleasantvilleGame
          sb.Append("+G");
          sb.Append(this.MetricGuard.ToString());
          sb.Append(")->(");
-         sb.Append(this.MovingMapItem.TerritoryCurrent.ToString());
+         sb.Append(this.MovingMapItem.TerritoryStarting.ToString());
          sb.Append("->");
          sb.Append(this.TargetTerritory.ToString());
          sb.Append(")");
@@ -381,26 +351,16 @@ namespace PleasantvilleGame
          }
          return sortedMetrics;
       }
-      public bool UpdateMetrics(IStacks stacks, bool isMoveAway)
+      public void UpdateMetrics(IStacks stacks)
       {
          foreach (IMetricAlienMove mam in this)
          {
             IStack? stack = stacks.Find(mam.TargetTerritory);
             if (null == stack)
-            {
-               Logger.Log(LogEnum.LE_ERROR, "UpdateMetrics(): stack=null");
-               return false;
-            }
-            if( true == isMoveAway )
-               mam.SetTownDenyMetric(stack);
+               return;
             mam.SetTakeoverMetric(stack, false);
-            if (false == mam.SetObservationMetric(stack, stacks, false))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "UpdateMetrics(): SetObservationMetric() returned false");
-               return false;
-            }
+            mam.SetObservationMetric(stack, stacks, false);
          }
-         return true;
       }
       public override string ToString()
       {
@@ -409,8 +369,12 @@ namespace PleasantvilleGame
          {
             IMetricAlienMove m = (IMetricAlienMove)o;
             sb.Append("<");
+            sb.Append(m.MovingMapItem.Name);
+            sb.Append("=>");
             sb.Append(m.TargetTerritory.ToString());
-            sb.Append(">");
+            sb.Append("(");
+            sb.Append(m.MetricTotal.ToString());
+            sb.Append(")>");
          }
          return sb.ToString();
       }

@@ -20,11 +20,10 @@ namespace PleasantvilleGame
       int MetricLeaving { get; set; }
       int MetricTakeover { get; set; }
       int MetricGuard { get; set; }
-      bool SetObservationMetric(IStack? stack, IStacks stacks, bool isPremove);
-      void SetTownDenyMetric(IStack? stack);
+      void SetObservationMetric(IStack? stack, IStacks stacks, bool isPremove);
       void SetLeavingMetric(IStack? stack);
       void SetTakeoverMetric(IStack? stack, bool isPremove);
-      bool SetTotalMetric(IStacks stacks, IMapPoint centerZebulon, IMapPoint centerAlien, IMapPoint centerControlled, bool isMoveAway=false);
+      bool SetTotalMetric(IStacks stacks, IMapPoint centerZebulon, IMapPoint centerAlien, IMapPoint centerControlled);
    }
    public interface IMetricAlienMoves : System.Collections.IEnumerable
    {
@@ -39,6 +38,6 @@ namespace PleasantvilleGame
       IMetricAlienMove? this[int index] { get; set; }
       IMetricAlienMoves Shuffle();
       IMetricAlienMoves Sort();
-      bool UpdateMetrics(IStacks stacks, bool isMoveAway=false);
+      void UpdateMetrics(IStacks stacks);
    }
 }
