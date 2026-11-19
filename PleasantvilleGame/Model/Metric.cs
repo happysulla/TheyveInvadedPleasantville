@@ -20,6 +20,7 @@ namespace PleasantvilleGame
       public int MetricTotal { get; set; } = 0;
       public int MetricDenyTown { get; set; } = 0;
       public int MetricObs { get; set; } = 0;
+      public int MetricLeaving { get; set; } = 0;
       public int MetricTakeover { get; set; } = 0;
       public int MetricZebulon { get; set; } = 0;
       public int MetricAlienCenter { get; set; } = 0;
@@ -61,34 +62,6 @@ namespace PleasantvilleGame
          return normalized;       // 100=>distance is large and 0=>distance is small
       }
       //-----------------------------------------------------------
-      public bool SetObservationMetric(IStack? stack, IStacks stacks, bool isPremove)
-      {
-         int stackCount = 3;
-         if (true == isPremove)
-            stackCount = 2;
-         double pTotal = 1.0; // probability of observation = 1 - (1-p0)(1-p1)(1-p3).... where p is the probability of observation from that hex
-         foreach (var kvp in TargetTerritory.Observations)
-         {
-            IStack? stack1 = stacks.Find(kvp.Key);
-            if (null == stack1) // might not be a stack in this Territory
-               continue;
-            //----------------------------
-            if ((null != stack) && (stack.Territory.ToString() == stack1.Territory.ToString()))
-            {
-               if(stackCount == stack1.MapItems.Count)
-                  pTotal *= 0.33334;
-               continue;
-            }
-            foreach (IMapItem mi in stack1.MapItems)
-            {
-               if ((this.MovingMapItem.Name == mi.Name) || (true == mi.IsAlien()) || (true == mi.IsKnockedout) || (true == mi.IsKilled)) // aliens do not observer and cannot observe onself
-                  continue;
-               pTotal *= (1 - kvp.Value);
-            }
-         }
-         MetricObs = (int)((100.0) * (pTotal));  // probability of not being observed
-         return true;
-      }
       public void SetTownDenyMetric(IStack? stack)
       {
          if (null == stack)
@@ -108,14 +81,111 @@ namespace PleasantvilleGame
          else
             this.MetricDenyTown = 80;
       }
-      public void SetTakeoverMetric(IStack? stack, bool isPremove)
+      public void SetLeavingMetric(IStack? currentStack)
       {
-         if (null == stack)
+         if (null == currentStack)
             return;
          IMapItems aliens = new MapItems();
          IMapItems townPeoples = new MapItems();
          IMapItems uncontrolled = new MapItems();
-         foreach (IMapItem mi in stack.MapItems)
+         foreach (IMapItem mi in currentStack.MapItems)
+         {
+            if ((true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsSurrendered))  // Unconscious, dead, or surrendered cannot partipate
+               continue;
+            else if (true == mi.IsControlled && false == mi.IsStunned)
+               townPeoples.Add(mi);
+            else if (true == mi.IsAlien())
+               aliens.Add(mi);
+            else if (false == mi.IsWary)
+               uncontrolled.Add(mi);
+         }
+         switch (uncontrolled.Count) // subtract if moving away from 
+         {
+            case 0:
+               this.MetricLeaving = 100;
+               break;
+            case 1:
+               switch (aliens.Count)
+               {
+                  case 0:
+                     this.MetricLeaving = 100;
+                     break;
+                  default:
+                     this.MetricLeaving = 0;
+                     break;
+               }
+               break;
+            case 2:
+               switch (aliens.Count)
+               {
+                  case 0:
+                     this.MetricLeaving = 20;
+                     break;
+                  case 1:
+                     this.MetricLeaving = 10;
+                     break;
+                  default:
+                     this.MetricLeaving = 0;
+                     break;
+               }
+               break;
+            default:
+               switch (aliens.Count)
+               {
+                  case 0:
+                     this.MetricLeaving = 50;
+                     break;
+                  case 1:
+                     this.MetricLeaving = 10;
+                     break;
+                  default:
+                     this.MetricLeaving = 0;
+                     break;
+               }
+               break;
+         }
+         if (0 < townPeoples.Count)
+            MetricTakeover = Math.Max(100, MetricTakeover+50);
+      }
+      public bool SetObservationMetric(IStack? stack, IStacks stacks, bool isPremove)
+      {
+         int stackCount = 3;
+         if (true == isPremove)
+            stackCount = 2;
+         double pTotal = 1.0; // probability of observation = 1 - (1-p0)(1-p1)(1-p3).... where p is the probability of observation from that hex
+         foreach (var kvp in TargetTerritory.Observations)
+         {
+            IStack? stack1 = stacks.Find(kvp.Key);
+            if (null == stack1) // might not be a stack in this Territory
+               continue;
+            //----------------------------
+            if ((null != stack) && (stack.Territory.ToString() == stack1.Territory.ToString()))
+            {
+               if (stackCount == stack1.MapItems.Count)
+               {
+                  pTotal *= 0.33334;
+                  Logger.Log(LogEnum.LE_ERROR, "SetObservationMetric(): stack=" + stack.ToString() + " sc=" + stackCount.ToString() + " pt=" + pTotal.ToString());
+               }
+               continue;
+            }
+            foreach (IMapItem mi in stack1.MapItems)
+            {
+               if ((this.MovingMapItem.Name == mi.Name) || (true == mi.IsAlien()) || (true == mi.IsKnockedout) || (true == mi.IsKilled)) // aliens do not observer and cannot observe onself
+                  continue;
+               pTotal *= (1 - kvp.Value);
+            }
+         }
+         MetricObs = (int)((100.0) * (pTotal));  // probability of not being observed
+         return true;
+      }
+      public void SetTakeoverMetric(IStack? targetStack, bool isPremove)
+      {
+         if (null == targetStack)
+            return;
+         IMapItems aliens = new MapItems();
+         IMapItems townPeoples = new MapItems();
+         IMapItems uncontrolled = new MapItems();
+         foreach (IMapItem mi in targetStack.MapItems)
          {
             if ((true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsSurrendered))  // Unconscious, dead, or surrendered cannot partipate
                continue;
@@ -188,47 +258,49 @@ namespace PleasantvilleGame
       }
       public bool SetTotalMetric(IStacks stacks, IMapPoint centerZebulon, IMapPoint centerAlien, IMapPoint centerControlled, bool isMoveAway)
       {
-         MetricZebulon = GetClosestDistanceMetric(centerZebulon, TargetTerritory);
-         MetricAlienCenter = GetClosestDistanceMetric(centerAlien, TargetTerritory);
-         MetricTownCenter = GetFarthestDistanceMetric(centerControlled, TargetTerritory);
-         IStack? stack = stacks.Find(this.TargetTerritory);
-         if (false == SetObservationMetric(stack, stacks, true))
+         IStack? targetStack = stacks.Find(this.TargetTerritory);
+         if (true == isMoveAway)
+            SetTownDenyMetric(targetStack);
+         IStack? currentStack = stacks.Find(this.MovingMapItem.TerritoryCurrent);
+         SetLeavingMetric(currentStack);
+         if (false == SetObservationMetric(targetStack, stacks, true))
          {
             Logger.Log(LogEnum.LE_ERROR, "SetTotalMetric(): GetObservationMetric() returned error");
             return false;
          }
-         if (true == isMoveAway)
-            SetTownDenyMetric(stack);
-         SetTakeoverMetric(stack, true);
-         MetricTotal = MetricDenyTown + MetricObs + MetricTakeover + MetricZebulon + MetricAlienCenter + MetricTownCenter + MetricGuard;
+         SetTakeoverMetric(targetStack, true);
+         MetricZebulon = GetClosestDistanceMetric(centerZebulon, TargetTerritory);
+         MetricAlienCenter = GetClosestDistanceMetric(centerAlien, TargetTerritory);
+         MetricTownCenter = GetFarthestDistanceMetric(centerControlled, TargetTerritory);
+         MetricTotal = MetricDenyTown + MetricObs + MetricLeaving + MetricTakeover + MetricZebulon + MetricAlienCenter + MetricTownCenter + MetricGuard;
          return true;
       }
       public override String ToString()
       {
          StringBuilder sb = new StringBuilder();
          sb.Append(this.MovingMapItem.Name);
-         if( this.MovingMapItem.Name.Length < 11 )
+         if( this.MovingMapItem.Name.Length < 12 )
             sb.Append("\t\t\t\t=>");
-         else if (this.MovingMapItem.Name.Length < 15)
+         else if (this.MovingMapItem.Name.Length < 20)
             sb.Append("\t\t\t=>");
-         else if (this.MovingMapItem.Name.Length < 18)
-            sb.Append("\t\t=>");
          else 
             sb.Append("\t=>");
          sb.Append(this.MetricTotal.ToString());
-         sb.Append("=(");
+         sb.Append("=(D");
          sb.Append(this.MetricDenyTown.ToString());
-         sb.Append("+");
+         sb.Append("+L");
+         sb.Append(this.MetricLeaving.ToString());
+         sb.Append("+O");
          sb.Append(this.MetricObs.ToString());
-         sb.Append("+");
+         sb.Append("+T");
          sb.Append(this.MetricTakeover.ToString());
-         sb.Append("+");
+         sb.Append("+Z");
          sb.Append(this.MetricZebulon.ToString());
-         sb.Append("+");
+         sb.Append("+A");
          sb.Append(this.MetricAlienCenter.ToString());
-         sb.Append("+");
+         sb.Append("+C");
          sb.Append(this.MetricTownCenter.ToString());
-         sb.Append("+");
+         sb.Append("+G");
          sb.Append(this.MetricGuard.ToString());
          sb.Append(")->(");
          sb.Append(this.MovingMapItem.TerritoryCurrent.ToString());
@@ -319,14 +391,14 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "UpdateMetrics(): stack=null");
                return false;
             }
+            if( true == isMoveAway )
+               mam.SetTownDenyMetric(stack);
+            mam.SetTakeoverMetric(stack, false);
             if (false == mam.SetObservationMetric(stack, stacks, false))
             {
                Logger.Log(LogEnum.LE_ERROR, "UpdateMetrics(): SetObservationMetric() returned false");
                return false;
             }
-            if( true == isMoveAway )
-               mam.SetTownDenyMetric(stack);
-            mam.SetTakeoverMetric(stack, false);
          }
          return true;
       }

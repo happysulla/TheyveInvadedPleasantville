@@ -272,16 +272,20 @@ namespace PleasantvilleGame
                   uncontrolledPeoples.Add(mi);
             }
          }
-         //------------------------------------
+         aliens = aliens.Shuffle();
+         //------------------------------------------
          IMapPoint mpCenterControlled = Territory.GetCenterPointControlled(stacks);
          IMapPoint mpCenterAlien = Territory.GetCenterPointAlien(stacks);
+         //------------------------------------------
          foreach (IMapItem candidate in aliens)
          {
             IMetricAlienMoves alienMoveMetrics = new MetricAlienMoves();
             IMapItems closeMapItems = Territory.GetMapItemsOfInterest(stacks, Territories.theTerritories, candidate); // MapItems this mapitem can move to
-            closeMapItems.Remove("Zebulon"); // remove if part of stack
+            closeMapItems = closeMapItems.Shuffle();
             foreach (IMapItem closeMapItem in closeMapItems)
             {
+               if ((true == closeMapItem.IsKnockedout) || (true == closeMapItem.IsTiedUp) || (true == closeMapItem.IsKilled) || ("Zebulon" == closeMapItem.Name) || (true == closeMapItem.IsStunned) || (true == closeMapItem.IsWary) || (true == closeMapItem.IsControlled) || (true == closeMapItem.IsAlien()))
+                  continue;
                if ((true == closeMapItem.IsMovingThisTurn) && (true == candidate.IsMovingThisTurn))
                   continue;
                IStack? candidateStack = stacks.Find(candidate.TerritoryCurrent);
@@ -290,7 +294,10 @@ namespace PleasantvilleGame
                int closeMapItemStackCount = Territory.GetStackingCount(closeMapItemStack, closeMapItem);
                if ((3 < candidateStackCount) && (3 < closeMapItemStackCount))
                   continue;
+               if ((true == closeMapItem.IsKnockedout) || (true == closeMapItem.IsKilled) || ("Zebulon" == closeMapItem.Name) || (true == closeMapItem.IsStunned) || (true == closeMapItem.IsWary) || (true == closeMapItem.IsAlien()))
+                  continue;
                //------------------------------------------
+               Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_AlienTakeoverMoves(): --------------------------------------------Candidate=" + candidate.Name + "--------------------------------------------");
                IMetricAlienMove mamCandidateMove = new MetricAlienMove(candidate, closeMapItem.TerritoryCurrent);
                IMetricAlienMove mamCloseItemMove = new MetricAlienMove(closeMapItem, candidate.TerritoryCurrent);
                //------------------------------------------
@@ -298,7 +305,7 @@ namespace PleasantvilleGame
                {
                   if (false == mamCandidateMove.SetTotalMetric(stacks, mpZebulon, mpCenterAlien, mpCenterControlled))
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "Add_UncontrolledTakeoverMoves(): Set_TotalMetric() returned false");
+                     Logger.Log(LogEnum.LE_ERROR, "Add_AlienTakeoverMoves(): Set_TotalMetric() returned false");
                      return false;
                   }
                }
@@ -307,7 +314,7 @@ namespace PleasantvilleGame
                {
                   if (false == mamCloseItemMove.SetTotalMetric(stacks, mpZebulon, mpCenterAlien, mpCenterControlled))
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "Add_UncontrolledTakeoverMoves(): Set_TotalMetric() returned false");
+                     Logger.Log(LogEnum.LE_ERROR, "Add_AlienTakeoverMoves(): Set_TotalMetric() returned false");
                      return false;
                   }
                }
@@ -320,9 +327,9 @@ namespace PleasantvilleGame
             if (0 < alienMoveMetrics.Count)
             {
                IMetricAlienMoves sortedMetrics = alienMoveMetrics.Sort();
+
                foreach (IMetricAlienMove mam in sortedMetrics)
                   Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_AlienTakeoverMoves(): " + mam.ToString());
-               Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_AlienTakeoverMoves(): --------------------------------------------");
                if (0 < sortedMetrics.Count)
                {
                   IMetricAlienMove? mam1 = sortedMetrics[0];
@@ -331,22 +338,34 @@ namespace PleasantvilleGame
                      Logger.Log(LogEnum.LE_ERROR, "Add_AlienTakeoverMoves(): mam1=null");
                      return false;
                   }
-                  candidateMoves.Add(mam1);
-                  //-------------------------------
-                  mam1.MovingMapItem.IsMovingThisTurn = true;
-                  stacks.Remove(mam1.MovingMapItem); // reset stacks to show change
-                  stacks.Add(mam1.MovingMapItem, mam1.TargetTerritory);
+                  if (candidateMoves.Count < 5)
+                  {
+                     candidateMoves.Add(mam1);
+                     mam1.MovingMapItem.IsMovingThisTurn = true;
+                     stacks.Remove(mam1.MovingMapItem); // reset stacks to show change
+                     stacks.Add(mam1.MovingMapItem, mam1.TargetTerritory);
+                  }
+                  else
+                  {
+                     IMetricAlienMove? lastMetric = candidateMoves[candidateMoves.Count - 1];
+                     if (null == lastMetric)
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "Add_UncontrolledMoves(): lastMetric=null");
+                        return false;
+                     }
+                     if (lastMetric.MetricTotal < mam1.MetricTotal)
+                     {
+                        stacks.Remove(lastMetric.MovingMapItem); // return the last moving mapitem to its original stack
+                        stacks.Add(lastMetric.MovingMapItem, lastMetric.MovingMapItem.TerritoryStarting);
+                        candidateMoves[candidateMoves.Count - 1] = mam1;
+                        mam1.MovingMapItem.IsMovingThisTurn = true;
+                        stacks.Remove(mam1.MovingMapItem); // reset stacks to show change
+                        stacks.Add(mam1.MovingMapItem, mam1.TargetTerritory);
+                     }
+                  }
                }
             }
          }
-         //-------------------------------------
-         if (false == candidateMoves.UpdateMetrics(stacks))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Add_AlienTakeoverMoves(): Update_Metrics() returned false");
-            return false;
-         }
-         foreach (IMetricAlienMove mam in candidateMoves)
-            Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_MoveAwayFromControlledMoves(): " + mam.ToString());
          return true;
       }
       public bool AddUncontrolledMoves(IStacks stacks, IMapPoint mpZebulon, IMetricAlienMoves candidateMoves)
@@ -365,82 +384,108 @@ namespace PleasantvilleGame
                   uncontrolledPeoples.Add(mi);
             }
          }
+         uncontrolledPeoples = uncontrolledPeoples.Shuffle();
          //------------------------------------
          IMapPoint mpCenterControlled = Territory.GetCenterPointControlled(stacks);
          IMapPoint mpCenterAlien = Territory.GetCenterPointAlien(stacks);
+         //------------------------------------
          foreach (IMapItem candidate in uncontrolledPeoples)
          {
+            if (true == candidate.IsMovingThisTurn)
+               continue;
             IMetricAlienMoves uncontrolledMoveMetric = new MetricAlienMoves();
             IMapItems closeMapItems = Territory.GetMapItemsOfInterest(stacks, Territories.theTerritories, candidate); // MapItems this mapitem can move to
-            closeMapItems.Remove("Zebulon"); // remove if part of stack
+            closeMapItems = closeMapItems.Shuffle();
             foreach (IMapItem closeMapItem in closeMapItems)
             {
-               if ( (true == closeMapItem.IsMovingThisTurn) && (true == candidate.IsMovingThisTurn) || (true == closeMapItem.IsControlled) )
-                     continue;
+               if ((true == closeMapItem.IsKnockedout) || (true == closeMapItem.IsTiedUp) || (true == closeMapItem.IsKilled) || ("Zebulon" == closeMapItem.Name) || (true == closeMapItem.IsStunned) || (true == closeMapItem.IsWary) || (true == closeMapItem.IsControlled) || (true == closeMapItem.IsAlien()) )
+                  continue;
+               if ((true == closeMapItem.IsMovingThisTurn) && (true == candidate.IsMovingThisTurn))
+                  continue;
                IStack? candidateStack = stacks.Find(candidate.TerritoryCurrent);
                int candidateStackCount = Territory.GetStackingCount(candidateStack, candidate);
                IStack? closeMapItemStack = stacks.Find(closeMapItem.TerritoryCurrent);
                int closeMapItemStackCount = Territory.GetStackingCount(closeMapItemStack, closeMapItem);
                if ((3 < candidateStackCount) && (3 < closeMapItemStackCount))
                   continue;
+               if ((true == closeMapItem.IsMovingThisTurn) || (true == closeMapItem.IsKnockedout) || (true == closeMapItem.IsTiedUp) || (true == closeMapItem.IsKilled) || ("Zebulon" == closeMapItem.Name) || (true == closeMapItem.IsStunned) || (true == closeMapItem.IsWary)  )
+                  continue;
                //------------------------------------------
                IMetricAlienMove mamCandidateMove = new MetricAlienMove(candidate, closeMapItem.TerritoryCurrent);
                IMetricAlienMove mamCloseItemMove = new MetricAlienMove(closeMapItem, candidate.TerritoryCurrent);
+               bool isCloseMapItemWithinRange = Territory.IsMapItemWithingRange(candidate, closeMapItem);
                //------------------------------------------
                if ( (closeMapItemStackCount < 4) && (false == candidate.IsMovingThisTurn) )
                {
                   if (false == mamCandidateMove.SetTotalMetric(stacks, mpZebulon, mpCenterAlien, mpCenterControlled))
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "Add_UncontrolledTakeoverMoves(): Set_TotalMetric() returned false");
+                     Logger.Log(LogEnum.LE_ERROR, "Add_UncontrolledMoves(): Set_TotalMetric() returned false");
                      return false;
                   }
                }
                //------------------------------------------
-               if ((candidateStackCount < 4) && (false == closeMapItem.IsMovingThisTurn))
+               if ((candidateStackCount < 4) && (false == closeMapItem.IsMovingThisTurn) && (true == isCloseMapItemWithinRange) )
                {
                   if (false == mamCloseItemMove.SetTotalMetric(stacks, mpZebulon, mpCenterAlien, mpCenterControlled))
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "Add_UncontrolledTakeoverMoves(): Set_TotalMetric() returned false");
+                     Logger.Log(LogEnum.LE_ERROR, "Add_UncontrolledMoves(): Set_TotalMetric() returned false");
                      return false;
                   }
                }
                //------------------------------------------
                if (mamCloseItemMove.MetricTotal < mamCandidateMove.MetricTotal)
+               {
+                  Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_UncontrolledMoves(): --------------------------------------------Candidate=" + candidate.Name + "--------------------------------------------\n(close=" + mamCloseItemMove.ToString() + ") < (cand=" + mamCandidateMove.ToString() + ")");
                   uncontrolledMoveMetric.Add(mamCandidateMove);
+               }
                else
+               {
+                  Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_UncontrolledMoves(): --------------------------------------------Candidate=" + candidate.Name + "--------------------------------------------\n(close=" + mamCloseItemMove.ToString() + ") > (cand=" + mamCandidateMove.ToString() + ")");
                   uncontrolledMoveMetric.Add(mamCloseItemMove);
+               }
             }
             if (0 < uncontrolledMoveMetric.Count)
             {
                IMetricAlienMoves sortedMetrics = uncontrolledMoveMetric.Sort();
-               //foreach (IMetricAlienMove mam in sortedMetrics)
-               //   Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_AlienTakeoverMoves(): " + mam.ToString());
-               //Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_AlienTakeoverMoves(): --------------------------------------------");
+               Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_UncontrolledMoves(): vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvCandidate=" + candidate.Name + "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
+               foreach (IMetricAlienMove mam in sortedMetrics)
+                  Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_UncontrolledMoves(): " + mam.ToString());
                if (0 < sortedMetrics.Count)
                {
                   IMetricAlienMove? mam1 = sortedMetrics[0];
                   if (null == mam1)
                   {
-                     Logger.Log(LogEnum.LE_ERROR, "Add_AlienTakeoverMoves(): mam1=null");
+                     Logger.Log(LogEnum.LE_ERROR, "Add_UncontrolledMoves(): mam1=null");
                      return false;
                   }
-                  candidateMoves.Add(mam1);
-                  //-------------------------------
-                  closeMapItem.IsMovingThisTurn = true;
-                  candidate.IsMovingThisTurn = true;
-                  stacks.Remove(mam1.MovingMapItem); // reset stacks to show change
-                  stacks.Add(mam1.MovingMapItem, mam1.TargetTerritory);
+                  if( candidateMoves.Count < 5)
+                  {
+                     candidateMoves.Add(mam1);
+                     mam1.MovingMapItem.IsMovingThisTurn = true;
+                     stacks.Remove(mam1.MovingMapItem); // reset stacks to show change
+                     stacks.Add(mam1.MovingMapItem, mam1.TargetTerritory);
+                  }
+                  else
+                  {
+                     IMetricAlienMove? lastMetric = candidateMoves[candidateMoves.Count - 1];
+                     if( null == lastMetric )
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "Add_UncontrolledMoves(): lastMetric=null");
+                        return false;
+                     }
+                     if(lastMetric.MetricTotal < mam1.MetricTotal)
+                     {
+                        stacks.Remove(lastMetric.MovingMapItem); // return the last moving mapitem to its original stack
+                        stacks.Add(lastMetric.MovingMapItem, lastMetric.MovingMapItem.TerritoryStarting);
+                        candidateMoves[candidateMoves.Count - 1] = mam1;
+                        mam1.MovingMapItem.IsMovingThisTurn = true;
+                        stacks.Remove(mam1.MovingMapItem); // reset stacks to show change
+                        stacks.Add(mam1.MovingMapItem, mam1.TargetTerritory);
+                     }
+                  }
                }
             }
          }
-         //-------------------------------------
-         if (false == candidateMoves.UpdateMetrics(stacks))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Add_AlienTakeoverMoves(): Update_Metrics() returned false");
-            return false;
-         }
-         foreach (IMetricAlienMove mam in candidateMoves)
-            Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_MoveAwayFromControlledMoves(): " + mam.ToString());
          return true;
       }
       private bool AddCandidatesMovesToStunned(IStacks stacks, IMapPoint mpZebulon, IMetricAlienMoves candidateMoves)

@@ -419,16 +419,11 @@ namespace PleasantvilleGame
       }
       public static bool IsMapItemWithingRange(IMapItem target, IMapItem moving)
       {
-         IMapPath? bestPath = GetBestPath(Territories.theTerritories, moving.TerritoryCurrent, target.TerritoryCurrent, moving.Movement);
-         if (null == bestPath)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "IsMapItemWithingRange(): returned error for mi=" + moving.Name + " from=" + moving.TerritoryCurrent.ToString() + " to target=" + target.TerritoryCurrent.ToString());
-            return false;
-         }
-         if (moving.Movement < bestPath.Territories.Count)
-            return false;
-         else
+         ITerritories territories = GetTerritoriesWithinRange(moving.TerritoryCurrent, moving.Movement);
+         if (true == territories.Contains(target.TerritoryCurrent))
             return true;
+         else
+            return false;
       }
       //---------------------------------------------------------------
       public static ITerritories GetTerritoriesWithinRange(ITerritory tStart, int range)

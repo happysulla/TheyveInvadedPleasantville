@@ -17,10 +17,12 @@ namespace PleasantvilleGame
       int MetricZebulon { get; set; }
       int MetricAlienCenter { get; set; }
       int MetricTownCenter { get; set; }
+      int MetricLeaving { get; set; }
       int MetricTakeover { get; set; }
       int MetricGuard { get; set; }
       bool SetObservationMetric(IStack? stack, IStacks stacks, bool isPremove);
       void SetTownDenyMetric(IStack? stack);
+      void SetLeavingMetric(IStack? stack);
       void SetTakeoverMetric(IStack? stack, bool isPremove);
       bool SetTotalMetric(IStacks stacks, IMapPoint centerZebulon, IMapPoint centerAlien, IMapPoint centerControlled, bool isMoveAway=false);
    }

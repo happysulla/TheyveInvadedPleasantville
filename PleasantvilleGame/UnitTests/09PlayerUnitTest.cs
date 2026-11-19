@@ -300,9 +300,9 @@ namespace PleasantvilleGame
             //-------------------------
             IMapItemMoves mapItemMoves = new MapItemMoves();
             moves = moves.Sort();
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "PlayerUnitTest.Command(3): +++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             foreach (IMetricAlienMove mam in moves)
                Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "PlayerUnitTest.Command(3): " + mam.ToString());
-            Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "PlayerUnitTest.Command(3): --------------------------------------------");
             foreach (IMetricAlienMove mam in moves)
             {
                mam.MovingMapItem.TerritoryCurrent = mam.MovingMapItem.TerritoryStarting;
@@ -338,9 +338,10 @@ namespace PleasantvilleGame
             //-------------------------
             IMapItemMoves mapItemMoves = new MapItemMoves();
             moves = moves.Sort();
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "PlayerUnitTest.Command(4): +++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             foreach (IMetricAlienMove mam in moves)
                Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "PlayerUnitTest.Command(4): " + mam.ToString());
-            Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "PlayerUnitTest.Command(4): --------------------------------------------");
+
             foreach (IMetricAlienMove mam in moves)
             {
                mam.MovingMapItem.TerritoryCurrent = mam.MovingMapItem.TerritoryStarting;
@@ -575,11 +576,11 @@ namespace PleasantvilleGame
          GameAction outAction = GameAction.UpdateMainCanvasClear;
          myGameEngine.PerformAction(ref gi, ref outAction);
          //--------------------------------------------
-         if (false == CreateLabelsForDisplay(Territories.theTerritories, 1))
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Reset(): CreateLabelsForDisplay() returned false");
-            return false;
-         }
+         //if (false == CreateLabelsForDisplay(Territories.theTerritories, 1))
+         //{
+         //   Logger.Log(LogEnum.LE_ERROR, "Reset(): CreateLabelsForDisplay() returned false");
+         //   return false;
+         //}
          //--------------------------------------------
          gi.MapItemMoves.Clear();
          gi.Stacks.Clear();
