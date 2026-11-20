@@ -61,7 +61,7 @@ namespace PleasantvilleGame
          Logger.Log(LogEnum.LE_ERROR, "PlayerAlienHuman.Block_TownMove(): not implemented");
          return false;
       }
-      public bool ShowPossibleTakeover(IGameInstance gi, IStack stack)
+      public bool ShowPossibleTakeover(IGameInstance gi)
       {
          Logger.Log(LogEnum.LE_ERROR, "PlayerAlienHuman.Show_Takeover(): not implemented");
          return false;

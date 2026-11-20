@@ -283,13 +283,13 @@ namespace PleasantvilleGame
                   continue;
                if ((true == closeMapItem.IsMovingThisTurn) && (true == candidate.IsMovingThisTurn))
                   continue;
+               if (closeMapItem.TerritoryCurrent.ToString() == candidate.TerritoryCurrent.ToString())
+                  continue;
                IStack? candidateStack = stacks.Find(candidate.TerritoryCurrent);
                int candidateStackCount = Territory.GetStackingCount(candidateStack, candidate);
                IStack? closeMapItemStack = stacks.Find(closeMapItem.TerritoryCurrent);
                int closeMapItemStackCount = Territory.GetStackingCount(closeMapItemStack, closeMapItem);
                if ((3 < candidateStackCount) && (3 < closeMapItemStackCount))
-                  continue;
-               if ((true == closeMapItem.IsKnockedout) || (true == closeMapItem.IsKilled) || ("Zebulon" == closeMapItem.Name) || (true == closeMapItem.IsStunned) || (true == closeMapItem.IsWary) || (true == closeMapItem.IsAlien()))
                   continue;
                //------------------------------------------
                IMetricAlienMove mamCandidateMove = new MetricAlienMove(candidate, closeMapItem.TerritoryCurrent);
@@ -315,12 +315,20 @@ namespace PleasantvilleGame
                //------------------------------------------
                if (mamCloseItemMove.MetricTotal < mamCandidateMove.MetricTotal)
                {
-                  Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_AlienTakeoverMoves(): nnnnnnnnnnnnnnnnnnnnnnnn Candidate=" + candidate.Name + " vs Close=" + closeMapItem.Name);
+                  IStack? stack = stacks.Find(mamCandidateMove.TargetTerritory);
+                  if (null == stack)
+                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_AlienTakeoverMoves(): nnnnnnnnnnnnnnnnnnnnnnnn " + candidate.Name + "-->" + closeMapItem.Name + "in " + mamCandidateMove.TargetTerritory.ToString());
+                  else
+                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_AlienTakeoverMoves(): nnnnnnnnnnnnnnnnnnnnnnnn " + candidate.Name + "-->" + closeMapItem.Name + " stack=" + stack.ToString());
                   alienMoveMetrics.Add(mamCandidateMove);
                }
                else
                {
-                  Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_AlienTakeoverMoves(): nnnnnnnnnnnnnnnnnnnnnnnn Close=" + closeMapItem.Name + " vs Candidate=" + candidate.Name);
+                  IStack? stack = stacks.Find(mamCloseItemMove.TargetTerritory);
+                  if (null == stack)
+                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_AlienTakeoverMoves(): nnnnnnnnnnnnnnnnnnnnnnnn " + candidate.Name + "<--" + closeMapItem.Name + "in " + mamCloseItemMove.TargetTerritory.ToString());
+                  else
+                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_AlienTakeoverMoves(): nnnnnnnnnnnnnnnnnnnnnnnn " + candidate.Name + "<--" + closeMapItem.Name + " stack=" + stack.ToString());
                   alienMoveMetrics.Add(mamCloseItemMove);
                }
             }
@@ -349,7 +357,6 @@ namespace PleasantvilleGame
                   else
                   {
                      candidateMoves = candidateMoves.Sort();
-                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_AlienTakeoverMoves(): cccccccccccccccccccccccc candidateMoves=" + candidateMoves.ToString());
                      IMetricAlienMove? lastMetric = candidateMoves[candidateMoves.Count - 1];
                      if (null == lastMetric)
                      {
@@ -415,6 +422,8 @@ namespace PleasantvilleGame
                   continue;
                if ((true == closeMapItem.IsMovingThisTurn) && (true == candidate.IsMovingThisTurn))
                   continue;
+               if (closeMapItem.TerritoryCurrent.ToString() == candidate.TerritoryCurrent.ToString())
+                  continue;
                IStack? candidateStack = stacks.Find(candidate.TerritoryCurrent);
                int candidateStackCount = Territory.GetStackingCount(candidateStack, candidate);
                IStack? closeMapItemStack = stacks.Find(closeMapItem.TerritoryCurrent);
@@ -448,19 +457,27 @@ namespace PleasantvilleGame
                //------------------------------------------
                if (mamCloseItemMove.MetricTotal < mamCandidateMove.MetricTotal)
                {
-                  Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_UncontrolledMoves(): nnnnnnnnnnnnnnnnnnnnnnnn Candidate=" + candidate.Name + " vs Close=" + closeMapItem.Name);
+                  IStack? stack = stacks.Find(mamCandidateMove.TargetTerritory);
+                  if( null == stack )
+                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_UncontrolledMoves(): nnnnnnnnnnnnnnnnnnnnnnnn " + candidate.Name + "-->" + closeMapItem.Name + "in " + mamCandidateMove.TargetTerritory.ToString());
+                  else
+                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_UncontrolledMoves(): nnnnnnnnnnnnnnnnnnnnnnnn " + candidate.Name + "-->" + closeMapItem.Name + " stack=" + stack.ToString());
                   uncontrolledMoveMetric.Add(mamCandidateMove);
                }
                else
                {
-                  Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_UncontrolledMoves(): nnnnnnnnnnnnnnnnnnnnnnnn Close=" + closeMapItem.Name + " vs Candidate=" + candidate.Name);
+                  IStack? stack = stacks.Find(mamCloseItemMove.TargetTerritory);
+                  if (null == stack)
+                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_UncontrolledMoves(): nnnnnnnnnnnnnnnnnnnnnnnn " + candidate.Name + "<--" + closeMapItem.Name + "in " + mamCloseItemMove.TargetTerritory.ToString());
+                  else
+                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_UncontrolledMoves(): nnnnnnnnnnnnnnnnnnnnnnnn " + candidate.Name + "<--" + closeMapItem.Name + " stack=" + stack.ToString());
                   uncontrolledMoveMetric.Add(mamCloseItemMove);
                }
             }
             if (0 < uncontrolledMoveMetric.Count)
             {
                IMetricAlienMoves sortedMetrics = uncontrolledMoveMetric.Sort();
-               Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_UncontrolledMoves(): ------------------------");
+               Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_UncontrolledMoves(): ++++++++++++++++++++++++ candidateMoves=" + candidateMoves.ToString());
                foreach (IMetricAlienMove mam in sortedMetrics)
                   Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_UncontrolledMoves(): " + mam.ToString());
                if (0 < sortedMetrics.Count)
@@ -482,7 +499,6 @@ namespace PleasantvilleGame
                   else
                   {
                      candidateMoves = candidateMoves.Sort();
-                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_UncontrolledMoves(): cccccccccccccccccccccccc candidateMoves=" + candidateMoves.ToString());
                      IMetricAlienMove? lastMetric = candidateMoves[candidateMoves.Count - 1];
                      if( null == lastMetric )
                      {

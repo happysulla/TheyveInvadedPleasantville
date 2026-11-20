@@ -511,7 +511,6 @@ namespace PleasantvilleGame
          }
          if (false == UpdateGrid())
             Logger.Log(LogEnum.LE_ERROR, "EventViewerRandomMovement.ShowDieResults(): UpdateGrid() return false");
-
          myIsRollInProgress = false;
       }
       //------------------------------------------------------------------------------------
@@ -528,7 +527,7 @@ namespace PleasantvilleGame
             if (true == gr.myIsResult) // true when observed doing takeover
             {
                isMapUpdateNeeded = true;
-               Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 1-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem1.Name + " taking over " + gr.myMapItem2.Name);
+               Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 0-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem1.Name + " taking over " + gr.myMapItem2.Name);
                myGameInstance.AddKnownAlien(gr.myMapItem1); // Perform_Observation()
                myGameInstance.AddKnownAlien(gr.myMapItem2); // Perform_Observation()
                gr.myMapItem1.IsObserveThisTurn = true;
@@ -549,7 +548,7 @@ namespace PleasantvilleGame
             }
             else
             {
-               Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 1-UNOBSERVED - AddingUnknownAlien() rightMapItem=" + gr.myMapItem1.Name + " taking over " + gr.myMapItem2.Name);
+               Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 0-UNOBSERVED - AddingUnknownAlien() rightMapItem=" + gr.myMapItem1.Name + " taking over " + gr.myMapItem2.Name);
                myGameInstance.AddUnknownAlien(gr.myMapItem2);
             }
          }
@@ -558,7 +557,7 @@ namespace PleasantvilleGame
             if (true == gr.myIsResult) // true when observed doing takeover
             {
                isMapUpdateNeeded = true;
-               Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 2-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem2.Name + " taking over " + gr.myMapItem1.Name);
+               Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 1-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem2.Name + " taking over " + gr.myMapItem1.Name);
                myGameInstance.AddKnownAlien(gr.myMapItem1);  // Perform_Observation()
                myGameInstance.AddKnownAlien(gr.myMapItem2);  // Perform_Observation()
                gr.myMapItem1.IsTakenOverThisTurn = true;
@@ -579,14 +578,14 @@ namespace PleasantvilleGame
             }
             else
             {
-               Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 2-UNOBSERVED - AddingUnknownAlien() rightMapItem=" + gr.myMapItem2.Name + " taking over " + gr.myMapItem1.Name);
+               Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 1-UNOBSERVED - AddingUnknownAlien() rightMapItem=" + gr.myMapItem2.Name + " taking over " + gr.myMapItem1.Name);
                myGameInstance.AddUnknownAlien(gr.myMapItem1); // Perform_Observation()
             }
          }
          else if ((true == gr.myMapItem1.IsAlienKnown) && (true == gr.myMapItem2.IsUncontrolled()) )  // Alien can be in either of these positions.
          {
             isMapUpdateNeeded = true;
-            Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 3-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem1.Name + " taking over " + gr.myMapItem2.Name);
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 2-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem1.Name + " taking over " + gr.myMapItem2.Name);
             myGameInstance.AddKnownAlien(gr.myMapItem2); // Perform_Observation()
             gr.myMapItem2.IsTakenOverThisTurn = true;
             if (true == gr.myIsResult) // true when observed doing takeover
@@ -609,7 +608,7 @@ namespace PleasantvilleGame
          else if ( (true == gr.myMapItem1.IsUncontrolled()) && (true == gr.myMapItem2.IsAlienKnown) ) // Alien can be in either of these positions.
          {
             isMapUpdateNeeded = true;
-            Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 4-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem2.Name + " taking over " + gr.myMapItem1.Name);
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 3-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem2.Name + " taking over " + gr.myMapItem1.Name);
             myGameInstance.AddKnownAlien(gr.myMapItem1);  // Perform_Observation()
             gr.myMapItem1.IsTakenOverThisTurn = true;
             if (true == gr.myIsResult) // true when observed doing takeover
@@ -632,7 +631,7 @@ namespace PleasantvilleGame
          else if ( ((true == gr.myMapItem1.IsAlienKnown) || (true == gr.myMapItem1.IsAlienUnknown)) && (true == gr.myMapItem2.IsControlled)) // alien can takeover controlled stunned units
          {
             isMapUpdateNeeded = true;
-            Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 5-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem2.Name + " taking over " + gr.myMapItem1.Name);
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 4-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem2.Name + " taking over " + gr.myMapItem1.Name);
             if (true == gr.myMapItem1.IsAlienUnknown)
             {
                myGameInstance.AddKnownAlien(gr.myMapItem1);  // Perform_Observation() - unknown becomes known
@@ -660,7 +659,7 @@ namespace PleasantvilleGame
          else if ((true == gr.myMapItem1.IsControlled) && ((true == gr.myMapItem2.IsAlienKnown) || (true == gr.myMapItem2.IsAlienUnknown)) ) // alien can takeover controlled stunned units
          {
             isMapUpdateNeeded = true;
-            Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 6-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem2.Name + " taking over " + gr.myMapItem1.Name);
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Perform_Observation(): 5-OBSERVED - AddingKnownAlien() rightMapItem=" + gr.myMapItem2.Name + " taking over " + gr.myMapItem1.Name);
             if (true == gr.myMapItem2.IsAlienUnknown)
             {
                myGameInstance.AddKnownAlien(gr.myMapItem2);  // Perform_Observation() - unknown becomes known
@@ -687,23 +686,23 @@ namespace PleasantvilleGame
          }
          else if ((true == gr.myMapItem1.IsUncontrolled()) && (true == gr.myMapItem2.IsUncontrolled()) )
          {
-            // if both uncontrolled, do nothing
+            gr.myIsResult = false; // if both uncontrolled, do nothing
          }
          else if ((true == gr.myMapItem1.IsAlienKnown) && (true == gr.myMapItem2.IsAlienUnknown))
          {
-            // if one unknown and one known aliens, do nothing
+            gr.myIsResult = false; // if one unknown and one known aliens, do nothing
          }
          else if ((true == gr.myMapItem1.IsAlienUnknown) && (true == gr.myMapItem2.IsAlienKnown))
          {
-            // if one unknown and one known aliens, do nothing
+            gr.myIsResult = false; // if one unknown and one known aliens, do nothing
          }
          else if ((true == gr.myMapItem1.IsAlienKnown) && (true == gr.myMapItem2.IsAlienKnown))
          {
-            // if both known aliens, do nothing
+            gr.myIsResult = false; // if both unknown, do nothing
          }
          else if ((true == gr.myMapItem1.IsAlienUnknown) && (true == gr.myMapItem2.IsAlienUnknown))
          {
-            // if both unknown aliens, do nothing
+            gr.myIsResult = false; // if both unknown, do nothing
          }
          else
          {

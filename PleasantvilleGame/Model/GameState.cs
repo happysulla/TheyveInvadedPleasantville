@@ -121,7 +121,7 @@ namespace PleasantvilleGame
       }
       protected bool ResetPhase(IGameInstance gi, GamePhase phase)
       {
-         Logger.Log(LogEnum.LE_SHOW_RESET_PHASE, "Reset_Phase(): ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + phase.ToString());
+         Logger.Log(LogEnum.LE_SHOW_RESET_PHASE, "Reset_Phase(): ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ TURN#" + gi.GameTurn.ToString() + " PHASE=" + phase.ToString());
          GameLoadMgr loadMgr = new GameLoadMgr();
          if (false == loadMgr.SaveGame(gi, MainMenuViewer.RECOVER_FILENAME_PHASE))
          {
@@ -659,68 +659,24 @@ namespace PleasantvilleGame
       }
       protected bool CheckForAlienTakeovers(IGameInstance gi, ref GameAction action)
       {
-         bool isAlienTakeover = false;
          if (false == ResetPhase(gi, GamePhase.AlienTakeovers))
          {
             Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): Reset_Phase() returned error");
             return false;
          }
          action = GameAction.AlienTakeoversShow;
-         foreach (Stack stack in gi.Stacks)
+         if (false == gi.PlayerAlien.ShowPossibleTakeover(gi))
          {
-            if (stack.MapItems.Count < 2)
-               continue;
-            IMapItems possibleVictims = new MapItems();
-            IMapItems knownAliens = new MapItems();
-            IMapItems unknownAliens = new MapItems();
-            IMapItems stuns = new MapItems();
-            foreach (MapItem mi in stack.MapItems)
-            {
-               if ((true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsSurrendered))  // Unconscious or dead cannot be taken over
-                  continue;
-               if (true == mi.IsControlled)
-               {
-                  if(true == mi.IsStunned)
-                     stuns.Add(mi);
-               }
-               else if (true == mi.IsAlienKnown)
-               {
-                  if (false == mi.IsTiedUp)
-                     knownAliens.Add(mi);
-               }
-               else if (true == mi.IsAlienUnknown)
-               {
-                  if (false == mi.IsTiedUp)
-                     unknownAliens.Add(mi);
-               }
-               else if (true == mi.IsWary)
-               {
-                  if (true == mi.IsStunned)
-                     possibleVictims.Add(mi);
-               }
-               else // conscious, unwary, uncontrolled townspeople
-               {
-                  possibleVictims.Add(mi);
-               }
-            }
-            //--------------------------------------------
-            int alienCount = knownAliens.Count + unknownAliens.Count;
-            if ((1 < possibleVictims.Count) || ((0 < unknownAliens.Count) && (0 < knownAliens.Count)) || ((0 < possibleVictims.Count) && (0 < alienCount)) || ((0 < stuns.Count) && (0 < alienCount)))   // at least two non-town controlled mapitems  - cannnot be all known aliens
-            {
-               isAlienTakeover = true;
-               gi.SelectedTerritories.Add(stack.Territory);
-               Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "CheckFor_AlienTakeovers(): t=" + stack.Territory.ToString() + " v=" + possibleVictims.ToString() + " ua=" + unknownAliens.ToString() + " ka=" + knownAliens.ToString());
-               if (false == gi.PlayerAlien.ShowPossibleTakeover(gi, stack))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): Perform_AlienTakeover() returned error");
-                  return false;
-               }
-               SetCommand(gi, GameAction.AlienTakeoversShow, GameAction.DieRollActionNone, gi.EventActive);
-            }
+            Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): Perform_AlienTakeover() returned error");
+            return false;
          }
-         if( false == isAlienTakeover )
+         if( 0 <  gi.SelectedTerritories.Count)
          {
-            if (false == CheckForEndOfGame(gi, ref action)) // CheckFor_AlienTakeovers() - no alient takeover places
+            SetCommand(gi, GameAction.AlienTakeoversShow, GameAction.DieRollActionNone, gi.EventActive);
+         }
+         else
+         {
+            if (false == CheckForEndOfGame(gi, ref action)) // CheckFor_AlienTakeovers() - no alien takeover places
             {
                Logger.Log(LogEnum.LE_ERROR, "CheckFor_AlienTakeovers(): CheckFor_EndOfGame() returned error");
                return false;
@@ -2777,7 +2733,7 @@ namespace PleasantvilleGame
                                  gi.Statistics.AddOne("NumCombats"); // GameStateCombat.PerformAction(CombatsRoll) - DefenderFlees
                                  gi.Statistics.AddOne("NumAlienFlee");
                               }
-                              else if ((false == firstDefender.IsControlled) && (true == firstAttacker.IsAlien()))
+                              else if ((true == firstDefender.IsControlled) && (true == firstAttacker.IsAlien()))
                               {
                                  action = GameAction.CombatTownFlee;
                                  SetCommand(gi, action, GameAction.DieRollActionNone, "e011tf");
@@ -2786,7 +2742,7 @@ namespace PleasantvilleGame
                               }
                               else // when combat vs uncontrolled should be automatic win and no chance of fleeing
                               {
-                                 returnStatus = "2-invalid state reached ";
+                                 returnStatus = "2-invalid state reached firstAttacker=" + firstAttacker.ToString() + " firstDefender=" + firstDefender.ToString();
                                  Logger.Log(LogEnum.LE_ERROR, "GameStateCombat.PerformAction(CombatsRoll): " + returnStatus);
                               }
                            }

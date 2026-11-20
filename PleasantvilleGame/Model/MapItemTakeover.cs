@@ -38,6 +38,8 @@ namespace PleasantvilleGame
                continue;
             foreach (IMapItem possibleObserver in stackObs.MapItems)
             {
+               if ("Zebulon" == possibleObserver.Name) // Zebulon does not observer
+                  continue;
                if ((true == possibleObserver.Name.Contains(alien.Name)) || (true == possibleObserver.Name.Contains(victim.Name)))
                   continue;
                if (true == possibleObserver.IsAlienKnown) // known aliens do not observer. Unknown aliens need to be listed so that town person does not suspect them as alien, but they will not find anything

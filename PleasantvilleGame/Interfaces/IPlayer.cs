@@ -36,6 +36,6 @@ namespace PleasantvilleGame
       bool BlockRandomMoves(IGameInstance gi);
       bool PerformMoves(IGameInstance gi);
       bool BlockTownMove(ref IMapItemMove mim);
-      bool ShowPossibleTakeover(IGameInstance gi, IStack stack);
+      bool ShowPossibleTakeover(IGameInstance gi);
    }
 }

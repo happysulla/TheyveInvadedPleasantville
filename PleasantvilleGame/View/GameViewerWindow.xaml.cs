@@ -4513,7 +4513,8 @@ namespace PleasantvilleGame
          myGameInstance.SelectedStack = myGameInstance.Stacks.Find(selectedMapItem.TerritoryCurrent);
          if (null == myGameInstance.SelectedStack)
          {
-            Logger.Log(LogEnum.LE_ERROR, "ClickButton_MapItem(): stack=null for t=" + selectedMapItem.TerritoryCurrent.ToString());
+            Logger.Log(LogEnum.LE_ERROR, "ClickButton_MapItem(): stack=null for t=" + selectedMapItem.TerritoryCurrent.ToString() + " mi=" + selectedMapItem.ToString() + " resetting to TerritoryStarting=" + selectedMapItem.TerritoryStarting.ToString());
+            selectedMapItem.TerritoryCurrent = selectedMapItem.TerritoryStarting;
             return;
          }
          //------------------------------------------------------------

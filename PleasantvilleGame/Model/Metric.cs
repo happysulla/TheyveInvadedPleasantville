@@ -44,7 +44,7 @@ namespace PleasantvilleGame
          // Assume Map Hieght = 950 pixels
          // Assume Map Width = height * 0.86 = 818
          // maxDistance(x) = sqrt( (mapWidth)^2 + (mapHeight)^2 ) = 1253
-         int normalized = (int)(100.0 * rawDiff / 1253); // = 100 if distance is larget and 0 if distance is small
+         int normalized = Math.Min(100, (int)(100.0 * rawDiff / 1200)); // = 100 if distance is larget and 0 if distance is small
          return 100 - normalized; // 0=>distance is large and 100=>distance is small
       }
       public static int GetFarthestDistanceMetric(IMapPoint center, ITerritory t)
@@ -58,7 +58,7 @@ namespace PleasantvilleGame
          // Assume Map Hieght = 950 pixels
          // Assume Map Width = height * 0.86 = 818
          // maxDistance(x) = sqrt( (mapWidth)^2 + (mapHeight)^2 ) = 1253
-         int normalized = (int)(100.0 * rawDiff / 1253); // = 100 if distance is larget and 0 if distance is small
+         int normalized = Math.Min(100, (int)(100.0 * rawDiff / 1000)); // = 100 if distance is larget and 0 if distance is small
          return normalized;       // 100=>distance is large and 0=>distance is small
       }
       //-----------------------------------------------------------
@@ -207,7 +207,7 @@ namespace PleasantvilleGame
                switch (alienCount)
                {
                   case 0:
-                     this.MetricTakeover = 50;
+                     this.MetricTakeover = 65;
                      break;
                   case 1:
                      this.MetricTakeover = 30;
