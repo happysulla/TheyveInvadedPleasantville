@@ -47,19 +47,21 @@ namespace PleasantvilleGame
          myIndexName = 0;
          myHeaderNames.Add("09-Centers");
          myHeaderNames.Add("09-GetTerritoriesOfInterest");
+         myHeaderNames.Add("09-GetMapItemsOfInterest");
          myHeaderNames.Add("09-AddMoveAwayFromControlled");
          myHeaderNames.Add("09-AddAlienTakeoverMoves");
          myHeaderNames.Add("09-AddUncontrolledMoves");
-         myHeaderNames.Add("09-AlienTakeover+Uncontrolled");
+         myHeaderNames.Add("09-Combined");
          myHeaderNames.Add("09-Finalize");
 
          myCommandNames.Add("00-Show Centers");
          myCommandNames.Add("01-GetTerritoriesOfInterest");
-         myCommandNames.Add("02-AddMoveAwayFromControlled");
-         myCommandNames.Add("03-AddAlienTakeoverMoves");
-         myCommandNames.Add("04-AddUncontrolledMoves");
-         myCommandNames.Add("05-AlienTakeover+Uncontrolled");
-         myCommandNames.Add("06-Cleanup");
+         myCommandNames.Add("02-GetMapItemsOfInterest");
+         myCommandNames.Add("03-AddMoveAwayFromControlled");
+         myCommandNames.Add("04-AddAlienTakeoverMoves");
+         myCommandNames.Add("05-AddUncontrolledMoves");
+         myCommandNames.Add("06-Combined");
+         myCommandNames.Add("07-Cleanup");
          //------------------------------------
          if (null == gi)
          {
@@ -255,6 +257,48 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): Reset() returned false");
                return false;
             }
+            IMapItem? mi0 = gi.Stacks.FindMapItem(TableMgr.JUDGE);
+            if (null == mi0)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): mi0=null ");
+               return false;
+            }
+            if (false == TableMgr.MovePerson(gi, TableMgr.JUDGE, "MachineShop_3"))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): MovePerson() failed for mi=" + TableMgr.WAR_VET);
+               return false;
+            }
+            //-------------------------
+            IMapItem? mi1 = gi.Stacks.FindMapItem(TableMgr.MAITRE_D);
+            if (null == mi1)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): mi1=null ");
+               return false;
+            }
+            if (false == TableMgr.MovePerson(gi, TableMgr.MAITRE_D, "HotelAndRestaurant_3"))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): MovePerson() failed for mi=" + TableMgr.WAR_VET);
+               return false;
+            }
+            //-------------------------
+            IMapItems closeMapItems = Territory.GetMapItemsOfInterest(gi.Stacks, Territories.theTerritories, mi0); // MapItems this mapitem can move to
+            ITerritories territoriesToDisplay = new Territories();
+            foreach(IMapItem mi in closeMapItems)
+               territoriesToDisplay.Add(mi.TerritoryCurrent);
+            if (false == CreateEllipsesForDisplay(territoriesToDisplay, 1))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): CreateEllipsesForDisplay() returned false");
+               return false;
+            }
+         }
+         //=========================================================
+         else if (CommandName == myCommandNames[3])
+         {
+            if (false == Reset(gi))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): Reset() returned false");
+               return false;
+            }
             //-------------------------
             IMetricAlienMoves moves = new MetricAlienMoves();
             IStacks newStacks = gi.Stacks.Clone();
@@ -283,7 +327,7 @@ namespace PleasantvilleGame
             myGameEngine.PerformAction(ref gi, ref outAction);         
          }
          //=========================================================
-         else if (CommandName == myCommandNames[3])
+         else if (CommandName == myCommandNames[4])
          {
             if (false == Reset(gi))
             {
@@ -321,7 +365,7 @@ namespace PleasantvilleGame
             myGameEngine.PerformAction(ref gi, ref outAction);
          }
          //=========================================================
-         else if (CommandName == myCommandNames[4])
+         else if (CommandName == myCommandNames[5])
          {
             if (false == Reset(gi))
             {
@@ -362,7 +406,7 @@ namespace PleasantvilleGame
             myGameEngine.PerformAction(ref gi, ref outAction);
          }
          //=========================================================
-         else if (CommandName == myCommandNames[5])
+         else if (CommandName == myCommandNames[6])
          {
             if (false == Reset(gi))
             {
