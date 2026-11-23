@@ -164,7 +164,7 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "Create_MapItemMove(): Invalid State Territories.Count=" + mim.BestPath.Territories.Count.ToString() + " for mi=" + mi.Name + " " + mi.TerritoryStarting.ToString() + "->" + newT.ToString());
             return null;
          }
-         Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Create_MapItemMove(): mi=" + mi.Name + " moving to t=" + newT.ToString());
+         Logger.Log(LogEnum.LE_SHOW_MIM_ADD, "Create_MapItemMove(): mim=" + mim.ToString());
          return mim;
       }
    }

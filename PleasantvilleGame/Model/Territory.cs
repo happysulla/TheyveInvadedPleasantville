@@ -483,7 +483,6 @@ namespace PleasantvilleGame
             IStack? stack = stacks.Find(t);
             if (null == stack)
                continue;
-            Logger.Log(LogEnum.LE_SHOW_TERRITORIES, "Get_MapItemsWithinRange(): t=" + stack.Territory.ToString() + " has mapitems=" + stack.MapItems.ToString());
             foreach (IMapItem mapItem in stack.MapItems)
                mapItemCandidates.Add(mapItem);
          }

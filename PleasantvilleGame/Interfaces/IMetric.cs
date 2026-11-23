@@ -23,11 +23,13 @@ namespace PleasantvilleGame
       void SetObservationMetric(IStack? stack, IStacks stacks, bool isPremove);
       void SetLeavingMetric(IStack? stack);
       void SetTakeoverMetric(IStack? stack, bool isPremove);
-      bool SetTotalMetric(IStacks stacks, IMapPoint centerZebulon, IMapPoint centerAlien, IMapPoint centerControlled);
+      void SetTotalMetric(IStacks stacks, IMapPoint centerZebulon, IMapPoint centerAlien, IMapPoint centerControlled);
+      void UpdateTotalMetric(IStacks stacks);
    }
    public interface IMetricAlienMoves : System.Collections.IEnumerable
    {
       int Count { get; }
+      IMetricAlienMoves Clone();
       void Add(IMetricAlienMove metric);
       void Insert(int index, IMetricAlienMove metric);
       void Clear();

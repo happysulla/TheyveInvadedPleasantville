@@ -216,7 +216,7 @@ namespace PleasantvilleGame
                      }
                      gi.Takeovers.Add(to);
                      unknownCount++;
-                     Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 1-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
+                     Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 1-to=" + to.ToString() + " pv=0 ka=" + knownAliens.Count.ToString() + " ua=" + knownAliens.Count.ToString());
                   }
                }
                else if ((0 < knownAliens.Count) && (knownAliens.Count < unknownAliens.Count))
@@ -241,7 +241,7 @@ namespace PleasantvilleGame
                      }
                      gi.Takeovers.Add(to);
                      knownCount++;
-                     Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 2-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
+                     Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 2-to=" + to.ToString() + " pv=0 ka=" + knownAliens.Count.ToString() + " ua=" + knownAliens.Count.ToString());
                   }
                }
                else // can only have up to three unknown aliens in space - choose two random ones
@@ -269,7 +269,7 @@ namespace PleasantvilleGame
                      return false;
                   }
                   gi.Takeovers.Add(to);
-                  Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 3-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
+                  Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 3-to=" + to.ToString() + " pv=0 ka=" + knownAliens.Count.ToString() + " ua=" + knownAliens.Count.ToString());
                }
             }
             else // possible victims
@@ -298,7 +298,7 @@ namespace PleasantvilleGame
                         }
                         gi.Takeovers.Add(to);
                         victimCount++;
-                        Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 4-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
+                        Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 4-to=" + to.ToString() + " pv=0 ka=" + knownAliens.Count.ToString() + " ua=" + knownAliens.Count.ToString());
                      }
                      else
                      {
@@ -317,7 +317,7 @@ namespace PleasantvilleGame
                         }
                         gi.Takeovers.Add(to);
                         victimCount++;
-                        Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 5-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
+                        Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 5-to=" + to.ToString() + " pv=0 ka=" + knownAliens.Count.ToString() + " ua=" + knownAliens.Count.ToString());
                      }
                   }
                }
@@ -345,7 +345,7 @@ namespace PleasantvilleGame
                         }
                         gi.Takeovers.Add(to);
                         victimCount++;
-                        Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover():Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
+                        Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 6-to=" + to.ToString() + " pv=0 ka=" + knownAliens.Count.ToString() + " ua=" + knownAliens.Count.ToString());
                         gi.AddKnownAlien(leftMapItem); // unknown becomes known when taking over a Stunned TP
                         Logger.Log(LogEnum.LE_SHOW_ALIEN_ADD, "Show_PossibleTakeover(): 6-AddKnownAlien() unknown becomes known when taking over stunned -- a=" + leftMapItem.ToString());
                      }
@@ -366,7 +366,7 @@ namespace PleasantvilleGame
                         }
                         gi.Takeovers.Add(to);
                         victimCount++;
-                        Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 7-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
+                        Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 7-to=" + to.ToString() + " pv=0 ka=" + knownAliens.Count.ToString() + " ua=" + knownAliens.Count.ToString());
                      }
                   }
                }
@@ -395,7 +395,7 @@ namespace PleasantvilleGame
                      return false;
                   }
                   gi.Takeovers.Add(to);
-                  Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 8-Adding leftMapItem=" + leftMapItem.Name + " rightMapItem=" + rightMapItem.Name + " in t=" + stack.Territory.ToString());
+                  Logger.Log(LogEnum.LE_SHOW_TAKEOVERS, "Show_PossibleTakeover(): 8-to=" + to.ToString() + " pv=" + possibleVictims.Count + " ka=" + knownAliens.Count.ToString() + " ua=" + knownAliens.Count.ToString());
                }
             }
          }

@@ -73,14 +73,14 @@ namespace PleasantvilleGame
          {
             if ((true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsSurrendered))  // Unconscious, dead, or surrendered cannot partipate
                continue;
-            else if (true == mi.IsControlled && false == mi.IsStunned)
+            else if ((true == mi.IsControlled) && (false == mi.IsStunned))
                townPeoples.Add(mi);
-            else if (true == mi.IsAlien())
+            else if ( (true == mi.IsAlienUnknown) || (true == mi.IsAlienKnown) ) // dont count Zebulon
                aliens.Add(mi);
-            else if (false == mi.IsWary)
+            else if ((false == mi.IsWary) && ("Zebulon" != mi.Name))
                uncontrolled.Add(mi);
          }
-         switch (uncontrolled.Count) // subtract if moving away from 
+         switch (uncontrolled.Count)  
          {
             case 0:
                this.MetricLeaving = 100;
@@ -89,7 +89,7 @@ namespace PleasantvilleGame
                switch (aliens.Count)
                {
                   case 0:
-                     this.MetricLeaving = 100;
+                     this.MetricLeaving = 70;
                      break;
                   default:
                      this.MetricLeaving = 0;
@@ -170,9 +170,9 @@ namespace PleasantvilleGame
                continue;
             else if (true == mi.IsControlled && false == mi.IsStunned)
                townPeoples.Add(mi);
-            else if (true == mi.IsAlien())
+            else if ((true == mi.IsAlienUnknown) || (true == mi.IsAlienKnown)) // dont count Zebulon
                aliens.Add(mi);
-            else if (false == mi.IsWary)
+            else if ( (false == mi.IsWary) && ("Zebulon" != mi.Name) )
                uncontrolled.Add(mi);
          }
          int uncontrolledCount = uncontrolled.Count;
@@ -187,19 +187,27 @@ namespace PleasantvilleGame
          switch (uncontrolledCount)
          {
             case 0:
-               this.MetricTakeover = 50;
+               switch (alienCount)
+               {
+                  case 0:
+                     this.MetricTakeover = 15; // when uncontrolled moves, it may help a little
+                     break;
+                  default:
+                     this.MetricTakeover = 35; // when alien moves, that is generally good
+                     break;
+               }
                break;
             case 1:
                switch (alienCount)
                {
                   case 0:
-                     this.MetricTakeover = 50;
+                     this.MetricTakeover = 20;
                      break;
                   case 1:
                      this.MetricTakeover = 100;
                      break;
                   default:
-                     this.MetricTakeover = 70;
+                     this.MetricTakeover = 60;
                      break;
                }
                break;
@@ -207,13 +215,13 @@ namespace PleasantvilleGame
                switch (alienCount)
                {
                   case 0:
-                     this.MetricTakeover = 65;
+                     this.MetricTakeover = 55;
                      break;
                   case 1:
-                     this.MetricTakeover = 30;
+                     this.MetricTakeover = 25;
                      break;
                   default:
-                     this.MetricTakeover = 95;
+                     this.MetricTakeover = 85;
                      break;
                }
                break;
@@ -224,10 +232,10 @@ namespace PleasantvilleGame
                      this.MetricTakeover = 20;
                      break;
                   case 1:
-                     this.MetricTakeover = 50;
+                     this.MetricTakeover = 40;
                      break;
                   default:
-                     this.MetricTakeover = 100;
+                     this.MetricTakeover = 90;
                      break;
                }
                break;
@@ -235,18 +243,33 @@ namespace PleasantvilleGame
          if (0 < townPeoples.Count)
             MetricTakeover -= 50;
       }
-      public bool SetTotalMetric(IStacks stacks, IMapPoint centerZebulon, IMapPoint centerAlien, IMapPoint centerControlled)
+      public void SetTotalMetric(IStacks stacks, IMapPoint centerZebulon, IMapPoint centerAlien, IMapPoint centerControlled)
       {
-         IStack? targetStack = stacks.Find(this.TargetTerritory);
          IStack? currentStack = stacks.Find(this.MovingMapItem.TerritoryCurrent);
          SetLeavingMetric(currentStack);
+         IStack? targetStack = stacks.Find(this.TargetTerritory);
          SetObservationMetric(targetStack, stacks, true);
          SetTakeoverMetric(targetStack, true);
          MetricZebulon = GetClosestDistanceMetric(centerZebulon, TargetTerritory);
          MetricAlienCenter = GetClosestDistanceMetric(centerAlien, TargetTerritory);
          MetricTownCenter = GetFarthestDistanceMetric(centerControlled, TargetTerritory);
          MetricTotal = MetricDenyTown + MetricObs + MetricLeaving + MetricTakeover + MetricZebulon + MetricAlienCenter + MetricTownCenter + MetricGuard;
-         return true;
+      }
+      public void UpdateTotalMetric(IStacks stacks)
+      {
+         int prevLeaving = this.MetricLeaving;
+         IStack? currentStack = stacks.Find(this.MovingMapItem.TerritoryCurrent);
+         SetLeavingMetric(currentStack);
+         if (null != currentStack)
+            Logger.Log(LogEnum.LE_SHOW_MIM, "Update_TotalMetric(): mi=" + this.MovingMapItem.Name + " current=" + currentStack.ToString() + " " + prevLeaving.ToString() + "->" + this.MetricLeaving.ToString());
+         IStack? targetStack = stacks.Find(this.TargetTerritory);
+         int prevObs = this.MetricObs;
+         int prevTake = this.MetricTakeover;
+         SetObservationMetric(targetStack, stacks, false);
+         SetTakeoverMetric(targetStack, false);
+         if (null != targetStack)
+            Logger.Log(LogEnum.LE_SHOW_MIM, "Update_TotalMetric(): mi=" + this.MovingMapItem.Name + " target=" + targetStack.ToString() + " " + prevObs.ToString() + "->" + this.MetricObs.ToString() + " " + prevTake.ToString() + "->" + this.MetricTakeover.ToString());
+         MetricTotal = MetricDenyTown + MetricObs + MetricLeaving + MetricTakeover + MetricZebulon + MetricAlienCenter + MetricTownCenter + MetricGuard;
       }
       public override String ToString()
       {
@@ -286,6 +309,13 @@ namespace PleasantvilleGame
       private readonly ArrayList myList;
       public MetricAlienMoves() { myList = new ArrayList(); }
       public int Count { get { return myList.Count; } }
+      public IMetricAlienMoves Clone()
+      {
+         IMetricAlienMoves clone = new MetricAlienMoves();
+         foreach (IMetricAlienMove metric in myList)
+            clone.Add(metric);
+         return clone;
+      }
       public void Add(IMetricAlienMove metric) { myList.Add(metric); }
       public void Insert(int index, IMetricAlienMove metric) { myList.Insert(index, metric); }
       public void Clear() { myList.Clear(); }
@@ -355,25 +385,29 @@ namespace PleasantvilleGame
       {
          foreach (IMetricAlienMove mam in this)
          {
-            IStack? stack = stacks.Find(mam.TargetTerritory);
-            if (null == stack)
-               return;
-            mam.SetTakeoverMetric(stack, false);
-            mam.SetObservationMetric(stack, stacks, false);
+            IStack? currentStack = stacks.Find(mam.MovingMapItem.TerritoryCurrent);
+            if( null != currentStack )
+            {
+
+            }
+            mam.SetLeavingMetric(currentStack);
+            IStack? targetStack = stacks.Find(mam.TargetTerritory);
+            mam.SetTakeoverMetric(targetStack, false);
+            mam.SetObservationMetric(targetStack, stacks, false);
          }
       }
       public override string ToString()
       {
+         IMetricAlienMoves moves = this.Sort();
          StringBuilder sb = new StringBuilder();
-         foreach (Object o in myList)
+         foreach (IMetricAlienMove move in moves)
          {
-            IMetricAlienMove m = (IMetricAlienMove)o;
             sb.Append("<");
-            sb.Append(m.MovingMapItem.Name);
+            sb.Append(move.MovingMapItem.Name);
             sb.Append("=>");
-            sb.Append(m.TargetTerritory.ToString());
+            sb.Append(move.TargetTerritory.ToString());
             sb.Append("(");
-            sb.Append(m.MetricTotal.ToString());
+            sb.Append(move.MetricTotal.ToString());
             sb.Append(")>");
          }
          return sb.ToString();

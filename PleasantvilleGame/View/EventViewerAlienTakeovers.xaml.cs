@@ -177,7 +177,7 @@ namespace PleasantvilleGame
             IStack? stack = myGameInstance.Stacks.Find(t);
             if( null == stack )
             {
-               Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): stack=null for t=" + t.ToString());
+               Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): stack=null for t=" + t.ToString() + " to=" + to.ToString());
                return false;
             }
             //-----------------------------------------
@@ -221,6 +221,11 @@ namespace PleasantvilleGame
                      if (null == obsTerritoryName)
                      {
                         Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): obsTerritoryName=null");
+                        return false;
+                     }
+                     if( false == t.Observations.ContainsKey(obsTerritoryName))
+                     {
+                        Logger.Log(LogEnum.LE_ERROR, "Consumate_AlienTakeovers(): t.Observations.ContainsKey()=false for t=" + obsTerritoryName + " occuring in to=" + to.ToString());
                         return false;
                      }
                      myGridRows[gridRowNum] = new GridRow(observer, rightMapItem, leftMapItem, t.Observations[obsTerritoryName]);

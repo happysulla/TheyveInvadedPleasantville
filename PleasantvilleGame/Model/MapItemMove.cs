@@ -66,16 +66,25 @@ namespace PleasantvilleGame
          StringBuilder sb = new StringBuilder("");
          sb.Append("mi=");
          sb.Append(MapItem.Name);
-         sb.Append(",oT=");
+         sb.Append("(");
          if (null == OldTerritory)
             sb.Append("null");
          else
-            sb.Append(OldTerritory.Name);
-         sb.Append(",nT=");
+            sb.Append(OldTerritory.ToString());
+         sb.Append("->");
+         if ( null != BestPath )
+         {
+            foreach (ITerritory t in BestPath.Territories)
+            {
+               sb.Append(t.ToString());
+               sb.Append("->");
+            }
+         }
          if (null == NewTerritory)
             sb.Append("null");
          else
-            sb.Append(NewTerritory.Name);
+            sb.Append(NewTerritory.ToString());
+         sb.Append(")");
          return sb.ToString();
       }
    }

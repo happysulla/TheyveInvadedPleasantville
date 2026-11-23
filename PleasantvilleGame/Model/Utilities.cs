@@ -22,7 +22,7 @@ namespace PleasantvilleGame
       private const int NUM_RANDOM_GEN = 13;
       public readonly static int STD_WAIT = 10;
       //--------------------------------------------
-      public readonly static System.Windows.Media.Color theBlackColor = System.Windows.Media.Colors.Black; 
+      public readonly static System.Windows.Media.Color theBlackColor = System.Windows.Media.Colors.Black;
       public readonly static System.Windows.Media.Color thePinkColor = System.Windows.Media.Colors.Pink;           // Conversations
       public readonly static System.Windows.Media.Color thePurpleColor = System.Windows.Media.Colors.Purple;       // Interogations
       public readonly static System.Windows.Media.Color theRosyBrownColor = System.Windows.Media.Colors.RosyBrown; // Implant Removal
@@ -119,7 +119,7 @@ namespace PleasantvilleGame
       //--------------------------------------------
       static public int DiffInDates(string day1, string day2)
       {
-         if( 10 != day1.Length )
+         if (10 != day1.Length)
          {
             Logger.Log(LogEnum.LE_ERROR, "DiffInDates(): 10 != day1.Length for day1=" + day1);
             return -1000;
@@ -213,7 +213,7 @@ namespace PleasantvilleGame
          cursorStream.Write(new byte[1] { 0x00 }, 0, 1);                                     // ICONDIRENTRY: Reserved. Should be 0.
          cursorStream.Write(new byte[2] { (byte)hotSpot.X, 0x00 }, 0, 2);                    // ICONDIRENTRY: Specifies the horizontal coordinates of the hotspot in number of pixels from the left.
          cursorStream.Write(new byte[2] { (byte)hotSpot.Y, 0x00 }, 0, 2);                    // ICONDIRENTRY: Specifies the vertical coordinates of the hotspot in number of pixels from the top.
-         cursorStream.Write(new byte[4] { (byte)(pngStream.Length & 0x000000FF), (byte)((pngStream.Length & 0x0000FF00) >> 0x08), (byte)((pngStream.Length & 0x00FF0000) >> 0x10), (byte)((pngStream.Length & 0xFF000000) >> 0x18)  }, 0, 4); // ICONDIRENTRY: Specifies the size of the image's data in bytes
+         cursorStream.Write(new byte[4] { (byte)(pngStream.Length & 0x000000FF), (byte)((pngStream.Length & 0x0000FF00) >> 0x08), (byte)((pngStream.Length & 0x00FF0000) >> 0x10), (byte)((pngStream.Length & 0xFF000000) >> 0x18) }, 0, 4); // ICONDIRENTRY: Specifies the size of the image's data in bytes
          cursorStream.Write(new byte[4] { 0x16, 0x00, 0x00, 0x00 }, 0, 4); // ICONDIRENTRY: Specifies the offset of BMP or PNG data from the beginning of the ICO/CUR file
          pngStream.Seek(0, SeekOrigin.Begin); // copy PNG stream to cursor stream
          pngStream.CopyTo(cursorStream);
@@ -274,6 +274,33 @@ namespace PleasantvilleGame
             var type = typeof(T);
             Logger.Log(LogEnum.LE_ERROR, "Deserialize(): s=" + s_xml + " T=" + type.ToString() + "\nex=" + ex.ToString());
             return default;
+         }
+      }
+      //--------------------------------------------
+      static long CombinationCount(int n, int r)
+      {
+         if (r < 0 || r > n) return 0;
+         return Factorial(n) / (Factorial(r) * Factorial(n - r));
+      } // Calculate nCr using factorial formula
+      static long Factorial(int num)
+      {
+         long result = 1;
+         for (int i = 2; i <= num; i++)
+            result *= i;
+         return result;
+      }
+      static void GenerateCombinations<T>(List<T> items, int r, List<T> current, int index)
+      {
+         if (current.Count == r)
+         {
+            Console.WriteLine(string.Join(", ", current));
+            return;
+         }
+         for (int i = index; i < items.Count; i++)
+         {
+            current.Add(items[i]);
+            GenerateCombinations(items, r, current, i + 1);
+            current.RemoveAt(current.Count - 1);
          }
       }
    }
