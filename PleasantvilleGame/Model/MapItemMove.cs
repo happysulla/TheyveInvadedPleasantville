@@ -64,7 +64,6 @@ namespace PleasantvilleGame
       public override string ToString()
       {
          StringBuilder sb = new StringBuilder("");
-         sb.Append("mi=");
          sb.Append(MapItem.Name);
          sb.Append("(");
          if (null == OldTerritory)
@@ -72,18 +71,24 @@ namespace PleasantvilleGame
          else
             sb.Append(OldTerritory.ToString());
          sb.Append("->");
-         if ( null != BestPath )
+         if ( null == BestPath )
          {
+            sb.Append("null->");
+            if (null == NewTerritory)
+               sb.Append("null"); 
+            else
+               sb.Append(NewTerritory.ToString());
+         } 
+         else
+         {
+            int count = 0;
             foreach (ITerritory t in BestPath.Territories)
             {
                sb.Append(t.ToString());
-               sb.Append("->");
+               if(  ++count < BestPath.Territories.Count )
+                 sb.Append("->");
             }
          }
-         if (null == NewTerritory)
-            sb.Append("null");
-         else
-            sb.Append(NewTerritory.ToString());
          sb.Append(")");
          return sb.ToString();
       }
