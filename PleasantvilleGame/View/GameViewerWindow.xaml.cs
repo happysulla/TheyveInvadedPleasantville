@@ -348,6 +348,11 @@ namespace PleasantvilleGame
             CommandBindings.Add(new CommandBinding(command, mmv.MenuItemEditRecoverTurn_Click, mmv.MenuItemEditRecoverTurn_ClickCanExecute));
             //------------------------------------------------
             command = new RoutedCommand();
+            keyGesture = new KeyGesture(Key.L, ModifierKeys.Control);
+            InputBindings.Add(new KeyBinding(command, keyGesture));
+            CommandBindings.Add(new CommandBinding(command, mmv.MenuItemViewRegionLabels_Click));
+            //------------------------------------------------
+            command = new RoutedCommand();
             keyGesture = new KeyGesture(Key.V, ModifierKeys.Control | ModifierKeys.Shift);
             InputBindings.Add(new KeyBinding(command, keyGesture));
             CommandBindings.Add(new CommandBinding(command, mmv.MenuItemViewOtherGames_Click));
@@ -1087,6 +1092,35 @@ namespace PleasantvilleGame
             case GameAction.InterrogationsPerform:
             case GameAction.UpdateEventViewerDisplay:
             case GameAction.UpdateEventViewerActive:
+               if (false == UpdateCanvasShowFeats())
+                  Logger.Log(LogEnum.LE_ERROR, "Update_View(): UpdateCanvas_ShowFeats(" + action.ToString() + ") returned error ");
+               break;
+            case GameAction.UpdateShowTerritoryNames:
+               if (null == myMainMenuViewer)
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "UpdateView(): myMainMenuViewer=null");
+                  return;
+               }
+               if (true == myMainMenuViewer.IsTerritoryLabelsShown) 
+               {
+                  if (false == UpdateLabelsForDisplay())
+                     Logger.Log(LogEnum.LE_ERROR, "Update_View(): Update_LabelsForDisplay(" + action.ToString() + ") returned error ");
+               }
+               else
+               {
+                  myMainMenuViewer.IsTerritoryLabelsShown = false;
+                  List<UIElement> elements = new List<UIElement>();
+                  foreach (UIElement ui in myCanvasMain.Children)
+                  {
+                     if (ui is Label label) // remove all polylines 
+                     {
+                        if (true == label.Name.Contains("T_LBL"))
+                           elements.Add(ui);
+                     }
+                  }
+                  foreach (UIElement ui1 in elements)
+                     myCanvasMain.Children.Remove(ui1);
+               }
                break;
             case GameAction.UpdateShowFeat:
             case GameAction.EndGameShowFeats:
@@ -4202,6 +4236,46 @@ namespace PleasantvilleGame
          Canvas.SetTop(aEllipse, mp.Y - 10);
          Canvas.SetZIndex(aEllipse, 10000);
          myCanvasMain.Children.Add(aEllipse);
+      }
+      private bool UpdateLabelsForDisplay()
+      {
+         if (null == myCanvasMain)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Update_LabelsForDisplay(): myCanvasMain=null");
+            return false;
+         }
+         SolidColorBrush aSolidColorBrush0 = new SolidColorBrush { Color = Colors.HotPink }; // nearly transparent but slightly colored
+         foreach (Territory t in Territories.theTerritories)
+         {
+            System.Windows.Point p = new System.Windows.Point(t.CenterPoint.X, t.CenterPoint.Y);
+            string name = "T_LBL" + t.ToString();
+            Label aLabel = new Label() { Name=name, Foreground = aSolidColorBrush0, FontFamily = myFontFam, FontWeight = FontWeights.Bold, FontSize = 8, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = t.ToString() };
+            System.Windows.Size measureSize = new System.Windows.Size(double.PositiveInfinity, double.PositiveInfinity);
+            aLabel.Measure(measureSize);
+            p.X -= (0.5 * aLabel.DesiredSize.Width);
+            double offset = 0.5;
+            if ("GeneralStore" == t.Name)
+            {
+               int subname = Int32.Parse(t.Subname);
+               switch (subname)
+               {
+                  case 1: offset += 0.4; break;
+                  case 3: offset += 0.3; break;
+                  default: break;
+               }
+            }
+            if ("HotelAndRestuarant" == t.Name)
+            {
+               if ("2" == t.Subname)
+                  offset += 0.4;
+            }
+            p.Y -= (offset * aLabel.DesiredSize.Height);
+            myCanvasMain.Children.Add(aLabel);
+            Canvas.SetLeft(aLabel, p.X);
+            Canvas.SetTop(aLabel, p.Y);
+            Canvas.SetZIndex(aLabel, 10000);
+         }
+         return true;
       }
       //-------------CONTROLLER FUNCTIONS---------------------------------
       private void MouseLeftButtonDownMarquee(object sender, MouseEventArgs e)

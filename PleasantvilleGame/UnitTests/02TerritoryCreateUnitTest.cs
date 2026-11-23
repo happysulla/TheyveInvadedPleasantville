@@ -11,12 +11,12 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.Linq;
-using Brushes=System.Windows.Media.Brushes;
-using Color=System.Windows.Media.Color;
-using FontFamily=System.Windows.Media.FontFamily;
-using Image=System.Windows.Controls.Image;
-using Label=System.Windows.Controls.Label;
-using MessageBox=System.Windows.MessageBox;
+using Brushes = System.Windows.Media.Brushes;
+using Color = System.Windows.Media.Color;
+using FontFamily = System.Windows.Media.FontFamily;
+using Image = System.Windows.Controls.Image;
+using Label = System.Windows.Controls.Label;
+using MessageBox = System.Windows.MessageBox;
 using Point = System.Windows.Point;
 
 namespace PleasantvilleGame
@@ -40,7 +40,7 @@ namespace PleasantvilleGame
       //-----------------------------------------
       private string? myFileName = null;
       //-----------------------------------------
-      private int myIndexName = 0;
+      private int myIndexName = 6;
       public bool CtorError { get; } = false;
       private List<string> myHeaderNames = new List<string>();
       private List<string> myCommandNames = new List<string>();
@@ -61,6 +61,7 @@ namespace PleasantvilleGame
          myHeaderNames.Add("02-GetTerritoriesOfInterest-F");
          myHeaderNames.Add("02-GetMapItemsOfInterest-T");
          myHeaderNames.Add("02-GetMapItemsOfInterest-F");
+         myHeaderNames.Add("02-Create MapItemMove");
          myHeaderNames.Add("02-GetMapItemsThatCanMoveToThisMapItem");
          myHeaderNames.Add("02-Final");
          //------------------------------------
@@ -76,8 +77,9 @@ namespace PleasantvilleGame
          myCommandNames.Add("09-Verify GetTerritoriesOfInterest-F");
          myCommandNames.Add("10-Verify GetMapItemsOfInterest-T");
          myCommandNames.Add("11-Verify GetMapItemsOfInterest-F");
-         myCommandNames.Add("12-Verify GetMapItemsThatCanMoveToThisMapItem");
-         myCommandNames.Add("13-Cleanup");
+         myCommandNames.Add("12-Create MapItemMove");
+         myCommandNames.Add("13-Verify GetMapItemsThatCanMoveToThisMapItem");
+         myCommandNames.Add("14-Cleanup");
          //------------------------------------
          myDockPanelTop = dp;
          //------------------------------------
@@ -131,7 +133,7 @@ namespace PleasantvilleGame
             CtorError = true;
          }
          //----------------------------------
-         if ( false == SetFileName())
+         if (false == SetFileName())
          {
             Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest(): SetFileName() returned false");
             CtorError = true;
@@ -140,7 +142,7 @@ namespace PleasantvilleGame
       }
       public bool Command(ref IGameInstance gi) // Performs function based on CommandName string
       {
-         if( null == myGameInstance )
+         if (null == myGameInstance)
          {
             Logger.Log(LogEnum.LE_ERROR, "Command(): myGameInstance=null");
             return false;
@@ -304,7 +306,7 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): Create_Ellipse() returned false for mi1");
                return false;
             }
-            IMapItems? mapItems = Territory.GetMapItemsOfInterest(gi.Stacks, Territories.theTerritories, mi1, true); 
+            IMapItems? mapItems = Territory.GetMapItemsOfInterest(gi.Stacks, Territories.theTerritories, mi1, true);
             if (null == mapItems)
             {
                Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): GetMapItemsOfInterest() returned error");
@@ -352,7 +354,40 @@ namespace PleasantvilleGame
             }
          }
          //==================================================================
-         else if (CommandName == myCommandNames[12]) // GetMapItemsThatThisMapItemCanMoveTo()
+         else if (CommandName == myCommandNames[12]) // Create MapItemMove
+         {
+            if( false == CreateLabelsForDisplay(Territories.theTerritories))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): CreateLabelsForDisplay() returned error");
+               return false;
+            }
+            IMapItem? mi2 = gi.Stacks.FindMapItem(TableMgr.LAWYER);
+            if (null == mi2)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): mi2=null");
+               return false;
+            }
+            if (false == TableMgr.MovePerson(gi, TableMgr.LAWYER, "LawyersOffice_0"))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): MovePerson() failed for mi=" + TableMgr.LAWYER);
+               return false;
+            }
+            ITerritory? t = Territories.theTerritories.Find("Grass_42");
+            if( null == t )
+            {
+               Logger.Log(LogEnum.LE_ERROR, "TerritoryCreateUnitTest.Command(): t=null");
+               return false;
+            }
+            IMapItemMove? mim = gi.CreateMapItemMove(mi2, t);
+            if (null == mim)
+            {
+               Logger.Log(LogEnum.LE_SHOW_MIM, "Create_Moves(): Create_MapItemMove() returned null");
+               return false;
+            }
+            Logger.Log(LogEnum.LE_SHOW_MIM, "Create_Moves(): mim=" + mim.ToString());
+         }
+         //==================================================================
+         else if (CommandName == myCommandNames[13]) // GetMapItemsThatThisMapItemCanMoveTo()
          {
             DeleteEllipses();
             IMapItem? mi1 = gi.Stacks.FindMapItem(TableMgr.SHERIFF);
@@ -390,8 +425,8 @@ namespace PleasantvilleGame
                return false;
             }
          }
-         return true;
-      }
+            return true;
+         }
       public bool NextTest(ref IGameInstance gi) // Move to the next test in this class's unit tests
       {
          if (null == myGameInstance)
@@ -460,21 +495,21 @@ namespace PleasantvilleGame
             myAnchorTerritory = null;
             ++myIndexName;
             myCanvasMain.MouseLeftButtonDown -= this.MouseLeftButtonDownSetObservations;
-            if( false == TableMgr.CreateTownspeople(gi))
+            if (false == TableMgr.CreateTownspeople(gi))
             {
                Logger.Log(LogEnum.LE_ERROR, "Next_Test(): Create_Townspeople() returned false");
                return false;
             }
          }
-         else if (HeaderName == myHeaderNames[7]) 
+         else if (HeaderName == myHeaderNames[7])
          {
             ++myIndexName;
          }
-         else if (HeaderName == myHeaderNames[8]) 
+         else if (HeaderName == myHeaderNames[8])
          {
             ++myIndexName;
          }
-         else if (HeaderName == myHeaderNames[9]) 
+         else if (HeaderName == myHeaderNames[9])
          {
             ++myIndexName;
          }
@@ -490,7 +525,11 @@ namespace PleasantvilleGame
          {
             ++myIndexName;
          }
-         else  
+         else if (HeaderName == myHeaderNames[13])
+         {
+            ++myIndexName;
+         }
+         else
          {
             if (false == Cleanup(ref gi))
             {
@@ -503,13 +542,13 @@ namespace PleasantvilleGame
       public bool Cleanup(ref IGameInstance gi) // Remove an elipses from the canvas and save off Territories.xml file
       {
          //--------------------------------------------------
-         if( false == DeleteEllipses())
+         if (false == DeleteEllipses())
          {
             Logger.Log(LogEnum.LE_ERROR, "Cleanup(): DeleteEllipses() returned false");
             return false;
          }
          //--------------------------------------------------
-         if ( false == CreateXml(Territories.theTerritories))
+         if (false == CreateXml(Territories.theTerritories))
          {
             Logger.Log(LogEnum.LE_ERROR, "Cleanup(): CreateXml() returned false");
             return false;
@@ -591,7 +630,7 @@ namespace PleasantvilleGame
       }
       private bool CreateEllipse(ITerritory territory, IMapPoint mp, System.Windows.Media.Color color)
       {
-         if( null == myCanvasMain)
+         if (null == myCanvasMain)
          {
             Logger.Log(LogEnum.LE_ERROR, "Creat_eEllipse(): myCanvasMain=null");
             return false;
@@ -627,7 +666,7 @@ namespace PleasantvilleGame
          SolidColorBrush aSolidColorBrush0 = new SolidColorBrush { Color = System.Windows.Media.Color.FromArgb(100, 100, 100, 0) }; // nearly transparent but slightly colored
          foreach (Territory t in territories)
          {
-            Ellipse aEllipse = new Ellipse () { Name = t.ToString() };
+            Ellipse aEllipse = new Ellipse() { Name = t.ToString() };
             aEllipse.Fill = aSolidColorBrush0;
             aEllipse.StrokeThickness = 1;
             aEllipse.Stroke = Brushes.Red;
@@ -754,7 +793,7 @@ namespace PleasantvilleGame
             sb1.Append("]");
             if (null == anchorEllipse)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Show_Adjacents(): anchorEllipse=null for " + anchorTerritory.ToString() + " " + sb1.ToString() );
+               Logger.Log(LogEnum.LE_ERROR, "Show_Adjacents(): anchorEllipse=null for " + anchorTerritory.ToString() + " " + sb1.ToString());
                return false;
             }
             if (0 < anchorTerritory.Adjacents.Count)
@@ -776,7 +815,7 @@ namespace PleasantvilleGame
                   return false;
                }
                string? adjacentName = adjacentTerritory.ToString();
-               if( null == adjacentName)
+               if (null == adjacentName)
                {
                   Logger.Log(LogEnum.LE_ERROR, "Show_Adjacents(): adjacentName=null for " + anchorTerritory.Name);
                   return false;
@@ -869,7 +908,7 @@ namespace PleasantvilleGame
             foreach (var kvp in anchorTerritory.Observations)  // At this point, the anchorEllipse and the anchorTerritory are found.
             {
                ITerritory? obsTerritory = null;
-               foreach (ITerritory t in territories) 
+               foreach (ITerritory t in territories)
                {
                   if (t.ToString() == kvp.Key)
                   {
@@ -936,7 +975,7 @@ namespace PleasantvilleGame
       //--------------------------------------------------------------------
       void MouseLeftButtonDownDeleteTerritory(object sender, MouseButtonEventArgs e)
       {
-         if( null == myCanvasMain )
+         if (null == myCanvasMain)
          {
             Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownDeleteTerritory(): myCanvasMain=null");
             return;
@@ -956,7 +995,7 @@ namespace PleasantvilleGame
                }
             }
          }
-         if( null == selectedEllipse)
+         if (null == selectedEllipse)
          {
             foreach (UIElement ui in myCanvasMain.Children)
             {
@@ -999,7 +1038,7 @@ namespace PleasantvilleGame
             territory.Subname = dialog.myTextBoxSubname.Text;
             territory.CanvasName = TerritoryCreateDialog.theLastEnteredCanvasName;
             Territories.theTerritories.Add(territory);
-            if ( false == CreateEllipse(territory, territory.CenterPoint, Colors.Black))
+            if (false == CreateEllipse(territory, territory.CenterPoint, Colors.Black))
             {
                Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownCreateTerritory(): Create_Ellipse() returned false");
                return;
@@ -1063,7 +1102,7 @@ namespace PleasantvilleGame
       void MouseUp(object sender, MouseButtonEventArgs e)
       {
          System.Windows.Point newPoint = new Point();
-         if( true == myIsDraggingMapItem)
+         if (true == myIsDraggingMapItem)
             newPoint = e.GetPosition(myCanvasMain);
          this.myIsDraggingMapItem = false;
          if (null != this.myEllipseSelected)
@@ -1071,13 +1110,13 @@ namespace PleasantvilleGame
             if (this.myEllipseSelected is Ellipse)
             {
                Ellipse? ellipse = (Ellipse)myEllipseSelected;
-               if( null == ellipse)
+               if (null == ellipse)
                {
                   Logger.Log(LogEnum.LE_ERROR, "MouseUp(): ellipse=null");
                   return;
                }
                ITerritory? t = Territories.theTerritories.Find(ellipse.Name);
-               if( null == t)
+               if (null == t)
                {
                   Logger.Log(LogEnum.LE_ERROR, "MouseUp(): t=null for eName=" + ellipse.Name);
                   return;
@@ -1276,7 +1315,7 @@ namespace PleasantvilleGame
                         return;
                      }
                      string? tName = myAnchorTerritory.ToString();
-                     if( null == tName )
+                     if (null == tName)
                      {
                         Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownSetObservations(): TableMgr.GetObservationChance() tName=null myAnchorTerritory=" + selectedTerritory);
                         return;
@@ -1290,7 +1329,7 @@ namespace PleasantvilleGame
                      MessageBox.Show(sb.ToString());
                      myAnchorTerritory = null;
                      isEndMatch = true;
-                  } 
+                  }
                   else
                   {
                      selectedEllipse.Fill = aSolidColorBrush2; // If the matching territory is not the anchor territory, change its color.
@@ -1305,7 +1344,7 @@ namespace PleasantvilleGame
                      {
                         if (kvp.Key == tName)
                         {
-                           isMatch = true; 
+                           isMatch = true;
                            break;
                         }
                      }
@@ -1313,7 +1352,7 @@ namespace PleasantvilleGame
                      {
                         System.Diagnostics.Debug.WriteLine("Trying tName=" + tName);
                         IMapPath? mapPath = Territory.GetShortestRandomPath(Territories.theTerritories, myAnchorTerritory, selectedTerritory, 3);
-                        if( null == mapPath )
+                        if (null == mapPath)
                         {
                            Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownSetObservations(): mapPath=null from myAnchorTerritory=" + myAnchorTerritory.ToString() + " to tName=" + tName);
                            return;
@@ -1321,7 +1360,7 @@ namespace PleasantvilleGame
                         bool isBuilding = selectedTerritory.IsBuilding();
                         int range = mapPath.Territories.Count;
                         double prob = TableMgr.GetObservationChance(range, isBuilding);
-                        if( TableMgr.FN_ERROR == prob )
+                        if (TableMgr.FN_ERROR == prob)
                         {
                            Logger.Log(LogEnum.LE_ERROR, "MouseLeftButtonDownSetObservations(): TableMgr.GetObservationChance() returned error for tName=" + tName);
                            return;
@@ -1357,6 +1396,45 @@ namespace PleasantvilleGame
                }
             }
          }
+      }
+      private bool CreateLabelsForDisplay(ITerritories territories)
+      {
+         if (null == myCanvasMain)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Create_EllipsesForDisplay(): myCanvasMain=null");
+            return false;
+         }
+         SolidColorBrush aSolidColorBrush0 = new SolidColorBrush { Color = Colors.HotPink }; // nearly transparent but slightly colored
+         foreach (Territory t in territories)
+         {
+            System.Windows.Point p = new System.Windows.Point(t.CenterPoint.X, t.CenterPoint.Y);
+            Label aLabel = new Label() { Foreground = aSolidColorBrush0, FontFamily = myFontFam, FontWeight = FontWeights.Bold, FontSize = 8, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Content = t.ToString() };
+            System.Windows.Size measureSize = new System.Windows.Size(double.PositiveInfinity, double.PositiveInfinity);
+            aLabel.Measure(measureSize);
+            p.X -= (0.5*aLabel.DesiredSize.Width);
+            double offset = 0.5;
+            if( "GeneralStore" ==  t.Name )
+            {
+               int subname = Int32.Parse(t.Subname);
+               switch(subname)
+               {
+                  case 1: offset += 0.4; break;
+                  case 3: offset += 0.3; break;
+                  default: break;
+               }
+            }
+            if ("HotelAndRestuarant" == t.Name)
+            {
+               if( "2" == t.Subname )
+                  offset += 0.4;
+            }
+            p.Y -= (offset * aLabel.DesiredSize.Height);
+            myCanvasMain.Children.Add(aLabel);
+            Canvas.SetLeft(aLabel, p.X);
+            Canvas.SetTop(aLabel, p.Y);
+            Canvas.SetZIndex(aLabel, 10000);
+         }
+         return true;
       }
    }
 }

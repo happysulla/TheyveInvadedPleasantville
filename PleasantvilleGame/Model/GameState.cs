@@ -1192,6 +1192,7 @@ namespace PleasantvilleGame
             case GameAction.EndGameShowFeats:
             case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
+            case GameAction.UpdateShowTerritoryNames:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -1755,6 +1756,8 @@ namespace PleasantvilleGame
             case GameAction.EndGameShowFeats:
             case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
+            case GameAction.UpdateMainCanvasClear:
+            case GameAction.UpdateShowTerritoryNames:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -1944,6 +1947,8 @@ namespace PleasantvilleGame
             case GameAction.EndGameShowFeats:
             case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
+            case GameAction.UpdateMainCanvasClear:
+            case GameAction.UpdateShowTerritoryNames:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -2046,6 +2051,8 @@ namespace PleasantvilleGame
             case GameAction.EndGameShowFeats:
             case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
+            case GameAction.UpdateMainCanvasClear:
+            case GameAction.UpdateShowTerritoryNames:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -2168,6 +2175,8 @@ namespace PleasantvilleGame
             case GameAction.EndGameShowFeats:
             case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
+            case GameAction.UpdateMainCanvasClear:
+            case GameAction.UpdateShowTerritoryNames:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -2329,6 +2338,8 @@ namespace PleasantvilleGame
             case GameAction.EndGameShowFeats:
             case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
+            case GameAction.UpdateMainCanvasClear:
+            case GameAction.UpdateShowTerritoryNames:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -2537,6 +2548,8 @@ namespace PleasantvilleGame
             case GameAction.EndGameShowFeats:
             case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
+            case GameAction.UpdateMainCanvasClear:
+            case GameAction.UpdateShowTerritoryNames:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -2943,6 +2956,8 @@ namespace PleasantvilleGame
             case GameAction.EndGameShowFeats:
             case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
+            case GameAction.UpdateMainCanvasClear:
+            case GameAction.UpdateShowTerritoryNames:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -3085,6 +3100,8 @@ namespace PleasantvilleGame
             case GameAction.EndGameShowFeats:
             case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
+            case GameAction.UpdateMainCanvasClear:
+            case GameAction.UpdateShowTerritoryNames:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -3247,6 +3264,8 @@ namespace PleasantvilleGame
             case GameAction.EndGameShowFeats:
             case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
+            case GameAction.UpdateMainCanvasClear:
+            case GameAction.UpdateShowTerritoryNames:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -3342,6 +3361,8 @@ namespace PleasantvilleGame
             case GameAction.EndGameShowFeats:
             case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
+            case GameAction.UpdateMainCanvasClear:
+            case GameAction.UpdateShowTerritoryNames:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:
@@ -3424,6 +3445,7 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowFeat:
             case GameAction.UpdateMainCanvas:
             case GameAction.UpdateMainCanvasClear:
+            case GameAction.UpdateShowTerritoryNames:
             case GameAction.UpdateStatusBar:
             case GameAction.UpdateGameOptions:
             case GameAction.UpdateShowRegion:

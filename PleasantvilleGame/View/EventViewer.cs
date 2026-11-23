@@ -203,6 +203,8 @@ namespace PleasantvilleGame
             case GameAction.UpdateShowRegion:
             case GameAction.UpdateRotateStack:
             case GameAction.UpdateScatterStack:
+            case GameAction.UpdateMainCanvasClear:
+            case GameAction.UpdateShowTerritoryNames:
                break;
             case GameAction.UpdateNewGame:
             case GameAction.UpdateLoadingGame:

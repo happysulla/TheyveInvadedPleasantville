@@ -15,6 +15,7 @@ namespace PleasantvilleGame
       public Options? NewGameOptions { get; set; } = null;  // These options take affect when new game menu item is selected
       public static readonly string RECOVER_FILENAME_PHASE = "CheckpointLastPhase.tip";
       public static readonly string RECOVER_FILENAME_TURN = "CheckpointLastTurn.tip";
+      public bool IsTerritoryLabelsShown { get; set; } = false;
       private readonly IGameEngine myGameEngine;
       private IGameInstance myGameInstance;
       private readonly Menu myMainMenu;                     // Top level menu items: File | View | Options | Help
@@ -27,6 +28,7 @@ namespace PleasantvilleGame
       private readonly MenuItem myMenuItemTopLevel22 = new MenuItem(); // Recover 
       private readonly MenuItem myMenuItemTopLevel23 = new MenuItem(); // Recover Last Round
       private readonly MenuItem myMenuItemTopLevel24 = new MenuItem(); // Recover Last Turn
+      private readonly MenuItem myMenuItemTopLevel31 = new MenuItem(); // Show Territory Labels
       //=======================================================
       public MainMenuViewer(IGameEngine ge, IGameInstance gi, Menu mi)
       {
@@ -90,6 +92,14 @@ namespace PleasantvilleGame
                   myMenuItemTopLevel3 = menuItem;
                   myMenuItemTopLevel3.Header = "_View";
                   myMenuItemTopLevel3.Visibility = Visibility.Visible;
+                  //------------------------------
+                  myMenuItemTopLevel31.Header = "Show _Labels...";
+                  myMenuItemTopLevel31.InputGestureText = "Ctrl+L";
+                  myMenuItemTopLevel31.Click += MenuItemViewRegionLabels_Click;
+                  myMenuItemTopLevel31.IsCheckable = true;
+                  myMenuItemTopLevel31.IsChecked = false;
+                  myMenuItemTopLevel3.Items.Add(myMenuItemTopLevel31);
+                  //------------------------------
                   MenuItem subItem35 = new MenuItem();
                   subItem35.Header = "_Game Feats...";
                   subItem35.InputGestureText = "Ctrl+V";
@@ -439,6 +449,13 @@ namespace PleasantvilleGame
             Logger.Log(LogEnum.LE_ERROR, "MenuItemEditRecoverPhase_ClickCanExecute(): path=" + GameLoadMgr.theGamesDirectory + " ex=" + ex.ToString());
             e.CanExecute = false;
          }
+      }
+      public void MenuItemViewRegionLabels_Click(object sender, RoutedEventArgs e)
+      {
+         IsTerritoryLabelsShown = !IsTerritoryLabelsShown;
+         myMenuItemTopLevel31.IsChecked = IsTerritoryLabelsShown;
+         GameAction action = GameAction.UpdateShowTerritoryNames;
+         myGameEngine.PerformAction(ref myGameInstance, ref action);
       }
       public void MenuItemViewFeats_Click(object sender, RoutedEventArgs e)
       {
