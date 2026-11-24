@@ -243,22 +243,42 @@ namespace PleasantvilleGame
          if (0 < townPeoples.Count)
             MetricTakeover -= 50;
       }
+      public void SetMetricTownCenter(IMapPoint center, ITerritory starting, ITerritory ending)
+      {
+         double xdiffStart = Math.Abs(center.X - starting.CenterPoint.X);
+         double ydiffStart = Math.Abs(center.Y - starting.CenterPoint.Y);
+         int rawDiffStart = (int)Math.Sqrt(xdiffStart * xdiffStart + ydiffStart * ydiffStart);
+         //-------------------------------------------------------
+         double xdiffEnd = Math.Abs(center.X - ending.CenterPoint.X);
+         double ydiffEnd = Math.Abs(center.Y - ending.CenterPoint.Y);
+         int rawDiffEnd = (int)Math.Sqrt(xdiffEnd * xdiffEnd + ydiffEnd * ydiffEnd);
+         //-------------------------------------------------------
+         int normalizedEnd = Math.Min(30, (int)(30 * rawDiffEnd / 500));
+         int diff = Math.Max(0, (rawDiffEnd - rawDiffStart));
+         int normalizedDiff = Math.Min( 70, (int)(70 * diff / 300));
+         MetricTownCenter = normalizedEnd + normalizedDiff;
+      }
+      public void SetMetricGuard(IStack? stack, IStacks stacks, bool isPremove)
+      {
+         MetricGuard = 0;
+      }
       public void SetTotalMetric(IStacks stacks, IMapPoint centerZebulon, IMapPoint centerAlien, IMapPoint centerControlled)
       {
-         IStack? currentStack = stacks.Find(this.MovingMapItem.TerritoryCurrent);
+         IStack? currentStack = stacks.Find(this.MovingMapItem.TerritoryStarting);
          SetLeavingMetric(currentStack);
          IStack? targetStack = stacks.Find(this.TargetTerritory);
          SetObservationMetric(targetStack, stacks, true);
          SetTakeoverMetric(targetStack, true);
          MetricZebulon = GetClosestDistanceMetric(centerZebulon, TargetTerritory);
          MetricAlienCenter = GetClosestDistanceMetric(centerAlien, TargetTerritory);
-         MetricTownCenter = GetFarthestDistanceMetric(centerControlled, TargetTerritory);
+         SetMetricTownCenter(centerControlled, this.MovingMapItem.TerritoryStarting, TargetTerritory);
+         SetMetricGuard(targetStack, stacks, true);
          MetricTotal = MetricDenyTown + MetricObs + MetricLeaving + MetricTakeover + MetricZebulon + MetricAlienCenter + MetricTownCenter + MetricGuard;
       }
       public void UpdateTotalMetric(IStacks stacks)
       {
          int prevLeaving = this.MetricLeaving;
-         IStack? currentStack = stacks.Find(this.MovingMapItem.TerritoryCurrent);
+         IStack? currentStack = stacks.Find(this.MovingMapItem.TerritoryStarting);
          SetLeavingMetric(currentStack);
          if (null != currentStack)
             Logger.Log(LogEnum.LE_SHOW_MIM, "Update_TotalMetric(): mi=" + this.MovingMapItem.Name + " current=" + currentStack.ToString() + " " + prevLeaving.ToString() + "->" + this.MetricLeaving.ToString());

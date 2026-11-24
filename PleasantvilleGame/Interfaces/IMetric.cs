@@ -23,6 +23,8 @@ namespace PleasantvilleGame
       void SetObservationMetric(IStack? stack, IStacks stacks, bool isPremove);
       void SetLeavingMetric(IStack? stack);
       void SetTakeoverMetric(IStack? stack, bool isPremove);
+      void SetMetricTownCenter(IMapPoint center, ITerritory starting, ITerritory ending);
+      void SetMetricGuard(IStack? stack, IStacks stacks, bool isPremove);
       void SetTotalMetric(IStacks stacks, IMapPoint centerZebulon, IMapPoint centerAlien, IMapPoint centerControlled);
       void UpdateTotalMetric(IStacks stacks);
    }

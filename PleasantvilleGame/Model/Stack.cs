@@ -58,7 +58,10 @@ namespace PleasantvilleGame
             IStack newStack = new Stack(stack.Territory);
             newStacks.Add(newStack);
             foreach (IMapItem mi in stack.MapItems)
+            {
+               mi.TerritoryCurrent = mi.TerritoryStarting = stack.Territory;
                newStack.MapItems.Add(mi);
+            }
          }
          return newStacks;
       }

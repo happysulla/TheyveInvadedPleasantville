@@ -332,7 +332,7 @@ namespace PleasantvilleGame
             IMapItems uncontrolledPeps = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsConversedThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsWary))
+               if ((true == mi.IsConversedThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (true == mi.IsWary) || ("Zebulon" == mi.Name))
                   continue;
                if (true == mi.IsControlled)
                   controlledPeps.Add(mi);
@@ -392,7 +392,7 @@ namespace PleasantvilleGame
             IMapItems uncontrolledPeps = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
+               if ((true == mi.IsInfluencedThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || ("Zebulon" == mi.Name))
                   continue;
                if (true == mi.IsControlled)
                   controlledPeps.Add(mi);
@@ -454,7 +454,7 @@ namespace PleasantvilleGame
             IMapItems unknownAliens = new MapItems();
             foreach (MapItem mi in stack.MapItems)
             {
-               if ((true == mi.IsCombatThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned) || (true == mi.IsTiedUp))
+               if ((true == mi.IsCombatThisTurn) || (true == mi.IsKilled) || (true == mi.IsKnockedout) || (true == mi.IsStunned) || (true == mi.IsTiedUp) || (("Zebulon" == mi.Name) && (false==mi.IsAlienKnown)) )
                   continue;
                if (true == mi.IsControlled)
                   controlledPeps.Add(mi);
@@ -779,7 +779,7 @@ namespace PleasantvilleGame
                mi.IsMoveAllowedToResetThisTurn = true;
                mi.IsConversedThisTurn = false;
                mi.IsInfluencedThisTurn = false;
-               mi.IsMovingThisTurn = false;
+               mi.IsMovingThisTurn = false;  // CheckForEndOfGame()
                mi.IsCombatThisTurn = false;
                mi.IsKnockedoutThisTurn = false;
                mi.IsStunnedThisTurn = false;
@@ -1065,6 +1065,7 @@ namespace PleasantvilleGame
       {
          gi.GameTurn++;
          gi.GamePhase = GamePhase.RandomMovement;
+         Logger.Log(LogEnum.LE_SHOW_RESET_PHASE, "StartNewTurn(): ============================================================================================================================== TURN#" + gi.GameTurn.ToString() );
          //---------------------------------------
          GameFeat changedFeat1;
          Logger.Log(LogEnum.LE_VIEW_SHOW_FEATS, "CheckFor_EndOfGame():\n  Feats=" + GameEngine.theInGameFeats.ToString() + " \n SFeats=" + GameEngine.theStartingFeats.ToString());
@@ -1823,7 +1824,12 @@ namespace PleasantvilleGame
             case GameAction.RandomMovementTownAck:
                if (true == gi.IsAlienAckedRandomMovement)
                {
-                  if( false == ResetPhase(gi, GamePhase.AlienMovement))
+                  foreach (IStack stack in gi.Stacks) // reset IsMovingThisTurn=false due to any random movement
+                  {
+                     foreach (IMapItem mi in stack.MapItems) // GameStateRandomMovement.PerformAction(RandomMovementConfirmed)
+                        mi.IsMovingThisTurn = false;
+                  }
+                  if ( false == ResetPhase(gi, GamePhase.AlienMovement))
                   {
                      returnStatus = "Reset_Phase() returned false";
                      Logger.Log(LogEnum.LE_ERROR, "GameStateRandomMovement.PerformAction(RandomMovementConfirmed): " + returnStatus);
