@@ -2245,6 +2245,11 @@ namespace PleasantvilleGame
             Canvas.SetTop(img, killed.Location.Y);
          }
          //---------------------------------------------------------------
+         IMapPoint mpCenterControlled = Territory.GetCenterPointControlled(gi.Stacks); // <cgs> TEST
+         CreateEllipse(mpCenterControlled, Utilities.theTownControlledBrush);          // <cgs> TEST
+         IMapPoint mpCenterAlien = Territory.GetCenterPointAlien(gi.Stacks);           // <cgs> TEST
+         CreateEllipse(mpCenterAlien, Utilities.theAlienControlledBrush);              // <cgs> TEST
+         //---------------------------------------------------------------
          Logger.Log(LogEnum.LE_SHOW_STACK_VIEW, "UpdateCanvasMain_MapItems(): " + gi.Stacks.ToString());
          foreach (IStack stack in gi.Stacks)
          {
@@ -2258,11 +2263,11 @@ namespace PleasantvilleGame
                   Logger.Log(LogEnum.LE_ERROR, "UpdateCanvasMain_MapItems(): mi=null");
                   return false;
                }
-               if (("Zebulon" == mi.Name) && (false == gi.Zebulon.IsAlienKnown)) // <cgs> - TEST 
-               {
-                  CreateEllipse(gi.Zebulon.TerritoryCurrent.CenterPoint);
-                  continue;
-               }
+               if (("Zebulon" == mi.Name) && (false == gi.Zebulon.IsAlienKnown))            // <cgs> - TEST 
+               {                                                                            // <cgs> - TEST 
+                  CreateEllipse(gi.Zebulon.TerritoryCurrent.CenterPoint, Brushes.Black);    // <cgs> - TEST 
+                  continue;                                                                 // <cgs> - TEST 
+               }                                                                             // <cgs> - TEST 
                //---------------------------------------------
                Button? b = myButtons.Find(mi.Name);
                if (null != b)
@@ -4217,7 +4222,7 @@ namespace PleasantvilleGame
          GameAction action = myGameInstance.DieRollAction;
          myGameEngine.PerformAction(ref myGameInstance, ref action, dieRoll);
       }
-      private void CreateEllipse(IMapPoint mp)
+      private void CreateEllipse(IMapPoint mp, System.Windows.Media.Brush brush)
       {
          if (null == myCanvasMain)
          {
@@ -4226,9 +4231,9 @@ namespace PleasantvilleGame
          }
          Ellipse aEllipse = new Ellipse
          {
-            Fill = Brushes.Black,
+            Fill = brush,
             StrokeThickness = 1,
-            Stroke = Brushes.Black,
+            Stroke = brush,
             Width = 20,
             Height = 20
          };

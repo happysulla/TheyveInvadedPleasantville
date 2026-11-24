@@ -243,6 +243,21 @@ namespace PleasantvilleGame
          if (0 < townPeoples.Count)
             MetricTakeover -= 50;
       }
+      public void SetMetricAlienCenter(IMapPoint center, ITerritory starting, ITerritory ending)
+      {
+         double xdiffStart = Math.Abs(center.X - starting.CenterPoint.X);
+         double ydiffStart = Math.Abs(center.Y - starting.CenterPoint.Y);
+         int rawDiffStart = (int)Math.Sqrt(xdiffStart * xdiffStart + ydiffStart * ydiffStart);
+         //-------------------------------------------------------
+         double xdiffEnd = Math.Abs(center.X - ending.CenterPoint.X);
+         double ydiffEnd = Math.Abs(center.Y - ending.CenterPoint.Y);
+         int rawDiffEnd = (int)Math.Sqrt(xdiffEnd * xdiffEnd + ydiffEnd * ydiffEnd);
+         //-------------------------------------------------------
+         int normalizedEnd = 50 - Math.Min(50, (int)(50 * rawDiffEnd / 500));
+         int diff = Math.Max(0, (rawDiffEnd - rawDiffStart));
+         int normalizedDiff = 50 - Math.Min(50, (int)(50 * diff / 300));
+         MetricAlienCenter = normalizedEnd + normalizedDiff;
+      }
       public void SetMetricTownCenter(IMapPoint center, ITerritory starting, ITerritory ending)
       {
          double xdiffStart = Math.Abs(center.X - starting.CenterPoint.X);
@@ -270,7 +285,7 @@ namespace PleasantvilleGame
          SetObservationMetric(targetStack, stacks, true);
          SetTakeoverMetric(targetStack, true);
          MetricZebulon = GetClosestDistanceMetric(centerZebulon, TargetTerritory);
-         MetricAlienCenter = GetClosestDistanceMetric(centerAlien, TargetTerritory);
+         SetMetricAlienCenter(centerAlien, this.MovingMapItem.TerritoryStarting, TargetTerritory);
          SetMetricTownCenter(centerControlled, this.MovingMapItem.TerritoryStarting, TargetTerritory);
          SetMetricGuard(targetStack, stacks, true);
          MetricTotal = MetricDenyTown + MetricObs + MetricLeaving + MetricTakeover + MetricZebulon + MetricAlienCenter + MetricTownCenter + MetricGuard;
