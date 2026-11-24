@@ -48,20 +48,22 @@ namespace PleasantvilleGame
          myHeaderNames.Add("09-Centers");
          myHeaderNames.Add("09-GetTerritoriesOfInterest");
          myHeaderNames.Add("09-GetMapItemsOfInterest");
+         myHeaderNames.Add("09-AddReduceStackingMoves");
          myHeaderNames.Add("09-AddMoveAwayFromControlled");
          myHeaderNames.Add("09-AddAlienTakeoverMoves");
          myHeaderNames.Add("09-AddUncontrolledMoves");
-         myHeaderNames.Add("09-Combined");
+         myHeaderNames.Add("09-CreateMoves");
          myHeaderNames.Add("09-Finalize");
 
          myCommandNames.Add("00-Show Centers");
          myCommandNames.Add("01-GetTerritoriesOfInterest");
          myCommandNames.Add("02-GetMapItemsOfInterest");
-         myCommandNames.Add("03-AddMoveAwayFromControlled");
-         myCommandNames.Add("04-AddAlienTakeoverMoves");
-         myCommandNames.Add("05-AddUncontrolledMoves");
-         myCommandNames.Add("06-Combined");
-         myCommandNames.Add("07-Cleanup");
+         myCommandNames.Add("03-AddReduceStackingMoves");
+         myCommandNames.Add("04-AddMoveAwayFromControlled");
+         myCommandNames.Add("05-AddAlienTakeoverMoves");
+         myCommandNames.Add("06-AddUncontrolledMoves");
+         myCommandNames.Add("07-CreateMoves");
+         myCommandNames.Add("08-Cleanup");
          //------------------------------------
          if (null == gi)
          {
@@ -299,6 +301,100 @@ namespace PleasantvilleGame
                Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): Reset() returned false");
                return false;
             }
+            IMapItem? mi0 = gi.Stacks.FindMapItem(TableMgr.HOTEL_OWNER);
+            if (null == mi0)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): mi0=null ");
+               return false;
+            }
+            mi0.IsAlienKnown = true;
+            //-------------------------
+            IMapItem? mi1 = gi.Stacks.FindMapItem(TableMgr.MAITRE_D);
+            if (null == mi1)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): mi1=null ");
+               return false;
+            }
+            mi1.IsAlienKnown = true;
+            if (false == TableMgr.MovePerson(gi, TableMgr.MAITRE_D, "HotelAndRestaurant_0"))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): MovePerson() failed for mi=" + TableMgr.MAITRE_D);
+               return false;
+            }
+            //-------------------------
+            IMapItem? mi2 = gi.Stacks.FindMapItem(TableMgr.WAITRESS);
+            if (null == mi2)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): mi2=null ");
+               return false;
+            }
+            mi2.IsAlienKnown = true;
+            if (false == TableMgr.MovePerson(gi, TableMgr.WAITRESS, "HotelAndRestaurant_0"))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): MovePerson() failed for mi=" + TableMgr.WAITRESS);
+               return false;
+            }
+            //-------------------------
+            IMapItem? mi4 = gi.Stacks.FindMapItem(TableMgr.MAID);
+            if (null == mi4)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): mi4=null ");
+               return false;
+            }
+            mi4.IsAlienKnown = true;
+            if (false == TableMgr.MovePerson(gi, TableMgr.MAID, "HotelAndRestaurant_0"))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): MovePerson() failed for mi=" + TableMgr.MAID);
+               return false;
+            }
+            //-------------------------
+            IMapItem? mi5 = gi.Stacks.FindMapItem(TableMgr.BANK_PRESIDENT);
+            if (null == mi5)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): mi5=null ");
+               return false;
+            }
+            mi5.IsAlienKnown = true;
+            if (false == TableMgr.MovePerson(gi, TableMgr.BANK_PRESIDENT, "HotelAndRestaurant_0"))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): MovePerson() failed for mi=" + TableMgr.BANK_PRESIDENT);
+               return false;
+            }
+            //-------------------------
+            IMetricAlienMoves moves = new MetricAlienMoves();
+            IStacks newStacks = gi.Stacks.Clone();
+            PlayerAlienComputerMoveMgr moveMgr = new PlayerAlienComputerMoveMgr();
+            if (false == moveMgr.AddReduceStackingMoves(newStacks, gi.Zebulon.TerritoryCurrent.CenterPoint, ref moves))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command():  AddReduceStackingMoves() returned false");
+               return false;
+            }
+            //-------------------------
+            IMapItemMoves mapItemMoves = new MapItemMoves();
+            moves = moves.Sort();
+            foreach (IMetricAlienMove mam in moves)
+            {
+               mam.MovingMapItem.TerritoryCurrent = mam.MovingMapItem.TerritoryStarting;
+               IMapItemMove? mim = gi.CreateMapItemMove(mam.MovingMapItem, mam.TargetTerritory);
+               if (null == mim)
+               {
+                  Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMovement(): mim=" + null);
+                  return false;
+               }
+               mapItemMoves.Add(mim);
+            }
+            gi.MapItemMoves = mapItemMoves;
+            GameAction outAction = GameAction.AlienMovementTownsShow;
+            myGameEngine.PerformAction(ref gi, ref outAction);
+         }
+         //=========================================================
+         else if (CommandName == myCommandNames[4])
+         {
+            if (false == Reset(gi))
+            {
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): Reset() returned false");
+               return false;
+            }
             //-------------------------
             IMetricAlienMoves moves = new MetricAlienMoves();
             IStacks newStacks = gi.Stacks.Clone();
@@ -327,7 +423,7 @@ namespace PleasantvilleGame
             myGameEngine.PerformAction(ref gi, ref outAction);         
          }
          //=========================================================
-         else if (CommandName == myCommandNames[4])
+         else if (CommandName == myCommandNames[5])
          {
             if (false == Reset(gi))
             {
@@ -365,7 +461,7 @@ namespace PleasantvilleGame
             myGameEngine.PerformAction(ref gi, ref outAction);
          }
          //=========================================================
-         else if (CommandName == myCommandNames[5])
+         else if (CommandName == myCommandNames[6])
          {
             if (false == Reset(gi))
             {
@@ -406,52 +502,19 @@ namespace PleasantvilleGame
             myGameEngine.PerformAction(ref gi, ref outAction);
          }
          //=========================================================
-         else if (CommandName == myCommandNames[6])
+         else if (CommandName == myCommandNames[7])
          {
             if (false == Reset(gi))
             {
                Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): Reset() returned false");
                return false;
             }
-            //-------------------------
-            IMetricAlienMoves moves = new MetricAlienMoves();
-            IStacks newStacks = gi.Stacks.Clone();
             PlayerAlienComputerMoveMgr moveMgr = new PlayerAlienComputerMoveMgr();
-            //-------------------------
-            if (false == moveMgr.AddMoveAwayFromControlledMoves(newStacks, gi.Zebulon.TerritoryCurrent.CenterPoint, ref moves))
+            if( false == moveMgr.CreateMoves(gi))
             {
-               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command():  AddMoveAwayFromControlledMoves() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command(): Reset() returned false");
                return false;
             }
-            Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "PlayerUnitTest.Command(5):\n*****************************************************************************\n*****************************************************************************\n" + moves.ToString());
-            if (false == moveMgr.AddAlienTakeoverMoves(newStacks, gi.Zebulon.TerritoryCurrent.CenterPoint, ref moves))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command():  AddMoveAwayFromControlledMoves() returned false");
-               return false;
-            }
-            Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "PlayerUnitTest.Command(5):\n*****************************************************************************\n*****************************************************************************\n" + moves.ToString());
-            if (false == moveMgr.AddUncontrolledMoves(newStacks, gi.Zebulon.TerritoryCurrent.CenterPoint, ref moves))
-            {
-               Logger.Log(LogEnum.LE_ERROR, "PlayerUnitTest.Command():  AddMoveAwayFromControlledMoves() returned false");
-               return false;
-            }
-            Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "PlayerUnitTest.Command(5):\n*****************************************************************************\n*****************************************************************************");
-            foreach (IMetricAlienMove mam in moves)
-               Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "PlayerUnitTest.Command(5): " + mam.ToString());
-            //-------------------------
-            IMapItemMoves mapItemMoves = new MapItemMoves();
-            foreach (IMetricAlienMove mam in moves)
-            {
-               mam.MovingMapItem.TerritoryCurrent = mam.MovingMapItem.TerritoryStarting;
-               IMapItemMove? mim = gi.CreateMapItemMove(mam.MovingMapItem, mam.TargetTerritory);
-               if (null == mim)
-               {
-                  Logger.Log(LogEnum.LE_SHOW_MIM, "Perform_AlienMovement(): mim=" + null);
-                  return false;
-               }
-               mapItemMoves.Add(mim);
-            }
-            gi.MapItemMoves = mapItemMoves.Shuffle();
             GameAction outAction = GameAction.AlienMovementTownsShow;
             myGameEngine.PerformAction(ref gi, ref outAction);
          }
@@ -494,6 +557,10 @@ namespace PleasantvilleGame
             ++myIndexName;
          }
          else if (HeaderName == myHeaderNames[5])
+         {
+            ++myIndexName;
+         }
+         else if (HeaderName == myHeaderNames[6])
          {
             ++myIndexName;
          }

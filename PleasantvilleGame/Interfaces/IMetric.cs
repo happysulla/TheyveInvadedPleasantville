@@ -12,6 +12,7 @@ namespace PleasantvilleGame
       IMapItem MovingMapItem { get; set; }
       ITerritory TargetTerritory { get; set; }
       int MetricTotal { get; set; }
+      int MetricFixStacking { get; set; } // Fix stacking if overstacked with known aliens
       int MetricDenyTown { get; set; } // Deny Town Person access for Controlling
       int MetricObs { get; set; }
       int MetricZebulon { get; set; }

@@ -18,6 +18,7 @@ namespace PleasantvilleGame
       public IMapItem MovingMapItem { get; set; }
       public ITerritory TargetTerritory { get; set; }
       public int MetricTotal { get; set; } = 0;
+      public int MetricFixStacking { get; set; } = 0; // if over stacking limits, must move one
       public int MetricDenyTown { get; set; } = 0;
       public int MetricObs { get; set; } = 0;
       public int MetricLeaving { get; set; } = 0;
@@ -288,7 +289,7 @@ namespace PleasantvilleGame
          SetMetricAlienCenter(centerAlien, this.MovingMapItem.TerritoryStarting, TargetTerritory);
          SetMetricTownCenter(centerControlled, this.MovingMapItem.TerritoryStarting, TargetTerritory);
          SetMetricGuard(targetStack, stacks, true);
-         MetricTotal = MetricDenyTown + MetricObs + MetricLeaving + MetricTakeover + MetricZebulon + MetricAlienCenter + MetricTownCenter + MetricGuard;
+         MetricTotal = MetricFixStacking + MetricDenyTown + MetricObs + MetricLeaving + MetricTakeover + MetricZebulon + MetricAlienCenter + MetricTownCenter + MetricGuard;
       }
       public void UpdateTotalMetric(IStacks stacks)
       {

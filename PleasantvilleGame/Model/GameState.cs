@@ -3504,6 +3504,7 @@ namespace PleasantvilleGame
                }
                break;
             case GameAction.AlienMovementTownsShow:
+            case GameAction.GameSetupPlayTownsperson:
                break;
             default:
                returnStatus = "reached default action=" + action.ToString();

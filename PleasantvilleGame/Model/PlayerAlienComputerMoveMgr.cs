@@ -1,5 +1,6 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing.Matching;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 
 namespace PleasantvilleGame
 {
@@ -139,61 +141,82 @@ namespace PleasantvilleGame
          return true;
       }
       //================================================================
-      private void GenerateCombinations(IMetricAlienMoves items, int r, IMetricAlienMoves currentMetrics, int depth, ref List<IMetricAlienMoves> combinations)
+      public bool AddReduceStackingMoves(IStacks stacks, IMapPoint mpZebulon, ref IMetricAlienMoves candidateMoves)
       {
-         if (currentMetrics.Count == r)
+         IMapPoint mpCenterControlled = Territory.GetCenterPointControlled(stacks);
+         IMapPoint mpCenterAlien = Territory.GetCenterPointAlien(stacks);
+         //------------------------------------------
+         IStacks overStacks = stacks.Clone();
+         foreach (IStack stack in overStacks)
          {
-            combinations.Add(currentMetrics.Clone());
-            return;
-         }
-         for (int i = depth; i < items.Count; i++)
-         {
-            IMetricAlienMove? tempMetric = items[i];
-            if ( null == tempMetric)
+            int alienStackCount = Territory.GetStackingCountKnownAlien(stack);
+            int numberToMoveFromStack = alienStackCount - MAX_STACKING_COUNT;
+            if( 0 < numberToMoveFromStack)
             {
-               Logger.Log(LogEnum.LE_ERROR, "Generate_Combinations(): item[i]=null");
-               return;
+               IMetricAlienMoves tempMetrics = new MetricAlienMoves();
+               IMapItems sortedMapItems = stack.MapItems.Shuffle();
+               foreach (IMapItem candidate in sortedMapItems)
+               {
+                  IMetricAlienMoves alienMoveMetrics = new MetricAlienMoves();
+                  if ((true == candidate.IsKnockedout) || (true == candidate.IsTiedUp) || (true == candidate.IsKilled) || ("Zebulon" == candidate.Name)  || (false == candidate.IsAlienKnown))
+                     continue;
+                  IMapItems closeMapItems = Territory.GetMapItemsOfInterest(stacks, Territories.theTerritories, candidate); // MapItems this mapitem can move to
+                  closeMapItems = closeMapItems.Shuffle();
+                  foreach (IMapItem closeMapItem in closeMapItems)
+                  {
+                     if ((true == closeMapItem.IsKnockedout) || (true == closeMapItem.IsTiedUp) || (true == closeMapItem.IsKilled) || ("Zebulon" == closeMapItem.Name) || (true == closeMapItem.IsStunned) || (true == closeMapItem.IsWary) || (true == closeMapItem.IsControlled) || (true == closeMapItem.IsAlien()))
+                        continue;
+                     if ((true == closeMapItem.IsMovingThisTurn) && (true == candidate.IsMovingThisTurn))
+                        continue;
+                     if (closeMapItem.TerritoryCurrent.ToString() == candidate.TerritoryCurrent.ToString())
+                        continue;
+                     IStack? closeMapItemStack = stacks.Find(closeMapItem.TerritoryCurrent);
+                     int closeMapItemStackCount = Territory.GetStackingCount(closeMapItemStack, candidate);
+                     if (MAX_STACKING_COUNT < closeMapItemStackCount)  // cannot move either map item or would violate stacking problems
+                        continue;
+                     //------------------------------------------
+                     IMetricAlienMove mamCandidateMove = new MetricAlienMove(candidate, closeMapItem.TerritoryCurrent);
+                     mamCandidateMove.MetricFixStacking = 300;
+                     mamCandidateMove.SetTotalMetric(stacks, mpZebulon, mpCenterAlien, mpCenterControlled);
+                     //------------------------------------------
+                     if (null == closeMapItemStack)
+                        Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_ReduceStackingMoves(): nnnnnnnnnnnnnnnnnnnnnnnn " + candidate.Name + "-->" + closeMapItem.Name + " in " + mamCandidateMove.TargetTerritory.ToString());
+                     else
+                        Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_ReduceStackingMoves(): nnnnnnnnnnnnnnnnnnnnnnnn " + candidate.Name + "-->" + closeMapItem.Name + " closeMapItemStack=" + closeMapItemStack.ToString());
+                     alienMoveMetrics.Add(mamCandidateMove);
+                  }
+                  //------------------------------------------
+                  ITerritories territoriesWithinRange = Territory.GetTerritoriesWithinRange(candidate.TerritoryCurrent, candidate.Movement);
+                  foreach (Territory t in territoriesWithinRange)
+                  {
+                     IMetricAlienMove mamCandidateMove = new MetricAlienMove(candidate, t);
+                     mamCandidateMove.MetricFixStacking = 300;
+                     mamCandidateMove.SetTotalMetric(stacks, mpZebulon, mpCenterAlien, mpCenterControlled);
+                     alienMoveMetrics.Add(mamCandidateMove);
+                  }
+                  //------------------------------------------
+                  if (false == ChooseBestMoveMetrics(ref stacks, alienMoveMetrics, candidate, ref tempMetrics))
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "Add_ReduceStackingMoves(): Choose_BestMoveMetrics() returned false");
+                     return false;
+                  }
+               }
+               //==================================
+               tempMetrics = tempMetrics.Sort();
+               int maxToFind = Math.Min(tempMetrics.Count, numberToMoveFromStack);
+               for (int i = 0; i < maxToFind; i++) // only add the necessary number of moves from this stack
+               {
+                  IMetricAlienMove? mam = tempMetrics[i];
+                  if (null == mam)
+                  {
+                     Logger.Log(LogEnum.LE_ERROR, "Add_ReduceStackingMoves(): mam=null");
+                     return false;
+                  }
+                  candidateMoves.Add(mam);
+               }
             }
-            currentMetrics.Add(tempMetric);
-            GenerateCombinations(items, r, currentMetrics, i + 1, ref combinations);
-            currentMetrics.RemoveAt(currentMetrics.Count - 1);
          }
-      }
-      private IMetricAlienMoves? FindBestMoves(IStacks stacks, List<IMetricAlienMoves> combinations)
-      {
-
-         IMetricAlienMoves? bestMoves = null;
-         int maxValue = 0;
-         foreach (IMetricAlienMoves moveMetrics in combinations)
-         {
-            IStacks newStacks = stacks.Clone();
-            foreach (IMetricAlienMove moveMetric in moveMetrics)  //  move each moving map item to proposed location 
-            {
-               newStacks.Remove(moveMetric.MovingMapItem);
-               newStacks.Add(moveMetric.MovingMapItem, moveMetric.TargetTerritory);
-            }
-            //-------------------------------------
-            foreach (IMetricAlienMove moveMetric in moveMetrics)  // update metrics for each mapitem based on proposed location
-               moveMetric.UpdateTotalMetric(newStacks);
-            //-------------------------------------
-            int tempValue = 0;
-            foreach (IMetricAlienMove moveMetric in moveMetrics) // get a sum value of move metrics - if best value, make that the proposed move metrics
-               tempValue += moveMetric.MetricTotal;
-            if (maxValue < tempValue)
-            {
-               bestMoves = moveMetrics.Clone();
-               Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Find_BestMoves(): ***" + maxValue.ToString() + "->" + tempValue.ToString() + "*** bestMoves=" + bestMoves.ToString());
-               foreach (IMetricAlienMove mam in moveMetrics)
-                  Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_MoveAwayFromControlledMoves(): " + mam.ToString());
-               maxValue = tempValue;
-            }
-         }
-         if (null == bestMoves)
-         {
-            Logger.Log(LogEnum.LE_ERROR, "Find_BestMoves(): bestMoves=null");
-            return null;
-         }
-         return bestMoves;
+         return true;
       }
       public bool AddMoveAwayFromControlledMoves(IStacks stacks, IMapPoint mpZebulon, ref IMetricAlienMoves candidateMoves)
       {
@@ -295,7 +318,6 @@ namespace PleasantvilleGame
       public bool AddAlienTakeoverMoves(IStacks stacks, IMapPoint mpZebulon, ref IMetricAlienMoves candidateMoves)
       {
          IMapItems aliens = new MapItems();
-         IMapItems townPeoples = new MapItems();
          IMapItems uncontrolledPeoples = new MapItems();
          foreach (IStack stack in stacks)
          {
@@ -305,9 +327,7 @@ namespace PleasantvilleGame
                   continue;
                else if (true == mi.IsAlien())
                   aliens.Add(mi);
-               else if (true == mi.IsControlled)
-                  townPeoples.Add(mi);
-               else 
+               else if (false == mi.IsControlled)
                   uncontrolledPeoples.Add(mi);
             }
          }
@@ -330,10 +350,10 @@ namespace PleasantvilleGame
                if (closeMapItem.TerritoryCurrent.ToString() == candidate.TerritoryCurrent.ToString())
                   continue;
                IStack? candidateStack = stacks.Find(candidate.TerritoryCurrent);
-               int candidateStackCount = Territory.GetStackingCount(candidateStack, candidate);
+               int candidateStackCount = Territory.GetStackingCount(candidateStack, closeMapItem);
                IStack? closeMapItemStack = stacks.Find(closeMapItem.TerritoryCurrent);
-               int closeMapItemStackCount = Territory.GetStackingCount(closeMapItemStack, closeMapItem);
-               if ((3 < candidateStackCount) && (3 < closeMapItemStackCount))
+               int closeMapItemStackCount = Territory.GetStackingCount(closeMapItemStack, candidate);
+               if ((MAX_STACKING_COUNT < candidateStackCount) && (MAX_STACKING_COUNT < closeMapItemStackCount))  // cannot move either map item or would violate stacking problems
                   continue;
                //------------------------------------------
                IMetricAlienMove mamCandidateMove = new MetricAlienMove(candidate, closeMapItem.TerritoryCurrent);
@@ -348,26 +368,26 @@ namespace PleasantvilleGame
                //------------------------------------------
                if (mamCloseItemMove.MetricTotal < mamCandidateMove.MetricTotal)
                {
-                  IStack? stack = stacks.Find(mamCandidateMove.TargetTerritory);
-                  if (null == stack)
+                  IStack? targetStack = stacks.Find(mamCandidateMove.TargetTerritory);
+                  if (null == targetStack)
                      Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_AlienTakeoverMoves(): nnnnnnnnnnnnnnnnnnnnnnnn " + candidate.Name + "-->" + closeMapItem.Name + " in " + mamCandidateMove.TargetTerritory.ToString());
                   else
-                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_AlienTakeoverMoves(): nnnnnnnnnnnnnnnnnnnnnnnn " + candidate.Name + "-->" + closeMapItem.Name + " stack=" + stack.ToString());
+                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_AlienTakeoverMoves(): nnnnnnnnnnnnnnnnnnnnnnnn " + candidate.Name + "-->" + closeMapItem.Name + " targetStack=" + targetStack.ToString());
                   alienMoveMetrics.Add(mamCandidateMove);
                }
                else
                {
-                  IStack? stack = stacks.Find(mamCloseItemMove.TargetTerritory);
-                  if (null == stack)
+                  IStack? targetStack = stacks.Find(mamCloseItemMove.TargetTerritory);
+                  if (null == targetStack)
                      Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_AlienTakeoverMoves(): nnnnnnnnnnnnnnnnnnnnnnnn " + candidate.Name + "<--" + closeMapItem.Name + " in " + mamCloseItemMove.TargetTerritory.ToString());
                   else
-                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_AlienTakeoverMoves(): nnnnnnnnnnnnnnnnnnnnnnnn " + candidate.Name + "<--" + closeMapItem.Name + " stack=" + stack.ToString());
+                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_AlienTakeoverMoves(): nnnnnnnnnnnnnnnnnnnnnnnn " + candidate.Name + "<--" + closeMapItem.Name + " targetStack=" + targetStack.ToString());
                   alienMoveMetrics.Add(mamCloseItemMove);
                }
             }
             if (false == ChooseBestMoveMetrics(ref stacks, alienMoveMetrics, candidate, ref candidateMoves))
             {
-               Logger.Log(LogEnum.LE_ERROR, "Add_UncontrolledMoves(): Choose_BestMoveMetrics() returned false");
+               Logger.Log(LogEnum.LE_ERROR, "Add_AlienTakeoverMoves(): Choose_BestMoveMetrics() returned false");
                return false;
             }
          }
@@ -375,7 +395,6 @@ namespace PleasantvilleGame
       }
       public bool AddUncontrolledMoves(IStacks stacks, IMapPoint mpZebulon, ref IMetricAlienMoves candidateMoves)
       {
-         IMapItems townPeoples = new MapItems();
          IMapItems uncontrolledPeoples = new MapItems();
          foreach (IStack stack in stacks)
          {
@@ -383,9 +402,7 @@ namespace PleasantvilleGame
             {
                if ((true == mi.IsMovingThisTurn) || (true == mi.IsKnockedout) || (true == mi.IsTiedUp) || (true == mi.IsKilled) || ("Zebulon" == mi.Name) || (true == mi.IsStunned) || (true == mi.IsWary) || (true==mi.IsAlien()) )
                   continue;
-               else if (true == mi.IsControlled)
-                  townPeoples.Add(mi);
-               else
+               else if (false == mi.IsControlled)
                   uncontrolledPeoples.Add(mi);
             }
          }
@@ -408,10 +425,10 @@ namespace PleasantvilleGame
                if (closeMapItem.TerritoryCurrent.ToString() == candidate.TerritoryCurrent.ToString())
                   continue;
                IStack? candidateStack = stacks.Find(candidate.TerritoryCurrent);
-               int candidateStackCount = Territory.GetStackingCount(candidateStack, candidate);
+               int candidateStackCount = Territory.GetStackingCount(candidateStack, closeMapItem);
                IStack? closeMapItemStack = stacks.Find(closeMapItem.TerritoryCurrent);
-               int closeMapItemStackCount = Territory.GetStackingCount(closeMapItemStack, closeMapItem);
-               if ((3 < candidateStackCount) && (3 < closeMapItemStackCount))
+               int closeMapItemStackCount = Territory.GetStackingCount(closeMapItemStack, candidate);
+               if ((MAX_STACKING_COUNT < candidateStackCount) && (MAX_STACKING_COUNT < closeMapItemStackCount))  // cannot move either map item or would violate stacking problems
                   continue;
                //------------------------------------------
                IMetricAlienMove mamCandidateMove = new MetricAlienMove(candidate, closeMapItem.TerritoryCurrent);
@@ -451,56 +468,7 @@ namespace PleasantvilleGame
          }
          return true;
       }
-      public bool AddZebulonGuardMoves(IStacks stacks, ref IMetricAlienMoves candidateMoves)
-      {
-         IMapItems townPeoples = new MapItems();
-         IMapItems aliens = new MapItems();
-         IMapItems uncontrolledPeoples = new MapItems();
-         foreach (IStack stack in stacks)
-         {
-            foreach (IMapItem mi in stack.MapItems)
-            {
-               if ((true == mi.IsMovingThisTurn) || (true == mi.IsKnockedout) || (true == mi.IsTiedUp) || (true == mi.IsKilled) || ("Zebulon" == mi.Name) || (true == mi.IsStunned) || (true == mi.IsWary))
-                  continue;
-               else if (true == mi.IsAlien())
-                  aliens.Add(mi);
-               else if (true == mi.IsControlled)
-                  townPeoples.Add(mi);
-               else
-                  uncontrolledPeoples.Add(mi);
-            }
-         }
-         aliens = aliens.Shuffle();
-         //------------------------------------
-         IMapPoint mpCenterControlled = Territory.GetCenterPointControlled(stacks);
-         IMapPoint mpCenterAlien = Territory.GetCenterPointAlien(stacks);
-         //------------------------------------
-         foreach (IMapItem candidate in aliens)
-         {
-            IMetricAlienMoves alienMoveMetrics = new MetricAlienMoves();
-            if (0 < alienMoveMetrics.Count)
-            {
-               IMetricAlienMoves sortedMetrics = alienMoveMetrics.Sort();
-               Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_ZebulonGuardMoves(): >>>>>>>>>>>>>>>>>>>>>>>> candidate=" + candidate.Name + " candidateMoves=" + candidateMoves.ToString());
-               foreach (IMetricAlienMove mam in sortedMetrics)
-               {
-                  IStack? stack = stacks.Find(mam.TargetTerritory);
-                  if (null == stack)
-                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_ZebulonGuardMoves(): " + mam.ToString());
-                  else
-                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_ZebulonGuardMoves(): " + mam.ToString() + " stack=" + stack.ToString());
-               }
-               if (false == ChooseBestMoveMetrics(ref stacks, alienMoveMetrics, candidate, ref candidateMoves))
-               {
-                  Logger.Log(LogEnum.LE_ERROR, "Add_ZebulonGuardMoves(): Choose_BestMoveMetrics() returned false");
-                  return false;
-               }
-            }
-         }
-
-         return true;
-      }
-      private bool AddMovesToStunned(IStacks stacks, IMapPoint mpZebulon, IMetricAlienMoves candidateMoves)
+      public bool AddMovesToStunned(IStacks stacks, IMapPoint mpZebulon, IMetricAlienMoves candidateMoves)
       {
          IMapItems aliens = new MapItems();
          IMapItems townPeoples = new MapItems();
@@ -527,13 +495,62 @@ namespace PleasantvilleGame
          IMapPoint mpCenterAlien = Territory.GetCenterPointAlien(stacks);
          return true;
       }
+      public bool AddZebulonGuardMoves(IStacks stacks, ref IMetricAlienMoves candidateMoves)
+      {
+         IMapItems townPeoples = new MapItems();
+         IMapItems aliens = new MapItems();
+         IMapItems uncontrolledPeoples = new MapItems();
+         foreach (IStack stack in stacks)
+         {
+            foreach (IMapItem mi in stack.MapItems)
+            {
+               if ((true == mi.IsMovingThisTurn) || (true == mi.IsKnockedout) || (true == mi.IsTiedUp) || (true == mi.IsKilled) || ("Zebulon" == mi.Name) || (true == mi.IsStunned) || (true == mi.IsWary))
+                  continue;
+               else if (true == mi.IsAlien())
+                  aliens.Add(mi);
+               else if (true == mi.IsControlled)
+                  townPeoples.Add(mi);
+               else
+                  uncontrolledPeoples.Add(mi);
+            }
+         }
+         aliens = aliens.Shuffle();
+         //------------------------------------
+         IMapPoint mpCenterControlled = Territory.GetCenterPointControlled(stacks);
+         IMapPoint mpCenterAlien = Territory.GetCenterPointAlien(stacks);
+         //------------------------------------
+         foreach (IMapItem candidate in aliens) // move aliens to Zebulon location when possible - then move to adjacent hexes to doors in same building
+         {
+            IMetricAlienMoves alienMoveMetrics = new MetricAlienMoves();
+            if (0 < alienMoveMetrics.Count)
+            {
+               IMetricAlienMoves sortedMetrics = alienMoveMetrics.Sort();
+               Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_ZebulonGuardMoves(): >>>>>>>>>>>>>>>>>>>>>>>> candidate=" + candidate.Name + " candidateMoves=" + candidateMoves.ToString());
+               foreach (IMetricAlienMove mam in sortedMetrics)
+               {
+                  IStack? stack = stacks.Find(mam.TargetTerritory);
+                  if (null == stack)
+                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_ZebulonGuardMoves(): " + mam.ToString());
+                  else
+                     Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_ZebulonGuardMoves(): " + mam.ToString() + " stack=" + stack.ToString());
+               }
+               if (false == ChooseBestMoveMetrics(ref stacks, alienMoveMetrics, candidate, ref candidateMoves))
+               {
+                  Logger.Log(LogEnum.LE_ERROR, "Add_ZebulonGuardMoves(): Choose_BestMoveMetrics() returned false");
+                  return false;
+               }
+            }
+         }
+
+         return true;
+      }
       //-----------------------------------------------
       private bool ChooseBestMoveMetrics(ref IStacks stacks, IMetricAlienMoves moveMetrics, IMapItem candidate, ref IMetricAlienMoves candidateMoves)
       {
          if (0 < moveMetrics.Count)
          {
             IMetricAlienMoves sortedMetrics = moveMetrics.Sort();
-            Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Choose_BestMoveMetrics(): >>>>>>>>>>>>>>>>>>>>>>>> candidate=" + candidate.Name + " candidateMoves=" + candidateMoves.ToString());
+            Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Choose_BestMoveMetrics(): >>>>>>>>>>>>>>>>>>>>>>>> candidate=" + candidate.Name + " moveMetrics=" + moveMetrics.ToString());
             foreach (IMetricAlienMove mam in sortedMetrics)
             {
                IStack? stack = stacks.Find(mam.TargetTerritory);
@@ -590,6 +607,62 @@ namespace PleasantvilleGame
             }
          }
          return true;
+      }
+      private IMetricAlienMoves? FindBestMoves(IStacks stacks, List<IMetricAlienMoves> combinations)
+      {
+
+         IMetricAlienMoves? bestMoves = null;
+         int maxValue = 0;
+         foreach (IMetricAlienMoves moveMetrics in combinations)
+         {
+            IStacks newStacks = stacks.Clone();
+            foreach (IMetricAlienMove moveMetric in moveMetrics)  //  move each moving map item to proposed location 
+            {
+               newStacks.Remove(moveMetric.MovingMapItem);
+               newStacks.Add(moveMetric.MovingMapItem, moveMetric.TargetTerritory);
+            }
+            //-------------------------------------
+            foreach (IMetricAlienMove moveMetric in moveMetrics)  // update metrics for each mapitem based on proposed location
+               moveMetric.UpdateTotalMetric(newStacks);
+            //-------------------------------------
+            int tempValue = 0;
+            foreach (IMetricAlienMove moveMetric in moveMetrics) // get a sum value of move metrics - if best value, make that the proposed move metrics
+               tempValue += moveMetric.MetricTotal;
+            if (maxValue < tempValue)
+            {
+               bestMoves = moveMetrics.Clone();
+               Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Find_BestMoves(): ***" + maxValue.ToString() + "->" + tempValue.ToString() + "*** bestMoves=" + bestMoves.ToString());
+               foreach (IMetricAlienMove mam in moveMetrics)
+                  Logger.Log(LogEnum.LE_SHOW_ALIEN_MOVE_METRIC, "Add_MoveAwayFromControlledMoves(): " + mam.ToString());
+               maxValue = tempValue;
+            }
+         }
+         if (null == bestMoves)
+         {
+            Logger.Log(LogEnum.LE_ERROR, "Find_BestMoves(): bestMoves=null");
+            return null;
+         }
+         return bestMoves;
+      }
+      private void GenerateCombinations(IMetricAlienMoves items, int r, IMetricAlienMoves currentMetrics, int depth, ref List<IMetricAlienMoves> combinations)
+      {
+         if (currentMetrics.Count == r)
+         {
+            combinations.Add(currentMetrics.Clone());
+            return;
+         }
+         for (int i = depth; i < items.Count; i++)
+         {
+            IMetricAlienMove? tempMetric = items[i];
+            if (null == tempMetric)
+            {
+               Logger.Log(LogEnum.LE_ERROR, "Generate_Combinations(): item[i]=null");
+               return;
+            }
+            currentMetrics.Add(tempMetric);
+            GenerateCombinations(items, r, currentMetrics, i + 1, ref combinations);
+            currentMetrics.RemoveAt(currentMetrics.Count - 1);
+         }
       }
    }
 }

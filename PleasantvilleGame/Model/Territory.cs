@@ -561,14 +561,24 @@ namespace PleasantvilleGame
          {
             if ((true == movingMi.IsControlled) && (true == mi.IsControlled) && (false == mi.IsTiedUp))
                ++count;
-            else if ((true == movingMi.IsAlienKnown) && (true == mi.IsAlienKnown) && (false == mi.IsTiedUp))
+            else if ((true == movingMi.IsAlienKnown) && (true == mi.IsAlienKnown) && (false == mi.IsTiedUp) && ("Zebulon" != mi.Name))
                ++count;
             else if (false == mi.IsTiedUp)
                ++count;
          }
          return count;
 		}
-		public static IMapPoint GetCenterPointControlled(IStacks stacks)
+      public static int GetStackingCountKnownAlien(IStack? stack)
+      {
+         int count = 0;
+         foreach (IMapItem mi in stack.MapItems)
+         {
+            if ((true == mi.IsAlienKnown) && (false == mi.IsTiedUp) && ("Zebulon" != mi.Name))
+               ++count;
+         }
+         return count;
+      }
+      public static IMapPoint GetCenterPointControlled(IStacks stacks)
 		{
 			double xTotal = 0.0;
 			double yTotal = 0.0;

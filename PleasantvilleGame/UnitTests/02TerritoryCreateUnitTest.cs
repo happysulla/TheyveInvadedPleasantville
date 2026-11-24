@@ -40,7 +40,7 @@ namespace PleasantvilleGame
       //-----------------------------------------
       private string? myFileName = null;
       //-----------------------------------------
-      private int myIndexName = 6;
+      private int myIndexName = 0;
       public bool CtorError { get; } = false;
       private List<string> myHeaderNames = new List<string>();
       private List<string> myCommandNames = new List<string>();
